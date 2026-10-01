@@ -1,0 +1,946 @@
+{
+  "afterStop": {
+    "animationFramesRun": 0.0,
+    "commits": 13.0,
+    "creates": 17.0,
+    "deletes": 17.0,
+    "errors": [],
+    "events": 12.0,
+    "mountReports": 13.0,
+    "nativeTags": 0.0,
+    "nodes": [],
+    "pendingAnimationFrames": 0.0,
+    "pendingTimers": 0.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 0.0,
+      "ends": 4.0,
+      "grants": 0.0,
+      "moves": 0.0,
+      "releases": 0.0,
+      "responder": 0.0,
+      "starts": 4.0
+    },
+    "retiringTags": 0.0,
+    "stopped": true,
+    "textMeasurements": 88.0,
+    "updates": 75.0,
+    "viewport": {
+      "height": 900.0,
+      "width": 1100.0
+    },
+    "viewportUpdates": 2.0,
+    "windowListener": false
+  },
+  "beforeStop": {
+    "animationFramesRun": 0.0,
+    "commits": 11.0,
+    "creates": 17.0,
+    "deletes": 0.0,
+    "errors": [],
+    "events": 12.0,
+    "mountReports": 11.0,
+    "nativeTags": 17.0,
+    "nodes": [
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 39.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 28.0,
+        "height": 39.0,
+        "id": 27967620579.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 28.0,
+        "nativeText": "Fabric: texto e janela responsivos",
+        "opacity": 1.0,
+        "tag": 2.0,
+        "testID": "",
+        "text": "Fabric: texto e janela responsivos",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 24.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 28017952230.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Viewport: 1100 × 900 · Estado: 1",
+        "opacity": 1.0,
+        "tag": 4.0,
+        "testID": "dimensions",
+        "text": "Viewport: 1100 × 900 · Estado: 1",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 79.0
+      },
+      {
+        "fabricHeight": 44.0,
+        "fabricWidth": 343.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 28521268740.0,
+        "kind": "button",
+        "nativeText": "Mudar conteúdo",
+        "opacity": 1.0,
+        "tag": 6.0,
+        "testID": "text-change",
+        "text": "Mudar conteúdo",
+        "visible": true,
+        "width": 343.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 44.0,
+        "fabricWidth": 342.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 28571600391.0,
+        "kind": "button",
+        "nativeText": "Mudar fonte",
+        "opacity": 1.0,
+        "tag": 8.0,
+        "testID": "font-change",
+        "text": "Mudar fonte",
+        "visible": true,
+        "width": 342.0,
+        "x": 355.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 44.0,
+        "fabricWidth": 343.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 28621932042.0,
+        "kind": "button",
+        "nativeText": "Estado +1",
+        "opacity": 1.0,
+        "tag": 10.0,
+        "testID": "layout-count",
+        "text": "Estado +1",
+        "visible": true,
+        "width": 343.0,
+        "x": 709.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 44.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 28068283881.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 12.0,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "width": 1052.0,
+        "x": 24.0,
+        "y": 121.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 45.0,
+        "fabricWidth": 172.0,
+        "focused": false,
+        "fontSize": 32.0,
+        "height": 45.0,
+        "id": 28118615532.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 32.0,
+        "nativeText": "Olá, Fabric!",
+        "opacity": 1.0,
+        "tag": 14.0,
+        "testID": "intrinsic",
+        "text": "Olá, Fabric!",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 172.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 181.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 150.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 150.0,
+        "id": 28168947183.0,
+        "kind": "text",
+        "lines": 5.0,
+        "minimumHeight": 21.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "O texto é medido pelo TextServer do Godot antes da montagem. Quando a janela muda, o Fabric recalcula as constraints e o Yoga quebra as linhas. A altura se adapta ao conteúdo, sem recriar o Label e sem perder o estado do React. O texto é medido pelo TextServer do Godot antes da montagem. Quando a janela muda, o Fabric recalcula as constraints e o Yoga quebra as linhas. A altura se adapta ao conteúdo, sem recriar o Label e sem perder o estado do React. ",
+        "opacity": 1.0,
+        "tag": 16.0,
+        "testID": "paragraph",
+        "text": "O texto é medido pelo TextServer do Godot antes da montagem. Quando a janela muda, o Fabric recalcula as constraints e o Yoga quebra as linhas. A altura se adapta ao conteúdo, sem recriar o Label e sem perder o estado do React. O texto é medido pelo TextServer do Godot antes da montagem. Quando a janela muda, o Fabric recalcula as constraints e o Yoga quebra as linhas. A altura se adapta ao conteúdo, sem recriar o Label e sem perder o estado do React. ",
+        "visible": true,
+        "visibleLines": 5.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 242.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 28219278834.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Este Label acompanha a altura do parágrafo acima.",
+        "opacity": 1.0,
+        "tag": 18.0,
+        "testID": "after-paragraph",
+        "text": "Este Label acompanha a altura do parágrafo acima.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 408.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 12.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 28.0,
+        "height": 12.0,
+        "id": 28269610485.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 28.0,
+        "nativeText": "Altura explícita continua pertencendo ao Yoga.",
+        "opacity": 1.0,
+        "tag": 20.0,
+        "testID": "clipped",
+        "text": "Altura explícita continua pertencendo ao Yoga.",
+        "visible": true,
+        "visibleLines": 0.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 450.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 52.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 52.0,
+        "id": 28319942136.0,
+        "kind": "text",
+        "lines": 2.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Duas linhas explícitas\nsem height manual.",
+        "opacity": 1.0,
+        "tag": 22.0,
+        "testID": "newline",
+        "text": "Duas linhas explícitas\nsem height manual.",
+        "visible": true,
+        "visibleLines": 2.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 478.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 28370273787.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "",
+        "opacity": 1.0,
+        "tag": 24.0,
+        "testID": "empty",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 546.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 28420605438.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "42",
+        "opacity": 1.0,
+        "tag": 26.0,
+        "testID": "numeric",
+        "text": "42",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 1052.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 588.0
+      },
+      {
+        "fabricHeight": 44.0,
+        "fabricWidth": 520.0,
+        "focused": true,
+        "height": 44.0,
+        "id": 28672263693.0,
+        "kind": "button",
+        "nativeText": "Parágrafo: 280 px",
+        "opacity": 1.0,
+        "tag": 28.0,
+        "testID": "paragraph-narrow",
+        "text": "Parágrafo: 280 px",
+        "visible": true,
+        "width": 520.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 44.0,
+        "fabricWidth": 520.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 28722595344.0,
+        "kind": "button",
+        "nativeText": "Parágrafo: fluido",
+        "opacity": 1.0,
+        "tag": 30.0,
+        "testID": "paragraph-fluid",
+        "text": "Parágrafo: fluido",
+        "visible": true,
+        "width": 520.0,
+        "x": 532.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 44.0,
+        "fabricWidth": 1052.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 28470937089.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 32.0,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "width": 1052.0,
+        "x": 24.0,
+        "y": 630.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 900.0,
+        "fabricWidth": 1100.0,
+        "focused": false,
+        "height": 900.0,
+        "id": 27917288921.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 34.0,
+        "testID": "layout-root",
+        "text": "",
+        "visible": true,
+        "width": 1100.0,
+        "x": 0.0,
+        "y": 0.0
+      }
+    ],
+    "pendingAnimationFrames": 0.0,
+    "pendingTimers": 0.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 0.0,
+      "ends": 4.0,
+      "grants": 0.0,
+      "moves": 0.0,
+      "releases": 0.0,
+      "responder": 0.0,
+      "starts": 4.0
+    },
+    "retiringTags": 0.0,
+    "stopped": false,
+    "textMeasurements": 88.0,
+    "updates": 75.0,
+    "viewport": {
+      "height": 900.0,
+      "width": 1100.0
+    },
+    "viewportUpdates": 2.0,
+    "windowListener": true
+  },
+  "checks": [
+    {
+      "name": "React condition completed: GodotApp.stats().mounts === 1",
+      "passed": true
+    },
+    {
+      "name": "Text gets intrinsic size without width or height",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text hugs content instead of stretching",
+      "passed": true
+    },
+    {
+      "name": "Text accepts JSX string and numeric children",
+      "passed": true
+    },
+    {
+      "name": "Explicit newlines get measured height without clipping",
+      "passed": true
+    },
+    {
+      "name": "Empty text keeps one native line with finite geometry",
+      "passed": true
+    },
+    {
+      "name": "Explicit Yoga height overrides native font minimum",
+      "passed": true
+    },
+    {
+      "name": "Fabric invokes native TextServer measurement during Yoga layout",
+      "passed": true
+    },
+    {
+      "name": "Window hook subscribes through the native host",
+      "passed": true
+    },
+    {
+      "name": "Fabric frames match actual Controls: initial",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text has no hidden lines: initial",
+      "passed": true
+    },
+    {
+      "name": "Layout effect observes committed measured Control: initial",
+      "passed": true
+    },
+    {
+      "name": "Content update invalidates Yoga text measurement",
+      "passed": true
+    },
+    {
+      "name": "Unicode content reaches native shaped Label",
+      "passed": true
+    },
+    {
+      "name": "Content update keeps native identity and allocates no Controls",
+      "passed": true
+    },
+    {
+      "name": "Fabric frames match actual Controls: content",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text has no hidden lines: content",
+      "passed": true
+    },
+    {
+      "name": "Layout effect observes committed measured Control: content",
+      "passed": true
+    },
+    {
+      "name": "Shorter content shrinks the previous measured width",
+      "passed": true
+    },
+    {
+      "name": "Font size update invalidates width and height",
+      "passed": true
+    },
+    {
+      "name": "Fabric frames match actual Controls: font",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text has no hidden lines: font",
+      "passed": true
+    },
+    {
+      "name": "Layout effect observes committed measured Control: font",
+      "passed": true
+    },
+    {
+      "name": "Width constraint increases wrapped text height",
+      "passed": true
+    },
+    {
+      "name": "Padded wrapped Label shows every measured line",
+      "passed": true
+    },
+    {
+      "name": "Yoga places following sibling after measured paragraph",
+      "passed": true
+    },
+    {
+      "name": "Fabric frames match actual Controls: paragraph narrow",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text has no hidden lines: paragraph narrow",
+      "passed": true
+    },
+    {
+      "name": "Widening a paragraph removes stale native height",
+      "passed": true
+    },
+    {
+      "name": "React condition completed: GodotApp.stats().layouts.slice(-1)[0].window.width === 620 && GodotApp.stats().layouts.slice(-1)[0].window.height === 900",
+      "passed": true
+    },
+    {
+      "name": "Native viewport changes Fabric root constraints",
+      "passed": true
+    },
+    {
+      "name": "Window hook rerenders dimensions and preserves React state",
+      "passed": true
+    },
+    {
+      "name": "Percentage layout reflows shaped text after native resize",
+      "passed": true
+    },
+    {
+      "name": "Fabric frames match actual Controls: small viewport",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text has no hidden lines: small viewport",
+      "passed": true
+    },
+    {
+      "name": "Layout effect observes committed measured Control: small viewport",
+      "passed": true
+    },
+    {
+      "name": "React condition completed: GodotApp.stats().layouts.slice(-1)[0].window.width === 1100 && GodotApp.stats().layouts.slice(-1)[0].window.height === 900",
+      "passed": true
+    },
+    {
+      "name": "Growing viewport recomputes percentage geometry",
+      "passed": true
+    },
+    {
+      "name": "Growing viewport shrinks wrapped paragraph height",
+      "passed": true
+    },
+    {
+      "name": "Viewport changes preserve native tree identity without allocations",
+      "passed": true
+    },
+    {
+      "name": "Fabric frames match actual Controls: large viewport",
+      "passed": true
+    },
+    {
+      "name": "Intrinsic text has no hidden lines: large viewport",
+      "passed": true
+    },
+    {
+      "name": "Layout effect observes committed measured Control: large viewport",
+      "passed": true
+    },
+    {
+      "name": "Unchanged viewport produces no resize rerenders or commits",
+      "passed": true
+    },
+    {
+      "name": "Scene exit releases every measured native Control",
+      "passed": true
+    },
+    {
+      "name": "Scene exit removes React window subscriptions and native callback",
+      "passed": true
+    },
+    {
+      "name": "Layout surface leaves no host errors or timers",
+      "passed": true
+    }
+  ],
+  "displayServer": "macOS",
+  "godot": "4.7.2-stable (official)",
+  "hermes": "250829098.0.17",
+  "inputTransport": "viewport-pointer",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "reactState": {
+    "cleanups": 1.0,
+    "errorsCaught": 0.0,
+    "layouts": [
+      {
+        "height": 28.0,
+        "native": {
+          "focused": false,
+          "height": 28.0,
+          "id": 28118615532.0,
+          "pageX": 24.0,
+          "pageY": 181.0,
+          "width": 108.0,
+          "x": 24.0,
+          "y": 181.0
+        },
+        "width": 108.0,
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      },
+      {
+        "height": 29.0,
+        "native": {
+          "focused": false,
+          "height": 29.0,
+          "id": 28118615532.0,
+          "pageX": 24.0,
+          "pageY": 181.0,
+          "width": 440.0,
+          "x": 24.0,
+          "y": 181.0
+        },
+        "width": 440.0,
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      },
+      {
+        "height": 28.0,
+        "native": {
+          "focused": false,
+          "height": 28.0,
+          "id": 28118615532.0,
+          "pageX": 24.0,
+          "pageY": 181.0,
+          "width": 108.0,
+          "x": 24.0,
+          "y": 181.0
+        },
+        "width": 108.0,
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      },
+      {
+        "height": 45.0,
+        "native": {
+          "focused": false,
+          "height": 45.0,
+          "id": 28118615532.0,
+          "pageX": 24.0,
+          "pageY": 181.0,
+          "width": 172.0,
+          "x": 24.0,
+          "y": 181.0
+        },
+        "width": 172.0,
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      },
+      {
+        "height": 45.0,
+        "native": {
+          "focused": false,
+          "height": 45.0,
+          "id": 28118615532.0,
+          "pageX": 24.0,
+          "pageY": 181.0,
+          "width": 172.0,
+          "x": 24.0,
+          "y": 181.0
+        },
+        "width": 172.0,
+        "window": {
+          "fontScale": 1.0,
+          "height": 900.0,
+          "scale": 1.0,
+          "width": 620.0
+        }
+      },
+      {
+        "height": 45.0,
+        "native": {
+          "focused": false,
+          "height": 45.0,
+          "id": 28118615532.0,
+          "pageX": 24.0,
+          "pageY": 181.0,
+          "width": 172.0,
+          "x": 24.0,
+          "y": 181.0
+        },
+        "width": 172.0,
+        "window": {
+          "fontScale": 1.0,
+          "height": 900.0,
+          "scale": 1.0,
+          "width": 1100.0
+        }
+      }
+    ],
+    "mounts": 1.0,
+    "windowSubscribers": 0.0
+  },
+  "scenario": "layout"
+}

@@ -1,0 +1,1255 @@
+{
+  "afterStop": {
+    "animationFramesRun": 0.0,
+    "commits": 15.0,
+    "creates": 15.0,
+    "deletes": 15.0,
+    "errors": [],
+    "events": 54.0,
+    "mountReports": 15.0,
+    "nativeTags": 0.0,
+    "nodes": [],
+    "pendingAnimationFrames": 0.0,
+    "pendingTimers": 0.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 0.0,
+      "ends": 0.0,
+      "grants": 0.0,
+      "moves": 0.0,
+      "releases": 0.0,
+      "responder": 0.0,
+      "starts": 0.0
+    },
+    "retiringTags": 0.0,
+    "stopped": true,
+    "textMeasurements": 65.0,
+    "updates": 43.0,
+    "viewport": {
+      "height": 680.0,
+      "width": 900.0
+    },
+    "viewportUpdates": 0.0,
+    "windowListener": false
+  },
+  "beforeStop": {
+    "animationFramesRun": 0.0,
+    "commits": 13.0,
+    "creates": 15.0,
+    "deletes": 0.0,
+    "errors": [],
+    "events": 54.0,
+    "mountReports": 13.0,
+    "nativeTags": 15.0,
+    "nodes": [
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 39.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 28.0,
+        "height": 39.0,
+        "id": 27447526877.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 28.0,
+        "nativeText": "Fabric · edição nativa e teclado",
+        "opacity": 1.0,
+        "tag": 2.0,
+        "testID": "",
+        "text": "Fabric · edição nativa e teclado",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 24.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 27497858528.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Seleção UTF-16, comandos com confirmação e foco preservado.",
+        "opacity": 1.0,
+        "tag": 4.0,
+        "testID": "",
+        "text": "Seleção UTF-16, comandos com confirmação e foco preservado.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 77.0
+      },
+      {
+        "caret": 4.0,
+        "editable": true,
+        "fabricHeight": 44.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 27548190179.0,
+        "input": {
+          "composing": false,
+          "deferredCommands": 3.0,
+          "editing": false,
+          "eventCount": 3.0,
+          "pendingEdit": false,
+          "rejectedCommands": 2.0,
+          "selection": {
+            "end": 5.0,
+            "start": 5.0
+          }
+        },
+        "kind": "input",
+        "nativeText": "DEF😀ERRED",
+        "opacity": 1.0,
+        "placeholder": "",
+        "tag": 6.0,
+        "testID": "controlled",
+        "text": "DEF😀ERRED",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 117.0
+      },
+      {
+        "caret": 5.0,
+        "editable": true,
+        "fabricHeight": 44.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 27615299047.0,
+        "input": {
+          "composing": false,
+          "deferredCommands": 0.0,
+          "editing": false,
+          "eventCount": 2.0,
+          "pendingEdit": false,
+          "rejectedCommands": 0.0,
+          "selection": {
+            "end": 5.0,
+            "start": 5.0
+          }
+        },
+        "kind": "input",
+        "nativeText": "livre",
+        "opacity": 1.0,
+        "placeholder": "Digite aqui",
+        "tag": 8.0,
+        "testID": "uncontrolled",
+        "text": "livre",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 175.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 27.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 27.0,
+        "id": 27648853481.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "React: DEF😀ERRED",
+        "opacity": 1.0,
+        "tag": 10.0,
+        "testID": "value-label",
+        "text": "React: DEF😀ERRED",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 233.0
+      },
+      {
+        "caret": 1.0,
+        "editable": true,
+        "fabricHeight": 44.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 44.0,
+        "id": 27699185132.0,
+        "input": {
+          "composing": false,
+          "deferredCommands": 0.0,
+          "editing": false,
+          "eventCount": 1.0,
+          "pendingEdit": false,
+          "rejectedCommands": 0.0,
+          "selection": {
+            "end": 1.0,
+            "start": 1.0
+          }
+        },
+        "kind": "input",
+        "nativeText": "fixo",
+        "opacity": 1.0,
+        "placeholder": "",
+        "tag": 12.0,
+        "testID": "fixed",
+        "text": "fixo",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 274.0
+      },
+      {
+        "fabricHeight": 44.0,
+        "fabricWidth": 852.0,
+        "focused": true,
+        "height": 44.0,
+        "id": 27732739566.0,
+        "kind": "button",
+        "nativeText": "Enter / Espaço: ativação nativa",
+        "opacity": 1.0,
+        "tag": 14.0,
+        "testID": "keyboard-button",
+        "text": "Enter / Espaço: ativação nativa",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 332.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 27783071217.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Retângulos menores que o mínimo do tema (clipping intencional):",
+        "opacity": 1.0,
+        "tag": 16.0,
+        "testID": "",
+        "text": "Retângulos menores que o mínimo do tema (clipping intencional):",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 390.0
+      },
+      {
+        "fabricHeight": 8.0,
+        "fabricWidth": 20.0,
+        "focused": false,
+        "height": 8.0,
+        "id": 27934066170.0,
+        "kind": "button",
+        "nativeText": "Texto largo",
+        "opacity": 1.0,
+        "tag": 18.0,
+        "testID": "tiny-button",
+        "text": "Texto largo",
+        "visible": true,
+        "width": 20.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "caret": 0.0,
+        "editable": true,
+        "fabricHeight": 8.0,
+        "fabricWidth": 30.0,
+        "focused": false,
+        "height": 8.0,
+        "id": 27984397821.0,
+        "input": {
+          "composing": false,
+          "deferredCommands": 0.0,
+          "editing": false,
+          "eventCount": 0.0,
+          "pendingEdit": false,
+          "rejectedCommands": 0.0,
+          "selection": {
+            "end": 0.0,
+            "start": 0.0
+          }
+        },
+        "kind": "input",
+        "nativeText": "Texto largo",
+        "opacity": 1.0,
+        "placeholder": "",
+        "tag": 20.0,
+        "testID": "tiny-input",
+        "text": "Texto largo",
+        "visible": true,
+        "width": 30.0,
+        "x": 34.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 0.0,
+        "fabricWidth": 0.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 0.0,
+        "id": 28017952255.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "zero",
+        "opacity": 1.0,
+        "tag": 22.0,
+        "testID": "zero-text",
+        "text": "zero",
+        "visible": true,
+        "visibleLines": 0.0,
+        "width": 0.0,
+        "wrap": 3.0,
+        "x": 78.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 0.0,
+        "fabricWidth": 0.0,
+        "focused": false,
+        "height": 0.0,
+        "id": 28068283906.0,
+        "kind": "button",
+        "nativeText": "zero",
+        "opacity": 1.0,
+        "tag": 24.0,
+        "testID": "zero-button",
+        "text": "zero",
+        "visible": true,
+        "width": 0.0,
+        "x": 92.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 8.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 8.0,
+        "id": 27833402868.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 26.0,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 430.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 26.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 26.0,
+        "id": 27883734519.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "O Godot mantém seus widgets; React controla estado e reconciliação.",
+        "opacity": 1.0,
+        "tag": 28.0,
+        "testID": "",
+        "text": "O Godot mantém seus widgets; React controla estado e reconciliação.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 452.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 680.0,
+        "fabricWidth": 900.0,
+        "focused": false,
+        "height": 680.0,
+        "id": 27397195214.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 30.0,
+        "testID": "input-root",
+        "text": "",
+        "visible": true,
+        "width": 900.0,
+        "x": 0.0,
+        "y": 0.0
+      }
+    ],
+    "pendingAnimationFrames": 0.0,
+    "pendingTimers": 0.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 0.0,
+      "ends": 0.0,
+      "grants": 0.0,
+      "moves": 0.0,
+      "releases": 0.0,
+      "responder": 0.0,
+      "starts": 0.0
+    },
+    "retiringTags": 0.0,
+    "stopped": false,
+    "textMeasurements": 65.0,
+    "updates": 43.0,
+    "viewport": {
+      "height": 680.0,
+      "width": 900.0
+    },
+    "viewportUpdates": 0.0,
+    "windowListener": false
+  },
+  "checks": [
+    {
+      "name": "React condition completed: GodotApp.stats().mounts === 1",
+      "passed": true
+    },
+    {
+      "name": "All native frames match Yoga, including widgets below themed minimums",
+      "passed": true
+    },
+    {
+      "name": "Native Button obeys 20x12 frame without extra wrapper Controls",
+      "passed": true
+    },
+    {
+      "name": "Native LineEdit obeys 30x12 frame without scaling text",
+      "passed": true
+    },
+    {
+      "name": "Zero Yoga frames stay zero despite native minimums",
+      "passed": true
+    },
+    {
+      "name": "Layout effects see the actual constrained native widget",
+      "passed": true
+    },
+    {
+      "name": "UTF-16 selection spans one astral character in native LineEdit",
+      "passed": true
+    },
+    {
+      "name": "Uncontrolled default value and placeholder mount natively",
+      "passed": true
+    },
+    {
+      "name": "Public ref focus and isFocused agree with native focus event",
+      "passed": true
+    },
+    {
+      "name": "Public ref blur releases focus and emits the current native value",
+      "passed": true
+    },
+    {
+      "name": "Controlled transform preserves native caret while replacing selected emoji",
+      "passed": true
+    },
+    {
+      "name": "onChange and onChangeText receive native text and monotonically counted edit",
+      "passed": true
+    },
+    {
+      "name": "Native keyPress precedes change through Fabric discrete events",
+      "passed": true
+    },
+    {
+      "name": "Native arrow key reports UTF-16 caret selection without text change",
+      "passed": true
+    },
+    {
+      "name": "Burst keys coalesce to one native change without losing either character",
+      "passed": true
+    },
+    {
+      "name": "Native edits call the latest handler after a React rerender",
+      "passed": true
+    },
+    {
+      "name": "Stale setTextAndSelection Fabric command cannot overwrite newer native edits",
+      "passed": true
+    },
+    {
+      "name": "Acknowledged Fabric command changes text and converts UTF-16 selection",
+      "passed": true
+    },
+    {
+      "name": "Programmatic text synchronization emits no synthetic native change",
+      "passed": true
+    },
+    {
+      "name": "Keyed input reorder preserves native instance, focus and editing session",
+      "passed": true
+    },
+    {
+      "name": "Same-parent reorder emits no spurious blur/focus events",
+      "passed": true
+    },
+    {
+      "name": "Reorder retains native selection without allocating replacement widgets",
+      "passed": true
+    },
+    {
+      "name": "Focus transfer sends blur/endEditing and focuses the other native input",
+      "passed": true
+    },
+    {
+      "name": "Uncontrolled editing keeps astral text and reports UTF-16 offsets",
+      "passed": true
+    },
+    {
+      "name": "Uncontrolled text/caret survive unrelated React prop updates",
+      "passed": true
+    },
+    {
+      "name": "Native Backspace deletes an astral character without splitting UTF-16 text",
+      "passed": true
+    },
+    {
+      "name": "Controlled value rejects user edit even when parent value stays unchanged",
+      "passed": true
+    },
+    {
+      "name": "Rejected edit restores value without event loops or focus loss",
+      "passed": true
+    },
+    {
+      "name": "Enter submits native text and submit behavior keeps editing",
+      "passed": true
+    },
+    {
+      "name": "blurAndSubmit sends submit, blur and endEditing through Fabric",
+      "passed": true
+    },
+    {
+      "name": "editable=false blocks native keyboard editing",
+      "passed": true
+    },
+    {
+      "name": "Native Unicode composition enters LineEdit composing state",
+      "passed": true
+    },
+    {
+      "name": "React value and Fabric command wait without cancelling active native composition",
+      "passed": true
+    },
+    {
+      "name": "Keyed reorder preserves native composition session",
+      "passed": true
+    },
+    {
+      "name": "Composition cancellation drains the last acknowledged command",
+      "passed": true
+    },
+    {
+      "name": "Composition commit invalidates an older deferred React command",
+      "passed": true
+    },
+    {
+      "name": "Committed native composition reaches React as one Unicode edit",
+      "passed": true
+    },
+    {
+      "name": "Tab follows reconciled native input order and transfers focus",
+      "passed": true
+    },
+    {
+      "name": "Keyboard activates the real native Button through Fabric",
+      "passed": true
+    },
+    {
+      "name": "React resize keeps all native frames within Yoga after theme minimum updates",
+      "passed": true
+    },
+    {
+      "name": "React rerenders preserve the TextInput callback ref attachment",
+      "passed": true
+    },
+    {
+      "name": "Editing, commands and resizing allocate no replacement widgets or host errors",
+      "passed": true
+    },
+    {
+      "name": "Scene exit releases every committed native widget and input adapter",
+      "passed": true
+    },
+    {
+      "name": "React 19 callback ref cleanup propagates through the TextInput wrapper",
+      "passed": true
+    },
+    {
+      "name": "Input scenario unmount runs React cleanup without runtime errors or timers",
+      "passed": true
+    }
+  ],
+  "compositionTransport": "godot-unicode-input",
+  "displayServer": "headless",
+  "godot": "4.7.2-stable (official)",
+  "hermes": "250829098.0.17",
+  "inputTransport": "viewport-keyboard",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "reactState": {
+    "changedText": "def😀erred",
+    "cleanups": 1.0,
+    "events": [
+      {
+        "eventCount": 0.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770536797.141291,
+        "type": "focus"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 3.0,
+          "start": 1.0
+        },
+        "target": 6.0,
+        "timeStamp": 770536797.189625,
+        "type": "selection"
+      },
+      {
+        "id": "uncontrolled",
+        "selection": {
+          "end": 0.0,
+          "start": 0.0
+        },
+        "target": 8.0,
+        "timeStamp": 770536797.190375,
+        "type": "selection"
+      },
+      {
+        "id": "fixed",
+        "selection": {
+          "end": 0.0,
+          "start": 0.0
+        },
+        "target": 12.0,
+        "timeStamp": 770536797.190958,
+        "type": "selection"
+      },
+      {
+        "eventCount": 0.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770536818.48575,
+        "type": "blur"
+      },
+      {
+        "eventCount": 0.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770536818.488041,
+        "type": "end"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 3.0,
+          "start": 3.0
+        },
+        "target": 6.0,
+        "timeStamp": 770536818.525125,
+        "type": "selection"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 3.0,
+          "start": 1.0
+        },
+        "target": 6.0,
+        "timeStamp": 770536823.501416,
+        "type": "selection"
+      },
+      {
+        "eventCount": 0.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770536845.625041,
+        "type": "focus"
+      },
+      {
+        "id": "controlled",
+        "key": "ç",
+        "target": 6.0,
+        "timeStamp": 770536899.893708,
+        "type": "key"
+      },
+      {
+        "eventCount": 1.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "AçB",
+        "timeStamp": 770536900.044125,
+        "type": "change"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 2.0,
+          "start": 2.0
+        },
+        "target": 6.0,
+        "timeStamp": 770536900.047708,
+        "type": "selection"
+      },
+      {
+        "id": "controlled",
+        "key": "ArrowLeft",
+        "target": 6.0,
+        "timeStamp": 770536955.227125,
+        "type": "key"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 1.0,
+          "start": 1.0
+        },
+        "target": 6.0,
+        "timeStamp": 770536955.476375,
+        "type": "selection"
+      },
+      {
+        "id": "controlled",
+        "key": "x",
+        "target": 6.0,
+        "timeStamp": 770536983.24525,
+        "type": "key"
+      },
+      {
+        "id": "controlled",
+        "key": "y",
+        "target": 6.0,
+        "timeStamp": 770536983.347333,
+        "type": "key"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "AxyÇB",
+        "timeStamp": 770536983.44675,
+        "type": "change"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 3.0,
+          "start": 3.0
+        },
+        "target": 6.0,
+        "timeStamp": 770536983.4525,
+        "type": "selection"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 3.0,
+          "start": 1.0
+        },
+        "target": 6.0,
+        "timeStamp": 770537038.902416,
+        "type": "selection"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770537095.010166,
+        "type": "blur"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770537095.012666,
+        "type": "end"
+      },
+      {
+        "eventCount": 0.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537095.015,
+        "type": "focus"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 3.0,
+          "start": 3.0
+        },
+        "target": 6.0,
+        "timeStamp": 770537095.059916,
+        "type": "selection"
+      },
+      {
+        "id": "uncontrolled",
+        "key": "😀",
+        "target": 8.0,
+        "timeStamp": 770537121.83925,
+        "type": "key"
+      },
+      {
+        "eventCount": 1.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre😀",
+        "timeStamp": 770537122.063833,
+        "type": "change"
+      },
+      {
+        "id": "uncontrolled",
+        "selection": {
+          "end": 7.0,
+          "start": 7.0
+        },
+        "target": 8.0,
+        "timeStamp": 770537122.067416,
+        "type": "selection"
+      },
+      {
+        "id": "uncontrolled",
+        "key": "Backspace",
+        "target": 8.0,
+        "timeStamp": 770537176.617916,
+        "type": "key"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537176.668125,
+        "type": "change"
+      },
+      {
+        "id": "uncontrolled",
+        "selection": {
+          "end": 5.0,
+          "start": 5.0
+        },
+        "target": 8.0,
+        "timeStamp": 770537176.714958,
+        "type": "selection"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537204.260208,
+        "type": "blur"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537204.26225,
+        "type": "end"
+      },
+      {
+        "eventCount": 0.0,
+        "id": "fixed",
+        "target": 12.0,
+        "text": "fixo",
+        "timeStamp": 770537204.264708,
+        "type": "focus"
+      },
+      {
+        "id": "fixed",
+        "key": "x",
+        "target": 12.0,
+        "timeStamp": 770537231.275791,
+        "type": "key"
+      },
+      {
+        "eventCount": 1.0,
+        "id": "fixed",
+        "target": 12.0,
+        "text": "xfixo",
+        "timeStamp": 770537231.413041,
+        "type": "change"
+      },
+      {
+        "id": "fixed",
+        "selection": {
+          "end": 1.0,
+          "start": 1.0
+        },
+        "target": 12.0,
+        "timeStamp": 770537231.416875,
+        "type": "selection"
+      },
+      {
+        "eventCount": 1.0,
+        "id": "fixed",
+        "target": 12.0,
+        "text": "fixo",
+        "timeStamp": 770537260.013541,
+        "type": "blur"
+      },
+      {
+        "eventCount": 1.0,
+        "id": "fixed",
+        "target": 12.0,
+        "text": "fixo",
+        "timeStamp": 770537260.015541,
+        "type": "end"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "A😀B",
+        "timeStamp": 770537260.018291,
+        "type": "focus"
+      },
+      {
+        "id": "controlled",
+        "key": "Enter",
+        "target": 6.0,
+        "timeStamp": 770537286.374,
+        "type": "key"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "submit",
+        "timeStamp": 770537286.404875,
+        "type": "submit"
+      },
+      {
+        "id": "controlled",
+        "key": "Enter",
+        "target": 6.0,
+        "timeStamp": 770537341.491125,
+        "type": "key"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "submit",
+        "timeStamp": 770537341.501458,
+        "type": "submit"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "submit",
+        "timeStamp": 770537341.511166,
+        "type": "blur"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "submit",
+        "timeStamp": 770537341.512333,
+        "type": "end"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "submit",
+        "timeStamp": 770537370.102875,
+        "type": "focus"
+      },
+      {
+        "eventCount": 3.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "def😀erred",
+        "timeStamp": 770537589.499166,
+        "type": "change"
+      },
+      {
+        "id": "controlled",
+        "selection": {
+          "end": 5.0,
+          "start": 5.0
+        },
+        "target": 6.0,
+        "timeStamp": 770537589.50325,
+        "type": "selection"
+      },
+      {
+        "eventCount": 3.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "DEF😀ERRED",
+        "timeStamp": 770537632.975583,
+        "type": "blur"
+      },
+      {
+        "eventCount": 3.0,
+        "id": "controlled",
+        "target": 6.0,
+        "text": "DEF😀ERRED",
+        "timeStamp": 770537632.978291,
+        "type": "end"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537632.980916,
+        "type": "focus"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537659.578375,
+        "type": "blur"
+      },
+      {
+        "eventCount": 2.0,
+        "id": "uncontrolled",
+        "target": 8.0,
+        "text": "livre",
+        "timeStamp": 770537659.581041,
+        "type": "end"
+      }
+    ],
+    "handlerVersion": 2.0,
+    "measurements": [
+      {
+        "height": 12.0,
+        "native": {
+          "focused": false,
+          "height": 12.0,
+          "id": 27934066170.0,
+          "pageX": 24.0,
+          "pageY": 430.0,
+          "width": 20.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "width": 20.0
+      },
+      {
+        "height": 12.0,
+        "native": {
+          "focused": false,
+          "height": 12.0,
+          "id": 27984397821.0,
+          "pageX": 58.0,
+          "pageY": 430.0,
+          "width": 30.0,
+          "x": 34.0,
+          "y": 0.0
+        },
+        "width": 30.0
+      },
+      {
+        "height": 8.0,
+        "native": {
+          "focused": false,
+          "height": 8.0,
+          "id": 27934066170.0,
+          "pageX": 24.0,
+          "pageY": 430.0,
+          "width": 20.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "width": 20.0
+      },
+      {
+        "height": 8.0,
+        "native": {
+          "focused": false,
+          "height": 8.0,
+          "id": 27984397821.0,
+          "pageX": 58.0,
+          "pageY": 430.0,
+          "width": 30.0,
+          "x": 34.0,
+          "y": 0.0
+        },
+        "width": 30.0
+      }
+    ],
+    "mounts": 1.0,
+    "presses": 1.0,
+    "refAttached": 1.0,
+    "refCleanups": 1.0,
+    "refFocused": true
+  },
+  "scenario": "input"
+}

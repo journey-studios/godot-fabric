@@ -1,0 +1,8 @@
+[configuration]
+entry_symbol = "fabric_library_init"
+compatibility_minimum = "4.6"
+reloadable = false
+
+[libraries]
+macos.debug.arm64 = "res://addons/fabric_godot.dylib"
+macos.release.arm64 = "res://addons/fabric_godot.dylib"

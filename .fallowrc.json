@@ -1,0 +1,137 @@
+{
+  "$schema": "node_modules/fallow/schema.json",
+  "entry": [
+    "src/app.jsx",
+    "src/initialize.js",
+    "src/private-interface.js",
+    "src/platform.js",
+    "src/native-modules.js",
+    "src/ui-manager.js",
+    "src/react-native-platform.jsx",
+    "src/svg.jsx",
+    "src/unsupported-reanimated.js",
+    "src/unsupported-safe-area.js"
+  ],
+  "ignorePatterns": [
+    "build/**",
+    "addons/**",
+    "evidence/**",
+    ".deps/**"
+  ],
+  "includeEntryExports": true,
+  "ignoreDependencies": [
+    "scheduler"
+  ],
+  "ignoreExports": [
+    {
+      "file": "src/private-interface.js",
+      "exports": [
+        "ReactNativeViewConfigRegistry",
+        "RawEventEmitter",
+        "createAttributePayload",
+        "diffAttributePayloads",
+        "createPublicInstance",
+        "ReactFiberErrorDialog",
+        "createPublicRootInstance",
+        "createPublicTextInstance",
+        "getNativeTagFromPublicInstance",
+        "getNodeFromPublicInstance",
+        "legacySendAccessibilityEvent",
+        "UIManager"
+      ]
+    },
+    {
+      "file": "src/platform.js",
+      "exports": [
+        "default"
+      ]
+    },
+    {
+      "file": "src/native-modules.js",
+      "exports": [
+        "default"
+      ]
+    },
+    {
+      "file": "src/ui-manager.js",
+      "exports": [
+        "default"
+      ]
+    },
+    {
+      "file": "src/svg.jsx",
+      "exports": [
+        "G",
+        "Path",
+        "Rect",
+        "Circle",
+        "Line",
+        "Text",
+        "Defs",
+        "ClipPath",
+        "LinearGradient",
+        "Stop",
+        "default"
+      ]
+    },
+    {
+      "file": "src/react-native-platform.jsx",
+      "exports": [
+        "useWindowDimensions",
+        "Platform",
+        "StyleSheet",
+        "View",
+        "Text",
+        "ScrollView",
+        "PanResponder",
+        "useColorScheme",
+        "Dimensions",
+        "Appearance",
+        "AppState",
+        "AccessibilityInfo",
+        "PixelRatio",
+        "I18nManager",
+        "Pressable",
+        "Image",
+        "Switch",
+        "TouchableHighlight",
+        "TouchableOpacity",
+        "TouchableWithoutFeedback",
+        "ActivityIndicator",
+        "StatusBar",
+        "FlatList",
+        "ImageBackground",
+        "KeyboardAvoidingView",
+        "VirtualizedList",
+        "TextInput"
+      ]
+    },
+    {
+      "file": "tailwind.config.cjs",
+      "exports": [
+        "content",
+        "presets",
+        "corePlugins",
+        "theme"
+      ]
+    }
+  ],
+  "framework": [
+    {
+      "name": "fabric-godot-build",
+      "enablers": [
+        "esbuild"
+      ],
+      "entryPoints": [
+        "scripts/*.mjs",
+        "tailwind.config.cjs",
+        "src/nativewind.css"
+      ],
+      "entryPointRole": "support",
+      "toolingDependencies": [
+        "@react-native/babel-preset",
+        "tailwindcss"
+      ]
+    }
+  ]
+}
