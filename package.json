@@ -1,0 +1,44 @@
+{
+  "name": "godot-fabric",
+  "private": true,
+  "scripts": {
+    "bundle": "node scripts/bundle.mjs",
+    "setup": "python3 scripts/setup.py",
+    "check": "node scripts/check.mjs",
+    "check:static": "fallow dead-code --root . --config .fallowrc.json",
+    "test:recovery": "python3 -m unittest discover -s tests -p '*_test.py' && node --test tests/recovery.test.mjs",
+    "test:charts": "node --test tests/svg-contract.test.mjs tests/chart-native.test.mjs",
+    "test:nativewind": "npm run bundle && node --test tests/nativewind-contract.test.mjs",
+    "start": "node scripts/check.mjs --interactive",
+    "test:typography": "npm run bundle && node --test tests/typography-contract.test.mjs tests/typography-native.test.mjs tests/line-height-native.test.mjs",
+    "test:contracts": "npm run bundle && node --test tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
+    "check:publication": "node scripts/publication-scan.mjs"
+  },
+  "dependencies": {
+    "nativewind": "4.2.7",
+    "react": "19.2.3",
+    "react-native": "0.87.1",
+    "react-native-chart-kit": "7.0.4",
+    "react-native-css-interop": "0.2.7",
+    "react-native-svg": "15.15.5",
+    "scheduler": "0.27.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.0",
+    "@react-native/babel-preset": "0.87.1",
+    "esbuild": "0.25.12",
+    "jscpd": "5.4.0",
+    "tailwindcss": "3.4.17",
+    "fallow": "3.18.0"
+  },
+  "version": "0.1.0",
+  "description": "An experimental React renderer for Godot, powered by React Native Fabric and Hermes",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/journey-studios/godot-fabric.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}

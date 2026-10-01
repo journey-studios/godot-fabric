@@ -1,0 +1,159 @@
+// Deliberately bounded public entrypoint for external packages. Unsupported
+// native features fail where invoked, instead of becoming inert no-op shims.
+import React from "react";
+import { ScrollView as GodotScrollView } from "./scroll-view";
+import {
+  View as GodotView,
+  Pressable as GodotPressable,
+  controlViewConfig,
+} from "./components";
+import {
+  ParagraphText as GodotText,
+  textStyleAttributes,
+  useTextAncestor,
+} from "./text";
+export {
+  Dimensions,
+  Appearance,
+  AppState,
+  AccessibilityInfo,
+  PixelRatio,
+  I18nManager,
+} from "./platform-environment";
+export { useWindowDimensions } from "./window-dimensions";
+export { default as Platform } from "./platform";
+export const StyleSheet = {
+  hairlineWidth: 1,
+  create: (styles) => styles,
+  flatten(style) {
+    return Array.isArray(style)
+      ? Object.assign({}, ...style.map(StyleSheet.flatten))
+      : style || {};
+  },
+};
+function nativeStyle(style, kind) {
+  const flat = StyleSheet.flatten(style);
+  for (const [name, value] of Object.entries(flat)) {
+    if (value == null) continue;
+    if (
+      !(name in controlViewConfig.validAttributes.style) &&
+      !(kind === "Text" && textStyleAttributes.includes(name))
+    )
+      throw new Error(`Godot ${kind} does not implement style ${name}`);
+    if (kind !== "Text" && textStyleAttributes.includes(name))
+      throw new Error(`Godot ${kind} does not implement text style ${name}`);
+    if (name === "borderStyle" && value !== "solid")
+      throw new Error("Godot platform supports solid borders only");
+    if (
+      name === "fontFamily" &&
+      !["NotoSans", "JetBrainsMono", ""].includes(value)
+    )
+      throw new Error(`Godot font family is not registered: ${value}`);
+    if (
+      name === "textAlign" &&
+      !["left", "center", "right", "auto"].includes(value)
+    )
+      throw new Error(
+        "Godot Text supports left, center, right or auto alignment",
+      );
+    if (
+      ["fontSize", "lineHeight"].includes(name) &&
+      (!Number.isFinite(value) || value <= 0)
+    )
+      throw new Error(`Godot Text ${name} must be finite and positive`);
+    if (name === "letterSpacing" && !Number.isFinite(value))
+      throw new Error("Godot Text letterSpacing must be finite");
+    if (
+      name === "fontWeight" &&
+      ![
+        "normal",
+        "bold",
+        "100",
+        "200",
+        "300",
+        "400",
+        "500",
+        "600",
+        "700",
+        "800",
+        "900",
+      ].includes(String(value))
+    )
+      throw new Error("Godot Text fontWeight must be normal, bold or 100..900");
+  }
+  return flat;
+}
+export function View({
+  style,
+  accessible,
+  accessibilityRole,
+  accessibilityLabel,
+  collapsable,
+  ...props
+}) {
+  if (useTextAncestor())
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  const flat = StyleSheet.flatten(style);
+  // Browser text selection is irrelevant to native Controls. Accessibility
+  // metadata remains explicitly unsupported, documented in the laboratory.
+  const { userSelect, ...layout } = flat;
+  return <GodotView {...props} style={nativeStyle(layout, "View")} />;
+}
+export function Text({ style, ...props }) {
+  const flat = nativeStyle(style, "Text");
+  if (useTextAncestor()) {
+    for (const name of Object.keys(flat))
+      if (!textStyleAttributes.includes(name) && name !== "opacity")
+        throw new Error(`Godot inline Text does not implement style ${name}`);
+  }
+  return <GodotText {...props} style={flat} />;
+}
+export function Pressable({ style, ...props }) {
+  if (useTextAncestor())
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  return (
+    <GodotPressable
+      {...props}
+      style={
+        typeof style === "function"
+          ? (state) => nativeStyle(style(state), "Pressable")
+          : nativeStyle(style, "Pressable")
+      }
+    />
+  );
+}
+// O interop registra estes tipos na inicialização; isso não fornece os controles.
+function unavailable(name) {
+  return function UnsupportedGodotComponent() {
+    throw new Error(`Godot platform does not implement ${name}`);
+  };
+}
+export const Image = unavailable("Image");
+export const Switch = unavailable("Switch");
+export const TouchableHighlight = unavailable("TouchableHighlight");
+export const TouchableOpacity = unavailable("TouchableOpacity");
+export const TouchableWithoutFeedback = unavailable("TouchableWithoutFeedback");
+export const ActivityIndicator = unavailable("ActivityIndicator");
+export const StatusBar = unavailable("StatusBar");
+export const FlatList = unavailable("FlatList");
+export const ImageBackground = unavailable("ImageBackground");
+export const KeyboardAvoidingView = unavailable("KeyboardAvoidingView");
+export const VirtualizedList = unavailable("VirtualizedList");
+export const TextInput = unavailable("NativeWind TextInput styles");
+export function ScrollView(props) {
+  if (useTextAncestor())
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  return <GodotScrollView {...props} />;
+}
+export const PanResponder = {
+  create() {
+    throw new Error(
+      "Chart platform PanResponder/pinch zoom is not implemented",
+    );
+  },
+};
+export function useColorScheme() {
+  throw new Error(
+    "Chart platform system color scheme is not implemented; use an explicit chart theme",
+  );
+}

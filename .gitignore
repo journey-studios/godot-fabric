@@ -1,0 +1,11 @@
+.deps/
+.godot/
+build/
+node_modules/
+addons/
+*.uid
+*.import
+.venv/
+.fallow/
+__pycache__/
+.DS_Store

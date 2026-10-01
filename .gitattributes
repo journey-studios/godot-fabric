@@ -1,0 +1,2 @@
+# Preserve original third-party license bytes, including upstream whitespace.
+assets/fonts/OFL-*.txt -whitespace

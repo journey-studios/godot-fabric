@@ -1,0 +1,31 @@
+{
+  "react": "19.2.3",
+  "react-native": {
+    "version": "0.87.1",
+    "url": "https://registry.npmjs.org/react-native/-/react-native-0.87.1.tgz",
+    "archive": "react-native-0.87.1.tgz",
+    "directory": "package",
+    "sha256": "f686b91e4c59ba8010be1b4abfde0adc24f7f5aea95a6a28cf4d4ad2cc494bd8"
+  },
+  "hermes": {
+    "version": "250829098.0.17",
+    "url": "https://repo1.maven.org/maven2/com/facebook/hermes/hermes-ios/250829098.0.17/hermes-ios-250829098.0.17-hermes-ios-release.tar.gz",
+    "archive": "hermes.tar.gz",
+    "directory": "hermes",
+    "sha256": "2967ee51b41bd433b3027dda875e96194354e2b4d715f9f186fd0c04ccef309d"
+  },
+  "rn-dependencies": {
+    "url": "https://repo1.maven.org/maven2/com/facebook/react/react-native-artifacts/0.87.1/react-native-artifacts-0.87.1-reactnative-dependencies-release.tar.gz",
+    "archive": "rndeps.tar.gz",
+    "directory": "rndeps",
+    "sha256": "d5f4e5476c69bcbbd9ccf09166a047f798507fe957645fdfcaa81c804927406e"
+  },
+  "godot-cpp": {
+    "commit": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "url": "https://codeload.github.com/godotengine/godot-cpp/tar.gz/da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "archive": "godot-cpp.tar.gz",
+    "directory": "godot-cpp-da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "sha256": "35d16951cc1395d2fb13ed02db4d67f6fd0f492b8c92b4dfeee36849fac343b7"
+  },
+  "cmake": "3.31.6"
+}
