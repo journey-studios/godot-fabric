@@ -1,6 +1,6 @@
 {
   "project": "Godot Fabric",
-  "sourceCommit": "2c108bf0deb2b1becf3629286003343630772357",
+  "sourceCommit": "265afee1c4936033517bbe3eb178c541cd5ac3ce",
   "platform": "macOS arm64",
   "versions": {
     "godot": "4.7.2.stable.official",
@@ -98,7 +98,7 @@
     "tailwind.config.cjs": "e9de0512cb54b185a3a6fe82b9adbdd219c82ec7ef5986098a3e17624a75e9d2",
     "tests/chart-native.test.mjs": "812c6af23510abaa9aa49e108b0074dec570597df70fd9752a1ad60f4b119ca9",
     "tests/chart_unsupported_validation.gd": "31c1ec20198e421496ae91d8c6f47b7b8c4c760e238a4bb0b818061a429c031d",
-    "tests/line-height-native.test.mjs": "7f7863d84b271dafb5ce15bb68e74685a62b76e6e7cc4fd0ccf5145109a1c98c",
+    "tests/line-height-native.test.mjs": "61f517c2a41f195f80bde79046753113265d31467cbe1762611b6c368b1003b4",
     "tests/line-height-probe.jsx": "bc72c75f052f800ae22e4417a14c827a0485fa3cafc6e6d2f6b6ccbaf8ed8a2e",
     "tests/line_height.tscn": "e663b2e4e8eba5bbc3d4ecea17264e41304bac0b1cb45f2c8a7e733623bc5a02",
     "tests/line_height_validation.gd": "6b6b994efe618a2473f2db74d281f80dd7e3278689e9d360786ea54970d04518",
@@ -147,5 +147,6 @@
     "extension": "7125810b1ae7a0c7cec02abf95882f9758fa6d78bb8f6ac58a6c33e0b32ba9dd"
   },
   "scope": "Reviewed renderer source, generic fixtures and newly generated native evidence only",
-  "excluded": "Original repository history, other projects, private documentation, raw logs, generated caches and dependencies"
+  "excluded": "Original repository history, other projects, private documentation, raw logs, generated caches and dependencies",
+  "validationFollowUp": "After the acceptance matrix, only the test log path construction changed. The native line-height test passed again, and static analysis passed with that generated log absent. Runtime source and retained evidence are unchanged."
 }

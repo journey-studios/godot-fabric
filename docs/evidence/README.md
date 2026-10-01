@@ -34,6 +34,11 @@ attachment cases); 4 chart tests; 2 native recovery tests. Fallow reported no
 unused code. The publication scan and manual source/capture review check scope
 and avoid carrying environment-specific logs into the public tree.
 
+The first hosted run exposed static analysis treating a generated test log as
+an imported dependency. The test now constructs that filesystem path from the
+project directory. Its native line-height check passed again, and static analysis
+passed with the log absent. Runtime source and the matrix evidence are unchanged.
+
 ## Native captures
 
 These images are Godot renderer readbacks of generic fixtures, not desktop
