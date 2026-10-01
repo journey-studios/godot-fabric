@@ -64,6 +64,15 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
 Rust should follow a measured bottleneck. Fabric/Hermes already execute C++; an
 additional FFI boundary alone does not demonstrate better performance.
 
+## Related projects
+
+| Project | Approach | Relevance to Godot Fabric |
+| --- | --- | --- |
+| [Rufino](rufino.md) | TypeScript/TSX authoring that generates native Godot scenes and resources | Generated types, a development CLI and a possible static scene shell around a dynamic Fabric surface |
+
+The Rufino note distinguishes its JSX authoring runtime from React execution
+and records source evidence, compatibility boundaries and a proposed experiment.
+
 ## Primary references
 
 - [React Native rendering overview](https://reactnative.dev/architecture/render-pipeline)
