@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import path from "node:path";
 import { ensureGodotBinary } from "../scripts/godot-binary.mjs";
 
 test("mixed line heights respect half-open run ranges and terminal sentinels", async () => {
@@ -11,7 +12,7 @@ test("mixed line heights respect half-open run ranges and terminal sentinels", a
     "--path", root, "--headless", "res://tests/line_height.tscn",
   ], { encoding: "utf8", timeout: 15000, maxBuffer: 4 * 1024 * 1024 });
   const log = (result.stdout ?? "") + (result.stderr ?? "");
-  writeFileSync(new URL("../build/line-height.log", import.meta.url), log);
+  writeFileSync(path.join(root, "build", "line-height.log"), log);
   assert.equal(result.error, undefined, log);
   assert.equal(result.status, 0, log);
   assert.match(log, /FABRIC_LINE_HEIGHT_PASSED/);
