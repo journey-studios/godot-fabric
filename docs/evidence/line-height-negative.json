@@ -1,0 +1,17 @@
+{
+  "purpose": "Inclusive overlap regression before the fix",
+  "expectedExit": 1,
+  "actualExit": 1,
+  "failedChecks": [
+    "An adjacent larger run does not change the following line height",
+    "Yoga measures only the runs overlapping each ordinary line"
+  ],
+  "largeFirstHeights": [
+    42,
+    42
+  ],
+  "expectedLargeFirstHeights": [
+    42,
+    21
+  ]
+}

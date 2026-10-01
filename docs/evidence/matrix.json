@@ -1,0 +1,135 @@
+{
+  "platform": "macOS arm64",
+  "godot": "4.7.2.stable.official",
+  "runs": [
+    {
+      "scenario": "react",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --headless",
+      "checks": 36,
+      "report": "react-headless-report.json",
+      "elapsedSeconds": 3.322
+    },
+    {
+      "scenario": "react",
+      "mode": "native",
+      "command": "node scripts/check.mjs",
+      "checks": 36,
+      "report": "react-native-report.json",
+      "elapsedSeconds": 6.11
+    },
+    {
+      "scenario": "layout",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --layout --headless",
+      "checks": 47,
+      "report": "layout-headless-report.json",
+      "elapsedSeconds": 3.153
+    },
+    {
+      "scenario": "layout",
+      "mode": "native",
+      "command": "node scripts/check.mjs --layout",
+      "checks": 47,
+      "report": "layout-native-report.json",
+      "elapsedSeconds": 3.414
+    },
+    {
+      "scenario": "input",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --input --headless",
+      "checks": 45,
+      "report": "input-headless-report.json",
+      "elapsedSeconds": 3.153
+    },
+    {
+      "scenario": "input",
+      "mode": "native",
+      "command": "node scripts/check.mjs --input",
+      "checks": 45,
+      "report": "input-native-report.json",
+      "elapsedSeconds": 3.619
+    },
+    {
+      "scenario": "pressable",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --pressable --headless",
+      "checks": 43,
+      "report": "pressable-headless-report.json",
+      "elapsedSeconds": 7.042
+    },
+    {
+      "scenario": "pressable",
+      "mode": "native",
+      "command": "node scripts/check.mjs --pressable",
+      "checks": 47,
+      "report": "pressable-native-report.json",
+      "elapsedSeconds": 8.223
+    },
+    {
+      "scenario": "chart",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --chart --headless",
+      "checks": 34,
+      "report": "chart-headless-report.json",
+      "elapsedSeconds": 3.262
+    },
+    {
+      "scenario": "chart",
+      "mode": "native",
+      "command": "node scripts/check.mjs --chart --capture",
+      "checks": 34,
+      "report": "chart-native-report.json",
+      "note": "Native GUI pointer moves to the button after resize before press/release"
+    },
+    {
+      "scenario": "scroll",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --scroll --headless",
+      "checks": 62,
+      "report": "scroll-headless-report.json",
+      "elapsedSeconds": 5.348
+    },
+    {
+      "scenario": "scroll",
+      "mode": "native",
+      "command": "node scripts/check.mjs --scroll",
+      "checks": 68,
+      "report": "scroll-native-report.json",
+      "elapsedSeconds": 6.085
+    },
+    {
+      "scenario": "nativewind",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --nativewind --headless",
+      "checks": 49,
+      "report": "nativewind-headless-report.json",
+      "elapsedSeconds": 2.906
+    },
+    {
+      "scenario": "nativewind",
+      "mode": "native",
+      "command": "node scripts/check.mjs --nativewind --capture",
+      "checks": 58,
+      "report": "nativewind-native-report.json",
+      "elapsedSeconds": 3.2
+    },
+    {
+      "scenario": "typography",
+      "mode": "headless",
+      "command": "node scripts/check.mjs --typography --headless",
+      "checks": 50,
+      "report": "typography-headless-report.json",
+      "elapsedSeconds": 3.494
+    },
+    {
+      "scenario": "typography",
+      "mode": "native",
+      "command": "node scripts/check.mjs --typography --capture",
+      "checks": 63,
+      "report": "typography-native-report.json",
+      "elapsedSeconds": 4.187
+    }
+  ],
+  "checks": 764
+}
