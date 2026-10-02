@@ -3,7 +3,7 @@
 This document describes the current implementation. The
 [Architecture 2.0 direction](ARCHITECTURE_V2.md) consolidates the approved
 application/surface, layout/host context, Godot integration, input, UI time and native adapter
-discovery contracts. Its
+discovery and binary compatibility contracts. Its
 [decision register](ARCHITECTURE_V2_DECISIONS.md) tracks approved and pending
 choices; the new interfaces are not yet implemented.
 
