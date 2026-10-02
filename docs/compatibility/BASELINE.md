@@ -54,6 +54,10 @@ refs, memo, Context, external-store snapshots, transition commits, and effect /
 subscription cleanup. Their [catalog](../../tests/parity/cases.json) names the
 specific RN declarations exercised. A passing width example certifies that
 example, not every width value or the whole View API.
+The fixture uses an eight-unit layout grid and reports the observed geometry,
+commit values, row renders and cleanup order. The protocol requires exact
+agreement for those controlled observations; arbitrary densities and fractional
+layout rounding require additional fixtures.
 
 ```sh
 npm run setup
@@ -69,7 +73,7 @@ npm run parity:status
 iOS needs Xcode, an installed iPhone simulator, and CocoaPods 1.16.2; Ruby 3.4.11
 was used locally. Set `RN_SIMULATOR_UDID` to select a simulator. Otherwise the
 runner chooses a shutdown simulator and shuts it down after the test.
-Android needs JDK 17, SDK platform/build-tools 37, NDK 27.1.12297006 and a running
+Android needs JDK 17, SDK platform 37.0 / build-tools 37, NDK 27.1.12297006 and a running
 emulator. The default ABI is x86_64; set `RN_ANDROID_ABI` for another ABI.
 `--prepare-only` prepares/builds the reference without certifying a runtime run.
 Downloaded projects, libraries, derived build data and raw logs stay in ignored

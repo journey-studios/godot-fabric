@@ -23,6 +23,10 @@ export function assertReport(report, platform) {
   for (const [key, value] of Object.entries(provenance())) assert.equal(report[key], value, `Stale ${platform} report: ${key}`);
   assert.deepEqual(report.checks?.map((check) => check.id).sort(), cases.map((fixture) => fixture.id).sort(), "Missing, extra or duplicated cases");
   for (const check of report.checks) assert.equal(check.passed, true, `${platform}: ${check.id}`);
+  assert.deepEqual(report.observations, {
+    box: { x: 8, y: 8, width: 120, height: 40 }, rows: { A: 64, B: 0 }, counts: [0, 2, 3],
+    renders: { A: 1, B: 1 }, mounts: ["A", "B"], cleanups: ["B", "A"], context: "updated", store: 7, subscribers: 0,
+  }, "Native geometry and lifecycle observations differ from the controlled fixture");
 }
 export function compareReports(godot, references) {
   assertReport(godot, "godot");
@@ -40,5 +44,6 @@ export function compareReports(godot, references) {
     completeMobileReferences: platforms.has("ios") && platforms.has("android"),
     scope: "Only these fixture cases; not complete RN API, renderer semantics, event ordering or platform support",
     cases: cases.map((fixture) => ({ ...fixture, status: "matched_subset" })),
+    observations: godot.observations,
   };
 }

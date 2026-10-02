@@ -98,8 +98,9 @@ try {
     await command("pod", ["install"], path.join(project, "ios"));
     if (process.argv.includes("--prepare-only")) console.log("Reference dependencies prepared");
     else {
-      const result = spawnSync("xcrun", ["simctl", "list", "devices", "available", "--json"], { encoding: "utf8", timeout: 10000 });
-      if (result.status !== 0) throw new Error(result.stderr || "Cannot list iOS simulators");
+      // A cold CoreSimulator service needs longer than a warmed local instance.
+      const result = spawnSync("xcrun", ["simctl", "list", "devices", "available", "--json"], { encoding: "utf8", timeout: 60000 });
+      if (result.error || result.status !== 0) throw new Error(String(result.error || result.stderr || "Cannot list iOS simulators"));
       const available = Object.entries(JSON.parse(result.stdout).devices).filter(([runtime]) => runtime.includes("iOS"))
         .sort(([left], [right]) => right.localeCompare(left, undefined, { numeric: true }))
         .flatMap(([, devices]) => devices).filter((device) => device.isAvailable && device.name.includes("iPhone"));

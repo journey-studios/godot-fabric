@@ -30,6 +30,9 @@ export function ParityFixture({ onComplete }) {
     }
     onComplete({ schemaVersion: 1, fixture: "core-ui-v1", react: React.version, reactNative: nativePackage.version,
       renderer: globalThis.nativeFabricUIManager ? "fabric" : "missing", engine: globalThis.HermesInternal ? "hermes" : "missing",
+      observations: { box: session.current.layouts[0], rows: { ...session.current.positions }, counts: [...session.current.counts],
+        renders: { ...session.current.rowRenders }, mounts: [...session.current.mounts], cleanups: [...session.current.cleanups],
+        context: session.current.context, store: session.current.observedStore, subscribers: session.current.subscribers.size },
       status: error ? "failed" : "passed", checks: session.current.checks, ...(error ? { error: String(error.message || error) } : {}) });
   };
   return visible ? <Probe session={session.current} complete={complete} /> : null;
@@ -41,7 +44,7 @@ const Row = memo(function Row({ name, session }) {
     session.mounts.push(name);
     return () => session.cleanups.push(name);
   }, []);
-  return <View ref={(instance) => { session.refs[name] = instance; }} onLayout={(event) => { session.positions[name] = event.nativeEvent.layout.x; }} testID={`parity-row-${name}`} style={{ width: 60, height: 24 }}><Text>{name}</Text></View>;
+  return <View ref={(instance) => { session.refs[name] = instance; }} onLayout={(event) => { session.positions[name] = event.nativeEvent.layout.x; }} testID={`parity-row-${name}`} style={{ width: 64, height: 24 }}><Text>{name}</Text></View>;
 });
 function ContextValue({ session }) {
   const value = useContext(Context);
@@ -72,7 +75,7 @@ function Probe({ session, complete }) {
     async function exercise() {
       await until(() => session.layouts.length && session.mounts.length === 2 && session.observedStore === 0);
       const { x, y, width, height } = session.layouts[0];
-      check("native-layout", x === 10 && y === 10 && width === 120 && height === 40);
+      check("native-layout", x === 8 && y === 8 && width === 120 && height === 40);
       const measurement = await new Promise((resolve, reject) => {
         const timeout = setTimeout(() => reject(new Error("Native measure callback missing")), 4000);
         box.current.measure((_x, _y, measuredWidth, measuredHeight) => {
@@ -87,7 +90,7 @@ function Probe({ session, complete }) {
       await until(() => session.counts.at(-1) === 2);
       check("automatic-batching", session.counts.join(",") === "0,2");
       setOrder(["B", "A"]);
-      await until(() => session.positions.A === 60 && session.positions.B === 0);
+      await until(() => session.positions.A === 64 && session.positions.B === 0);
       check("keyed-reorder", session.refs.A === beforeRefs.A && session.refs.B === beforeRefs.B && session.mounts.length === 2);
       check("memo", session.rowRenders.A === 1 && session.rowRenders.B === 1);
       setContext("updated");
@@ -104,7 +107,7 @@ function Probe({ session, complete }) {
     exercise().then(() => complete()).catch(complete);
   }, []);
   return <Context.Provider value={context}>
-    <View testID="parity-root" style={{ width: 240, height: 200, padding: 10 }}>
+    <View testID="parity-root" style={{ width: 240, height: 200, padding: 8 }}>
       <View ref={box} testID="parity-box" onLayout={(event) => session.layouts.push(event.nativeEvent.layout)} style={{ width: 120, height: 40 }} />
       <Text testID="parity-count">{count}</Text>
       <View style={{ flexDirection: "row" }}>{order.map((name) => <Row key={name} name={name} session={session} />)}</View>

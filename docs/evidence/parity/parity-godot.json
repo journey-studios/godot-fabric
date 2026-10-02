@@ -39,6 +39,38 @@
   ],
   "engine": "hermes",
   "fixture": "core-ui-v1",
+  "observations": {
+    "box": {
+      "height": 40,
+      "width": 120,
+      "x": 8,
+      "y": 8
+    },
+    "cleanups": [
+      "B",
+      "A"
+    ],
+    "context": "updated",
+    "counts": [
+      0,
+      2,
+      3
+    ],
+    "mounts": [
+      "A",
+      "B"
+    ],
+    "renders": {
+      "A": 1,
+      "B": 1
+    },
+    "rows": {
+      "A": 64,
+      "B": 0
+    },
+    "store": 7,
+    "subscribers": 0
+  },
   "react": "19.2.3",
   "reactNative": "0.87.1",
   "renderer": "fabric",
@@ -47,7 +79,7 @@
   "platform": "godot",
   "godot": "4.7.2",
   "display": "native",
-  "fixtureSha256": "15ae2a683646c63667bf51f39d038199902540757747957e56ad29a4401d87df",
+  "fixtureSha256": "9ac6f310d7793797ad06774e6cb1867591fdd0a83d231e971026f04ef799e446",
   "casesSha256": "5b72a75230043dcec87d61ebddf110383c2911c1373ccc10348306530fe9131f",
   "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3"
 }
