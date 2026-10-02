@@ -31,9 +31,9 @@ verified the native archives by SHA-256. Godot itself was not rebuilt. The
 | **Total** | **366** | **398** |
 
 **764 passing assertions in 16 runs.** [matrix.json](matrix.json) contains
-commands and report filenames; complete per-run reports remain beside it.
-Every retained report was checked for scene, display mode, expected assertion
-count and passing results. Native runs are sequential because they share a
+commands and report filenames. The complete per-run reports are not versioned:
+`npm run check` regenerates each one as `build/report.json`. Every report was
+checked for scene, display mode, expected assertion count and passing results. Native runs are sequential because they share a
 generated report path.
 
 Additional release checks: 9 Node contract tests and 6 Python archive-recovery
@@ -75,8 +75,8 @@ input, DPI/Retina, IME or mobile gestures.
 run-overlap implementation failing before the fix. A 42-height first run leaked
 into the next 21-height line: the measured height was 84 instead of 63. The
 corrected implementation uses strict half-open overlap plus a final-run sentinel
-exception. [line-height-report.json](line-height-report.json) proves both span
-orders, empty/trailing lines and balanced native cleanup.
+exception. The line-height run report, regenerated as
+`build/line-height-report.json`, proves both span orders, empty/trailing lines and balanced native cleanup.
 
 The chart test also moves the native GUI pointer to the target button before
 press/release after resize. Its original missing motion caused the empty-data
