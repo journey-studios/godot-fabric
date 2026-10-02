@@ -1,6 +1,8 @@
 #include "appearance_adapter.h"
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/panel.hpp>
+#include <godot_cpp/classes/button.hpp>
+#include <godot_cpp/classes/line_edit.hpp>
 #include <godot_cpp/classes/style_box_flat.hpp>
 #include <cmath>
 
@@ -19,9 +21,10 @@ void apply_appearance(Control &control, const rn::ViewProps &props,
                       const rn::LayoutMetrics &layout) {
   const bool label = Object::cast_to<Label>(&control) != nullptr;
   const bool panel = Object::cast_to<Panel>(&control) != nullptr;
-  if (!label && !panel) return;
-  // A ausência de uma prop recria o estilo vazio e remove overrides antigos.
-  // Yoga já posiciona os filhos; somente o Label consome seus contentInsets.
+  const bool widget = Object::cast_to<Button>(&control) || Object::cast_to<LineEdit>(&control);
+  if (!label && !panel && !widget) return;
+  // Recreate styles on updates so removed props leave no stale overrides.
+  // Yoga positions children; leaf text and widgets consume their content insets.
   Ref<StyleBoxFlat> style;
   style.instantiate();
   auto border = props.resolveBorderMetrics(layout);
@@ -31,16 +34,27 @@ void apply_appearance(Control &control, const rn::ViewProps &props,
     border.borderWidths.right, border.borderWidths.bottom};
   const float insets[] = {layout.contentInsets.left, layout.contentInsets.top,
     layout.contentInsets.right, layout.contentInsets.bottom};
+  const bool styled = props.backgroundColor || border.borderWidths.left || border.borderWidths.top ||
+      border.borderWidths.right || border.borderWidths.bottom || border.borderRadii.topLeft.horizontal ||
+      border.borderRadii.topRight.horizontal || border.borderRadii.bottomLeft.horizontal ||
+      border.borderRadii.bottomRight.horizontal || insets[0] || insets[1] || insets[2] || insets[3];
   for (int side = 0; side < 4; ++side) {
     style->set_border_width(static_cast<Side>(side), std::lround(widths[side]));
-    style->set_content_margin(static_cast<Side>(side), label ? insets[side] : 0);
+    style->set_content_margin(static_cast<Side>(side), label || widget ? insets[side] : 0);
   }
   style->set_corner_radius(CORNER_TOP_LEFT, std::lround(border.borderRadii.topLeft.horizontal));
   style->set_corner_radius(CORNER_TOP_RIGHT, std::lround(border.borderRadii.topRight.horizontal));
   style->set_corner_radius(CORNER_BOTTOM_LEFT, std::lround(border.borderRadii.bottomLeft.horizontal));
   style->set_corner_radius(CORNER_BOTTOM_RIGHT, std::lround(border.borderRadii.bottomRight.horizontal));
-  control.add_theme_stylebox_override(label ? "normal" : "panel", style);
-  if (label) {
+  if (widget) {
+    // Preserve the Godot Theme for unstyled legacy controls and restore it
+    // after prop removal. Focus keeps the transparent native Theme outline.
+    for (const auto *key : {"normal", "hover", "pressed", "hover_pressed", "disabled", "read_only"}) {
+      if (styled) control.add_theme_stylebox_override(key, style);
+      else control.remove_theme_stylebox_override(key);
+    }
+  } else control.add_theme_stylebox_override(label ? "normal" : "panel", style);
+  if (label || widget) {
     const auto &text = static_cast<const ControlProps &>(props);
     if (text.color) control.add_theme_color_override("font_color", native_color(text.color));
     else control.remove_theme_color_override("font_color");
@@ -48,8 +62,9 @@ void apply_appearance(Control &control, const rn::ViewProps &props,
 }
 folly::dynamic appearance_snapshot(const Control &control) {
   const bool label = Object::cast_to<Label>(&control) != nullptr;
-  if (!label && !Object::cast_to<Panel>(&control)) return nullptr;
-  Ref<StyleBoxFlat> style = control.get_theme_stylebox(label ? "normal" : "panel");
+  const bool widget = Object::cast_to<Button>(&control) || Object::cast_to<LineEdit>(&control);
+  if (!label && !widget && !Object::cast_to<Panel>(&control)) return nullptr;
+  Ref<StyleBoxFlat> style = control.get_theme_stylebox(label || widget ? "normal" : "panel");
   if (style.is_null()) return nullptr;
   folly::dynamic result = folly::dynamic::object("background", hex(style->get_bg_color()))
     ("borderColor", hex(style->get_border_color()));
@@ -59,7 +74,7 @@ folly::dynamic appearance_snapshot(const Control &control) {
   for (int corner = 0; corner < 4; ++corner) radii.push_back(style->get_corner_radius(static_cast<Corner>(corner)));
   result["borderWidths"] = std::move(widths);
   result["cornerRadii"] = std::move(radii);
-  if (label) result["textColor"] = hex(control.get_theme_color("font_color"));
+  if (label || widget) result["textColor"] = hex(control.get_theme_color("font_color"));
   return result;
 }
 }

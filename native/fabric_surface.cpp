@@ -682,7 +682,8 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
           ("x", control->get_position().x)("y", control->get_position().y)
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
-      if (kind == "view" || kind == "text" || kind == "paragraph") node["appearance"] = fabric_godot::appearance_snapshot(*control);
+      if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input")
+        node["appearance"] = fabric_godot::appearance_snapshot(*control);
       if (auto *paragraph = Object::cast_to<GodotParagraph>(control)) {
         auto measured = paragraph->snapshot();
         for (const auto &item : measured.items()) node[item.first] = item.second;

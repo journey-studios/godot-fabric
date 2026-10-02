@@ -107,6 +107,7 @@ export const controlViewConfig = {
     svg: true,
     text: true,
     fontSize: true,
+    color: { process: processColor },
     disabled: true,
     placeholder: true,
     submitBehavior: true,
