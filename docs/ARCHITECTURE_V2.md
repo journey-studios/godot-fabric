@@ -13,6 +13,9 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
 identifica 10 aprovações e 22 escolhas pendentes, com seus cenários de validação.
+Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
+e detalhes ainda a especificar. O registro distingue escolhas de produto,
+contratos públicos e mecanismos internos a validar por evidência.
 A [arquitetura atual](ARCHITECTURE.md), a
 [auditoria de paridade](PARITY.md) e o [roadmap para 1.0](../ROADMAP.md) continuam
 descrevendo, respectivamente, a implementação, seus gaps e o status do trabalho.

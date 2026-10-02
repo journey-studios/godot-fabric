@@ -64,6 +64,23 @@ automaticamente um ponto pendente.
 Discutir uma família de comportamento por vez. Os IDs mantêm rastreabilidade;
 não exigem 22 aprovações rápidas sem exemplos.
 
+### Termos usados nas discussões
+
+| Termo | Significado aqui |
+| --- | --- |
+| Runtime / Hermes | Ambiente em que o JavaScript da aplicação executa dentro do Godot |
+| Surface / raiz | Área hospedada pelo Godot em que uma entrada React está montada |
+| Fabric / Yoga | Renderer que produz a árvore/transações nativas e mecanismo que calcula seu layout |
+| Adapter | Implementação Godot dos componentes ou serviços nativos que uma lib espera |
+| Spec / Codegen | Declaração da interface e geração de partes da integração; não gera o comportamento do backend |
+| ABI | Contrato entre binários compilados: como funções, objetos e dados atravessam a interface |
+| Builder / bundle | Ferramenta que transforma e reúne fontes/dependências, e o código resultante |
+| Manifesto | Descrição do conteúdo, versões, requisitos e identidades de um conjunto distribuído |
+| Geração | Identidade de um build, runtime ou montagem; são ciclos distintos, não um único contador universal |
+| Source map | Mapa que relaciona posição no código gerado à fonte original para diagnóstico |
+| Executor | Mecanismo que decide onde/quando trabalho é executado, incluindo thread e agendamento |
+| Shaping de texto | Preparação de caracteres em glifos e posições usados para medir/desenhar |
+
 ## Índice
 
 | ID | Contrato | Status |
@@ -534,6 +551,30 @@ quem instala as dependências de usuário sem transformar o SDK em package manag
 - **Validação:** consumidor limpo inicia o exemplo básico sem Node global;
   dependência ausente tem diagnóstico; atualizar o SDK não reescreve seu lockfile.
 
+**Natureza:** produto para instalação/offline; contrato para versões e dependências.
+
+**Na prática:** alguém baixa o addon num computador sem Node global, abre o
+exemplo e aperta Play. Em outro projeto, instala uma lib de formulário. O SDK
+precisa fornecer suas ferramentas sem assumir a posse de todas as bibliotecas
+que o projeto decidiu usar.
+
+**Consequências dos caminhos:** ferramenta embutida entrega uma versão conhecida
+junto do SDK, aumentando o pacote. Download versionado reduz o pacote inicial,
+mas exige instalação online e um caminho offline definido. Node externo deixa
+mais trabalho de preparação para o consumidor e pode servir ao fluxo avançado.
+Nenhuma opção resolve sozinha instalar dependências adicionais do projeto.
+
+**Como ler a recomendação:** fluxo básico autocontido, com React/RN e ferramentas
+compatíveis sob posse do SDK. Libs do usuário têm instalação explícita, versões
+e lockfile preservados. Play verifica e diagnostica; não instala silenciosamente
+pacotes nem troca a versão de React escolhida para o renderer.
+
+**Ainda a especificar:** o que vem no download, quais hosts têm ferramentas,
+atualização/reversão, diretório de cache e experiência de instalação de lib.
+Offline precisa distinguir exemplo já incluído de projeto com dependências
+nunca baixadas. Aprovar a direção não decide embutido versus bootstrap por download;
+ambos precisam cumprir a experiência básica e a política de versões.
+
 ### V2-D19
 
 **Decisão:** contrato do builder independente: protocolo, watch, stop,
@@ -547,6 +588,30 @@ diagnósticos, caches e resolução de workspaces/symlinks.
   escolha de escopo, não consequência automática de aceitar package.json.
 - **Validação:** respostas fora de ordem, crash do builder, cancelamento,
   arquivo removido, workspace externo e mudança de Babel não ativam bundle obsoleto.
+
+**Natureza:** execução do builder; contrato para integração e workspaces suportados.
+
+**Na prática:** salvar arquivo dispara build 12; outro save dispara build 13.
+O 13 termina primeiro. Se o 12 chegar depois e substituir a UI, o editor mostra
+código antigo apesar de ter compilado a versão nova. Uma lib local via workspace
+pode ainda estar fora do diretório observado e nunca invalidar o cache.
+
+**Consequências dos caminhos:** builder no processo do editor acopla travamentos
+à edição. Processo separado contém essa falha, mas precisa de pedidos/respostas,
+cancelamento e encerramento explícitos. Reusar Metro mantém uma referência do
+ecossistema; trocar o builder exige demonstrar os mesmos contratos necessários,
+e não apenas gerar um arquivo JS.
+
+**Como ler a recomendação:** cada resposta identifica pedido, geração e entradas
+usadas. Só a geração vigente pode ser ativada; resposta atrasada é descartada
+mesmo se o cancelamento não conseguiu interromper seu processamento. Cache
+considera grafo, configuração, lockfile e ferramentas, além do arquivo editado.
+
+**Ainda a especificar:** protocolo, eventos de watch, crash/restart, limites e
+visibilidade real dos diretórios. Testar alterar/remover uma fonte, mudar Babel
+ou o lockfile e editar lib externa. npm/pnpm/workspaces/symlinks e Yarn PnP não
+são o mesmo contrato; definir a matriz de suporte sem anunciar compatibilidade
+com todos os managers por reconhecer `package.json`.
 
 ### V2-D20
 
@@ -566,6 +631,32 @@ Esse limite vem dos contratos de
 [conditional exports do Node](https://nodejs.org/api/packages.html#conditional-exports)
 e [package exports do Metro](https://metrobundler.dev/docs/package-exports/).
 
+**Natureza:** contrato de resolução; identidade de React é obrigação técnica.
+
+**Na prática:** uma lib publica caminhos distintos para RN, Godot e uso genérico.
+O builder escolhe qual código o import executa. Outro risco aparece quando uma
+lib local traz uma segunda cópia de React: componente e renderer podem usar
+instâncias diferentes, condição associada a falhas de hooks na
+[documentação do React](https://react.dev/warnings/invalid-hook-call-warning).
+
+**Consequências dos caminhos:** seguir as condições e a ordem publicadas pela lib
+preserva seu contrato. Forçar uma prioridade fixa Godot → RN → genérico pode
+selecionar arquivo diferente do que o autor declarou. Resolver por suffixes
+serve ao caminho que permite essa busca; não pode substituir um target exato
+já selecionado em `exports`.
+
+**Como ler a recomendação:** usar Metro como referência, declarar as condições
+do host e proteger a mesma identidade React/RN pertinente ao SDK. Isso inclui
+imports indiretos, JSX runtimes e libs em workspaces, não só `import React` no
+arquivo de entrada. Não significa reescrever todo import privado de qualquer pacote.
+
+**Ainda a especificar:** conjunto de condições por modo, resolução fora de
+`exports`, subpaths protegidos, peer dependencies e diagnóstico de versões
+incompatíveis. Resolver um pacote com a mesma versão de React escrita no lockfile
+não prova identidade de módulo; a fixture precisa verificar o que executa.
+A ordem/exatidão seguem [os contratos de Metro](https://metrobundler.dev/docs/package-exports/);
+a escolha pendente é como aplicá-los na plataforma, não se podemos ignorá-los.
+
 ### V2-D21
 
 **Decisão:** como combinar transforms do SDK e Babel do projeto e quais
@@ -578,6 +669,30 @@ contratos de runtime são necessários às versões suportadas de NativeWind.
   com métricas, tema, interação e container queries; transforms não bastam.
 - **Validação:** plugin do projeto executa na ordem prevista, override proibido
   falha e estilos reagem às mudanças no runtime, incluindo remoção de classes.
+
+**Natureza:** contrato de configuração; NativeWind funcionando é comportamento do produto.
+
+**Na prática:** o projeto adiciona um plugin Babel e usa classes condicionais,
+tema e breakpoints. O TSX pode compilar, mas a cor não muda ao alternar o tema,
+ou uma classe removida continua aplicada. Isso revela lacuna de runtime mesmo
+quando o transform de `className` funcionou.
+
+**Consequências dos caminhos:** configuração fechada do SDK garante um caminho
+conhecido, mas bloqueia plugins esperados por libs. Extensão sem regras permite
+remover transforms que o RN precisa. Composição explícita preserva uma baseline
+e oferece pontos de extensão, ordem e erros compreensíveis.
+
+**Como ler a recomendação:** configurar transforms RN obrigatórios e extensões
+do projeto com contrato verificável. O consumidor não precisa descobrir a ordem
+por tentativa. NativeWind é exercitado em métricas, tema, interação e remoção,
+além da compilação. Seu [design responsivo](https://www.nativewind.dev/docs/core-concepts/responsive-design)
+e [container queries](https://www.nativewind.dev/docs/tailwind/plugins/container-queries)
+distinguem janela de container; isso se conecta ao tema de dimensões já aprovado.
+
+**Ainda a especificar:** versão certificada, campos extensíveis/protegidos,
+resolução dos plugins, caller e ordenação. Testar também classes que mudam ao
+redimensionar só um painel. Aprovar composição não promete todo plugin Babel
+compatível; alternativas de transform só entram após prova, mantendo a semântica.
 
 ## Ativação, desenvolvimento e exportação
 
@@ -596,6 +711,31 @@ falhas de avaliação JavaScript ou montagem após compilação bem-sucedida.
 - **Validação:** syntax error, throw no módulo, erro de mount e chamada ao jogo
   durante ativação verificam exatamente o que foi preservado ou reiniciado.
 
+**Natureza:** produto para recuperação e contrato para ativação de gerações.
+
+**Na prática:** enquanto a UI A funciona, você salva B. B pode falhar no build,
+lançar ao avaliar um módulo ou falhar ao montar. São etapas diferentes. Pior:
+B pode chamar uma operação do jogo antes de lançar. Restaurar o arquivo A não
+desfaz essa operação aceita pelo jogo.
+
+**Consequências dos caminhos:** reiniciar com recuperação explícita pode perder
+estado local/shared da VM, mas permite especificar um fluxo honesto. Preparar
+candidato isolado pode manter A até B estar pronto, desde que isole também chamadas
+e outros efeitos observáveis. Um runtime escondido não é isolamento suficiente
+se ele pode escrever no mesmo mundo ou em serviços externos.
+
+**Como ler a recomendação:** build falhou, A continua. Publicar artefatos B como
+conjunto consistente não autoriza sua ativação. Falhas de avaliação/mount têm
+política própria, visível para o desenvolvedor; não prometer rollback universal.
+A distinção permanece relevante mesmo quando D23 introduzir Fast Refresh.
+
+**Ainda a especificar:** escolher reinício/recuperação ou candidato com restrições
+comprovadas; determinar quando B ganha permissão para chamar o jogo, que estado
+se perde e qual geração fica ativa depois de falhar. Testar throw no módulo e no
+render, e uma chamada ao jogo antes do throw. Esse ponto pede decisão explícita:
+manter a tela anterior após qualquer erro é uma garantia mais forte que preservar
+a tela após erro de compilação.
+
 ### V2-D23
 
 **Decisão:** quais mudanças permitem Fast Refresh e quais obrigam reload,
@@ -612,6 +752,30 @@ incluindo roots registrados, stores de módulo e adapters.
 Os limites de preservação precisam seguir
 [Fast Refresh do RN](https://reactnative.dev/docs/fast-refresh).
 
+**Natureza:** produto para experiência ao salvar; contrato de preservação de estado.
+
+**Na prática:** você está com o inventário aberto e busca preenchida. Mudar o
+padding deveria permitir continuar inspecionando esse estado quando a edição
+for elegível. Mudar ordem de hooks, exports ou configuração nativa pode exigir
+remount/reload. Uma store no módulo tem ainda outro ciclo de reavaliação.
+
+**Consequências dos caminhos:** reload integral inicial é previsível, com perda
+de estado declarada. Fast Refresh do ecossistema preserva estado em casos
+permitidos; reinjetar um bundle arbitrariamente na VM não equivale a integrar
+seu protocolo. Preservar absolutamente todo estado cria uma promessa que nem o
+[mecanismo documentado pelo RN](https://reactnative.dev/docs/fast-refresh) oferece.
+
+**Como ler a recomendação:** integrar runtime/transforms de desenvolvimento
+originais, com fallback visível. Preservar `useState` quando seguro, e executar
+cleanup/reexecução dos effects conforme o mecanismo; não bloquear effects para
+parecer que o estado foi preservado.
+
+**Ainda a especificar:** limites por tipo de arquivo, entradas AppRegistry,
+stores de módulo, múltiplas roots e ligação à geração de artefatos. Alteração
+nativa de adapter não vira alteração JS elegível por ter sido observada pelo watch.
+Testar listener antes/depois de cinco saves e detectar duplicação; documentar a
+perda de estado de um reload e sua diferença para a falha de ativação em D22.
+
 ### V2-D24
 
 **Decisão:** como assets JS, recursos Godot, densidades, fontes e arquivos
@@ -625,6 +789,30 @@ importados se identificam no build e no aplicativo exportado.
   ao export de recursos que precisam ser importados/remapeados.
 - **Validação:** app exportado encontra imagem/fonte sem diretório de trabalho;
   asset ausente/corrompido falha; atualização não mistura recursos de gerações.
+
+**Natureza:** contrato de recursos; empacotamento/cache são execução.
+
+**Na prática:** `<Image source={require("./icon.png")} />` funciona no editor,
+mas o jogo exportado vai para outro computador. O caminho da fonte pode não
+existir lá; imagem, dimensões, variantes de densidade e arquivo importado precisam
+continuar identificados. Fonte carregada também precisa participar da medição.
+
+**Consequências dos caminhos:** caminho local absoluto resolve um protótipo e
+quebra distribuição. ID sem manifesto pode apontar para recurso errado após
+rebuild. Registry/manifesto da geração relaciona a referência JS ao recurso que
+foi efetivamente empacotado. O RN documenta
+[assets estáticos e variantes de densidade](https://reactnative.dev/docs/images);
+essas expectativas precisam de integração com recursos Godot.
+
+**Como ler a recomendação:** resolver asset no build, incluir metadados pertinentes
+e empacotar pelo pipeline apropriado. Diferenciar recursos importados de bytes
+incluídos diretamente; a existência de um arquivo no cache do editor não comprova
+que o export terá o recurso correspondente.
+
+**Ainda a especificar:** identidade por geração, deduplicação, fontes/erro/cancelamento,
+carregamento assíncrono e URIs remotas, que têm contrato distinto de assets locais.
+Validar export em ambiente sem fontes do projeto e trocar imagem/fonte entre builds.
+Definir separadamente o que pode invalidar layout após um recurso terminar de carregar.
 
 ### V2-D25
 
@@ -643,6 +831,31 @@ distinguindo o host de build e o target do aplicativo.
 Os recursos e hooks de export devem ser verificados contra
 [EditorExportPlugin](https://docs.godotengine.org/en/stable/classes/class_editorexportplugin.html).
 
+**Natureza:** produto para exportação confiável e contrato por target.
+
+**Na prática:** desenvolver no macOS e exportar para Windows exige binários e
+adapters Windows, não copiar os do editor. Um pacote pode conter um bundle válido
+e ainda faltar uma extensão ou recurso necessário. Ele precisa falhar antes da
+entrega ao usuário.
+
+**Consequências dos caminhos:** validação apenas no Play testa o host, não o
+aplicativo distribuído. Preflight por target e integração ao export verificam
+o conjunto real. Uma CLI externa pode garantir a ordem do próprio fluxo, mas
+não prova que o botão de export do editor passa pelo mesmo bloqueio.
+
+**Como ler a recomendação:** exigir artefatos compatíveis com target/arquitetura,
+Hermes correspondente, adapters e assets identificados. O build de JS pode ocorrer
+no host enquanto os binários do aplicativo pertencem ao target. A validação deve
+rejeitar a combinação ausente, sem escolher por conveniência o arquivo do host.
+
+**Ainda a especificar:** caminho canônico do export, hooks e propagação efetiva
+de falha no editor e headless. A assinatura documentada de
+[EditorExportPlugin](https://docs.godotengine.org/en/stable/classes/class_editorexportplugin.html)
+não oferece um booleano de cancelamento em `_export_begin`; demonstrar o bloqueio,
+sem deduzi-lo de uma intenção no plugin. Testar falhas deliberadas e verificar
+exit não zero e ausência de pacote final novo. Relatar erro em log deixando um
+pacote incompleto ser publicado não atende ao contrato.
+
 ### V2-D26
 
 **Decisão:** política de erros de build, compatibilidade, render, callbacks,
@@ -655,6 +868,30 @@ Promises e native calls, com localização útil para desenvolvimento e CI.
   destino de exceções assíncronas e falhas fatais; cleanup não transforma erro em sucesso.
 - **Validação:** erro em TSX aponta para a fonte correta; callback lança sem
   esconder o erro; CI detecta falha mesmo quando o processo encerra normalmente.
+
+**Natureza:** produto para diagnóstico/recuperação; contrato para classes de falha.
+
+**Na prática:** um erro em `Inventory.tsx` deveria apontar arquivo, linha e raiz,
+não apenas uma posição no bundle. Erro de render, listener que lança, Promise
+rejeitada e falha fatal nativa não têm a mesma possibilidade de recuperação.
+Num teste headless, sair com código zero não deveria esconder falhas registradas.
+
+**Consequências dos caminhos:** só escrever log facilita começar, mas exige que
+o usuário procure a causa e permite falso sucesso no CI. Overlay/painel com
+source maps melhora diagnóstico, sem transformar todo erro em recuperável.
+Boundary por raiz atende certos erros de render; não isola toda atividade de
+um Hermes compartilhado, como já registrado na arquitetura.
+
+**Como ler a recomendação:** dar destino e códigos às classes de erro, com
+build/runtime/raiz/serviço identificados quando aplicável. O map precisa ser da
+geração do bundle executado; combinar versões produz uma linha convincente e errada.
+Separar dev e release para apresentação, preservando visibilidade da falha.
+
+**Ainda a especificar:** o que mantém uma raiz operante, o que exige restart e
+como release apresenta indisponibilidade. Definir erros tratados pela aplicação
+versus não tratados, rejeições assíncronas e integração com o resultado dos testes.
+Crash nativo pode impedir produzir o diagnóstico ideal; não anunciar boundary
+como contenção de acesso inválido em código nativo.
 
 ### V2-D27
 
@@ -669,6 +906,30 @@ Promises nunca resolvidas, callbacks e operações já aceitas pelo jogo.
   como prova de quiescência. Invalidar gerações antes de liberar recursos nativos.
 - **Validação:** shutdown com listener ativo, timer, chamada pendente e Promise
   que nunca resolve encerra sem use-after-free e informa trabalho não concluído.
+
+**Natureza:** contrato de lifecycle; protocolo e prazo de shutdown são execução.
+
+**Na prática:** fechar o jogo enquanto uma operação está pendente, um intervalo
+está ativo e uma Promise nunca vai resolver. Esperar tudo pode impedir sair;
+liberar a VM imediatamente pode permitir um callback acessar memória encerrada.
+Uma ação já aceita pelo Godot tem ainda sua própria posse.
+
+**Consequências dos caminhos:** esperar toda Promise exige controlar trabalho
+arbitrário do usuário, incluindo tarefas sem fim. Rodar um número fixo de pumps
+pode passar um teste sem comprovar encerramento. Um protocolo com owners define
+qual trabalho é cancelado, concluído ou abandonado com resultado observável.
+
+**Como ler a recomendação:** recusar novas entradas, desmontar roots, invalidar
+referências/callbacks de gerações encerradas e drenar apenas o trabalho controlado
+pelo host conforme seu contrato. Prazo de shutdown não significa liberar objetos
+enquanto outro executor ainda os usa; ao vencer, a política precisa manter essa
+segurança e informar trabalho que não terminou.
+
+**Ainda a especificar:** ordem de cleanup, cancelamento do builder, timers,
+queues e adapters; comportamento ao vencer o limite; e garantia de que executores
+pararam de acessar a VM. Fechar uma surface não é desligar a aplicação toda.
+Operação aceita pelo jogo pode concluir sem a UI original, como em D05; não
+pode devolver resultado usando a ref que foi desmontada.
 
 ## Threads, tipos, plataforma e certificação
 
@@ -691,6 +952,32 @@ inclui execução síncrona de render em situações prioritárias na UI thread.
 Uma regra genérica de sempre enfileirar tudo precisa ser verificada contra o
 renderer da versão fixada, não presumida equivalente.
 
+**Natureza:** execução guiada por medição, com contratos de prioridade e acesso nativo.
+
+**Na prática:** digitar num campo enquanto uma lista grande atualiza causa atraso.
+Ele pode vir de trabalho JS, shaping de texto, Yoga, mount de Controls ou pintura.
+Mover código para Rust sem localizar a origem pode deixar o atraso intacto.
+Mover JS para worker também não autoriza modificar SceneTree dessa thread.
+
+**Consequências dos caminhos:** começar na principal simplifica acesso ao host,
+mas trabalho longo disputa frames com o jogo. JS dedicado pode reduzir essa disputa,
+exigindo coordenação, prioridades e um caminho correto para medidas/comandos.
+Uma fila que sempre adia tudo pode mudar observações síncronas; bloquear duas
+threads esperando uma à outra cria deadlock.
+
+**Como ler a recomendação:** separar contratos dos executores e medir os trechos.
+A [arquitetura de threads do RN](https://reactnative.dev/architecture/threading-model)
+reserva manipulação de host views à UI thread e descreve render síncrono para
+situações prioritárias. Verificar esses caminhos no renderer fixado. Medição
+precisa concordar com desenho e com os requisitos dos recursos/TextServer usados.
+
+**Ainda a especificar:** traces e budgets por carga/target, cache de medição,
+reentrada e política de chamadas síncronas. Chaves de cache precisam incluir
+entradas que mudam o resultado, como constraints, fonte e escala; uma medida
+rápida desatualizada não é otimização correta. C++/Rust são opções para trabalho
+delimitado com ganho medido; React/Fabric continuam donos da reconciliação.
+Aprovar a direção não escolhe antecipadamente uma thread ou linguagem para tudo.
+
 ### V2-D29
 
 **Decisão:** como tipos publicados, resolução no editor e resolução do builder
@@ -704,6 +991,29 @@ descrevem a mesma API, incluindo diferenças de plataforma.
 - **Validação:** imports resolvem para o mesmo contrato; prop suportada compila
   e executa; API ainda ausente produz diagnóstico explícito no ponto correto.
 
+**Natureza:** contrato público de autoria e coerência de APIs.
+
+**Na prática:** autocomplete aceita uma prop, o TypeScript compila, mas o host
+a ignora. Ou o editor importa tipos de um pacote enquanto o builder executa uma
+facade diferente. O consumidor perde tempo depurando uma garantia que só existia
+na declaração de tipos.
+
+**Consequências dos caminhos:** publicar tipos upstream completos sem runtime
+correspondente aparenta paridade. Um subset explícito retrata o estágio atual,
+mas precisa ampliar com a implementação rumo à meta. Gerar tipos das specs ajuda
+coerência; ainda não prova que o backend cumpre os métodos declarados.
+
+**Como ler a recomendação:** editor, build e execução precisam representar o
+mesmo contrato versionado. APIs comuns suportadas mantêm a experiência React/RN;
+extensões Godot recebem tipos próprios. O projeto consumidor não deveria depender
+do `tsconfig` privado do repositório para seus imports funcionarem.
+
+**Ainda a especificar:** exports/types conditions, versão de TS suportada,
+tratamento de APIs de outros OS e diagnóstico de capacidade ausente. Não prometer
+que TypeScript sozinho detecta prop dinâmica ou capability específica do target;
+validar também build/runtime no nível adequado. Exercitar um caso positivo e um
+negativo no consumidor externo. O subset transitório não redefine o objetivo da 1.0.
+
 ### V2-D30
 
 **Decisão:** como representar a plataforma Godot e seu OS físico, e quem
@@ -716,6 +1026,31 @@ implementa teclado, rede, acessibilidade, storage e outros serviços nativos.
   suporte mobile porque o Godot exporta para mobile ou porque existe um nome na facade.
 - **Validação:** biblioteca escolhe o caminho Godot correto; serviços observam
   o sistema real; implementação ausente falha de forma distinguível.
+
+**Natureza:** produto para plataformas anunciadas e contrato de serviços nativos.
+
+**Na prática:** o mesmo bundle Godot roda em Windows e Android. Uma lib pode
+precisar do teclado virtual no Android ou de um módulo específico de iOS.
+Compartilhar JSX não cria automaticamente esse módulo, nem transforma um Control
+Godot numa view UIKit/Android esperada pelo código nativo da lib.
+
+**Consequências dos caminhos:** fingir `Platform.OS = ios` pode selecionar um
+caminho cuja implementação depende de UIKit. Identidade `godot` evita essa
+promessa, mas libs que só têm branches iOS/Android precisam de caminho Godot,
+adapter ou adaptação explícita. Não existe uma resposta universal para toda lib.
+
+**Como ler a recomendação:** distinguir plataforma de UI do OS físico e suas
+capabilities. Componentes React montam no Godot; serviços que dependem do sistema
+devem ter implementação apropriada e contratos verificáveis. A API RN de
+[código por plataforma](https://reactnative.dev/docs/platform-specific-code)
+mostra que pacotes podem selecionar implementações diferentes; nossa identidade
+precisa se encaixar sem simular um backend que não existe.
+
+**Ainda a especificar:** acesso ao OS físico, capability checks e responsáveis
+por rede/storage, teclado, acessibilidade, lifecycle e serviços específicos.
+Certificar por target, incluindo aparelhos pertinentes; exportar um executável
+não prova teclado, permissões ou integração assistiva. O rumo multiplataforma
+continua, com estágios declarados e sem anunciar todos os OS pela existência do addon.
 
 ### V2-D31
 
@@ -731,6 +1066,31 @@ definir diferenças aceitáveis e acompanhar novos React Native estáveis.
 - **Validação:** a mesma fixture roda nos hosts pertinentes, divergências são
   classificadas e upgrades invalidam os certificados que precisam de nova execução.
 
+**Natureza:** contrato público de evidência e política de atualização.
+
+**Na prática:** dizer “suporta React Native” pode significar que `View` aparece,
+que uma versão de uma lib executa ou que um conjunto amplo de comportamentos é
+pareado. Precisamos indicar o que foi executado e em qual combinação. Um scroll
+visualmente parecido pode ter outra sequência de eventos ou comportamento de foco.
+
+**Consequências dos caminhos:** checklist nominal é barato de ler, mas não
+identifica lacunas de comportamento. Fixture local testa a implementação contra
+suas próprias expectativas. Comparação com RN original e consumidor independente
+ajuda a detectar expectativa errada ou dependência escondida do nosso repositório.
+Ainda exige declarar diferenças específicas de plataforma.
+
+**Como ler a recomendação:** fixar versões, configuração e matriz API × target
+× biblioteca. Comparar semântica, lifecycle, refs, eventos e medidas pertinentes;
+não exigir pixels idênticos entre sistemas com renderização/fontes diferentes.
+Tolerância visual não pode justificar evento perdido ou ordem funcional errada.
+Diferença precisa de justificativa e contrato.
+
+**Ainda a especificar:** critérios mínimos de cada certificado, reexecução por
+upgrade, manutenção das referências e classificação de falhas/intermitência.
+Fixture positiva de um gráfico não certifica todos os componentes SVG. CI verde
+também não certifica targets que não executou. Atualizar RN pode invalidar provas
+mesmo sem mudar uma linha do adapter; a matriz deve tornar isso rastreável.
+
 ### V2-D32
 
 **Decisão:** como migrar da base atual sem perder provas existentes, e quais
@@ -744,6 +1104,30 @@ contratos da v2 são necessários para entregar a versão inicial 1.0 do produto
   de alpha/beta/1.0 e gates por plataforma sem reduzir a meta por conveniência.
 - **Validação:** cada fatia tem comportamento antes/depois, consumidor externo
   e evidência pertinente; múltiplas roots e comunicação são exercitadas junto à UI.
+
+**Natureza:** produto para marcos de entrega; execução para ordem da migração.
+
+**Na prática:** o protótipo já tem exemplos e provas. Trocar host, builder,
+comunicação e extensões ao mesmo tempo dificulta descobrir qual contrato deixou
+de funcionar. Uma fatia como HUD + inventário na mesma aplicação permite observar
+estado local/shared, lifecycle e comunicação juntos, antes de ampliar.
+
+**Consequências dos caminhos:** troca ampla pode eliminar rapidamente código
+antigo, mas perde comparações úteis se os exemplos forem substituídos junto.
+Fatias verticais mantêm o antes/depois e deixam uma sequência revisável. Manter
+a base antiga temporariamente exige marcar qual host cada prova exercita; teste
+verde no antigo não comprova o novo.
+
+**Como ler a recomendação:** migrar cenários preservando regressões e rastrear
+contratos nos itens existentes do roadmap. “Arquitetura 2.0” descreve a direção;
+SDK 1.0 descreve uma entrega pública. Alpha/beta podem ter escopos parciais claros,
+sem renomear uma entrega parcial como a paridade completa desejada.
+
+**Ainda a especificar:** critérios de saída de cada etapa, targets, dependências
+entre fatias e remoção da base antiga. A ordem concreta vem após fechar os contratos
+que a condicionam. Não criar automaticamente 22 tarefas paralelas só porque há
+22 decisões. D31 define a evidência; este ponto conecta essa evidência ao plano
+de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
