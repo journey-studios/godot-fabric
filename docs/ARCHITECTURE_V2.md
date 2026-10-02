@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D11 aprovadas, V2-D12 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D12 aprovadas, V2-D13 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 11 aprovações e 21 escolhas pendentes, com seus cenários de validação.
+identifica 12 aprovações e 20 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -33,11 +33,11 @@ build, extensões nativas e exportação ainda precisam de discussão específic
 Os temas consolidados são:
 
 1. Aplicação, runtime, raízes e ciclo de vida.
-2. Dimensões, layout adaptativo e NativeWind.
+2. Dimensões, contextos de UI, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
-4. Autoridade sobre a árvore, input e tempo da UI, com contextos adicionais pendentes.
+4. Autoridade sobre a árvore, input e tempo da UI.
 
-As direções de V2-D01 a V2-D11 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D12 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -224,9 +224,33 @@ display e `fontScale` precisam preservar seus significados próprios.
 Renderização, medição e hit testing devem concordar. Alterar a escala visual de
 um Control não redefine automaticamente a densidade do dispositivo.
 
-Cada surface identifica sua janela e viewport. Na configuração inicial, as
-métricas globais do RN referem-se à janela principal. Uma segunda janela exige
-política explícita de métricas e foco; essa política ainda está aberta.
+O contexto de hospedagem segue a direção aprovada de [V2-D12](#v2-d12).
+
+### V2-D12
+
+**Contexto explícito por surface:** representar desde o início a associação
+da raiz com sua Window/Viewport, espaço disponível e conversões necessárias.
+O host fornece esse contexto; componentes React compostos com as APIs existentes
+continuam com a mesma autoria, sem descobrir individualmente sua janela.
+
+Métricas globais do RN continuam ligadas à janela principal, conforme aprovado.
+Medidas locais pertencem à surface e suas constraints. Registrar uma segunda
+janela não redefine automaticamente `Dimensions` para toda a aplicação.
+
+Desenho, medição e input precisam concordar após deslocamento e escala. Respeitar
+os ajustes de input realizados pelo próprio Godot, evitando conversão duplicada.
+As regras de [Viewports do Godot](https://docs.godotengine.org/en/stable/tutorials/rendering/viewports.html)
+incluem ajustes de input e condições de entrega a SubViewports.
+
+O contexto explícito prepara a arquitetura; suporte anunciado a cada modo
+depende de testes próprios de geometria, input, medidas e foco. UI numa textura
+3D exige mapear a interação do mundo para a textura, além do contrato de
+SubViewport retangular apresentado na janela.
+
+Formato do contexto/helper, origem/unidades, notificações de mudança, safe areas,
+foco ao transferir uma raiz ou fechar uma janela e os marcos de certificação
+ainda precisam de especificação. Não foram fixados nomes finais de API nem
+certificados novos modos de hospedagem por esta aprovação.
 
 ### Aceitação do tema 2
 
@@ -234,6 +258,11 @@ Com HUD e inventário montados, redimensionar apenas o inventário. Seu layout e
 container queries reagem, o tamanho do HUD permanece estável e as métricas da
 janela não mudam. Cliques e medidas continuam alinhados à geometria resultante.
 Redimensionar a janela deve atualizar suas métricas e os breakpoints pertinentes.
+
+Exercitar uma surface em região parcial da janela, um SubViewport ampliado e
+uma janela secundária nos modos que serão certificados. Medição, desenho e
+destino do clique concordam; contexto local não altera o significado das APIs
+globais. Validar foco e lifecycle ao fechar ou transferir o hospedeiro.
 
 ## Tema 3 — Comunicação entre Godot e JavaScript
 
@@ -419,8 +448,8 @@ quando uma entidade ou geração do runtime deixa de existir.
 
 ## Tema 4 — Autoridade sobre árvore, input e tempo
 
-As direções de V2-D09 a V2-D11 estão aprovadas. Associação a contextos adicionais
-permanece pendente em V2-D12; detalhes de retomada de V2-D11 precisam de
+As direções de V2-D09 a V2-D11 estão aprovadas. O contexto de hospedagem está
+consolidado em V2-D12 no tema 2; detalhes de retomada de V2-D11 precisam de
 especificação e comparação com o RN da versão fixada.
 
 ### V2-D09
@@ -503,14 +532,13 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 21 escolhas pendentes, V2-D12 a V2-D32, têm IDs estáveis no
+As 20 escolhas pendentes, V2-D13 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D11 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D12 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Contextos de UI | Janelas adicionais e SubViewports; árvore, input e direção de tempo/lifecycle já aprovados |
 | Extensões e adapters | Registro, schemas, Codegen, componentes/módulos externos e fronteira ABI do SDK |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |

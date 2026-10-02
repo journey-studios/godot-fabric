@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 11 decisões aprovadas (V2-D01 a V2-D11) e 21 pendentes (V2-D12 a V2-D32).
+**Status:** 12 decisões aprovadas (V2-D01 a V2-D12) e 20 pendentes (V2-D13 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As direções de V2-D01 a V2-D11 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D12 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D12 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D13 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -30,9 +30,10 @@ sequência de implementação nem cria novos itens de roadmap.
 ## Como entender o que está sendo decidido
 
 As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
-e detalhes a especificar. V2-D11 está aprovado na direção discutida e mantém seus
-detalhes de retomada abertos. V2-D12 a V2-D32 continuam como propostas, incluindo
-seus exemplos de comportamento; nenhuma entrada descreve implementação comprovada.
+e detalhes a especificar. V2-D11/V2-D12 estão aprovados na direção discutida,
+com retomada e detalhes dos contextos ainda a especificar. V2-D13 a V2-D32
+continuam como propostas, incluindo seus exemplos de comportamento;
+nenhuma entrada descreve implementação comprovada.
 
 Há três naturezas de discussão, que podem aparecer juntas:
 
@@ -53,7 +54,6 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Contextos de UI](#v2-d12), D12 | Onde a UI pode aparecer; direção de tempo/lifecycle aprovada em D11 |
 | [Extensões](#v2-d13), D13–D17 | O que alguém entrega para uma biblioteca nativa funcionar |
 | [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
@@ -96,7 +96,7 @@ não exigem aprovações rápidas sem exemplos.
 | [V2-D09](#v2-d09) | Autoridade sobre layout e árvore nativa | Aprovada |
 | [V2-D10](#v2-d10) | Input, foco e interação com o gameplay | Aprovada |
 | [V2-D11](#v2-d11) | Pausa do jogo, background e relógios da UI | Aprovada |
-| [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas | Pendente |
+| [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas | Aprovada |
 | [V2-D13](#v2-d13) | Registro e descoberta de adapters | Pendente |
 | [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Pendente |
 | [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Pendente |
@@ -322,14 +322,16 @@ runtime quanto callbacks que chegam do Godot.
 
 ### V2-D12
 
+**Status:** aprovada na direção discutida em 2026-10-02; contexto explícito
+desde o início, com suporte por modo sujeito a testes próprios e certificação.
+
+**Contrato aprovado:** [V2-D12 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d12).
+
 **Decisão:** como associar raiz, Window e SubViewport e expressar medidas,
 coordenadas, safe areas e foco fora da janela principal.
 
-- **Alternativas:** escopo inicial limitado à janela principal ou contexto de
+- **Alternativas avaliadas:** escopo inicial limitado à janela principal ou contexto de
   surface que também suporte outras janelas/viewports com diferenças declaradas.
-- **Recomendação:** registrar a associação desde o início, mantendo as métricas
-  globais na janela principal. Definir contrato do helper de surface, unidades
-  e conversões para medições/input; suporte adicional só com casos certificados.
 - **Validação:** dois painéis, viewport escalado e janela secundária têm medidas
   e hit testing coerentes; APIs globais mantêm o significado já aprovado.
 
@@ -346,7 +348,7 @@ como experimentais. Aceitar qualquer viewport sem contrato parece funcionar
 até surgirem escala, clipping e foco. Contexto por surface representa essas
 diferenças sem fazer `Dimensions` mudar de significado conforme o painel.
 
-**Como ler a recomendação:** cada raiz sabe onde está hospedada; APIs globais
+**Como ler o contrato aprovado:** cada raiz sabe onde está hospedada; APIs globais
 continuam ligadas à janela principal, como aprovado. Medidas da surface usam
 um contrato próprio. Safe area da janela não é copiada para todo painel sem
 primeiro relacionar suas regiões e unidades.
@@ -1132,14 +1134,13 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-1. Definir contextos adicionais: V2-D12. As direções de aplicação, comunicação,
-   árvore, input e tempo/lifecycle de V2-D01 a V2-D11 já estão aprovadas;
-   detalhes de retomada de V2-D11 continuam na especificação e validação.
-2. Definir extensibilidade e fronteira binária: V2-D13 a V2-D17.
-3. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
-4. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
-5. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
+1. Definir extensibilidade e fronteira binária: V2-D13 a V2-D17. As direções de
+   aplicação, comunicação, árvore, input, tempo e contextos de V2-D01 a V2-D12
+   estão aprovadas; seus detalhes e provas continuam na especificação e validação.
+2. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
+3. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
+4. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D12 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D13 em diante,
 a implementação e suas prioridades finais continuam em aberto.
