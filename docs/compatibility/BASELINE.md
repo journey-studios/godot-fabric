@@ -60,8 +60,9 @@ arguments and self-cancellation, microtask/immediate ordering, and monotonic
 cancellable frames. The identical [runtime module](../../tests/parity/runtime.js)
 is copied alongside the JSX into both original native reference apps. Version
 `core-ui-v2` and its extra source hash reject historical nine-case reports.
-Godot has passed the 13-case fixture locally; new mobile results require fresh
-hosted or local reference runs. See [runtime evidence](../evidence/runtime/README.md).
+The 13-case fixture passed locally in Godot and in the hosted three-way
+comparison with original RN iOS/Android. See the versioned run, source hashes
+and bounded scope in [runtime evidence](../evidence/runtime/README.md).
 
 The fixture uses an eight-unit layout grid and reports the observed geometry,
 commit values, row renders and cleanup order. The protocol requires exact

@@ -101,9 +101,14 @@ microtask/immediate ordering and cancellable monotonic frames. The same
 [runtime probe](../../../tests/parity/runtime.js) is copied verbatim into the
 original RN iOS and Android reference applications. Its source has its own
 provenance hash; stale nine-case reports are rejected. The Godot oracle passed
-locally. Fresh mobile/three-way comparison results must come from the hosted
-jobs or separate native reference runs; their configuration is not proof of
-success. See the [oracle instructions](../../compatibility/BASELINE.md).
+locally. The [hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37006291589)
+passed all five jobs on `d4e5673`, including the original iOS/Android references
+and the three-way comparison. Downloaded artifacts were accepted by the current
+strict protocol: **13 matched subset cases** with both mobile references.
+The matrix retains that run/commit and comparison hash. Subsequent changes only
+document this evidence. This result certifies the recorded subset; full RN API
+coverage and Godot mobile builds remain separate milestones. See the
+[oracle instructions](../../compatibility/BASELINE.md).
 
 ## Remaining GF-05 work
 

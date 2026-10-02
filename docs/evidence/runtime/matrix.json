@@ -155,6 +155,22 @@
     "registryAssertions": 12,
     "errorRecoveryAssertions": 6,
     "godotOracleCases": 13,
-    "mobileOracle": "Fresh reference execution required; historical v1 reports do not certify v2"
+    "mobileOracle": "13 shared cases matched original RN iOS and Android in the recorded hosted run"
+  },
+  "hostedOracle": {
+    "workflowUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37006291589",
+    "commit": "d4e5673abbaa6c433a4330d0b9c41171a49b4e30",
+    "fixture": "core-ui-v2",
+    "status": "matched_subset",
+    "caseCount": 13,
+    "referencePlatforms": [
+      "android",
+      "ios"
+    ],
+    "completeMobileReferences": true,
+    "fixtureSha256": "494c0d77e6f7a062d11fc83fd454675158c6a675bf1bc078707a806656cc314b",
+    "runtimeSha256": "4789b9a6e5ee2669dda9a83168119bc884194c9fbb7788585c2e186ec89cd67a",
+    "casesSha256": "59042db76c90659482ded32a01269b85ffa27440c8348cce2c87feb48cf700e4",
+    "comparisonSha256": "4dcba19a18f52e71fef31c164451f3aa6d7892ac07dc2f084059a20a5cc8086c"
   }
 }
