@@ -24,6 +24,10 @@ audit remain the original 2026-10-01 snapshot; they must not be read as current
 export counts. Full types/props, mobile editing and differential certification
 remain open in GF-03/GF-04/GF-12/GF-17.
 
+The bounded GF-05 runtime implementation and its 13-case original-native
+comparison are recorded in [the runtime example](evidence/runtime/README.md).
+The tables below preserve the audit-date findings.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

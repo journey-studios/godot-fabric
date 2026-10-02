@@ -4,7 +4,9 @@ Checkpoint: **2026-10-02**. The [TSX form](../../../examples/form/README.md)
 uses public RN imports and the original React/Fabric runtime with real Godot
 Button and single-line LineEdit Controls. These are local macOS arm64 results
 with official Godot 4.7.2, React 19.2.3, RN 0.87.1 and Hermes 250829098.0.17.
-Godot itself was not rebuilt.
+Godot itself was not rebuilt. The counts, hashes and captures below retain this
+checkpoint before integration with the runtime example and 13-case oracle.
+See [runtime evidence](../runtime/README.md) for that separate implementation.
 
 ## Native form
 
@@ -72,8 +74,8 @@ were regression-checked with the same ten cases after all runtime changes.
 ## Scope
 
 This form is Godot acceptance evidence, not new iOS/Android differential
-certification. The existing original-mobile oracle still covers its nine shared
-core cases. Physical hardware input, IME/virtual keyboard, multiline,
+certification. At this checkpoint the original-mobile oracle covered nine shared
+core cases; the later runtime snapshot extends it to 13. Physical hardware input, IME/virtual keyboard, multiline,
 accessibility, complete types/props, NativeWind TextInput interop and other
 platform builds remain open. The [API](../../API.md) defines the implemented
 subset and [roadmap](../../../ROADMAP.md) retains those larger milestones as

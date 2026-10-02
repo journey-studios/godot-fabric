@@ -9,4 +9,3 @@ func key(code: Key, unicode_value: int = 0, shift := false, ctrl := false) -> vo
     event.ctrl_pressed = ctrl
     event.pressed = pressed
     get_viewport().push_input(event)
-

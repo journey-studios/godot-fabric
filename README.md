@@ -72,8 +72,10 @@ the existing `npm start` flags remain available.
 ## Example gallery
 
 These are real Godot Viewport captures of the runnable examples. Launch a case
-with `npm run example -- <name>`; the [evidence record](docs/evidence/public-controls/README.md)
-includes initial/updated form captures and validation results for every example.
+with `npm run example -- <name>`; the [public control evidence](docs/evidence/public-controls/README.md)
+includes initial/updated form captures and its ten-example validation snapshot.
+The [runtime evidence](docs/evidence/runtime/README.md) records the additional
+clock example separately.
 
 | Counter | NativeWind | Chart Kit |
 | --- | --- | --- |
@@ -84,6 +86,18 @@ includes initial/updated form captures and validation results for every example.
 | [![Scrolling and editing](docs/evidence/public-controls/scroll-initial.png)](examples/scroll/README.md) | [![Rich text](docs/evidence/public-controls/typography-initial.png)](examples/typography/README.md) | [![Native form rerender](docs/evidence/public-controls/form-changed.png)](examples/form/README.md) |
 
 ## Write React
+
+### Runtime example
+
+`npm run example -- runtime` opens a public React Native UI driven by intervals
+and animation frames. Start runs four shared runtime probes; Pause cancels the
+clock; six ticks complete the progress bar. See the
+[initial, paused and completed captures](docs/evidence/runtime/README.md) for
+the assertions behind each image and the remaining GF-05 gaps.
+
+![Timers commit the completed React state to real Godot Controls](docs/evidence/runtime/complete.png)
+
+### Components
 
 The build aliases `react-native` to the Godot platform facade and applies
 the original NativeWind compiler. Start with the public
@@ -120,6 +134,7 @@ npm package or a drop-in addon with prebuilt binaries.
 
 ```sh
 npm run test:examples                    # all interactive demos, headless and sequential
+npm run test:runtime                     # native deadline budget and callback error recovery
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static

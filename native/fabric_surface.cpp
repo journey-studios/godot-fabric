@@ -6,6 +6,8 @@
 #include "scroll_adapter.h"
 #include "appearance_adapter.h"
 #include "paragraph_view.h"
+#include "timer_registry.h"
+#include <react/runtime/TimerManager.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
@@ -71,8 +73,10 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
   std::shared_ptr<rn::EventDispatcher> dispatcher;
   GodotEventBeat *beat{};
   std::deque<rn::RawCallback> work;
-  struct Timer { double due; jsi::Function callback; };
-  std::map<int, Timer> timers;
+  std::unique_ptr<rn::TimerManager> timer_manager;
+  fabric_godot::TimerRegistry *timer_registry{}; // Owned by TimerManager.
+  std::optional<jsi::Function> clear_timer;
+  uint32_t dispatching_timer{};
   std::map<int, jsi::Function> frame_callbacks;
   int frame_callbacks_run{};
   struct Mounted {
@@ -86,7 +90,7 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
   std::unordered_map<Control *, int> native_tags;
   std::set<int> retiring;
   std::unique_ptr<fabric_godot::PointerAdapter> pointer;
-  int next_timer{1};
+  int next_frame{1};
   int commits{}, mount_reports{}, creates{}, deletes{}, updates{}, events{};
   bool stopped{false};
   bool stopping{false};
@@ -214,22 +218,29 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
       if (count) UtilityFunctions::print(String("HERMES: ") + gd(args[0].toString(rt).utf8(rt)));
       return jsi::Value::undefined();
     });
-    bind("setTimeout", 2, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
-      if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
-        throw jsi::JSError(rt, "setTimeout requires a function");
-      int id = next_timer++;
-      double delay = count > 1 && args[1].isNumber() ? std::max(0.0, args[1].asNumber()) : 0;
-      timers.emplace(id, Timer{now_ms() + delay, args[0].asObject(rt).asFunction(rt)});
-      return jsi::Value(id);
+    auto registry = std::make_unique<fabric_godot::TimerRegistry>(now_ms);
+    timer_registry = registry.get();
+    timer_manager = std::make_unique<rn::TimerManager>(std::move(registry));
+    timer_manager->setRuntimeExecutor([this](rn::RawCallback &&callback) {
+      const auto id = dispatching_timer;
+      work.push_back([this, id, callback = std::move(callback)](jsi::Runtime &rt) {
+        try { callback(rt); }
+        catch (const std::exception &error) { fail(error.what()); }
+        // Upstream erases one-shot callbacks after invocation. A throwing
+        // callback bypasses that erase; release it through the original API.
+        if (!timer_registry->recurring(id)) clear_timer->call(rt, static_cast<double>(id));
+        timer_registry->finish(id, now_ms());
+      });
     });
-    bind("clearTimeout", 1, [this](auto &, auto &, const jsi::Value *args, size_t count) {
-      if (count && args[0].isNumber()) timers.erase(static_cast<int>(args[0].asNumber()));
-      return jsi::Value::undefined();
+    timer_manager->attachGlobals(*runtime);
+    clear_timer.emplace(runtime->global().getPropertyAsFunction(*runtime, "clearTimeout"));
+    bind("godotRuntimeActive", 0, [this](auto &, auto &, const auto *, size_t) {
+      return jsi::Value(!stopping && !stopped);
     });
     bind("requestAnimationFrame", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
         throw jsi::JSError(rt, "requestAnimationFrame requires a function");
-      const int id = next_timer++;
+      const int id = next_frame++;
       frame_callbacks.emplace(id, args[0].asObject(rt).asFunction(rt));
       return jsi::Value(id);
     });
@@ -264,8 +275,6 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
     });
     evaluate("globalThis.global=globalThis; globalThis.__DEV__=false;"
         "globalThis.performance={now:nativePerformanceNow};"
-        "globalThis.setImmediate=(fn,...args)=>setTimeout(()=>fn(...args),0);"
-        "globalThis.clearImmediate=clearTimeout;"
         "globalThis.console={log:(...a)=>nativeLoggingHook(a.join(' '),0),"
         "warn:(...a)=>nativeLoggingHook(a.join(' '),1),error:(...a)=>nativeLoggingHook(a.join(' '),2)};");
   }
@@ -281,6 +290,8 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
         if (mounted.scroll) mounted.scroll->sample();
       }
       beat->tick();
+      // Finish the preceding JS turn's microtasks before due native timers.
+      runtime->drainMicrotasks();
       // Snapshot the current frame. Callbacks scheduled by a callback, timer,
       // or React commit are deferred to the next Godot frame, never a tight loop.
       std::vector<int> frame_ids;
@@ -291,23 +302,21 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
         auto callback = frame_callbacks.extract(id);
         if (callback.empty()) continue;
         ++frame_callbacks_run;
-        callback.mapped().call(*runtime, frame_time);
+        try { callback.mapped().call(*runtime, frame_time); }
+        catch (const std::exception &error) { fail(error.what()); }
         runtime->drainMicrotasks();
       }
       // Bound a frame's work. Timers created by a callback run on a later tick.
-      auto due = std::vector<int>();
-      const double time = now_ms();
       if (!stopping)
-        for (const auto &[id, timer] : timers) if (timer.due <= time) due.push_back(id);
-      for (int id : due) {
-        auto item = timers.extract(id);
-        if (!item.empty()) item.mapped().callback.call(*runtime);
-        runtime->drainMicrotasks();
-      }
+        for (auto id : timer_registry->take_due(now_ms())) {
+          dispatching_timer = id;
+          timer_manager->callTimer(id);
+        }
       for (int limit = 0; !work.empty() && limit < 256; ++limit) {
         auto callback = std::move(work.front());
         work.pop_front();
-        callback(*runtime);
+        try { callback(*runtime); }
+        catch (const std::exception &error) { fail(error.what()); }
         runtime->drainMicrotasks();
       }
       runtime->drainMicrotasks();
@@ -318,6 +327,9 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
     // O pump ainda conclui unmount e effects, mas não executa timers do app
     // depois que o encerramento começa, mesmo que o prazo já tenha vencido.
     stopping = true;
+    // Cancel already queued timers as well as deadlines before flushing React.
+    for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
+    frame_callbacks.clear();
     try {
       pointer->cancel();
       pump();
@@ -337,7 +349,7 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
     ui->setDelegate(nullptr);
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(nullptr);
     window_listener.reset();
-    timers.clear();
+    timer_registry->quit();
     frame_callbacks.clear();
     work.clear();
     stopped = true;
@@ -663,7 +675,8 @@ struct FabricSurface::Impl final : rn::UIManagerDelegate {
   std::string snapshot() {
     folly::dynamic result = folly::dynamic::object("commits", commits)("mountReports", mount_reports)
         ("retiringTags", retiring.size())("creates", creates)("deletes", deletes)
-        ("updates", updates)("events", events)("stopped", stopped)("pendingTimers", timers.size())
+        ("updates", updates)("events", events)("stopped", stopped)("pendingTimers", timer_registry->size())
+        ("pendingWork", work.size())("timerEngine", "react-native/TimerManager")
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())("viewportUpdates", viewport_updates)
         ("windowListener", window_listener.has_value())("nativeTags", native_tags.size())
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)

@@ -84,6 +84,31 @@ This prop audit is still incomplete for the other public facade components.
 
 ## Platform and performance
 
+### JavaScript runtime
+
+The host compiles the pinned RN `TimerManager.cpp` unchanged. `setTimeout` and
+`setInterval` preserve callback arguments and upstream delay coercion;
+`clearTimeout`/`clearInterval` share cancellation authority. Missing callbacks
+throw, while non-function timer callbacks return zero in this pinned RN version.
+The original portable RN microtask and immediate modules provide
+`queueMicrotask`, `setImmediate` and `clearImmediate` over Hermes Promise jobs.
+
+Godot supplies deadlines and a bounded native work pump. Overdue intervals do
+not replay missed ticks in a burst. RAF runs on Godot process frames with a
+shared monotonic timestamp; callbacks scheduled during a frame wait for the
+next frame. `performance.now()` uses the same monotonic clock.
+
+Callback exceptions reach the host error channel. A failed one-shot releases
+its registration; a failed interval remains recurring until cancelled.
+Surface shutdown cancels registered timers/frames and suppresses pending
+portable microtask/immediate callbacks. Retained scheduling functions cannot
+restart them after shutdown. Ordinary Promises are not a cancellation API.
+
+[Runtime evidence](evidence/runtime/README.md) documents the positive and
+negative native checks. This is a partial GF-05 bootstrap: idle callbacks,
+unhandled rejection/error-handler parity, URL/encoding/abort globals and
+microtask starvation protection remain uncertified. No worker thread is used.
+
 The build currently targets macOS arm64 only. Linux, Windows, iOS, Android and
 Web need their own dependency/toolchain and runtime validation. Installing
 Godot on those systems does not by itself make this GDExtension available.

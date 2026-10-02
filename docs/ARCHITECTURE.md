@@ -55,6 +55,21 @@ React root does not imply parallel native execution.
 
 ## Input and lifecycle
 
+The upstream portable `TimerManager` owns timer callbacks, their JSI arguments,
+coercion and cancellation. [TimerRegistry](../native/timer_registry.h) only
+holds Godot deadlines. Due callbacks enter the existing runtime executor;
+the registry marks queued handles so a backlog cannot dispatch duplicates.
+The pump bounds timer dispatch and runtime-executor work to 256 entries each
+per turn and completes Hermes microtasks between tasks. This budget does not
+bound the RAF snapshot or recursively queued Promise jobs.
+
+[Runtime initialization](../src/runtime.js) imports the original RN portable
+microtask/immediate shims. It is an audited bootstrap subset rather than all of
+`InitializeCore`, whose native OS services are still missing. Godot keeps its
+frame-driven RAF adapter; upstream `TimerManager`'s zero-delay RAF fallback is
+replaced by actual Godot process frames. The shared oracle compares cancellation
+and clock monotonicity, not OS frame cadence or numeric timestamps.
+
 Native input enters the original TouchEventEmitter and responder machinery.
 Upstream Pressability decides press behavior. ScrollView uses the original
 descriptor/state and a Godot ScrollContainer, with responder-mediated transfer

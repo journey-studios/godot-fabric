@@ -1,11 +1,15 @@
 [
-  { "id": "native-layout", "contracts": ["event:ViewProps.onLayout", "style:ViewStyle.width", "style:ViewStyle.height", "style:ViewStyle.padding"] },
-  { "id": "native-measure", "contracts": ["ref-member:ViewInstance.measure"] },
-  { "id": "automatic-batching", "contracts": [], "reactFeature": "Two functional updates in one task produce a single visible state commit" },
-  { "id": "keyed-reorder", "contracts": [], "reactFeature": "Native positions change while keyed refs and effect mounts survive" },
-  { "id": "memo", "contracts": [], "reactFeature": "Memoized rows skip unrelated renders" },
-  { "id": "context-update", "contracts": [], "reactFeature": "Context update reaches a committed descendant" },
-  { "id": "external-store", "contracts": [], "reactFeature": "useSyncExternalStore publishes the next snapshot" },
-  { "id": "transition-commit", "contracts": [], "reactFeature": "startTransition eventually commits its update" },
-  { "id": "unmount-cleanup", "contracts": [], "reactFeature": "Unmount removes effects and external-store subscriptions" }
+  {"id": "native-layout", "contracts": ["event:ViewProps.onLayout", "style:ViewStyle.width", "style:ViewStyle.height", "style:ViewStyle.padding"]},
+  {"id": "native-measure", "contracts": ["ref-member:ViewInstance.measure"]},
+  {"id": "automatic-batching", "contracts": [], "reactFeature": "Two functional updates in one task produce a single visible state commit"},
+  {"id": "keyed-reorder", "contracts": [], "reactFeature": "Native positions change while keyed refs and effect mounts survive"},
+  {"id": "memo", "contracts": [], "reactFeature": "Memoized rows skip unrelated renders"},
+  {"id": "context-update", "contracts": [], "reactFeature": "Context update reaches a committed descendant"},
+  {"id": "external-store", "contracts": [], "reactFeature": "useSyncExternalStore publishes the next snapshot"},
+  {"id": "transition-commit", "contracts": [], "reactFeature": "startTransition eventually commits its update"},
+  {"id": "unmount-cleanup", "contracts": [], "reactFeature": "Unmount removes effects and external-store subscriptions"},
+  {"id": "timer-arguments-cancellation", "contracts": ["global-value:global.setTimeout", "global-value:global.clearTimeout", "global-value:global.clearInterval"], "runtimeFeature": "Timeout callback arguments, object identity, delay coercion, invalid callbacks and cross-cancellation"},
+  {"id": "interval-arguments-cancellation", "contracts": ["global-value:global.setInterval", "global-value:global.clearTimeout"], "runtimeFeature": "Recurring callback arguments and cancellation inside a callback"},
+  {"id": "microtask-immediate-order", "contracts": ["global-value:global.setImmediate", "global-value:global.clearImmediate"], "runtimeFeature": "Promise, nested microtask and cancellable immediate ordering before timers"},
+  {"id": "animation-frame-clock", "contracts": ["global-value:global.requestAnimationFrame", "global-value:global.cancelAnimationFrame"], "runtimeFeature": "Cancellable frames with finite monotonic performance timestamps"}
 ]

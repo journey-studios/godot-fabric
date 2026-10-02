@@ -7,13 +7,14 @@ export function provenance() {
   const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
   return {
     fixtureSha256: hash(readFileSync(new URL("../tests/parity/fixture.jsx", import.meta.url))),
+    runtimeSha256: hash(readFileSync(new URL("../tests/parity/runtime.js", import.meta.url))),
     casesSha256: hash(readFileSync(new URL("../tests/parity/cases.json", import.meta.url))),
     upstreamSha256: hash(readFileSync(new URL("../node_modules/react-native/types_generated/index.d.ts", import.meta.url))),
   };
 }
 export function assertReport(report, platform) {
   assert.equal(report.schemaVersion, 1);
-  assert.equal(report.fixture, "core-ui-v1");
+  assert.equal(report.fixture, "core-ui-v2");
   assert.equal(report.platform, platform);
   assert.equal(report.status, "passed");
   assert.equal(report.reactNative, "0.87.1");
@@ -26,6 +27,9 @@ export function assertReport(report, platform) {
   assert.deepEqual(report.observations, {
     box: { x: 8, y: 8, width: 120, height: 40 }, rows: { A: 64, B: 0 }, counts: [0, 2, 3],
     renders: { A: 1, B: 1 }, mounts: ["A", "B"], cleanups: ["B", "A"], context: "updated", store: 7, subscribers: 0,
+    runtime: { timeoutArgs: ["token", 42], objectIdentity: true, coercions: 1, cancelled: false,
+      intervalTicks: 3, intervalArgs: [["tick", 2], ["tick", 2], ["tick", 2]],
+      trace: ["sync", "promise", "microtask", "immediate", "nested", "timer"], frameCount: 2, monotonic: true, cancelledFrame: false },
   }, "Native geometry and lifecycle observations differ from the controlled fixture");
 }
 export function compareReports(godot, references) {
@@ -39,7 +43,7 @@ export function compareReports(godot, references) {
     assertReport(reference, reference.platform);
   }
   return {
-    schemaVersion: 1, status: "matched_subset", fixture: "core-ui-v1", ...provenance(),
+    schemaVersion: 1, status: "matched_subset", fixture: "core-ui-v2", ...provenance(),
     referencePlatforms: [...platforms].sort(), caseCount: cases.length,
     completeMobileReferences: platforms.has("ios") && platforms.has("android"),
     scope: "Only these fixture cases; not complete RN API, renderer semantics, event ordering or platform support",

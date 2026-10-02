@@ -53,6 +53,11 @@ passed with the log absent. Runtime source and the matrix evidence are unchanged
 
 ## Native captures
 
+The later [GF-05 runtime example](runtime/README.md) adds three real Viewport
+captures with explanations of starting, pausing and completing a React clock.
+Its local validation and remaining gaps are recorded separately from this
+initial release snapshot.
+
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
 

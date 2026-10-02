@@ -58,6 +58,7 @@ const manifest = path.join(project, "android/app/src/main/AndroidManifest.xml");
 writeFileSync(manifest, readFileSync(manifest, "utf8").replace('android:usesCleartextTraffic="${usesCleartextTraffic}"', 'android:usesCleartextTraffic="true"'));
 mkdirSync(path.join(project, "parity"), { recursive: true });
 writeFileSync(path.join(project, "parity/fixture.jsx"), fixture);
+cpSync(path.join(root, "tests/parity/runtime.js"), path.join(project, "parity/runtime.js"));
 rmSync(path.join(project, "App.tsx"), { force: true });
 
 let resolveReport;
@@ -140,7 +141,9 @@ try {
 } finally {
   server.close();
   const actions = [];
-  if (bootedHere) actions.push(() => command("xcrun", ["simctl", "shutdown", simulator.udid], project, 30000));
+  // Fresh hosted simulators took over 30s to shut down after valid completion.
+  // Keep cleanup mandatory, with a bounded deadline consistent with boot work.
+  if (bootedHere) actions.push(() => command("xcrun", ["simctl", "shutdown", simulator.udid], project, 120000));
   if (reversedHere) actions.push(() => command("adb", ["-s", serial, "reverse", "--remove", `tcp:${port}`], project, 30000));
   try { await cleanupReference(actions, primaryError); }
   catch (error) { rmSync(reportPath, { force: true }); throw error; }

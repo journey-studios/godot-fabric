@@ -25,6 +25,7 @@ set(MODULES
   react/performance/cdpmetrics jsinspector-modern/tracing
   reactperflogger/reactperflogger jserrorhandler logger oscompat)
 set(SOURCES "${RN}/jsi/jsi/jsi.cpp" "${RN}/jsi/jsi/JSIDynamic.cpp"
+  "${RN}/react/runtime/TimerManager.cpp"
   "${RN}/runtimeexecutor/platform/cxx/ReactCommon/RuntimeExecutorSyncUIThreadUtils.cpp")
 foreach(MODULE IN LISTS MODULES)
   file(GLOB MODULE_SOURCES CONFIGURE_DEPENDS "${RN}/${MODULE}/*.cpp")
@@ -66,6 +67,8 @@ target_link_libraries(fabric_core PUBLIC
   "${HERMES}/Library/Frameworks/macosx/hermesvm.framework/hermesvm")
 add_executable(fabric_smoke smoke.cpp)
 target_link_libraries(fabric_smoke PRIVATE fabric_core)
+add_executable(timer_registry_test timer_registry_test.cpp)
+target_include_directories(timer_registry_test PRIVATE "${RN}")
 
 set(GODOTCPP_TARGET template_release CACHE STRING "" FORCE)
 set(GODOTCPP_BUILD_PROFILE "${CMAKE_CURRENT_SOURCE_DIR}/godot-profile.json" CACHE FILEPATH "" FORCE)
