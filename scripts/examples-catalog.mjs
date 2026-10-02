@@ -10,7 +10,7 @@ export function exampleOptions(args) {
   if (names.length > 1) throw new Error("Choose one example at a time");
   if (flags.includes("--headless") && flags.includes("--capture")) throw new Error("Capture requires a native window");
   if (flags.includes("--list") || flags.includes("--help")) return { list: true };
-  const example = examples.find((entry) => entry.id === (names[0] || "react"));
+  const example = examples.find((entry) => entry.id === (names[0] || "counter"));
   if (!example) throw new Error(`Unknown example: ${names[0]}. Use npm run examples:list`);
   if (example.automated && flags.includes("--capture")) throw new Error("The parity oracle reports observations; it does not capture images");
   return { example, check: flags.some((flag) => ["--check", "--headless", "--capture"].includes(flag)),

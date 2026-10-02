@@ -1,0 +1,4841 @@
+{
+  "afterStop": {
+    "animationFramesRun": 0.0,
+    "commits": 57.0,
+    "creates": 509.0,
+    "deletes": 509.0,
+    "errors": [],
+    "events": 40.0,
+    "mountReports": 57.0,
+    "nativeTags": 0.0,
+    "nodes": [],
+    "pendingAnimationFrames": 0.0,
+    "pendingTimers": 0.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 3.0,
+      "ends": 5.0,
+      "grants": 12.0,
+      "moves": 8.0,
+      "releases": 12.0,
+      "responder": 0.0,
+      "starts": 8.0
+    },
+    "retiringTags": 0.0,
+    "stopped": true,
+    "textMeasurements": 0.0,
+    "updates": 344.0,
+    "viewport": {
+      "height": 680.0,
+      "width": 900.0
+    },
+    "viewportUpdates": 2.0,
+    "windowListener": false
+  },
+  "beforeStop": {
+    "animationFramesRun": 0.0,
+    "commits": 55.0,
+    "creates": 509.0,
+    "deletes": 394.0,
+    "errors": [],
+    "events": 40.0,
+    "mountReports": 55.0,
+    "nativeTags": 115.0,
+    "nodes": [
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 32.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 32.0,
+        "id": 27514635739.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Fabric + Godot · inventário com ScrollView nativo",
+        "opacity": 1.0,
+        "tag": 2.0,
+        "testID": "",
+        "text": "Fabric + Godot · inventário com ScrollView nativo",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 24.0
+      },
+      {
+        "caret": 0.0,
+        "editable": true,
+        "fabricHeight": 38.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 38.0,
+        "id": 27564967390.0,
+        "input": {
+          "composing": false,
+          "deferredCommands": 0.0,
+          "editing": false,
+          "eventCount": 1.0,
+          "pendingEdit": false,
+          "rejectedCommands": 0.0,
+          "selection": {
+            "end": 0.0,
+            "start": 0.0
+          }
+        },
+        "kind": "input",
+        "nativeText": "",
+        "opacity": 1.0,
+        "placeholder": "Filtrar mercadorias",
+        "tag": 4.0,
+        "testID": "filter",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 68.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 28.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 28.0,
+        "id": 27615299041.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Selecionado: Registro 00",
+        "opacity": 1.0,
+        "tag": 6.0,
+        "testID": "selection",
+        "text": "Selecionado: Registro 00",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 852.0,
+        "wrap": 3.0,
+        "x": 24.0,
+        "y": 118.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 220.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 34712061735.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Alimentos",
+        "opacity": 1.0,
+        "tag": 204.0,
+        "testID": "",
+        "text": "Alimentos",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 220.0,
+        "wrap": 3.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 220.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 34762393386.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Ferramentas",
+        "opacity": 1.0,
+        "tag": 206.0,
+        "testID": "",
+        "text": "Ferramentas",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 220.0,
+        "wrap": 3.0,
+        "x": 220.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 220.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 34812725037.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Materiais",
+        "opacity": 1.0,
+        "tag": 208.0,
+        "testID": "",
+        "text": "Materiais",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 220.0,
+        "wrap": 3.0,
+        "x": 440.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 220.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 34863056688.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Equipamentos",
+        "opacity": 1.0,
+        "tag": 210.0,
+        "testID": "",
+        "text": "Equipamentos",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 220.0,
+        "wrap": 3.0,
+        "x": 660.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 220.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 34913388339.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Relíquias",
+        "opacity": 1.0,
+        "tag": 212.0,
+        "testID": "",
+        "text": "Relíquias",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 220.0,
+        "wrap": 3.0,
+        "x": 880.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 220.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 34963719990.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "Comércio",
+        "opacity": 1.0,
+        "tag": 214.0,
+        "testID": "",
+        "text": "Comércio",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 220.0,
+        "wrap": 3.0,
+        "x": 1100.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 1320.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 34661729795.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 216.0,
+        "testID": "categories-content",
+        "text": "",
+        "visible": true,
+        "width": 1320.0,
+        "x": -228.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 27883734513.0,
+        "kind": "scroll",
+        "opacity": 1.0,
+        "scroll": {
+          "begins": 0.0,
+          "contentHeight": 48.0,
+          "contentWidth": 1320.0,
+          "dragging": false,
+          "enabled": true,
+          "ends": 0.0,
+          "fabricX": 228.0,
+          "fabricY": 0.0,
+          "maxX": 468.0,
+          "maxY": 0.0,
+          "scrolls": 2.0,
+          "x": 228.0,
+          "y": 0.0
+        },
+        "tag": 218.0,
+        "testID": "categories",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 558.0
+      },
+      {
+        "fabricHeight": 38.0,
+        "fabricWidth": 276.0,
+        "focused": false,
+        "height": 38.0,
+        "id": 35131492134.0,
+        "kind": "button",
+        "nativeText": "Início",
+        "opacity": 1.0,
+        "tag": 220.0,
+        "testID": "",
+        "text": "Início",
+        "visible": true,
+        "width": 276.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 38.0,
+        "fabricWidth": 276.0,
+        "focused": false,
+        "height": 38.0,
+        "id": 35181823804.0,
+        "kind": "button",
+        "nativeText": "Fim",
+        "opacity": 1.0,
+        "tag": 222.0,
+        "testID": "",
+        "text": "Fim",
+        "visible": true,
+        "width": 276.0,
+        "x": 288.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 38.0,
+        "fabricWidth": 276.0,
+        "focused": false,
+        "height": 38.0,
+        "id": 35232155455.0,
+        "kind": "button",
+        "nativeText": "Desativar rolagem",
+        "opacity": 1.0,
+        "tag": 224.0,
+        "testID": "",
+        "text": "Desativar rolagem",
+        "visible": true,
+        "width": 276.0,
+        "x": 576.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 38.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 38.0,
+        "id": 28101838334.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 226.0,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 618.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 680.0,
+        "fabricWidth": 900.0,
+        "focused": false,
+        "height": 680.0,
+        "id": 27464304078.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 228.0,
+        "testID": "inventory-root",
+        "text": "",
+        "visible": true,
+        "width": 900.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "caret": 0.0,
+        "editable": true,
+        "fabricHeight": 38.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 38.0,
+        "id": 35987129821.0,
+        "input": {
+          "composing": false,
+          "deferredCommands": 0.0,
+          "editing": false,
+          "eventCount": 1.0,
+          "pendingEdit": false,
+          "rejectedCommands": 0.0,
+          "selection": {
+            "end": 0.0,
+            "start": 0.0
+          }
+        },
+        "kind": "input",
+        "nativeText": "Registro 00",
+        "opacity": 1.0,
+        "placeholder": "",
+        "tag": 230.0,
+        "testID": "rename",
+        "text": "Registro 00",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 158.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74557949598.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "00  ·  Registro 00  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 826.0,
+        "testID": "",
+        "text": "00  ·  Registro 00  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72142030352.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 828.0,
+        "testID": "item-0",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74625058471.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "01  ·  Registro 01  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 830.0,
+        "testID": "",
+        "text": "01  ·  Registro 01  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72192362003.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 832.0,
+        "testID": "item-1",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 48.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74692167338.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "02  ·  Registro 02  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 834.0,
+        "testID": "",
+        "text": "02  ·  Registro 02  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72242693654.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 836.0,
+        "testID": "item-2",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 96.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74759276205.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "03  ·  Registro 03  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 838.0,
+        "testID": "",
+        "text": "03  ·  Registro 03  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72293025305.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 840.0,
+        "testID": "item-3",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 144.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74826385072.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "04  ·  Registro 04  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 842.0,
+        "testID": "",
+        "text": "04  ·  Registro 04  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72343356956.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 844.0,
+        "testID": "item-4",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 192.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74893493939.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "05  ·  Registro 05  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 846.0,
+        "testID": "",
+        "text": "05  ·  Registro 05  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72393688607.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 848.0,
+        "testID": "item-5",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 240.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 74960602806.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "06  ·  Registro 06  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 850.0,
+        "testID": "",
+        "text": "06  ·  Registro 06  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72444020258.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 852.0,
+        "testID": "item-6",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 288.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75027711673.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "07  ·  Registro 07  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 854.0,
+        "testID": "",
+        "text": "07  ·  Registro 07  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72494351909.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 856.0,
+        "testID": "item-7",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 336.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75094820540.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "08  ·  Registro 08  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 858.0,
+        "testID": "",
+        "text": "08  ·  Registro 08  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72544683560.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 860.0,
+        "testID": "item-8",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 384.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75161929407.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "09  ·  Registro 09  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 862.0,
+        "testID": "",
+        "text": "09  ·  Registro 09  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72595015211.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 864.0,
+        "testID": "item-9",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 432.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75229038274.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "10  ·  Registro 10  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 866.0,
+        "testID": "",
+        "text": "10  ·  Registro 10  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72645346862.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 868.0,
+        "testID": "item-10",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 480.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75296147141.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "11  ·  Registro 11  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 870.0,
+        "testID": "",
+        "text": "11  ·  Registro 11  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72695678513.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 872.0,
+        "testID": "item-11",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 528.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75363256008.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "12  ·  Registro 12  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 874.0,
+        "testID": "",
+        "text": "12  ·  Registro 12  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72746010164.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 876.0,
+        "testID": "item-12",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 576.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75430364875.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "13  ·  Registro 13  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 878.0,
+        "testID": "",
+        "text": "13  ·  Registro 13  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72796341815.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 880.0,
+        "testID": "item-13",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 624.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75497473742.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "14  ·  Registro 14  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 882.0,
+        "testID": "",
+        "text": "14  ·  Registro 14  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72846673466.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 884.0,
+        "testID": "item-14",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 672.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75564582609.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "15  ·  Registro 15  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 886.0,
+        "testID": "",
+        "text": "15  ·  Registro 15  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72897005117.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 888.0,
+        "testID": "item-15",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 720.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75631691476.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "16  ·  Registro 16  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 890.0,
+        "testID": "",
+        "text": "16  ·  Registro 16  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72947336768.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 892.0,
+        "testID": "item-16",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 768.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75698800343.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "17  ·  Registro 17  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 894.0,
+        "testID": "",
+        "text": "17  ·  Registro 17  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 72997668419.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 896.0,
+        "testID": "item-17",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 816.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75765909210.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "18  ·  Registro 18  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 898.0,
+        "testID": "",
+        "text": "18  ·  Registro 18  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73048000070.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 900.0,
+        "testID": "item-18",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 864.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75833018077.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "19  ·  Registro 19  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 902.0,
+        "testID": "",
+        "text": "19  ·  Registro 19  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73098331721.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 904.0,
+        "testID": "item-19",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 912.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75900126944.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "20  ·  Registro 20  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 906.0,
+        "testID": "",
+        "text": "20  ·  Registro 20  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73148663372.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 908.0,
+        "testID": "item-20",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 960.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 75967235811.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "21  ·  Registro 21  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 910.0,
+        "testID": "",
+        "text": "21  ·  Registro 21  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73198995023.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 912.0,
+        "testID": "item-21",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1008.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76034344678.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "22  ·  Registro 22  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 914.0,
+        "testID": "",
+        "text": "22  ·  Registro 22  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73249326674.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 916.0,
+        "testID": "item-22",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1056.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76101453545.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "23  ·  Registro 23  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 918.0,
+        "testID": "",
+        "text": "23  ·  Registro 23  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73299658325.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 920.0,
+        "testID": "item-23",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1104.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76168562412.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "24  ·  Registro 24  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 922.0,
+        "testID": "",
+        "text": "24  ·  Registro 24  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73349989976.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 924.0,
+        "testID": "item-24",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1152.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76235671279.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "25  ·  Registro 25  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 926.0,
+        "testID": "",
+        "text": "25  ·  Registro 25  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73400321627.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 928.0,
+        "testID": "item-25",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1200.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76302780146.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "26  ·  Registro 26  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 930.0,
+        "testID": "",
+        "text": "26  ·  Registro 26  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73450653278.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 932.0,
+        "testID": "item-26",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1248.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76369889013.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "27  ·  Registro 27  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 934.0,
+        "testID": "",
+        "text": "27  ·  Registro 27  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73500984929.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 936.0,
+        "testID": "item-27",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1296.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76436997880.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "28  ·  Registro 28  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 938.0,
+        "testID": "",
+        "text": "28  ·  Registro 28  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73551316580.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 940.0,
+        "testID": "item-28",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1344.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76504106747.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "29  ·  Registro 29  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 942.0,
+        "testID": "",
+        "text": "29  ·  Registro 29  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73601648231.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 944.0,
+        "testID": "item-29",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1392.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76571215614.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "30  ·  Registro 30  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 946.0,
+        "testID": "",
+        "text": "30  ·  Registro 30  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73651979882.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 948.0,
+        "testID": "item-30",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1440.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76638324481.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "31  ·  Registro 31  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 950.0,
+        "testID": "",
+        "text": "31  ·  Registro 31  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73702311533.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 952.0,
+        "testID": "item-31",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1488.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76705433348.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "32  ·  Registro 32  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 954.0,
+        "testID": "",
+        "text": "32  ·  Registro 32  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73752643184.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 956.0,
+        "testID": "item-32",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1536.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76772542215.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "33  ·  Registro 33  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 958.0,
+        "testID": "",
+        "text": "33  ·  Registro 33  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73802974835.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 960.0,
+        "testID": "item-33",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1584.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76839651082.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "34  ·  Registro 34  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 962.0,
+        "testID": "",
+        "text": "34  ·  Registro 34  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73853306486.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 964.0,
+        "testID": "item-34",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1632.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76906759949.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "35  ·  Registro 35  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 966.0,
+        "testID": "",
+        "text": "35  ·  Registro 35  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73903638137.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 968.0,
+        "testID": "item-35",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1680.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 76973868816.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "36  ·  Registro 36  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 970.0,
+        "testID": "",
+        "text": "36  ·  Registro 36  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 73953969788.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 972.0,
+        "testID": "item-36",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1728.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77040977683.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "37  ·  Registro 37  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 974.0,
+        "testID": "",
+        "text": "37  ·  Registro 37  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74004301439.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 976.0,
+        "testID": "item-37",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1776.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77108086550.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "38  ·  Registro 38  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 978.0,
+        "testID": "",
+        "text": "38  ·  Registro 38  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74054633090.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 980.0,
+        "testID": "item-38",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1824.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77175195417.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "39  ·  Registro 39  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 982.0,
+        "testID": "",
+        "text": "39  ·  Registro 39  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74104964741.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 984.0,
+        "testID": "item-39",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1872.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77242304284.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "40  ·  Registro 40  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 986.0,
+        "testID": "",
+        "text": "40  ·  Registro 40  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74155296392.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 988.0,
+        "testID": "item-40",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1920.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77309413151.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "41  ·  Registro 41  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 990.0,
+        "testID": "",
+        "text": "41  ·  Registro 41  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74205628043.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 992.0,
+        "testID": "item-41",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 1968.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77376522018.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "42  ·  Registro 42  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 994.0,
+        "testID": "",
+        "text": "42  ·  Registro 42  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74255959879.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 996.0,
+        "testID": "item-42",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 2016.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77443630880.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "43  ·  Registro 43  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 998.0,
+        "testID": "",
+        "text": "43  ·  Registro 43  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74306291151.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 1000.0,
+        "testID": "item-43",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 2064.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77510739604.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "44  ·  Registro 44  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 1002.0,
+        "testID": "",
+        "text": "44  ·  Registro 44  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74356623185.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 1004.0,
+        "testID": "item-44",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 2112.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77577848477.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "45  ·  Registro 45  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 1006.0,
+        "testID": "",
+        "text": "45  ·  Registro 45  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74406954825.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 1008.0,
+        "testID": "item-45",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 2160.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77644957338.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "46  ·  Registro 46  ·  8 un.",
+        "opacity": 1.0,
+        "tag": 1010.0,
+        "testID": "",
+        "text": "46  ·  Registro 46  ·  8 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74457286149.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 1012.0,
+        "testID": "item-46",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 2208.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "textColor": "ffffffff"
+        },
+        "clip": true,
+        "fabricHeight": 48.0,
+        "fabricWidth": 840.0,
+        "focused": false,
+        "fontSize": 18.0,
+        "height": 48.0,
+        "id": 77712066199.0,
+        "kind": "text",
+        "lines": 1.0,
+        "minimumHeight": 1.0,
+        "nativeFontSize": 18.0,
+        "nativeText": "47  ·  Registro 47  ·  12 un.",
+        "opacity": 1.0,
+        "tag": 1014.0,
+        "testID": "",
+        "text": "47  ·  Registro 47  ·  12 un.",
+        "visible": true,
+        "visibleLines": 1.0,
+        "width": 840.0,
+        "wrap": 3.0,
+        "x": 12.0,
+        "y": 0.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 48.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 48.0,
+        "id": 74507617942.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 1016.0,
+        "testID": "item-47",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 2256.0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "cornerRadii": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "fabricHeight": 2304.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 2304.0,
+        "id": 72091698701.0,
+        "kind": "view",
+        "opacity": 1.0,
+        "tag": 1018.0,
+        "testID": "inventory-content",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      {
+        "fabricHeight": 338.0,
+        "fabricWidth": 852.0,
+        "focused": false,
+        "height": 338.0,
+        "id": 71873594886.0,
+        "kind": "scroll",
+        "opacity": 1.0,
+        "scroll": {
+          "begins": 0.0,
+          "contentHeight": 2304.0,
+          "contentWidth": 852.0,
+          "dragging": false,
+          "enabled": true,
+          "ends": 0.0,
+          "fabricX": 0.0,
+          "fabricY": 0.0,
+          "maxX": 0.0,
+          "maxY": 1966.0,
+          "scrolls": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "tag": 1020.0,
+        "testID": "inventory",
+        "text": "",
+        "visible": true,
+        "width": 852.0,
+        "x": 24.0,
+        "y": 208.0
+      }
+    ],
+    "pendingAnimationFrames": 0.0,
+    "pendingTimers": 0.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 3.0,
+      "ends": 5.0,
+      "grants": 12.0,
+      "moves": 8.0,
+      "releases": 12.0,
+      "responder": 0.0,
+      "starts": 8.0
+    },
+    "retiringTags": 0.0,
+    "stopped": false,
+    "textMeasurements": 0.0,
+    "updates": 344.0,
+    "viewport": {
+      "height": 680.0,
+      "width": 900.0
+    },
+    "viewportUpdates": 2.0,
+    "windowListener": false
+  },
+  "checks": [
+    {
+      "name": "Native node committed: inventory",
+      "passed": true
+    },
+    {
+      "name": "Fabric ScrollView mounts a real Godot ScrollContainer",
+      "passed": true
+    },
+    {
+      "name": "Yoga supplies all 48 inventory row frames without shrinking",
+      "passed": true
+    },
+    {
+      "name": "Native scroll viewport keeps the committed Yoga height",
+      "passed": true
+    },
+    {
+      "name": "Native content keeps the committed Yoga height",
+      "passed": true
+    },
+    {
+      "name": "Content layout notification reports Yoga content size",
+      "passed": true
+    },
+    {
+      "name": "Pressability begins and rerenders native pressed state inside scroll content",
+      "passed": true
+    },
+    {
+      "name": "Normal click selects the inventory item through React state",
+      "passed": true
+    },
+    {
+      "name": "Native node committed: rename",
+      "passed": true
+    },
+    {
+      "name": "Motion below the pan threshold preserves the child responder",
+      "passed": true
+    },
+    {
+      "name": "Parent takes responder and moves native content when vertical drag crosses threshold",
+      "passed": true
+    },
+    {
+      "name": "React condition completed: GodotApp.stats().events.some(event => event.type === 'Out:0')",
+      "passed": true
+    },
+    {
+      "name": "Upstream termination cancels Pressability and native pressed style",
+      "passed": true
+    },
+    {
+      "name": "Scroll responder blocks native gesture handling after transfer",
+      "passed": true
+    },
+    {
+      "name": "Wheel input cannot move content during a responder-owned drag",
+      "passed": true
+    },
+    {
+      "name": "Canceled child produces neither delayed press nor long press",
+      "passed": true
+    },
+    {
+      "name": "One native begin/end pair closes the accepted drag",
+      "passed": true
+    },
+    {
+      "name": "Release clears both native capture and Fabric responder",
+      "passed": true
+    },
+    {
+      "name": "Fabric immutable ScrollView state matches native offset",
+      "passed": true
+    },
+    {
+      "name": "Original Fabric scroll event reports offset, content size and viewport size",
+      "passed": true
+    },
+    {
+      "name": "Native keyboard editing updates the selected inventory name through controlled React state",
+      "passed": true
+    },
+    {
+      "name": "Editing updates the existing keyed row without disturbing scroll position",
+      "passed": true
+    },
+    {
+      "name": "Native filter input rerenders matching rows and updates content bounds",
+      "passed": true
+    },
+    {
+      "name": "Clearing filter restores the scrollable inventory through React reconciliation",
+      "passed": true
+    },
+    {
+      "name": "Native scroll container cannot start a competing GUI pan recognizer",
+      "passed": true
+    },
+    {
+      "name": "Changing contentOffset props synchronizes native and Fabric scroll state",
+      "passed": true
+    },
+    {
+      "name": "scrollTo ref command updates native and Fabric state",
+      "passed": true
+    },
+    {
+      "name": "Fabric measureInWindow includes the native scroll translation",
+      "passed": true
+    },
+    {
+      "name": "Viewport wheel moves the committed native scroll container",
+      "passed": true
+    },
+    {
+      "name": "scrollToEnd clamps to native content bounds",
+      "passed": true
+    },
+    {
+      "name": "Wheel cannot overscroll the lower content boundary",
+      "passed": true
+    },
+    {
+      "name": "Negative ref offset clamps to the upper boundary",
+      "passed": true
+    },
+    {
+      "name": "Animated ref requests fail explicitly without moving content",
+      "passed": true
+    },
+    {
+      "name": "A second horizontal consumer updates Fabric state on its own axis",
+      "passed": true
+    },
+    {
+      "name": "Horizontal wheel respects the horizontal native content axis",
+      "passed": true
+    },
+    {
+      "name": "Native node committed: unsupported-scroll-error",
+      "passed": true
+    },
+    {
+      "name": "Unsupported pan control throws through a real React ErrorBoundary before native allocation",
+      "passed": true
+    },
+    {
+      "name": "Removing the rejected ScrollView preserves the working inventory and its offset",
+      "passed": true
+    },
+    {
+      "name": "Native resize relayouts scroll viewport and content through Yoga",
+      "passed": true
+    },
+    {
+      "name": "Growing viewport clamps the native offset and updates Fabric state",
+      "passed": true
+    },
+    {
+      "name": "Responsive relayout preserves the native scroll instance",
+      "passed": true
+    },
+    {
+      "name": "Noncancelable Pressability rejects parent scroll takeover",
+      "passed": true
+    },
+    {
+      "name": "Disabled scroll refuses touch pan and wheel input",
+      "passed": true
+    },
+    {
+      "name": "Real viewport touch drag and cancel close the native scroll gesture without a child press",
+      "passed": true
+    },
+    {
+      "name": "Touch cancellation clears capture and responder",
+      "passed": true
+    },
+    {
+      "name": "Disabling scroll during a live drag emits one terminal native event",
+      "passed": true
+    },
+    {
+      "name": "A disabled held gesture cannot continue moving native content",
+      "passed": true
+    },
+    {
+      "name": "Keyed content reorder preserves native identities and scroll position",
+      "passed": true
+    },
+    {
+      "name": "Content shrink clamps offset and publishes the new Fabric state",
+      "passed": true
+    },
+    {
+      "name": "Native node committed: empty",
+      "passed": true
+    },
+    {
+      "name": "React filtering unmounts rows and renders the empty state",
+      "passed": true
+    },
+    {
+      "name": "Unmount during a held child gesture releases capture and removes native scroll content",
+      "passed": true
+    },
+    {
+      "name": "Removed inventory cannot emit delayed child actions",
+      "passed": true
+    },
+    {
+      "name": "Native node committed: inventory",
+      "passed": true
+    },
+    {
+      "name": "Remount starts a new native scroll instance without retained offset",
+      "passed": true
+    },
+    {
+      "name": "Native node committed: inventory",
+      "passed": true
+    },
+    {
+      "name": "Initial contentOffset survives a fresh native mount after ranges are known",
+      "passed": true
+    },
+    {
+      "name": "Remounted inventory accepts a fresh native drag",
+      "passed": true
+    },
+    {
+      "name": "Unmount during a live scroll drag releases native and Fabric gesture authority",
+      "passed": true
+    },
+    {
+      "name": "Native node committed: inventory",
+      "passed": true
+    },
+    {
+      "name": "Surface shutdown releases every native instance, timer and contact",
+      "passed": true
+    },
+    {
+      "name": "React effect cleanup completes without runtime errors",
+      "passed": true
+    }
+  ],
+  "displayServer": "headless",
+  "godot": "4.7.2-stable (official)",
+  "hermes": "250829098.0.17",
+  "inputTransport": "viewport-pointer",
+  "osFocusIsolation": true,
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "reactState": {
+    "cleanups": 1.0,
+    "content": [
+      852.0,
+      2304.0
+    ],
+    "events": [
+      {
+        "type": "In:0"
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "timeStamp": 789523163.55925,
+        "timestamp": 1476608512.0,
+        "type": "Begin",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 70.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "timeStamp": 789523163.586,
+        "timestamp": 1476608512.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 70.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "targetContentOffset": {
+          "x": 0.0,
+          "y": 70.0
+        },
+        "timeStamp": 789523179.51175,
+        "timestamp": 1476608512.0,
+        "type": "End",
+        "velocity": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "timeStamp": 789523212.716583,
+        "timestamp": 1476608640.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "type": "In:0"
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "timeStamp": 789523243.756541,
+        "timestamp": 1476608640.0,
+        "type": "Begin",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 70.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "timeStamp": 789523243.774166,
+        "timestamp": 1476608640.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 70.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "targetContentOffset": {
+          "x": 0.0,
+          "y": 70.0
+        },
+        "timeStamp": 789523262.862375,
+        "timestamp": 1476608640.0,
+        "type": "End",
+        "velocity": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "zoomScale": 1.0
+      },
+      {
+        "type": "Out:0"
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "contentSize": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 202.0,
+        "timeStamp": 789523379.370125,
+        "timestamp": 1476608768.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "type": "In:47"
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 96.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 444.0,
+        "timeStamp": 789524028.941791,
+        "timestamp": 1476609408.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 96.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 824.0,
+        "timeStamp": 789524091.891666,
+        "timestamp": 1476609536.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 824.0,
+        "timeStamp": 789524125.509666,
+        "timestamp": 1476609536.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      },
+      {
+        "type": "In:0"
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 0.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 824.0,
+        "timeStamp": 789524183.713,
+        "timestamp": 1476609536.0,
+        "type": "Begin",
+        "zoomScale": 1.0
+      },
+      {
+        "contentInset": {
+          "bottom": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0
+        },
+        "contentOffset": {
+          "x": 0.0,
+          "y": 30.0
+        },
+        "contentSize": {
+          "height": 2304.0,
+          "width": 852.0
+        },
+        "layoutMeasurement": {
+          "height": 338.0,
+          "width": 852.0
+        },
+        "target": 824.0,
+        "timeStamp": 789524183.719333,
+        "timestamp": 1476609536.0,
+        "type": "Scroll",
+        "zoomScale": 1.0
+      }
+    ],
+    "measured": {
+      "height": 48.0,
+      "width": 852.0,
+      "x": 24.0,
+      "y": 88.0
+    },
+    "selected": 0.0,
+    "unsupported": "Godot scrollTo requires finite coordinates and animated: false",
+    "unsupportedProp": "Godot ScrollView disableScrollViewPanResponder is not implemented"
+  },
+  "scenario": "scroll",
+  "validationInputDevice": 1001
+}

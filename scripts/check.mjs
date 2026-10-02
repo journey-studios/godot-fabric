@@ -1,5 +1,5 @@
 import { spawnSync, spawn } from "node:child_process";
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { ensureGodotBinary } from "./godot-binary.mjs";
@@ -48,6 +48,7 @@ if (interactive) {
   const capture = process.argv.includes("--capture");
   if (capture && !headed)
     throw new Error("Capture requires the native renderer");
+  rmSync(path.join(root, "build/report.json"), { force: true });
   const log = run(`${scenario}-${headed ? "native" : "headless"}`, [
     ...(headed ? [] : ["--headless"]),
     ...scene,
@@ -60,8 +61,9 @@ if (interactive) {
   const report = JSON.parse(
     readFileSync(path.join(root, "build/report.json"), "utf8"),
   );
-  if (report.checks.some((check) => !check.passed))
-    throw new Error("Acceptance report contains failures");
+  if (report.scenario !== scenario || (report.displayServer === "headless") === headed ||
+      !report.checks.length || report.checks.some((check) => !check.passed))
+    throw new Error("Acceptance report has the wrong scene/mode, no checks or failures");
   console.log(
     `Fabric/Godot: ${report.checks.length} acceptance checks passed (${headed ? "native renderer" : "headless"}).`,
   );

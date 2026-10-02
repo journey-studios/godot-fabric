@@ -12,7 +12,7 @@ and official Godot 4.7.2. Follow the [root setup instructions](../README.md#run)
 ```sh
 npm run setup
 npm run examples:list
-npm run example -- react
+npm run example -- counter
 ```
 
 The launcher rebuilds JSX/styles, prepares extension startup, imports resources
@@ -23,6 +23,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 
 | Name | Case | UI API | Source and scene |
 | --- | --- | --- | --- |
+| [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
 | [react](react/README.md) | State, keyed reconciliation, effects, Suspense and errors | Internal | [App](react/App.jsx) · [scene](react/scene.tscn) |
 | [layout](layout/README.md) | Intrinsic text measurement and responsive layout | Internal | [App](layout/App.jsx) · [scene](layout/scene.tscn) |
 | [input](input/README.md) | Controlled native editing, selection and focus | Internal | [App](input/App.jsx) · [scene](input/scene.tscn) |
@@ -47,14 +48,17 @@ and [parity baseline](../docs/compatibility/BASELINE.md).
 npm run example -- layout --check       # bounded native check; exits
 npm run example -- layout --headless    # bounded contracts; no GPU rendering
 npm run example -- layout --capture     # native check plus renderer readbacks
-npm run test:examples                   # every interactive case, sequentially
+npm run test:examples                   # every interactive case, headless
+npm run test:examples -- --capture       # same suite, renderer + screenshots
 npm run example -- parity --headless    # automated differential-oracle fixture
 ```
 
-The default mode is interactive. `--check`, `--headless` and `--capture` run
+The default example is the public counter; the default mode is interactive.
+`--check`, `--headless` and `--capture` run
 acceptance assertions and close Godot. Capture requires a graphical renderer
 and cannot be combined with `--headless`. Individual runs write `build/report.json`;
-the full suite preserves one report per case in `build/examples/headless/`.
+the full suite preserves one report per case in `build/examples/headless/` or
+`build/examples/native/`.
 Native checks must run sequentially because they share generated output.
 Images are Godot Viewport readbacks, not desktop screenshots. Retained results
 are in [validation evidence](../docs/evidence/README.md).

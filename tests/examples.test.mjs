@@ -14,6 +14,7 @@ test("catalog routes every example to a real documented source and scene", () =>
   }
 });
 test("interactive and bounded modes select the same scene", () => {
+  assert.equal(exampleOptions([]).example.id, "counter");
   assert.equal(exampleOptions(["layout"]).check, false);
   for (const mode of ["--check", "--headless", "--capture"]) {
     const options = exampleOptions([mode, "layout"]);

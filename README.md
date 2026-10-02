@@ -46,7 +46,7 @@ git clone https://github.com/journey-studios/godot-fabric.git
 cd godot-fabric
 npm run setup
 npm run examples:list
-npm run example -- react
+npm run example -- counter
 ```
 
 Set `GODOT_BIN` to the official engine executable if it is outside
@@ -70,7 +70,8 @@ the existing `npm start` flags remain available.
 ## Write React
 
 The build aliases `react-native` to the Godot platform facade and applies
-the original NativeWind compiler. The native application entry is
+the original NativeWind compiler. Start with the public
+[counter](examples/counter/App.jsx). The shared Fabric application entry is
 [examples/entry.jsx](examples/entry.jsx); the typography example is
 [examples/typography/App.jsx](examples/typography/App.jsx).
 
