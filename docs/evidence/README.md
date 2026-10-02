@@ -8,6 +8,10 @@ has separate evidence.
 The [runnable examples record](examples/README.md) has fresh source hashes,
 reports for the nine interactive cases and the new public counter captures.
 
+The [public controls record](public-controls/README.md) adds the typed form,
+fresh ten-example reports and README gallery captures. Earlier records retain
+their historical provenance.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

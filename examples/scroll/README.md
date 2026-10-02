@@ -30,3 +30,11 @@ commands, resize and visible rejection of unsupported behavior.
 The native checks additionally require the acceptance marker and reject script
 errors, runtime errors, crashes and timeouts. Generated reports are local and
 are overwritten by another individual check.
+
+## Renderer captures
+
+These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).
+
+![Native scrolling fixture](../../docs/evidence/public-controls/scroll-initial.png)
+
+![Native content after logical drag](../../docs/evidence/public-controls/scroll-drag.png)

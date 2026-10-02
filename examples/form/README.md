@@ -51,8 +51,16 @@ invalid props through React error boundaries. These probes are not application
 API examples to copy.
 
 The capture lane checks actual input glyph pixels and writes
-`build/form-initial.png` and `build/form-changed.png`. Reports and screenshots
+`build/form-initial.png` and `build/form-changed.png`. Screenshots and curated results
 are retained in the [public controls evidence](../../docs/evidence/public-controls/README.md).
 These checks do not certify physical hardware input or original-native mobile
 parity for this form; the existing nine-case differential oracle covers other
 core UI contracts.
+
+## Renderer captures
+
+These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).
+
+![Public TSX native form at mount](../../docs/evidence/public-controls/form-initial.png)
+
+![Native input and Button after React updates](../../docs/evidence/public-controls/form-changed.png)

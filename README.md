@@ -7,7 +7,7 @@ React runs inside Godot. JSX, hooks and reconciliation produce real Godot
 Controls through the original Fabric mounting pipeline. The official Godot
 engine does not need rebuilding.
 
-![Native typography example](docs/evidence/typography-initial.png)
+![Public TSX form rendered by Godot](docs/evidence/public-controls/form-initial.png)
 
 ## Status
 
@@ -21,10 +21,11 @@ discovers extension classes late. Resources are still imported from scratch;
 failures are reported without retries. See the [cold-start evidence](docs/evidence/cold-start.md).
 
 Supported, within the documented subset: React 19 hooks and concurrent roots,
-public View, Text, Pressable and ScrollView, NativeWind styles, nested rich
-text and a limited SVG adapter exercised by React Native Chart Kit. The older
-native TextInput probe passes its bounded fixtures; the public `react-native`
-TextInput export is currently unavailable.
+public View, Text, Pressable, ScrollView, Button and single-line TextInput,
+NativeWind styles, nested rich text and a limited SVG adapter exercised by
+React Native Chart Kit. The [TSX form](examples/form/README.md) uses the narrowed
+public types and native editing/activation. Mobile keyboard/IME contracts and
+complete React Native props remain open.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -55,6 +56,7 @@ installs the npm lockfile, bundles JSX and compiles the GDExtension.
 CMake lives in a local virtual environment; Godot itself is not recompiled.
 
 ```sh
+npm run example -- form     # public typed Button/TextInput form
 npm start -- --nativewind   # reactive utility classes and manual theme
 npm start -- --chart        # original React Native Chart Kit
 npm start -- --scroll       # generic scroll, filtering and editing demo
@@ -63,9 +65,23 @@ npm run bundle             # rebuild after JSX/style changes
 npm run setup              # rebuild after native C++ changes
 ```
 
-The [examples catalog](examples/README.md) has runnable scenes, JSX and per-case
+The [examples catalog](examples/README.md) has runnable scenes, JSX/TSX and per-case
 instructions. `npm run example -- <name>` rebuilds the bundle before opening it;
 the existing `npm start` flags remain available.
+
+## Example gallery
+
+These are real Godot Viewport captures of the runnable examples. Launch a case
+with `npm run example -- <name>`; the [evidence record](docs/evidence/public-controls/README.md)
+includes initial/updated form captures and validation results for every example.
+
+| Counter | NativeWind | Chart Kit |
+| --- | --- | --- |
+| [![Public counter](docs/evidence/public-controls/counter-initial.png)](examples/counter/README.md) | [![Utility styles](docs/evidence/public-controls/nativewind-initial.png)](examples/nativewind/README.md) | [![Chart Kit](docs/evidence/public-controls/chart-initial.png)](examples/chart/README.md) |
+
+| Scrolling | Typography | Updated form |
+| --- | --- | --- |
+| [![Scrolling and editing](docs/evidence/public-controls/scroll-initial.png)](examples/scroll/README.md) | [![Rich text](docs/evidence/public-controls/typography-initial.png)](examples/typography/README.md) | [![Native form rerender](docs/evidence/public-controls/form-changed.png)](examples/form/README.md) |
 
 ## Write React
 
@@ -104,7 +120,8 @@ npm package or a drop-in addon with prebuilt binaries.
 
 ```sh
 npm run test:examples                    # all interactive demos, headless and sequential
-npm run test:contracts                   # JS compiler/SVG/font contracts + Python fixtures
+npm run type-check                      # bounded strict public TSX consumer
+npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

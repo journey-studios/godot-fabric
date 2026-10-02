@@ -30,3 +30,11 @@ cancel, nested negotiation, keyed reorder and stop during a held gesture.
 The native checks additionally require the acceptance marker and reject script
 errors, runtime errors, crashes and timeouts. Generated reports are local and
 are overwritten by another individual check.
+
+## Renderer captures
+
+These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).
+
+![Upstream Pressability fixture](../../docs/evidence/public-controls/pressable.png)
+
+![Native pressed state](../../docs/evidence/public-controls/pressable-pressed.png)

@@ -34,6 +34,41 @@ TypeScript. The mixed-extension test exposed different resolution order; the
 bundler now matches TypeScript's .ts-before-.tsx preference and platform suffixes
 within each extension.
 
+## Ten-example regression matrix
+
+| Example | Headless | Native renderer with capture |
+| --- | ---: | ---: |
+| counter | 19 | 24 |
+| form | 39 | 43 |
+| react | 36 | 36 |
+| layout | 47 | 47 |
+| input | 45 | 45 |
+| pressable | 43 | 47 |
+| scroll | 62 | 68 |
+| chart | 34 | 34 |
+| nativewind | 49 | 58 |
+| typography | 50 | 63 |
+| **Total** | **424** | **465** |
+
+**889 passing assertions in 20 sequential runs.** [matrix.json](matrix.json)
+records each count, display/input mode, generated report path and SHA-256.
+Reports are regenerated under `build/examples/`; the hosted native job uploads
+its headless reports as `native-examples-headless`. Graphical checks and these
+18 generic captures are local evidence. The root and ten per-example READMEs
+link these images. Raw logs/full snapshots remain outside the Git payload.
+
+The contract gate passed **26 Node tests and 8 Python fixtures**, including
+strict positive/negative TSX checking and resolver collisions. Fallow and the
+publication scan passed. Two disposable projects passed cold imports, React/
+typography runtime checks and warm imports; the unchanged Godot oracle passed
+nine core cases. The current PR's hosted result is separate from these local
+results and from earlier mobile oracle evidence.
+
+[provenance.json](provenance.json) pins the implementation and records current
+source/capture/matrix hashes. Raw report hashes are in the matrix; earlier
+provenance remains historical. The new form wrapper and native appearance paths
+were regression-checked with the same ten cases after all runtime changes.
+
 ## Scope
 
 This form is Godot acceptance evidence, not new iOS/Android differential

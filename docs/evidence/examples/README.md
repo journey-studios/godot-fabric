@@ -78,6 +78,11 @@ new captures are retained here; the original demos' captures remain in the
 
 ## Limits and organization
 
+This is the earlier examples snapshot. Public TextInput was subsequently added
+with [separate typed form evidence](../public-controls/README.md); counts and
+provenance here remain historical.
+
+
 The [catalog](../../../examples/README.md) distinguishes public, internal and
 mixed UI APIs. The eight original demos preserved their headless/native counts
 after relocation. Public TextInput remains unavailable; internal input/scroll

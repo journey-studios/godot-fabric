@@ -1,0 +1,243 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-02",
+  "scope": "Local Godot acceptance on macOS arm64; logical Viewport input, not physical hardware or mobile differential certification.",
+  "versions": {
+    "godot": "4.7.2",
+    "react": "19.2.3",
+    "reactNative": "0.87.1",
+    "hermes": "250829098.0.17"
+  },
+  "commands": [
+    "npm run test:examples",
+    "npm run test:examples -- --capture"
+  ],
+  "totals": {
+    "headless": 424,
+    "native": 465
+  },
+  "checks": 889,
+  "cases": [
+    {
+      "example": "counter",
+      "api": "public",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/counter.json",
+          "sha256": "3ce3b0ec58f85627ec9a8413c188c0577ad86c7db99b48dc42a4cd37799f9589",
+          "checks": 19,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-pointer"
+        },
+        "native": {
+          "report": "build/examples/native/counter.json",
+          "sha256": "14fb0d3081cf480931e6aae97b66f11e3a5742e5b9707a165bb5987202c27109",
+          "checks": 24,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "form",
+      "api": "public",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/form.json",
+          "sha256": "50557cebf10f479018d024b86825b416c38ee7a01b52c23f139d42217f1c73f1",
+          "checks": 39,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-keyboard"
+        },
+        "native": {
+          "report": "build/examples/native/form.json",
+          "sha256": "b507e58d9b8a9e28d08ea8cf0d7bc18e9a4f1f29fff3839e26226765a8872ef2",
+          "checks": 43,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-keyboard"
+        }
+      }
+    },
+    {
+      "example": "react",
+      "api": "internal",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/react.json",
+          "sha256": "39cc437c89b80eca5d52ac1db4b06b245255fdd7c83490ba769c355afcdec1c3",
+          "checks": 36,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "native-signal"
+        },
+        "native": {
+          "report": "build/examples/native/react.json",
+          "sha256": "fbb87c713c36c693c41c6be0d471bfd44fe9b648a1c4019bb4b697fadae3dbf8",
+          "checks": 36,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "layout",
+      "api": "internal",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/layout.json",
+          "sha256": "d5771be6fbbc470159efdc697d10318d255de96e176650e55f85125bda6aa9e2",
+          "checks": 47,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "native-signal"
+        },
+        "native": {
+          "report": "build/examples/native/layout.json",
+          "sha256": "abd67b42d57ca86d679ebf47ad2954c3042fed7a791d8483f04b422fb6eab2a4",
+          "checks": 47,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "input",
+      "api": "internal",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/input.json",
+          "sha256": "7383668a5f046fa343c1de3ceff1c6dad3bd7e2fc72747babf8760df42fb4de7",
+          "checks": 45,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-keyboard"
+        },
+        "native": {
+          "report": "build/examples/native/input.json",
+          "sha256": "a1e2effe46b6ee1c3e014630c6bc4e0147f4195d8d7479619f7ac8580da41051",
+          "checks": 45,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-keyboard"
+        }
+      }
+    },
+    {
+      "example": "pressable",
+      "api": "internal",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/pressable.json",
+          "sha256": "31ece9087eafd7abe079a8817261ac5be50f364edba7754795d3552d68a726ac",
+          "checks": 43,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-pointer"
+        },
+        "native": {
+          "report": "build/examples/native/pressable.json",
+          "sha256": "c84b1b507a37ee311f3e22d43bbf1376f4abffc015f699303e0c24022b8ed895",
+          "checks": 47,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "scroll",
+      "api": "internal",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/scroll.json",
+          "sha256": "a572a9ca6f3d012494a819e05aeba25b2cc8e8c82f4280108f8500ac807b3818",
+          "checks": 62,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-pointer"
+        },
+        "native": {
+          "report": "build/examples/native/scroll.json",
+          "sha256": "380d7e67499edd4467d60d3a4980d5e26dad5e8a7b0fc343c86644e664a62e15",
+          "checks": 68,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "chart",
+      "api": "internal",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/chart.json",
+          "sha256": "93a0d818bdd7f6c876f020faf0cd435b486e297af1d3a2c59300981cd62d6dc6",
+          "checks": 34,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-pointer"
+        },
+        "native": {
+          "report": "build/examples/native/chart.json",
+          "sha256": "d035a141c410622afdb2546da5e8e952ced665a5421d5c7202b24d310cd5dd2f",
+          "checks": 34,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "nativewind",
+      "api": "public",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/nativewind.json",
+          "sha256": "471f9c59ff40af93303b37843c078f998076ab6add6172c121d3f4ba9d664a17",
+          "checks": 49,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-pointer"
+        },
+        "native": {
+          "report": "build/examples/native/nativewind.json",
+          "sha256": "171bac4178824c5bf6f4b2e6bc5f107725af1b24b0d8a9eb064b8b1f6c6ed4cb",
+          "checks": 58,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    },
+    {
+      "example": "typography",
+      "api": "mixed",
+      "runs": {
+        "headless": {
+          "report": "build/examples/headless/typography.json",
+          "sha256": "0ff5fb3a57a571b21cecb91cc5091b9e492fb8e4ab63fb123c520e152e37d41c",
+          "checks": 50,
+          "status": "passed",
+          "displayServer": "headless",
+          "inputTransport": "viewport-pointer"
+        },
+        "native": {
+          "report": "build/examples/native/typography.json",
+          "sha256": "8a98cd24be9612c71811a5b36c320e44a261489a270a0219d0dac311480d5843",
+          "checks": 63,
+          "status": "passed",
+          "displayServer": "macOS",
+          "inputTransport": "viewport-pointer"
+        }
+      }
+    }
+  ],
+  "reportsVersioned": false
+}
