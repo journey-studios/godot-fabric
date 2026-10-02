@@ -43,7 +43,7 @@ keys, unsupported sections and attempts to restart a stopped application.
 ![Inventory removed while HUD keeps its state](../../docs/evidence/shared-roots/unmounted.png)
 
 The [validation record](../../docs/evidence/shared-roots/README.md) explains
-the captures, transport, 35 headless/38 graphical checks, 17 negative checks and
+the captures, transport, 35 headless/38 graphical checks, 19 negative checks and
 remaining gaps. These are real Godot Viewport readbacks of the generic example.
 
 These are experimental native authoring properties. The approved resource-based

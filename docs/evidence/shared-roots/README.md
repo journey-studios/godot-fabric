@@ -38,13 +38,15 @@ independent cleanup, stale-tag rejection, fresh remount identity, hide/show,
 replacement scene Nodes, zero-root timer survival and global shutdown.
 A freed application leaves an inspectable finalized surface snapshot.
 
-The **17 negative checks** reject a wrong owner, missing entry, inherited
+The **19 negative checks** reject a wrong owner, missing entry, inherited
 prototype entry, duplicate/reserved registration, unsupported sections,
 stopped/off-tree owners and missing bundles. Exact expected native errors are
 required; additional errors, repetitions, crashes, script errors or incomplete
 reports fail the runner. Rejected entry lookup happens before ShadowTree
 allocation, and a valid entry can subsequently use the already evaluated bundle.
 Failed initial bundle load stops the owner and releases scheduling resources.
+The suite also destroys an owner with a live root/timer and requires complete
+native cleanup while the surface Node survives.
 
 ## Captures
 

@@ -5,7 +5,7 @@
   "react": "19.2.3",
   "reactNative": "0.87.1",
   "hermes": "250829098.0.17",
-  "sourceCommit": "ad2842bc9fcbaac36f6b3b6245d7bbe2fd569cc9",
+  "sourceCommit": "748eaa0eb18057507ef3746e0d676791e6757ab4",
   "runs": [
     {
       "example": "shared",
@@ -182,9 +182,9 @@
   },
   "additionalChecks": {
     "rootActivationFailures": {
-      "checks": 17,
+      "checks": 19,
       "report": "build/shared-failures-report.json",
-      "sha256": "7756263417a5fa98265a3e327262cfe340dc677a2ff6b8e44305d7869d69e045"
+      "sha256": "a7164c75b333a2e02d6d623efb5158f22069f7a1016648254c9300e8a6c7ba9e"
     },
     "runtimeErrorRecovery": {
       "checks": 6,
