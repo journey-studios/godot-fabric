@@ -35,8 +35,17 @@ export function scan(root) {
       ++files;
       if (relative === "scripts/publication-scan.mjs" || relative === "tests/publication-scan.test.mjs" || binaryExtensions.has(path.extname(filename))) continue;
       const source = readFileSync(filename, "utf8");
+      const candidates = [source];
+      for (const match of source.matchAll(/file:\/\/[^\s"'<>`]+/gi)) {
+        try {
+          const decoded = decodeURIComponent(new URL(match[0]).pathname);
+          candidates.push(path.posix.normalize(decoded.replaceAll("\\", "/")));
+        } catch {
+          failures.push({ file: relative, pattern: "invalid file URL" });
+        }
+      }
       for (const pattern of forbidden) {
-        if (pattern.test(source)) failures.push({ file: relative, pattern: pattern.source });
+        if (candidates.some((candidate) => pattern.test(candidate))) failures.push({ file: relative, pattern: pattern.source });
       }
     }
   }
