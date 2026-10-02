@@ -23,3 +23,22 @@ jobs:
       - run: npm run check:publication
       # Native setup is macOS arm64 only. This lane does not certify the
       # GDExtension, graphical rendering or other platform support.
+  native-cold-start:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Install pinned official Godot
+        run: |
+          test "$(uname -m)" = arm64
+          mkdir -p .deps/godot
+          curl --fail --location --retry 2 --max-time 180 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o .deps/godot.zip
+          echo 'c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e  .deps/godot.zip' | shasum -a 256 -c -
+          ditto -x -k .deps/godot.zip .deps/godot
+          echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
+      - run: npm run setup
+      - run: npm run test:cold
+      # No dependency/build cache is restored: this job checks a cold install.

@@ -15,10 +15,10 @@ This is an experimental platform implementation. Native setup and rendering
 are validated on **macOS arm64 with official Godot 4.7.2**. Linux, Windows,
 iOS, Android and Web do not yet have supported build paths.
 
-**Known setup limitation:** the first editor import with an empty resource cache
-terminated with signal 11 during release validation. A subsequent import with
-the generated cache passed. The runner reports the failure and does not retry
-automatically. See the [recorded import boundary](docs/evidence/README.md).
+Setup and the check runner prepare Godot's extension startup list before the
+first import. This avoids a Godot 4.7.2 editor crash when an import-only scan
+discovers extension classes late. Resources are still imported from scratch;
+failures are reported without retries. See the [cold-start evidence](docs/evidence/cold-start.md).
 
 Supported, within the documented subset: React 19 hooks and concurrent roots,
 View, Text, TextInput, Pressable, ScrollView, NativeWind styles, nested rich
@@ -91,6 +91,7 @@ npm package or a drop-in addon with prebuilt binaries.
 npm run test:contracts                   # JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
 npm run check:publication
+npm run test:cold                        # two disposable projects, no resource cache
 npm run check -- --typography --headless
 npm run check -- --typography --capture
 npm run test:typography                  # includes real native negative cases

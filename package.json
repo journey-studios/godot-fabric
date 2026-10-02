@@ -12,7 +12,8 @@
     "start": "node scripts/check.mjs --interactive",
     "test:typography": "npm run bundle && node --test tests/typography-contract.test.mjs tests/typography-native.test.mjs tests/line-height-native.test.mjs",
     "test:contracts": "npm run bundle && node --test tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
-    "check:publication": "node scripts/publication-scan.mjs"
+    "check:publication": "node scripts/publication-scan.mjs",
+    "test:cold": "npm run bundle && node scripts/cold-start.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

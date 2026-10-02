@@ -40,6 +40,7 @@ def source(name):
 
 
 def main():
+    from extension_startup import prepare_extension_startup
     if (platform.system(), platform.machine()) != ("Darwin", "arm64"):
         raise RuntimeError("This validation currently builds on macOS arm64 only")
     DEPS.mkdir(exist_ok=True)
@@ -78,6 +79,7 @@ def main():
     shutil.copytree(DEPS / "rndeps/packages/react-native/third-party/ReactNativeDependencies.xcframework/macos-arm64_x86_64/ReactNativeDependencies.framework",
                     frameworks / "ReactNativeDependencies.framework", symlinks=True, dirs_exist_ok=True)
     (PROJECT / "addons/.gdignore").touch()
+    prepare_extension_startup(PROJECT)
     print("Hermes, Fabric, Yoga and the Godot extension are ready. Godot was not rebuilt.")
 
 
