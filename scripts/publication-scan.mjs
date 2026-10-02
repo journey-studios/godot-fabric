@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 // The release contains only this project's reviewed sources and generic demos.
 // Generated outputs and downloaded third-party code never enter the Git payload.
 const forbidden = [
-  /\/Users\//i, /\/private\//i, /[A-Z]:\\Users\\/i,
+  /\/Users\//i, /(?<![\w.-])\/private\//i, /[A-Z]:\\Users\\/i,
   /github\.com\/journey-studios\/(?!godot-fabric(?:[./?#]|$))/i,
   /\bapps\/[^/\s]+\/(?:src|scenario|docs)\//i,
   /agent_docs\//i, /docs\/domains\//i, /vision\/EV-/i,
@@ -21,6 +21,8 @@ export function scan(root) {
   let files = 0;
   function visit(directory) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      // Git metadata is not a publication payload, including worktree pointers.
+      if (directory === root && entry.name === ".git") continue;
       if (entry.isDirectory() && !excluded.has(entry.name)) visit(path.join(directory, entry.name));
       if (entry.isSymbolicLink()) {
         failures.push({ file: path.relative(root, path.join(directory, entry.name)), pattern: "unreviewed symlink" });

@@ -21,6 +21,7 @@ import { ChartApp, runChart, chartStats } from "./chart-app";
 
 import { ScrollApp, runScroll, scrollStats } from "./scroll-app";
 import { LineHeightProbe } from "../tests/line-height-probe";
+import { ParityFixture } from "../tests/parity/fixture";
 
 const stats = {
   mounts: 0,
@@ -336,7 +337,9 @@ globalThis.GodotApp = {
   },
 };
 Fabric.render(
-  globalThis.godotScenario === "lineheight" ? (
+  globalThis.godotScenario === "parity" ? (
+    <ParityFixture onComplete={(report) => { globalThis.fabricParityReport = report; }} />
+  ) : globalThis.godotScenario === "lineheight" ? (
     <LineHeightProbe />
   ) : typography ? (
     React.createElement(typography.TypographyApp)

@@ -26,10 +26,12 @@ text and a limited SVG adapter exercised by React Native Chart Kit.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
+The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
+public contracts and compares a shared fixture against original native RN.
 
 ## Run
 
-Requirements: macOS arm64, Node 22+, npm, Python 3.12+, Xcode Command Line Tools,
+Requirements: macOS arm64, Node 22.13+, npm, Python 3.12+, Xcode Command Line Tools,
 and [official Godot 4.7.2](https://github.com/godotengine/godot-builds/releases/tag/4.7.2-stable).
 
 ```sh
@@ -92,6 +94,8 @@ npm run test:contracts                   # JS compiler/SVG/font contracts + Pyth
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
+npm run parity:status                    # API gaps and current native evidence
+npm run parity:godot                     # shared core UI fixture in Godot
 npm run check -- --typography --headless
 npm run check -- --typography --capture
 npm run test:typography                  # includes real native negative cases

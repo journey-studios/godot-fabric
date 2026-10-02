@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "fixture": "core-ui-v1",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "renderer": "fabric",
+  "engine": "hermes",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "native-layout",
+      "passed": true
+    },
+    {
+      "id": "native-measure",
+      "passed": true
+    },
+    {
+      "id": "automatic-batching",
+      "passed": true
+    },
+    {
+      "id": "keyed-reorder",
+      "passed": true
+    },
+    {
+      "id": "memo",
+      "passed": true
+    },
+    {
+      "id": "context-update",
+      "passed": true
+    },
+    {
+      "id": "external-store",
+      "passed": true
+    },
+    {
+      "id": "transition-commit",
+      "passed": true
+    },
+    {
+      "id": "unmount-cleanup",
+      "passed": true
+    }
+  ],
+  "platform": "ios",
+  "fixtureSha256": "15ae2a683646c63667bf51f39d038199902540757747957e56ad29a4401d87df",
+  "casesSha256": "5b72a75230043dcec87d61ebddf110383c2911c1373ccc10348306530fe9131f",
+  "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3"
+}

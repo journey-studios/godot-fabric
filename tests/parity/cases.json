@@ -1,0 +1,11 @@
+[
+  { "id": "native-layout", "contracts": ["event:ViewProps.onLayout", "style:ViewStyle.width", "style:ViewStyle.height", "style:ViewStyle.padding"] },
+  { "id": "native-measure", "contracts": ["ref-member:ViewInstance.measure"] },
+  { "id": "automatic-batching", "contracts": [], "reactFeature": "Two functional updates in one task produce a single visible state commit" },
+  { "id": "keyed-reorder", "contracts": [], "reactFeature": "Native positions change while keyed refs and effect mounts survive" },
+  { "id": "memo", "contracts": [], "reactFeature": "Memoized rows skip unrelated renders" },
+  { "id": "context-update", "contracts": [], "reactFeature": "Context update reaches a committed descendant" },
+  { "id": "external-store", "contracts": [], "reactFeature": "useSyncExternalStore publishes the next snapshot" },
+  { "id": "transition-commit", "contracts": [], "reactFeature": "startTransition eventually commits its update" },
+  { "id": "unmount-cleanup", "contracts": [], "reactFeature": "Unmount removes effects and external-store subscriptions" }
+]

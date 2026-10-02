@@ -10,6 +10,7 @@ const binary = await ensureGodotBinary();
 const errors = /SCRIPT ERROR|(?:^|\n)ERROR:|Program crashed|FABRIC_ERROR|FABRIC_CHECK_FAILED/;
 const runs = [];
 mkdirSync(path.join(root, "build"), { recursive: true });
+rmSync(path.join(root, "build/cold-start.json"), { force: true });
 if (!existsSync(path.join(root, "build/app.js"))) throw new Error("Run npm run bundle first");
 
 function run(fixture, name, args, marker) {
