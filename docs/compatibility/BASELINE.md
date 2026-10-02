@@ -84,8 +84,8 @@ localhost report collector. Other installed applications are not removed.
 The comparison rejects missing/duplicated cases, failed assertions, a non-native
 renderer, different versions and stale fixture/catalog/upstream hashes. Failed
 runs remove prior report output. Unit fixtures verify these rejection paths;
-they are separate from native evidence. Local retained proof is listed in the
-[evidence record](../evidence/parity/README.md).
+they are separate from native evidence. Retained local and CI proof is listed
+in the [evidence record](../evidence/parity/README.md).
 
 CI has distinct Linux source contracts, uncached macOS Godot startup, original
 iOS reference, original Android reference, and a final comparison that requires
@@ -98,8 +98,9 @@ This is the first GF-01/GF-02 delivery from the
 [parity roadmap proposal](https://github.com/journey-studios/godot-fabric/pull/3).
 
 - **GF-02:** startup preparation and two fresh import/runtime regressions are
-  implemented. The original native CI lane also passed before the new reference
-  jobs were added. Direct import after deleting `.godot` still bypasses the
+  implemented and passed in the uncached native CI lane alongside the original
+  mobile reference comparison. Direct import after deleting `.godot` still
+  bypasses the
   [documented engine containment](../evidence/cold-start.md).
 - **GF-01:** the inventory, drift gate, status board and original-native oracle
   are implemented. Behavioral certification remains in progress: core-ui-v1
