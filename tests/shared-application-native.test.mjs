@@ -14,7 +14,7 @@ test("registered roots share Hermes while preserving independent mount lifetimes
     encoding: "utf8", timeout: 20000, maxBuffer: 4 * 1024 * 1024,
   });
   const log = (result.stdout ?? "") + (result.stderr ?? "");
-  writeFileSync(new URL("../build/shared-application.log", import.meta.url), log);
+  writeFileSync(join(root, "build", "shared-application.log"), log);
   assert.equal(result.error, undefined, log);
   assert.equal(result.status, 0, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|(?:^|\n)ERROR:|Program crashed|FABRIC_ERROR/);
@@ -28,13 +28,13 @@ test("registered roots share Hermes while preserving independent mount lifetimes
 });
 
 test("failed root activation is visible, bounded and leaves no native authority", async () => {
-  const reportPath = new URL("../build/shared-failures-report.json", import.meta.url);
+  const reportPath = join(root, "build", "shared-failures-report.json");
   rmSync(reportPath, { force: true });
   const result = spawnSync(await ensureGodotBinary(), ["--path", root, "--headless", "--script", "res://tests/shared_application_failures.gd"], {
     encoding: "utf8", timeout: 20000, maxBuffer: 4 * 1024 * 1024,
   });
   const log = (result.stdout ?? "") + (result.stderr ?? "");
-  writeFileSync(new URL("../build/shared-failures.log", import.meta.url), log);
+  writeFileSync(join(root, "build", "shared-failures.log"), log);
   assert.equal(result.error, undefined, log);
   assert.equal(result.status, 0, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|FABRIC_CHECK_FAILED/);
