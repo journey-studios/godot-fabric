@@ -18,7 +18,7 @@
     "tests/parity/fixture.jsx": "494c0d77e6f7a062d11fc83fd454675158c6a675bf1bc078707a806656cc314b",
     "tests/parity/cases.json": "59042db76c90659482ded32a01269b85ffa27440c8348cce2c87feb48cf700e4",
     "scripts/parity-protocol.mjs": "1959978d99a9f7a2a697a3a3be89b35824f9bc2d285abcad32f26d92aadf7be6",
-    "scripts/parity-reference.mjs": "a963f1669a3decc6c413ca5c9bb1024a5fb18cfa9fb454209ba76e93b9c8b0b7",
+    "scripts/parity-reference.mjs": "7fe570624b3dc887b6b5aa982e2610a930334deef718f7cd38346c47d0d92f2d",
     "scripts/validation_base.gd": "2f15c7058060f4ec1a32da2c42fea98140faa10e8c6c42723ed5215280155567",
     ".github/workflows/contracts.yml": "f5a6cd20fa2b26a3b0227542c41b5c30a2867d30cfba016d37e77adb24d1db88"
   },

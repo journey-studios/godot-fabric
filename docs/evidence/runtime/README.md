@@ -90,6 +90,11 @@ incremental analysis state masked the failure. The test now builds filesystem
 output paths with `path.join`; `npm run check:static -- --no-cache` was verified
 with both generated files absent, without adding an ignore or weakening the gate.
 
+The first hosted iOS execution passed all 13 cases, then its simulator shutdown
+exceeded the previous 30-second deadline. The runner now allows two minutes for
+that owned-simulator cleanup. Timeout/errors still invalidate the report and
+fail the job; a passing fixture alone does not establish a green hosted run.
+
 The shared `core-ui-v2` oracle now has **13 cases**: the original nine UI cases
 plus timeout arguments/coercion/cancellation, interval arguments/self-cancellation,
 microtask/immediate ordering and cancellable monotonic frames. The same

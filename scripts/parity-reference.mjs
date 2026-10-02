@@ -141,7 +141,9 @@ try {
 } finally {
   server.close();
   const actions = [];
-  if (bootedHere) actions.push(() => command("xcrun", ["simctl", "shutdown", simulator.udid], project, 30000));
+  // Fresh hosted simulators took over 30s to shut down after valid completion.
+  // Keep cleanup mandatory, with a bounded deadline consistent with boot work.
+  if (bootedHere) actions.push(() => command("xcrun", ["simctl", "shutdown", simulator.udid], project, 120000));
   if (reversedHere) actions.push(() => command("adb", ["-s", serial, "reverse", "--remove", `tcp:${port}`], project, 30000));
   try { await cleanupReference(actions, primaryError); }
   catch (error) { rmSync(reportPath, { force: true }); throw error; }
