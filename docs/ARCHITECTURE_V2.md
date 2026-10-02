@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção, consolidado parcialmente até o tema 3.
+**Status:** documento de direção; V2-D01 a V2-D10 aprovadas, V2-D11 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -8,11 +8,11 @@
 
 “2.0” identifica a proposta de arquitetura. Não representa uma versão publicada
 do SDK nem certificação de paridade com React Native. Os exemplos de integração
-abaixo descrevem APIs propostas e ainda não executam no projeto atual.
+ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
-ser implementados. O [registro de 32 decisões pendentes](ARCHITECTURE_V2_DECISIONS.md)
-detalha alternativas, recomendações e validações para continuar a discussão.
+ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
+identifica 10 aprovações e 22 escolhas pendentes, com seus cenários de validação.
 A [arquitetura atual](ARCHITECTURE.md), a
 [auditoria de paridade](PARITY.md) e o [roadmap para 1.0](../ROADMAP.md) continuam
 descrevendo, respectivamente, a implementação, seus gaps e o status do trabalho.
@@ -32,10 +32,12 @@ Os temas consolidados são:
 1. Aplicação, runtime, raízes e ciclo de vida.
 2. Dimensões, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
+4. Autoridade sobre a árvore e input, com pausa e contextos adicionais ainda pendentes.
 
-As decisões de arquitetura desses temas foram alinhadas na discussão. Assinaturas
-finais de APIs, detalhes dos protocolos e suas provas de comportamento ainda
-precisam ser fechados e implementados. Os demais temas estão listados ao final.
+As recomendações de V2-D01 a V2-D10 foram aprovadas em 2026-10-02 e estão
+consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
+finais, detalhes que as recomendações deixaram para especificação e provas de
+comportamento continuam necessários. As decisões restantes estão listadas ao final.
 
 ## Tema 1 — Aplicação, runtime e surfaces
 
@@ -83,10 +85,34 @@ registrada pode ser montada em duas surfaces com props diferentes e estados
 locais independentes.
 
 Para o caso simples, o autor poderá exportar um componente padrão e o builder
-gerará o registro no AppRegistry. O nome dessa entrada e sua configuração ainda
-precisam de definição. Várias entradas externas terão registro explícito.
+gerará o registro no AppRegistry. O formato do nome gerado e os campos de
+configuração ainda precisam de especificação. Várias entradas externas terão
+registro explícito.
 
 Essa direção usa o [contrato de entrada e ciclo de vida do AppRegistry](https://reactnative.dev/docs/appregistry).
+
+### Configuração e identidade aprovadas
+
+#### V2-D01
+
+**Configuração da aplicação:** usar um recurso versionado, referenciado pelo
+projeto, para entry, bundle e opções da aplicação. Surfaces selecionam suas
+entradas e props, respeitando a posse compartilhada do runtime.
+
+O builder gera um nome documentado para a entrada simples. Registros duplicados
+produzem diagnóstico, sem sobrescrever a entrada existente. O formato do recurso,
+campos e nome gerado ainda precisam de especificação.
+
+#### V2-D02
+
+**Identidade das montagens:** atribuir IDs únicos no runtime e gerações separadas
+para validar referências. Integrar montagem/desmontagem ao ciclo do Node, com
+operações explícitas de update e unmount.
+
+Atualizar props preserva a identidade da raiz e seu estado local. Substituir a
+montagem invalida referências anteriores. O contrato da surface deve indicar
+quando ela está pronta para receber input e comandos; seus estados e notificações
+exatos serão especificados antes da implementação.
 
 ### Posse de estado e recursos
 
@@ -241,7 +267,7 @@ tipos e componentes internos do Fabric original do RN.
 
 ### Exemplo completo: signal até a UI
 
-**Exemplo de API proposta, ainda não executável.** No Godot, o addon conecta um
+**Exemplo da direção aprovada, ainda não executável.** No Godot, o addon conecta um
 callback nativo ao signal indicado:
 
 ```gdscript
@@ -306,45 +332,76 @@ normal. A conexão com o Godot pode pertencer à aplicação compartilhada, enqu
 HUD e inventário assinam a mesma store. Não é preciso abrir uma assinatura nativa
 por componente. O projeto continua responsável pelo cleanup dessas conexões.
 
-### Valor inicial, estado e acontecimentos
+### Contratos de comunicação aprovados
+
+#### V2-D03
+
+**Valor inicial e acompanhamento:** a conexão devolve valor inicial e revisão,
+com acompanhamento a partir dessa revisão, sem perder alterações durante a
+instalação do listener. O transporte não impõe uma store nem regras de domínio.
 
 O exemplo acompanha eventos futuros. Se o signal já foi emitido antes da
-assinatura, ele não fornece a vida atual automaticamente.
+assinatura, ele não fornece a vida atual automaticamente. A leitura inicial
+consistente requer esse contrato adicional, cuja assinatura pública e protocolo
+de revisões ainda precisam ser especificados.
 
-Precisamos definir um contrato de leitura inicial mais acompanhamento de
-mudanças que evite perder atualizações durante a conexão. A API e o protocolo
-de versões ainda estão abertos; não é suficiente fazer uma leitura e assinar
-sem tratar essa janela de concorrência.
+#### V2-D04
 
-Estado representa um valor atual; eventos representam acontecimentos. Uma
-publicação de estado pode agrupar valores intermediários quando seu contrato
-permitir. Eventos como dois danos consecutivos precisam preservar sua identidade
-e ordem. Política de agrupamento, limites da fila e comportamento sob carga
-devem ser definidos por contrato, sem descarte silencioso.
+**Origem e argumentos:** identificar explicitamente origem e namespace, com
+schema de argumentos. A forma simples com string permanece possível. Múltiplas
+instâncias, colisões de nomes, troca de origem e signals com vários argumentos
+precisam de representação e diagnóstico definidos.
+
+O exemplo usa uma origem simples. Ele não define por si só o formato final
+para endereçar dois jogadores ou versionar seus schemas.
+
+#### V2-D05
+
+**Chamadas ao jogo:** oferecer transporte pequeno, registro por GDScript e
+facades tipadas opcionais. Ações que dependem da execução no Godot retornam
+resultado assíncrono; leitura síncrona só é permitida quando seu contrato puder
+garantir execução segura. Não exigir C++ por jogo para a integração básica.
+
+Operações executam na thread apropriada, em um ponto seguro. Cada método declara
+se a resposta confirma aceitação ou conclusão, além de resultado, erro e
+cancelamento. A API de registro/chamada ainda precisa de especificação.
+
+Uma operação aceita pode concluir após fechar o painel, conforme seu contrato.
+A conclusão não pode acessar refs desmontadas.
+
+#### V2-D06
+
+**Conversões e referências:** começar com DTOs tipados e handles com identidade
+e validade. Rejeitar conversões sem contrato; remover a origem ou reiniciar o
+runtime invalida suas referências.
+
+A especificação deve definir arrays, dictionaries, null, vetores, cores,
+recursos, ciclos e números fora do intervalo inteiro exato do JavaScript.
+Tipos e erros precisam corresponder ao transporte implementado.
+
+#### V2-D07
+
+**Entrega de eventos:** preservar sequência por origem e respeitar as
+prioridades do RN. Definir ordem entre canais, orçamento de processamento e
+política de overflow, com comportamento verificável sob carga.
+
+Estado representa um valor atual e pode permitir agrupamento explicitamente.
+Acontecimentos não recebem essa política por padrão: dois danos consecutivos
+continuam sendo dois eventos. Não descartar silenciosamente para aliviar a fila.
 
 Raízes diferentes podem observar a mesma revisão de dados. Isso não implica um
 commit visual simultâneo de todas as raízes; seus commits continuam sob o RN.
 
-### Props, métodos, tipos e ciclo de vida
+#### V2-D08
 
-- Props configuram uma entrada da surface. Atualizações normais preservam sua
-  identidade e estado local; reiniciar a raiz é explícito.
-- Métodos publicados pelo jogo ficam acessíveis ao JavaScript, com argumentos,
-  resultados e erros. A integração básica por GDScript deve evitar exigir C++
-  por jogo. O registro de métodos e a API de chamada ainda precisam ser definidos.
-- Operações que acessam Godot executam na thread apropriada, em um ponto seguro.
-  Resultado e conclusão têm semântica definida pelo método publicado.
-- Uma operação aceita pelo jogo pode concluir após fechar o painel. Cancelamento
-  depende do contrato da operação. A conclusão não pode acessar refs desmontadas.
-- Subscriptions globais podem sobreviver ao fechamento de uma surface.
-  Subscriptions criadas em effects seguem seu cleanup. O serviço deve permitir
-  remoção e invalidar callbacks da geração anterior quando o runtime reiniciar.
-- Métodos e eventos terão contratos de tipos. Referências a objetos e recursos
-  precisam de validade e erro definido após remoção; conversões de estruturas
-  do Godot e geração de tipos TypeScript ainda precisam de especificação.
-- A conexão nativa criada por `bind_signal` precisa de cleanup ao remover sua
-  origem ou encerrar a integração. API de desligamento, conflitos de nomes e
-  sinais com vários argumentos ainda precisam ser definidos.
+**Posse das conexões:** oferecer bindings removíveis, remoção idempotente e
+invalidação quando a origem é destruída. No JavaScript, manter
+`subscription.remove()` como interface de remoção.
+
+Subscriptions globais podem sobreviver ao fechamento de uma surface;
+subscriptions criadas em effects seguem seu cleanup. Reiniciar o runtime
+invalida callbacks da geração anterior. A especificação deve cobrir eventos
+enfileirados, listeners sem binding, reconexão e a API de desligamento no Godot.
 
 ### Aceitação do tema 3
 
@@ -356,6 +413,38 @@ Fechar o inventário durante uma operação aceita permite sua conclusão confor
 o contrato. Reabrir mostra os dados atuais. Verificar leitura inicial sem perda
 de atualização, cleanup repetido, ordem dos eventos e referências invalidadas
 quando uma entidade ou geração do runtime deixa de existir.
+
+## Tema 4 — Autoridade sobre árvore e input
+
+Este tema está aprovado em V2-D09/V2-D10. Pausa, background e associação a
+contextos adicionais permanecem pendentes em V2-D11/V2-D12.
+
+### V2-D09
+
+**Layout e hierarquia:** Godot posiciona e dimensiona a surface; Fabric/Yoga
+controla os descendentes montados. Conteúdo externo e operações imperativas
+entram por contratos próprios, incluindo transformações e clipping.
+
+Um Container do Godot pode fornecer espaço à surface. Alterações diretas nos
+descendentes geridos por Fabric não criam um segundo layout implícito; sua
+integração deve respeitar uma fronteira explícita.
+
+### V2-D10
+
+**Input e foco:** o host roteia input entre raízes, Controls externos e gameplay,
+com políticas de consumo declaradas. Dentro da raiz, usar responders e
+Pressability do RN. Modais possuem foco explicitamente e o restauram ao fechar.
+
+Input não consumido segue a política do Godot. A especificação deve definir
+essas políticas para fundo transparente, teclado/gamepad e overlays, sem dupla
+ativação do gameplay quando um botão ou modal consome a interação.
+
+### Aceitação do tema 4
+
+Uma surface dentro de um Container recebe constraints corretas. Intervenções
+externas em sua subtree são tratadas explicitamente. Clique no fundo chega ao
+jogo quando permitido; botão/modal não ativam gameplay; foco é transferido e
+restaurado para os destinos corretos.
 
 ## Distância entre a direção e a implementação consultada
 
@@ -376,13 +465,14 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As escolhas pendentes têm IDs estáveis no
+As 22 escolhas pendentes, V2-D11 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-As recomendações desse registro não representam aprovação nem implementação.
+V2-D01 a V2-D10 já estão aprovadas. As recomendações das entradas pendentes
+continuam em discussão; nenhum desses status certifica implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Autoridade sobre árvore e input | Limites entre Containers/Controls do Godot e layout Fabric/Yoga; foco, modais, consumo de input, pausa e SubViewports |
+| Tempo e contextos de UI | Pausa, background, relógios, janelas adicionais e SubViewports; autoridade sobre árvore/input já está aprovada |
 | Extensões e adapters | Registro, schemas, Codegen, componentes/módulos externos e fronteira ABI do SDK |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |

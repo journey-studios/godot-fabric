@@ -1,91 +1,96 @@
-# Godot Fabric — Decisões pendentes da arquitetura 2.0
+# Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 32 decisões pendentes; recomendações para discussão, sem aprovação.
+**Status:** 10 decisões aprovadas (V2-D01 a V2-D10) e 22 pendentes (V2-D11 a V2-D32).
 
 **Data:** 2026-10-02.
 
 Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
-migração e pontos deixados abertos nos três temas discutidos.
+migração e pontos deixados abertos nos temas discutidos.
 
-As recomendações abaixo são propostas. Não alteram decisões já alinhadas, não
-implementam APIs e não mudam o status do [roadmap para 1.0](../ROADMAP.md).
+As recomendações de V2-D01 a V2-D10 foram aprovadas em 2026-10-02. Seus contratos
+estão consolidados na arquitetura principal; as alternativas dessas entradas
+ficam como histórico da escolha. V2-D11 a V2-D32 continuam como propostas.
+A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
 a direção consolidada.
 
 ## Como fechar uma decisão
 
-Cada ID tem uma escolha pendente, alternativas, recomendação e cenário de
-validação. Ao aprovar uma alternativa, registrar o contrato na arquitetura
-principal e ligar a resolução ao ID. Aprovar o contrato não equivale a provar
-sua implementação; a evidência executada deve ser registrada separadamente.
+Cada ID tem uma questão, alternativas e cenário de validação. Entradas pendentes
+têm uma recomendação; entradas aprovadas apontam para seu contrato na arquitetura
+principal. Aprovar o contrato não equivale a provar sua implementação; a
+evidência executada deve ser registrada separadamente. Assinaturas finais e
+detalhes deixados para especificação não são inventados pelo registro da aprovação.
 
 Os IDs são estáveis. A ordem abaixo organiza a discussão; não aprova uma
 sequência de implementação nem cria novos itens de roadmap.
 
 ## Índice
 
-| ID | Decisão pendente |
-| --- | --- |
-| [V2-D01](#v2-d01) | Configuração da aplicação e registro automático da entrada |
-| [V2-D02](#v2-d02) | Identidade, montagem e atualização das surfaces |
-| [V2-D03](#v2-d03) | Leitura inicial e subscription sem perder mudanças |
-| [V2-D04](#v2-d04) | Nomes, escopos e argumentos dos signals |
-| [V2-D05](#v2-d05) | Registro de métodos e chamadas JavaScript → Godot |
-| [V2-D06](#v2-d06) | Conversão de valores e validade das referências |
-| [V2-D07](#v2-d07) | Ordem, prioridade e limites da entrega de eventos |
-| [V2-D08](#v2-d08) | Posse e cleanup das conexões nativas |
-| [V2-D09](#v2-d09) | Autoridade sobre layout e árvore nativa |
-| [V2-D10](#v2-d10) | Input, foco e interação com o gameplay |
-| [V2-D11](#v2-d11) | Pausa do jogo, background e relógios da UI |
-| [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas |
-| [V2-D13](#v2-d13) | Registro e descoberta de adapters |
-| [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters |
-| [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados |
-| [V2-D16](#v2-d16) | Contrato completo de um componente nativo |
-| [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa |
-| [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto |
-| [V2-D19](#v2-d19) | Builder, protocolo, cache e workspaces |
-| [V2-D20](#v2-d20) | Resolução de módulos e identidade única de React |
-| [V2-D21](#v2-d21) | Babel, configuração do usuário e NativeWind |
-| [V2-D22](#v2-d22) | Ativação de builds e recuperação após falhas |
-| [V2-D23](#v2-d23) | Fast Refresh e limites da preservação de estado |
-| [V2-D24](#v2-d24) | Assets, recursos importados e manifesto |
-| [V2-D25](#v2-d25) | Exportação, targets e falha obrigatória do processo |
-| [V2-D26](#v2-d26) | Erros, source maps e diagnósticos |
-| [V2-D27](#v2-d27) | Encerramento, cancelamento e trabalho pendente |
-| [V2-D28](#v2-d28) | Threads, medição de texto e desempenho |
-| [V2-D29](#v2-d29) | Tipos coerentes com build e runtime |
-| [V2-D30](#v2-d30) | Identidade Godot e serviços do sistema operacional |
-| [V2-D31](#v2-d31) | Certificação, versões e bibliotecas suportadas |
-| [V2-D32](#v2-d32) | Migração e relação com a entrega 1.0 |
+| ID | Contrato | Status |
+| --- | --- | --- |
+| [V2-D01](#v2-d01) | Configuração da aplicação e registro automático da entrada | Aprovada |
+| [V2-D02](#v2-d02) | Identidade, montagem e atualização das surfaces | Aprovada |
+| [V2-D03](#v2-d03) | Leitura inicial e subscription sem perder mudanças | Aprovada |
+| [V2-D04](#v2-d04) | Nomes, escopos e argumentos dos signals | Aprovada |
+| [V2-D05](#v2-d05) | Registro de métodos e chamadas JavaScript → Godot | Aprovada |
+| [V2-D06](#v2-d06) | Conversão de valores e validade das referências | Aprovada |
+| [V2-D07](#v2-d07) | Ordem, prioridade e limites da entrega de eventos | Aprovada |
+| [V2-D08](#v2-d08) | Posse e cleanup das conexões nativas | Aprovada |
+| [V2-D09](#v2-d09) | Autoridade sobre layout e árvore nativa | Aprovada |
+| [V2-D10](#v2-d10) | Input, foco e interação com o gameplay | Aprovada |
+| [V2-D11](#v2-d11) | Pausa do jogo, background e relógios da UI | Pendente |
+| [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas | Pendente |
+| [V2-D13](#v2-d13) | Registro e descoberta de adapters | Pendente |
+| [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Pendente |
+| [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Pendente |
+| [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Pendente |
+| [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa | Pendente |
+| [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto | Pendente |
+| [V2-D19](#v2-d19) | Builder, protocolo, cache e workspaces | Pendente |
+| [V2-D20](#v2-d20) | Resolução de módulos e identidade única de React | Pendente |
+| [V2-D21](#v2-d21) | Babel, configuração do usuário e NativeWind | Pendente |
+| [V2-D22](#v2-d22) | Ativação de builds e recuperação após falhas | Pendente |
+| [V2-D23](#v2-d23) | Fast Refresh e limites da preservação de estado | Pendente |
+| [V2-D24](#v2-d24) | Assets, recursos importados e manifesto | Pendente |
+| [V2-D25](#v2-d25) | Exportação, targets e falha obrigatória do processo | Pendente |
+| [V2-D26](#v2-d26) | Erros, source maps e diagnósticos | Pendente |
+| [V2-D27](#v2-d27) | Encerramento, cancelamento e trabalho pendente | Pendente |
+| [V2-D28](#v2-d28) | Threads, medição de texto e desempenho | Pendente |
+| [V2-D29](#v2-d29) | Tipos coerentes com build e runtime | Pendente |
+| [V2-D30](#v2-d30) | Identidade Godot e serviços do sistema operacional | Pendente |
+| [V2-D31](#v2-d31) | Certificação, versões e bibliotecas suportadas | Pendente |
+| [V2-D32](#v2-d32) | Migração e relação com a entrega 1.0 | Pendente |
 
 ## Aplicação e surfaces — completar o tema 1
 
 ### V2-D01
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D01 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d01).
+
 **Decisão:** onde configurar entry, bundle, opções da aplicação e o nome da raiz
 registrada automaticamente para um `export default`.
 
-- **Alternativas:** ProjectSettings, um recurso de configuração da aplicação ou
+- **Alternativas avaliadas:** ProjectSettings, um recurso de configuração da aplicação ou
   bootstrap por script; todos respeitando a posse da aplicação já decidida.
-- **Recomendação:** recurso versionado de configuração, referenciado pelo projeto;
-  surfaces selecionam entradas e props. Gerar um nome documentado para a entrada
-  simples e diagnosticar registros duplicados, sem sobrescrever silenciosamente.
 - **Validação:** dois painéis usam a mesma aplicação; projeto com uma entrada
   funciona sem registro manual; entrada ausente ou duplicada gera erro claro.
 
 ### V2-D02
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D02 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d02).
+
 **Decisão:** como atribuir IDs, distinguir montagens e atualizar props sem
 reaproveitar referências de uma raiz encerrada.
 
-- **Alternativas:** identidade baseada no caminho do Node ou IDs do host com
+- **Alternativas avaliadas:** identidade baseada no caminho do Node ou IDs do host com
   geração de montagem/runtime; APIs explícitas ou montagem ligada ao ciclo do Node.
-- **Recomendação:** IDs únicos no runtime e gerações separadas para validação;
-  integrar o ciclo do Node mantendo operações explícitas de update/unmount.
-  Documentar quando a montagem está pronta para receber input e comandos.
 - **Validação:** montar duas instâncias da mesma entrada, mudar props, substituir
   uma raiz e reenviar um comando antigo; somente a referência vigente funciona.
 
@@ -93,80 +98,85 @@ reaproveitar referências de uma raiz encerrada.
 
 ### V2-D03
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D03 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d03).
+
 **Decisão:** como obter dados iniciais e acompanhar alterações sem perder uma
 mudança entre a leitura e a instalação do listener.
 
-- **Alternativas:** leitura e subscription atômicas no publisher; ou instalar o
+- **Alternativas avaliadas:** leitura e subscription atômicas no publisher; ou instalar o
   listener, ler uma revisão e ordenar os eventos recebidos durante a leitura.
-- **Recomendação:** contrato de conexão que devolva valor inicial e revisão,
-  com acompanhamento a partir dessa revisão. A API pública exata fica para escolha;
-  o mecanismo de transporte não impõe uma store nem regras de domínio.
 - **Validação:** modificar o valor durante a conexão e reabrir um painel depois
   de várias mudanças; ele recebe o estado atual sem perda ou regressão de revisão.
 
 ### V2-D04
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D04 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d04).
+
 **Decisão:** como nomes de eventos, várias instâncias e signals com múltiplos
 argumentos aparecem em `GodotFabric.bind_signal` e `GodotFabric.subscribe`.
 
-- **Alternativas:** nomes globais livres, namespaces registrados ou canais
+- **Alternativas avaliadas:** nomes globais livres, namespaces registrados ou canais
   associados a uma origem/instância; argumentos posicionais ou payload tipado.
-- **Recomendação:** identidade explícita da origem e namespace, com schema de
-  argumentos. A forma simples com string permanece possível; colisões e troca
-  de origem precisam de diagnóstico e política definida.
 - **Validação:** dois jogadores emitem o mesmo tipo de signal; um signal envia
   vários argumentos; nomes conflitantes e payload inválido não chegam ao destino errado.
 
 ### V2-D05
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D05 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d05).
+
 **Decisão:** como publicar funções do jogo e chamá-las pelo JavaScript, incluindo
 resultado, erro, conclusão e cancelamento.
 
-- **Alternativas:** chamada genérica por nome, interfaces geradas por serviço ou
+- **Alternativas avaliadas:** chamada genérica por nome, interfaces geradas por serviço ou
   módulos nativos específicos; cada uma com métodos síncronos e/ou assíncronos.
-- **Recomendação:** transporte pequeno com registro por GDScript e facades
-  tipadas opcionais. Ações que dependem da execução no Godot retornam resultado
-  assíncrono; leitura síncrona só quando o contrato puder garantir execução segura.
-  Definir se a resposta confirma aceitação ou conclusão.
 - **Validação:** método inexistente, argumento inválido, exceção, execução
   bem-sucedida e pedido de cancelamento têm respostas distinguíveis.
 
 ### V2-D06
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D06 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d06).
+
 **Decisão:** quais valores atravessam a integração e como referenciar objetos
 Godot sem deixar ponteiros ou referências inválidas no JavaScript.
 
-- **Alternativas:** DTOs, handles opacos, wrappers de objetos ou conversores
+- **Alternativas avaliadas:** DTOs, handles opacos, wrappers de objetos ou conversores
   registrados para tipos específicos.
-- **Recomendação:** DTOs tipados e handles com identidade/validade inicialmente;
-  definir arrays, dictionaries, null, vetores, cores, recursos, ciclos e números
-  fora do intervalo inteiro exato do JavaScript. Rejeitar conversões sem contrato.
 - **Validação:** referência removida ou de outra geração falha; números grandes,
   estruturas aninhadas e payload cíclico preservam o contrato ou são rejeitados.
 
 ### V2-D07
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D07 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d07).
+
 **Decisão:** quais garantias de ordem e prioridade oferecer e como agir quando
 o produtor envia mais eventos do que a UI consegue consumir.
 
-- **Alternativas:** fila global, filas por canal, agrupamento explícito de estado
+- **Alternativas avaliadas:** fila global, filas por canal, agrupamento explícito de estado
   ou controle de produção; descarte apenas se o contrato o autorizar.
-- **Recomendação:** preservar sequência por origem e respeitar prioridades do RN.
-  Definir ordem entre canais, orçamento de processamento e política de overflow.
-  Estado pode permitir agrupamento; acontecimentos não recebem essa política por padrão.
 - **Validação:** dois danos permanecem dois eventos; uma sequência de medidas
   pode agrupar conforme contrato; carga alta tem comportamento e métricas verificáveis.
 
 ### V2-D08
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D08 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d08).
+
 **Decisão:** quem possui o binding nativo de um signal e como desligá-lo,
 substituí-lo ou encerrar suas subscriptions.
 
-- **Alternativas:** tokens explícitos de binding, posse pelo Node de origem ou
+- **Alternativas avaliadas:** tokens explícitos de binding, posse pelo Node de origem ou
   pelo serviço registrado; lifetimes de aplicação e surface permanecem distintos.
-- **Recomendação:** binding removível, remoção idempotente e invalidação quando
-  a origem é destruída. `subscription.remove()` continua como direção no JS.
-  Definir eventos já enfileirados, listeners sem binding e reconexão da origem.
 - **Validação:** cleanup duplo, Node destruído, troca de origem e remount repetido
   não duplicam listeners nem entregam callbacks de uma geração encerrada.
 
@@ -174,27 +184,29 @@ substituí-lo ou encerrar suas subscriptions.
 
 ### V2-D09
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D09 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d09).
+
 **Decisão:** onde Godot e Fabric podem alterar layout, hierarquia e propriedades
 sem criar dois sistemas disputando o mesmo conteúdo.
 
-- **Alternativas:** subtree exclusivamente gerida por Fabric ou mistura com
+- **Alternativas avaliadas:** subtree exclusivamente gerida por Fabric ou mistura com
   Nodes externos através de pontos de integração definidos.
-- **Recomendação:** Godot posiciona/dimensiona a surface; Fabric/Yoga controla
-  seus descendentes montados. Integração com conteúdo externo e operações
-  imperativas precisam de contratos próprios, incluindo transformações e clipping.
 - **Validação:** uma surface dentro de um Container recebe constraints corretas;
   alterações externas em descendentes são tratadas explicitamente, sem disputa de layout.
 
 ### V2-D10
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D10 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d10).
+
 **Decisão:** como distribuir input entre roots, Controls externos e gameplay,
 incluindo foco, teclado/gamepad, transparência e modais.
 
-- **Alternativas:** capturar toda a região da surface, consumir somente destinos
+- **Alternativas avaliadas:** capturar toda a região da surface, consumir somente destinos
   interativos ou definir políticas explícitas por surface/overlay.
-- **Recomendação:** roteamento pelo host com políticas de consumo declaradas,
-  usando responders/Pressability do RN dentro da raiz. Modais têm posse explícita
-  de foco e restauração; input não consumido segue a política do Godot.
 - **Validação:** clique em fundo transparente chega ao jogo quando permitido;
   botão e modal não ativam gameplay; foco atravessa e retorna às árvores corretas.
 
@@ -523,14 +535,13 @@ contratos da v2 são necessários para entregar a versão inicial 1.0 do produto
 
 ## Ordem sugerida para continuar a discussão
 
-1. Completar os contratos da comunicação: V2-D03 a V2-D08. O nome público foi
-   alinhado; leitura inicial, chamadas, schemas e cleanup ainda não foram fechados.
-2. Definir convivência com o Godot: V2-D09 a V2-D12, complementando V2-D01/V2-D02.
-3. Definir extensibilidade e fronteira binária: V2-D13 a V2-D17.
-4. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
-5. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
-6. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
+1. Definir pausa, relógios e contextos adicionais: V2-D11/V2-D12. As direções de
+   aplicação, comunicação, árvore e input de V2-D01 a V2-D10 já estão aprovadas.
+2. Definir extensibilidade e fronteira binária: V2-D13 a V2-D17.
+3. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
+4. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
+5. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. Implementação, prioridades finais
-e aprovações continuam em aberto.
+Essa sequência é recomendação de discussão. As decisões de V2-D11 em diante,
+a implementação e suas prioridades finais continuam em aberto.
