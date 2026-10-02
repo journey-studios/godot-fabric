@@ -20,8 +20,10 @@ already run. This foundation is **experimental 0.1**, not full RN parity.
 
 GF-01 and GF-02 are **In progress**: [PR #4](https://github.com/journey-studios/godot-fabric/pull/4)
 delivered the root API inventory, nine shared native reference cases, differential
-CI and a cold-start containment. The full contract inventory and the underlying
-Godot import-crash root cause remain open. See the [baseline](docs/compatibility/BASELINE.md)
+CI and a cold-start containment. The GF-02 follow-up pins the tested engine,
+validates it before native setup and covers failed-start cleanup. The crash was
+narrowed to native-class discovery and the editor documentation shutdown path;
+the upstream correction and full contract inventory remain open. See the [baseline](docs/compatibility/BASELINE.md)
 and [cold-start evidence](docs/evidence/cold-start.md). GF-03/GF-04 and the
 bounded public editing/widget slices of GF-12/GF-17 are now In progress.
 The [typed public form](examples/form/README.md) delivers a single-line
@@ -257,6 +259,16 @@ and expose a contract failure without hidden no-ops or stale evidence.
 | GF-07 · P1 · Root and surface lifecycle | Planned | Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions | GF-05, GF-06 |
 | GF-08 · P1 · Public refs and native commands | Planned | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
 | GF-09 · P0 · Real metrics and platform identity | Planned | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
+
+**GF-02 checkpoint (2026-10-02):** the extension minimum now matches the tested
+Godot 4.7.2 runtime. Setup rejects a different engine before downloads/build
+outputs; runners discard stale success reports before version validation.
+Regressions cover interrupted startup-list publication, disposable-project
+cleanup and visible import/runtime failures. Prepared cold imports and runtime
+checks pass locally. Direct empty-cache import still reproduces the engine
+crash, consistent with [upstream issue #111645](https://github.com/godotengine/godot/issues/111645).
+GF-02 remains In progress; the [evidence record](docs/evidence/cold-start.md)
+distinguishes containment, local verification and the remaining engine boundary.
 
 ## M1 — Complete the native UI tree
 

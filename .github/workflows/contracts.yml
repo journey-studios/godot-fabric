@@ -35,8 +35,10 @@ jobs:
         run: |
           test "$(uname -m)" = arm64
           mkdir -p .deps/godot
-          curl --fail --location --retry 2 --max-time 180 https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip -o .deps/godot.zip
-          echo 'c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e  .deps/godot.zip' | shasum -a 256 -c -
+          GODOT_DOWNLOAD_URL=$(node -p "require('./dependencies.json').godot.macos.url")
+          GODOT_DOWNLOAD_SHA=$(node -p "require('./dependencies.json').godot.macos.sha256")
+          curl --fail --location --retry 2 --max-time 180 "$GODOT_DOWNLOAD_URL" -o .deps/godot.zip
+          echo "$GODOT_DOWNLOAD_SHA  .deps/godot.zip" | shasum -a 256 -c -
           ditto -x -k .deps/godot.zip .deps/godot
           echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
       - run: npm run setup
@@ -56,6 +58,14 @@ jobs:
           path: build/examples/headless/*.json
           if-no-files-found: error
       - run: npm run test:cold
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-cold-start
+          path: |
+            build/cold-start.json
+            build/cold-*.log
+          if-no-files-found: warn
       - run: npm run parity:godot
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

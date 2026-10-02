@@ -6,6 +6,7 @@ import { ensureGodotBinary } from "./godot-binary.mjs";
 import { examples } from "./examples-catalog.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+rmSync(path.join(root, "build/report.json"), { force: true });
 const binary = await ensureGodotBinary();
 const selected = examples.filter((example) => process.argv.includes(`--${example.id}`));
 if (selected.length > 1) throw new Error("Choose one example at a time");

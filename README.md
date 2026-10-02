@@ -51,7 +51,10 @@ npm run example -- counter
 ```
 
 Set `GODOT_BIN` to the official engine executable if it is outside
-`/Applications/Godot.app`. Setup downloads checksum-pinned native dependencies,
+`/Applications/Godot.app`. Setup validates the pinned stable engine before any
+downloads or build output. The engine version and CI download checksum live in
+[`dependencies.json`](dependencies.json); the extension declares 4.7.2 as its
+minimum supported runtime. Setup downloads checksum-pinned native dependencies,
 installs the npm lockfile, bundles JSX and compiles the GDExtension.
 CMake lives in a local virtual environment; Godot itself is not recompiled.
 

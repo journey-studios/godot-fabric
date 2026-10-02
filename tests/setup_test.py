@@ -3,6 +3,8 @@ import hashlib
 import importlib.util
 import io
 import shutil
+import subprocess
+import sys
 import tarfile
 import tempfile
 import unittest
@@ -89,3 +91,27 @@ class ArchiveRecoveryTests(unittest.TestCase):
             self.setup.source("react-native")
         self.assertFalse(destination.exists())
         self.assertFalse((self.setup.DEPS / "first.txt").exists())
+
+
+class SetupPreflightTests(unittest.TestCase):
+    def test_rejected_engine_stops_before_creating_outputs_or_downloading(self):
+        scripts = Path(__file__).resolve().parents[1] / "scripts"
+        spec = importlib.util.spec_from_file_location("fabric_setup", scripts / "setup.py")
+        setup = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(setup)
+        with tempfile.TemporaryDirectory() as directory:
+            setup.PROJECT = Path(directory) / "project"
+            setup.DEPS = setup.PROJECT / ".deps"
+            setup.PROJECT.mkdir()
+            rejected = subprocess.CalledProcessError(1, ["node", "scripts/godot-binary.mjs"])
+            with patch.object(sys, "path", [str(scripts), *sys.path]), \
+                    patch.object(setup.platform, "system", return_value="Darwin"), \
+                    patch.object(setup.platform, "machine", return_value="arm64"), \
+                    patch.object(setup, "run", side_effect=rejected) as command, \
+                    patch.object(setup, "source") as download:
+                with self.assertRaises(subprocess.CalledProcessError):
+                    setup.main()
+                command.assert_called_once_with("node", setup.PROJECT / "scripts/godot-binary.mjs")
+                download.assert_not_called()
+            self.assertFalse(setup.DEPS.exists())
+            self.assertFalse((setup.PROJECT / "build").exists())

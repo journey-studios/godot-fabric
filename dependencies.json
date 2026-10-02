@@ -1,4 +1,11 @@
 {
+  "godot": {
+    "version": "4.7.2",
+    "macos": {
+      "url": "https://github.com/godotengine/godot-builds/releases/download/4.7.2-stable/Godot_v4.7.2-stable_macos.universal.zip",
+      "sha256": "c58a24e31d720be9d62f60cb5627c4e695fb72f21b0cfe1bc9ccaa9a3b3ba63e"
+    }
+  },
   "react": "19.2.3",
   "react-native": {
     "version": "0.87.1",
