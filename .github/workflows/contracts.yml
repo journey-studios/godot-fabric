@@ -46,15 +46,20 @@ jobs:
       - run: npm run test:runtime
       - run: npm run test:application
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
         with:
           name: native-shared-application
           path: |
             build/examples/headless/shared.json
             build/shared-application.log
             build/shared-application-report.json
+            build/shared-clock-report.json
+            build/shared-clock.log
             build/shared-failures-report.json
             build/shared-failures.log
-          if-no-files-found: error
+            build/legacy-application-report.json
+            build/legacy-application.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: native-runtime

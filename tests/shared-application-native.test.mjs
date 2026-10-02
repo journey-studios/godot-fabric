@@ -13,7 +13,9 @@ for (const [label, timeScale, artifact] of [
   ["Hermes timers remain live when the Godot simulation clock is accelerated", 1000, "shared-clock"],
 ]) test(label, async () => {
   const reportPath = join(root, "build", "report.json");
+  const artifactPath = join(root, "build", artifact + "-report.json");
   rmSync(reportPath, { force: true });
+  rmSync(artifactPath, { force: true });
   const result = spawnSync(await ensureGodotBinary(), ["--path", root, "--headless", "--time-scale", String(timeScale), "res://examples/shared/scene.tscn", "--", "--validate"], {
     encoding: "utf8", timeout: 20000, maxBuffer: 4 * 1024 * 1024,
   });
@@ -28,7 +30,7 @@ for (const [label, timeScale, artifact] of [
   assert.ok(report.checks.every(check => check.passed), JSON.stringify(report));
   assert.equal(report.engine, "hermes");
   assert.equal(report.renderer, "fabric");
-  writeFileSync(join(root, "build", artifact + "-report.json"), JSON.stringify(report, null, 2) + "\n");
+  writeFileSync(artifactPath, JSON.stringify(report, null, 2) + "\n");
 });
 
 test("legacy scene replacement and surface reentry allocate fresh implicit owners", async () => {
