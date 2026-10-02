@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 15 decisões aprovadas (V2-D01 a V2-D15) e 17 pendentes (V2-D16 a V2-D32).
+**Status:** 16 decisões aprovadas (V2-D01 a V2-D16) e 16 pendentes (V2-D17 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As direções de V2-D01 a V2-D15 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D16 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D16 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D17 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -30,8 +30,8 @@ sequência de implementação nem cria novos itens de roadmap.
 ## Como entender o que está sendo decidido
 
 As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
-e detalhes a especificar. V2-D11 a V2-D15 estão aprovados na direção discutida,
-com retomada, contextos e integração nativa ainda a especificar. V2-D16 a V2-D32
+e detalhes a especificar. V2-D11 a V2-D16 estão aprovados na direção discutida,
+com retomada, contextos e integração nativa ainda a especificar. V2-D17 a V2-D32
 continuam como propostas, incluindo seus exemplos de comportamento;
 nenhuma entrada descreve implementação comprovada.
 
@@ -54,7 +54,7 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Extensões](#v2-d16), D16–D17 | Comportamentos dos componentes e reuso das libs; descoberta, compatibilidade binária e specs/Codegen aprovados em D13–D15 |
+| [Extensões](#v2-d17), D17 | Classificação do reuso das libs; descoberta, compatibilidade binária, specs/Codegen e comportamento dos componentes aprovados em D13–D16 |
 | [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
 | [Execução e tipos](#v2-d28), D28–D29 | O que preservar ao otimizar e publicar APIs |
@@ -100,7 +100,7 @@ não exigem aprovações rápidas sem exemplos.
 | [V2-D13](#v2-d13) | Registro e descoberta de adapters | Aprovada |
 | [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Aprovada |
 | [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Aprovada |
-| [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Pendente |
+| [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Aprovada |
 | [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa | Pendente |
 | [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto | Pendente |
 | [V2-D19](#v2-d19) | Builder, protocolo, cache e workspaces | Pendente |
@@ -482,14 +482,15 @@ aprova automaticamente suporte a toda lib que o utiliza.
 
 ### V2-D16
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D16 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d16).
+
 **Decisão:** o que um adapter de componente precisa implementar além de criar
 um Control, incluindo state nativo, refs, comandos, eventos e medição.
 
-- **Alternativas:** adapter reduzido por props ou contrato de componente
+- **Alternativas avaliadas:** adapter reduzido por props ou contrato de componente
   completo, com capacidades opcionais declaradas por schema.
-- **Recomendação:** explicitar mount/update/removal, defaults, state, eventos,
-  comandos, refs e ownership de medidas. Definir interação com nós virtuais e
-  flattening; montar um Control por nó React não deve ser uma premissa universal.
 - **Validação:** componente externo recebe updates/remoção de props, emite
   eventos, executa comando e invalida ref; medição e pintura concordam.
 
@@ -505,7 +506,7 @@ que declare essa capacidade. Anunciá-lo como substituto completo deixa libs
 falharem em refs/commands/state. Contrato completo cobre capacidades declaradas;
 componentes não precisam inventar capacidades ausentes da própria spec.
 
-**Como ler a recomendação:** descrever create/update/remove, defaults na remoção
+**Como ler o contrato aprovado:** descrever create/update/remove, defaults na remoção
 de props, state, eventos, commands, refs e medição. O RN documenta
 [eventos e métodos de TextInput](https://reactnative.dev/docs/textinput) e
 [flattening de views](https://reactnative.dev/architecture/view-flattening).
@@ -1146,14 +1147,15 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-1. Definir comportamentos dos componentes e reuso de bibliotecas: V2-D16 a V2-D17.
+1. Definir a classificação do reuso de bibliotecas: V2-D17.
    As direções de aplicação, comunicação, árvore, input, tempo, contextos, descoberta,
-   compatibilidade binária e specs/Codegen de V2-D01 a V2-D15 estão aprovadas;
+   compatibilidade binária, specs/Codegen e comportamento dos componentes de
+   V2-D01 a V2-D16 estão aprovadas;
    seus detalhes e provas continuam na especificação e validação.
 2. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
 3. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
 4. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D16 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D17 em diante,
 a implementação e suas prioridades finais continuam em aberto.

@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D15 aprovadas, V2-D16 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D16 aprovadas, V2-D17 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 15 aprovações e 17 escolhas pendentes, com seus cenários de validação.
+identifica 16 aprovações e 16 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -30,8 +30,8 @@ A direção geral busca uma experiência integrada ao Godot: configurar o addon,
 adicionar uma surface e executar o jogo. Distribuição do SDK, ferramentas de
 build e exportação ainda precisam de discussão específica. Descoberta de
 extensões nativas segue V2-D13, compatibilidade binária segue V2-D14 e schemas/
-Codegen seguem V2-D15. O contrato funcional completo dos componentes continua
-pendente em V2-D16.
+Codegen seguem V2-D15. O contrato funcional dos componentes segue V2-D16;
+a classificação do reuso das bibliotecas continua pendente em V2-D17.
 
 Os temas consolidados são:
 
@@ -39,9 +39,9 @@ Os temas consolidados são:
 2. Dimensões, contextos de UI, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
 4. Autoridade sobre a árvore, input e tempo da UI.
-5. Descoberta, compatibilidade e interfaces geradas dos adapters nativos.
+5. Descoberta, compatibilidade, interfaces e comportamento dos adapters nativos.
 
-As direções de V2-D01 a V2-D15 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D16 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -517,7 +517,7 @@ surface preserva seus effects. Exercitar suspensão/resume quando o OS permitir,
 com timeouts e intervals vencidos, frames e reconexão dos dados; verificar o
 contrato de retomada contra o RN pertinente, sem perder acontecimentos do jogo.
 
-## Tema 5 — Extensões nativas, descoberta, compatibilidade e Codegen
+## Tema 5 — Extensões nativas, descoberta, compatibilidade e componentes
 
 ### V2-D13
 
@@ -616,6 +616,46 @@ ainda precisam de especificação. A compatibilidade nativa segue V2-D14. Suport
 a uma biblioteca depende de implementar e validar seus contratos; usar Codegen
 não certifica por si só esse suporte.
 
+### V2-D16
+
+**Cada adapter deve cumprir o contrato funcional das capacidades declaradas
+pelo componente, seguindo sua semântica no RN:** explicitar criação, montagem,
+updates, reordenação de filhos e remoção, incluindo props, defaults, state
+nativo, eventos, comandos, refs e posse das medidas. Componentes não precisam
+inventar capacidades ausentes de seu contrato; limites implementados precisam
+ser explícitos, com classificação de compatibilidade a discutir em V2-D17.
+
+| Parte | Contrato a cumprir |
+| --- | --- |
+| Props | Aplicar mudanças, defaults e remoções conforme o componente, sem manter valores antigos indevidamente |
+| Eventos | Entregar payloads e ordem pertinentes ao contrato, evitando duplicações indevidas |
+| Estado nativo | Integrar informações produzidas pelo componente ao estado do renderer quando seu contrato exigir |
+| Refs e comandos | Operar na instância/montagem correta e tratar invalidação; um comando antigo não pode atingir uma nova montagem |
+| Layout e medição | Manter medidas, coordenadas e pintura coerentes com Fabric/Yoga e o contexto da surface |
+| Ciclo de vida | Montar, atualizar, reordenar filhos e desmontar com cleanup e posses definidos |
+
+O RN documenta [eventos e métodos de TextInput](https://reactnative.dev/docs/textinput).
+Um campo controlado exige tratar edição, seleção, updates e comandos de foco
+conforme esse contrato; copiar `value` para um `LineEdit` não define o ciclo todo.
+Os detalhes de sincronização precisam de especificação e comparação com o RN
+pertinente, distinguindo updates atrasados de mudanças intencionais do autor.
+
+O [estado nativo do renderer](https://reactnative.dev/architecture/render-pipeline#react-native-renderer-state-updates)
+pode conter, por exemplo, o offset de um `ScrollView` usado em medição. É uma
+responsabilidade do componente/renderer e convive com o estado da aplicação em
+React, Zustand ou outra biblioteca; esta decisão não impõe uma biblioteca de estado.
+
+Seguir a árvore e as transações de montagem produzidas pelo Fabric, incluindo
+nós virtuais e [view flattening](https://reactnative.dev/architecture/view-flattening).
+Um elemento React não implica sempre um Control materializado. O mapeamento
+para Nodes implementa esse contrato e respeita a autoridade de layout V2-D09
+e os contextos V2-D12.
+
+Capacidades por componente, sincronização/agendamento de eventos, coordenadas,
+refs/commands e tratamento de operações após desmontagem ainda precisam de
+especificação. A aprovação define a direção funcional e não certifica os
+componentes atuais nem fecha os gaps de paridade.
+
 ### Aceitação do tema 5
 
 Um consumidor instala dois adapters externos e os utiliza sem modificar o core.
@@ -639,6 +679,14 @@ suportado ou artefato desatualizado gera erro verificável. Exercitar essa inter
 no backend e identificar quais artefatos e versões executaram, sem tratar geração
 de código como prova de desenho, input ou suporte integral à biblioteca.
 
+Um componente externo exercita mudanças/remoções de props, defaults, eventos,
+comando, medição, reordenação e desmontagem. Verificar cleanup, invalidação de
+ref e comandos pendentes, sem atingir uma nova montagem. Comparar medidas e
+pintura e exercitar materialização/flattening conforme as transações do Fabric.
+Um campo controlado adicional cobre digitação, seleção e updates atrasados,
+comparando o comportamento com o RN pertinente. Registrar o ciclo observado,
+incluindo casos negativos; um print isolado não comprova esse contrato inteiro.
+
 ## Distância entre a direção e a implementação consultada
 
 | Área | Base consultada | Direção deste documento |
@@ -658,14 +706,14 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 17 escolhas pendentes, V2-D16 a V2-D32, têm IDs estáveis no
+As 16 escolhas pendentes, V2-D17 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D15 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D16 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Extensões e adapters | Contrato completo de componentes e reuso das bibliotecas; direções de descoberta, compatibilidade binária e specs/Codegen aprovadas |
+| Extensões e adapters | Classificação do reuso das bibliotecas; direções de descoberta, compatibilidade binária, specs/Codegen e contrato funcional dos componentes aprovadas |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |
 | Assets e exportação | Recursos, manifestos, host versus target, empacotamento e falhas verificáveis de export |
