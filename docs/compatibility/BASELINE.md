@@ -74,6 +74,8 @@ npm run parity:status
 iOS needs Xcode, an installed iPhone simulator, and CocoaPods 1.16.2; Ruby 3.4.11
 was used locally. Set `RN_SIMULATOR_UDID` to select a simulator. Otherwise the
 runner chooses a shutdown simulator and shuts it down after the test.
+Cold simulator boot/data migration has a five-minute deadline; after launching
+the app, a valid native completion report is still required within one minute.
 Android needs JDK 17, SDK platform 37.0 / build-tools 37, NDK 27.1.12297006 and a running
 emulator. The default ABI is x86_64; set `RN_ANDROID_ABI` for another ABI.
 `--prepare-only` prepares/builds the reference without certifying a runtime run.

@@ -112,7 +112,8 @@ try {
       const derived = path.join(deps, "reference-derived");
       await command("xcodebuild", ["-workspace", "ios/HelloWorld.xcworkspace", "-scheme", "HelloWorld", "-configuration", "Release", "-sdk", "iphonesimulator", "-destination", "generic/platform=iOS Simulator", "-derivedDataPath", derived, "-quiet", "CODE_SIGNING_ALLOWED=NO", "ARCHS=arm64", "ONLY_ACTIVE_ARCH=YES"]);
       if (simulator.state === "Shutdown") { await command("xcrun", ["simctl", "boot", simulator.udid]); bootedHere = true; }
-      await command("xcrun", ["simctl", "bootstatus", simulator.udid, "-b"], project, 120000);
+      // Fresh CI simulator data migration exceeded two minutes before app launch.
+      await command("xcrun", ["simctl", "bootstatus", simulator.udid, "-b"], project, 300000);
       await command("xcrun", ["simctl", "install", simulator.udid, path.join(derived, "Build/Products/Release-iphonesimulator/HelloWorld.app")]);
       await command("xcrun", ["simctl", "launch", simulator.udid, "org.godotfabric.parity"]);
     }
