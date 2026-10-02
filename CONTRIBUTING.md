@@ -7,7 +7,9 @@ and failure visibility.
 
 Run setup on supported macOS arm64, then the relevant scene in headless and
 graphical modes. Native tests share output files and must run sequentially.
-Generated dependencies, framework binaries and logs are never committed.
+Generated dependencies, framework binaries, logs and raw per-run reports are
+never committed. Evidence keeps the curated record (README, matrix, provenance,
+captures); `.gitignore` covers the report paths.
 
 Before sending a PR, run `npm run test:contracts`, `npm run check:static` and
 `npm run check:publication`. The publication scan rejects environment paths,
