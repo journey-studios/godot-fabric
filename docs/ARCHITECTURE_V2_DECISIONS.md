@@ -27,6 +27,43 @@ detalhes deixados para especificação não são inventados pelo registro da apr
 Os IDs são estáveis. A ordem abaixo organiza a discussão; não aprova uma
 sequência de implementação nem cria novos itens de roadmap.
 
+## Como entender o que está sendo decidido
+
+As entradas pendentes têm agora uma leitura prática: situação de uso,
+consequências dos caminhos, significado da recomendação e detalhes que ela
+ainda não resolve. Esses aprofundamentos são propostas, incluindo os exemplos
+de comportamento; não são novas aprovações nem descrições do runtime atual.
+
+Há três naturezas de discussão, que podem aparecer juntas:
+
+- **Produto:** comportamento percebido ou compromisso público do SDK. Precisa
+  de escolha consciente: pausar a UI, perder estado num reload, exigir instalação
+  externa ou anunciar suporte a uma plataforma.
+- **Contrato:** limite que autores de bibliotecas e projetos precisam conhecer.
+  Aprovar a direção deixa formatos e casos de borda para especificação, como
+  versões de adapters e comandos que uma ref aceita.
+- **Execução:** mecanismo interno a escolher por evidência. Cache, orçamento de
+  fila, executor e uso de Rust devem cumprir o contrato e ser medidos; não
+  precisam virar preferências arbitrárias do consumidor.
+
+Compatibilidade com o RN não é uma alternativa à correção. Algumas perguntas
+localizam uma obrigação técnica; outras oferecem comportamentos diferentes.
+Cada aprofundamento indica essa diferença. Nenhuma classificação aprova
+automaticamente um ponto pendente.
+
+| Discussão | O que precisa ficar claro antes de aprovar |
+| --- | --- |
+| [Tempo e contextos](#v2-d11), D11–D12 | Como menus continuam utilizáveis e onde a UI pode aparecer |
+| [Extensões](#v2-d13), D13–D17 | O que alguém entrega para uma biblioteca nativa funcionar |
+| [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
+| [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
+| [Execução e tipos](#v2-d28), D28–D29 | O que preservar ao otimizar e publicar APIs |
+| [Plataformas e certificação](#v2-d30), D30–D31 | O que significa dizer que algo é compatível |
+| [Migração](#v2-d32), D32 | Como chegar à 1.0 sem perder o que funciona |
+
+Discutir uma família de comportamento por vez. Os IDs mantêm rastreabilidade;
+não exigem 22 aprovações rápidas sem exemplos.
+
 ## Índice
 
 | ID | Contrato | Status |
@@ -224,6 +261,47 @@ background, e qual relógio alimenta timers, RAF e animações.
 - **Validação:** menu funciona durante pausa; alterar velocidade da simulação
   não muda timers públicos; retomada tem política clara para callbacks atrasados.
 
+**Natureza:** produto e contrato; a implementação do relógio é execução.
+
+**Na prática:** o jogador pausa durante um combate. O mundo para, mas o botão
+de continuar, o indicador de salvamento e a transição do menu precisam funcionar.
+Uma lib que faz debounce de busca com `setTimeout` não deveria mudar de
+comportamento porque a simulação passou a rodar em velocidade 4×.
+
+| Situação | Comportamento proposto para discussão |
+| --- | --- |
+| Jogo pausado | Runtime, input da UI e timers continuam; simulação depende do jogo |
+| Simulação acelerada | Timers públicos mantêm tempo real; tempo do jogo chega como dado explícito |
+| Uma surface oculta | Estado/effects continuam, conforme aprovado; otimizar pintura não suspende a aplicação |
+| Aplicativo em background | Mapear lifecycle do OS; não prometer execução enquanto o processo estiver suspenso |
+| Retorno do background | Reconectar estado atual e tratar callbacks vencidos sem simular frames que não existiram |
+
+**Consequências dos caminhos:** usar o delta da simulação como relógio público
+acopla as libs ao jogo e pode congelar o menu de pausa. Tempo real separa as
+responsabilidades: cooldown depende de dados do jogo; busca da UI depende do
+tempo real. Uma política de execução por surface parece flexível, mas um único
+Hermes tem timers e stores globais: pausar todo o JS de um painel não é isolamento
+disponível nessa arquitetura.
+
+**Como ler a recomendação:** deadlines monotônicos para agendamento, separados
+do relógio civil de `Date.now()`, do tempo da simulação e dos frames apresentados.
+RAF acompanha oportunidades de apresentação; não prometer que todo mecanismo
+de animação roda pelo mesmo callback.
+
+**Ainda a especificar:** um timeout vencido durante suspensão, um interval que
+perdeu cem períodos e uma animação retomada são casos diferentes. A proposta de
+detalhe é entregar o timeout quando o host puder executar, evitar cem intervals
+em rajada e retomar frames sem inventar frames intermediários. Comparar com o
+RN da versão fixada por OS antes de fechar essa semântica. Foco de janela,
+background e surface oculta precisam de sinais distintos. JS longo pode bloquear
+a UI mesmo com relógio correto.
+
+O RN oferece [timers e RAF](https://reactnative.dev/docs/timers) e
+[AppState para lifecycle](https://reactnative.dev/docs/appstate). No Godot,
+[process mode participa da pausa](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html),
+e signals podem executar em Nodes sem processamento. Cobrir tanto o pump do
+runtime quanto callbacks que chegam do Godot.
+
 ### V2-D12
 
 **Decisão:** como associar raiz, Window e SubViewport e expressar medidas,
@@ -236,6 +314,29 @@ coordenadas, safe areas e foco fora da janela principal.
   e conversões para medições/input; suporte adicional só com casos certificados.
 - **Validação:** dois painéis, viewport escalado e janela secundária têm medidas
   e hit testing coerentes; APIs globais mantêm o significado já aprovado.
+
+**Natureza:** produto para contextos suportados e contrato para coordenadas.
+
+**Na prática:** um inventário de 600 × 700 ocupa parte de uma janela maior.
+Outra UI tem 400 × 300 num SubViewport e aparece ampliada a 800 × 600. Um botão
+em x=100 na UI passa por essa transformação; comparar diretamente o mouse da
+janela com o rect local erra o alvo.
+
+**Consequências dos caminhos:** limitar inicialmente à janela principal permite
+certificar um contexto claro, mas os demais precisam ser recusados ou marcados
+como experimentais. Aceitar qualquer viewport sem contrato parece funcionar
+até surgirem escala, clipping e foco. Contexto por surface representa essas
+diferenças sem fazer `Dimensions` mudar de significado conforme o painel.
+
+**Como ler a recomendação:** cada raiz sabe onde está hospedada; APIs globais
+continuam ligadas à janela principal, como aprovado. Medidas da surface usam
+um contrato próprio. Safe area da janela não é copiada para todo painel sem
+primeiro relacionar suas regiões e unidades.
+
+**Ainda a especificar:** quais contextos entram em cada marco, origem/unidade,
+transforms, notificações e foco ao transferir uma raiz ou fechar uma janela.
+UI numa textura de objeto 3D exige mapear o hit do mundo para a textura; esse
+caso não é automaticamente coberto por um SubViewport retangular na janela.
 
 ## SDK nativo, adapters e bibliotecas
 
@@ -253,6 +354,27 @@ nomes, dependências e serviços exigidos pelo bundle.
 - **Validação:** dois adapters externos registram seus contratos sem recompilar
   o core; duplicação e dependência ausente falham antes de executar o app.
 
+**Natureza:** contrato de extensibilidade; descoberta e validação são execução.
+
+**Na prática:** alguém instala um componente de gráfico e seu adapter Godot.
+Antes do bundle executar, o host precisa conhecer os componentes e módulos
+fornecidos e confirmar implementação para o target selecionado.
+
+**Consequências dos caminhos:** editar/recompilar o core para cada lib fecha o
+conjunto de integrações. Registro externo anterior ao runtime permite extensões
+independentes e configuração verificável. Troca dinâmica de código nativo exige
+outro contrato: objetos e callbacks antigos podem usar o adapter removido.
+
+**Como ler a recomendação:** descobrir extensões, validar manifestos e congelar
+o registry daquela geração. Substituir um adapter exige a operação permitida
+pelo host, podendo exigir reiniciar o processo; reiniciar Hermes não comprova
+descarregamento nativo seguro.
+
+**Ainda a especificar:** manifesto, ordem/dependências/ciclos, duplicação, API de
+registro e descoberta no editor/export. Esse registro nativo é distinto do
+AppRegistry de entradas React. Uma `HealthBar` composta com componentes existentes
+não precisa de adapter nem de registro para cada JSX.
+
 ### V2-D14
 
 **Decisão:** qual fronteira binária oferecer aos adapters e o que comprova sua
@@ -267,6 +389,29 @@ compatibilidade com o SDK carregado.
 - **Validação:** adapter correto carrega; variante com toolchain/dependência
   incompatível é rejeitada antes de cruzar a fronteira binária.
 
+**Natureza:** contrato público de versões e distribuição de extensões.
+
+**Na prática:** um plugin compilado para um SDK é copiado para um projeto que
+atualizou o RN. O nome do componente pode continuar igual, mas layouts de tipos,
+símbolos e convenções nativas podem mudar. Abrir o arquivo não comprova que seus
+objetos podem atravessar a interface.
+
+**Consequências dos caminhos:** expor estruturas C++ do Fabric dá acesso aos
+contratos existentes com dependência da combinação de build. Uma interface C
+com handles opacos evita expor esse layout, mas precisa definir/versionar tudo
+que atravessa a fronteira; não torna implementações RN compatíveis com toda versão.
+
+**Como ler a recomendação:** publicar uma combinação identificada de SDK,
+headers, runtime e toolchain por target. O autor de TSX usa o artefato correspondente;
+o autor de extensão nativa pode precisar recompilá-la ao atualizar o SDK. Isso
+não implica recompilar Godot.
+
+**Ainda a especificar:** diferenças incompatíveis, detecção anterior à chamada,
+rejeição e distribuição por target. Se carregar a biblioteca executa inicializadores,
+validar seu manifesto antes do carregamento é necessário; o teste posterior
+não desfaz essas ações. Fingerprint verifica a combinação declarada, não substitui
+certificação. Fronteira opaca continua outra proposta, não estabilidade já prometida.
+
 ### V2-D15
 
 **Decisão:** qual schema é fonte de props, eventos, métodos, commands e tipos,
@@ -279,6 +424,29 @@ e como gerar/atualizar os artefatos do host Godot.
   atualização; registro manual não substitui os contratos completos.
 - **Validação:** alterar uma spec atualiza tipos e native artifacts; schema
   incompatível ou arquivo gerado desatualizado produz erro verificável.
+
+**Natureza:** contrato de autoria de adapters e compatibilidade de schemas.
+
+**Na prática:** uma lib declara prop numérica, evento com payload e comando.
+Se TS, bridge e C++ mantêm declarações manualmente, uma alteração pode compilar
+de um lado e enviar argumentos inválidos do outro. A spec precisa ser a fonte
+identificada da parte derivável desse contrato.
+
+**Consequências dos caminhos:** schema exclusivo Godot serve a componentes
+próprios, mas exige traduzir novamente specs upstream. Reaproveitar specs RN
+preserva a interface da lib e permite consumir artefatos pertinentes. Isso não
+gera por si só desenho, input ou operações do Godot.
+
+**Como ler a recomendação:** usar specs/Codegen RN onde cabem, acrescentando a
+integração Godot. O adapter continua implementando o backend. O
+[Codegen documentado pelo RN](https://reactnative.dev/docs/the-new-architecture/using-codegen)
+está integrado aos builds Android/iOS; precisamos de nosso caminho de consumo e
+geração, sem fingir ser um desses targets.
+
+**Ainda a especificar:** schemas iniciais, defaults/nullability, comandos/eventos,
+extensões Godot, quem gera e distribui, e gate de drift. Schema não suportado
+precisa de diagnóstico, sem remoção silenciosa de campos. Aprovar Codegen não
+aprova automaticamente suporte a toda lib que o utiliza.
 
 ### V2-D16
 
@@ -293,6 +461,30 @@ um Control, incluindo state nativo, refs, comandos, eventos e medição.
 - **Validação:** componente externo recebe updates/remoção de props, emite
   eventos, executa comando e invalida ref; medição e pintura concordam.
 
+**Natureza:** contrato funcional; mapeamento para Nodes é execução.
+
+**Na prática:** um campo recebe texto controlado por React. O jogador digita e
+muda seleção enquanto JS envia atualização atrasada. Criar um `LineEdit` e copiar
+`value` não define ordem de updates, seleção, eventos ou comandos de foco.
+Esse é um exercício de contrato, não uma garantia do campo atual.
+
+**Consequências dos caminhos:** adapter só de props serve a um componente simples
+que declare essa capacidade. Anunciá-lo como substituto completo deixa libs
+falharem em refs/commands/state. Contrato completo cobre capacidades declaradas;
+componentes não precisam inventar capacidades ausentes da própria spec.
+
+**Como ler a recomendação:** descrever create/update/remove, defaults na remoção
+de props, state, eventos, commands, refs e medição. O RN documenta
+[eventos e métodos de TextInput](https://reactnative.dev/docs/textinput) e
+[flattening de views](https://reactnative.dev/architecture/view-flattening).
+Um elemento React não implica sempre um Control materializado; o host segue
+árvore e transações produzidas pelo Fabric.
+
+**Ainda a especificar:** capacidades por componente, agendamento de eventos,
+coordenadas e invalidação de refs/commands. Exercitar prop removida, reordenação
+de filhos e comando antigo. Print correto valida aparência de um estado, não
+esse ciclo inteiro.
+
 ### V2-D17
 
 **Decisão:** como distinguir uma biblioteca original funcionando sobre nosso
@@ -306,6 +498,26 @@ backend de uma API alternativa que apenas oferece aparência semelhante.
   exige validar runtime além de transforms.
 - **Validação:** consumidor independente instala a versão declarada, e a prova
   identifica exatamente quais arquivos e adapters executam.
+
+**Natureza:** produto e contrato de compatibilidade anunciado ao consumidor.
+
+**Na prática:** um gráfico aparece, mas seu pacote JS chama uma implementação
+SVG local. A prova vale para o gráfico e comportamentos exercitados; não demonstra
+que outra lib com máscaras, gradientes ou outros contratos SVG funcionará.
+
+**Consequências dos caminhos:** pacote original com backend Godot permite
+reivindicar contratos certificados. Substituir todo o pacote por facade parecida
+pode ser útil, mas exige outra descrição de compatibilidade. Publicar alternativa
+com outro nome explicita a dependência, exigindo mudar imports do consumidor.
+
+**Como ler a recomendação:** identificar JS original, adapter nativo e facades
+substitutas na evidência. Suporte parcial pode ser declarado com versão e limites,
+sem esconder um experimento útil. O objetivo continua ampliar reuso do RN original.
+
+**Ainda a especificar:** rótulos públicos, fixtures por biblioteca e tratamento
+de APIs fora do subset. Reproduzir instalação num consumidor independente evita
+prova que depende de aliases internos não publicados. D15/D16 definem contrato;
+D31 certifica. Esta classificação não troca paridade por semelhança visual.
 
 ## Distribuição, builder e resolução
 
