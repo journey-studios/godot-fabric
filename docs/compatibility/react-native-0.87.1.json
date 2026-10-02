@@ -1,0 +1,944 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-10-01",
+  "sourceCommit": "72d2bc6d7a10fd90dfea53754cf405ff5c75e5da",
+  "baseline": {
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "godot": "4.7.2"
+  },
+  "upstream": {
+    "url": "https://github.com/facebook/react-native/blob/v0.87.1/packages/react-native/types_generated/index.d.ts",
+    "file": "packages/react-native/types_generated/index.d.ts",
+    "sha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3",
+    "archiveSha256": "f686b91e4c59ba8010be1b4abfde0adc24f7f5aea95a6a28cf4d4ad2cc494bd8"
+  },
+  "facade": {
+    "file": "src/react-native-platform.jsx",
+    "sha256": "f3778849862988dff3b079f17fab147dd78fd7fa70df45c33c079f4e6d62b83c"
+  },
+  "scope": "Runtime value exports from the strict generated TypeScript root entry; excludes type-only exports, globals, props, events, methods and private deep imports. This dated audit is not a behavioral coverage gate.",
+  "exportCount": 97,
+  "statusDefinitions": {
+    "implemented_subset": "A usable public component exists with retained subset evidence; complete RN parity is not certified.",
+    "environment_or_utility_subset": "A public utility or environment policy exists, often with fixed values or narrowed contracts.",
+    "unavailable_placeholder": "The facade exports the name but throws when used.",
+    "missing_public_export": "The public facade does not export the name; internal upstream availability does not count."
+  },
+  "exports": [
+    {
+      "name": "AccessibilityInfo",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-20",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform-environment.js"
+      ],
+      "note": "Surface policy or fixed values; complete system behavior is not implemented."
+    },
+    {
+      "name": "ActionSheetIOS",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "ActivityIndicator",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-17",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Alert",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Animated",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-19",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "AppRegistry",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-07",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "AppState",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-21",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform-environment.js"
+      ],
+      "note": "Surface policy or fixed values; complete system behavior is not implemented."
+    },
+    {
+      "name": "Appearance",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-21",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform-environment.js"
+      ],
+      "note": "Surface policy or fixed values; complete system behavior is not implemented."
+    },
+    {
+      "name": "AssetRegistry",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-16",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "BackHandler",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Button",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-17",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Clipboard",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+    },
+    {
+      "name": "DevMenu",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-29",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "DevSettings",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-29",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "DeviceEventEmitter",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "DeviceInfo",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-09",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Dimensions",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-09",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform-environment.js"
+      ]
+    },
+    {
+      "name": "DrawerLayoutAndroid",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+    },
+    {
+      "name": "DynamicColorIOS",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Easing",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-19",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "EventEmitter",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "FlatList",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-15",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "I18nManager",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-10",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform-environment.js"
+      ],
+      "note": "Surface policy or fixed values; complete system behavior is not implemented."
+    },
+    {
+      "name": "Image",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-16",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "ImageBackground",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-16",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+    },
+    {
+      "name": "InputAccessoryView",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Keyboard",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-12",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "KeyboardAvoidingView",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-12",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "LayoutAnimation",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-19",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Linking",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "LogBox",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-29",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Modal",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-18",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "NativeAppEventEmitter",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "NativeComponentRegistry",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-26",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "NativeEventEmitter",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "NativeModules",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Networking",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-22",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "PanResponder",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-13",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "PermissionsAndroid",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "PixelRatio",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-09",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform-environment.js"
+      ],
+      "note": "Surface policy or fixed values; complete system behavior is not implemented."
+    },
+    {
+      "name": "Platform",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-09",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/platform.js"
+      ]
+    },
+    {
+      "name": "PlatformColor",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-10",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Pressable",
+      "status": "implemented_subset",
+      "target": "1_0",
+      "roadmap": "GF-13",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/components.jsx"
+      ]
+    },
+    {
+      "name": "ProgressBarAndroid",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "PushNotificationIOS",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+    },
+    {
+      "name": "ReactNativeVersion",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-03",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "RefreshControl",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-14",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "RootTagContext",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-07",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "SafeAreaView",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-18",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Retain the pinned upstream compatibility/deprecation behavior; deprecation is not a coverage exemption."
+    },
+    {
+      "name": "ScrollView",
+      "status": "implemented_subset",
+      "target": "1_0",
+      "roadmap": "GF-14",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/scroll-view.jsx"
+      ]
+    },
+    {
+      "name": "SectionList",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-15",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Settings",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Share",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "StatusBar",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "StyleSheet",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-10",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/components.jsx"
+      ]
+    },
+    {
+      "name": "Switch",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-17",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Systrace",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-29",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Text",
+      "status": "implemented_subset",
+      "target": "1_0",
+      "roadmap": "GF-11",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/text.jsx"
+      ]
+    },
+    {
+      "name": "TextInput",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-12",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/components.jsx",
+        "src/input-app.jsx",
+        "native/input_adapter.cpp"
+      ],
+      "note": "Native single-line probe exists; the public react-native export throws."
+    },
+    {
+      "name": "ToastAndroid",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "TouchableHighlight",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-13",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "TouchableNativeFeedback",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-24",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "TouchableOpacity",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-13",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "TouchableWithoutFeedback",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-13",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "TurboModuleRegistry",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "UIManager",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-08",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "UTFSequence",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-11",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "Vibration",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-23",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "View",
+      "status": "implemented_subset",
+      "target": "1_0",
+      "roadmap": "GF-10",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/components.jsx"
+      ]
+    },
+    {
+      "name": "VirtualViewMode",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "VirtualizedList",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-15",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "VirtualizedSectionList",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-15",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "codegenNativeCommands",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-26",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "codegenNativeComponent",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-26",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "experimental_LayoutConformance",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "findNodeHandle",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-08",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "processColor",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-10",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "registerCallableModule",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-25",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "requireNativeComponent",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-26",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "unstable_DEFAULT_INITIAL_NUM_TO_RENDER",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_NativeText",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_NativeView",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_TextAncestorContext",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_VirtualArray",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_VirtualColumn",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_VirtualColumnGenerator",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_VirtualRow",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_VirtualView",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_batchedUpdates",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-06",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "unstable_createVirtualCollectionView",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "unstable_getScrollParent",
+      "status": "missing_public_export",
+      "target": "post_1_0",
+      "roadmap": "GF-40",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ],
+      "note": "Experimental or unstable upstream export, tracked explicitly outside the stable 1.0 contract."
+    },
+    {
+      "name": "useAnimatedColor",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-19",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "useAnimatedValue",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-19",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "useAnimatedValueXY",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-19",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "useColorScheme",
+      "status": "unavailable_placeholder",
+      "target": "1_0",
+      "roadmap": "GF-21",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "usePressability",
+      "status": "missing_public_export",
+      "target": "1_0",
+      "roadmap": "GF-13",
+      "evidence": [
+        "src/react-native-platform.jsx"
+      ]
+    },
+    {
+      "name": "useWindowDimensions",
+      "status": "environment_or_utility_subset",
+      "target": "1_0",
+      "roadmap": "GF-09",
+      "evidence": [
+        "src/react-native-platform.jsx",
+        "src/window-dimensions.js"
+      ]
+    }
+  ]
+}
