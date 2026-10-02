@@ -43,6 +43,8 @@ def main():
     from extension_startup import prepare_extension_startup
     if (platform.system(), platform.machine()) != ("Darwin", "arm64"):
         raise RuntimeError("This validation currently builds on macOS arm64 only")
+    # Reject an unsupported engine before downloading or publishing build output.
+    run("node", PROJECT / "scripts/godot-binary.mjs")
     DEPS.mkdir(exist_ok=True)
     (DEPS / ".gdignore").touch()
     (PROJECT / "build").mkdir(exist_ok=True)

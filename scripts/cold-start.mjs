@@ -3,14 +3,14 @@ import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, 
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ensureGodotBinary } from "./godot-binary.mjs";
+import { ensureGodotBinary, GODOT_VERSION } from "./godot-binary.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-const binary = await ensureGodotBinary();
 const errors = /SCRIPT ERROR|(?:^|\n)ERROR:|Program crashed|FABRIC_ERROR|FABRIC_CHECK_FAILED/;
 const runs = [];
 mkdirSync(path.join(root, "build"), { recursive: true });
 rmSync(path.join(root, "build/cold-start.json"), { force: true });
+const binary = await ensureGodotBinary();
 if (!existsSync(path.join(root, "build/app.js"))) throw new Error("Run npm run bundle first");
 
 function run(fixture, name, args, marker) {
@@ -58,6 +58,6 @@ for (let index = 1; index <= 2; index++) {
     rmSync(fixture, { recursive: true, force: true });
   }
 }
-const report = { schemaVersion: 1, godot: "4.7.2", platform: process.platform, architecture: process.arch, status: "passed", runs };
+const report = { schemaVersion: 1, godot: GODOT_VERSION, platform: process.platform, architecture: process.arch, status: "passed", runs };
 writeFileSync(path.join(root, "build/cold-start.json"), JSON.stringify(report, null, 2) + "\n");
 console.log(`COLD_START_PASSED: ${runs.length} fresh imports, runtime checks and warm imports`);

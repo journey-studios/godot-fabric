@@ -2,7 +2,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { ensureGodotBinary } from "./godot-binary.mjs";
+import { ensureGodotBinary, GODOT_VERSION } from "./godot-binary.mjs";
 import { assertReport, provenance } from "./parity-protocol.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -24,7 +24,7 @@ command(binary, ["--path", root, "--headless", "--script", "res://tests/parity_g
 const log = command(binary, ["--path", root, ...(process.argv.includes("--headed") ? [] : ["--headless"]), "res://parity.tscn"], "FABRIC_PARITY_PASSED");
 writeFileSync(path.join(root, "build/parity-godot.log"), log);
 const result = JSON.parse(readFileSync(output, "utf8"));
-const report = { ...result, platform: "godot", godot: "4.7.2", display: process.argv.includes("--headed") ? "native" : "headless", ...provenance() };
+const report = { ...result, platform: "godot", godot: GODOT_VERSION, display: process.argv.includes("--headed") ? "native" : "headless", ...provenance() };
 assertReport(report, "godot");
 writeFileSync(output, JSON.stringify(report, null, 2) + "\n");
 console.log(`PARITY_GODOT_PASSED: ${report.checks.length} native subset cases`);

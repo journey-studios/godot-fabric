@@ -1,7 +1,9 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const GODOT_VERSION = "4.7.2";
+export const GODOT_VERSION = JSON.parse(readFileSync(new URL("../dependencies.json", import.meta.url), "utf8")).godot.version;
 
 export async function ensureGodotBinary() {
   const binary = process.env.GODOT_BIN || [
@@ -13,8 +15,15 @@ export async function ensureGodotBinary() {
   const detected = spawnSync(binary, ["--version"], {
     encoding: "utf8", timeout: 10000,
   });
+  const version = detected.stdout?.trim();
+  const baseline = `${GODOT_VERSION}.stable`;
   if (detected.error || detected.status !== 0 ||
-      !detected.stdout?.startsWith(`${GODOT_VERSION}.stable`))
-    throw new Error(`Godot ${GODOT_VERSION}.stable required; found ${detected.stdout?.trim() || detected.error || "no version"}`);
+      !(version === baseline || version?.startsWith(`${baseline}.`)))
+    throw new Error(`Godot ${baseline} required; found ${version || detected.error || "no version"}`);
   return binary;
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  await ensureGodotBinary();
+  console.log(`Godot ${GODOT_VERSION}.stable preflight passed`);
 }
