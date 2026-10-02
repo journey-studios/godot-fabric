@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D14 aprovadas, V2-D15 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D15 aprovadas, V2-D16 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 14 aprovações e 18 escolhas pendentes, com seus cenários de validação.
+identifica 15 aprovações e 17 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -29,8 +29,9 @@ do Godot através do addon, usando o executável oficial do engine.
 A direção geral busca uma experiência integrada ao Godot: configurar o addon,
 adicionar uma surface e executar o jogo. Distribuição do SDK, ferramentas de
 build e exportação ainda precisam de discussão específica. Descoberta de
-extensões nativas segue V2-D13 e compatibilidade binária segue V2-D14;
-schemas e Codegen continuam pendentes em V2-D15.
+extensões nativas segue V2-D13, compatibilidade binária segue V2-D14 e schemas/
+Codegen seguem V2-D15. O contrato funcional completo dos componentes continua
+pendente em V2-D16.
 
 Os temas consolidados são:
 
@@ -38,9 +39,9 @@ Os temas consolidados são:
 2. Dimensões, contextos de UI, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
 4. Autoridade sobre a árvore, input e tempo da UI.
-5. Descoberta, integração e compatibilidade de adapters nativos.
+5. Descoberta, compatibilidade e interfaces geradas dos adapters nativos.
 
-As direções de V2-D01 a V2-D14 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D15 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -516,7 +517,7 @@ surface preserva seus effects. Exercitar suspensão/resume quando o OS permitir,
 com timeouts e intervals vencidos, frames e reconexão dos dados; verificar o
 contrato de retomada contra o RN pertinente, sem perder acontecimentos do jogo.
 
-## Tema 5 — Extensões nativas, descoberta e compatibilidade
+## Tema 5 — Extensões nativas, descoberta, compatibilidade e Codegen
 
 ### V2-D13
 
@@ -584,6 +585,37 @@ versionada com handles opacos pode ser uma evolução separada, sem promessa
 de estabilidade dessa ABI na direção inicial. Ela também não elimina a
 necessidade de adaptar e validar implementações quando o RN muda.
 
+### V2-D15
+
+**Reaproveitar specs e Codegen do RN onde forem aplicáveis, com integração
+própria para Godot:** a spec identifica a fonte da parte derivável do contrato
+de props, eventos, comandos, métodos e tipos de componentes/módulos nativos.
+Consumir ou gerar os artefatos pertinentes a partir dessa fonte, preservando
+a interface da biblioteca original. Registro manual não substitui esses contratos.
+
+O [Codegen documentado pelo RN](https://reactnative.dev/docs/the-new-architecture/using-codegen)
+está integrado aos builds Android/iOS. O host precisa definir seu caminho de
+consumo e geração para Godot; a aprovação não pressupõe um target Godot já
+disponível na ferramenta upstream.
+
+O adapter implementa desenho, input, operações e integração com o host.
+Codegen gera partes da ligação, sem gerar automaticamente esse comportamento.
+Para quem escreve telas, JSX e composição React continuam normais; componentes
+compostos com capacidades existentes não precisam de uma spec nativa própria.
+Esta decisão não substitui o registro de bindings do jogo de V2-D03 a V2-D08.
+
+Identificar versão e proveniência dos artefatos derivados e verificar sua
+atualização em relação à spec e à versão das ferramentas. Uma incompatibilidade
+de schema ou artefato desatualizado deve produzir diagnóstico verificável,
+sem remover campos silenciosamente. Extensões específicas do Godot precisam
+ser explícitas; seu formato e versionamento ainda serão especificados.
+
+Schemas iniciais, defaults/nullability, comandos/eventos, integração com o build,
+responsabilidade pela geração/distribuição e mecanismo de detecção de divergência
+ainda precisam de especificação. A compatibilidade nativa segue V2-D14. Suporte
+a uma biblioteca depende de implementar e validar seus contratos; usar Codegen
+não certifica por si só esse suporte.
+
 ### Aceitação do tema 5
 
 Um consumidor instala dois adapters externos e os utiliza sem modificar o core.
@@ -599,6 +631,13 @@ a interface. Se houver inicializadores no carregamento, a rejeição pelo
 manifesto acontece antes deles. Uma edição somente de TSX/estilos atualiza o
 bundle sem recompilar o adapter; uma atualização nativa incompatível informa
 qual artefato precisa ser substituído, sem exigir recompilar Godot.
+
+Uma biblioteca externa declara prop, evento com payload e comando/método em
+sua spec; os artefatos pertinentes são consumidos/gerados para o adapter Godot.
+Alterar a spec atualiza os contratos derivados. Schema incompatível, campo não
+suportado ou artefato desatualizado gera erro verificável. Exercitar essa interface
+no backend e identificar quais artefatos e versões executaram, sem tratar geração
+de código como prova de desenho, input ou suporte integral à biblioteca.
 
 ## Distância entre a direção e a implementação consultada
 
@@ -619,14 +658,14 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 18 escolhas pendentes, V2-D15 a V2-D32, têm IDs estáveis no
+As 17 escolhas pendentes, V2-D16 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D14 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D15 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Extensões e adapters | Schemas, Codegen e contrato completo de componentes; direções de descoberta e compatibilidade binária aprovadas |
+| Extensões e adapters | Contrato completo de componentes e reuso das bibliotecas; direções de descoberta, compatibilidade binária e specs/Codegen aprovadas |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |
 | Assets e exportação | Recursos, manifestos, host versus target, empacotamento e falhas verificáveis de export |

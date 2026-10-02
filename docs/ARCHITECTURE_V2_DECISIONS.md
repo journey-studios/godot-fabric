@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 14 decisões aprovadas (V2-D01 a V2-D14) e 18 pendentes (V2-D15 a V2-D32).
+**Status:** 15 decisões aprovadas (V2-D01 a V2-D15) e 17 pendentes (V2-D16 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As direções de V2-D01 a V2-D14 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D15 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D15 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D16 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -30,8 +30,8 @@ sequência de implementação nem cria novos itens de roadmap.
 ## Como entender o que está sendo decidido
 
 As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
-e detalhes a especificar. V2-D11 a V2-D14 estão aprovados na direção discutida,
-com retomada, contextos e integração nativa ainda a especificar. V2-D15 a V2-D32
+e detalhes a especificar. V2-D11 a V2-D15 estão aprovados na direção discutida,
+com retomada, contextos e integração nativa ainda a especificar. V2-D16 a V2-D32
 continuam como propostas, incluindo seus exemplos de comportamento;
 nenhuma entrada descreve implementação comprovada.
 
@@ -54,7 +54,7 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Extensões](#v2-d15), D15–D17 | Schemas e contratos das libs; descoberta e compatibilidade binária aprovadas em D13/D14 |
+| [Extensões](#v2-d16), D16–D17 | Comportamentos dos componentes e reuso das libs; descoberta, compatibilidade binária e specs/Codegen aprovados em D13–D15 |
 | [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
 | [Execução e tipos](#v2-d28), D28–D29 | O que preservar ao otimizar e publicar APIs |
@@ -99,7 +99,7 @@ não exigem aprovações rápidas sem exemplos.
 | [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas | Aprovada |
 | [V2-D13](#v2-d13) | Registro e descoberta de adapters | Aprovada |
 | [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Aprovada |
-| [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Pendente |
+| [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Aprovada |
 | [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Pendente |
 | [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa | Pendente |
 | [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto | Pendente |
@@ -445,14 +445,15 @@ certificação. Fronteira opaca continua outra proposta, não estabilidade já p
 
 ### V2-D15
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D15 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d15).
+
 **Decisão:** qual schema é fonte de props, eventos, métodos, commands e tipos,
 e como gerar/atualizar os artefatos do host Godot.
 
-- **Alternativas:** schemas manuais próprios, specs do RN com Codegen ou uma
+- **Alternativas avaliadas:** schemas manuais próprios, specs do RN com Codegen ou uma
   combinação com extensão explícita para aspectos específicos do Godot.
-- **Recomendação:** preservar specs/Codegen do RN onde aplicáveis e definir a
-  geração para Godot. Código derivado tem versão/proveniência e verificação de
-  atualização; registro manual não substitui os contratos completos.
 - **Validação:** alterar uma spec atualiza tipos e native artifacts; schema
   incompatível ou arquivo gerado desatualizado produz erro verificável.
 
@@ -468,7 +469,7 @@ próprios, mas exige traduzir novamente specs upstream. Reaproveitar specs RN
 preserva a interface da lib e permite consumir artefatos pertinentes. Isso não
 gera por si só desenho, input ou operações do Godot.
 
-**Como ler a recomendação:** usar specs/Codegen RN onde cabem, acrescentando a
+**Como ler o contrato aprovado:** usar specs/Codegen RN onde cabem, acrescentando a
 integração Godot. O adapter continua implementando o backend. O
 [Codegen documentado pelo RN](https://reactnative.dev/docs/the-new-architecture/using-codegen)
 está integrado aos builds Android/iOS; precisamos de nosso caminho de consumo e
@@ -1145,14 +1146,14 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-1. Definir schemas e contratos de bibliotecas: V2-D15 a V2-D17. As direções de
-   aplicação, comunicação, árvore, input, tempo, contextos, descoberta e compatibilidade
-   binária de V2-D01 a V2-D14 estão aprovadas; seus detalhes e provas continuam
-   na especificação e validação.
+1. Definir comportamentos dos componentes e reuso de bibliotecas: V2-D16 a V2-D17.
+   As direções de aplicação, comunicação, árvore, input, tempo, contextos, descoberta,
+   compatibilidade binária e specs/Codegen de V2-D01 a V2-D15 estão aprovadas;
+   seus detalhes e provas continuam na especificação e validação.
 2. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
 3. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
 4. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D15 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D16 em diante,
 a implementação e suas prioridades finais continuam em aberto.
