@@ -3,6 +3,10 @@
 Local validation used macOS arm64, official Godot 4.7.2, React 19.2.3,
 RN 0.87.1 and Hermes 250829098.0.17. No Godot engine rebuild was required.
 This is a bounded GF-05 implementation; the roadmap item remains In progress.
+The counts, hashes and captures below describe this implementation's recorded
+snapshot before integration with the public form. The current catalog contains
+both examples; [public control evidence](../public-controls/README.md) retains
+its separate snapshot.
 
 ## What changed
 
@@ -105,8 +109,8 @@ locally. The [hosted run](https://github.com/journey-studios/godot-fabric/action
 passed all five jobs on `d4e5673`, including the original iOS/Android references
 and the three-way comparison. Downloaded artifacts were accepted by the current
 strict protocol: **13 matched subset cases** with both mobile references.
-The matrix retains that run/commit and comparison hash. Subsequent changes only
-document this evidence. This result certifies the recorded subset; full RN API
+The matrix retains that run/commit and comparison hash. This result certifies
+the recorded subset; full RN API
 coverage and Godot mobile builds remain separate milestones. See the
 [oracle instructions](../../compatibility/BASELINE.md).
 

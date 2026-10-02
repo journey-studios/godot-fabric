@@ -35,10 +35,10 @@ value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
 `npm run parity:status` generates `build/parity-status.json`. The current facade
-has **15 exported names awaiting differential certification, 12 explicit
-placeholders, and 70 missing public names**. This describes the public facade,
-including the fact that its TextInput is unavailable. Internal LineEdit tests
-do not change that classification. The board separately identifies native
+has **17 exported names awaiting differential certification, 11 explicit
+placeholders, and 69 missing public names** after adding Button/public TextInput.
+This describes source presence. The [public form evidence](../evidence/public-controls/README.md)
+is a Godot acceptance fixture; it does not add mobile differential coverage. The board separately identifies native
 reports as `not_run`, `invalid_or_stale`, or `passed_subset`.
 
 ## Original native oracle

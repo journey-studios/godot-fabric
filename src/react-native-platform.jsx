@@ -5,6 +5,7 @@ import { ScrollView as GodotScrollView } from "./scroll-view";
 import {
   View as GodotView,
   Pressable as GodotPressable,
+  Button as GodotButton,
   controlViewConfig,
 } from "./components";
 import {
@@ -12,6 +13,9 @@ import {
   textStyleAttributes,
   useTextAncestor,
 } from "./text";
+import { PublicInput } from "./public-input";
+import { validateButton, validateInput } from "./control-contracts.mjs";
+import processColor from "react-native/Libraries/StyleSheet/processColor";
 export {
   Dimensions,
   Appearance,
@@ -139,7 +143,26 @@ export const FlatList = unavailable("FlatList");
 export const ImageBackground = unavailable("ImageBackground");
 export const KeyboardAvoidingView = unavailable("KeyboardAvoidingView");
 export const VirtualizedList = unavailable("VirtualizedList");
-export const TextInput = unavailable("NativeWind TextInput styles");
+export function Button(props) {
+  if (useTextAncestor()) throw new Error("Inline Controls are not implemented in Godot Text");
+  validateButton(props);
+  const { title, onPress, disabled = false, color = "#2563eb", ...native } = props;
+  if (processColor(color) == null) throw new Error("Godot Button color is invalid");
+  return <GodotButton {...native} text={title} onActivate={() => onPress?.()} disabled={disabled}
+    color="#ffffff" style={{ minHeight: 44, paddingHorizontal: 12, paddingVertical: 8,
+      backgroundColor: color, borderRadius: 8, opacity: disabled ? 0.4 : 1 }} />;
+}
+export function TextInput(props) {
+  if (useTextAncestor()) throw new Error("Inline Controls are not implemented in Godot Text");
+  validateInput(props);
+  const style = nativeStyle(props.style, "Text");
+  for (const name of textStyleAttributes)
+    if (style[name] != null && !["fontSize", "color"].includes(name))
+      throw new Error(`Godot TextInput does not implement style ${name}`);
+  if (style.color != null && (typeof style.color !== "string" || processColor(style.color) == null))
+    throw new Error("Godot TextInput color requires a valid static color string");
+  return <PublicInput {...props} style={{ minHeight: 44, ...style }} />;
+}
 export function ScrollView(props) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");

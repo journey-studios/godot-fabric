@@ -16,3 +16,5 @@ __pycache__/
 docs/evidence/**/*-report.json
 docs/evidence/examples/*-headless.json
 docs/evidence/examples/*-native.json
+docs/evidence/public-controls/*-headless.json
+docs/evidence/public-controls/*-native.json

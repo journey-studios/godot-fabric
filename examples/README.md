@@ -1,7 +1,7 @@
 # Runnable examples
 
 These examples share the root Godot project and pinned native runtime. Each
-folder has a JSX application, a Godot scene and instructions. They are runnable
+folder has a JSX/TSX application, a Godot scene and instructions. They are runnable
 fixtures, not independent npm packages or a published SDK.
 
 ## Start
@@ -16,7 +16,7 @@ npm run example -- counter
 ```
 
 The launcher rebuilds JSX/styles, prepares extension startup, imports resources
-and opens the selected scene. Edit that example's `App.jsx`, close Godot and run
+and opens the selected scene. Edit that example's `App.jsx` or `App.tsx`, close Godot and run
 the command again. Rebuild native C++ changes with `npm run setup`.
 
 ## Catalog
@@ -25,6 +25,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | --- | --- | --- | --- |
 | [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
+| [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
 | [react](react/README.md) | State, keyed reconciliation, effects, Suspense and errors | Internal | [App](react/App.jsx) · [scene](react/scene.tscn) |
 | [layout](layout/README.md) | Intrinsic text measurement and responsive layout | Internal | [App](layout/App.jsx) · [scene](layout/scene.tscn) |
 | [input](input/README.md) | Controlled native editing, selection and focus | Internal | [App](input/App.jsx) · [scene](input/scene.tscn) |
@@ -39,9 +40,17 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 exports may still call local harness helpers. **Internal** uses wrappers in
 `src/components.jsx` and cannot be copied unchanged into an ordinary RN app.
 **Mixed** combines public UI with internal probes. These labels do not certify
-the full RN API. Public `TextInput` remains unavailable; the input and scroll
-editing probes use an internal native adapter. See the [API limits](../docs/API.md)
+the full RN API. The form exercises the new public single-line `TextInput`;
+the older input and scroll probes still use the internal adapter. See the [API limits](../docs/API.md)
 and [parity baseline](../docs/compatibility/BASELINE.md).
+
+## Gallery
+
+| Public TSX form | Public counter | NativeWind |
+| --- | --- | --- |
+| [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
+
+Every interactive example's README has its own renderer capture.
 
 ## Validation and images
 

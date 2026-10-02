@@ -13,9 +13,20 @@ system integration, developer tooling and distributable builds. The
 [roadmap](../ROADMAP.md) owns live work status; this document records the dated
 audit and the meaning of parity.
 
-Later GF-05 runtime implementation and its bounded evidence are recorded in
-[the runtime example](evidence/runtime/README.md); the tables below preserve
-the audit-date findings.
+## Subsequent checkpoint — 2026-10-02
+
+Public Button and single-line TextInput now have a typed TSX form, native
+editing/ref/activation checks and explicit unsupported-prop errors. The
+[API](API.md), [live status board](compatibility/BASELINE.md) and
+[public control evidence](evidence/public-controls/README.md) describe that
+bounded implementation. The tables below and their machine-readable 97-name
+audit remain the original 2026-10-01 snapshot; they must not be read as current
+export counts. Full types/props, mobile editing and differential certification
+remain open in GF-03/GF-04/GF-12/GF-17.
+
+The bounded GF-05 runtime implementation and its 13-case original-native
+comparison are recorded in [the runtime example](evidence/runtime/README.md).
+The tables below preserve the audit-date findings.
 
 ## What 1.0 must mean
 

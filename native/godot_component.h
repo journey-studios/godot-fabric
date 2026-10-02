@@ -61,7 +61,8 @@ class ControlShadowNode final
   }
  private:
   static rn::ShadowNodeTraits textTraits(const rn::ShadowNodeFragment &fragment, rn::ShadowNodeTraits traits) {
-    if (fragment.props && static_cast<const ControlProps &>(*fragment.props).kind == "text") {
+    if (fragment.props && (static_cast<const ControlProps &>(*fragment.props).kind == "text" ||
+        static_cast<const ControlProps &>(*fragment.props).kind == "button")) {
       traits.set(rn::ShadowNodeTraits::Trait::LeafYogaNode);
       traits.set(rn::ShadowNodeTraits::Trait::MeasurableYogaNode);
     }

@@ -1,5 +1,6 @@
 import React from "react";
 import * as Fabric from "react-native/Libraries/Renderer/implementations/ReactFabric-prod";
+import { FormApp, formStats, runForm } from "./form/App";
 import { CounterApp, counterStats } from "./counter/App";
 import { ReactApp, runReact, reactStats } from "./react/App";
 import { LayoutApp, runLayout, layoutStats } from "./layout/App";
@@ -10,6 +11,7 @@ import { ScrollApp, runScroll, scrollStats } from "./scroll/App";
 import { LineHeightProbe } from "../tests/line-height-probe";
 import { ParityFixture } from "../tests/parity/fixture";
 
+const formScenario = globalThis.godotScenario === "form";
 const counterScenario = globalThis.godotScenario === "counter";
 const runtimeExample = globalThis.godotScenario === "runtime" ? require("./runtime/App") : null;
 const scrollScenario = globalThis.godotScenario === "scroll";
@@ -28,6 +30,7 @@ const typography =
     : null;
 globalThis.GodotApp = {
   run(name, ...args) {
+    if (formScenario) return runForm(name, ...args);
     if (counterScenario) throw new Error("The counter is driven by public Pressable input");
     if (runtimeExample) throw new Error("The runtime example is driven by public Pressable input");
     if (typography) return typography.runTypography(name, ...args);
@@ -40,6 +43,7 @@ globalThis.GodotApp = {
     else runReact(name);
   },
   stats() {
+    if (formScenario) return formStats();
     if (counterScenario) return counterStats();
     if (runtimeExample) return runtimeExample.runtimeStats();
     if (typography) return typography.typographyStats();
@@ -71,6 +75,8 @@ Fabric.render(
       }
       globalThis.fabricParityReport = report;
     }} />
+  ) : formScenario ? (
+    <FormApp />
   ) : counterScenario ? (
     <CounterApp />
   ) : runtimeExample ? (
