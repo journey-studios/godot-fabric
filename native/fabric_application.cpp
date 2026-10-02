@@ -57,5 +57,6 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
 void FabricApplication::_exit_tree() { stop(); }
 void FabricApplication::stop() { if (runtime) runtime->stop(); }
+bool FabricApplication::is_stopped() const { return runtime && runtime->is_stopped(); }
 String FabricApplication::evaluate(const String &source) { return runtime ? gd(runtime->evaluate(utf8(source))) : String("null"); }
 String FabricApplication::snapshot() { return runtime ? gd(runtime->status()) : String("{}"); }

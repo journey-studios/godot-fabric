@@ -45,6 +45,10 @@ bool FabricSurface::mount() {
   if (!is_inside_tree()) return false;
   bool pending_implicit_owner = false;
   auto *owner = application();
+  if (owner && application_path.is_empty() && owner->is_stopped()) {
+    application_id = 0;
+    owner = nullptr;
+  }
   if (!owner && !application_path.is_empty())
     owner = Object::cast_to<FabricApplication>(get_node_or_null(application_path));
   if (!owner && application_path.is_empty()) {
@@ -54,6 +58,15 @@ bool FabricSurface::mount() {
     owner = Object::cast_to<FabricApplication>(root->get_node_or_null(NodePath("_FabricApplication")));
     if (!owner && get_tree()->has_meta("_fabric_application_id"))
       owner = Object::cast_to<FabricApplication>(ObjectDB::get_instance(static_cast<uint64_t>(get_tree()->get_meta("_fabric_application_id"))));
+    if (owner && owner->is_stopped()) {
+      const auto id = owner->get_instance_id();
+      owner->set_name(String("_FabricApplicationRetired_") + String::num_uint64(id));
+      owner->queue_free();
+      if (get_tree()->has_meta("_fabric_application_id") &&
+          static_cast<uint64_t>(get_tree()->get_meta("_fabric_application_id")) == id)
+        get_tree()->remove_meta("_fabric_application_id");
+      owner = nullptr;
+    }
     if (!owner) {
       owner = memnew(FabricApplication);
       owner->set_name("_FabricApplication");

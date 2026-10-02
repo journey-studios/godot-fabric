@@ -856,6 +856,7 @@ int ApplicationRuntime::mount(FabricSurface &host, const std::string &component,
 void ApplicationRuntime::update_props(int id, const std::string &props_json) { impl->update_props(id, props_json); }
 void ApplicationRuntime::unmount(int id) { impl->unmount(id); }
 void ApplicationRuntime::stop() { impl->stop(); }
+bool ApplicationRuntime::is_stopped() const { return impl->stopped || impl->stopping; }
 void ApplicationRuntime::pump(bool frame) { impl->pump(frame); }
 std::string ApplicationRuntime::evaluate(const std::string &source) {
   try { return impl->evaluate(source).toString(*impl->runtime).utf8(*impl->runtime); }

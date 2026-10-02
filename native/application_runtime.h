@@ -18,6 +18,7 @@ class ApplicationRuntime {
   void update_props(int surface_id, const std::string &props_json);
   void unmount(int surface_id);
   void stop();
+  bool is_stopped() const;
   void pump(bool frame = false);
   std::string evaluate(const std::string &source);
   std::string snapshot(int surface_id, const std::string &retired = "{}");

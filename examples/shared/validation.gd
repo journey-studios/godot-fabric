@@ -42,6 +42,13 @@ func press(surface: Control, id: String) -> void:
 func js(application: Node) -> Dictionary:
   return JSON.parse_string(application.call("evaluate", "JSON.stringify(SharedRoots.stats())"))
 
+func timer_progress(previous_ticks: int) -> bool:
+  # Hermes timers use a monotonic wall clock, independent of Godot time_scale.
+  var deadline := Time.get_ticks_msec() + 1000
+  while js(app).ticks <= previous_ticks and Time.get_ticks_msec() < deadline:
+    await get_tree().process_frame
+  return js(app).ticks > previous_ticks
+
 func finish() -> void:
   var report := {"scenario": "shared", "engine": "hermes", "renderer": "fabric", "godot": Engine.get_version_info().string, "reactNative": "0.87.1", "displayServer": DisplayServer.get_name(), "checks": checks, "beforeStop": before_stop, "afterStop": state(hud)}
   var output := FileAccess.open("res://build/report.json", FileAccess.WRITE)
@@ -121,8 +128,8 @@ func run_probe() -> void:
   check(js(app).roots.hud.local == 2 and not js(app).roots.has("inventory"), "Surviving root preserves state")
   await capture("unmounted")
   check(js(app).subscribers == 1, "Unmount releases root subscriptions without clearing the store")
-  await get_tree().create_timer(0.08).timeout
-  check(js(app).ticks > tick_before, "Application timers survive an individual unmount")
+  var root_timer_live := await timer_progress(tick_before)
+  check(root_timer_live, "Application timers survive an individual unmount")
   check(inventory.call("mount"), "A detached surface can mount again")
   await frames()
   check(state(inventory).surfaceId != b.surfaceId, "Remount allocates a new root identity")
@@ -152,8 +159,8 @@ func run_probe() -> void:
   hud.call("unmount")
   replacement.call("unmount")
   var idle := js(app)
-  await get_tree().create_timer(0.06).timeout
-  check(js(app).subscribers == 0 and js(app).ticks > idle.ticks and JSON.parse_string(app.call("snapshot")).rootCount == 0, "Application remains alive with zero mounted roots")
+  var idle_timer_live := await timer_progress(idle.ticks)
+  check(js(app).subscribers == 0 and idle_timer_live and JSON.parse_string(app.call("snapshot")).rootCount == 0, "Application remains alive with zero mounted roots")
   check(hud.call("mount"), "The live application can mount after all roots were removed")
   await frames()
   check(state(hud).surfaceId != previous and js(app).roots.hud.local == 0 and js(app).roots.hud.shared == 7, "A new root receives fresh identity over persistent module state")

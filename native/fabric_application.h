@@ -16,6 +16,7 @@ class FabricApplication : public godot::Node {
   godot::String evaluate(const godot::String &source);
   godot::String snapshot();
   void stop();
+  bool is_stopped() const;
   void set_bundle_path(const godot::String &path);
   godot::String get_bundle_path() const;
   int mount(FabricSurface &host, const godot::String &component, const godot::Dictionary &props);
