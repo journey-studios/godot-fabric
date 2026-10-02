@@ -84,6 +84,12 @@ cross-platform performance guarantees.
 [provenance.json](provenance.json) binds source, upstream modules and captures.
 Raw reports and logs stay in ignored `build/` and hosted artifacts.
 
+The first hosted source gate caught output URLs in the native test being
+interpreted as imports by static analysis. Existing local output files and
+incremental analysis state masked the failure. The test now builds filesystem
+output paths with `path.join`; `npm run check:static -- --no-cache` was verified
+with both generated files absent, without adding an ignore or weakening the gate.
+
 The shared `core-ui-v2` oracle now has **13 cases**: the original nine UI cases
 plus timeout arguments/coercion/cancellation, interval arguments/self-cancellation,
 microtask/immediate ordering and cancellable monotonic frames. The same

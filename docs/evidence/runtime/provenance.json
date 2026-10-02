@@ -12,7 +12,7 @@
     "examples/runtime/scene.tscn": "21a05520fcb82e960cd5dd8afb02a23f57f2f7c08e7c952284f0a77b6c45843d",
     "examples/entry.jsx": "ae118eefac053983342f230b65264c87daadd9770b5d0100cbcdbcdae38b4e9a",
     "examples/catalog.json": "4a613de6fa19ae741d3e658d5106babb423ddf7266b0d83f11d53bedf474190e",
-    "tests/runtime-native.test.mjs": "ccc1201e0846d778508ee10c307fb821e08e5b10a28daae9ba3925e8b1fb9394",
+    "tests/runtime-native.test.mjs": "4fcf14a706afb5230c71c30f8b8ff128da3229910f9e535811498f7d1ad48a9d",
     "tests/runtime_errors.gd": "5a623348610e487ccd0ad3f3b4d17830713cdeb4053700481dfc055796a64ed9",
     "tests/parity/runtime.js": "4789b9a6e5ee2669dda9a83168119bc884194c9fbb7788585c2e186ec89cd67a",
     "tests/parity/fixture.jsx": "494c0d77e6f7a062d11fc83fd454675158c6a675bf1bc078707a806656cc314b",
