@@ -1,5 +1,10 @@
 # Architecture
 
+This document describes the current implementation. The
+[Architecture 2.0 direction](ARCHITECTURE_V2.md) records the application/surface,
+layout and Godot integration decisions discussed so far; its proposed APIs
+are not yet implemented.
+
 ```mermaid
 flowchart LR
   JSX[React and NativeWind JSX] --> Bundle[esbuild and original RN Babel transforms]
