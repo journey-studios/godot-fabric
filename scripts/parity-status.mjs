@@ -38,7 +38,7 @@ const report = {
   facadeSha256: createHash("sha256").update(contents).digest("hex"),
   declaredContracts: inventory.counts, facadeNames: counts, exports,
   fixtureCases: cases.length, nativeEvidence: comparisons,
-  scope: "Exports are source presence, not behavior coverage. Native evidence covers only core-ui-v1. All other declared contracts remain unverified by this differential fixture.",
+  scope: "Exports are source presence, not behavior coverage. Native evidence covers only core-ui-v2. All other declared contracts remain unverified by this differential fixture.",
 };
 mkdirSync("build", { recursive: true });
 writeFileSync("build/parity-status.json", JSON.stringify(report, null, 2) + "\n");

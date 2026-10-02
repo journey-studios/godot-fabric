@@ -2,6 +2,7 @@
 import React, { createContext, memo, startTransition, useContext, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Text, View } from "react-native";
 import nativePackage from "react-native/package.json";
+import { exerciseRuntime } from "./runtime";
 
 const Context = createContext("initial");
 const sleep = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -30,11 +31,12 @@ export function ParityFixture({ onComplete }) {
     } catch (cleanupError) {
       error ||= cleanupError;
     }
-    onComplete({ schemaVersion: 1, fixture: "core-ui-v1", react: React.version, reactNative: nativePackage.version,
+    onComplete({ schemaVersion: 1, fixture: "core-ui-v2", react: React.version, reactNative: nativePackage.version,
       renderer: globalThis.nativeFabricUIManager ? "fabric" : "missing", engine: globalThis.HermesInternal ? "hermes" : "missing",
       observations: { box: session.current.layouts[0], rows: { ...session.current.positions }, counts: [...session.current.counts],
         renders: { ...session.current.rowRenders }, mounts: [...session.current.mounts], cleanups: [...session.current.cleanups],
-        context: session.current.context, store: session.current.observedStore, subscribers: session.current.subscribers.size },
+        context: session.current.context, store: session.current.observedStore, subscribers: session.current.subscribers.size,
+        runtime: session.current.runtime },
       status: error ? "failed" : "passed", checks: session.current.checks, ...(error ? { error: String(error.message || error) } : {}) });
   };
   return visible ? <Probe session={session.current} complete={complete} /> : null;
@@ -105,6 +107,7 @@ function Probe({ session, complete }) {
       startTransition(() => setCount(3));
       await until(() => session.counts.at(-1) === 3);
       check("transition-commit", true);
+      session.runtime = await exerciseRuntime(check);
     }
     exercise().then(() => complete()).catch(complete);
   }, []);

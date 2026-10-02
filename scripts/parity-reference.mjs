@@ -58,6 +58,7 @@ const manifest = path.join(project, "android/app/src/main/AndroidManifest.xml");
 writeFileSync(manifest, readFileSync(manifest, "utf8").replace('android:usesCleartextTraffic="${usesCleartextTraffic}"', 'android:usesCleartextTraffic="true"'));
 mkdirSync(path.join(project, "parity"), { recursive: true });
 writeFileSync(path.join(project, "parity/fixture.jsx"), fixture);
+cpSync(path.join(root, "tests/parity/runtime.js"), path.join(project, "parity/runtime.js"));
 rmSync(path.join(project, "App.tsx"), { force: true });
 
 let resolveReport;
