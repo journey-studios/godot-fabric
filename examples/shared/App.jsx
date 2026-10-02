@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useSyncExternalStore } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState, useSyncExternalStore } from "react";
 import { AppRegistry, RootTagContext, View, Text, Button } from "react-native";
 
 // The module store and timer belong to the application. Only subscriptions
@@ -25,7 +25,9 @@ function Panel({ panel, title }) {
   const rootTag = useContext(RootTagContext);
   const [local, setLocal] = useState(0);
   const value = useSyncExternalStore(subscribe, () => shared);
-  roots[panel] = { local, shared: value, rootTag, title };
+  useLayoutEffect(() => {
+    roots[panel] = { local, shared: value, rootTag, title };
+  }, [panel, local, value, rootTag, title]);
   useEffect(() => {
     setters[panel] = setLocal;
     return () => {

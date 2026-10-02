@@ -20,10 +20,11 @@ test("registered roots share Hermes while preserving independent mount lifetimes
   assert.doesNotMatch(log, /SCRIPT ERROR|(?:^|\n)ERROR:|Program crashed|FABRIC_ERROR/);
   assert.match(log, /FABRIC_VALIDATION_PASSED: shared/);
   const report = JSON.parse(readFileSync(reportPath, "utf8"));
-  assert.ok(report.checks.length >= 20, "Incomplete root lifecycle report");
+  assert.equal(report.checks.length, 35, "Incomplete root lifecycle report");
   assert.ok(report.checks.every(check => check.passed), JSON.stringify(report));
   assert.equal(report.engine, "hermes");
   assert.equal(report.renderer, "fabric");
+  writeFileSync(join(root, "build", "shared-application-report.json"), JSON.stringify(report, null, 2) + "\n");
 });
 
 test("failed root activation is visible, bounded and leaves no native authority", async () => {
@@ -50,6 +51,6 @@ test("failed root activation is visible, bounded and leaves no native authority"
   assert.equal(errors.length, allowed.size, "Unexpected or repeated native failure");
   assert.match(log, /SHARED_FAILURES_PASSED/);
   const report = JSON.parse(readFileSync(reportPath, "utf8"));
-  assert.ok(report.checks.length >= 17, "Incomplete activation failure report");
+  assert.equal(report.checks.length, 17, "Incomplete activation failure report");
   assert.ok(report.checks.every(check => check.passed), JSON.stringify(report));
 });
