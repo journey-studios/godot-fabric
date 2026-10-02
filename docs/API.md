@@ -9,12 +9,17 @@ composition. The older Button and controlled TextInput probes import from
 `src/components.jsx`; `react-native` TextInput/NativeWind styling is explicitly
 unavailable. Passing the legacy probe is not evidence of that mobile API.
 
+The [parity audit](PARITY.md) records current public exports and verified gaps;
+the [1.0 roadmap](../ROADMAP.md) assigns their priorities, dependencies and
+completion criteria. Current implementation evidence is distinct from planned
+RN compatibility.
+
 | Area | Implemented subset | Important limits |
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
 | View / Yoga | Layout, constraint-based sizes, supported appearance and native Controls | No promise of all React Native styles or intrinsic native widget behaviors |
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
-| TextInput | Controlled single-line LineEdit, editing acknowledgement, selection and registered commands | System IME, virtual keyboard, multiline, arbitrary mobile props and undo transformation need separate proof |
+| TextInput legacy probe | Controlled single-line LineEdit, editing acknowledgement, selection and registered commands | Public RN export unavailable; system IME, virtual keyboard, multiline, arbitrary mobile props and undo transformation need separate proof |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events and responder-mediated drag | All children mount; no virtualization, inertia, bounce, paging, zoom or complete nested/multitouch scrolling |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |

@@ -21,11 +21,18 @@ the generated cache passed. The runner reports the failure and does not retry
 automatically. See the [recorded import boundary](docs/evidence/README.md).
 
 Supported, within the documented subset: React 19 hooks and concurrent roots,
-View, Text, TextInput, Pressable, ScrollView, NativeWind styles, nested rich
-text and a limited SVG adapter exercised by React Native Chart Kit.
+public View, Text, Pressable and ScrollView, NativeWind styles, nested rich
+text and a limited SVG adapter exercised by React Native Chart Kit. The older
+native TextInput probe passes its bounded fixtures; the public `react-native`
+TextInput export is currently unavailable.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
+
+The [1.0 roadmap](ROADMAP.md) maps priorities, dependencies and acceptance
+criteria for RN parity across macOS, Linux, Windows, Android and iOS. The
+[dated parity audit](docs/PARITY.md) separates implemented behavior, incomplete
+contracts and missing APIs against React Native 0.87.1.
 
 ## Run
 
@@ -104,6 +111,7 @@ timeouts and exit without the acceptance marker. Headless proves native
 contracts; captures independently exercise rendering and logical Viewport input.
 
 [Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) ·
+[1.0 roadmap](ROADMAP.md) · [Parity audit](docs/PARITY.md) ·
 [Findings](docs/research/README.md) · [Validation evidence](docs/evidence/README.md) ·
 [Third-party licenses](THIRD_PARTY_NOTICES.md)
 

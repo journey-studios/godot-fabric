@@ -24,8 +24,9 @@ flowchart LR
   native mounting, microtasks, timers, animation frames and cleanup. It translates
   mounts to real Controls in the SceneTree.
 - **Platform facade:** `react-native` resolves to this project's bounded host
-  API. Unsupported props and components fail explicitly; exporting a name does
-  not certify the corresponding complete mobile API.
+  API. Many unsupported contracts fail explicitly, but prop filtering and fixed
+  environment policies still leave gaps. Exporting a name does not certify the
+  corresponding complete mobile API; see the [parity audit](PARITY.md).
 - **Styling:** NativeWind 4.2.7 and css-interop 0.2.7 run their original compiler
   and runtime. Godot receives resolved props; it does not execute browser CSS.
 - **SVG:** this project's limited SVG implementation is exercised by the
@@ -66,4 +67,5 @@ state and subscriptions. Expected failures remain visible to the CLI even when
 cleanup succeeds.
 
 See [API limits](API.md) and [measured evidence](evidence/README.md) before
-assuming compatibility with a React Native dependency.
+assuming compatibility with a React Native dependency. The
+[1.0 roadmap](../ROADMAP.md) tracks the remaining platform contracts and ports.
