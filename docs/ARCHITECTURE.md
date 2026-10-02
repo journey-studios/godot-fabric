@@ -1,9 +1,10 @@
 # Architecture
 
 This document describes the current implementation. The
-[Architecture 2.0 direction](ARCHITECTURE_V2.md) records the application/surface,
-layout and Godot integration decisions discussed so far; its proposed APIs
-are not yet implemented.
+[Architecture 2.0 direction](ARCHITECTURE_V2.md) consolidates the approved
+application/surface, layout, Godot integration and input contracts. Its
+[decision register](ARCHITECTURE_V2_DECISIONS.md) tracks approved and pending
+choices; the new interfaces are not yet implemented.
 
 ```mermaid
 flowchart LR
