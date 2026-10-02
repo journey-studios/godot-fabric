@@ -20,7 +20,7 @@
     "parity:ios": "node scripts/parity-reference.mjs --platform ios",
     "parity:android": "node scripts/parity-reference.mjs --platform android",
     "parity:compare": "node scripts/parity-compare.mjs",
-    "test:parity": "node scripts/parity-inventory.mjs --check && node --test tests/parity-inventory.test.mjs tests/parity-protocol.test.mjs"
+    "test:parity": "node scripts/parity-inventory.mjs --check && node --test tests/parity-inventory.test.mjs tests/parity-protocol.test.mjs tests/reference-cleanup.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

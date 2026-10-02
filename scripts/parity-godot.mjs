@@ -20,6 +20,7 @@ command("npm", ["run", "bundle"]);
 command("python3", ["scripts/extension_startup.py", root]);
 const binary = await ensureGodotBinary();
 command(binary, ["--path", root, "--headless", "--editor", "--import"]);
+command(binary, ["--path", root, "--headless", "--script", "res://tests/parity_guards.gd"], "FABRIC_PARITY_GUARDS_PASSED");
 const log = command(binary, ["--path", root, ...(process.argv.includes("--headed") ? [] : ["--headless"]), "res://parity.tscn"], "FABRIC_PARITY_PASSED");
 writeFileSync(path.join(root, "build/parity-godot.log"), log);
 const result = JSON.parse(readFileSync(output, "utf8"));

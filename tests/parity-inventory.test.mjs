@@ -18,6 +18,10 @@ test("inventory resolves inherited contracts and retains overloads, without clai
   }
   assert.match(row("global-value:global.setTimeout").type, /\{.*;.*\}/);
   assert.ok(inventory.upstreamFiles.length > 100);
+  assert.equal(row("global-member:Request.cache"), undefined, "Browser members must not become RN contracts");
+  assert.ok(row("global-member:FormData.append"));
+  assert.ok(row("global-member:AbortController.abort"));
+  assert.ok(row("global-type:global.FormData"));
 });
 
 test("the check rejects drift and preserves the reviewed inventory", () => {

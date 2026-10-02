@@ -6,6 +6,7 @@ import { createServer } from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertReport, provenance } from "./parity-protocol.mjs";
+import { cleanupReference } from "./reference-cleanup.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const platformIndex = process.argv.indexOf("--platform");
@@ -92,6 +93,7 @@ let simulator;
 let bootedHere = false;
 let serial;
 let reversedHere = false;
+let primaryError;
 try {
   if (platform === "ios") {
     if (process.platform !== "darwin") throw new Error("iOS reference requires macOS, Xcode and CocoaPods");
@@ -132,8 +134,13 @@ try {
     writeFileSync(reportPath, JSON.stringify(report, null, 2) + "\n");
     console.log(`PARITY_REFERENCE_PASSED: original RN ${platform}, ${report.checks.length} checks`);
   }
+} catch (error) {
+  primaryError = error;
 } finally {
   server.close();
-  if (bootedHere) await command("xcrun", ["simctl", "shutdown", simulator.udid], project, 30000);
-  if (reversedHere) await command("adb", ["-s", serial, "reverse", "--remove", `tcp:${port}`], project, 30000);
+  const actions = [];
+  if (bootedHere) actions.push(() => command("xcrun", ["simctl", "shutdown", simulator.udid], project, 30000));
+  if (reversedHere) actions.push(() => command("adb", ["-s", serial, "reverse", "--remove", `tcp:${port}`], project, 30000));
+  try { await cleanupReference(actions, primaryError); }
+  catch (error) { rmSync(reportPath, { force: true }); throw error; }
 }

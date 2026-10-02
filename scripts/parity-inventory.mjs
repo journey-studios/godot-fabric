@@ -17,6 +17,7 @@ const version = JSON.parse(readFileSync(path.join(upstream, "package.json"), "ut
 if (version !== "0.87.1") throw new Error(`Review the parity baseline before upgrading RN: ${version}`);
 const program = ts.createProgram([entry], {
   strict: true, skipLibCheck: true, noEmit: true, target: ts.ScriptTarget.ESNext,
+  lib: ["lib.esnext.d.ts"], types: ["react"],
   module: ts.ModuleKind.NodeNext, moduleResolution: ts.ModuleResolutionKind.NodeNext,
 });
 const diagnostics = ts.getPreEmitDiagnostics(program);
@@ -50,6 +51,7 @@ function members(type, owner, kind) {
   for (const member of checker.getPropertiesOfType(type)) {
     const declaration = member.valueDeclaration || member.declarations?.[0];
     if (!declaration) continue;
+    if (kind === "global-member" && !declaration.getSourceFile().fileName.startsWith(upstream + path.sep)) continue;
     const fieldType = checker.getTypeOfSymbolAtLocation(member, declaration);
     const category = kind === "prop" && /^on[A-Z]/.test(member.name) ? "event" : kind;
     record(category, owner, member.name, fieldType, declaration);
@@ -91,6 +93,11 @@ for (const declaration of globalModule.body.statements) {
       : checker.getDeclaredTypeOfSymbol(symbol);
     record(kind, "global", declaration.name.text, type, declaration);
     members(type, declaration.name.text, "global-member");
+    if (ts.isClassDeclaration(declaration)) {
+      const instance = checker.getDeclaredTypeOfSymbol(symbol);
+      record("global-type", "global", declaration.name.text, instance, declaration);
+      members(instance, declaration.name.text, "global-member");
+    }
   }
 }
 records.sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0);

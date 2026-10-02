@@ -8,7 +8,8 @@ comparison; they do not certify Godot Fabric builds on those operating systems.
 ## Contract inventory
 
 `npm run parity:inventory` resolves the upstream strict generated declarations
-with TypeScript 6.0.3. The [generated inventory](contracts-0.87.1.json) contains
+with TypeScript 6.0.3, ESNext and React types, without browser DOM or Node global
+merging. The [generated inventory](contracts-0.87.1.json) contains
 stable IDs, signatures, owning types and hashes of the resolved RN source files.
 `npm run parity:inventory -- --check` rejects drift without rewriting that file.
 This check runs in the normal contract gate.
@@ -23,11 +24,11 @@ This check runs in the normal contract gate.
 | Public instance/ref members | 1,027 |
 | API members | 342 |
 | Other type members | 2,556 |
-| Explicit RN global values / types / members | 32 / 51 / 716 |
-| Total | 8,561 |
+| Explicit RN global values / types / members | 32 / 54 / 265 |
+| Total | 8,113 |
 
 Rows count declarations in their owning contexts. An inherited property can
-occur in several components; these are not 8,561 independent behaviors.
+occur in several components; these are not 8,113 independent behaviors.
 Signatures retain nested types and overloads, but member expansion is immediate,
 not recursive. Private deep imports, undocumented globals, every possible
 value/combination and RN's entire transitive dependency API are outside this

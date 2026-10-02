@@ -21,6 +21,8 @@ export function ParityFixture({ onComplete }) {
     layouts: [], positions: {}, storeValue: 0, subscribers: new Set(), context: "", observedStore: -1,
   };
   const complete = async (error) => {
+    if (session.current.completed) return;
+    session.current.completed = true;
     setVisible(false);
     try {
       await until(() => session.current.cleanups.length === 2 && session.current.subscribers.size === 0);

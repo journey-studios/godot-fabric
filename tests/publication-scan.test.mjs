@@ -8,7 +8,7 @@ import { scan } from "../scripts/publication-scan.mjs";
 test("publication rejects private game references, local paths and credential-shaped fixtures", () => {
   const root = mkdtempSync(path.join(tmpdir(), "publication-scan-"));
   try {
-    for (const content of ["apps/private-example/scenario/data.json", "/Users/example/project", "/private/var/project", "file:///private/var/project", "ghp_" + "x".repeat(36)]) {
+    for (const content of ["apps/private-example/scenario/data.json", "/Users/example/project", "/private/var/project", "file:///private/var/project", "file://localhost/private/var/project", "ghp_" + "x".repeat(36)]) {
       writeFileSync(path.join(root, "fixture.txt"), content);
       const result = scan(root);
       assert.equal(result.passed, false);

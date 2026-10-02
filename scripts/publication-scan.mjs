@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 // Generated outputs and downloaded third-party code never enter the Git payload.
 const forbidden = [
   /\/Users\//i, /(?<![\w.-])\/private\//i, /[A-Z]:\\Users\\/i,
+  /file:\/\/[^/\s"'<>]*\/private\//i,
   /github\.com\/journey-studios\/(?!godot-fabric(?:[./?#]|$))/i,
   /\bapps\/[^/\s]+\/(?:src|scenario|docs)\//i,
   /agent_docs\//i, /docs\/domains\//i, /vision\/EV-/i,

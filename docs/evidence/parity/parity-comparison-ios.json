@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "status": "matched_subset",
   "fixture": "core-ui-v1",
-  "fixtureSha256": "9ac6f310d7793797ad06774e6cb1867591fdd0a83d231e971026f04ef799e446",
+  "fixtureSha256": "2a0f55ca13f6163be55d35ecd8f017cf22bacde9367055b53f8d0185de058cd9",
   "casesSha256": "5b72a75230043dcec87d61ebddf110383c2911c1373ccc10348306530fe9131f",
   "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3",
   "referencePlatforms": [

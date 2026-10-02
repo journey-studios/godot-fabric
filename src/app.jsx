@@ -337,8 +337,14 @@ globalThis.GodotApp = {
   },
 };
 Fabric.render(
-  globalThis.godotScenario === "parity" ? (
-    <ParityFixture onComplete={(report) => { globalThis.fabricParityReport = report; }} />
+  ["parity", "parity-completion-failure"].includes(globalThis.godotScenario) ? (
+    <ParityFixture onComplete={(report) => {
+      if (globalThis.godotScenario === "parity-completion-failure") {
+        globalThis.fabricParityCompletions = (globalThis.fabricParityCompletions || 0) + 1;
+        throw new Error("Expected parity completion failure");
+      }
+      globalThis.fabricParityReport = report;
+    }} />
   ) : globalThis.godotScenario === "lineheight" ? (
     <LineHeightProbe />
   ) : typography ? (
