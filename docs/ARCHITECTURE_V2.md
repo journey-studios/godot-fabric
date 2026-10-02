@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D12 aprovadas, V2-D13 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D13 aprovadas, V2-D14 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 12 aprovações e 20 escolhas pendentes, com seus cenários de validação.
+identifica 13 aprovações e 19 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -28,7 +28,8 @@ do Godot através do addon, usando o executável oficial do engine.
 
 A direção geral busca uma experiência integrada ao Godot: configurar o addon,
 adicionar uma surface e executar o jogo. Distribuição do SDK, ferramentas de
-build, extensões nativas e exportação ainda precisam de discussão específica.
+build e exportação ainda precisam de discussão específica. Descoberta de
+extensões nativas segue V2-D13; compatibilidade binária e schemas continuam pendentes.
 
 Os temas consolidados são:
 
@@ -36,8 +37,9 @@ Os temas consolidados são:
 2. Dimensões, contextos de UI, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
 4. Autoridade sobre a árvore, input e tempo da UI.
+5. Descoberta e integração de adapters nativos, seguindo o modelo de dependências do RN.
 
-As direções de V2-D01 a V2-D12 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D13 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -513,6 +515,56 @@ surface preserva seus effects. Exercitar suspensão/resume quando o OS permitir,
 com timeouts e intervals vencidos, frames e reconexão dos dados; verificar o
 contrato de retomada contra o RN pertinente, sem perder acontecimentos do jogo.
 
+## Tema 5 — Extensões nativas e descoberta
+
+### V2-D13
+
+**Seguir o modelo de integração de dependências nativas do RN:** bibliotecas
+declaram sua integração por plataforma; ferramentas descobrem essa configuração,
+integram as dependências ao build e disponibilizam os providers no aplicativo.
+O [autolinking do RN](https://github.com/react-native-community/cli/blob/main/docs/autolinking.md)
+usa configuração das dependências e integração com os builds de Android/iOS.
+Godot precisa de seu caminho correspondente de descoberta, build/export e registro.
+
+Adapters externos podem fornecer componentes e módulos sem alterar/recompilar
+o core do Godot Fabric ou o executável Godot. Descobrir deterministicamente os
+adapters declarados no projeto, com manifesto de componentes/módulos/capabilities
+e requisitos por target. Validar colisões e dependências declaradas ausentes
+antes de ativar o bundle. Isso não gera uma implementação Godot ausente da lib.
+
+**Definir o conjunto de adapters por geração, preservando registro sob demanda:**
+a seleção e versões dos adapters nativos pertencem à configuração da aplicação.
+Isso não congela as estruturas internas do Fabric nem exige instanciar todos
+os módulos antecipadamente. O RN 0.87.1 permite adicionar providers e atender
+pedidos de registro de componentes sob demanda no
+[ComponentDescriptorProviderRegistry](https://github.com/react/react-native/blob/v0.87.1/packages/react-native/ReactCommon/react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h).
+O host deve preservar esses caminhos para implementações disponíveis no conjunto selecionado.
+
+Trocar o código nativo de um adapter exige um recarregamento/reinício compatível
+com suas posses e o host, podendo exigir reiniciar o processo. Reiniciar Hermes
+não comprova descarregamento seguro da biblioteca nativa. O contrato não exige
+troca arbitrária de binários enquanto objetos/callbacks antigos os utilizam.
+
+Registro nativo de providers é distinto do AppRegistry de entradas React e
+da composição de componentes filhos. Montagens, remoções, updates e re-renders
+continuam dinâmicos; componentes que usam capacidades existentes não precisam
+de adapter próprio. Essa configuração também não congela os bindings de jogo
+que seguem os contratos de comunicação V2-D03 a V2-D08.
+
+Manifesto, API de registro, integração com configuração/autolinking das libs,
+ordem/dependências/ciclos e descoberta no editor/export ainda precisam de
+especificação. A compatibilidade binária fica em V2-D14; schemas e Codegen em
+V2-D15. A aprovação não certifica esses mecanismos no protótipo.
+
+### Aceitação do tema 5
+
+Um consumidor instala dois adapters externos e os utiliza sem modificar o core.
+Descoberta e requisitos funcionam no editor e no export pertinente; colisão ou
+dependência declarada ausente impede ativação com diagnóstico. Exercitar registro
+de provider sob demanda e criação de módulo conforme seu contrato, sem bloquear
+esse comportamento por um freeze artificial do registry. Troca de adapter
+respeita o ciclo de carregamento; re-renders e bindings de jogo continuam operantes.
+
 ## Distância entre a direção e a implementação consultada
 
 | Área | Base consultada | Direção deste documento |
@@ -532,14 +584,14 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 20 escolhas pendentes, V2-D13 a V2-D32, têm IDs estáveis no
+As 19 escolhas pendentes, V2-D14 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D12 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D13 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Extensões e adapters | Registro, schemas, Codegen, componentes/módulos externos e fronteira ABI do SDK |
+| Extensões e adapters | Schemas, Codegen, contrato completo de componentes e fronteira ABI do SDK; direção de descoberta aprovada |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |
 | Assets e exportação | Recursos, manifestos, host versus target, empacotamento e falhas verificáveis de export |

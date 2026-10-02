@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 12 decisões aprovadas (V2-D01 a V2-D12) e 20 pendentes (V2-D13 a V2-D32).
+**Status:** 13 decisões aprovadas (V2-D01 a V2-D13) e 19 pendentes (V2-D14 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As direções de V2-D01 a V2-D12 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D13 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D13 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D14 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -30,8 +30,8 @@ sequência de implementação nem cria novos itens de roadmap.
 ## Como entender o que está sendo decidido
 
 As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
-e detalhes a especificar. V2-D11/V2-D12 estão aprovados na direção discutida,
-com retomada e detalhes dos contextos ainda a especificar. V2-D13 a V2-D32
+e detalhes a especificar. V2-D11 a V2-D13 estão aprovados na direção discutida,
+com retomada, contextos e integração nativa ainda a especificar. V2-D14 a V2-D32
 continuam como propostas, incluindo seus exemplos de comportamento;
 nenhuma entrada descreve implementação comprovada.
 
@@ -54,7 +54,7 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Extensões](#v2-d13), D13–D17 | O que alguém entrega para uma biblioteca nativa funcionar |
+| [Extensões](#v2-d14), D14–D17 | Compatibilidade binária e contratos das libs; direção de descoberta aprovada em D13 |
 | [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
 | [Execução e tipos](#v2-d28), D28–D29 | O que preservar ao otimizar e publicar APIs |
@@ -97,7 +97,7 @@ não exigem aprovações rápidas sem exemplos.
 | [V2-D10](#v2-d10) | Input, foco e interação com o gameplay | Aprovada |
 | [V2-D11](#v2-d11) | Pausa do jogo, background e relógios da UI | Aprovada |
 | [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas | Aprovada |
-| [V2-D13](#v2-d13) | Registro e descoberta de adapters | Pendente |
+| [V2-D13](#v2-d13) | Registro e descoberta de adapters | Aprovada |
 | [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Pendente |
 | [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Pendente |
 | [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Pendente |
@@ -362,15 +362,16 @@ caso não é automaticamente coberto por um SubViewport retangular na janela.
 
 ### V2-D13
 
+**Status:** aprovada em 2026-10-02 seguindo o modelo de integração nativa do RN,
+com a adaptação Godot descrita no contrato consolidado.
+
+**Contrato aprovado:** [V2-D13 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d13).
+
 **Decisão:** quem registra adapters, quando o registry pode mudar e como validar
 nomes, dependências e serviços exigidos pelo bundle.
 
-- **Alternativas:** registro antes da criação do runtime, atualização dinâmica
+- **Alternativas avaliadas:** registro antes da criação do runtime, atualização dinâmica
   ou rebuild explícito do host para mudar a configuração.
-- **Recomendação:** registro determinístico antes do runtime e configuração
-  congelada por geração. Manifesto declara componentes/módulos/capabilities;
-  colisões e dependências ausentes impedem ativação. Definir registro por
-  GDExtension independente e sua descoberta pelo editor/export.
 - **Validação:** dois adapters externos registram seus contratos sem recompilar
   o core; duplicação e dependência ausente falham antes de executar o app.
 
@@ -385,10 +386,19 @@ conjunto de integrações. Registro externo anterior ao runtime permite extensõ
 independentes e configuração verificável. Troca dinâmica de código nativo exige
 outro contrato: objetos e callbacks antigos podem usar o adapter removido.
 
-**Como ler a recomendação:** descobrir extensões, validar manifestos e congelar
-o registry daquela geração. Substituir um adapter exige a operação permitida
-pelo host, podendo exigir reiniciar o processo; reiniciar Hermes não comprova
+**Como ler o contrato aprovado:** seguir descoberta/configuração e integração
+nativa das dependências como no RN, com caminho de build/export próprio do Godot.
+Definir seleção/versões dos adapters por geração; não congelar o registry interno
+do Fabric nem proibir registro/criação sob demanda de implementações disponíveis.
+Substituir o binário de um adapter exige operação compatível com o host e suas
+posses, podendo exigir reiniciar o processo; reiniciar Hermes não comprova
 descarregamento nativo seguro.
+
+**Precisão em relação ao RN:** autolinking disponibiliza dependências nativas
+no aplicativo através da integração no build. “Registry fixo” era uma expressão
+imprecisa: o Fabric permite registrar providers sob demanda. O contrato distingue
+o conjunto de adapters escolhido de suas estruturas internas de registro;
+montagens/re-renders e bindings do jogo seguem seus ciclos próprios.
 
 **Ainda a especificar:** manifesto, ordem/dependências/ciclos, duplicação, API de
 registro e descoberta no editor/export. Esse registro nativo é distinto do
@@ -1134,13 +1144,13 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-1. Definir extensibilidade e fronteira binária: V2-D13 a V2-D17. As direções de
-   aplicação, comunicação, árvore, input, tempo e contextos de V2-D01 a V2-D12
+1. Definir fronteira binária e contratos de bibliotecas: V2-D14 a V2-D17. As direções de
+   aplicação, comunicação, árvore, input, tempo, contextos e descoberta de V2-D01 a V2-D13
    estão aprovadas; seus detalhes e provas continuam na especificação e validação.
 2. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
 3. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
 4. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D13 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D14 em diante,
 a implementação e suas prioridades finais continuam em aberto.
