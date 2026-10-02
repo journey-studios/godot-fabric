@@ -74,43 +74,171 @@ scope change. RC/nightly APIs are not automatically added to the 1.0 gate.
 
 ## Next implementation order
 
-1. **GF-01 + GF-02:** build the contract/oracle inventory and reproduce/fix cold
-   startup and the Godot minimum-version mismatch.
-2. **GF-03 + GF-04:** expose a truthful typed public facade, beginning with
-   TextInput/Button, module resolution and props that are currently discarded.
-3. **GF-05 + GF-09:** complete JS bootstrap and actual system metrics; these
-   unblock libraries, responsive layout and correct input coordinates.
-4. **GF-12 + GF-13 + GF-14:** finish public editing, input/responder and scrolling
-   behavior, then run original virtualized lists in GF-15.
-5. In parallel with those implementation slices, **GF-31** resolves native
-   toolchain/mobile feasibility and **GF-25/GF-26** designs extension contracts.
-   Prove Android/iOS integration and accessibility paths early, before treating
-   them as routine packaging work.
+Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)
+below: establish reliable startup and comparison fixtures; advance the shared
+application and independent consumer in parallel; connect geometry, refs and
+native services; prove external extensions; then expand UI/system behavior,
+distribution and certification. Begin portable-build, accessibility and IME
+probes immediately. Keep existing examples as regression evidence.
 
-The dependencies below are completion prerequisites, not a prohibition on
-starting bounded research or a build spike early. Do not wait until desktop UI
-is complete to discover a mobile linking, IME or accessibility blocker.
+### Architecture 2.0 migration order
+
+**Sequencing recorded: 2026-10-02.** This is the agreed prioritization of work,
+not approval of the remaining architecture contracts. At this sequencing
+checkpoint, the [decision register](docs/ARCHITECTURE_V2_DECISIONS.md) records
+**18 approved directions and 14 pending decisions**. No item changes status because of this
+plan; the release scope and acceptance requirements remain in force.
+
+Prioritize foundations with many dependents and early tests that can reveal
+design constraints. Decision numbers organize discussion, not implementation.
+M0 through M5 group responsibilities; they are not a requirement to finish one
+entire group before beginning another.
+
+| Sequence | Delivery slice | Existing work owners | Prerequisite and observable result |
+| --- | --- | --- | --- |
+| 1 | Reliable startup and comparison fixtures | GF-01, GF-02 | Reproduce and fix cold-start/root-cause and minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable |
+| 2A | Shared application, bootstrap and roots | GF-05, GF-06, GF-07 | Start from the reliable baseline; register/mount two distinct roots in one runtime, update props and unmount one without restarting the other; extend the semantic suite with each behavior |
+| 2B | Minimal independent consumer and authoring flow | GF-03, GF-04; initial slices of GF-28/GF-29 | Advance alongside 2A; a separate TSX project uses public imports/types and project-owned dependencies, with visible build/unsupported-contract errors and no hidden demo aliases |
+| 3 | Geometry, refs and Godot-to-React communication | GF-08, GF-09, GF-25; View foundation in GF-10 | Integrate 2A/2B; window/surface metrics, drawing, measures and input agree; typed calls/events respect lifetime, initial-state revisions and stale-reference rejection |
+| 4 | External native module and component | GF-26, supported by GF-25/GF-31 | Use the native registry, refs, View foundation and identified binary combination; an independent consumer builds/runs a module and component with specs, events/commands and cleanup without editing the core |
+| 5 | Complete UI, interaction and system behavior | GF-10 through GF-24 | Expand the host/service foundations through the dependency branches below; forms, gestures, animations, scroll/lists, images, widgets, accessibility and services pass their applicable fixtures; OS-specific completion also needs the relevant port |
+| 6 | Distributable SDK, selected libraries, development tools and complete ports | GF-27, GF-28, GF-29, GF-32 through GF-35 | Combine host contracts, extensions and per-target tooling; clean consumers install, debug and export identified artifacts; selected libraries and real input/system integration have target-specific evidence |
+| 7 | Complete certification, performance and release | GF-30, GF-36 through GF-39 | Close coverage for the promised scope, budgets and soak/recovery cases; verify the actual release head, current stable baseline policy and reproducible SDK/consumer artifacts before 1.0 |
+
+These are **implementation slices**, not substitutes for the complete item
+acceptance. A minimal consumer does not close GF-28, a working form does not
+close GF-12, and an early port spike does not close GF-34/GF-35. Close each item
+only when its full result and completion dependencies in the tables pass.
+Selected contracts can be implemented and tested before every contract of a
+preceding item is complete; record exactly which slice and host were exercised.
 
 ```mermaid
 flowchart TD
-  Baseline[Audit and differential oracle: GF-01] --> Contracts[Public/runtime contracts: GF-02 to GF-09]
-  Baseline --> Portable[Portable dependencies and feasibility: GF-31]
-  Contracts --> Host[Styles, text, input, widgets and lists: GF-10 to GF-18]
-  Contracts --> Modules[TurboModules and Codegen: GF-25 and GF-26]
-  Modules --> Services[Animation, accessibility and OS services: GF-19 to GF-24]
-  Host --> SDK[Library and SDK integration: GF-27 to GF-29]
-  Modules --> SDK
-  Services --> SDK
-  Portable --> Ports[Desktop and mobile ports: GF-32 to GF-35]
-  SDK --> Evidence[Native CI and differential certification: GF-36 and GF-37]
-  Ports --> Evidence
-  Evidence --> Release[Performance, upgrades and RC: GF-30 and GF-38 to GF-39]
+  Baseline[Startup and comparison: GF-01 and GF-02] --> Application[Shared application: GF-05 to GF-07]
+  Baseline --> Consumer[Consumer and public facade: GF-03 and GF-04]
+  Baseline --> Portable[Early target feasibility: GF-31]
+  Application --> Foundation[Refs, metrics and modules: GF-08, GF-09, GF-25 and View foundation]
+  Consumer --> Foundation
+  Foundation --> UI[Complete UI and system contracts: GF-10 to GF-24]
+  Foundation --> Extensions[External extension proof: GF-26]
+  Portable --> Extensions
+  UI --> SDK[SDK, libraries, tools and ports: GF-27 to GF-29 and GF-32 to GF-35]
+  Extensions --> SDK
+  Portable --> SDK
+  SDK --> Release[Complete certification and release: GF-30 and GF-36 to GF-39]
 ```
 
-The diagram groups workstreams; individual prerequisites in the tables are
-more precise. These are substantial platform milestones, not a small backlog
-of cosmetic fixes. Intermediate alphas/betas can ship narrower declared scopes
-without labelling them full 1.0 parity.
+The diagram groups slices; the item tables retain the more precise completion
+dependencies. Intermediate alphas/betas can ship narrower declared scopes
+without labelling them full 1.0 parity or reducing the agreed release goal.
+
+### Dependencies that determine the schedule
+
+- **Bootstrap and semantics → roots → refs/metrics:** GF-05/GF-06 precede full
+  GF-07; GF-08/GF-09 depend on GF-07. Root/application lifecycle is an early
+  migration foundation even though GF-07 has P1 release priority.
+- **Public facade, bootstrap and roots → native modules:** GF-03/GF-05/GF-07
+  feed GF-25. GF-25 is in M3 but is a prerequisite for completing styles,
+  editing, animation, accessibility, environment and network contracts.
+- **Refs, metrics, View and text → editing:** GF-08/GF-09/GF-10/GF-11, together
+  with the public facade/native modules, support complete GF-12. IME, selection
+  and focus commands need correct host geometry and native lifetime.
+- **Editing, input and animation → scroll → lists:** full GF-14 requires
+  GF-12/GF-13/GF-19 as well as refs/metrics; GF-15 requires GF-10/GF-14.
+  A partial ScrollView probe is not a completed host for upstream lists.
+- **Environment and modules → networking → remote images:** GF-21/GF-25
+  support GF-22, which GF-16 needs for network images. This branch can advance
+  alongside scrolling after its own prerequisites are available.
+- **Extensions and portable builds → complete SDK/ports:** GF-26/GF-31 feed
+  GF-28. A consumer/packaging prototype starts early; complete SDK acceptance
+  includes extension and per-target export results, with port certification
+  continuing in GF-32 through GF-35.
+
+### Architecture decisions before dependent implementation
+
+Use this discussion priority for the **14 pending decisions**. Agree the
+contract needed by the next slice before implementing behavior that depends on
+it; detailed formats and measured internal choices can be specified with that
+slice. This schedule does not turn a recommendation into an approved contract.
+
+| Discussion priority | Pending decisions | Reason and work connection |
+| --- | --- | --- |
+| 1 · Evidence and migration criteria | [D31](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d31), [D32](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d32) | Define comparison evidence and slice exit criteria before changing the host; connect GF-01/GF-37 and this migration plan without weakening 1.0 scope |
+| 2 · Platform and execution safety | [D30](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d30), [D27](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d27), [D28](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d28) | Define service responsibilities, shutdown/ownership and executor boundaries for GF-05/GF-07/GF-25/GF-31; thread migration, caching and Rust still require profiling in GF-30 |
+| 3 · Authoring and activation | [D19](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d19), [D20](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d20), [D21](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d21), [D29](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d29), [D22](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d22), [D26](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d26) | Connect builder, resolution, transforms, types, activation and diagnostics across GF-03/GF-04/GF-28/GF-29; a successful build alone is not successful activation |
+| 4 · Resources and distribution | [D24](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d24), [D25](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d25) | Keep resource identities, artifact generations and per-target exports coherent for GF-16/GF-28/GF-31 through GF-35 |
+| 5 · State preservation while editing | [D23](docs/ARCHITECTURE_V2_DECISIONS.md#v2-d23) | Add Fast Refresh in GF-29 after reload, activation and cleanup are reliable; document eligible edits and fallback/state loss |
+
+The **18 approved directions** map to the existing work as follows. These are
+ownership links for the migration, not evidence that the decisions are shipped.
+
+| Approved direction | Implementation connection |
+| --- | --- |
+| [D01–D02](docs/ARCHITECTURE_V2.md#v2-d01) · application and surface identity | GF-07/GF-28, with GF-05/GF-06 runtime foundations |
+| [D03–D08](docs/ARCHITECTURE_V2.md#v2-d03) · calls, data, events and connection lifetime | GF-25 transports/game bindings, coordinated with GF-05/GF-07 and typed consumer work in GF-03/GF-28 |
+| [D09–D12](docs/ARCHITECTURE_V2.md#v2-d09) · tree, input, time and hosting contexts | GF-07/GF-08/GF-09/GF-10/GF-13/GF-21, plus module/runtime integration |
+| [D13–D16](docs/ARCHITECTURE_V2.md#v2-d13) · native discovery, compatibility, specs and behavior | GF-25/GF-26/GF-28/GF-31; each component also belongs to its functional GF item |
+| [D17](docs/ARCHITECTURE_V2.md#v2-d17) · original library identity and demonstrated scope | GF-27/GF-37/GF-38 |
+| [D18](docs/ARCHITECTURE_V2.md#v2-d18) · self-contained editor flow and project dependency ownership | GF-28/GF-29/GF-31, with GF-03 resolution/types |
+
+In particular, make the GodotFabric binding/revision/lifetime scenarios explicit
+in GF-25/GF-07 acceptance slices. A generic TurboModule example alone does not
+prove every game-integration contract in D03–D08. Track those cases within the
+existing owners rather than creating a second backlog from the decision IDs.
+
+### Parallel probes and verification throughout migration
+
+- **GF-31 begins immediately:** prove loading, JSI and a minimal Control in
+  Android/iOS consumers with official Godot/templates; establish the native
+  build/ABI constraints before committing the complete port design.
+- **Accessibility and IME paths begin immediately:** investigate a real OS
+  semantic/focus/action bridge in GF-20 and native composition/keyboard paths in
+  GF-12, coordinated with GF-31. An exported executable or metadata dictionary
+  does not prove assistive technology or editing behavior.
+- **Comparison and CI grow per slice:** GF-01 fixtures feed GF-37 continuously;
+  extend GF-36 native lanes as targets become runnable. Early passing subsets
+  are not the complete certification required in sequence 7.
+- **Measure before optimizing:** establish GF-30 frame/heap/node baselines and
+  budgets on available workloads during migration; add list/target workloads
+  as they exist. Separate runtime/mount executor contracts early, then choose
+  caching, workers or bounded C++/Rust work from measured bottlenecks.
+
+### First integrated milestone: HUD and inventory consumer
+
+Build a generic independent Godot consumer with **HUD and inventory in one
+shared application**. This integrates selected contracts from sequences 1–3;
+it is an alpha migration milestone, not complete RN parity or closure of every
+participating GF item. Keep the existing form/runtime/chart/style examples as
+regressions and identify which host each report exercised.
+
+Acceptance for this milestone:
+
+1. Configure the application/addon and run public TSX imports in the separate
+   consumer without editing demo internals. Exercise the provisioned basic
+   editor flow from D18 without requiring global Node; additional dependencies
+   remain project-owned and explicitly installed.
+2. Mount HUD and inventory with separate identities/local state in one Hermes.
+   Share data explicitly when needed; no state-management library is required.
+3. Update the HUD from Godot data/signals, including an initial revision and
+   changes during connection. Invoke a typed game operation from the inventory;
+   observe defined results/errors and event ordering.
+4. Resize only the inventory: its constraints/layout and input/measure geometry
+   update while HUD geometry and window metrics retain their meanings.
+5. Pause the simulation while UI input/timers remain available. Hide, unmount
+   and remount the inventory according to their distinct lifecycle contracts;
+   the HUD and application remain operant.
+6. Close the inventory during an accepted operation; its result must not access
+   the old mount. Repeated mounts/cleanup do not duplicate listeners or leak
+   owned nodes, and runtime restart rejects old refs/callbacks.
+7. Once pending activation/diagnostic contracts are agreed, inject build and
+   activation failures and verify their distinct recovery policies. Outdated
+   build responses cannot become the active generation; source maps identify
+   the executed generation. Do not imply rollback of accepted game operations.
+
+Record semantic assertions, root/runtime identities, cleanup observations and
+native visual captures. Extend this same consumer with an external module and
+Fabric component in sequence 4, then grow selected library cases. Screenshots
+explain the scenario; they do not replace lifecycle/event/ref assertions.
 
 ## M0 — Establish a reliable, measurable contract
 

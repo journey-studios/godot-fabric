@@ -815,7 +815,9 @@ Detalhes de especificação das direções já aprovadas continuam necessários.
 | Threads e desempenho | Runtime/mount executors, medição de texto, prioridades, reentrada, filas e profiling |
 | Certificação de compatibilidade | Oráculo RN original, fixtures diferenciais, tolerâncias e matriz por biblioteca/plataforma |
 
-A ordem de implementação da migração ainda não foi aprovada. A proposta não
-encerra gaps do roadmap nem amplia a matriz de plataformas suportadas pelo
+A priorização da migração está registrada no
+[roadmap](../ROADMAP.md#architecture-20-migration-order), com dependências,
+frentes paralelas e o primeiro marco de HUD e inventário. Esse plano não aprova
+os contratos pendentes nem encerra gaps ou amplia o suporte comprovado do
 protótipo. Novas decisões devem atualizar este documento com seu status e
 critérios de aceitação, preservando a distinção entre direção e prova executada.

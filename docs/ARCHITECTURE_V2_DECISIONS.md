@@ -1145,16 +1145,19 @@ que a condicionam. Não criar automaticamente 22 tarefas paralelas só porque h�
 22 decisões. D31 define a evidência; este ponto conecta essa evidência ao plano
 de entrega, sem marcar itens shipped pela aprovação de documentos.
 
-## Ordem sugerida para continuar a discussão
+## Prioridade de discussão e implementação
 
 V2-D01 a V2-D18 estão aprovadas, incluindo aplicação, comunicação, árvore,
 input, tempo, contextos, adapters, reuso de bibliotecas e direção de distribuição.
 Seus detalhes e provas continuam na especificação e validação.
 
-1. Definir experiência do consumidor e build: V2-D19 a V2-D21, V2-D29 e V2-D30.
-2. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
-3. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
-   seus requisitos devem orientar as etapas anteriores desde o início.
+A priorização discutida está no
+[roadmap](../ROADMAP.md#architecture-decisions-before-dependent-implementation),
+junto da ordem de migração, dependências e critérios do primeiro consumidor.
+Essa é a fonte da sequência de trabalho; os IDs deste registro permanecem
+estáveis e não representam uma fila de implementação.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D19 em diante,
-a implementação e suas prioridades finais continuam em aberto.
+V2-D19 a V2-D32 continuam pendentes, inclusive os detalhes do contrato de
+migração de V2-D32. Registrar o plano não aprova suas recomendações; a
+implementação de cada fatia depende de fechar os contratos que a condicionam
+e manter a evidência separada da aprovação.
