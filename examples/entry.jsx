@@ -11,6 +11,7 @@ import { LineHeightProbe } from "../tests/line-height-probe";
 import { ParityFixture } from "../tests/parity/fixture";
 
 const counterScenario = globalThis.godotScenario === "counter";
+const runtimeExample = globalThis.godotScenario === "runtime" ? require("./runtime/App") : null;
 const scrollScenario = globalThis.godotScenario === "scroll";
 const pressableScenario = globalThis.godotScenario === "pressable";
 const layoutScenario = globalThis.godotScenario === "layout";
@@ -28,6 +29,7 @@ const typography =
 globalThis.GodotApp = {
   run(name, ...args) {
     if (counterScenario) throw new Error("The counter is driven by public Pressable input");
+    if (runtimeExample) throw new Error("The runtime example is driven by public Pressable input");
     if (typography) return typography.runTypography(name, ...args);
     if (nativewind) nativewind.runNativeWind(name, ...args);
     else if (chartScenario) runChart(name, ...args);
@@ -39,6 +41,7 @@ globalThis.GodotApp = {
   },
   stats() {
     if (counterScenario) return counterStats();
+    if (runtimeExample) return runtimeExample.runtimeStats();
     if (typography) return typography.typographyStats();
     if (nativewind) return nativewind.nativewindStats();
     return chartScenario
@@ -70,6 +73,8 @@ Fabric.render(
     }} />
   ) : counterScenario ? (
     <CounterApp />
+  ) : runtimeExample ? (
+    React.createElement(runtimeExample.RuntimeApp)
   ) : globalThis.godotScenario === "lineheight" ? (
     <LineHeightProbe />
   ) : typography ? (

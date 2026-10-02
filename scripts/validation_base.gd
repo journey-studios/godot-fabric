@@ -5,9 +5,9 @@ var checks: Array = []
 var failure := false
 
 func save_report(scenario: String, before_stop: Dictionary, stopped: Dictionary, stopped_react: Dictionary, details: Dictionary = {}) -> void:
-  var report := {"scenario": scenario, "godot": Engine.get_version_info().string, "react": "19.2.3", "reactNative": "0.87.1", "hermes": "250829098.0.17", "displayServer": DisplayServer.get_name(), "inputTransport": "viewport-pointer" if scenario in ["counter", "pressable", "chart", "scroll", "nativewind", "typography"] else ("viewport-keyboard" if scenario == "input" else ("native-signal" if DisplayServer.get_name() == "headless" else "viewport-pointer")), "checks": checks, "beforeStop": before_stop, "afterStop": stopped, "reactState": stopped_react}
+  var report := {"scenario": scenario, "godot": Engine.get_version_info().string, "react": "19.2.3", "reactNative": "0.87.1", "hermes": "250829098.0.17", "displayServer": DisplayServer.get_name(), "inputTransport": "viewport-pointer" if scenario in ["counter", "runtime", "pressable", "chart", "scroll", "nativewind", "typography"] else ("viewport-keyboard" if scenario == "input" else ("native-signal" if DisplayServer.get_name() == "headless" else "viewport-pointer")), "checks": checks, "beforeStop": before_stop, "afterStop": stopped, "reactState": stopped_react}
   report.merge(details)
-  if scenario in ["counter", "pressable", "chart", "scroll", "nativewind", "typography"]:
+  if scenario in ["counter", "runtime", "pressable", "chart", "scroll", "nativewind", "typography"]:
     report["validationInputDevice"] = 1001
     report["osFocusIsolation"] = true
   if scenario == "chart":

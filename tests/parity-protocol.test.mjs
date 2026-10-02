@@ -17,6 +17,7 @@ test("missing, stale, failed, duplicated and non-native references are rejected"
     { fixtureSha256: "stale" }, { runtimeSha256: "stale" }, { upstreamSha256: "stale" }, { casesSha256: "stale" },
     { status: "failed" }, { renderer: "mock" }, { engine: "javascriptcore" },
     { observations: { ...candidate.observations, rows: { A: 0, B: 64 } } },
+    { observations: { ...candidate.observations, runtime: { ...candidate.observations.runtime, trace: ["timer", "microtask"] } } },
     { checks: candidate.checks.slice(1) },
     { checks: [...candidate.checks.slice(1), candidate.checks[1]] },
     { checks: candidate.checks.map((check, index) => ({ ...check, passed: index !== 0 })) },

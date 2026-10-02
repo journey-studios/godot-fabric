@@ -23,7 +23,8 @@
     "test:parity": "node scripts/parity-inventory.mjs --check && node --test tests/parity-inventory.test.mjs tests/parity-protocol.test.mjs tests/reference-cleanup.test.mjs",
     "example": "node scripts/examples.mjs",
     "examples:list": "node scripts/examples.mjs --list",
-    "test:examples": "node scripts/examples-check.mjs"
+    "test:examples": "node scripts/examples-check.mjs",
+    "test:runtime": "npm run bundle && node --test tests/runtime-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

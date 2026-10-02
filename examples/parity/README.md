@@ -4,7 +4,8 @@
 [Examples index](../README.md)
 
 This automated fixture runs identical public React Native JSX on Godot and
-original RN iOS/Android. It reports nine cases: consult the
+original RN iOS/Android. It reports thirteen cases, including four runtime
+contracts shared with the [runtime example](../runtime/README.md): consult the
 [case inventory](../../tests/parity/cases.json) and
 [current baseline](../../docs/compatibility/BASELINE.md) for exact contracts.
 It is a differential oracle, not a manual UI gallery or full parity percentage.

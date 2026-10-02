@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "platform": "macOS arm64",
+  "godot": "4.7.2",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "runs": [
+    {
+      "example": "counter",
+      "api": "public",
+      "headless": {
+        "checks": 19,
+        "report": "build/examples/headless/counter.json",
+        "sha256": "d052d5e466ffa0036254404420a5c62b10839811154ea6ca9e0267b0828963ae"
+      },
+      "native": {
+        "checks": 24,
+        "report": "build/examples/native/counter.json",
+        "sha256": "d6ad04e38de6f300432457a2d5e1dd2f80cfea87f03b537c9332da79f508b967"
+      }
+    },
+    {
+      "example": "runtime",
+      "api": "public",
+      "headless": {
+        "checks": 23,
+        "report": "build/examples/headless/runtime.json",
+        "sha256": "d8baae3032cc68d510d31ce75f63bd3d97427ffefe49abb1a18255606f237766"
+      },
+      "native": {
+        "checks": 33,
+        "report": "build/examples/native/runtime.json",
+        "sha256": "0055d05f81b76946d89f0527f81b3c98c87918da5316761d522cf6a0c771c125"
+      }
+    },
+    {
+      "example": "react",
+      "api": "internal",
+      "headless": {
+        "checks": 36,
+        "report": "build/examples/headless/react.json",
+        "sha256": "02dd68a670addb0996d4030661bea15c5f5b56cb2fa2cc71dc30fc2758fbf450"
+      },
+      "native": {
+        "checks": 36,
+        "report": "build/examples/native/react.json",
+        "sha256": "86372149357ab0e723a60e8e1288b86424b019156e1c3b51678f62f3873f2119"
+      }
+    },
+    {
+      "example": "layout",
+      "api": "internal",
+      "headless": {
+        "checks": 47,
+        "report": "build/examples/headless/layout.json",
+        "sha256": "cafb467c9cd2b9c9145030bfc655dc476d4205b643e2266d08a97ca678df34d5"
+      },
+      "native": {
+        "checks": 47,
+        "report": "build/examples/native/layout.json",
+        "sha256": "3218757cca564d69787c04ed3b0cc2def80ebe12bc048bcf456953f6c252b366"
+      }
+    },
+    {
+      "example": "input",
+      "api": "internal",
+      "headless": {
+        "checks": 45,
+        "report": "build/examples/headless/input.json",
+        "sha256": "63268c9383470c29c27a406cb2b77067e0337ff5807fc7b88c40707eb77e68ef"
+      },
+      "native": {
+        "checks": 45,
+        "report": "build/examples/native/input.json",
+        "sha256": "71be36dea2fbcc6935d7e0e51bece8ac8d4ee2d2733df5d57b9e37c413f76cf1"
+      }
+    },
+    {
+      "example": "pressable",
+      "api": "internal",
+      "headless": {
+        "checks": 43,
+        "report": "build/examples/headless/pressable.json",
+        "sha256": "2d20c145fa59067761911f9df9d8008df6b78e794b4b6cb05600558a7868e325"
+      },
+      "native": {
+        "checks": 47,
+        "report": "build/examples/native/pressable.json",
+        "sha256": "1d66462414f0f9fd4e80d9fefecfe484d5ad7535f79be6836d7bfe9b86074ece"
+      }
+    },
+    {
+      "example": "scroll",
+      "api": "internal",
+      "headless": {
+        "checks": 62,
+        "report": "build/examples/headless/scroll.json",
+        "sha256": "9148d18bae8469b7fce84131879ca0b076dea115611e52b5197e14da00261b42"
+      },
+      "native": {
+        "checks": 68,
+        "report": "build/examples/native/scroll.json",
+        "sha256": "3aabe1aa603b83e96c81d2788c1d59deec589ba9b2072b168d2b5a8d87d426fd"
+      }
+    },
+    {
+      "example": "chart",
+      "api": "internal",
+      "headless": {
+        "checks": 34,
+        "report": "build/examples/headless/chart.json",
+        "sha256": "df6aa2ac569a3d7d5b8ee9975d5c182b02fef7ca084fcd6b01d7a8c91748c6ec"
+      },
+      "native": {
+        "checks": 34,
+        "report": "build/examples/native/chart.json",
+        "sha256": "89ad073a25abf39681a5b17fc9907689296dd795282be2de78d75ab14428a6b7"
+      }
+    },
+    {
+      "example": "nativewind",
+      "api": "public",
+      "headless": {
+        "checks": 49,
+        "report": "build/examples/headless/nativewind.json",
+        "sha256": "3bdcdf28b176049884dc339f4d1566e72b76869b85ed7e1977429edbc16daab1"
+      },
+      "native": {
+        "checks": 58,
+        "report": "build/examples/native/nativewind.json",
+        "sha256": "c08177074611463adee9231a235fd27d6f2a0bce217957886539cb65d5934ed6"
+      }
+    },
+    {
+      "example": "typography",
+      "api": "mixed",
+      "headless": {
+        "checks": 50,
+        "report": "build/examples/headless/typography.json",
+        "sha256": "a69bc9d4fa7e3fcd6a109299f122b953a18f23142dda669d9deaf97632a2f3e0"
+      },
+      "native": {
+        "checks": 63,
+        "report": "build/examples/native/typography.json",
+        "sha256": "f19c9257b376f9c70676ba6052155dad0326e4504514b2eda8a36878d4cb9ea1"
+      }
+    }
+  ],
+  "totals": {
+    "headless": 408,
+    "native": 455
+  },
+  "additionalChecks": {
+    "registryAssertions": 12,
+    "errorRecoveryAssertions": 6,
+    "godotOracleCases": 13,
+    "mobileOracle": "Fresh reference execution required; historical v1 reports do not certify v2"
+  }
+}
