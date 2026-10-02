@@ -5,6 +5,10 @@ counter. Runs used macOS arm64, official Godot 4.7.2, React 19.2.3,
 React Native 0.87.1 and Hermes 250829098.0.17. Godot was not rebuilt.
 These are local runtime results; the current PR's hosted jobs are separate proof.
 
+Later timer/microtask changes and the added runtime scene have their own
+[validation record and captures](../runtime/README.md). This table preserves
+the example-relocation snapshot.
+
 ## Acceptance
 
 | Example | Headless | Native renderer with capture |
@@ -80,7 +84,7 @@ new captures are retained here; the original demos' captures remain in the
 
 The [catalog](../../../examples/README.md) distinguishes public, internal and
 mixed UI APIs. The eight original demos preserved their headless/native counts
-after relocation. Public TextInput remains unavailable; internal input/scroll
+after relocation. Public TextInput was unavailable in this snapshot; internal input/scroll
 editing checks do not certify that API. The parity fixture remains identical
 under `tests/parity/`; it is an automated reference case rather than a gallery.
 

@@ -22,7 +22,13 @@ GF-01 and GF-02 are **In progress**: [PR #4](https://github.com/journey-studios/
 delivered the root API inventory, nine shared native reference cases, differential
 CI and a cold-start containment. The full contract inventory and the underlying
 Godot import-crash root cause remain open. See the [baseline](docs/compatibility/BASELINE.md)
-and [cold-start evidence](docs/evidence/cold-start.md). GF-05 is In progress for a bounded timer/microtask slice; other rows remain Planned.
+and [cold-start evidence](docs/evidence/cold-start.md).
+
+GF-05 is **In progress**: upstream TimerManager, portable RN microtask/immediate
+modules, a public runtime example and four additional shared oracle cases are
+implemented. [Runtime evidence](docs/evidence/runtime/README.md) records native
+checks/captures and the remaining bootstrap, idle/error/global and starvation
+gaps. GF-09 system metrics remain Planned; this slice does not complete GF-05.
 
 The [runnable examples](examples/README.md) expose existing fixtures in a shared
 project; they are a prerequisite for GF-28, not the independent packaged consumer

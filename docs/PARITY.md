@@ -13,6 +13,10 @@ system integration, developer tooling and distributable builds. The
 [roadmap](../ROADMAP.md) owns live work status; this document records the dated
 audit and the meaning of parity.
 
+Later GF-05 runtime implementation and its bounded evidence are recorded in
+[the runtime example](evidence/runtime/README.md); the tables below preserve
+the audit-date findings.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

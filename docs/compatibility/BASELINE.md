@@ -43,18 +43,26 @@ reports as `not_run`, `invalid_or_stale`, or `passed_subset`.
 
 ## Original native oracle
 
-The same [core-ui-v1 fixture](../../tests/parity/fixture.jsx) is bundled into
+The same [core-ui-v2 fixture](../../tests/parity/fixture.jsx) is bundled into
 Godot and copied verbatim into a checksum-pinned official RN community template.
 The reference app uses the original RN Fabric renderer, Hermes, native UIKit or
 Android views, and Metro in Release configuration. It never imports the Godot
 facade, platform aliases or a mocked native renderer.
 
-The nine cases exercise actual native layout and asynchronous measurement,
+The original nine UI cases exercise actual native layout and asynchronous measurement,
 automatic batching, keyed reorder with changed native positions and retained
 refs, memo, Context, external-store snapshots, transition commits, and effect /
 subscription cleanup. Their [catalog](../../tests/parity/cases.json) names the
 specific RN declarations exercised. A passing width example certifies that
 example, not every width value or the whole View API.
+Four new runtime cases cover timer arguments/coercion/cancellation, interval
+arguments and self-cancellation, microtask/immediate ordering, and monotonic
+cancellable frames. The identical [runtime module](../../tests/parity/runtime.js)
+is copied alongside the JSX into both original native reference apps. Version
+`core-ui-v2` and its extra source hash reject historical nine-case reports.
+Godot has passed the 13-case fixture locally; new mobile results require fresh
+hosted or local reference runs. See [runtime evidence](../evidence/runtime/README.md).
+
 The fixture uses an eight-unit layout grid and reports the observed geometry,
 commit values, row renders and cleanup order. The protocol requires exact
 agreement for those controlled observations; arbitrary densities and fractional
@@ -84,7 +92,7 @@ Downloaded projects, libraries, derived build data and raw logs stay in ignored
 localhost report collector. Other installed applications are not removed.
 
 The comparison rejects missing/duplicated cases, failed assertions, a non-native
-renderer, different versions and stale fixture/catalog/upstream hashes. Failed
+renderer, different versions and stale fixture/catalog/upstream and runtime-module hashes. Failed
 runs remove prior report output. Unit fixtures verify these rejection paths;
 they are separate from native evidence. Retained local and CI proof is listed
 in the [evidence record](../evidence/parity/README.md).
@@ -105,8 +113,8 @@ This is the first GF-01/GF-02 delivery from the
   bypasses the
   [documented engine containment](../evidence/cold-start.md).
 - **GF-01:** the inventory, drift gate, status board and original-native oracle
-  are implemented. Behavioral certification remains in progress: core-ui-v1
-  covers nine cases, not the whole inventory.
+  are implemented. Behavioral certification remains in progress: core-ui-v2
+  covers thirteen cases, not the whole inventory.
 
 Next differential fixtures should cover public facade/types first, then runtime
 globals and metrics, followed by editing/selection, pointer/responder ordering,

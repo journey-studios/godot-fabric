@@ -69,6 +69,18 @@ the existing `npm start` flags remain available.
 
 ## Write React
 
+### Runtime example
+
+`npm run example -- runtime` opens a public React Native UI driven by intervals
+and animation frames. Start runs four shared runtime probes; Pause cancels the
+clock; six ticks complete the progress bar. See the
+[initial, paused and completed captures](docs/evidence/runtime/README.md) for
+the assertions behind each image and the remaining GF-05 gaps.
+
+![Timers commit the completed React state to real Godot Controls](docs/evidence/runtime/complete.png)
+
+### Components
+
 The build aliases `react-native` to the Godot platform facade and applies
 the original NativeWind compiler. Start with the public
 [counter](examples/counter/App.jsx). The shared Fabric application entry is
@@ -104,6 +116,7 @@ npm package or a drop-in addon with prebuilt binaries.
 
 ```sh
 npm run test:examples                    # all interactive demos, headless and sequential
+npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:contracts                   # JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
 npm run check:publication
