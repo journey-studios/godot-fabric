@@ -72,6 +72,17 @@ func run_probe() -> void:
   check(not cold.call("mount"), "An off-tree owner is rejected without an unbounded deferred retry")
   missing.free()
   check(data(cold).nodes.is_empty(), "A surface with a freed owner exposes an empty native tree")
+  var closing: Node = ClassDB.instantiate("FabricApplication")
+  closing.name = "OwnerExit"
+  closing.set_meta("scenario", "shared")
+  root.add_child(closing)
+  var orphan := make_surface("OwnerExit", "HUD")
+  await frames()
+  check(data(orphan).nodes.size() > 0 and data(closing).pendingTimers > 0, "Owner destruction starts with a committed root and a live application timer")
+  closing.queue_free()
+  await frames()
+  var closed := data(orphan)
+  check(closed.stopped and closed.applicationStopped and closed.nodes.is_empty() and closed.nativeTags == 0 and closed.creates == closed.deletes and closed.pendingTimers == 0 and closed.pendingWork == 0, "Destroying a live owner releases its runtime resources while surface Nodes survive")
   var report := {"checks": checks}
   var output := FileAccess.open("res://build/shared-failures-report.json", FileAccess.WRITE)
   if output == null:

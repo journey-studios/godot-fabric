@@ -51,6 +51,6 @@ test("failed root activation is visible, bounded and leaves no native authority"
   assert.equal(errors.length, allowed.size, "Unexpected or repeated native failure");
   assert.match(log, /SHARED_FAILURES_PASSED/);
   const report = JSON.parse(readFileSync(reportPath, "utf8"));
-  assert.equal(report.checks.length, 17, "Incomplete activation failure report");
+  assert.equal(report.checks.length, 19, "Incomplete activation failure report");
   assert.ok(report.checks.every(check => check.passed), JSON.stringify(report));
 });
