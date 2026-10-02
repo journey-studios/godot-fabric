@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 10 decisões aprovadas (V2-D01 a V2-D10) e 22 pendentes (V2-D11 a V2-D32).
+**Status:** 11 decisões aprovadas (V2-D01 a V2-D11) e 21 pendentes (V2-D12 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As recomendações de V2-D01 a V2-D10 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D11 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D11 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D12 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -29,10 +29,10 @@ sequência de implementação nem cria novos itens de roadmap.
 
 ## Como entender o que está sendo decidido
 
-As entradas pendentes têm agora uma leitura prática: situação de uso,
-consequências dos caminhos, significado da recomendação e detalhes que ela
-ainda não resolve. Esses aprofundamentos são propostas, incluindo os exemplos
-de comportamento; não são novas aprovações nem descrições do runtime atual.
+As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
+e detalhes a especificar. V2-D11 está aprovado na direção discutida e mantém seus
+detalhes de retomada abertos. V2-D12 a V2-D32 continuam como propostas, incluindo
+seus exemplos de comportamento; nenhuma entrada descreve implementação comprovada.
 
 Há três naturezas de discussão, que podem aparecer juntas:
 
@@ -53,7 +53,7 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Tempo e contextos](#v2-d11), D11–D12 | Como menus continuam utilizáveis e onde a UI pode aparecer |
+| [Contextos de UI](#v2-d12), D12 | Onde a UI pode aparecer; direção de tempo/lifecycle aprovada em D11 |
 | [Extensões](#v2-d13), D13–D17 | O que alguém entrega para uma biblioteca nativa funcionar |
 | [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
@@ -62,7 +62,7 @@ automaticamente um ponto pendente.
 | [Migração](#v2-d32), D32 | Como chegar à 1.0 sem perder o que funciona |
 
 Discutir uma família de comportamento por vez. Os IDs mantêm rastreabilidade;
-não exigem 22 aprovações rápidas sem exemplos.
+não exigem aprovações rápidas sem exemplos.
 
 ### Termos usados nas discussões
 
@@ -95,7 +95,7 @@ não exigem 22 aprovações rápidas sem exemplos.
 | [V2-D08](#v2-d08) | Posse e cleanup das conexões nativas | Aprovada |
 | [V2-D09](#v2-d09) | Autoridade sobre layout e árvore nativa | Aprovada |
 | [V2-D10](#v2-d10) | Input, foco e interação com o gameplay | Aprovada |
-| [V2-D11](#v2-d11) | Pausa do jogo, background e relógios da UI | Pendente |
+| [V2-D11](#v2-d11) | Pausa do jogo, background e relógios da UI | Aprovada |
 | [V2-D12](#v2-d12) | Janelas, SubViewports e contexto de métricas | Pendente |
 | [V2-D13](#v2-d13) | Registro e descoberta de adapters | Pendente |
 | [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Pendente |
@@ -266,15 +266,16 @@ incluindo foco, teclado/gamepad, transparência e modais.
 
 ### V2-D11
 
+**Status:** aprovada na direção discutida em 2026-10-02; semântica exata de retomada
+pendente de especificação e comparação com o RN da versão fixada por OS.
+
+**Contrato aprovado:** [V2-D11 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d11).
+
 **Decisão:** o que pausa ao pausar o jogo, ocultar UI ou colocar o aplicativo em
 background, e qual relógio alimenta timers, RAF e animações.
 
-- **Alternativas:** UI acompanha o tempo do jogo, usa tempo real ou recebe uma
+- **Alternativas avaliadas:** UI acompanha o tempo do jogo, usa tempo real ou recebe uma
   política explícita separada para cada situação.
-- **Recomendação:** timers públicos usam tempo real monotônico; pausa da
-  simulação não bloqueia o menu. Tempo de jogo é dado explícito do projeto.
-  Definir background/resume e `AppState` sem confundir visibilidade da surface
-  com estado do aplicativo; ocultar continua preservando effects como já decidido.
 - **Validação:** menu funciona durante pausa; alterar velocidade da simulação
   não muda timers públicos; retomada tem política clara para callbacks atrasados.
 
@@ -285,7 +286,7 @@ de continuar, o indicador de salvamento e a transição do menu precisam funcion
 Uma lib que faz debounce de busca com `setTimeout` não deveria mudar de
 comportamento porque a simulação passou a rodar em velocidade 4×.
 
-| Situação | Comportamento proposto para discussão |
+| Situação | Direção aprovada; detalhes de retomada ainda a especificar |
 | --- | --- |
 | Jogo pausado | Runtime, input da UI e timers continuam; simulação depende do jogo |
 | Simulação acelerada | Timers públicos mantêm tempo real; tempo do jogo chega como dado explícito |
@@ -300,18 +301,18 @@ tempo real. Uma política de execução por surface parece flexível, mas um ún
 Hermes tem timers e stores globais: pausar todo o JS de um painel não é isolamento
 disponível nessa arquitetura.
 
-**Como ler a recomendação:** deadlines monotônicos para agendamento, separados
+**Como ler o contrato aprovado:** deadlines monotônicos para agendamento, separados
 do relógio civil de `Date.now()`, do tempo da simulação e dos frames apresentados.
 RAF acompanha oportunidades de apresentação; não prometer que todo mecanismo
 de animação roda pelo mesmo callback.
 
 **Ainda a especificar:** um timeout vencido durante suspensão, um interval que
-perdeu cem períodos e uma animação retomada são casos diferentes. A proposta de
-detalhe é entregar o timeout quando o host puder executar, evitar cem intervals
-em rajada e retomar frames sem inventar frames intermediários. Comparar com o
-RN da versão fixada por OS antes de fechar essa semântica. Foco de janela,
-background e surface oculta precisam de sinais distintos. JS longo pode bloquear
-a UI mesmo com relógio correto.
+perdeu cem períodos e uma animação retomada são casos diferentes. A direção de
+evitar rajadas está aprovada; entregar um timeout vencido quando o host puder
+executar, reprogramar intervals e retomar animações ainda exige contrato preciso
+e comparação com o RN da versão fixada por OS. Não usar essa direção para descartar
+acontecimentos do jogo, sujeitos a V2-D07. Foco de janela, background e surface
+oculta precisam de sinais distintos. JS longo pode bloquear a UI mesmo com relógio correto.
 
 O RN oferece [timers e RAF](https://reactnative.dev/docs/timers) e
 [AppState para lifecycle](https://reactnative.dev/docs/appstate). No Godot,
@@ -1131,13 +1132,14 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-1. Definir pausa, relógios e contextos adicionais: V2-D11/V2-D12. As direções de
-   aplicação, comunicação, árvore e input de V2-D01 a V2-D10 já estão aprovadas.
+1. Definir contextos adicionais: V2-D12. As direções de aplicação, comunicação,
+   árvore, input e tempo/lifecycle de V2-D01 a V2-D11 já estão aprovadas;
+   detalhes de retomada de V2-D11 continuam na especificação e validação.
 2. Definir extensibilidade e fronteira binária: V2-D13 a V2-D17.
 3. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
 4. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
 5. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D11 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D12 em diante,
 a implementação e suas prioridades finais continuam em aberto.

@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D10 aprovadas, V2-D11 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D11 aprovadas, V2-D12 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 10 aprovações e 22 escolhas pendentes, com seus cenários de validação.
+identifica 11 aprovações e 21 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -35,9 +35,9 @@ Os temas consolidados são:
 1. Aplicação, runtime, raízes e ciclo de vida.
 2. Dimensões, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
-4. Autoridade sobre a árvore e input, com pausa e contextos adicionais ainda pendentes.
+4. Autoridade sobre a árvore, input e tempo da UI, com contextos adicionais pendentes.
 
-As recomendações de V2-D01 a V2-D10 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D11 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -142,8 +142,8 @@ representados no JavaScript para apresentação, sem transferir sua autoridade.
 | Reiniciar a aplicação | Recria o runtime e suas raízes; referências e callbacks da execução anterior ficam inválidos |
 
 Uma futura política de suspensão de trabalho em surfaces ocultas será uma
-operação distinta. Pausa do jogo e background do sistema ainda precisam de
-contratos próprios.
+operação distinta. Pausa do jogo e background do sistema seguem a direção de
+[V2-D11](#v2-d11), com a semântica exata de retomada ainda a especificar e validar.
 
 ### Timers e falhas
 
@@ -417,10 +417,11 @@ o contrato. Reabrir mostra os dados atuais. Verificar leitura inicial sem perda
 de atualização, cleanup repetido, ordem dos eventos e referências invalidadas
 quando uma entidade ou geração do runtime deixa de existir.
 
-## Tema 4 — Autoridade sobre árvore e input
+## Tema 4 — Autoridade sobre árvore, input e tempo
 
-Este tema está aprovado em V2-D09/V2-D10. Pausa, background e associação a
-contextos adicionais permanecem pendentes em V2-D11/V2-D12.
+As direções de V2-D09 a V2-D11 estão aprovadas. Associação a contextos adicionais
+permanece pendente em V2-D12; detalhes de retomada de V2-D11 precisam de
+especificação e comparação com o RN da versão fixada.
 
 ### V2-D09
 
@@ -442,12 +443,46 @@ Input não consumido segue a política do Godot. A especificação deve definir
 essas políticas para fundo transparente, teclado/gamepad e overlays, sem dupla
 ativação do gameplay quando um botão ou modal consome a interação.
 
+### V2-D11
+
+**Tempo da UI e lifecycle:** timers públicos usam tempo real monotônico para
+agendamento. Pausar ou acelerar a simulação não muda esse relógio; runtime e
+input da UI continuam disponíveis durante a pausa do jogo. Cooldowns e outras
+regras de gameplay recebem o tempo ou estado do jogo como dados explícitos.
+Ocultar uma surface preserva estado/effects, conforme o ciclo de vida aprovado.
+
+Separar deadlines de timers, relógio civil de `Date.now()`, tempo da simulação
+e oportunidades de apresentação de frames. RAF acompanha estas oportunidades;
+isso não define um único mecanismo para todas as animações.
+
+Background, perda de foco e surface oculta são situações distintas. Mapear
+`AppState` para o lifecycle do aplicativo, sem derivá-lo da visibilidade de um
+painel. Não prometer execução quando o sistema operacional suspende o processo.
+
+Na retomada, recuperar os dados atuais e evitar rajadas de períodos perdidos
+de intervals, sem inventar frames intermediários. A regra exata para timeouts
+vencidos, intervals, RAF e animações ainda deve ser especificada e comparada
+com o RN da versão fixada por OS. Essa direção não autoriza descartar eventos
+do jogo: ordem e overflow continuam sujeitos ao contrato de V2-D07.
+
+O RN documenta [timers e RAF](https://reactnative.dev/docs/timers) e
+[AppState](https://reactnative.dev/docs/appstate). A integração com a
+[pausa/process mode do Godot](https://docs.godotengine.org/en/stable/tutorials/scripting/pausing_games.html)
+precisa cobrir o pump do runtime e callbacks nativos; a direção aprovada não
+certifica esse comportamento no protótipo.
+
 ### Aceitação do tema 4
 
 Uma surface dentro de um Container recebe constraints corretas. Intervenções
 externas em sua subtree são tratadas explicitamente. Clique no fundo chega ao
 jogo quando permitido; botão/modal não ativam gameplay; foco é transferido e
 restaurado para os destinos corretos.
+
+Pausar a simulação mantendo menu, input e timers da UI disponíveis; acelerar
+somente a simulação sem alterar debounce e outros timers públicos. Ocultar uma
+surface preserva seus effects. Exercitar suspensão/resume quando o OS permitir,
+com timeouts e intervals vencidos, frames e reconexão dos dados; verificar o
+contrato de retomada contra o RN pertinente, sem perder acontecimentos do jogo.
 
 ## Distância entre a direção e a implementação consultada
 
@@ -468,14 +503,14 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 22 escolhas pendentes, V2-D11 a V2-D32, têm IDs estáveis no
+As 21 escolhas pendentes, V2-D12 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D10 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D11 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Tempo e contextos de UI | Pausa, background, relógios, janelas adicionais e SubViewports; autoridade sobre árvore/input já está aprovada |
+| Contextos de UI | Janelas adicionais e SubViewports; árvore, input e direção de tempo/lifecycle já aprovados |
 | Extensões e adapters | Registro, schemas, Codegen, componentes/módulos externos e fronteira ABI do SDK |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |
