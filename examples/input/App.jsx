@@ -5,7 +5,7 @@ import React, {
   useState,
   useCallback,
 } from "react";
-import { View, Text, Button, TextInput } from "./components";
+import { View, Text, Button, TextInput } from "../../src/components";
 
 const observations = {
   mounts: 0,

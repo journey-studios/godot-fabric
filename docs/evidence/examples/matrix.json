@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "platform": "macOS arm64",
+  "godot": "4.7.2",
+  "commands": {
+    "headless": "npm run test:examples",
+    "native": "npm run test:examples -- --capture"
+  },
+  "runs": [
+    {
+      "example": "counter",
+      "api": "public",
+      "headless": {
+        "checks": 19,
+        "report": "counter-headless.json"
+      },
+      "native": {
+        "checks": 24,
+        "report": "counter-native.json"
+      }
+    },
+    {
+      "example": "react",
+      "api": "internal",
+      "headless": {
+        "checks": 36,
+        "report": "react-headless.json"
+      },
+      "native": {
+        "checks": 36,
+        "report": "react-native.json"
+      }
+    },
+    {
+      "example": "layout",
+      "api": "internal",
+      "headless": {
+        "checks": 47,
+        "report": "layout-headless.json"
+      },
+      "native": {
+        "checks": 47,
+        "report": "layout-native.json"
+      }
+    },
+    {
+      "example": "input",
+      "api": "internal",
+      "headless": {
+        "checks": 45,
+        "report": "input-headless.json"
+      },
+      "native": {
+        "checks": 45,
+        "report": "input-native.json"
+      }
+    },
+    {
+      "example": "pressable",
+      "api": "internal",
+      "headless": {
+        "checks": 43,
+        "report": "pressable-headless.json"
+      },
+      "native": {
+        "checks": 47,
+        "report": "pressable-native.json"
+      }
+    },
+    {
+      "example": "scroll",
+      "api": "internal",
+      "headless": {
+        "checks": 62,
+        "report": "scroll-headless.json"
+      },
+      "native": {
+        "checks": 68,
+        "report": "scroll-native.json"
+      }
+    },
+    {
+      "example": "chart",
+      "api": "internal",
+      "headless": {
+        "checks": 34,
+        "report": "chart-headless.json"
+      },
+      "native": {
+        "checks": 34,
+        "report": "chart-native.json"
+      }
+    },
+    {
+      "example": "nativewind",
+      "api": "public",
+      "headless": {
+        "checks": 49,
+        "report": "nativewind-headless.json"
+      },
+      "native": {
+        "checks": 58,
+        "report": "nativewind-native.json"
+      }
+    },
+    {
+      "example": "typography",
+      "api": "mixed",
+      "headless": {
+        "checks": 50,
+        "report": "typography-headless.json"
+      },
+      "native": {
+        "checks": 63,
+        "report": "typography-native.json"
+      }
+    }
+  ],
+  "totals": {
+    "headless": 385,
+    "native": 422
+  }
+}

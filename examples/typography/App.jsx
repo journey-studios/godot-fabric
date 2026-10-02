@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, ScrollView } from "react-native";
-import "../build/nativewind-compiled";
-import { Button as LegacyButton } from "./components";
-import { disposeEnvironment, environmentStats } from "./platform-environment";
+import "../../build/nativewind-compiled";
+import { Button as LegacyButton } from "../../src/components";
+import { disposeEnvironment, environmentStats } from "../../src/platform-environment";
 
 const stats = {
   mounts: 0,

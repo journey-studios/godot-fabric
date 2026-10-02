@@ -28,7 +28,7 @@ for (let index = 1; index <= 2; index++) {
   const fixture = mkdtempSync(path.join(tmpdir(), "godot-fabric-cold-"));
   try {
     for (const entry of readdirSync(root)) {
-      if (/\.(?:gd|tscn|gdextension)$/.test(entry) || entry === "project.godot" || entry === "assets" || entry === "addons")
+      if (/\.(?:gd|tscn|gdextension)$/.test(entry) || entry === "project.godot" || entry === "assets" || entry === "addons" || entry === "examples")
         cpSync(path.join(root, entry), path.join(fixture, entry), { recursive: true });
     }
     cpSync(path.join(root, "scripts"), path.join(fixture, "scripts"), {

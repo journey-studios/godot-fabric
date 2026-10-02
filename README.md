@@ -45,7 +45,8 @@ and [official Godot 4.7.2](https://github.com/godotengine/godot-builds/releases/
 git clone https://github.com/journey-studios/godot-fabric.git
 cd godot-fabric
 npm run setup
-npm start -- --typography
+npm run examples:list
+npm run example -- counter
 ```
 
 Set `GODOT_BIN` to the official engine executable if it is outside
@@ -62,12 +63,17 @@ npm run bundle             # rebuild after JSX/style changes
 npm run setup              # rebuild after native C++ changes
 ```
 
+The [examples catalog](examples/README.md) has runnable scenes, JSX and per-case
+instructions. `npm run example -- <name>` rebuilds the bundle before opening it;
+the existing `npm start` flags remain available.
+
 ## Write React
 
 The build aliases `react-native` to the Godot platform facade and applies
-the original NativeWind compiler. The native application entry is
-[src/app.jsx](src/app.jsx); the typography example is
-[src/typography-app.jsx](src/typography-app.jsx).
+the original NativeWind compiler. Start with the public
+[counter](examples/counter/App.jsx). The shared Fabric application entry is
+[examples/entry.jsx](examples/entry.jsx); the typography example is
+[examples/typography/App.jsx](examples/typography/App.jsx).
 
 ```jsx
 import { useState } from "react";
@@ -97,6 +103,7 @@ npm package or a drop-in addon with prebuilt binaries.
 ## Verify
 
 ```sh
+npm run test:examples                    # all interactive demos, headless and sequential
 npm run test:contracts                   # JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
 npm run check:publication

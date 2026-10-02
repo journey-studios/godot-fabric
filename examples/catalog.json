@@ -1,0 +1,73 @@
+[
+  {
+    "id": "counter",
+    "title": "Minimal public React Native UI",
+    "api": "public",
+    "source": "examples/counter/App.jsx",
+    "scene": "examples/counter/scene.tscn"
+  },
+  {
+    "id": "react",
+    "title": "React state and lifecycle",
+    "api": "internal",
+    "source": "examples/react/App.jsx",
+    "scene": "examples/react/scene.tscn"
+  },
+  {
+    "id": "layout",
+    "title": "Measured and responsive layout",
+    "api": "internal",
+    "source": "examples/layout/App.jsx",
+    "scene": "examples/layout/scene.tscn"
+  },
+  {
+    "id": "input",
+    "title": "Controlled native editing",
+    "api": "internal",
+    "source": "examples/input/App.jsx",
+    "scene": "examples/input/scene.tscn"
+  },
+  {
+    "id": "pressable",
+    "title": "Pressability and responder negotiation",
+    "api": "internal",
+    "source": "examples/pressable/App.jsx",
+    "scene": "examples/pressable/scene.tscn"
+  },
+  {
+    "id": "scroll",
+    "title": "Scrolling, filtering and editing",
+    "api": "internal",
+    "source": "examples/scroll/App.jsx",
+    "scene": "examples/scroll/scene.tscn"
+  },
+  {
+    "id": "chart",
+    "title": "Original React Native Chart Kit",
+    "api": "internal",
+    "source": "examples/chart/App.jsx",
+    "scene": "examples/chart/scene.tscn"
+  },
+  {
+    "id": "nativewind",
+    "title": "NativeWind utility classes and themes",
+    "api": "public",
+    "source": "examples/nativewind/App.jsx",
+    "scene": "examples/nativewind/scene.tscn"
+  },
+  {
+    "id": "typography",
+    "title": "Rich text and variable fonts",
+    "api": "mixed",
+    "source": "examples/typography/App.jsx",
+    "scene": "examples/typography/scene.tscn"
+  },
+  {
+    "id": "parity",
+    "title": "Nine original-native reference cases",
+    "api": "public",
+    "source": "tests/parity/fixture.jsx",
+    "scene": "examples/parity/scene.tscn",
+    "automated": true
+  }
+]

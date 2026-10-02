@@ -1,5 +1,5 @@
 module.exports = {
-  content: ["./src/nativewind-app.jsx", "./src/typography-app.jsx"],
+  content: ["./examples/**/*.jsx"],
   theme: {
     extend: { fontFamily: { sans: ["NotoSans"], mono: ["JetBrainsMono"] } },
   },

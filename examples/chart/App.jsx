@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { LineChart } from "react-native-chart-kit/v2";
-import { View, Text, Button } from "./components";
+import { View, Text, Button } from "../../src/components";
 import {
   useWindowDimensions,
   windowSubscriptionCount,
-} from "./window-dimensions";
-import { svgPayload } from "./svg-contract.mjs";
+} from "../../src/window-dimensions";
+import { svgPayload } from "../../src/svg-contract.mjs";
 
 const thresholdSeries = [
   {

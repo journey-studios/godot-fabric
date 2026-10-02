@@ -18,11 +18,16 @@ macOS prototype, generic fixtures, captures and contract CI are delivered.
 Original reconciliation, Fabric commits, Yoga layout and several host subsets
 already run. This foundation is **experimental 0.1**, not full RN parity.
 
-All GF work items below are **Planned**; this roadmap does not claim their
-implementation started or passed. Each table row owns its status. When work
-begins, set it to In progress, Blocked or Verified and link its PR and evidence. Keep
-this as the sole live status source. Verification requires the acceptance
-result, not an export stub, merged PR or unrelated green CI.
+GF-01 and GF-02 are **In progress**: [PR #4](https://github.com/journey-studios/godot-fabric/pull/4)
+delivered the root API inventory, nine shared native reference cases, differential
+CI and a cold-start containment. The full contract inventory and the underlying
+Godot import-crash root cause remain open. See the [baseline](docs/compatibility/BASELINE.md)
+and [cold-start evidence](docs/evidence/cold-start.md). Other rows remain Planned.
+
+The [runnable examples](examples/README.md) expose existing fixtures in a shared
+project; they are a prerequisite for GF-28, not the independent packaged consumer
+SDK required by that item. Each table row owns its status. Verification requires
+its acceptance result, not an export stub, merged PR or unrelated green CI.
 
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit
@@ -104,8 +109,8 @@ and expose a contract failure without hidden no-ops or stale evidence.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-01 · P0 · Full contract inventory and oracle | Planned | Expand the versioned root inventory to types, component props/styles, events, ref commands, globals and applicable OS APIs. Every target contract has an owner and positive/negative fixture. Run shared fixtures against an original pinned RN iOS/Android app and Godot; record semantic traces, layout tolerances and platform applicability before implementation | None |
-| GF-02 · P0 · Clean startup and engine contract | Planned | Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and fix the root cause. Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes | GF-01 |
+| GF-01 · P0 · Full contract inventory and oracle | In progress | Expand the versioned root inventory to types, component props/styles, events, ref commands, globals and applicable OS APIs. Every target contract has an owner and positive/negative fixture. Run shared fixtures against an original pinned RN iOS/Android app and Godot; record semantic traces, layout tolerances and platform applicability before implementation | None |
+| GF-02 · P0 · Clean startup and engine contract | In progress | Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and fix the root cause. Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes | GF-01 |
 | GF-03 · P0 · Public API and typed platform resolution | Planned | Export actual public TextInput/Button contracts, use the original wrapper where viable, and provide strict RN-compatible public types. Resolve `.godot`, `.native`, JS/JSX/TS/TSX, assets and package conditions through a documented consumer bundler. An independent TSX app imports every in-scope root name; implemented APIs run, unfinished contracts still fail visibly | GF-01 |
 | GF-04 · P0 · Eliminate silently accepted behavior | Planned | Audit facade destructuring, validAttributes, values and event registration. Implement or explicitly reject each unsupported prop/value, including accessibility metadata and userSelect/collapsable semantics; verify updates/removal as well as initial mount. Before 1.0 all applicable target contracts must be implemented, not merely guarded | GF-01, GF-03 |
 | GF-05 · P0 · RN bootstrap and JS globals | Planned | Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22 | GF-01 |

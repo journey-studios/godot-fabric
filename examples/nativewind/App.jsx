@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, Appearance } from "react-native";
 import { vars } from "nativewind";
-import "../build/nativewind-compiled";
-import { disposeEnvironment, environmentStats } from "./platform-environment";
-import { windowSubscriptionCount } from "./window-dimensions";
+import "../../build/nativewind-compiled";
+import { disposeEnvironment, environmentStats } from "../../src/platform-environment";
+import { windowSubscriptionCount } from "../../src/window-dimensions";
 
 const stats = { mounts: 0, cleanups: 0, renders: 0, errors: [] };
 let actions = {};
