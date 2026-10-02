@@ -1,0 +1,108 @@
+{
+  "schemaVersion": 1,
+  "status": "matched_subset",
+  "fixture": "core-ui-v1",
+  "fixtureSha256": "2a0f55ca13f6163be55d35ecd8f017cf22bacde9367055b53f8d0185de058cd9",
+  "casesSha256": "5b72a75230043dcec87d61ebddf110383c2911c1373ccc10348306530fe9131f",
+  "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3",
+  "referencePlatforms": [
+    "android",
+    "ios"
+  ],
+  "caseCount": 9,
+  "completeMobileReferences": true,
+  "scope": "Only these fixture cases; not complete RN API, renderer semantics, event ordering or platform support",
+  "cases": [
+    {
+      "id": "native-layout",
+      "contracts": [
+        "event:ViewProps.onLayout",
+        "style:ViewStyle.width",
+        "style:ViewStyle.height",
+        "style:ViewStyle.padding"
+      ],
+      "status": "matched_subset"
+    },
+    {
+      "id": "native-measure",
+      "contracts": [
+        "ref-member:ViewInstance.measure"
+      ],
+      "status": "matched_subset"
+    },
+    {
+      "id": "automatic-batching",
+      "contracts": [],
+      "reactFeature": "Two functional updates in one task produce a single visible state commit",
+      "status": "matched_subset"
+    },
+    {
+      "id": "keyed-reorder",
+      "contracts": [],
+      "reactFeature": "Native positions change while keyed refs and effect mounts survive",
+      "status": "matched_subset"
+    },
+    {
+      "id": "memo",
+      "contracts": [],
+      "reactFeature": "Memoized rows skip unrelated renders",
+      "status": "matched_subset"
+    },
+    {
+      "id": "context-update",
+      "contracts": [],
+      "reactFeature": "Context update reaches a committed descendant",
+      "status": "matched_subset"
+    },
+    {
+      "id": "external-store",
+      "contracts": [],
+      "reactFeature": "useSyncExternalStore publishes the next snapshot",
+      "status": "matched_subset"
+    },
+    {
+      "id": "transition-commit",
+      "contracts": [],
+      "reactFeature": "startTransition eventually commits its update",
+      "status": "matched_subset"
+    },
+    {
+      "id": "unmount-cleanup",
+      "contracts": [],
+      "reactFeature": "Unmount removes effects and external-store subscriptions",
+      "status": "matched_subset"
+    }
+  ],
+  "observations": {
+    "box": {
+      "height": 40,
+      "width": 120,
+      "x": 8,
+      "y": 8
+    },
+    "cleanups": [
+      "B",
+      "A"
+    ],
+    "context": "updated",
+    "counts": [
+      0,
+      2,
+      3
+    ],
+    "mounts": [
+      "A",
+      "B"
+    ],
+    "renders": {
+      "A": 1,
+      "B": 1
+    },
+    "rows": {
+      "A": 64,
+      "B": 0
+    },
+    "store": 7,
+    "subscribers": 0
+  }
+}

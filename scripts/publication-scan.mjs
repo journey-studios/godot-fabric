@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 // The release contains only this project's reviewed sources and generic demos.
 // Generated outputs and downloaded third-party code never enter the Git payload.
 const forbidden = [
-  /\/Users\//i, /\/private\//i, /[A-Z]:\\Users\\/i,
+  /\/Users\//i, /(?<![\w.-])\/private\//i, /[A-Z]:\\Users\\/i,
+  /file:\/\/[^/\s"'<>]*\/private\//i,
   /github\.com\/journey-studios\/(?!godot-fabric(?:[./?#]|$))/i,
   /\bapps\/[^/\s]+\/(?:src|scenario|docs)\//i,
   /agent_docs\//i, /docs\/domains\//i, /vision\/EV-/i,
@@ -21,6 +22,8 @@ export function scan(root) {
   let files = 0;
   function visit(directory) {
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      // Git metadata is not a publication payload, including worktree pointers.
+      if (directory === root && entry.name === ".git") continue;
       if (entry.isDirectory() && !excluded.has(entry.name)) visit(path.join(directory, entry.name));
       if (entry.isSymbolicLink()) {
         failures.push({ file: path.relative(root, path.join(directory, entry.name)), pattern: "unreviewed symlink" });
@@ -32,8 +35,17 @@ export function scan(root) {
       ++files;
       if (relative === "scripts/publication-scan.mjs" || relative === "tests/publication-scan.test.mjs" || binaryExtensions.has(path.extname(filename))) continue;
       const source = readFileSync(filename, "utf8");
+      const candidates = [source];
+      for (const match of source.matchAll(/file:\/\/[^\s"'<>`]+/gi)) {
+        try {
+          const decoded = decodeURIComponent(new URL(match[0]).pathname);
+          candidates.push(path.posix.normalize(decoded.replaceAll("\\", "/")));
+        } catch {
+          failures.push({ file: relative, pattern: "invalid file URL" });
+        }
+      }
       for (const pattern of forbidden) {
-        if (pattern.test(source)) failures.push({ file: relative, pattern: pattern.source });
+        if (candidates.some((candidate) => pattern.test(candidate))) failures.push({ file: relative, pattern: pattern.source });
       }
     }
   }

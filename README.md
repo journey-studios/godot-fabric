@@ -15,10 +15,10 @@ This is an experimental platform implementation. Native setup and rendering
 are validated on **macOS arm64 with official Godot 4.7.2**. Linux, Windows,
 iOS, Android and Web do not yet have supported build paths.
 
-**Known setup limitation:** the first editor import with an empty resource cache
-terminated with signal 11 during release validation. A subsequent import with
-the generated cache passed. The runner reports the failure and does not retry
-automatically. See the [recorded import boundary](docs/evidence/README.md).
+Setup and the check runner prepare Godot's extension startup list before the
+first import. This avoids a Godot 4.7.2 editor crash when an import-only scan
+discovers extension classes late. Resources are still imported from scratch;
+failures are reported without retries. See the [cold-start evidence](docs/evidence/cold-start.md).
 
 Supported, within the documented subset: React 19 hooks and concurrent roots,
 public View, Text, Pressable and ScrollView, NativeWind styles, nested rich
@@ -28,6 +28,8 @@ TextInput export is currently unavailable.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
+The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
+public contracts and compares a shared fixture against original native RN.
 
 The [1.0 roadmap](ROADMAP.md) maps priorities, dependencies and acceptance
 criteria for RN parity across macOS, Linux, Windows, Android and iOS. The
@@ -36,7 +38,7 @@ contracts and missing APIs against React Native 0.87.1.
 
 ## Run
 
-Requirements: macOS arm64, Node 22+, npm, Python 3.12+, Xcode Command Line Tools,
+Requirements: macOS arm64, Node 22.13+, npm, Python 3.12+, Xcode Command Line Tools,
 and [official Godot 4.7.2](https://github.com/godotengine/godot-builds/releases/tag/4.7.2-stable).
 
 ```sh
@@ -98,6 +100,9 @@ npm package or a drop-in addon with prebuilt binaries.
 npm run test:contracts                   # JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
 npm run check:publication
+npm run test:cold                        # two disposable projects, no resource cache
+npm run parity:status                    # API gaps and current native evidence
+npm run parity:godot                     # shared core UI fixture in Godot
 npm run check -- --typography --headless
 npm run check -- --typography --capture
 npm run test:typography                  # includes real native negative cases

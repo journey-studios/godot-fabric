@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "fixture": "core-ui-v1",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "renderer": "fabric",
+  "engine": "hermes",
+  "observations": {
+    "box": {
+      "x": 8,
+      "y": 8,
+      "width": 120,
+      "height": 40
+    },
+    "rows": {
+      "A": 64,
+      "B": 0
+    },
+    "counts": [
+      0,
+      2,
+      3
+    ],
+    "renders": {
+      "A": 1,
+      "B": 1
+    },
+    "mounts": [
+      "A",
+      "B"
+    ],
+    "cleanups": [
+      "B",
+      "A"
+    ],
+    "context": "updated",
+    "store": 7,
+    "subscribers": 0
+  },
+  "status": "passed",
+  "checks": [
+    {
+      "id": "native-layout",
+      "passed": true
+    },
+    {
+      "id": "native-measure",
+      "passed": true
+    },
+    {
+      "id": "automatic-batching",
+      "passed": true
+    },
+    {
+      "id": "keyed-reorder",
+      "passed": true
+    },
+    {
+      "id": "memo",
+      "passed": true
+    },
+    {
+      "id": "context-update",
+      "passed": true
+    },
+    {
+      "id": "external-store",
+      "passed": true
+    },
+    {
+      "id": "transition-commit",
+      "passed": true
+    },
+    {
+      "id": "unmount-cleanup",
+      "passed": true
+    }
+  ],
+  "platform": "ios",
+  "fixtureSha256": "2a0f55ca13f6163be55d35ecd8f017cf22bacde9367055b53f8d0185de058cd9",
+  "casesSha256": "5b72a75230043dcec87d61ebddf110383c2911c1373ccc10348306530fe9131f",
+  "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3"
+}

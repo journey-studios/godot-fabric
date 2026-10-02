@@ -41,6 +41,11 @@ function run(name, args) {
   }
   return log;
 }
+const startup = spawnSync("python3", [path.join(root, "scripts/extension_startup.py"), root], {
+  encoding: "utf8", timeout: 10000,
+});
+if (startup.error || startup.status !== 0)
+  throw new Error(`Extension startup failed: ${startup.stderr || startup.error}`);
 run("editor", ["--headless", "--editor", "--import"]);
 if (interactive) {
   const child = spawn(binary, ["--path", root, ...scene], { stdio: "inherit" });
