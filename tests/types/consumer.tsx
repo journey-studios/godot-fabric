@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Button, TextInput, View, type TextInputInstance } from "react-native";
+import { AppRegistry, RootTagContext, Button, TextInput, View, type TextInputInstance } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps } from "react-native";
 
@@ -29,3 +29,11 @@ const dynamicColor = <TextInput style={{ color: {} }} />;
 void dynamicColor; void multiline; void keyboard; void legacyButton; void invalidTitle; void weight;
 
 void Consumer;
+AppRegistry.registerComponent("Consumer", () => Consumer);
+const keys: readonly string[] = AppRegistry.getAppKeys();
+const rootTag = React.useContext(RootTagContext);
+void keys; void rootTag;
+// @ts-expect-error sections are outside the implemented registry subset
+AppRegistry.registerComponent("Section", () => Consumer, true);
+// @ts-expect-error native application owns mounting; this is not the full registry
+AppRegistry.runApplication("Consumer", { rootTag: 1 });

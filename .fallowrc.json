@@ -8,6 +8,7 @@
     "src/native-modules.js",
     "src/ui-manager.js",
     "src/react-native-platform.jsx",
+    "src/render-application.jsx",
     "src/svg.jsx",
     "src/unsupported-reanimated.js",
     "src/unsupported-safe-area.js",
@@ -25,6 +26,10 @@
     "scheduler"
   ],
   "ignoreExports": [
+    {
+      "file": "src/render-application.jsx",
+      "exports": ["default"]
+    },
     {
       "file": "src/private-interface.js",
       "exports": [
@@ -106,7 +111,9 @@
         "KeyboardAvoidingView",
         "VirtualizedList",
         "TextInput",
-        "Button"
+        "Button",
+        "AppRegistry",
+        "RootTagContext"
       ]
     },
     {
@@ -143,7 +150,9 @@
             "Text",
             "TextInput",
             "Button",
-            "StyleSheet"
+            "StyleSheet",
+            "AppRegistry",
+            "RootTagContext"
           ]
         }
       ]

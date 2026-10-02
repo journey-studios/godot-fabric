@@ -42,6 +42,14 @@ project; they are a prerequisite for GF-28, not the independent packaged consume
 SDK required by that item. Each table row owns its status. Verification requires
 its acceptance result, not an export stub, merged PR or unrelated green CI.
 
+GF-07 is **In progress**: an explicit `FabricApplication` owns one Hermes,
+UIManager, scheduler and timer queue. The [shared example](examples/shared/README.md)
+registers HUD/Inventory through the original AppRegistry and validates root props,
+independent state/input/constraints, module stores, unmount/remount and live
+application scheduling with no mounted roots. This is the bounded 2A prototype:
+full bootstrap, pause/resume, overlays/portals, reference comparison and the
+resource/editor SDK are still open. D19–D32 remain pending.
+
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit
 release scope. P0 describes urgency, not the full release checklist. Module
@@ -256,7 +264,7 @@ and expose a contract failure without hidden no-ops or stale evidence.
 | GF-04 · P0 · Eliminate silently accepted behavior | In progress | Audit facade destructuring, validAttributes, values and event registration. Implement or explicitly reject each unsupported prop/value, including accessibility metadata and userSelect/collapsable semantics; verify updates/removal as well as initial mount. Before 1.0 all applicable target contracts must be implemented, not merely guarded | GF-01, GF-03 |
 | GF-05 · P0 · RN bootstrap and JS globals | In progress | Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22 | GF-01 |
 | GF-06 · P1 · React/Fabric semantic suite | Planned | Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler | GF-01, GF-05 |
-| GF-07 · P1 · Root and surface lifecycle | Planned | Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions | GF-05, GF-06 |
+| GF-07 · P1 · Root and surface lifecycle | In progress | Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions | GF-05, GF-06 |
 | GF-08 · P1 · Public refs and native commands | Planned | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
 | GF-09 · P0 · Real metrics and platform identity | Planned | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
 

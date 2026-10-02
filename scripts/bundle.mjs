@@ -27,6 +27,10 @@ const result = await build({
     {
       name: "godot-platform",
       setup(builder) {
+        builder.onResolve({ filter: /(?:^|\/)renderApplication$/ }, ({ importer }) => {
+          if (importer.endsWith("/ReactNative/AppRegistryImpl.js"))
+            return { path: path.join(root, "src/render-application.jsx") };
+        });
         builder.onResolve({ filter: /^react-native-reanimated$/ }, () => ({
           path: path.join(root, "src/unsupported-reanimated.js"),
         }));

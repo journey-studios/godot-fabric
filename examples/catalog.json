@@ -1,5 +1,12 @@
 [
   {
+    "id": "shared",
+    "title": "Two AppRegistry roots in one Hermes application",
+    "api": "public",
+    "source": "examples/shared/App.jsx",
+    "scene": "examples/shared/scene.tscn"
+  },
+  {
     "id": "counter",
     "title": "Minimal public React Native UI",
     "api": "public",

@@ -16,6 +16,7 @@ import {
 import { PublicInput } from "./public-input";
 import { validateButton, validateInput } from "./control-contracts.mjs";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
+export { AppRegistry, RootTagContext } from "./app-registry";
 export {
   Dimensions,
   Appearance,
