@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 17 decisões aprovadas (V2-D01 a V2-D17) e 15 pendentes (V2-D18 a V2-D32).
+**Status:** 18 decisões aprovadas (V2-D01 a V2-D18) e 14 pendentes (V2-D19 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As direções de V2-D01 a V2-D17 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D18 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D18 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D19 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -30,9 +30,9 @@ sequência de implementação nem cria novos itens de roadmap.
 ## Como entender o que está sendo decidido
 
 As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
-e detalhes a especificar. V2-D11 a V2-D17 estão aprovados na direção discutida,
-com retomada, contextos e integração nativa ainda a especificar. V2-D18 a V2-D32
-continuam como propostas, incluindo seus exemplos de comportamento;
+e detalhes a especificar. V2-D11 a V2-D18 estão aprovados na direção discutida,
+com retomada, contextos, integração nativa e distribuição ainda a especificar.
+V2-D19 a V2-D32 continuam como propostas, incluindo seus exemplos de comportamento;
 nenhuma entrada descreve implementação comprovada.
 
 Há três naturezas de discussão, que podem aparecer juntas:
@@ -54,7 +54,7 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
+| [Ferramentas](#v2-d19), D19–D21 | Builder, resolução e transforms; direção de distribuição e dependências aprovada em D18 |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
 | [Execução e tipos](#v2-d28), D28–D29 | O que preservar ao otimizar e publicar APIs |
 | [Plataformas e certificação](#v2-d30), D30–D31 | O que significa dizer que algo é compatível |
@@ -101,7 +101,7 @@ não exigem aprovações rápidas sem exemplos.
 | [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Aprovada |
 | [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Aprovada |
 | [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa | Aprovada |
-| [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto | Pendente |
+| [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto | Aprovada |
 | [V2-D19](#v2-d19) | Builder, protocolo, cache e workspaces | Pendente |
 | [V2-D20](#v2-d20) | Resolução de módulos e identidade única de React | Pendente |
 | [V2-D21](#v2-d21) | Babel, configuração do usuário e NativeWind | Pendente |
@@ -555,14 +555,15 @@ D31 certifica. Esta classificação não troca paridade por semelhança visual.
 
 ### V2-D18
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D18 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d18).
+
 **Decisão:** quais ferramentas o addon distribui por host, como atualizá-las e
 quem instala as dependências de usuário sem transformar o SDK em package manager.
 
-- **Alternativas:** toolchain embutida, download versionado pelo addon ou Node
+- **Alternativas avaliadas:** toolchain embutida, download versionado pelo addon ou Node
   externo como caminho avançado; dependências do projeto continuam do usuário.
-- **Recomendação:** SDK autocontido para o fluxo básico, com versões/proveniência
-  e suporte offline definidos. Separar dependências React/RN do SDK e packages
-  do projeto. Instalação de bibliotecas é operação explícita, não efeito de Play.
 - **Validação:** consumidor limpo inicia o exemplo básico sem Node global;
   dependência ausente tem diagnóstico; atualizar o SDK não reescreve seu lockfile.
 
@@ -579,7 +580,7 @@ mas exige instalação online e um caminho offline definido. Node externo deixa
 mais trabalho de preparação para o consumidor e pode servir ao fluxo avançado.
 Nenhuma opção resolve sozinha instalar dependências adicionais do projeto.
 
-**Como ler a recomendação:** fluxo básico autocontido, com React/RN e ferramentas
+**Como ler o contrato aprovado:** fluxo básico autocontido, com React/RN e ferramentas
 compatíveis sob posse do SDK. Libs do usuário têm instalação explícita, versões
 e lockfile preservados. Play verifica e diagnostica; não instala silenciosamente
 pacotes nem troca a versão de React escolhida para o renderer.
@@ -1146,14 +1147,14 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-V2-D01 a V2-D17 estão aprovadas, incluindo aplicação, comunicação, árvore,
-input, tempo, contextos, adapters e classificação do reuso de bibliotecas.
+V2-D01 a V2-D18 estão aprovadas, incluindo aplicação, comunicação, árvore,
+input, tempo, contextos, adapters, reuso de bibliotecas e direção de distribuição.
 Seus detalhes e provas continuam na especificação e validação.
 
-1. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
+1. Definir experiência do consumidor e build: V2-D19 a V2-D21, V2-D29 e V2-D30.
 2. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
 3. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D18 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D19 em diante,
 a implementação e suas prioridades finais continuam em aberto.

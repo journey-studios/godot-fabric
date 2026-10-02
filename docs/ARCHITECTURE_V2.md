@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D17 aprovadas, V2-D18 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D18 aprovadas, V2-D19 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 17 aprovações e 15 escolhas pendentes, com seus cenários de validação.
+identifica 18 aprovações e 14 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -27,9 +27,10 @@ Hermes e Yoga originais. JSX, hooks e reconciliação devem produzir UI na árvo
 do Godot através do addon, usando o executável oficial do engine.
 
 A direção geral busca uma experiência integrada ao Godot: configurar o addon,
-adicionar uma surface e executar o jogo. Distribuição do SDK, ferramentas de
-build e exportação ainda precisam de discussão específica. Descoberta de
-extensões nativas segue V2-D13, compatibilidade binária segue V2-D14 e schemas/
+adicionar uma surface e executar o jogo. O fluxo básico autocontido e a separação
+entre ferramentas do SDK e dependências do projeto seguem V2-D18. Contratos do
+builder, resolução de módulos e exportação ainda precisam de discussão específica.
+Descoberta de extensões nativas segue V2-D13, compatibilidade binária segue V2-D14 e schemas/
 Codegen seguem V2-D15. O contrato funcional dos componentes segue V2-D16 e
 a classificação do reuso das bibliotecas segue V2-D17.
 
@@ -40,8 +41,9 @@ Os temas consolidados são:
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
 4. Autoridade sobre a árvore, input e tempo da UI.
 5. Adapters nativos e classificação da compatibilidade das bibliotecas.
+6. Distribuição do SDK, ferramentas e dependências do projeto.
 
-As direções de V2-D01 a V2-D17 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D18 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -730,6 +732,55 @@ e quaisquer substituições, junto do target e capacidades exercitadas. Conferir
 que uma prova parcial ou alternativa é descrita com seu alcance, e que toda
 configuração necessária de resolução foi publicada para o consumidor.
 
+## Tema 6 — Distribuição do SDK e dependências
+
+### V2-D18
+
+**Oferecer um fluxo básico autocontido pelo editor Godot:** instalar/configurar
+o addon, configurar a aplicação, escrever TSX e apertar Play. O SDK fornece suas
+ferramentas compatíveis e, quando necessário, um Node privado, permitindo iniciar
+o exemplo básico sem Node global. Identificar versões e proveniência por host
+distribuído. A integração com o editor não transforma o SDK em um package manager.
+
+| Responsável | O que controla |
+| --- | --- |
+| Godot Fabric | Addon, ferramentas de build, versões compatíveis de React/RN e runtime nativo |
+| Projeto do usuário | TSX, assets, bibliotecas adicionais, configuração e lockfile |
+
+**Instalação de bibliotecas adicionais é uma operação explícita:** o editor pode
+oferecer uma interface que delegue ao gerenciador de pacotes configurado.
+Play verifica dependências e produz diagnóstico com a ação necessária quando
+uma estiver ausente ou incompatível. Instalar bibliotecas não é um efeito
+silencioso de Play. Atualizar o SDK preserva o lockfile do projeto e informa
+incompatibilidades; não troca silenciosamente a versão de React do renderer.
+A matriz de gerenciadores/workspaces e a identidade dos módulos ainda são
+discussões de V2-D19/V2-D20.
+
+Ferramentas incluídas no download entregam um pacote maior já preparado para
+uso offline. Um download versionado durante a configuração reduz o pacote
+inicial, exigindo conexão inicial ou um caminho de instalação offline definido.
+O formato de distribuição ainda não foi escolhido: ambos precisam cumprir a
+experiência básica autocontida, a identificação das versões e o contrato offline.
+Node externo pode ser um caminho avançado; não é requisito do fluxo básico.
+
+Offline distingue o exemplo incluído, com SDK completamente provisionado, de
+um projeto com dependências adicionais nunca baixadas. Esta aprovação não
+promete disponibilizar bibliotecas ausentes do pacote/cache sem conexão.
+Conteúdo do download, hosts atendidos, cache, atualização/reversão e experiência
+de instalação de bibliotecas ainda precisam de especificação. Exportação e
+certificação de plataformas permanecem em V2-D25/V2-D30; a direção de
+distribuição não amplia o suporte comprovado do protótipo.
+
+### Aceitação do tema 6
+
+Um consumidor limpo, sem Node global, instala/provisiona o SDK e inicia o
+exemplo básico pelo editor. Exercitar o exemplo offline após provisionamento
+e diagnosticar dependência adicional nunca baixada. Instalar uma biblioteca
+por ação explícita conforme a configuração do projeto; Play não faz essa
+instalação silenciosamente. Atualizar o SDK preserva seu lockfile e identifica
+incompatibilidades. Registrar host, artefatos/versões e passos de preparação
+necessários, sem confundir a direção aprovada com distribuição já implementada.
+
 ## Distância entre a direção e a implementação consultada
 
 | Área | Base consultada | Direção deste documento |
@@ -749,15 +800,15 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 15 escolhas pendentes, V2-D18 a V2-D32, têm IDs estáveis no
+As 14 escolhas pendentes, V2-D19 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D17 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D18 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
 Detalhes de especificação das direções já aprovadas continuam necessários.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
+| Builder e resolução | Protocolo do builder, caches/watch/workspaces, Metro/Babel, condições de packages e identidade única de React; direção de distribuição aprovada |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |
 | Assets e exportação | Recursos, manifestos, host versus target, empacotamento e falhas verificáveis de export |
 | Tipos e plataformas | Coerência entre editor/build/runtime, identidade da plataforma Godot e serviços específicos de cada OS |
