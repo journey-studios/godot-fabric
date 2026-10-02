@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { copyFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { examples } from "./examples-catalog.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -21,5 +22,5 @@ for (const example of examples.filter((entry) => !entry.automated)) {
   console.log(`Checking example: ${example.id}`);
   run(["scripts/check.mjs", `--${example.id}`, ...(headed ? [] : ["--headless"]),
     ...(capture ? ["--capture"] : [])]);
-  copyFileSync(new URL("../build/report.json", import.meta.url), new URL(`${example.id}.json`, directory));
+  copyFileSync(join(root, "build", "report.json"), new URL(`${example.id}.json`, directory));
 }

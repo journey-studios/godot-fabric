@@ -755,7 +755,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510216.571958,
+        "timeStamp": 789997730.754375,
         "type": "focus"
       },
       {
@@ -765,7 +765,7 @@
           "start": 1.0
         },
         "target": 6.0,
-        "timeStamp": 789510216.601958,
+        "timeStamp": 789997730.781791,
         "type": "selection"
       },
       {
@@ -775,7 +775,7 @@
           "start": 0.0
         },
         "target": 8.0,
-        "timeStamp": 789510216.602625,
+        "timeStamp": 789997730.782416,
         "type": "selection"
       },
       {
@@ -785,7 +785,7 @@
           "start": 0.0
         },
         "target": 12.0,
-        "timeStamp": 789510216.603125,
+        "timeStamp": 789997730.782875,
         "type": "selection"
       },
       {
@@ -793,7 +793,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510237.612166,
+        "timeStamp": 789997749.723166,
         "type": "blur"
       },
       {
@@ -801,7 +801,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510237.613333,
+        "timeStamp": 789997749.725125,
         "type": "end"
       },
       {
@@ -811,7 +811,7 @@
           "start": 3.0
         },
         "target": 6.0,
-        "timeStamp": 789510237.63025,
+        "timeStamp": 789997749.746958,
         "type": "selection"
       },
       {
@@ -821,7 +821,7 @@
           "start": 1.0
         },
         "target": 6.0,
-        "timeStamp": 789510242.992,
+        "timeStamp": 789997758.266416,
         "type": "selection"
       },
       {
@@ -829,14 +829,14 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510264.880291,
+        "timeStamp": 789997778.550958,
         "type": "focus"
       },
       {
         "id": "controlled",
         "key": "ç",
         "target": 6.0,
-        "timeStamp": 789510319.534666,
+        "timeStamp": 789997833.764416,
         "type": "key"
       },
       {
@@ -844,7 +844,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "AçB",
-        "timeStamp": 789510319.669958,
+        "timeStamp": 789997833.897458,
         "type": "change"
       },
       {
@@ -854,14 +854,14 @@
           "start": 2.0
         },
         "target": 6.0,
-        "timeStamp": 789510319.672416,
+        "timeStamp": 789997833.899375,
         "type": "selection"
       },
       {
         "id": "controlled",
         "key": "ArrowLeft",
         "target": 6.0,
-        "timeStamp": 789510375.4425,
+        "timeStamp": 789997889.540375,
         "type": "key"
       },
       {
@@ -871,21 +871,21 @@
           "start": 1.0
         },
         "target": 6.0,
-        "timeStamp": 789510375.56775,
+        "timeStamp": 789997889.647583,
         "type": "selection"
       },
       {
         "id": "controlled",
         "key": "x",
         "target": 6.0,
-        "timeStamp": 789510403.18775,
+        "timeStamp": 789997917.872291,
         "type": "key"
       },
       {
         "id": "controlled",
         "key": "y",
         "target": 6.0,
-        "timeStamp": 789510403.2725,
+        "timeStamp": 789997917.954041,
         "type": "key"
       },
       {
@@ -893,7 +893,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "AxyÇB",
-        "timeStamp": 789510403.395041,
+        "timeStamp": 789997918.063916,
         "type": "change"
       },
       {
@@ -903,7 +903,7 @@
           "start": 3.0
         },
         "target": 6.0,
-        "timeStamp": 789510403.398208,
+        "timeStamp": 789997918.067375,
         "type": "selection"
       },
       {
@@ -913,7 +913,7 @@
           "start": 1.0
         },
         "target": 6.0,
-        "timeStamp": 789510460.918875,
+        "timeStamp": 789997976.00525,
         "type": "selection"
       },
       {
@@ -921,7 +921,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510515.397625,
+        "timeStamp": 789998033.512416,
         "type": "blur"
       },
       {
@@ -929,7 +929,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510515.400583,
+        "timeStamp": 789998033.520958,
         "type": "end"
       },
       {
@@ -937,7 +937,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789510515.409166,
+        "timeStamp": 789998033.52675,
         "type": "focus"
       },
       {
@@ -947,14 +947,14 @@
           "start": 3.0
         },
         "target": 6.0,
-        "timeStamp": 789510515.492666,
+        "timeStamp": 789998033.62775,
         "type": "selection"
       },
       {
         "id": "uncontrolled",
         "key": "😀",
         "target": 8.0,
-        "timeStamp": 789510543.580333,
+        "timeStamp": 789998058.122125,
         "type": "key"
       },
       {
@@ -962,7 +962,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre😀",
-        "timeStamp": 789510544.32625,
+        "timeStamp": 789998058.67625,
         "type": "change"
       },
       {
@@ -972,14 +972,14 @@
           "start": 7.0
         },
         "target": 8.0,
-        "timeStamp": 789510544.337083,
+        "timeStamp": 789998058.683875,
         "type": "selection"
       },
       {
         "id": "uncontrolled",
         "key": "Backspace",
         "target": 8.0,
-        "timeStamp": 789510598.185916,
+        "timeStamp": 789998111.968583,
         "type": "key"
       },
       {
@@ -987,7 +987,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789510598.326583,
+        "timeStamp": 789998112.126416,
         "type": "change"
       },
       {
@@ -997,7 +997,7 @@
           "start": 5.0
         },
         "target": 8.0,
-        "timeStamp": 789510598.449916,
+        "timeStamp": 789998112.311541,
         "type": "selection"
       },
       {
@@ -1005,7 +1005,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789510627.686,
+        "timeStamp": 789998143.64475,
         "type": "blur"
       },
       {
@@ -1013,7 +1013,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789510627.692041,
+        "timeStamp": 789998143.650041,
         "type": "end"
       },
       {
@@ -1021,14 +1021,14 @@
         "id": "fixed",
         "target": 12.0,
         "text": "fixo",
-        "timeStamp": 789510627.700166,
+        "timeStamp": 789998143.6575,
         "type": "focus"
       },
       {
         "id": "fixed",
         "key": "x",
         "target": 12.0,
-        "timeStamp": 789510651.968666,
+        "timeStamp": 789998166.150833,
         "type": "key"
       },
       {
@@ -1036,7 +1036,7 @@
         "id": "fixed",
         "target": 12.0,
         "text": "xfixo",
-        "timeStamp": 789510652.823791,
+        "timeStamp": 789998166.553583,
         "type": "change"
       },
       {
@@ -1046,7 +1046,7 @@
           "start": 1.0
         },
         "target": 12.0,
-        "timeStamp": 789510652.844875,
+        "timeStamp": 789998166.566541,
         "type": "selection"
       },
       {
@@ -1054,7 +1054,7 @@
         "id": "fixed",
         "target": 12.0,
         "text": "fixo",
-        "timeStamp": 789510684.30575,
+        "timeStamp": 789998198.984625,
         "type": "blur"
       },
       {
@@ -1062,7 +1062,7 @@
         "id": "fixed",
         "target": 12.0,
         "text": "fixo",
-        "timeStamp": 789510684.310416,
+        "timeStamp": 789998198.988333,
         "type": "end"
       },
       {
@@ -1070,14 +1070,14 @@
         "id": "controlled",
         "target": 6.0,
         "text": "A😀B",
-        "timeStamp": 789510684.317875,
+        "timeStamp": 789998198.997708,
         "type": "focus"
       },
       {
         "id": "controlled",
         "key": "Enter",
         "target": 6.0,
-        "timeStamp": 789510705.844333,
+        "timeStamp": 789998220.083833,
         "type": "key"
       },
       {
@@ -1085,14 +1085,14 @@
         "id": "controlled",
         "target": 6.0,
         "text": "submit",
-        "timeStamp": 789510705.923791,
+        "timeStamp": 789998220.156416,
         "type": "submit"
       },
       {
         "id": "controlled",
         "key": "Enter",
         "target": 6.0,
-        "timeStamp": 789510759.747916,
+        "timeStamp": 789998275.207083,
         "type": "key"
       },
       {
@@ -1100,7 +1100,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "submit",
-        "timeStamp": 789510759.777208,
+        "timeStamp": 789998275.2425,
         "type": "submit"
       },
       {
@@ -1108,7 +1108,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "submit",
-        "timeStamp": 789510759.800125,
+        "timeStamp": 789998275.264208,
         "type": "blur"
       },
       {
@@ -1116,7 +1116,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "submit",
-        "timeStamp": 789510759.801916,
+        "timeStamp": 789998275.267416,
         "type": "end"
       },
       {
@@ -1124,7 +1124,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "submit",
-        "timeStamp": 789510790.930458,
+        "timeStamp": 789998307.839041,
         "type": "focus"
       },
       {
@@ -1132,7 +1132,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "def😀erred",
-        "timeStamp": 789511012.01925,
+        "timeStamp": 789998526.76575,
         "type": "change"
       },
       {
@@ -1142,7 +1142,7 @@
           "start": 5.0
         },
         "target": 6.0,
-        "timeStamp": 789511012.03075,
+        "timeStamp": 789998526.79225,
         "type": "selection"
       },
       {
@@ -1150,7 +1150,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "DEF😀ERRED",
-        "timeStamp": 789511057.06425,
+        "timeStamp": 789998572.771375,
         "type": "blur"
       },
       {
@@ -1158,7 +1158,7 @@
         "id": "controlled",
         "target": 6.0,
         "text": "DEF😀ERRED",
-        "timeStamp": 789511057.068916,
+        "timeStamp": 789998572.779625,
         "type": "end"
       },
       {
@@ -1166,7 +1166,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789511057.074291,
+        "timeStamp": 789998572.788166,
         "type": "focus"
       },
       {
@@ -1174,7 +1174,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789511080.425,
+        "timeStamp": 789998594.461458,
         "type": "blur"
       },
       {
@@ -1182,7 +1182,7 @@
         "id": "uncontrolled",
         "target": 8.0,
         "text": "livre",
-        "timeStamp": 789511080.429791,
+        "timeStamp": 789998594.466375,
         "type": "end"
       }
     ],

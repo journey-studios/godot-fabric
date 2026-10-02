@@ -48,6 +48,11 @@ The hosted macOS job now runs every interactive example headless after its
 uncached setup. Original RN iOS/Android jobs still compare the shared parity
 fixture; no new mobile-Godot support is claimed.
 
+The initial clean CI static check exposed the suite's generated report URL
+being interpreted as an import. The suite now constructs that filesystem path
+from the project directory. Static analysis also passed with the report absent;
+generated local output must not be required for a clean source-only check.
+
 ## Public counter
 
 The [source](../../../examples/counter/App.jsx) only imports React and public RN
