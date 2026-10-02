@@ -36,6 +36,16 @@ alive; subscriptions and native tags belong to each mounted root. Finally
 The failure suite checks invalid owner/entry/bundle, duplicate keys, reserved
 keys, unsupported sections and attempts to restart a stopped application.
 
+![Initial registered roots](../../docs/evidence/shared-roots/initial.png)
+
+![HUD props retain local state while both roots share a module store](../../docs/evidence/shared-roots/updated.png)
+
+![Inventory removed while HUD keeps its state](../../docs/evidence/shared-roots/unmounted.png)
+
+The [validation record](../../docs/evidence/shared-roots/README.md) explains
+the captures, transport, 35 headless/38 graphical checks, 17 negative checks and
+remaining gaps. These are real Godot Viewport readbacks of the generic example.
+
 These are experimental native authoring properties. The approved resource-based
 application/SDK/editor flow, `GodotFabric` service API, final execution/shutdown
 policies, dev bootstrap, hidden Activity, portals, pause/resume and mobile/desktop

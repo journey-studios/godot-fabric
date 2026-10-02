@@ -36,7 +36,8 @@ types, narrowing them to this implementation. They are checked as project
 source with strict TypeScript. Third-party declaration bodies use
 `skipLibCheck`; the upstream contract inventory still checks their source hashes
 and signatures. Positive consumer assignments and negative unsupported-prop
-fixtures run in CI. Other facade exports do not yet have Godot declarations;
+fixtures run in CI. AppRegistry's registration subset and RootTagContext are
+also typed. Other facade exports do not yet have Godot declarations;
 this is not the complete typed SDK or an independently packaged consumer.
 
 The bundler accepts TS/TSX. Both resolvers prefer `.ts`, then `.tsx`, then
@@ -67,6 +68,53 @@ boundaries. Submission is `submit` or `blurAndSubmit`. Unsupported defined props
 throw; no unsupported mobile prop is silently forwarded by these two wrappers.
 This prop audit is still incomplete for the other public facade components.
 
+## Shared application and root authoring
+
+The [shared example](../examples/shared/README.md) registers named root
+components with the original RN AppRegistry. Godot's `renderApplication`
+container supplies the original RootTagContext and invokes the original
+production Fabric renderer. Component children require no registration.
+The typed public subset is `AppRegistry.registerComponent(key, provider)` and
+`getAppKeys()`. Empty/duplicate/reserved keys and a section argument fail;
+headless-task, section, instrumentation and public mounting APIs are not exposed.
+
+An experimental `FabricApplication` Node owns one Hermes runtime, module cache,
+UIManager, scheduler and timer/frame queues. Set its `bundle_path` before first
+mount (default `res://build/app.js`). A bundle evaluates once and registers all
+entries. Each `FabricSurface` Control uses:
+
+| Property/API | Behavior |
+| --- | --- |
+| `application_path` | NodePath to its application owner; the example uses `../SharedApplication` |
+| `component_name` | AppRegistry entry key; HUD and Inventory use different registered components |
+| `initial_props` | Dictionary serialized through Godot JSON for that root; use JSON-compatible values |
+| `update_props(props)` | Replace root props, preserving root/component identity and local state; before mounting, save props for the next mount |
+| `mount()` | Mount a registered entry, or return true if already mounted; return false with a visible error on failure |
+| `unmount()` / named `stop()` | React cleanup, native tree/tag release and input cancellation for this root |
+| `get_surface_id()` | Current native root tag, or zero after unmount; remount receives a new identity |
+| `hide()` / `show()` | Godot visibility; the mounted React state and effects continue |
+
+Control sizes provide separate Yoga constraints. The module store is shared
+only because both roots import the same module and subscribe explicitly; React
+Context does not cross roots. Put the owner in a persistent part of the SceneTree
+when replacing UI scenes. Removing a surface unmounts only its root. Removing
+the owner or calling `FabricApplication.stop()` shuts down all its roots and
+scheduling. This prototype's stopped owner cannot be restarted; retaining
+Hermes until owner destruction allows diagnostic `evaluate()`/`snapshot()`.
+These diagnostic methods are not the planned `GodotFabric` game-service API.
+
+The legacy anonymous single-root fixtures retain implicit owner lookup, root 1
+and application shutdown on `stop()`/scene exit. They do not demonstrate named
+registration or an independent consumer SDK. New UI should use registered roots.
+
+[Shared-root evidence](evidence/shared-roots/README.md) covers two nonoverlapping
+roots, updates, replacement, zero-root survival and activation failures.
+App-resource/EditorPlugin authoring, SDK singleton activation, reload/restart
+policy, public game services, bootstrap/dev tooling, portals/overlapping-root
+input, pause/resume, Activity hidden mode, transformed/multiwindow geometry and
+original mobile multi-root comparison remain open. The pending V2 decisions
+retain their status; these native properties are an experimental validation API.
+
 ## Text details
 
 - `font-sans` is Noto Sans; `font-mono` is JetBrains Mono. Original assets and
@@ -79,8 +127,9 @@ This prop audit is still incomplete for the other public facade components.
   accept text attributes; layout/background styles and inline Controls fail.
 - Latin accents are exercised. Bidi, emoji/fallback and colored truncation
   need dedicated tests before claiming parity.
-- The initial Theme font is captured when a surface starts. Dynamic Theme/font
-  loading, system font scaling and React Native baseline semantics are pending.
+- The initial Theme font is captured from the application's first surface.
+  Per-root Theme fonts, dynamic Theme/font loading, system font scaling and
+  React Native baseline semantics are pending.
 
 ## Platform and performance
 
@@ -100,9 +149,11 @@ next frame. `performance.now()` uses the same monotonic clock.
 
 Callback exceptions reach the host error channel. A failed one-shot releases
 its registration; a failed interval remains recurring until cancelled.
-Surface shutdown cancels registered timers/frames and suppresses pending
+Application shutdown cancels registered timers/frames and suppresses pending
 portable microtask/immediate callbacks. Retained scheduling functions cannot
-restart them after shutdown. Ordinary Promises are not a cancellation API.
+restart them after shutdown. Individual named root unmounts preserve application
+timers/frames and module state; component effects must dispose their own subscriptions
+and clocks. Ordinary Promises are not a cancellation API.
 
 [Runtime evidence](evidence/runtime/README.md) documents the positive and
 negative native checks. This is a partial GF-05 bootstrap: idle callbacks,
@@ -113,7 +164,8 @@ The build currently targets macOS arm64 only. Linux, Windows, iOS, Android and
 Web need their own dependency/toolchain and runtime validation. Installing
 Godot on those systems does not by itself make this GDExtension available.
 
-Multiple surfaces/portals, ecosystem TurboModules, JS worker-thread execution,
+Two named surfaces are exercised by the shared example. Portals, overlapping
+surface input, ecosystem TurboModules, JS worker-thread execution,
 10,000-row virtualized lists and Hermes RSS/heap profiling are not certified.
 The generic list demonstrates reconciliation and scrolling of mounted rows.
 

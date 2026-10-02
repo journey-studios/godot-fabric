@@ -27,8 +27,8 @@ the upstream correction and full contract inventory remain open. See the [baseli
 and [cold-start evidence](docs/evidence/cold-start.md). GF-03/GF-04 and the
 bounded public editing/widget slices of GF-12/GF-17 are now In progress.
 The [typed public form](examples/form/README.md) delivers a single-line
-TextInput/Button slice and explicit prop failures. Types cover only its bounded
-View/Text/control imports; complete facade types, mobile editing, other widgets
+TextInput/Button slice and explicit prop failures. Types cover bounded
+View/Text/control imports and the registration/RootTagContext subset; complete facade types, mobile editing, other widgets
 and differential certification remain open.
 
 GF-05 is **In progress**: upstream TimerManager, portable RN microtask/immediate
@@ -49,6 +49,8 @@ independent state/input/constraints, module stores, unmount/remount and live
 application scheduling with no mounted roots. This is the bounded 2A prototype:
 full bootstrap, pause/resume, overlays/portals, reference comparison and the
 resource/editor SDK are still open. D19–D32 remain pending.
+The [shared-root evidence](docs/evidence/shared-roots/README.md) retains local
+positive/negative checks, real captures and the 12-example regression matrix.
 
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit

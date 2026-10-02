@@ -58,6 +58,11 @@ captures with explanations of starting, pausing and completing a React clock.
 Its local validation and remaining gaps are recorded separately from this
 initial release snapshot.
 
+The [shared-root record](shared-roots/README.md) adds the bounded GF-07
+application owner, original AppRegistry, independent lifetimes and three actual
+captures. Its matrix retains the 12-example regression results; this earlier
+release snapshot and its hashes remain historical.
+
 These images are Godot renderer readbacks of generic fixtures, not desktop
 screenshots. They contain no other applications or game content.
 

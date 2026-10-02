@@ -60,6 +60,7 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 
 ```sh
 npm run example -- form     # public typed Button/TextInput form
+npm run example -- shared   # two registered roots in one Hermes application
 npm start -- --nativewind   # reactive utility classes and manual theme
 npm start -- --chart        # original React Native Chart Kit
 npm start -- --scroll       # generic scroll, filtering and editing demo
@@ -89,6 +90,22 @@ clock example separately.
 | [![Scrolling and editing](docs/evidence/public-controls/scroll-initial.png)](examples/scroll/README.md) | [![Rich text](docs/evidence/public-controls/typography-initial.png)](examples/typography/README.md) | [![Native form rerender](docs/evidence/public-controls/form-changed.png)](examples/form/README.md) |
 
 ## Write React
+
+### Shared application
+
+`npm run example -- shared` mounts HUD and Inventory through the original
+AppRegistry in one Hermes/Fabric application. Each root has local React state;
+an explicit module store updates both. Updating props preserves state, while
+unmounting one tree leaves the other running. The
+[scene and root authoring guide](examples/shared/README.md) show how the
+application owner and surfaces enter Godot's tree.
+
+![Two real Godot roots share module state while preserving local state](docs/evidence/shared-roots/updated.png)
+
+![Inventory unmounts while HUD keeps its state](docs/evidence/shared-roots/unmounted.png)
+
+These are actual renderer readbacks. The [evidence](docs/evidence/shared-roots/README.md)
+records checks and gaps; this is the bounded GF-07 prototype, not full RN/SDK parity.
 
 ### Runtime example
 
@@ -138,6 +155,7 @@ npm package or a drop-in addon with prebuilt binaries.
 ```sh
 npm run test:examples                    # all interactive demos, headless and sequential
 npm run test:runtime                     # native deadline budget and callback error recovery
+npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
