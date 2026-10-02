@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, Pressable } from "./components";
+import { View, Text, Button, Pressable } from "../../src/components";
 
 const observations = { events: [], cleanups: 0 };
 const actions = {};

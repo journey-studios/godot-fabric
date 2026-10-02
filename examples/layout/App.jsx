@@ -1,9 +1,9 @@
 import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
-import { View, Text, Button } from "./components";
+import { View, Text, Button } from "../../src/components";
 import {
   useWindowDimensions,
   windowSubscriptionCount,
-} from "./window-dimensions";
+} from "../../src/window-dimensions";
 
 const observations = { mounts: 0, cleanups: 0, layouts: [], errorsCaught: 0 };
 let controls = {};

@@ -3,25 +3,16 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { ensureGodotBinary } from "./godot-binary.mjs";
+import { examples } from "./examples-catalog.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const binary = await ensureGodotBinary();
-const scenario = process.argv.includes("--typography")
-  ? "typography"
-  : process.argv.includes("--nativewind")
-    ? "nativewind"
-    : process.argv.includes("--chart")
-      ? "chart"
-      : process.argv.includes("--scroll")
-        ? "scroll"
-        : process.argv.includes("--pressable")
-          ? "pressable"
-          : process.argv.includes("--input")
-            ? "input"
-            : process.argv.includes("--layout")
-              ? "layout"
-              : "react";
-const scene = scenario === "react" ? [] : [`res://${scenario}.tscn`];
+const selected = examples.filter((example) => process.argv.includes(`--${example.id}`));
+if (selected.length > 1) throw new Error("Choose one example at a time");
+const example = selected[0] || examples.find((entry) => entry.id === "react");
+if (example.automated) throw new Error("Use npm run example -- parity for the original-native oracle");
+const scenario = example.id;
+const scene = [`res://${example.scene}`];
 const interactive = process.argv.includes("--interactive");
 if (!existsSync(path.join(root, "addons/fabric_godot.dylib")))
   throw new Error("Run npm run setup first");

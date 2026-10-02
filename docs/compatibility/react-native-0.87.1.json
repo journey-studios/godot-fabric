@@ -578,7 +578,7 @@
       "evidence": [
         "src/react-native-platform.jsx",
         "src/components.jsx",
-        "src/input-app.jsx",
+        "examples/input/App.jsx",
         "native/input_adapter.cpp"
       ],
       "note": "Native single-line probe exists; the public react-native export throws."

@@ -1,4 +1,5 @@
 [gd_scene load_steps=2 format=3]
-[ext_resource type="Script" path="res://scripts/layout_validation.gd" id="1"]
-[node name="FabricLayoutValidation" type="Node"]
-script = ExtResource("1")
+
+[ext_resource type="PackedScene" path="res://examples/layout/scene.tscn" id="1"]
+
+[node name="FabricLayoutValidation" instance=ExtResource("1")]

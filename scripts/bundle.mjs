@@ -13,7 +13,7 @@ await mkdir(path.join(root, "build"), { recursive: true });
 await compileNativeWind();
 const result = await build({
   absWorkingDir: root,
-  entryPoints: ["src/app.jsx"],
+  entryPoints: ["examples/entry.jsx"],
   outfile: "build/app.js",
   bundle: true,
   platform: "neutral",
@@ -38,7 +38,7 @@ const result = await build({
         builder.onLoad(
           {
             filter:
-              /(?:src\/(?:nativewind|typography)-app\.jsx|react-native-css-interop\/dist\/doctor\.native\.js)$/,
+              /(?:examples\/(?:nativewind|typography)\/App\.jsx|react-native-css-interop\/dist\/doctor\.native\.js)$/,
           },
           async ({ path: filename }) => ({
             contents: (

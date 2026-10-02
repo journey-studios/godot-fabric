@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Button, Pressable, TextInput } from "./components";
-import { ScrollView } from "./scroll-view";
+import { View, Text, Button, Pressable, TextInput } from "../../src/components";
+import { ScrollView } from "../../src/scroll-view";
 
 const observations = {
   events: [],

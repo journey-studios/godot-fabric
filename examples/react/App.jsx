@@ -11,17 +11,9 @@ import React, {
   useCallback,
   memo,
 } from "react";
-import * as Fabric from "react-native/Libraries/Renderer/implementations/ReactFabric-prod";
-import { View, Text, Button, TextInput } from "./components";
-import { LayoutApp, runLayout, layoutStats } from "./layout-app";
-import { InputApp, runInput, inputStats } from "./input-app";
+import { View, Text, Button, TextInput } from "../../src/components";
 
-import { PressableApp, runPressable, pressableStats } from "./pressable-app";
-import { ChartApp, runChart, chartStats } from "./chart-app";
 
-import { ScrollApp, runScroll, scrollStats } from "./scroll-app";
-import { LineHeightProbe } from "../tests/line-height-probe";
-import { ParityFixture } from "../tests/parity/fixture";
 
 const stats = {
   mounts: 0,
@@ -290,94 +282,13 @@ function App() {
     </View>
   );
 }
-const scrollScenario = globalThis.godotScenario === "scroll";
-const pressableScenario = globalThis.godotScenario === "pressable";
-const layoutScenario = globalThis.godotScenario === "layout";
-const inputScenario = globalThis.godotScenario === "input";
-const chartScenario = globalThis.godotScenario === "chart";
-// Executa o runtime NativeWind somente no cenário dedicado desta surface.
-const nativewind =
-  globalThis.godotScenario === "nativewind"
-    ? require("./nativewind-app")
-    : null;
-const typography =
-  globalThis.godotScenario === "typography"
-    ? require("./typography-app")
-    : null;
-globalThis.GodotApp = {
-  run(name, ...args) {
-    if (typography) return typography.runTypography(name, ...args);
-    if (nativewind) nativewind.runNativeWind(name, ...args);
-    else if (chartScenario) runChart(name, ...args);
-    else if (scrollScenario) runScroll(name, ...args);
-    else if (pressableScenario) runPressable(name, ...args);
-    else if (inputScenario) runInput(name, ...args);
-    else if (layoutScenario) runLayout(name);
-    else controls[name]();
-  },
-  stats() {
-    if (typography) return typography.typographyStats();
-    if (nativewind) return nativewind.nativewindStats();
-    return chartScenario
-      ? chartStats()
-      : scrollScenario
-        ? scrollStats()
-        : pressableScenario
-          ? pressableStats()
-          : inputScenario
-            ? inputStats()
-            : layoutScenario
-              ? layoutStats()
-              : { ...stats, subscribers: listeners.size };
-  },
-  stop() {
-    Fabric.stopSurface(1);
-    nativewind?.stopNativeWind();
-    typography?.stopTypography();
-  },
-};
-Fabric.render(
-  ["parity", "parity-completion-failure"].includes(globalThis.godotScenario) ? (
-    <ParityFixture onComplete={(report) => {
-      if (globalThis.godotScenario === "parity-completion-failure") {
-        globalThis.fabricParityCompletions = (globalThis.fabricParityCompletions || 0) + 1;
-        throw new Error("Expected parity completion failure");
-      }
-      globalThis.fabricParityReport = report;
-    }} />
-  ) : globalThis.godotScenario === "lineheight" ? (
-    <LineHeightProbe />
-  ) : typography ? (
-    React.createElement(typography.TypographyApp)
-  ) : nativewind ? (
-    React.createElement(nativewind.NativeWindApp)
-  ) : chartScenario ? (
-    <ChartApp />
-  ) : scrollScenario ? (
-    <ScrollApp />
-  ) : pressableScenario ? (
-    <PressableApp />
-  ) : inputScenario ? (
-    <InputApp />
-  ) : layoutScenario ? (
-    <LayoutApp />
-  ) : (
-    <Context.Provider value="React Native">
-      <App />
-    </Context.Provider>
-  ),
-  1,
-  null,
-  true,
-  {
-    onCaughtError(error) {
-      console.log("Caught expected:", error.message);
-    },
-    onUncaughtError(error) {
-      throw error;
-    },
-    onRecoverableError(error) {
-      console.warn(error.message);
-    },
-  },
-);
+
+export function ReactApp() {
+  return <Context.Provider value="React Native"><App /></Context.Provider>;
+}
+export function runReact(name) {
+  controls[name]();
+}
+export function reactStats() {
+  return { ...stats, subscribers: listeners.size };
+}

@@ -1,4 +1,9 @@
-# Public release validation
+# Initial public release validation
+
+This record describes the initial public-source snapshot before the examples
+reorganization. Its provenance hashes remain historical; they are not hashes
+of today's moved source files. Subsequent [cold-start/oracle work](cold-start.md)
+has separate evidence.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
@@ -84,8 +89,10 @@ crashes; no automatic retry or suppressed native error was added.
 
 A separate font-only control without Fabric, a GDExtension or application code
 passed its cold import: [editor-import-control.json](editor-import-control.json).
-That control does not attribute the crash to Godot alone. The root cause of
-the initial standalone failure remains unresolved.
+That control does not attribute the crash to Godot alone. The underlying engine root cause remains unresolved. The current runner
+contains the late-extension-discovery failure by preparing the startup list
+before import; [cold-start evidence](cold-start.md) records fresh native CI
+checks without retries.
 
 ## Scope and remaining proof
 
@@ -95,7 +102,8 @@ dependencies, build caches, native framework binaries, raw logs and unrelated
 project documentation are excluded. The publication scanner has negative
 fixtures for local paths, internal references and credential-shaped strings.
 
-These are local runtime results, independent of hosted CI. The Ubuntu contract
-workflow checks JS/Python/compiler contracts and publication scope; it does not
-certify native macOS rendering or additional platforms. [API limits](../API.md)
+These initial results are local runtime evidence. The current workflow also
+runs cold native Godot checks, original RN iOS/Android reference apps and
+differential comparison. Mobile reference jobs do not certify Godot mobile
+builds. [API limits](../API.md)
 describe capabilities that still need dedicated validation.
