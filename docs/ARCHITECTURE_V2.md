@@ -11,7 +11,9 @@ do SDK nem certificação de paridade com React Native. Os exemplos de integraç
 abaixo descrevem APIs propostas e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
-ser implementados. A [arquitetura atual](ARCHITECTURE.md), a
+ser implementados. O [registro de 32 decisões pendentes](ARCHITECTURE_V2_DECISIONS.md)
+detalha alternativas, recomendações e validações para continuar a discussão.
+A [arquitetura atual](ARCHITECTURE.md), a
 [auditoria de paridade](PARITY.md) e o [roadmap para 1.0](../ROADMAP.md) continuam
 descrevendo, respectivamente, a implementação, seus gaps e o status do trabalho.
 
@@ -373,6 +375,10 @@ Essa comparação é uma fotografia da base indicada no início, não um status
 automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
+
+As escolhas pendentes têm IDs estáveis no
+[registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
+As recomendações desse registro não representam aprovação nem implementação.
 
 | Tema | Contrato a discutir |
 | --- | --- |
