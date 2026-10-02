@@ -48,6 +48,18 @@ Failed initial bundle load stops the owner and releases scheduling resources.
 The suite also destroys an owner with a live root/timer and requires complete
 native cleanup while the surface Node survives.
 
+An additional **8 legacy lifecycle checks** verify anonymous scene replacement
+and reentry of the same surface: both receive a fresh implicit owner, bundle
+evaluation and React state. Retired owners are freed, SceneTree metadata names
+the live owner, and scene exit releases scheduling resources. This preserves
+the existing anonymous authoring path without restarting explicit shared owners.
+
+The shared fixture also passes all **35 checks with Godot time_scale 1000**.
+Hermes timer assertions await callback progress against a one-second monotonic
+deadline rather than a Godot scene timer. The accelerated clock reproduces the
+previous zero-root false failure and passes with the corrected wait; callback
+progress, zero roots and released subscriptions remain mandatory assertions.
+
 ## Captures
 
 ![Initial roots](initial.png)
@@ -84,14 +96,17 @@ npm run check:publication
 ```
 
 All **12 interactive examples** passed headless and graphical validation.
-The legacy anonymous examples keep whole-application shutdown on scene exit;
-registered roots use independent unmount. Runtime exception recovery passed,
+The legacy anonymous examples keep whole-application shutdown on scene exit
+and allocate a fresh implicit owner on replacement/reentry; registered roots
+use independent unmount. Runtime exception recovery passed,
 as did two fresh cold-import projects and the existing 13-case Godot oracle.
 The parity completion guard now waits for the deferred implicit owner before
 enforcing exactly one completion callback; its timeout and final assertion remain.
 
 The workflow adds a macOS shared-application lane within native-cold-start and
-uploads the positive/negative reports/logs. Local success is separate from hosted
+uploads the positive/negative, accelerated-clock and legacy reports/logs even
+after a failed step. Stable report copies are removed before each run to avoid
+publishing an earlier success. Local success is separate from hosted
 CI. The existing iOS/Android oracle covers core-ui-v2; it does not yet compare
 the new shared-root fixture.
 
@@ -110,8 +125,9 @@ geometry, public refs/game services and resource/SDK/editor authoring remain ope
 `hide()` preserves effects; it does not implement Activity hidden behavior.
 
 One application Node is manually placed and shared in this prototype; the SDK
-must still enforce primary-application/resource activation. Its stopped owner
-cannot restart. JS, Fabric and Godot still execute on the main thread. Final
+must still enforce primary-application/resource activation. An explicit stopped
+owner cannot restart. The legacy compatibility path replaces its stopped
+implicit owner. JS, Fabric and Godot still execute on the main thread. Final
 activation, shutdown/restart, threading and tooling policies retain their pending
 V2 decision status. This delivery supplies a tested foundation for those contracts
 without claiming complete GF-05/GF-06/GF-07 or full RN parity.

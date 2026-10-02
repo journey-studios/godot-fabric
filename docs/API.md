@@ -104,7 +104,10 @@ Hermes until owner destruction allows diagnostic `evaluate()`/`snapshot()`.
 These diagnostic methods are not the planned `GodotFabric` game-service API.
 
 The legacy anonymous single-root fixtures retain implicit owner lookup, root 1
-and application shutdown on `stop()`/scene exit. They do not demonstrate named
+and application shutdown on `stop()`/scene exit. A new anonymous scene, or
+reentry of the same surface, retires the stopped implicit owner and creates a
+fresh runtime with fresh React/module state. This compatibility path does not
+restart an explicitly shared application. These fixtures do not demonstrate named
 registration or an independent consumer SDK. New UI should use registered roots.
 
 [Shared-root evidence](evidence/shared-roots/README.md) covers two nonoverlapping

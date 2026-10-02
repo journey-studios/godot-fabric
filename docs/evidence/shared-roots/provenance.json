@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "sourceCommit": "87979452552cea349931d3b832f95d32aaab6ad9",
+  "sourceCommit": "51a52e6591d1805f0d7f70d3b4e02fd54a41f7f6",
   "sourceHashes": {
-    "native/application_runtime.cpp": "04e02036dfa513b079589d30df5cdfbfc3c32808cd8986e4aa41763f7d9aafd6",
-    "native/application_runtime.h": "eedccbc611af74da3a7994f1c0f30f46e443df79b162228e92093848658e8c67",
-    "native/fabric_application.cpp": "b6a3da14c273b96d9774a54d9be19bd021a963dd01166a84efc96f9baf82c2ae",
-    "native/fabric_application.h": "dcde0121c98dbadf1c6ea97b61c21553842c09d7688260ec8c7e16497a135bd7",
-    "native/fabric_surface.cpp": "783d9a78d011ce9a577b56b2f7749f379e5ea0ffd7c7fd3dd9abfaa60b6bd5fa",
+    "native/application_runtime.cpp": "7327aeb9b0c06afdba8b0c5801ee30f17d1d24a180828f87a70190fd74673418",
+    "native/application_runtime.h": "b03edb04d8e07ae17c2900a50ce496a9d272f52866d7bfd277fb3264da56964b",
+    "native/fabric_application.cpp": "6fcc4fbf7e3d5fd60d9867e177c8f7ff72c8c6879b9a4ce2e888e83c0baa1303",
+    "native/fabric_application.h": "a05d659f8cd0ca3864869bdef111c3cb757396c42012d2a795c2f4dc053e9cb9",
+    "native/fabric_surface.cpp": "7220d1a49c7e08511893f06cbb0b736ae1bb98f95db059fc7e295c19d5bdd776",
     "native/fabric_surface.h": "1fef412a3171b00e44665362ec6a842b51f38d2d1501c0696f1677e4a8aafac8",
     "native/register.cpp": "3cbd813c56aa7764c377de97518ccced7647953ec30a98fc4c869b618b5c3b49",
     "native/CMakeLists.txt": "cd3bce98b78d758652d9f4fcffb5cd056c1f24cfa368b3339f78c77e749889e8",
@@ -18,12 +18,14 @@
     "examples/entry.jsx": "aea66c2c95478d1d50706b9af5701ab01aeb62ee8b04e990fa13bb3cf5525a3a",
     "examples/catalog.json": "de814e91f249df5409bdca4ec8932767d94c94493bde0436ef8d4ec3b04e0d78",
     "examples/shared/App.jsx": "a0bcc39d161170582f2564871b9980653e37d74160217c5314e78cb9cca6c9ed",
-    "examples/shared/validation.gd": "c5fb016e7de261fe74856d6c4e5318e9c3b25f75fc696518710bd0912b4a024b",
+    "examples/shared/validation.gd": "86a6dab67ff648846a7fbe1374adb1f6b8a204005ed919f83afdf863b9f89fb0",
     "examples/shared/scene.tscn": "a33a520a4671b66bd8ba3c9103638fae57fed5ace6d7f60d2f5c54ea8ef8cb3d",
-    "tests/shared-application-native.test.mjs": "bd81969cb1aad34e704977771ce7f0d8760287bf4973447dad31cb2735e9ac42",
+    "tests/shared-application-native.test.mjs": "2d5a1544c1a5f3c296ad0dc0be81f056e0af75e59e283e5ae43694c521e3768a",
     "tests/shared_application_failures.gd": "ebe295f96a2c05d618fc3f4fe78f93608621baf0e1711a008a2b211799a42419",
     "tests/parity_guards.gd": "04241547d18d405747adba8abf3ef090300416165f41138a7cd68adcf6c9ecb7",
-    "types/react-native.ts": "1d06d52bec2bab0b14482ba75d585419e2a547ffc238183df1e6d77102a06275"
+    "types/react-native.ts": "1d06d52bec2bab0b14482ba75d585419e2a547ffc238183df1e6d77102a06275",
+    "tests/legacy_application.gd": "45d7e5998fd2572a91da5c1450fa88553bf2e0528414c388d66e6fca3b448ae2",
+    ".github/workflows/contracts.yml": "bdc6386d3950143e92d0984a1bda1f39e3a4f8706daa51976fe3aeccfa86c38a"
   },
   "upstreamHashes": {
     "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js": "9f58cfbd0c060422203c10080ed1b520b333a02207125fc5d9b7b315429942a4",

@@ -5,7 +5,7 @@
   "react": "19.2.3",
   "reactNative": "0.87.1",
   "hermes": "250829098.0.17",
-  "sourceCommit": "87979452552cea349931d3b832f95d32aaab6ad9",
+  "sourceCommit": "51a52e6591d1805f0d7f70d3b4e02fd54a41f7f6",
   "runs": [
     {
       "example": "shared",
@@ -13,12 +13,12 @@
       "headless": {
         "checks": 35,
         "report": "build/examples/headless/shared.json",
-        "sha256": "fb1a5fba94e9b4bfcd703f3c023ac5f10cc7f27ad1acd4c8f02718d7d0fb1bee"
+        "sha256": "c051618d81a046536e84c364143c955a5c54a594e873e962fc84d2f852811386"
       },
       "native": {
         "checks": 38,
         "report": "build/examples/native/shared.json",
-        "sha256": "4e53ecb1228f66fc128ddba4c32c6f711d9ef112ead2804646cfbd69b2f59ef4"
+        "sha256": "27f0e109227ff747c8e84643e2110c22385d170c2dac29d17bc4027da09dd8d6"
       }
     },
     {
@@ -46,7 +46,7 @@
       "native": {
         "checks": 33,
         "report": "build/examples/native/runtime.json",
-        "sha256": "f619063f3ec8de7650737540d23531d2ac70d47a3087961be58f1652572c05f3"
+        "sha256": "9d44c5304b5f4b3250dac88f986ef32b4d10da285e273fd5504b2aba46b4b57a"
       }
     },
     {
@@ -74,7 +74,7 @@
       "native": {
         "checks": 36,
         "report": "build/examples/native/react.json",
-        "sha256": "5ea9c7958abfee9231460f37454222de0b453ca815f17de89ed1ee86916264c1"
+        "sha256": "5a86fb7551f314cb137566b68abf4553abf29b9a53835d7528c36f65e0ee5c11"
       }
     },
     {
@@ -97,12 +97,12 @@
       "headless": {
         "checks": 45,
         "report": "build/examples/headless/input.json",
-        "sha256": "a11049fb7b6f8667eef7b5eb4866803896be1287505ae5cf479fb961816b3d71"
+        "sha256": "e599ae5646a7cd496e75b7e9bc7c657a64844ee6348592a234b168cf91541373"
       },
       "native": {
         "checks": 45,
         "report": "build/examples/native/input.json",
-        "sha256": "67ee2dd650de7ed54b06b75cf07d2088f428b096c033ad857dafd8abb72e642c"
+        "sha256": "bba80ee9135e4b8a81a995e0ee6e86111780f9a2f709aead692daed2c343bce6"
       }
     },
     {
@@ -111,12 +111,12 @@
       "headless": {
         "checks": 43,
         "report": "build/examples/headless/pressable.json",
-        "sha256": "9a4010068e239ef9b034d0ddb61fa0120e34eb8f46773d0fffb53b227b4b54c6"
+        "sha256": "b94ed63f0eff025f8a402c5a2d3cdaaa83a3b9a2a8744da7de191b04d744163e"
       },
       "native": {
         "checks": 47,
         "report": "build/examples/native/pressable.json",
-        "sha256": "72c9ebf2b131698f495c598e65e2c3264ecd484e7428d3cf8ce8af1ed6acede5"
+        "sha256": "4fb8ba065d5d9721f9b613bc28ab7947643f1d91af50029bcfd9c82ab2892181"
       }
     },
     {
@@ -125,12 +125,12 @@
       "headless": {
         "checks": 62,
         "report": "build/examples/headless/scroll.json",
-        "sha256": "2d093e6742eb710f318c94a8d868bda0a6138392a79491adc0c537b9b65b958d"
+        "sha256": "da7c4ed8f34e1c6631d2b5980c98b411dd730c2ba9358a22b85980add0a4aa12"
       },
       "native": {
         "checks": 68,
         "report": "build/examples/native/scroll.json",
-        "sha256": "b03f19590c0d6a5f50abfb2e138020eff383f37f10ad26dd79bd59f4b1105796"
+        "sha256": "7f8bcf2c4149b944eebd642548e032c47e0f8bbd4ab928bed2600d3f73898847"
       }
     },
     {
@@ -139,12 +139,12 @@
       "headless": {
         "checks": 34,
         "report": "build/examples/headless/chart.json",
-        "sha256": "98abc85dac7bd6b365e55e75965172599b2782f993c6041f19da3fdf3221c3be"
+        "sha256": "f6deece713c88c4f467517031aaf0f3d5a7e7b4613929746f0f1b97c80daf3af"
       },
       "native": {
         "checks": 34,
         "report": "build/examples/native/chart.json",
-        "sha256": "c5d52cc7b1f241fdce9cf48ceddf7a39c54c3ee545904ea6e12233c0a07d8d4c"
+        "sha256": "d253db994d1c04d22e468ec539047ca707deafed5456b87717841a169552dddb"
       }
     },
     {
@@ -158,7 +158,7 @@
       "native": {
         "checks": 58,
         "report": "build/examples/native/nativewind.json",
-        "sha256": "6a65d705caa24886a804cb90d095d919c558afb5274eda03c1866bb7df032931"
+        "sha256": "dfdc208f5b5c880178b8adb1d59f53e7312ad5b5208b75cb2e884030f93b43a6"
       }
     },
     {
@@ -172,7 +172,7 @@
       "native": {
         "checks": 63,
         "report": "build/examples/native/typography.json",
-        "sha256": "7d748afa44bed5838b19575489814f418cb2c3db9b3d52b447597ad72907ced5"
+        "sha256": "b7f5d179a2b1dc659318bdf0215c5420db597bfdf14221525639fbbb09b865fc"
       }
     }
   ],
@@ -200,6 +200,16 @@
       "cases": 13,
       "report": "build/parity-godot.json",
       "sha256": "3a9b984e3ef394480e46a8e4824e00613de03b939e4884206e5e73c8de18400a"
+    },
+    "legacyApplicationLifecycle": {
+      "checks": 8,
+      "report": "build/legacy-application-report.json",
+      "sha256": "22419e0b03fd19f664a6f9647c7cc19a41a56a0acbf435aa62c6f8497035c5b2"
+    },
+    "acceleratedGodotClock": {
+      "checks": 35,
+      "report": "build/shared-clock-report.json",
+      "sha256": "8d37229c6d63ce6d9df361a0df381117775fdb8522f8b37013a1f9b674ef1bdd"
     }
   },
   "scope": "Local native validation, not full React Native parity. Shared-root behavior has no original iOS/Android multi-root reference result yet."
