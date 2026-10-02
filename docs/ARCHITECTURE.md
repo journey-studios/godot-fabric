@@ -1,5 +1,13 @@
 # Architecture
 
+This document describes the current implementation. The
+[Architecture 2.0 direction](ARCHITECTURE_V2.md) consolidates the approved
+application/surface, layout/host context, Godot integration, input, UI time and native adapter
+discovery, binary compatibility, spec/Codegen, native component behavior and library
+reuse classification contracts, plus the self-contained SDK distribution direction. Its
+[decision register](ARCHITECTURE_V2_DECISIONS.md) tracks approved and pending
+choices; the new interfaces are not yet implemented.
+
 ```mermaid
 flowchart LR
   JSX[React and NativeWind JSX] --> Bundle[esbuild and original RN Babel transforms]

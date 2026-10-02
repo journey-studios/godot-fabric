@@ -154,7 +154,8 @@ imports through the editor and rejects native errors, script errors, crashes,
 timeouts and exit without the acceptance marker. Headless proves native
 contracts; captures independently exercise rendering and logical Viewport input.
 
-[Architecture](docs/ARCHITECTURE.md) · [API](docs/API.md) ·
+[Architecture](docs/ARCHITECTURE.md) · [Architecture 2.0 direction](docs/ARCHITECTURE_V2.md) ·
+[V2 decisions and practical tradeoffs](docs/ARCHITECTURE_V2_DECISIONS.md) · [API](docs/API.md) ·
 [1.0 roadmap](ROADMAP.md) · [Parity audit](docs/PARITY.md) ·
 [Findings](docs/research/README.md) · [Validation evidence](docs/evidence/README.md) ·
 [Third-party licenses](THIRD_PARTY_NOTICES.md)
