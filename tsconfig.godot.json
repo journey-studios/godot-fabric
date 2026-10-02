@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "ESNext"
+    ],
+    "types": [
+      "react"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "paths": {
+      "react-native": [
+        "./types/react-native.ts"
+      ]
+    },
+    "moduleSuffixes": [
+      ".godot",
+      ".native",
+      ""
+    ]
+  },
+  "include": [
+    "examples/form/**/*.tsx",
+    "tests/types/**/*.tsx"
+  ]
+}

@@ -13,6 +13,17 @@ system integration, developer tooling and distributable builds. The
 [roadmap](../ROADMAP.md) owns live work status; this document records the dated
 audit and the meaning of parity.
 
+## Subsequent checkpoint — 2026-10-02
+
+Public Button and single-line TextInput now have a typed TSX form, native
+editing/ref/activation checks and explicit unsupported-prop errors. The
+[API](API.md), [live status board](compatibility/BASELINE.md) and
+[public control evidence](evidence/public-controls/README.md) describe that
+bounded implementation. The tables below and their machine-readable 97-name
+audit remain the original 2026-10-01 snapshot; they must not be read as current
+export counts. Full types/props, mobile editing and differential certification
+remain open in GF-03/GF-04/GF-12/GF-17.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

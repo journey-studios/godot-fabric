@@ -10,7 +10,9 @@
     "src/react-native-platform.jsx",
     "src/svg.jsx",
     "src/unsupported-reanimated.js",
-    "src/unsupported-safe-area.js"
+    "src/unsupported-safe-area.js",
+    "types/react-native.ts",
+    "tests/types/consumer.tsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -103,7 +105,8 @@
         "ImageBackground",
         "KeyboardAvoidingView",
         "VirtualizedList",
-        "TextInput"
+        "TextInput",
+        "Button"
       ]
     },
     {
@@ -131,6 +134,18 @@
       "toolingDependencies": [
         "@react-native/babel-preset",
         "tailwindcss"
+      ],
+      "usedExports": [
+        {
+          "pattern": "types/react-native.ts",
+          "exports": [
+            "View",
+            "Text",
+            "TextInput",
+            "Button",
+            "StyleSheet"
+          ]
+        }
       ]
     }
   ]

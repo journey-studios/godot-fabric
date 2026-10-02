@@ -31,3 +31,11 @@ data, unsupported behavior and lifecycle cleanup.
 The native checks additionally require the acceptance marker and reject script
 errors, runtime errors, crashes and timeouts. Generated reports are local and
 are overwritten by another individual check.
+
+## Renderer captures
+
+These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).
+
+![Original Chart Kit with synthetic data](../../docs/evidence/public-controls/chart-initial.png)
+
+![Native chart selection and tooltip](../../docs/evidence/public-controls/chart-selected.png)

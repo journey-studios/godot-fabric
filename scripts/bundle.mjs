@@ -3,6 +3,7 @@ import { transformAsync } from "@babel/core";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { godotExtensions } from "./platform-resolution.mjs";
 import {
   compileNativeWind,
   assertNativeWindBundle,
@@ -20,7 +21,7 @@ const result = await build({
   format: "iife",
   define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
   mainFields: ["main"],
-  resolveExtensions: [".native.js", ".js", ".jsx", ".json"],
+  resolveExtensions: godotExtensions,
   metafile: true,
   plugins: [
     {

@@ -30,3 +30,11 @@ callbacks and preservation of React/native identity.
 The native checks additionally require the acceptance marker and reject script
 errors, runtime errors, crashes and timeouts. Generated reports are local and
 are overwritten by another individual check.
+
+## Renderer captures
+
+These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).
+
+![Responsive layout at wide width](../../docs/evidence/public-controls/layout-wide.png)
+
+![Same layout at narrow width](../../docs/evidence/public-controls/layout-narrow.png)

@@ -30,7 +30,7 @@ register that font or replace/remove `fontFamily`.
 
 This repository's runner supplies platform aliases and the native runtime.
 It is still a prototype, not a standalone npm package or prebuilt SDK.
-Accessibility/keyboard activation, public TextInput, OS services and mobile
+Pressable accessibility/keyboard activation, complete public editing, OS services and mobile
 Godot builds remain [roadmap gaps](../../ROADMAP.md).
 
 ## Proof
@@ -46,3 +46,11 @@ It does not call the React state setter through the diagnostic bridge.
 Capture also checks real glyph pixels and that the two value readbacks differ.
 See [retained example evidence](../../docs/evidence/examples/README.md). These
 logical-event checks do not certify physical OS input or complete RN parity.
+
+## Renderer captures
+
+These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).
+
+![Public counter at mount](../../docs/evidence/public-controls/counter-initial.png)
+
+![Same native Text after two pointer presses](../../docs/evidence/public-controls/counter-updated.png)
