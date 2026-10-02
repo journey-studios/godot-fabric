@@ -5,7 +5,7 @@
   "react": "19.2.3",
   "reactNative": "0.87.1",
   "hermes": "250829098.0.17",
-  "sourceCommit": "748eaa0eb18057507ef3746e0d676791e6757ab4",
+  "sourceCommit": "87979452552cea349931d3b832f95d32aaab6ad9",
   "runs": [
     {
       "example": "shared",

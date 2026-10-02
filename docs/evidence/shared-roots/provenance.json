@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceCommit": "748eaa0eb18057507ef3746e0d676791e6757ab4",
+  "sourceCommit": "87979452552cea349931d3b832f95d32aaab6ad9",
   "sourceHashes": {
     "native/application_runtime.cpp": "04e02036dfa513b079589d30df5cdfbfc3c32808cd8986e4aa41763f7d9aafd6",
     "native/application_runtime.h": "eedccbc611af74da3a7994f1c0f30f46e443df79b162228e92093848658e8c67",
@@ -20,7 +20,7 @@
     "examples/shared/App.jsx": "a0bcc39d161170582f2564871b9980653e37d74160217c5314e78cb9cca6c9ed",
     "examples/shared/validation.gd": "c5fb016e7de261fe74856d6c4e5318e9c3b25f75fc696518710bd0912b4a024b",
     "examples/shared/scene.tscn": "a33a520a4671b66bd8ba3c9103638fae57fed5ace6d7f60d2f5c54ea8ef8cb3d",
-    "tests/shared-application-native.test.mjs": "42b239dec5520fb9d9a48a9ebd82a8a5f1e62a2ecbadf0220825fdcb61a87f74",
+    "tests/shared-application-native.test.mjs": "bd81969cb1aad34e704977771ce7f0d8760287bf4973447dad31cb2735e9ac42",
     "tests/shared_application_failures.gd": "ebe295f96a2c05d618fc3f4fe78f93608621baf0e1711a008a2b211799a42419",
     "tests/parity_guards.gd": "04241547d18d405747adba8abf3ef090300416165f41138a7cd68adcf6c9ecb7",
     "types/react-native.ts": "1d06d52bec2bab0b14482ba75d585419e2a547ffc238183df1e6d77102a06275"

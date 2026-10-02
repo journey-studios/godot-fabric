@@ -95,6 +95,12 @@ uploads the positive/negative reports/logs. Local success is separate from hoste
 CI. The existing iOS/Android oracle covers core-ui-v2; it does not yet compare
 the new shared-root fixture.
 
+The initial hosted contracts job passed tests and exposed a static-analysis
+false import: native report/log URLs were resolved as modules only when those
+artifacts were absent. The runner now uses filesystem paths. A fresh no-cache
+analyzer with the three artifacts absent rejects the prior source and passes
+the corrected source; runtime checks and report assertions remain enforced.
+
 ## Remaining gaps
 
 GF-07 remains In progress. Full bootstrap/dev renderer, original RN multi-root
