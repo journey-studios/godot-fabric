@@ -1,6 +1,6 @@
 # Godot Fabric — Arquitetura 2.0
 
-**Status:** documento de direção; V2-D01 a V2-D16 aprovadas, V2-D17 a V2-D32 pendentes.
+**Status:** documento de direção; V2-D01 a V2-D17 aprovadas, V2-D18 a V2-D32 pendentes.
 
 **Data:** 2026-10-02.
 
@@ -12,7 +12,7 @@ ilustram a direção aprovada e ainda não executam no projeto atual.
 
 Este documento registra as decisões da discussão e os contratos que precisam
 ser implementados. O [registro das 32 decisões](ARCHITECTURE_V2_DECISIONS.md)
-identifica 16 aprovações e 16 escolhas pendentes, com seus cenários de validação.
+identifica 17 aprovações e 15 escolhas pendentes, com seus cenários de validação.
 Cada ponto pendente apresenta uma situação prática, consequências dos caminhos
 e detalhes ainda a especificar. O registro distingue escolhas de produto,
 contratos públicos e mecanismos internos a validar por evidência.
@@ -30,8 +30,8 @@ A direção geral busca uma experiência integrada ao Godot: configurar o addon,
 adicionar uma surface e executar o jogo. Distribuição do SDK, ferramentas de
 build e exportação ainda precisam de discussão específica. Descoberta de
 extensões nativas segue V2-D13, compatibilidade binária segue V2-D14 e schemas/
-Codegen seguem V2-D15. O contrato funcional dos componentes segue V2-D16;
-a classificação do reuso das bibliotecas continua pendente em V2-D17.
+Codegen seguem V2-D15. O contrato funcional dos componentes segue V2-D16 e
+a classificação do reuso das bibliotecas segue V2-D17.
 
 Os temas consolidados são:
 
@@ -39,9 +39,9 @@ Os temas consolidados são:
 2. Dimensões, contextos de UI, layout adaptativo e NativeWind.
 3. Comunicação entre Godot e JavaScript, com gestão de estado independente.
 4. Autoridade sobre a árvore, input e tempo da UI.
-5. Descoberta, compatibilidade, interfaces e comportamento dos adapters nativos.
+5. Adapters nativos e classificação da compatibilidade das bibliotecas.
 
-As direções de V2-D01 a V2-D16 foram aprovadas em 2026-10-02 e estão
+As direções de V2-D01 a V2-D17 foram aprovadas em 2026-10-02 e estão
 consolidadas abaixo. A aprovação define a direção dos contratos; assinaturas
 finais, detalhes que as recomendações deixaram para especificação e provas de
 comportamento continuam necessários. As decisões restantes estão listadas ao final.
@@ -517,7 +517,7 @@ surface preserva seus effects. Exercitar suspensão/resume quando o OS permitir,
 com timeouts e intervals vencidos, frames e reconexão dos dados; verificar o
 contrato de retomada contra o RN pertinente, sem perder acontecimentos do jogo.
 
-## Tema 5 — Extensões nativas, descoberta, compatibilidade e componentes
+## Tema 5 — Extensões nativas e compatibilidade das bibliotecas
 
 ### V2-D13
 
@@ -656,6 +656,43 @@ refs/commands e tratamento de operações após desmontagem ainda precisam de
 especificação. A aprovação define a direção funcional e não certifica os
 componentes atuais nem fecha os gaps de paridade.
 
+### V2-D17
+
+**Priorizar bibliotecas originais e distinguir origem de alcance comprovado:**
+executar seu JavaScript/specs e implementar os backends Godot necessários,
+preservando as interfaces pertinentes. Um adapter Godot é parte da integração
+da plataforma; sua presença é distinta de substituir a biblioteca inteira por
+uma implementação local com API semelhante.
+
+| Informação | O que a evidência precisa identificar |
+| --- | --- |
+| Origem | JavaScript/specs originais, adapter nativo e eventuais facades substitutas, com arquivos e versões identificados |
+| Alcance | Plataforma, capacidades e comportamentos exercitados, resultados e limitações da versão declarada |
+
+Documentar suporte por biblioteca, versão, plataforma e capacidades validadas.
+Suporte parcial acompanha o progresso rumo à paridade, com gaps explícitos.
+Implementações alternativas que substituam uma biblioteca por uma API nossa
+devem ter nome e escopo próprios. Usar o mesmo nome de import não comprova a
+origem dos arquivos executados nem o alcance dos contratos implementados.
+
+Na base consultada, o [experimento de gráficos](../examples/chart/README.md)
+usa Chart Kit original com uma implementação SVG local limitada. A prova
+identifica os comportamentos exercitados nesse cenário; suporte integral ao
+pacote upstream `react-native-svg` exige outros contratos. A
+[arquitetura consultada](ARCHITECTURE.md#boundaries) também identifica os
+transforms/runtime originais de NativeWind; essa origem não substitui a
+validação dos comportamentos de cada biblioteca.
+
+Um consumidor independente instala a versão declarada e executa os exemplos.
+Registrar pacote, adapter, interfaces, configurações necessárias de resolução
+e limitações; aliases internos não publicados não podem ser uma dependência
+oculta dessa prova. O consumo das specs e o contrato funcional seguem V2-D15
+e V2-D16; critérios completos de certificação continuam pendentes em V2-D31.
+
+Rótulos públicos, fixtures por biblioteca e tratamento das APIs fora do subset
+ainda precisam de especificação. Esta aprovação define a classificação e não
+amplia o suporte comprovado das bibliotecas atuais.
+
 ### Aceitação do tema 5
 
 Um consumidor instala dois adapters externos e os utiliza sem modificar o core.
@@ -687,6 +724,12 @@ Um campo controlado adicional cobre digitação, seleção e updates atrasados,
 comparando o comportamento com o RN pertinente. Registrar o ciclo observado,
 incluindo casos negativos; um print isolado não comprova esse contrato inteiro.
 
+Um projeto consumidor separado reproduz a instalação e execução da biblioteca
+na versão declarada. A evidência identifica o código original, o backend Godot
+e quaisquer substituições, junto do target e capacidades exercitadas. Conferir
+que uma prova parcial ou alternativa é descrita com seu alcance, e que toda
+configuração necessária de resolução foi publicada para o consumidor.
+
 ## Distância entre a direção e a implementação consultada
 
 | Área | Base consultada | Direção deste documento |
@@ -706,14 +749,14 @@ automaticamente atualizado da migração.
 
 ## Próximos temas ainda abertos
 
-As 16 escolhas pendentes, V2-D17 a V2-D32, têm IDs estáveis no
+As 15 escolhas pendentes, V2-D18 a V2-D32, têm IDs estáveis no
 [registro de decisões da v2.0](ARCHITECTURE_V2_DECISIONS.md).
-V2-D01 a V2-D16 já estão aprovadas. As recomendações das entradas pendentes
+V2-D01 a V2-D17 já estão aprovadas. As recomendações das entradas pendentes
 continuam em discussão; nenhum desses status certifica implementação.
+Detalhes de especificação das direções já aprovadas continuam necessários.
 
 | Tema | Contrato a discutir |
 | --- | --- |
-| Extensões e adapters | Classificação do reuso das bibliotecas; direções de descoberta, compatibilidade binária, specs/Codegen e contrato funcional dos componentes aprovadas |
 | Builder e resolução | Toolchain privada, Metro/Babel, condições de packages, identidade única de React e configuração do projeto |
 | Ativação e desenvolvimento | Gerações de artefatos, falhas de avaliação/montagem, reload, Fast Refresh e encerramento seguro |
 | Assets e exportação | Recursos, manifestos, host versus target, empacotamento e falhas verificáveis de export |

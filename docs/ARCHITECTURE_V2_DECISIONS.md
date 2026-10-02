@@ -1,6 +1,6 @@
 # Godot Fabric — Registro de decisões da arquitetura 2.0
 
-**Status:** 16 decisões aprovadas (V2-D01 a V2-D16) e 16 pendentes (V2-D17 a V2-D32).
+**Status:** 17 decisões aprovadas (V2-D01 a V2-D17) e 15 pendentes (V2-D18 a V2-D32).
 
 **Data:** 2026-10-02.
 
@@ -8,9 +8,9 @@ Este documento complementa a [direção da arquitetura 2.0](ARCHITECTURE_V2.md).
 Ele detalha os contratos ainda necessários, incluindo lacunas da proposta de
 migração e pontos deixados abertos nos temas discutidos.
 
-As direções de V2-D01 a V2-D16 foram aprovadas em 2026-10-02. Seus contratos
+As direções de V2-D01 a V2-D17 foram aprovadas em 2026-10-02. Seus contratos
 estão consolidados na arquitetura principal; as alternativas dessas entradas
-ficam como histórico da escolha. V2-D17 a V2-D32 continuam como propostas.
+ficam como histórico da escolha. V2-D18 a V2-D32 continuam como propostas.
 A aprovação não implementa APIs nem muda o status do [roadmap para 1.0](../ROADMAP.md).
 Uma aplicação compartilhada, AppRegistry, a separação entre janela e surface,
 gestão de estado independente e o nome público `GodotFabric` continuam sendo
@@ -30,8 +30,8 @@ sequência de implementação nem cria novos itens de roadmap.
 ## Como entender o que está sendo decidido
 
 As entradas aprofundadas apresentam situação de uso, consequências dos caminhos
-e detalhes a especificar. V2-D11 a V2-D16 estão aprovados na direção discutida,
-com retomada, contextos e integração nativa ainda a especificar. V2-D17 a V2-D32
+e detalhes a especificar. V2-D11 a V2-D17 estão aprovados na direção discutida,
+com retomada, contextos e integração nativa ainda a especificar. V2-D18 a V2-D32
 continuam como propostas, incluindo seus exemplos de comportamento;
 nenhuma entrada descreve implementação comprovada.
 
@@ -54,7 +54,6 @@ automaticamente um ponto pendente.
 
 | Discussão | O que precisa ficar claro antes de aprovar |
 | --- | --- |
-| [Extensões](#v2-d17), D17 | Classificação do reuso das libs; descoberta, compatibilidade binária, specs/Codegen e comportamento dos componentes aprovados em D13–D16 |
 | [Ferramentas](#v2-d18), D18–D21 | Instalar, escrever TSX e apertar Play, incluindo dependências |
 | [Desenvolvimento e distribuição](#v2-d22), D22–D27 | Salvar código, errar, exportar ou fechar o jogo |
 | [Execução e tipos](#v2-d28), D28–D29 | O que preservar ao otimizar e publicar APIs |
@@ -101,7 +100,7 @@ não exigem aprovações rápidas sem exemplos.
 | [V2-D14](#v2-d14) | Compatibilidade binária do SDK e dos adapters | Aprovada |
 | [V2-D15](#v2-d15) | Schemas, Codegen e artefatos gerados | Aprovada |
 | [V2-D16](#v2-d16) | Contrato completo de um componente nativo | Aprovada |
-| [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa | Pendente |
+| [V2-D17](#v2-d17) | Reuso da biblioteca original versus uma facade alternativa | Aprovada |
 | [V2-D18](#v2-d18) | Distribuição do SDK e dependências do projeto | Pendente |
 | [V2-D19](#v2-d19) | Builder, protocolo, cache e workspaces | Pendente |
 | [V2-D20](#v2-d20) | Resolução de módulos e identidade única de React | Pendente |
@@ -520,15 +519,15 @@ esse ciclo inteiro.
 
 ### V2-D17
 
+**Status:** aprovada na direção recomendada em 2026-10-02.
+
+**Contrato aprovado:** [V2-D17 na arquitetura consolidada](ARCHITECTURE_V2.md#v2-d17).
+
 **Decisão:** como distinguir uma biblioteca original funcionando sobre nosso
 backend de uma API alternativa que apenas oferece aparência semelhante.
 
-- **Alternativas:** executar JS/specs originais com adapter, substituir o pacote
+- **Alternativas avaliadas:** executar JS/specs originais com adapter, substituir o pacote
   inteiro por facade local ou publicar uma alternativa com outro nome.
-- **Recomendação:** classificar e nomear essas situações separadamente.
-  Certificação de uma biblioteca original exige seu código e contratos relevantes.
-  O SVG limitado atual não prova execução do pacote upstream inteiro; NativeWind
-  exige validar runtime além de transforms.
 - **Validação:** consumidor independente instala a versão declarada, e a prova
   identifica exatamente quais arquivos e adapters executam.
 
@@ -543,7 +542,7 @@ reivindicar contratos certificados. Substituir todo o pacote por facade parecida
 pode ser útil, mas exige outra descrição de compatibilidade. Publicar alternativa
 com outro nome explicita a dependência, exigindo mudar imports do consumidor.
 
-**Como ler a recomendação:** identificar JS original, adapter nativo e facades
+**Como ler o contrato aprovado:** identificar JS original, adapter nativo e facades
 substitutas na evidência. Suporte parcial pode ser declarado com versão e limites,
 sem esconder um experimento útil. O objetivo continua ampliar reuso do RN original.
 
@@ -1147,15 +1146,14 @@ de entrega, sem marcar itens shipped pela aprovação de documentos.
 
 ## Ordem sugerida para continuar a discussão
 
-1. Definir a classificação do reuso de bibliotecas: V2-D17.
-   As direções de aplicação, comunicação, árvore, input, tempo, contextos, descoberta,
-   compatibilidade binária, specs/Codegen e comportamento dos componentes de
-   V2-D01 a V2-D16 estão aprovadas;
-   seus detalhes e provas continuam na especificação e validação.
-2. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
-3. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
-4. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
+V2-D01 a V2-D17 estão aprovadas, incluindo aplicação, comunicação, árvore,
+input, tempo, contextos, adapters e classificação do reuso de bibliotecas.
+Seus detalhes e provas continuam na especificação e validação.
+
+1. Definir experiência do consumidor e build: V2-D18 a V2-D21, V2-D29 e V2-D30.
+2. Fechar ativação, desenvolvimento, export e encerramento: V2-D22 a V2-D27.
+3. Fechar execução/performance, certificação e migração: V2-D28, V2-D31 e V2-D32;
    seus requisitos devem orientar as etapas anteriores desde o início.
 
-Essa sequência é recomendação de discussão. As decisões de V2-D17 em diante,
+Essa sequência é recomendação de discussão. As decisões de V2-D18 em diante,
 a implementação e suas prioridades finais continuam em aberto.
