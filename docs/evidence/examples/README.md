@@ -21,7 +21,8 @@ These are local runtime results; the current PR's hosted jobs are separate proof
 | **Total** | **385** | **422** |
 
 **807 passing assertions in 18 sequential runs.** [matrix.json](matrix.json)
-links every retained per-case report and its count. Reports contain native
+names every per-case report and its count. The reports are not versioned:
+`npm run test:examples` regenerates them under `build/examples/`. They contain native
 snapshots, React observations and complete assertion results. The runner removes
 old output and requires a fresh matching scene/display mode, nonempty passing
 checks and the acceptance marker. Errors, crashes and timeouts fail the run.
@@ -64,7 +65,7 @@ Checks cover disabled decrement, pressed styling, 0 → 1 → 2 → 1 → 0 upda
 one React mount, preserved native identity and balanced unmount. After stopping,
 Controls/tags, contacts/responder and timers are empty and React cleanup ran once.
 The graphical lane checks actual glyph pixels and changed value-region readback
-hashes. Reports: [headless](counter-headless.json), [native](counter-native.json).
+hashes. Its headless and native reports are regenerated under `build/examples/`.
 
 ![Initial public counter](counter-initial.png)
 
