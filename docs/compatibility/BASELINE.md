@@ -115,6 +115,9 @@ This is the first GF-01/GF-02 delivery from the
   mobile reference comparison. Direct import after deleting `.godot` still
   bypasses the
   [documented engine containment](../evidence/cold-start.md).
+  The 2026-10-02 follow-up aligns the extension minimum with the tested 4.7.2
+  runtime, checks the engine before setup downloads and covers failure cleanup
+  and stale-report rejection. The upstream editor crash remains open.
 - **GF-01:** the inventory, drift gate, status board and original-native oracle
   are implemented. Behavioral certification remains in progress: core-ui-v2
   covers thirteen cases, not the whole inventory.
