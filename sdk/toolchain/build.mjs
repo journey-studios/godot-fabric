@@ -18,6 +18,11 @@ function projectPath(root, resource) {
   if (!resource.startsWith("res://")) throw new Error("Use res:// project paths");
   const result = path.resolve(root, resource.slice(6));
   if (!result.startsWith(root + path.sep)) throw new Error("Path escapes the project");
+  let ancestor = result;
+  while (!existsSync(ancestor)) ancestor = path.dirname(ancestor);
+  const physical = realpathSync(ancestor);
+  if (physical !== root && !physical.startsWith(root + path.sep))
+    throw new Error("Resource path resolves outside the project");
   return result;
 }
 
@@ -30,6 +35,7 @@ async function main() {
   if (!bundleArg.startsWith("res://.godot_fabric/") || !bundleArg.endsWith(".js"))
     throw new Error("This prototype writes bundles only under res://.godot_fabric/");
   if (!existsSync(entry)) throw new Error("Entry missing: " + entryArg);
+  if (!realpathSync(entry).startsWith(project + path.sep)) throw new Error("Entry must remain inside the project");
   if (entry === outfile) throw new Error("Entry and output must differ");
   const manifest = JSON.parse(await readFile(path.join(sdk, "manifest.json"), "utf8"));
   if (process.version !== "v" + manifest.node) throw new Error("Use the provisioned private Node " + manifest.node);
@@ -39,7 +45,11 @@ async function main() {
     const version = dependencies.dependencies?.[name] ?? dependencies.devDependencies?.[name] ?? dependencies.peerDependencies?.[name];
     if (version && version !== manifest[name]) throw new Error(`${name} must match SDK version ${manifest[name]}`);
   }
-  for (const name of ["babel.config.js", "babel.config.cjs", ".babelrc", ".babelrc.json"])
+  for (const name of Object.keys(dependencies.dependencies ?? {}))
+    if (!["react", "react-native"].includes(name) && !existsSync(path.join(project, "node_modules", name, "package.json")))
+      throw new Error(`Missing project dependency ${name}; install it explicitly with the project's package manager`);
+  if (dependencies.babel) throw new Error("Project Babel configuration is not supported by this prototype: package.json");
+  for (const name of ["babel.config.js", "babel.config.cjs", "babel.config.mjs", "babel.config.json", "babel.config.cts", ".babelrc", ".babelrc.json", ".babelrc.js", ".babelrc.cjs", ".babelrc.mjs", ".babelrc.cts"])
     if (existsSync(path.join(project, name))) throw new Error("Project Babel configuration is not supported by this prototype: " + name);
   const typecheck = spawnSync(process.execPath, [requireSdk.resolve("typescript/bin/tsc"), "--project", path.join(project, "tsconfig.json")], {
     cwd: project, encoding: "utf8", timeout: 30000,

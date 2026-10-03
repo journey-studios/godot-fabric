@@ -44,12 +44,16 @@ async function main() {
   await writeFile(typePath, (await readFile(typePath, "utf8")).replace("../node_modules/", "../toolchain/node_modules/"));
   await writeFile(path.join(output, "fabric.gdextension"), (await readFile(path.join(root, "fabric.gdextension"), "utf8"))
     .replaceAll("res://addons/fabric_godot.dylib", "res://addons/godot_fabric/native/fabric_godot.dylib"));
+  const sourceFiles = {};
+  for (const file of run("git", ["-C", root, "ls-files", "-z", "sdk", "src", "types", "native", "dependencies.json", "package-lock.json", "fabric.gdextension"]).split("\0").filter(Boolean))
+    sourceFiles[file] = hash(await readFile(path.join(root, file)));
   await writeFile(path.join(output, "manifest.json"), JSON.stringify({
     schemaVersion: 1, experimental: true, host: "macOS arm64", godot: lock.godot.version,
     react: lock.react, "react-native": lock["react-native"].version, node: lock.node.version,
     nodeArchiveSha256: lock.node.sha256,
     sourceCommit: run("git", ["-C", root, "rev-parse", "HEAD"]),
     sourceDirty: run("git", ["-C", root, "status", "--porcelain"]).length > 0,
+    sourceFiles,
     nativeSha256: hash(await readFile(path.join(output, "native/fabric_godot.dylib"))),
     lockfileSha256: hash(await readFile(path.join(root, "package-lock.json"))),
   }, null, 2) + "\n");

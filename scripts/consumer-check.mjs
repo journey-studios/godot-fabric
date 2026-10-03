@@ -3,7 +3,7 @@ import path from "node:path";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
-import { cp, mkdir, mkdtemp, readFile, writeFile, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, writeFile, rm, rename, symlink } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { ensureGodotBinary } from "./godot-binary.mjs";
 
@@ -13,6 +13,7 @@ const directory = path.join(root, "build", "consumer");
 await mkdir(directory, { recursive: true });
 await rm(path.join(directory, "report.json"), { force: true });
 const project = await mkdtemp(path.join(tmpdir(), "godot-fabric-consumer-"));
+const outside = await mkdtemp(path.join(tmpdir(), "godot-fabric-output-control-"));
 const sdk = path.join(project, "addons", "godot_fabric");
 const env = { ...process.env, PATH: "/usr/bin:/bin", NODE_PATH: "" };
 const godot = await ensureGodotBinary();
@@ -48,6 +49,7 @@ async function runtime(label, headed = false) {
 try {
   await cp(path.join(root, "consumers", "minimal"), project, { recursive: true, filter: (file) => !/\.(?:uid|import)$/.test(file) });
   await run("provision", process.execPath, [path.join(root, "scripts", "pack-addon.mjs"), sdk], 0, process.env);
+  await cp(path.join(sdk, "manifest.json"), path.join(directory, "sdk-manifest.json"));
   await mkdir(path.join(project, ".godot"));
   await writeFile(path.join(project, ".godot", "extension_list.cfg"), "res://addons/godot_fabric/fabric.gdextension\n");
   verify(spawnSync("node", ["--version"], { env }).error?.code === "ENOENT", "Consumer cannot find global Node");
@@ -65,6 +67,7 @@ try {
   const bundlePath = path.join(project, ".godot_fabric", "app.js");
   const bundleHash = hash(await readFile(bundlePath));
   const inputs = JSON.parse(await readFile(path.join(project, ".godot_fabric", "build-report.json"), "utf8")).inputs;
+  await cp(path.join(project, ".godot_fabric", "build-report.json"), path.join(directory, "bundle-report.json"));
   verify(inputs.every(file => !file.includes("examples/") && !file.startsWith("project/../")), "Bundle has no laboratory or external checkout inputs");
   verify(inputs.some(file => file === "project/ui/platform.godot.ts") && !inputs.some(file => file === "project/ui/platform.native.ts"), "Consumer and types select the Godot platform source");
   await run("offline", "/usr/bin/sandbox-exec", ["-p", "(version 1)(allow default)(deny network*)", path.join(sdk, "toolchain", "node", "bin", "node"), path.join(sdk, "toolchain", "build.mjs"), project, "res://ui/index.tsx", "res://.godot_fabric/app.js"]);
@@ -82,6 +85,30 @@ try {
     verify(hash(await readFile(bundlePath)) === bundleHash, name + " failure preserves the previous bundle");
   }
   await writeFile(entryPath, originalEntry);
+  const resourcePath = path.join(project, "ui", "application.tres");
+  const originalResource = await readFile(resourcePath, "utf8");
+  await writeFile(resourcePath, originalResource.replace("format_version=1", "format_version=999"));
+  assert.match(await editor("invalid-resource", 1), /Unsupported application Resource version/);
+  verify(hash(await readFile(bundlePath)) === bundleHash, "An invalid Resource cannot replace the bundle");
+  await writeFile(resourcePath, originalResource);
+  const privateNode = path.join(sdk, "toolchain", "node", "bin", "node");
+  await rename(privateNode, privateNode + ".unavailable");
+  try {
+    assert.match(await editor("missing-toolchain", 1), /private toolchain missing/);
+    verify(hash(await readFile(bundlePath)) === bundleHash, "Missing private tools reject builds without global fallback or installation");
+  } finally { await rename(privateNode + ".unavailable", privateNode); }
+  const generated = path.join(project, ".godot_fabric");
+  await rename(generated, generated + ".saved");
+  await symlink(outside, generated);
+  try {
+    assert.match(await editor("escaped-output", 1), /Resource path resolves outside the project/);
+    verify(hash(await readFile(path.join(generated + ".saved", "app.js"))) === bundleHash, "An output symlink outside the project is rejected");
+  } finally { await rm(generated); await rename(generated + ".saved", generated); }
+  const babelPath = path.join(project, "babel.config.cjs");
+  await writeFile(babelPath, "module.exports = {};\n");
+  assert.match(await editor("unsupported-babel", 1), /Project Babel configuration is not supported/);
+  verify(hash(await readFile(bundlePath)) === bundleHash, "Project Babel configuration is rejected explicitly rather than ignored");
+  await rm(babelPath);
   await writeFile(packagePath, JSON.stringify({ ...JSON.parse(originalPackage), dependencies: { react: "0.0.0" } }));
   assert.match(await editor("version", 1), /react must match SDK version/);
   verify(hash(await readFile(bundlePath)) === bundleHash, "Incompatible renderer version cannot replace the bundle");
@@ -111,4 +138,5 @@ try {
   console.log("CONSUMER_CHECK_PASSED: " + checks.length + " build/ownership checks; 18 native checks");
 } finally {
   await rm(project, { recursive: true, force: true });
+  await rm(outside, { recursive: true, force: true });
 }
