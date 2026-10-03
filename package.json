@@ -25,6 +25,7 @@
     "examples:list": "node scripts/examples.mjs --list",
     "test:examples": "node scripts/examples-check.mjs",
     "test:runtime": "npm run bundle && node --test tests/runtime-native.test.mjs",
+    "test:application": "npm run bundle && node --test tests/shared-application-native.test.mjs",
     "type-check": "tsc -p tsconfig.godot.json"
   },
   "dependencies": {

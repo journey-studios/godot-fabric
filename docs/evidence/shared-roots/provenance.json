@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "51a52e6591d1805f0d7f70d3b4e02fd54a41f7f6",
+  "sourceHashes": {
+    "native/application_runtime.cpp": "7327aeb9b0c06afdba8b0c5801ee30f17d1d24a180828f87a70190fd74673418",
+    "native/application_runtime.h": "b03edb04d8e07ae17c2900a50ce496a9d272f52866d7bfd277fb3264da56964b",
+    "native/fabric_application.cpp": "6fcc4fbf7e3d5fd60d9867e177c8f7ff72c8c6879b9a4ce2e888e83c0baa1303",
+    "native/fabric_application.h": "a05d659f8cd0ca3864869bdef111c3cb757396c42012d2a795c2f4dc053e9cb9",
+    "native/fabric_surface.cpp": "7220d1a49c7e08511893f06cbb0b736ae1bb98f95db059fc7e295c19d5bdd776",
+    "native/fabric_surface.h": "1fef412a3171b00e44665362ec6a842b51f38d2d1501c0696f1677e4a8aafac8",
+    "native/register.cpp": "3cbd813c56aa7764c377de97518ccced7647953ec30a98fc4c869b618b5c3b49",
+    "native/CMakeLists.txt": "cd3bce98b78d758652d9f4fcffb5cd056c1f24cfa368b3339f78c77e749889e8",
+    "native/godot-profile.json": "47807122dec3641325452bbc17c2ddd4e19836591897a5bf211774f86597c228",
+    "src/app-registry.js": "370c319308002e4ab052cb9609348b6f096262ed926a5b60bc8d2faa6da7988b",
+    "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+    "src/react-native-platform.jsx": "6ebafc47e73d1e1f7abe9515336d0cb2cf6c4b416b15159a6ee84697e6dd596c",
+    "scripts/bundle.mjs": "d5bac4f46e881be0bf6a7e3aabb35f244bc567fc9e58a58765bd56e730367083",
+    "examples/entry.jsx": "aea66c2c95478d1d50706b9af5701ab01aeb62ee8b04e990fa13bb3cf5525a3a",
+    "examples/catalog.json": "de814e91f249df5409bdca4ec8932767d94c94493bde0436ef8d4ec3b04e0d78",
+    "examples/shared/App.jsx": "a0bcc39d161170582f2564871b9980653e37d74160217c5314e78cb9cca6c9ed",
+    "examples/shared/validation.gd": "86a6dab67ff648846a7fbe1374adb1f6b8a204005ed919f83afdf863b9f89fb0",
+    "examples/shared/scene.tscn": "a33a520a4671b66bd8ba3c9103638fae57fed5ace6d7f60d2f5c54ea8ef8cb3d",
+    "tests/shared-application-native.test.mjs": "2d5a1544c1a5f3c296ad0dc0be81f056e0af75e59e283e5ae43694c521e3768a",
+    "tests/shared_application_failures.gd": "ebe295f96a2c05d618fc3f4fe78f93608621baf0e1711a008a2b211799a42419",
+    "tests/parity_guards.gd": "04241547d18d405747adba8abf3ef090300416165f41138a7cd68adcf6c9ecb7",
+    "types/react-native.ts": "1d06d52bec2bab0b14482ba75d585419e2a547ffc238183df1e6d77102a06275",
+    "tests/legacy_application.gd": "45d7e5998fd2572a91da5c1450fa88553bf2e0528414c388d66e6fca3b448ae2",
+    ".github/workflows/contracts.yml": "bdc6386d3950143e92d0984a1bda1f39e3a4f8706daa51976fe3aeccfa86c38a"
+  },
+  "upstreamHashes": {
+    "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js": "9f58cfbd0c060422203c10080ed1b520b333a02207125fc5d9b7b315429942a4",
+    "node_modules/react-native/Libraries/ReactNative/RootTag.js": "4410d95aec445b54e9fa482c612833c9df3f32c88242357a1bfda438b62aaba4",
+    ".deps/package/ReactCommon/react/renderer/uimanager/AppRegistryBinding.cpp": "79247bb78ce5935db2f4abfa517e80dadd0b1c31fca232ea7d8796fa796876f5",
+    ".deps/package/ReactCommon/react/renderer/uimanager/UIManager.cpp": "1a2fc7e3e3a7ef9162388cb023664e73f0cc96bde99899140fb2e5f7644e1fcc"
+  },
+  "evidenceHashes": {
+    "initial.png": "c511308d5affad5b2b3c8e27d63cfab38e8dfc549124a4b1cc2b80de256b3f81",
+    "unmounted.png": "bd4ae8814d49d096f5c4848af35e429fa78e415246a3e6084ea67fa9e2eda014",
+    "updated.png": "0934118feb3436c6db67af2e6d24a3d38b3da6f9573dfceaebb59adda6ee92f3"
+  },
+  "reportPolicy": "Raw run logs/reports remain in ignored build/ or CI artifacts; matrix retains counts and hashes. Runtime source hashes identify the validated implementation; documentation/CI additions do not change that runtime."
+}

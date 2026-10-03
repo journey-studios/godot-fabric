@@ -1,6 +1,12 @@
 import type * as React from "react";
 import type * as RN from "../node_modules/react-native/types_generated/index";
 
+export declare const AppRegistry: Pick<typeof RN.AppRegistry, "getAppKeys"> & {
+  registerComponent(key: Parameters<typeof RN.AppRegistry.registerComponent>[0],
+    provider: Parameters<typeof RN.AppRegistry.registerComponent>[1]): string;
+};
+export declare const RootTagContext: typeof RN.RootTagContext;
+
 /** The implemented Godot subset, derived from the pinned RN declarations. */
 export type ViewStyle = Pick<RN.ViewStyle,
   "width" | "height" | "minWidth" | "minHeight" | "maxWidth" | "maxHeight" |

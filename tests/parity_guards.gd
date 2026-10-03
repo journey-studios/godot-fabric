@@ -15,7 +15,9 @@ func test_completion() -> void:
   surface.set_meta("scenario", "parity-completion-failure")
   root.add_child(surface)
   var deadline := Time.get_ticks_msec() + 10000
-  while surface.evaluate("Number(globalThis.fabricParityCompletions || 0)") == "0" and Time.get_ticks_msec() < deadline:
+  # The legacy implicit application is inserted after the scene's _ready batch.
+  # A not-yet-initialized evaluator returns null; it is not completion evidence.
+  while surface.evaluate("Number(globalThis.fabricParityCompletions || 0)") in ["null", "0"] and Time.get_ticks_msec() < deadline:
     await process_frame
   for i in range(20):
     await process_frame

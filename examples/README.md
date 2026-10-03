@@ -23,6 +23,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 
 | Name | Case | UI API | Source and scene |
 | --- | --- | --- | --- |
+| [shared](shared/README.md) | Two AppRegistry roots, props and independent lifetimes | Public | [App](shared/App.jsx) · [scene](shared/scene.tscn) |
 | [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
@@ -51,6 +52,12 @@ and [parity baseline](../docs/compatibility/BASELINE.md).
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
 
 Every interactive example's README has its own renderer capture.
+
+![Two registered roots share one application](../docs/evidence/shared-roots/updated.png)
+
+The [shared application](shared/README.md) adds explicit native application and
+surface properties. Its controls use public RN imports; final resource/SDK
+authoring and multi-root mobile reference certification remain open.
 
 ## Validation and images
 

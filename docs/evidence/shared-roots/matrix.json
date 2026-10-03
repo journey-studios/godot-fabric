@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "platform": "macOS arm64",
+  "godot": "4.7.2",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "sourceCommit": "51a52e6591d1805f0d7f70d3b4e02fd54a41f7f6",
+  "runs": [
+    {
+      "example": "shared",
+      "api": "public",
+      "headless": {
+        "checks": 35,
+        "report": "build/examples/headless/shared.json",
+        "sha256": "c051618d81a046536e84c364143c955a5c54a594e873e962fc84d2f852811386"
+      },
+      "native": {
+        "checks": 38,
+        "report": "build/examples/native/shared.json",
+        "sha256": "27f0e109227ff747c8e84643e2110c22385d170c2dac29d17bc4027da09dd8d6"
+      }
+    },
+    {
+      "example": "counter",
+      "api": "public",
+      "headless": {
+        "checks": 19,
+        "report": "build/examples/headless/counter.json",
+        "sha256": "426e2f40dbfa4070b96d7b847febaa01de90caf7eb75e649cedf89f881abf58f"
+      },
+      "native": {
+        "checks": 24,
+        "report": "build/examples/native/counter.json",
+        "sha256": "4698094b2251fb62e824cda3fb83dd5f68f5fa72c9c7660574ae844574f71cf9"
+      }
+    },
+    {
+      "example": "runtime",
+      "api": "public",
+      "headless": {
+        "checks": 23,
+        "report": "build/examples/headless/runtime.json",
+        "sha256": "9b1a4acbc70046f91c055ad0a2a2aae50ec23bd868bdc1d95f4c528d2610d3be"
+      },
+      "native": {
+        "checks": 33,
+        "report": "build/examples/native/runtime.json",
+        "sha256": "9d44c5304b5f4b3250dac88f986ef32b4d10da285e273fd5504b2aba46b4b57a"
+      }
+    },
+    {
+      "example": "form",
+      "api": "public",
+      "headless": {
+        "checks": 39,
+        "report": "build/examples/headless/form.json",
+        "sha256": "a3e240b9bff7a3399a038f2fa6799eb0987a609bb7dad968603762e1da234c6f"
+      },
+      "native": {
+        "checks": 43,
+        "report": "build/examples/native/form.json",
+        "sha256": "433f42a313a4c22e4cd1fa8e9e95b84cb65aeb8983f27ed4cd5ae53a1bad2d59"
+      }
+    },
+    {
+      "example": "react",
+      "api": "internal",
+      "headless": {
+        "checks": 36,
+        "report": "build/examples/headless/react.json",
+        "sha256": "759aa35a52bb37fe22b45a652ad6368d74aa603d98c277238b1415cb31cf9d33"
+      },
+      "native": {
+        "checks": 36,
+        "report": "build/examples/native/react.json",
+        "sha256": "5a86fb7551f314cb137566b68abf4553abf29b9a53835d7528c36f65e0ee5c11"
+      }
+    },
+    {
+      "example": "layout",
+      "api": "internal",
+      "headless": {
+        "checks": 47,
+        "report": "build/examples/headless/layout.json",
+        "sha256": "6a24b27d005f9d1d53f3c97ae55eb524253b097be01feba4a84e56a535b29a6a"
+      },
+      "native": {
+        "checks": 47,
+        "report": "build/examples/native/layout.json",
+        "sha256": "6df854de3946f712faf38d856b406f527887df612e94fd498d4e4584e865b950"
+      }
+    },
+    {
+      "example": "input",
+      "api": "internal",
+      "headless": {
+        "checks": 45,
+        "report": "build/examples/headless/input.json",
+        "sha256": "e599ae5646a7cd496e75b7e9bc7c657a64844ee6348592a234b168cf91541373"
+      },
+      "native": {
+        "checks": 45,
+        "report": "build/examples/native/input.json",
+        "sha256": "bba80ee9135e4b8a81a995e0ee6e86111780f9a2f709aead692daed2c343bce6"
+      }
+    },
+    {
+      "example": "pressable",
+      "api": "internal",
+      "headless": {
+        "checks": 43,
+        "report": "build/examples/headless/pressable.json",
+        "sha256": "b94ed63f0eff025f8a402c5a2d3cdaaa83a3b9a2a8744da7de191b04d744163e"
+      },
+      "native": {
+        "checks": 47,
+        "report": "build/examples/native/pressable.json",
+        "sha256": "4fb8ba065d5d9721f9b613bc28ab7947643f1d91af50029bcfd9c82ab2892181"
+      }
+    },
+    {
+      "example": "scroll",
+      "api": "internal",
+      "headless": {
+        "checks": 62,
+        "report": "build/examples/headless/scroll.json",
+        "sha256": "da7c4ed8f34e1c6631d2b5980c98b411dd730c2ba9358a22b85980add0a4aa12"
+      },
+      "native": {
+        "checks": 68,
+        "report": "build/examples/native/scroll.json",
+        "sha256": "7f8bcf2c4149b944eebd642548e032c47e0f8bbd4ab928bed2600d3f73898847"
+      }
+    },
+    {
+      "example": "chart",
+      "api": "internal",
+      "headless": {
+        "checks": 34,
+        "report": "build/examples/headless/chart.json",
+        "sha256": "f6deece713c88c4f467517031aaf0f3d5a7e7b4613929746f0f1b97c80daf3af"
+      },
+      "native": {
+        "checks": 34,
+        "report": "build/examples/native/chart.json",
+        "sha256": "d253db994d1c04d22e468ec539047ca707deafed5456b87717841a169552dddb"
+      }
+    },
+    {
+      "example": "nativewind",
+      "api": "public",
+      "headless": {
+        "checks": 49,
+        "report": "build/examples/headless/nativewind.json",
+        "sha256": "a2b8692dd47a8cecf5fdb8d4f0b403e81493ae330766a4bade06e31bc3aca8a5"
+      },
+      "native": {
+        "checks": 58,
+        "report": "build/examples/native/nativewind.json",
+        "sha256": "dfdc208f5b5c880178b8adb1d59f53e7312ad5b5208b75cb2e884030f93b43a6"
+      }
+    },
+    {
+      "example": "typography",
+      "api": "mixed",
+      "headless": {
+        "checks": 50,
+        "report": "build/examples/headless/typography.json",
+        "sha256": "2d6dc26accfc442c29f6b0e881c689b54ae2053e2c282fe0972fbe8b765d4c70"
+      },
+      "native": {
+        "checks": 63,
+        "report": "build/examples/native/typography.json",
+        "sha256": "b7f5d179a2b1dc659318bdf0215c5420db597bfdf14221525639fbbb09b865fc"
+      }
+    }
+  ],
+  "totals": {
+    "headless": 482,
+    "native": 536
+  },
+  "additionalChecks": {
+    "rootActivationFailures": {
+      "checks": 19,
+      "report": "build/shared-failures-report.json",
+      "sha256": "a7164c75b333a2e02d6d623efb5158f22069f7a1016648254c9300e8a6c7ba9e"
+    },
+    "runtimeErrorRecovery": {
+      "checks": 6,
+      "report": "build/runtime-errors-report.json",
+      "sha256": "6b2ad75ad84c436b90ad4c4893706bfabb2a74cc6314811f9e638d371a7543c8"
+    },
+    "coldStart": {
+      "freshProjects": 2,
+      "report": "build/cold-start.json",
+      "sha256": "7ead60a56a3d8c5a3ce192e8e2a1124b1f5c18b6c78ab274bab40b230853a39f"
+    },
+    "godotOracle": {
+      "cases": 13,
+      "report": "build/parity-godot.json",
+      "sha256": "3a9b984e3ef394480e46a8e4824e00613de03b939e4884206e5e73c8de18400a"
+    },
+    "legacyApplicationLifecycle": {
+      "checks": 8,
+      "report": "build/legacy-application-report.json",
+      "sha256": "22419e0b03fd19f664a6f9647c7cc19a41a56a0acbf435aa62c6f8497035c5b2"
+    },
+    "acceleratedGodotClock": {
+      "checks": 35,
+      "report": "build/shared-clock-report.json",
+      "sha256": "8d37229c6d63ce6d9df361a0df381117775fdb8522f8b37013a1f9b674ef1bdd"
+    }
+  },
+  "scope": "Local native validation, not full React Native parity. Shared-root behavior has no original iOS/Android multi-root reference result yet."
+}

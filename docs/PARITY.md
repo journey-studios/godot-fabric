@@ -28,6 +28,12 @@ The bounded GF-05 runtime implementation and its 13-case original-native
 comparison are recorded in [the runtime example](evidence/runtime/README.md).
 The tables below preserve the audit-date findings.
 
+The bounded GF-07 [shared application](evidence/shared-roots/README.md) adds
+original AppRegistry/RootTagContext, distinct native roots, prop updates and
+independent unmount/remount over one runtime. Native positive/negative checks
+and captures exercise two nonoverlapping roots; full bootstrap, portals,
+pause/resume, SDK activation and original RN multi-root comparison remain open.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

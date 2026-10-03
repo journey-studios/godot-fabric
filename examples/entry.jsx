@@ -28,6 +28,9 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
+if (globalThis.godotScenario === "shared") {
+  require("./shared/App");
+} else {
 globalThis.GodotApp = {
   run(name, ...args) {
     if (formScenario) return runForm(name, ...args);
@@ -115,3 +118,4 @@ Fabric.render(
     },
   },
 );
+}

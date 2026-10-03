@@ -6,12 +6,15 @@ application/surface, layout/host context, Godot integration, input, UI time and 
 discovery, binary compatibility, spec/Codegen, native component behavior and library
 reuse classification contracts, plus the self-contained SDK distribution direction. Its
 [decision register](ARCHITECTURE_V2_DECISIONS.md) tracks approved and pending
-choices; the new interfaces are not yet implemented.
+choices. Shared native application/registered-root ownership has a bounded
+implementation; the resource/SDK/game-service interfaces remain pending.
 
 ```mermaid
 flowchart LR
   JSX[React and NativeWind JSX] --> Bundle[esbuild and original RN Babel transforms]
-  Bundle --> Hermes[Hermes runtime in Godot]
+  Bundle --> Hermes[FabricApplication owns Hermes and scheduling]
+  Hermes --> Registry[Original AppRegistry and Godot root container]
+  Registry --> Fabric
   Hermes <-->|JSI| Fabric[Original React Native Fabric]
   Fabric --> Shadow[Immutable ShadowTree and Yoga layout]
   Shadow --> Mount[MountingCoordinator transactions]
@@ -28,9 +31,16 @@ flowchart LR
 - **Fabric / Yoga:** original C++ descriptors, ShadowNodes, immutable state,
   constraints and mounting transactions are built from pinned portable sources.
   Neither the reconciler nor Yoga receives a patch.
-- **Godot platform:** `FabricSurface` implements runtime execution, event beats,
-  native mounting, microtasks, timers, animation frames and cleanup. It translates
-  mounts to real Controls in the SceneTree.
+- **Application owner:** `FabricApplication` holds one `ApplicationRuntime` with
+  Hermes, module cache, UIManager, event beats, microtasks, timers, frame callbacks
+  and cleanup. Its process pump runs once per Godot frame.
+- **Surface host:** `FabricSurface` references an application and its AppRegistry
+  entry/props. Each root has a ShadowTree, constraints, pointer adapter and native
+  Controls. Committed transactions and commands route by surface ID; native
+  tags remain unique within the shared runtime. Unmount releases only that root.
+- **Registration:** original `AppRegistryImpl` and C++ `AppRegistryBinding` own
+  named entry lookup/start/prop updates. Godot supplies the `renderApplication`
+  container and original RootTagContext, with the unchanged Fabric reconciler.
 - **Platform facade:** `react-native` resolves to this project's bounded host
   API. Many unsupported contracts fail explicitly, but prop filtering and fixed
   environment policies still leave gaps. Exporting a name does not certify the
@@ -85,9 +95,19 @@ and native cancellation of a child's pending press. TextInput translates editing
 selection and event-count confirmation through LineEdit.
 
 Animation frames use monotonic timestamps and pending callbacks do not run
-immediately during input. Unmount removes native nodes, tags, timers, responder
-state and subscriptions. Expected failures remain visible to the CLI even when
-cleanup succeeds.
+immediately during input. Named root unmount removes its native tree/tags,
+responder state and React effects. Module state and application timers/frames
+remain alive, including when no roots are mounted. Effects own cleanup of their
+subscriptions and clocks. Application shutdown cancels global scheduling and
+unmounts all roots. The anonymous legacy fixtures preserve whole-application
+shutdown on scene exit. Expected failures remain visible even after cleanup.
+
+The [shared example](../examples/shared/README.md) and
+[evidence](evidence/shared-roots/README.md) document the native owner prototype.
+The SDK's primary-application/resource activation, complete pause/resume,
+overlays/portals, multiwindow/ref geometry, dev renderer and original RN
+multi-root comparison are still open. The main-thread executor remains;
+this change does not resolve the pending thread/shutdown/activation decisions.
 
 See [API limits](API.md) and [measured evidence](evidence/README.md) before
 assuming compatibility with a React Native dependency. The

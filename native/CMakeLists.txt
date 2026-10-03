@@ -73,7 +73,7 @@ target_include_directories(timer_registry_test PRIVATE "${RN}")
 set(GODOTCPP_TARGET template_release CACHE STRING "" FORCE)
 set(GODOTCPP_BUILD_PROFILE "${CMAKE_CURRENT_SOURCE_DIR}/godot-profile.json" CACHE FILEPATH "" FORCE)
 add_subdirectory("../.deps/godot-cpp-da26c1732ee8656ef9ccad587cbdd55acf8637c8" godot-cpp)
-add_library(fabric_godot SHARED fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp register.cpp)
+add_library(fabric_godot SHARED fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp register.cpp)
 target_link_libraries(fabric_godot PRIVATE fabric_core godot-cpp)
 set_target_properties(fabric_godot PROPERTIES
   PREFIX "" SUFFIX ".dylib"
