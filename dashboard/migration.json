@@ -8,11 +8,11 @@
     "focusSequence": "2B",
     "focusTitle": "Aliases e dependências validados no addon; completar resolução e exports"
   },
-  "updatedAt": "2026-10-03T22:06:28.590177+00:00",
+  "updatedAt": "2026-10-03T22:09:37.060842+00:00",
   "source": {
-    "commit": "9c75031eaab462dad830be9d58119a826f228505",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/ROADMAP.md",
-    "scope": "GF-03/GF-28: resolução executada sobre base9c75031, fontes exatas nos receipts; consumer27/40/43, aliases40/43, nested40, adapter35/37+8/9/9, 172 Node/13 Python, 10 nativos e 15 exemplos/605 checks. Fixação do SHA final após commit; CI resolver pendente.",
+    "commit": "dde5485591b818def8d0b03443494d60c101389f",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/ROADMAP.md",
+    "scope": "GF-03/GF-28: implementação dde5485 conferida pelos hashes consumidos; consumer27/40/43, aliases40/43, nested40, adapter35/37+8/9/9, 172 Node/13 Python, 10 nativos e 15 exemplos/605 checks. CI precedente9c75031 verde; CI resolver pendente.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -168,7 +168,7 @@
             },
             {
               "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/project-resolution/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
             }
           ]
         },
@@ -1398,7 +1398,7 @@
             },
             {
               "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/project-resolution/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
             }
           ]
         },
@@ -2434,7 +2434,7 @@
         "GF-28"
       ],
       "message": "Aliases herdados e dependências sem hoisting executados no addon: 27/40/43, aliases40/43, nested40; adapter35/37+8/9/9 e 46 testes. Perfis não suportados falham; nenhum aceite GF/dependência/denominador fechado. Evidência local com fontes exatas; CI desta fatia pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/project-resolution/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
     },
     {
       "id": "bundle-determinism-hosted-success-9c75031",

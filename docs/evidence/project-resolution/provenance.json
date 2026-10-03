@@ -72,5 +72,7 @@
     "Physical OS input, mobile targets and exported applications remain unverified by these consumer captures."
   ],
   "sdkDependencyLockfileSha256": "7c19d95a91da6a8aab8e1c5ac818e16a679d9f365b4fb9eaec88b7fcfd69c7fa",
-  "projectLockfileSha256": "89de230d7484f241d6b67027550e15bfb0dddde08aa3994aa4c8125ea92a4866"
+  "projectLockfileSha256": "89de230d7484f241d6b67027550e15bfb0dddde08aa3994aa4c8125ea92a4866",
+  "testedImplementationCommit": "dde5485591b818def8d0b03443494d60c101389f",
+  "committedSourceIdentityVerified": true
 }
