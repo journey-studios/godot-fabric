@@ -8,11 +8,11 @@
     "focusSequence": "2B",
     "focusTitle": "Aliases isolados por origem; condições comparadas, completar tipos e resolução"
   },
-  "updatedAt": "2026-10-03T22:46:45.315700+00:00",
+  "updatedAt": "2026-10-03T22:48:49.480448+00:00",
   "source": {
-    "commit": "f2eb57f14dcc6f0c25750ff6284f9244d4b3e617",
-    "url": "https://github.com/journey-studios/godot-fabric/pull/14",
-    "scope": "GF-03/GF-28: working tree verificada sobre f2eb57f; aliases app/lib/SDK isolados em tipos/runtime, consumer30/40/43, Codegen35/37+8/9/9, Metro13 com duas diferenças explícitas, 199 Node/13 Python e 10 nativos. CI precedente f2eb57f fechou cinco jobs; CI desta fatia ainda pendente.",
+    "commit": "fe056fa98801ad737d2f7a48338338d0f0b10083",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/ROADMAP.md",
+    "scope": "GF-03/GF-28: implementação fe056fa conferida pelos hashes executados; aliases app/lib/SDK isolados, consumer30/40/43, Codegen35/37+8/9/9, Metro13 com duas diferenças explícitas, 199 Node/13 Python e 10 nativos. CI precedente f2eb57f verde nos cinco jobs; CI desta fatia ainda pendente.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -172,7 +172,7 @@
             },
             {
               "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/alias-scopes/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
             }
           ]
         },
@@ -1406,7 +1406,7 @@
             },
             {
               "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/alias-scopes/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
             }
           ]
         },
@@ -2441,8 +2441,8 @@
         "GF-03",
         "GF-28"
       ],
-      "message": "Tipos e runtime isolam aliases do app, lib e SDK; consumidor30/40/43 e Codegen35/37+8/9/9 passaram. 199 Node/13 Python e 10 nativos; Metro13 registra duas diferenças. CI precedente f2eb57f verde; nenhuma conclusão GF/checkpoint/denominador mudou.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+      "message": "Implementação fe056fa conferida pelos hashes executados. Tipos e runtime isolam aliases do app, lib e SDK; consumidor30/40/43 e Codegen35/37+8/9/9 passaram. 199 Node/13 Python e 10 nativos; Metro13 registra duas diferenças. CI precedente f2eb57f verde; nenhuma conclusão GF/checkpoint/denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
     },
     {
       "id": "gf03-project-resolution-local",

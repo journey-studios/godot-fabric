@@ -69,5 +69,7 @@
     "Bounded ESNext/Preserve + Bundler and fixed suffix profile; not full Metro/TSConfig acceptance",
     "No Godot engine or export template rebuild",
     "Actual exported consumers and other OS targets are not certified by these local captures"
-  ]
+  ],
+  "testedImplementationCommit": "fe056fa98801ad737d2f7a48338338d0f0b10083",
+  "committedSourceIdentityVerified": true
 }
