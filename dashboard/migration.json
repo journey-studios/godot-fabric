@@ -8,10 +8,10 @@
     "focusSequence": "4",
     "focusTitle": "Shutdown nativo verificado; determinismo do builder como próximo bloqueio"
   },
-  "updatedAt": "2026-10-03T20:56:28.110465Z",
+  "updatedAt": "2026-10-03T21:00:19.977979Z",
   "source": {
-    "commit": "fbd045385ba2ef33d16f21fdd5b9bf193296fa19",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/ROADMAP.md",
+    "commit": "9d14553b1cdf46e5d213685c754ab603d2fb6871",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/ROADMAP.md",
     "scope": "GF-07/GF-26: stop reentrante 8/9/9 e consumidor 35/37 locais; CI anterior falhou em regeneração de bundle, causa em investigação",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -358,7 +358,7 @@
             },
             {
               "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
             }
           ]
         },
@@ -1261,7 +1261,7 @@
             },
             {
               "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
             }
           ]
         },
@@ -2408,14 +2408,14 @@
   "activity": [
     {
       "id": "native-stop-reentrancy-20261003",
-      "at": "2026-10-03T20:56:28.110465Z",
+      "at": "2026-10-03T21:00:19.977979Z",
       "taskIds": [
         "GF-07",
         "GF-26",
         "GF-28"
       ],
       "message": "Falha Control freed inside signal reproduzida. Novo host passou resize/RAF/timer 8/9/9, consumidor 35/37 e suites 2/4/2/2 em série. CI anterior passou 89/207 mas reproduziu hash divergente do consumidor. Checkpoints/denominador preservados; nenhum GF fechado.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
     },
     {
       "id": "native-adapter-runtime-20261003",

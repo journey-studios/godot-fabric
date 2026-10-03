@@ -128,5 +128,7 @@
     "node --test tests/shared-application-native.test.mjs",
     "node --test tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs",
     "node --test --test-concurrency=1 tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs"
-  ]
+  ],
+  "testedImplementationCommit": "9d14553b1cdf46e5d213685c754ab603d2fb6871",
+  "committedSourceIdentityVerified": true
 }
