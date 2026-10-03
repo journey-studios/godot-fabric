@@ -111,3 +111,27 @@ estiver ocupada. Não copie o dashboard a cada entrega: mantenha um JSON
 observado e valide antes de publicar sua atualização.
 
 [Prompt para a thread de implementação](AGENT_PROMPT.md).
+
+## GitHub Pages
+
+O workflow `Migration dashboard Pages` testa e prepara somente os arquivos do
+dashboard e as fontes/licenças. Publica automaticamente quando esses arquivos,
+incluindo `dashboard/migration.json`, mudam no `main`. PRs validam o artefato
+sem publicar. Também é possível iniciar o workflow manualmente no `main`.
+
+URL: https://journey-studios.github.io/godot-fabric/
+
+Em Settings → Pages, use **Source: GitHub Actions**. Deploy por branch também
+é possível com um artefato estático na raiz da branch ou em `/docs`, mas este
+workflow evita duplicar o JSON e os assets em uma branch de publicação.
+
+```sh
+node scripts/build-dashboard-pages.mjs
+# Artefato: build/dashboard-pages/
+```
+
+No site público, o navegador lê `migration.json` diretamente; não há servidor
+Node ou endpoint API. Os caminhos são relativos para funcionar sob
+`/godot-fabric/`. A atualização de cinco segundos consulta a última versão
+publicada: mudanças locais só aparecem após commit, push/merge no main e
+deploy bem-sucedido. O Pages/CDN pode levar um tempo para propagar a versão.

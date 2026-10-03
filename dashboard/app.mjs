@@ -75,7 +75,7 @@ async function refresh() {
   if (loading) return;
   loading = true; $("refresh").disabled = true;
   try {
-    const response = await fetch("/api/data", { cache: "no-store", signal: AbortSignal.timeout(8000) });
+    const response = await fetch(new URL("./migration.json", import.meta.url), { cache: "no-store", signal: AbortSignal.timeout(8000) });
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
     validate(payload);

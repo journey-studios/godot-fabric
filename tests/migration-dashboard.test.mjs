@@ -1,16 +1,33 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile, writeFile, mkdtemp, rm } from "node:fs/promises";
+import { readFile, writeFile, mkdtemp, rm, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { once } from "node:events";
 import { validate, summarize, progress, taskProgress } from "../dashboard/model.mjs";
 import { parseRoadmap, syncRoadmap, expandIds } from "../dashboard/import-roadmap.mjs";
 import { createDashboardServer } from "../scripts/migration-dashboard.mjs";
+import { buildDashboardPages } from "../scripts/build-dashboard-pages.mjs";
 
 const data = JSON.parse(await readFile(new URL("../dashboard/migration.json", import.meta.url), "utf8"));
 const roadmap = await readFile(new URL("../ROADMAP.md", import.meta.url), "utf8");
 const clone = () => structuredClone(data);
+
+test("Pages artifact works under a project subpath and contains only public assets", async t => {
+  const output = await mkdtemp(path.join(tmpdir(), "fabric-pages-"));
+  t.after(() => rm(output, { recursive: true, force: true }));
+  await buildDashboardPages(output);
+  assert.deepEqual((await readdir(output)).sort(), [".nojekyll", "AGENT_PROMPT.md", "app.mjs", "fonts", "index.html", "migration.json", "model.mjs", "style.css"].sort());
+  const html = await readFile(path.join(output, "index.html"), "utf8");
+  const app = await readFile(path.join(output, "app.mjs"), "utf8");
+  const css = await readFile(path.join(output, "style.css"), "utf8");
+  assert.ok(!/(?:href|src)="\//.test(html));
+  assert.ok(!app.includes('fetch("/api/data"'));
+  assert.match(app, /new URL\("\.\/migration.json", import.meta.url\)/);
+  assert.match(css, /url\('\.\/fonts\/NotoSans.ttf'\)/);
+  assert.equal(new URL("./migration.json", "https://journey-studios.github.io/godot-fabric/app.mjs").pathname, "/godot-fabric/migration.json");
+  assert.deepEqual(JSON.parse(await readFile(path.join(output, "migration.json"), "utf8")), data);
+});
 
 test("snapshot covers the complete canonical roadmap, sequences and release gates", () => {
   validate(data);

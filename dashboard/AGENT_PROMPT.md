@@ -47,3 +47,10 @@ A cada avanço verificável, fechamento, falha ou bloqueio relevante:
 O painel lê o JSON automaticamente a cada cinco segundos quando “Ao vivo”
 estiver ativo. Atualize após cada fatia comprovada; não espere o roadmap inteiro
 terminar. Não invente percentuais, evidências ou aprovações arquiteturais.
+
+O dashboard público está configurado para GitHub Pages em
+https://journey-studios.github.io/godot-fabric/. Inclua o JSON atualizado na
+entrega da implementação: o deploy automático ocorre quando a mudança chega
+ao main. Verifique o workflow `Migration dashboard Pages` antes de afirmar
+que o site público já mostra a atualização. Alterações somente locais não
+atualizam o Pages.

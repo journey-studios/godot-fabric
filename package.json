@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dashboard": "node scripts/migration-dashboard.mjs",
+    "dashboard:build": "node scripts/build-dashboard-pages.mjs",
     "dashboard:check": "node scripts/migration-dashboard.mjs check",
     "dashboard:sync": "node scripts/migration-dashboard.mjs sync",
     "test:dashboard": "node --test tests/migration-dashboard.test.mjs",

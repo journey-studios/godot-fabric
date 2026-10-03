@@ -1,0 +1,54 @@
+name: Migration dashboard Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'dashboard/**'
+      - 'assets/fonts/**'
+      - 'scripts/build-dashboard-pages.mjs'
+      - 'tests/migration-dashboard.test.mjs'
+      - '.github/workflows/dashboard-pages.yml'
+  pull_request:
+    paths:
+      - 'dashboard/**'
+      - 'assets/fonts/**'
+      - 'scripts/build-dashboard-pages.mjs'
+      - 'tests/migration-dashboard.test.mjs'
+      - '.github/workflows/dashboard-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dashboard-pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - run: node --test tests/migration-dashboard.test.mjs
+      - run: node scripts/build-dashboard-pages.mjs
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: build/dashboard-pages
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
+        id: deployment
