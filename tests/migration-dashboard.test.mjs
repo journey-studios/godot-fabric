@@ -125,3 +125,24 @@ test("server observes external JSON updates, rejects corruption and recovers", a
     assert.equal((await fetch(`${base}${resource}`)).status, 200, resource);
   }
 });
+
+test("Manual publication pins only JSON and identifies data outside main", async () => {
+  const { fetchDashboardData } = await import("../scripts/fetch-dashboard-data.mjs");
+  const sha = "a".repeat(40);
+  const endpoints = [];
+  const request = async url => {
+    endpoints.push(url);
+    const payload = url.includes("/commits/") ? { sha }
+      : url.includes("/contents/") ? { encoding: "base64", content: Buffer.from(JSON.stringify(data)).toString("base64") }
+      : { status: "diverged" };
+    return { ok: true, json: async () => payload };
+  };
+  const result = await fetchDashboardData({ repository: "journey-studios/godot-fabric", ref: "codex/progress", token: "test", request });
+  assert.equal(result.publication.commit, sha);
+  assert.equal(result.publication.inMain, false);
+  assert.equal(result.publication.ref, "codex/progress");
+  assert.ok(endpoints[0].endsWith("commits/codex%2Fprogress"));
+  assert.ok(endpoints[1].endsWith(`contents/dashboard/migration.json?ref=${sha}`));
+  await assert.rejects(fetchDashboardData({ repository: "journey-studios/godot-fabric", ref: "missing", request: async () => ({ ok: false, status: 404 }) }), /HTTP 404/);
+  await assert.rejects(fetchDashboardData({ repository: "journey-studios/godot-fabric", ref: "bad", request: async url => ({ ok: true, json: async () => url.includes("commits") ? { sha } : { encoding: "base64", content: Buffer.from('{}').toString('base64') } }) }));
+});

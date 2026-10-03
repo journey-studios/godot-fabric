@@ -82,7 +82,7 @@ async function refresh() {
     const serialized = JSON.stringify(payload);
     if (serialized !== lastPayload) { data = payload; lastPayload = serialized; render(); }
     $("error").hidden = true;
-    $("connection").innerHTML = `${live ? "Sincronizado" : "Atualizado"} às ${clock(new Date())} · JSON de ${date(data.updatedAt)} · <a href="${url(data.source.url)}" target="_blank" rel="noopener">${escape(data.source.scope)} / ${escape(data.source.commit.slice(0, 7))} ↗</a>`;
+    $("connection").innerHTML = `${live ? "Sincronizado" : "Atualizado"} às ${clock(new Date())} · JSON de ${date(data.updatedAt)} · <a href="${url(data.source.url)}" target="_blank" rel="noopener">${escape(data.source.scope)} / ${escape(data.source.commit.slice(0, 7))} ↗</a>${data.publication ? ` · Publicado de ${escape(data.publication.ref)} / ${escape(data.publication.commit.slice(0, 7))}${data.publication.inMain ? " (integrado ao main)" : " (fora do main)"}` : ""}`;
   } catch (error) {
     $("error").textContent = `${error.message}. ${data ? "Mantendo a última versão válida; nova tentativa automática quando Ao vivo estiver ativo." : "Corrija o JSON ou a conexão e clique em Atualizar."}`;
     $("error").hidden = false;

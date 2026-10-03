@@ -133,5 +133,24 @@ node scripts/build-dashboard-pages.mjs
 No site público, o navegador lê `migration.json` diretamente; não há servidor
 Node ou endpoint API. Os caminhos são relativos para funcionar sob
 `/godot-fabric/`. A atualização de cinco segundos consulta a última versão
-publicada: mudanças locais só aparecem após commit, push/merge no main e
+publicada: mudanças locais só aparecem após commit, push e
 deploy bem-sucedido. O Pages/CDN pode levar um tempo para propagar a versão.
+
+## Publicar progresso sem merge
+
+Faça commit e push de `dashboard/migration.json` na sua branch. O workflow
+busca somente esse JSON, fixa o commit resolvido, valida os dados e usa o
+renderer do main. A branch precisa conter o JSON; um arquivo local não basta.
+
+```sh
+gh workflow run dashboard-pages.yml --ref main -f data_ref="SUA_BRANCH"
+```
+
+Na interface: Actions → Migration dashboard Pages → Run workflow, selecione
+`main` para o workflow e informe sua branch em `data_ref` (também aceita SHA
+ou tag). Confirme o sucesso da execução antes de dizer que publicou.
+O mesmo site público é substituído pela publicação mais recente. O painel
+mostra branch, commit do JSON e se esse commit está integrado ao main.
+Um push relevante no main volta a publicar os dados do main; para restaurar
+manualmente, dispare com `data_ref=main`. Não execute o workflow com
+`--ref SUA_BRANCH`: o deploy é permitido apenas pelo workflow do main.
