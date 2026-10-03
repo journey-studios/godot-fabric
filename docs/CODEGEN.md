@@ -91,7 +91,13 @@ The witness targets macOS arm64 Release with minimum OS 13.0. It does not link
 or load a library, run Hermes/Godot, attest the synthetic combination or draw a
 Badge. Its report describes compilation separately from the generation
 manifest's false runtime/ABI claims. Hosted CI runs the same witness after
-native setup; a configured job is not a passing job.
+native setup; a configured job is not a passing job. CI selects its installed
+Node explicitly with `--node`; the default remains the provisioned private Node.
+The runner records the selected executable's version and SHA-256. The first
+hosted attempt failed before compilation because the private executable was
+absent; [the correction](evidence/codegen/ci-node-selection.json) retains that
+failure and a separate successful six-unit local rerun. Hosted acceptance must
+still come from the corrected workflow's result.
 
 [The executed checkpoint](evidence/codegen/README.md) retains the 20-test and
 six-translation-unit results, hashes, target and limitations.

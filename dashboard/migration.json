@@ -8,11 +8,11 @@
     "focusSequence": "4",
     "focusTitle": "Codegen e registro de extensões nativas externas"
   },
-  "updatedAt": "2026-10-03T18:23:11.243914Z",
+  "updatedAt": "2026-10-03T18:44:17.962892Z",
   "source": {
     "commit": "689c93985ed746a21d8aca3d056070e5d9c8382d",
     "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/ROADMAP.md",
-    "scope": "Fatia GF-26 Codegen original executada e commitada; checkpoints de serviços/consumidor e iOS registrados; main adad606 integrado; dados da PR #14 para publicação manual antes do merge",
+    "scope": "GF-26 geração/compilação comprovadas; falha CI de seleção Node identificada e correção local verificada; SDK/adapters externos em implementação",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1223,7 +1223,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fatia verificada: Codegen original 0.87.1 TS/Flow, 20/20 testes e 6/6 unidades C++ macOS arm64 Release. Sem adapter externo carregado/renderizado ou ABI certificada. Provider/mount externo, bundler/export e contrato completo seguem abertos.",
+      "note": "Fatia verificada: Codegen original 0.87.1 TS/Flow, 20/20 testes e 6/6 unidades C++ macOS arm64 Release. Sem adapter externo carregado/renderizado ou ABI certificada. Provider/mount externo, bundler/export e contrato completo seguem abertos. CI inicial falhou antes de compilar por ausência do Node privado; --node explícito tem 3 testes e nova compilação local 6/6. Aceite da CI corrigida pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1234,6 +1234,10 @@
             {
               "label": "Codegen 20 testes / 6 unidades C++; fonte e hashes registrados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
+            },
+            {
+              "label": "Falha CI de seleção Node / correção e compilação local 6/6",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/ci-node-selection.json"
             }
           ]
         },
@@ -2358,6 +2362,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "codegen-ci-node-selection-correction",
+      "at": "2026-10-03T18:44:17.962892Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "CI nativa falhou antes de compilar: Node privado não provisionado. Runner aceita Node explícito, workflow seleciona seu executável e preserva default do addon. Três testes e nova compilação 6/6 passaram localmente; CI corrigida ainda pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/ci-node-selection.json"
+    },
     {
       "id": "codegen-original-20-compile-6",
       "at": "2026-10-03T18:21:12.038377Z",

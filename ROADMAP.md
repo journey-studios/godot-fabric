@@ -110,6 +110,9 @@ The isolated compilation witness instantiates the generated descriptor and a
 typed Promise/event TurboModule against the existing macOS arm64 Release build.
 The [executed evidence](docs/evidence/codegen/README.md) retains 20 Node tests,
 six compiled translation units and explicit generation/runtime distinctions.
+The first hosted Codegen attempt failed on its assumed private Node path before
+compilation. Explicit CI Node selection now has three tests and a fresh local
+six-unit witness; the corrected hosted job's acceptance remains pending.
 It rejects unsupported schema, collisions and stale inputs/artifacts. This
 first slice does not register a native provider or draw the Badge. The next
 slice must expose external factories/adapters safely, remove the fixed native

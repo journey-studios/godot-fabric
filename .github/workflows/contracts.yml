@@ -42,7 +42,7 @@ jobs:
           ditto -x -k .deps/godot.zip .deps/godot
           echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
       - run: npm run setup
-      - run: npm run test:codegen:native
+      - run: npm run test:codegen:native -- --node "$(command -v node)"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

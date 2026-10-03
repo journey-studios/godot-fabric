@@ -4,6 +4,7 @@
 Compilation only; no CMake/core build, link, library loading or Godot execution.
 Requires the prepared macOS arm64 Release build and provisioned Node:
   python3 scripts/codegen-native-compile.py --out build/codegen-native-proof
+CI can select its installed Node explicitly with --node /absolute/path/to/node.
 The output directory must be new. Failed attempts retain logs and report.json.
 """
 import argparse
@@ -131,13 +132,20 @@ def run(arguments, output, report, stage, timeout=180):
     return logfile.read_text(encoding="utf-8")
 
 
-def compile_witness(output, report):
+def resolve_node(provided, dependencies):
+    node = Path(provided).resolve() if provided is not None else (
+        PROJECT / ".deps" / ("node-v" + dependencies["node"]["version"] + "-darwin-arm64") / "bin/node")
+    if not node.is_file():
+        origin = "Explicit Node executable" if provided is not None else "Provisioned private Node"
+        raise RuntimeError(origin + " is missing; this runner does not install dependencies")
+    return node
+
+
+def compile_witness(output, report, provided_node=None):
     report["inputSha256"] = hash_inputs()
     compiler, groups, sysroot = native_settings()
     dependencies = json.loads((PROJECT / "dependencies.json").read_text(encoding="utf-8"))
-    node = PROJECT / ".deps" / ("node-v" + dependencies["node"]["version"] + "-darwin-arm64") / "bin/node"
-    if not node.is_file():
-        raise RuntimeError("Provisioned private Node is missing; this runner does not install dependencies")
+    node = resolve_node(provided_node, dependencies)
     generated = output / "generated"
     flags = [arg for name in ["CXX_DEFINES", "CXX_INCLUDES", "CXX_FLAGS"] for arg in groups[name]]
     report["target"] = {"platform": "macos", "architecture": "arm64", "configuration": "Release", "minimumOS": "13.0"}
@@ -155,6 +163,13 @@ def compile_witness(output, report):
     if len(version_lines) != 1:
         raise RuntimeError("Existing native compiler did not report a unique Clang version")
     report["compiler"]["version"] = version_lines[0]
+    node_version = run([node, "--version"], output, report, "node-version")
+    node_versions = [line for line in node_version.splitlines() if re.fullmatch(r"v\d+\.\d+\.\d+", line)]
+    if len(node_versions) != 1:
+        raise RuntimeError("Selected Node did not report a unique version")
+    report["node"] = {"path": portable(node), "version": node_versions[0],
+                      "executableSha256": sha256(node),
+                      "selection": "explicit" if provided_node is not None else "private"}
     base = [node, PROJECT / "scripts/codegen.mjs"]
     parameters = ["--root", PROJECT / "tests/codegen", "--library", LIBRARY,
                   "--native-combination", PROJECT / "tests/codegen/native-combination.json", "--out", generated]
@@ -199,6 +214,7 @@ def compile_witness(output, report):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--node", type=Path, help="Select CI's installed Node; defaults to provisioned private Node")
     args = parser.parse_args()
     candidate = args.out if args.out.is_absolute() else PROJECT / args.out
     if os.path.lexists(candidate):
@@ -221,7 +237,7 @@ def main():
               "passed": False, "stages": [], "translationUnits": []}
     exit_code = 0
     try:
-        compile_witness(output, report)
+        compile_witness(output, report, args.node)
     except Exception as error:
         report["error"] = str(error)
         (output / "logs/failure.log").write_text(str(error) + "\n", encoding="utf-8")

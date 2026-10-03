@@ -63,3 +63,16 @@ included because this fixture has not rendered a Godot component.
 
 GF-26 remains **In progress** in the [roadmap](../../../ROADMAP.md). Hosted CI
 is tracked separately from these local results.
+
+## CI Node selection correction
+
+The native job in [run 37143997861](https://github.com/journey-studios/godot-fabric/actions/runs/37143997861)
+failed before compiling: setup used CI's installed Node while this runner
+assumed the addon-private executable existed. The corrected workflow supplies
+`--node "$(command -v node)"`; addon/default selection remains private.
+
+[ci-node-selection.json](ci-node-selection.json) records three selection tests,
+the new runner/configuration source hashes and a fresh **6/6** compilation with
+explicit Node selection. It identifies the actual Node binary/version and
+retains false link/load/runtime/ABI claims. The earlier provenance/report remains
+historical. A successful local rerun does not turn the failed hosted job green.
