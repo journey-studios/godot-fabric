@@ -112,7 +112,10 @@ The [executed evidence](docs/evidence/codegen/README.md) retains 20 Node tests,
 six compiled translation units and explicit generation/runtime distinctions.
 The first hosted Codegen attempt failed on its assumed private Node path before
 compilation. Explicit CI Node selection now has three tests and a fresh local
-six-unit witness; the corrected hosted job's acceptance remains pending.
+six-unit witness. The corrected [hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37145700599)
+passed all five jobs at `5d46bba`, including the six-unit Codegen compilation.
+Its [artifact evidence](docs/evidence/codegen/hosted-ci.json) records the actual
+CI Node 22.23.2 separately from declared addon Node 22.23.3.
 It rejects unsupported schema, collisions and stale inputs/artifacts. This
 first slice does not register a native provider or draw the Badge. The next
 slice must expose external factories/adapters safely, remove the fixed native

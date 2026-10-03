@@ -8,11 +8,11 @@
     "focusSequence": "4",
     "focusTitle": "Codegen e registro de extensões nativas externas"
   },
-  "updatedAt": "2026-10-03T18:50:11.486090Z",
+  "updatedAt": "2026-10-03T19:06:46.695413Z",
   "source": {
-    "commit": "d28a02476fd682e66a357e83789f5e8e4b049fa7",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/ROADMAP.md",
-    "scope": "GF-26 geração/compilação comprovadas; falha CI de seleção Node identificada e correção local verificada; SDK/adapters externos em implementação",
+    "commit": "5d46bba77db8f012afb1ef364f719012a932dba5",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/5d46bba77db8f012afb1ef364f719012a932dba5/ROADMAP.md",
+    "scope": "GF-26 geração/compilação e CI corrigida comprovadas; SDK e adapters externos em implementação",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1223,7 +1223,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fatia verificada: Codegen original 0.87.1 TS/Flow, 20/20 testes e 6/6 unidades C++ macOS arm64 Release. Sem adapter externo carregado/renderizado ou ABI certificada. Provider/mount externo, bundler/export e contrato completo seguem abertos. CI inicial falhou antes de compilar por ausência do Node privado; --node explícito tem 3 testes e nova compilação local 6/6. Aceite da CI corrigida pendente.",
+      "note": "Codegen original 0.87.1 TS/Flow: 20/20 testes e 6/6 unidades C++ macOS arm64 Release locais. Correção da seleção Node: 3 testes; CI 37145700599 passou os cinco jobs e compilou 6/6 unidades com Node 22.23.2. Nenhum adapter externo carregado/renderizado ou ABI certificada. Provider/mount externo, bundler/export e contrato completo seguem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1238,6 +1238,10 @@
             {
               "label": "Falha CI de seleção Node / correção e compilação local 6/6",
               "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
+            },
+            {
+              "label": "CI corrigida: cinco jobs e seis unidades Codegen compiladas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37145700599"
             }
           ]
         },
@@ -2362,6 +2366,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "codegen-ci-37145700599",
+      "at": "2026-10-03T19:06:46.695413Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "CI corrigida passou os cinco jobs em 5d46bba. Artefato original confirma 6/6 unidades C++; Node real 22.23.2 e compiler/SDK registrados. Sem prova de link/load/runtime de adapter externo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37145700599"
+    },
     {
       "id": "codegen-ci-node-selection-correction",
       "at": "2026-10-03T18:44:17.962892Z",

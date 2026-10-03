@@ -76,3 +76,12 @@ the new runner/configuration source hashes and a fresh **6/6** compilation with
 explicit Node selection. It identifies the actual Node binary/version and
 retains false link/load/runtime/ABI claims. The earlier provenance/report remains
 historical. A successful local rerun does not turn the failed hosted job green.
+
+The corrected [run 37145700599](https://github.com/journey-studios/godot-fabric/actions/runs/37145700599)
+passed all five jobs at source commit `5d46bba77db8f012afb1ef364f719012a932dba5`.
+The downloaded original artifact records **6/6** compiled units on macOS arm64
+Release using Node **22.23.2**, Apple clang **17.0.0 (clang-1700.0.13.5)** and
+macOS SDK **15.5**. [hosted-ci.json](hosted-ci.json) retains those identities,
+per-stage/object hashes and the raw report digest. The declared addon Node stays
+22.23.3; actual CI selection is recorded separately. Reference iOS/Android jobs
+validate original RN apps and do not prove Godot ports or external adapters.

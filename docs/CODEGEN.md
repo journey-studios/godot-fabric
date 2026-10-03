@@ -96,8 +96,12 @@ Node explicitly with `--node`; the default remains the provisioned private Node.
 The runner records the selected executable's version and SHA-256. The first
 hosted attempt failed before compilation because the private executable was
 absent; [the correction](evidence/codegen/ci-node-selection.json) retains that
-failure and a separate successful six-unit local rerun. Hosted acceptance must
-still come from the corrected workflow's result.
+failure and a separate successful six-unit local rerun. The corrected
+[hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37145700599)
+passed all five jobs at commit `5d46bba`; its original Codegen artifact records
+**6/6** compiled units with CI Node **22.23.2**, distinct from the declared
+addon Node **22.23.3**. [hosted-ci.json](evidence/codegen/hosted-ci.json)
+retains the actual compiler/Node identities and bounded compilation claims.
 
 [The executed checkpoint](evidence/codegen/README.md) retains the 20-test and
 six-translation-unit results, hashes, target and limitations.
