@@ -1,0 +1,893 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "scenario": "metrics",
+  "engine": "hermes",
+  "renderer": "fabric",
+  "displayServer": "macOS",
+  "assertionCount": 67,
+  "checks": [
+    {
+      "name": "Registered MetricsPanel mounts through AppRegistry",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.window matches the application viewport: initial",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.screen uses the current screen and content density: initial",
+      "passed": true
+    },
+    {
+      "name": "Original PixelRatio reports actual content density and font multiplier: initial",
+      "passed": true
+    },
+    {
+      "name": "PixelRatio converts logical layout size to pixels: initial",
+      "passed": true
+    },
+    {
+      "name": "useWindowDimensions observes the original RN Dimensions state: initial",
+      "passed": true
+    },
+    {
+      "name": "Native DeviceInfo payload agrees with public Dimensions: initial",
+      "passed": true
+    },
+    {
+      "name": "Fabric initially rounds a 10.3-point edge to one-pixel content density",
+      "passed": true
+    },
+    {
+      "name": "Metrics initialize from original DeviceInfo without the legacy window callback",
+      "passed": true
+    },
+    {
+      "name": "Mounted hook and public listener own two tracked RN subscriptions",
+      "passed": true
+    },
+    {
+      "name": "Renderer capture saved: initial",
+      "passed": true
+    },
+    {
+      "name": "React local state updates before resizing",
+      "passed": true
+    },
+    {
+      "name": "Native resize reaches original Dimensions state",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.window matches the application viewport: resized",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.screen uses the current screen and content density: resized",
+      "passed": true
+    },
+    {
+      "name": "Original PixelRatio reports actual content density and font multiplier: resized",
+      "passed": true
+    },
+    {
+      "name": "PixelRatio converts logical layout size to pixels: resized",
+      "passed": true
+    },
+    {
+      "name": "useWindowDimensions observes the original RN Dimensions state: resized",
+      "passed": true
+    },
+    {
+      "name": "Native DeviceInfo payload agrees with public Dimensions: resized",
+      "passed": true
+    },
+    {
+      "name": "Window resize preserves local state and component identity",
+      "passed": true
+    },
+    {
+      "name": "didUpdateDimensions reaches the original RN public change listener",
+      "passed": true
+    },
+    {
+      "name": "Public change callback carries the new application window metrics",
+      "passed": true
+    },
+    {
+      "name": "Renderer capture saved: resized",
+      "passed": true
+    },
+    {
+      "name": "Unchanged native metrics cause no React rerenders or viewport updates",
+      "passed": true
+    },
+    {
+      "name": "Equal RN Dimensions values emit once without rerendering the hook",
+      "passed": true
+    },
+    {
+      "name": "Original Dimensions rejects unknown subscription events",
+      "passed": true
+    },
+    {
+      "name": "Public unsubscribe is idempotent and preserves only the hook subscription",
+      "passed": true
+    },
+    {
+      "name": "Hook remains responsive after public unsubscribe",
+      "passed": true
+    },
+    {
+      "name": "Removed public listener receives no events while React state survives",
+      "passed": true
+    },
+    {
+      "name": "Unmount removes every hook and public subscription while the application lives",
+      "passed": true
+    },
+    {
+      "name": "Original Dimensions updates with no React roots or public listeners",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.window matches the application viewport: without-subscribers",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.screen uses the current screen and content density: without-subscribers",
+      "passed": true
+    },
+    {
+      "name": "Original PixelRatio reports actual content density and font multiplier: without-subscribers",
+      "passed": true
+    },
+    {
+      "name": "PixelRatio converts logical layout size to pixels: without-subscribers",
+      "passed": true
+    },
+    {
+      "name": "Native DeviceInfo payload agrees with public Dimensions: without-subscribers",
+      "passed": true
+    },
+    {
+      "name": "Reading fresh Dimensions does not recreate subscriptions",
+      "passed": true
+    },
+    {
+      "name": "The same application remounts MetricsPanel",
+      "passed": true
+    },
+    {
+      "name": "Remounted hook reads current RN dimensions",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.window matches the application viewport: remounted",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.screen uses the current screen and content density: remounted",
+      "passed": true
+    },
+    {
+      "name": "Original PixelRatio reports actual content density and font multiplier: remounted",
+      "passed": true
+    },
+    {
+      "name": "PixelRatio converts logical layout size to pixels: remounted",
+      "passed": true
+    },
+    {
+      "name": "useWindowDimensions observes the original RN Dimensions state: remounted",
+      "passed": true
+    },
+    {
+      "name": "Native DeviceInfo payload agrees with public Dimensions: remounted",
+      "passed": true
+    },
+    {
+      "name": "Remount starts fresh local state and owns fresh subscriptions",
+      "passed": true
+    },
+    {
+      "name": "Uniform canvas content scaling updates original PixelRatio and the hook",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.window matches the application viewport: scaled",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.screen uses the current screen and content density: scaled",
+      "passed": true
+    },
+    {
+      "name": "Original PixelRatio reports actual content density and font multiplier: scaled",
+      "passed": true
+    },
+    {
+      "name": "PixelRatio converts logical layout size to pixels: scaled",
+      "passed": true
+    },
+    {
+      "name": "useWindowDimensions observes the original RN Dimensions state: scaled",
+      "passed": true
+    },
+    {
+      "name": "Native DeviceInfo payload agrees with public Dimensions: scaled",
+      "passed": true
+    },
+    {
+      "name": "Fabric pointScaleFactor follows content density when rounding native Control frames",
+      "passed": true
+    },
+    {
+      "name": "Two physical pixels per point agree with Godot logical content and RN rounding",
+      "passed": true
+    },
+    {
+      "name": "Renderer capture saved: scaled",
+      "passed": true
+    },
+    {
+      "name": "Restoring Godot content settings restores RN density",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.window matches the application viewport: restored",
+      "passed": true
+    },
+    {
+      "name": "Dimensions.screen uses the current screen and content density: restored",
+      "passed": true
+    },
+    {
+      "name": "Original PixelRatio reports actual content density and font multiplier: restored",
+      "passed": true
+    },
+    {
+      "name": "PixelRatio converts logical layout size to pixels: restored",
+      "passed": true
+    },
+    {
+      "name": "useWindowDimensions observes the original RN Dimensions state: restored",
+      "passed": true
+    },
+    {
+      "name": "Native DeviceInfo payload agrees with public Dimensions: restored",
+      "passed": true
+    },
+    {
+      "name": "Restoring content density also restores Fabric edge rounding",
+      "passed": true
+    },
+    {
+      "name": "Application shutdown releases all metric subscriptions",
+      "passed": true
+    },
+    {
+      "name": "Metrics validation shuts down roots and native modules without host errors",
+      "passed": true
+    },
+    {
+      "name": "Shutdown leaves no scheduling resources",
+      "passed": true
+    }
+  ],
+  "stages": {
+    "initial": {
+      "react": {
+        "cleanups": 0.0,
+        "commits": 1.0,
+        "events": [],
+        "fontScale": 1.0,
+        "hook": {
+          "fontScale": 1.0,
+          "height": 720.0,
+          "scale": 1.0,
+          "width": 1000.0
+        },
+        "local": 0.0,
+        "mounts": 1.0,
+        "pixelRatio": 1.0,
+        "pixelsFor12Points": 12.0,
+        "publicListeners": 1.0,
+        "rounded10Point3": 10.0,
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 720.0,
+          "scale": 1.0,
+          "width": 1000.0
+        }
+      },
+      "godotVisibleSize": [
+        1000.0,
+        720.0
+      ],
+      "godotWindowSize": [
+        1000,
+        720
+      ],
+      "nativeDimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 720.0,
+          "scale": 1.0,
+          "width": 1000.0
+        }
+      },
+      "nativeProbeWidth": 10.0,
+      "screenIndex": 0
+    },
+    "remounted": {
+      "react": {
+        "cleanups": 1.0,
+        "commits": 5.0,
+        "events": [
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          }
+        ],
+        "fontScale": 1.0,
+        "hook": {
+          "fontScale": 1.0,
+          "height": 700.0,
+          "scale": 1.0,
+          "width": 960.0
+        },
+        "local": 0.0,
+        "mounts": 2.0,
+        "pixelRatio": 1.0,
+        "pixelsFor12Points": 12.0,
+        "publicListeners": 1.0,
+        "rounded10Point3": 10.0,
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 700.0,
+          "scale": 1.0,
+          "width": 960.0
+        }
+      },
+      "godotVisibleSize": [
+        960.0,
+        700.0
+      ],
+      "godotWindowSize": [
+        960,
+        700
+      ],
+      "nativeDimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 700.0,
+          "scale": 1.0,
+          "width": 960.0
+        }
+      },
+      "nativeProbeWidth": 10.0,
+      "screenIndex": 0
+    },
+    "resized": {
+      "react": {
+        "cleanups": 0.0,
+        "commits": 3.0,
+        "events": [
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          }
+        ],
+        "fontScale": 1.0,
+        "hook": {
+          "fontScale": 1.0,
+          "height": 760.0,
+          "scale": 1.0,
+          "width": 1100.0
+        },
+        "local": 7.0,
+        "mounts": 1.0,
+        "pixelRatio": 1.0,
+        "pixelsFor12Points": 12.0,
+        "publicListeners": 1.0,
+        "rounded10Point3": 10.0,
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 760.0,
+          "scale": 1.0,
+          "width": 1100.0
+        }
+      },
+      "godotVisibleSize": [
+        1100.0,
+        760.0
+      ],
+      "godotWindowSize": [
+        1100,
+        760
+      ],
+      "nativeDimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 760.0,
+          "scale": 1.0,
+          "width": 1100.0
+        }
+      },
+      "nativeProbeWidth": 10.0,
+      "screenIndex": 0
+    },
+    "restored": {
+      "react": {
+        "cleanups": 1.0,
+        "commits": 7.0,
+        "events": [
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 982.0,
+              "scale": 2.0,
+              "width": 1512.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 480.0,
+              "scale": 2.0,
+              "width": 640.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 680.0,
+              "scale": 1.0,
+              "width": 900.0
+            }
+          }
+        ],
+        "fontScale": 1.0,
+        "hook": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        },
+        "local": 0.0,
+        "mounts": 2.0,
+        "pixelRatio": 1.0,
+        "pixelsFor12Points": 12.0,
+        "publicListeners": 1.0,
+        "rounded10Point3": 10.0,
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      },
+      "godotVisibleSize": [
+        900.0,
+        680.0
+      ],
+      "godotWindowSize": [
+        900,
+        680
+      ],
+      "nativeDimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      },
+      "nativeProbeWidth": 10.0,
+      "screenIndex": 0
+    },
+    "scaled": {
+      "react": {
+        "cleanups": 1.0,
+        "commits": 6.0,
+        "events": [
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 982.0,
+              "scale": 2.0,
+              "width": 1512.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 480.0,
+              "scale": 2.0,
+              "width": 640.0
+            }
+          }
+        ],
+        "fontScale": 1.0,
+        "hook": {
+          "fontScale": 1.0,
+          "height": 480.0,
+          "scale": 2.0,
+          "width": 640.0
+        },
+        "local": 0.0,
+        "mounts": 2.0,
+        "pixelRatio": 2.0,
+        "pixelsFor12Points": 24.0,
+        "publicListeners": 1.0,
+        "rounded10Point3": 10.5,
+        "screen": {
+          "fontScale": 1.0,
+          "height": 982.0,
+          "scale": 2.0,
+          "width": 1512.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 480.0,
+          "scale": 2.0,
+          "width": 640.0
+        }
+      },
+      "godotVisibleSize": [
+        640.0,
+        480.0
+      ],
+      "godotWindowSize": [
+        1280,
+        960
+      ],
+      "nativeDimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 982.0,
+          "scale": 2.0,
+          "width": 1512.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 480.0,
+          "scale": 2.0,
+          "width": 640.0
+        }
+      },
+      "nativeProbeWidth": 10.5,
+      "screenIndex": 0
+    },
+    "without-subscribers": {
+      "react": {
+        "cleanups": 1.0,
+        "commits": 4.0,
+        "events": [
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          },
+          {
+            "screen": {
+              "fontScale": 1.0,
+              "height": 1964.0,
+              "scale": 1.0,
+              "width": 3024.0
+            },
+            "window": {
+              "fontScale": 1.0,
+              "height": 760.0,
+              "scale": 1.0,
+              "width": 1100.0
+            }
+          }
+        ],
+        "fontScale": 1.0,
+        "hook": null,
+        "local": null,
+        "mounts": 1.0,
+        "pixelRatio": 1.0,
+        "pixelsFor12Points": 12.0,
+        "publicListeners": 0.0,
+        "rounded10Point3": 10.0,
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 700.0,
+          "scale": 1.0,
+          "width": 960.0
+        }
+      },
+      "godotVisibleSize": [
+        960.0,
+        700.0
+      ],
+      "godotWindowSize": [
+        960,
+        700
+      ],
+      "nativeDimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 700.0,
+          "scale": 1.0,
+          "width": 960.0
+        }
+      },
+      "nativeProbeWidth": null,
+      "screenIndex": 0
+    }
+  },
+  "reactState": {
+    "cleanups": 2.0,
+    "commits": 7.0,
+    "events": [
+      {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 760.0,
+          "scale": 1.0,
+          "width": 1100.0
+        }
+      },
+      {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 760.0,
+          "scale": 1.0,
+          "width": 1100.0
+        }
+      },
+      {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 982.0,
+          "scale": 2.0,
+          "width": 1512.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 480.0,
+          "scale": 2.0,
+          "width": 640.0
+        }
+      },
+      {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1964.0,
+          "scale": 1.0,
+          "width": 3024.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 680.0,
+          "scale": 1.0,
+          "width": 900.0
+        }
+      }
+    ],
+    "fontScale": 1.0,
+    "hook": null,
+    "local": null,
+    "mounts": 2.0,
+    "pixelRatio": 1.0,
+    "pixelsFor12Points": 12.0,
+    "publicListeners": 0.0,
+    "rounded10Point3": 10.0,
+    "screen": {
+      "fontScale": 1.0,
+      "height": 1964.0,
+      "scale": 1.0,
+      "width": 3024.0
+    },
+    "window": {
+      "fontScale": 1.0,
+      "height": 680.0,
+      "scale": 1.0,
+      "width": 900.0
+    }
+  },
+  "shutdown": {
+    "stopped": true,
+    "rootCount": 0.0,
+    "pendingTimers": 0.0,
+    "pendingAnimationFrames": 0.0,
+    "pendingWork": 0.0,
+    "errors": [],
+    "nativeModules": {
+      "callableCalls": 0.0,
+      "callableModules": 0.0,
+      "creations": 4.0,
+      "disposals": 2.0,
+      "installed": true,
+      "loaded": 0.0,
+      "lookups": 5.0,
+      "registered": 4.0,
+      "retainedUntilVMDestroy": 4.0,
+      "runtimeId": "27262977489",
+      "staleCalls": 0.0,
+      "stopped": true
+    }
+  }
+}

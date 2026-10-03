@@ -35,7 +35,7 @@ GF-05 is **In progress**: upstream TimerManager, portable RN microtask/immediate
 modules, a public runtime example and four additional shared oracle cases are
 implemented. [Runtime evidence](docs/evidence/runtime/README.md) records native
 checks/captures and the remaining bootstrap, idle/error/global and starvation
-gaps. GF-09 system metrics remain Planned; this slice does not complete GF-05.
+gaps. The later DeviceInfo checkpoint starts GF-09; it does not complete GF-05.
 
 The [runnable examples](examples/README.md) expose existing fixtures in a shared
 project; they are a prerequisite for GF-28, not the independent packaged consumer
@@ -68,6 +68,20 @@ Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit
 release scope. P0 describes urgency, not the full release checklist. Module
 owners below are implementation boundaries, not assigned people.
+
+The [native foundation checkpoint](docs/evidence/native-foundation/README.md)
+starts GF-08/GF-09/GF-25: original RN public refs and NativeDOM use the Fabric
+tree; generated DeviceInfo/SourceCode bootstrap and original JSI TurboModules
+cover bounded measurements, subscriptions, promises/events and lifetime.
+The [metrics example](examples/metrics/README.md) tests real resize, uniform
+content density, reads without subscribers and Yoga rounding. These items
+remain In progress for their full rows below. Typed game-service operations,
+revisions/connections and the integrated HUD/inventory milestone remain next.
+
+GF-31 starts with the [iOS arm64 build/link checkpoint](docs/IOS_BUILD.md),
+including device/simulator XCFramework packaging. Godot iOS consumer export,
+runtime/device proof and the other target foundations remain required. This
+is independent of the original RN reference-app CI and does not close GF-35.
 
 ## Release contract and scope
 
@@ -279,8 +293,8 @@ and expose a contract failure without hidden no-ops or stale evidence.
 | GF-05 · P0 · RN bootstrap and JS globals | In progress | Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22 | GF-01 |
 | GF-06 · P1 · React/Fabric semantic suite | Planned | Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler | GF-01, GF-05 |
 | GF-07 · P1 · Root and surface lifecycle | In progress | Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions | GF-05, GF-06 |
-| GF-08 · P1 · Public refs and native commands | Planned | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
-| GF-09 · P0 · Real metrics and platform identity | Planned | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
+| GF-08 · P1 · Public refs and native commands | In progress | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
+| GF-09 · P0 · Real metrics and platform identity | In progress | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
 
 **GF-02 checkpoint (2026-10-02):** the extension minimum now matches the tested
 Godot 4.7.2 runtime. Setup rejects a different engine before downloads/build
@@ -333,7 +347,7 @@ consumer project can write TSX, add native functionality, debug and export.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-25 · P0 · TurboModule and event infrastructure | Planned | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
+| GF-25 · P0 · TurboModule and event infrastructure | In progress | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
 | GF-26 · P1 · Codegen and custom Fabric components | Planned | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
 | GF-27 · P1 · Selected library certification | Planned | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
 | GF-28 · P1 · SDK, addon and consumer exports | In progress | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
@@ -349,7 +363,7 @@ in M0; certification completes after the host and service contracts exist.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-31 · P0 · Portable dependency/build foundation | Planned | Replace macOS-framework assumptions with per-target Hermes, RN dependencies, Fabric/Yoga and godot-cpp builds. Specify ABI/compiler/OS minimums and debug/release combinations, hashes/licenses and loader/export behavior. Build an early Android/iOS startup/JSI/Control spike with official templates and identify native-view/accessibility bridge constraints before committing the port design | GF-01 |
+| GF-31 · P0 · Portable dependency/build foundation | In progress | Replace macOS-framework assumptions with per-target Hermes, RN dependencies, Fabric/Yoga and godot-cpp builds. Specify ABI/compiler/OS minimums and debug/release combinations, hashes/licenses and loader/export behavior. Build an early Android/iOS startup/JSI/Control spike with official templates and identify native-view/accessibility bridge constraints before committing the port design | GF-01 |
 | GF-32 · P1 · Linux x86_64 | Planned | Build/load/export on a declared distribution baseline, package shared dependencies and verify window/DPI/input/IME/accessibility/system services. Native headless and graphical acceptance run on a fresh consumer, plus exported application evidence | GF-02, GF-09, GF-12, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-33 · P1 · Windows x86_64 | Planned | Establish MSVC/CRT/ABI and DLL discovery/export; verify native startup/shutdown, DPI, keyboard/IME, focus, accessibility and services in exported debug/release consumers. Test installation paths with spaces and fresh machines | GF-02, GF-09, GF-12, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-34 · P1 · Android arm64 | Planned | Integrate NDK/JNI/shared dependencies and exported Gradle project without modifying Godot. Prove startup, hardware touch, keyboard/IME, safe insets/orientation, lifecycle, accessibility, network and OS services on emulator and a physical device; debug/release packaging includes all dependencies | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |

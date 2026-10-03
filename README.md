@@ -12,8 +12,10 @@ engine does not need rebuilding.
 ## Status
 
 This is an experimental platform implementation. Native setup and rendering
-are validated on **macOS arm64 with official Godot 4.7.2**. Linux, Windows,
-iOS, Android and Web do not yet have supported build paths.
+are validated on **macOS arm64 with official Godot 4.7.2**. An experimental
+[iOS arm64 build path](docs/IOS_BUILD.md) has device/simulator compile and link
+proof; exported Godot runtime acceptance is pending. Linux, Windows, Android
+and Web do not yet have supported build paths.
 
 Setup and the check runner prepare Godot's extension startup list before the
 first import. This avoids a Godot 4.7.2 editor crash when an import-only scan
@@ -36,6 +38,17 @@ The [1.0 roadmap](ROADMAP.md) maps priorities, dependencies and acceptance
 criteria for RN parity across macOS, Linux, Windows, Android and iOS. The
 [dated parity audit](docs/PARITY.md) separates implemented behavior, incomplete
 contracts and missing APIs against React Native 0.87.1.
+
+The [native foundation checkpoint](docs/evidence/native-foundation/README.md)
+exercises original RN refs, Fabric prop commits and JSI TurboModules. The
+[refs example](examples/refs/README.md) measures scaled and rotated Godot
+surfaces, then replaces a child and unmounts one root while retaining refs.
+The [metrics example](examples/metrics/README.md) exercises original RN
+Dimensions/PixelRatio, live resize and Yoga rounding with Godot content scale.
+
+![Original RN refs in transformed Godot surfaces](docs/evidence/native-foundation/refs-initial.png)
+
+![RN window metrics at Godot content scale 2](docs/evidence/native-foundation/metrics-scaled.png)
 
 ## Independent Godot project
 
@@ -78,12 +91,14 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 ```sh
 npm run example -- form     # public typed Button/TextInput form
 npm run example -- shared   # two registered roots in one Hermes application
+npm run example -- refs     # original RN refs and transformed window geometry
 npm start -- --nativewind   # reactive utility classes and manual theme
 npm start -- --chart        # original React Native Chart Kit
 npm start -- --scroll       # generic scroll, filtering and editing demo
 npm start                  # React state, keys, Suspense and error boundaries
 npm run bundle             # rebuild after JSX/style changes
 npm run setup              # rebuild after native C++ changes
+npm run test:modules       # original JSI modules, promises, events and disposal
 ```
 
 The [examples catalog](examples/README.md) has runnable scenes, JSX/TSX and per-case

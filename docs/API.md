@@ -1,5 +1,11 @@
 # API and compatibility limits
 
+The [native modules and refs checkpoint](NATIVE_MODULES.md) documents original
+RN element/document refs, measurement, `setNativeProps`, `NativeModules`,
+`TurboModuleRegistry`, `NativeEventEmitter` and DeviceInfo-backed
+Dimensions/PixelRatio. Its [evidence](evidence/native-foundation/README.md)
+is bounded; complete API and platform parity remain roadmap requirements.
+
 The examples use React and JSX. `react-native` imports resolve to the Godot
 facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
@@ -185,8 +191,10 @@ negative native checks. This is a partial GF-05 bootstrap: idle callbacks,
 unhandled rejection/error-handler parity, URL/encoding/abort globals and
 microtask starvation protection remain uncertified. No worker thread is used.
 
-The build currently targets macOS arm64 only. Linux, Windows, iOS, Android and
-Web need their own dependency/toolchain and runtime validation. Installing
+Native runtime acceptance currently targets macOS arm64. The experimental
+[iOS build path](IOS_BUILD.md) has arm64 device/simulator build and link proof;
+exported runtime acceptance remains pending. Linux, Windows, Android and Web
+need their own dependency/toolchain and runtime validation. Installing
 Godot on those systems does not by itself make this GDExtension available.
 
 Two named surfaces are exercised by the shared example. Portals, overlapping

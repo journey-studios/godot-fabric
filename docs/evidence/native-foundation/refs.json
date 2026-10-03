@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "scenario": "refs",
+  "engine": "hermes",
+  "renderer": "fabric",
+  "displayServer": "macOS",
+  "assertionCount": 25,
+  "checks": [
+    {
+      "name": "Both roots expose the original RN public element class",
+      "passed": true
+    },
+    {
+      "name": "Parent, containment, owner document and root APIs follow the original shadow tree",
+      "passed": true
+    },
+    {
+      "name": "Original children traverses native View and Text including zero/hidden elements",
+      "passed": true
+    },
+    {
+      "name": "measure stays in RN root coordinates despite scaled Godot embedding",
+      "passed": true
+    },
+    {
+      "name": "Ref and numeric UIManager measureLayout agree",
+      "passed": true
+    },
+    {
+      "name": "offset sizes and positions exclude embedding transforms",
+      "passed": true
+    },
+    {
+      "name": "Scaled measureInWindow agrees with actual native corners and legacy API",
+      "passed": true
+    },
+    {
+      "name": "Rotated measureInWindow includes all four native corners",
+      "passed": true
+    },
+    {
+      "name": "Original DOMRect and window measurement agree",
+      "passed": true
+    },
+    {
+      "name": "A valid zero-size element retains its transformed window position",
+      "passed": true
+    },
+    {
+      "name": "display:none retains empty DOM geometry without the surface offset",
+      "passed": true
+    },
+    {
+      "name": "Invalid numeric and nonnumeric handles fail safely before native tag conversion",
+      "passed": true
+    },
+    {
+      "name": "Cross-root measureLayout uses upstream failure callback",
+      "passed": true
+    },
+    {
+      "name": "Capture saved: initial",
+      "passed": true
+    },
+    {
+      "name": "Moving an embedded surface changes only window coordinates",
+      "passed": true
+    },
+    {
+      "name": "Original setNativeProps commits Yoga layout and native appearance",
+      "passed": true
+    },
+    {
+      "name": "Unrelated React rerender preserves the imperative width",
+      "passed": true
+    },
+    {
+      "name": "A changed declarative prop supersedes the imperative width",
+      "passed": true
+    },
+    {
+      "name": "Retained deleted refs neither measure nor access a new native node",
+      "passed": true
+    },
+    {
+      "name": "A replacement has a fresh native tag and ignores stale commands",
+      "passed": true
+    },
+    {
+      "name": "Root unmount invalidates retained refs while the application stays alive",
+      "passed": true
+    },
+    {
+      "name": "Comparing an active element with another root's retired document stays disconnected and safe",
+      "passed": true
+    },
+    {
+      "name": "Unmounting the second root preserves the first root's document",
+      "passed": true
+    },
+    {
+      "name": "Capture saved: updated",
+      "passed": true
+    },
+    {
+      "name": "Shutdown removes roots and native module authority without errors",
+      "passed": true
+    }
+  ],
+  "observations": {
+    "initial": {
+      "A": {
+        "className": "_ReactNativeElement",
+        "connected": true,
+        "contained": true,
+        "documentConnected": true,
+        "hidden": {
+          "bottom": 0.0,
+          "height": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0,
+          "width": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "legacyRelative": [
+          16.0,
+          16.0,
+          100.0,
+          40.0
+        ],
+        "legacyWindow": [
+          92.0,
+          102.0,
+          200.0,
+          80.0
+        ],
+        "measure": [
+          16.0,
+          16.0,
+          100.0,
+          40.0,
+          16.0,
+          16.0
+        ],
+        "offset": [
+          16.0,
+          16.0,
+          100.0,
+          40.0
+        ],
+        "originalInstance": true,
+        "parentChildren": 4.0,
+        "parentMatches": true,
+        "rect": {
+          "bottom": 182.0,
+          "height": 80.0,
+          "left": 92.0,
+          "right": 292.0,
+          "top": 102.0,
+          "width": 200.0,
+          "x": 92.0,
+          "y": 102.0
+        },
+        "relative": [
+          16.0,
+          16.0,
+          100.0,
+          40.0
+        ],
+        "rootMatches": true,
+        "sameDocument": true,
+        "tag": 2.0,
+        "window": [
+          92.0,
+          102.0,
+          200.0,
+          80.0
+        ],
+        "zero": {
+          "bottom": 250.0,
+          "height": 0.0,
+          "left": 130.0,
+          "right": 130.0,
+          "top": 250.0,
+          "width": 0.0,
+          "x": 130.0,
+          "y": 250.0
+        }
+      },
+      "B": {
+        "className": "_ReactNativeElement",
+        "connected": true,
+        "contained": true,
+        "documentConnected": true,
+        "hidden": {
+          "bottom": 0.0,
+          "height": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0,
+          "width": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "legacyRelative": [
+          16.0,
+          16.0,
+          100.0,
+          40.0
+        ],
+        "legacyWindow": [
+          624.0,
+          106.0,
+          40.0,
+          100.0
+        ],
+        "measure": [
+          16.0,
+          16.0,
+          100.0,
+          40.0,
+          16.0,
+          16.0
+        ],
+        "offset": [
+          16.0,
+          16.0,
+          100.0,
+          40.0
+        ],
+        "originalInstance": true,
+        "parentChildren": 4.0,
+        "parentMatches": true,
+        "rect": {
+          "bottom": 206.0,
+          "height": 100.0,
+          "left": 624.0,
+          "right": 664.0,
+          "top": 106.0,
+          "width": 40.0,
+          "x": 624.0,
+          "y": 106.0
+        },
+        "relative": [
+          16.0,
+          16.0,
+          100.0,
+          40.0
+        ],
+        "rootMatches": true,
+        "sameDocument": true,
+        "tag": 20.0,
+        "window": [
+          624.0,
+          106.0,
+          40.0,
+          100.0
+        ],
+        "zero": {
+          "bottom": 125.000007629395,
+          "height": 0.0,
+          "left": 590.0,
+          "right": 590.0,
+          "top": 125.000007629395,
+          "width": 0.0,
+          "x": 590.0,
+          "y": 125.000007629395
+        }
+      }
+    },
+    "final": {
+      "className": "_ReactNativeElement",
+      "connected": true,
+      "contained": true,
+      "documentConnected": true,
+      "hidden": {
+        "bottom": 0.0,
+        "height": 0.0,
+        "left": 0.0,
+        "right": 0.0,
+        "top": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "legacyRelative": [
+        16.0,
+        16.0,
+        130.0,
+        40.0
+      ],
+      "legacyWindow": [
+        117.0,
+        132.0,
+        260.0,
+        80.0
+      ],
+      "measure": [
+        16.0,
+        16.0,
+        130.0,
+        40.0,
+        16.0,
+        16.0
+      ],
+      "offset": [
+        16.0,
+        16.0,
+        130.0,
+        40.0
+      ],
+      "originalInstance": true,
+      "parentChildren": 4.0,
+      "parentMatches": true,
+      "rect": {
+        "bottom": 212.0,
+        "height": 80.0,
+        "left": 117.0,
+        "right": 377.0,
+        "top": 132.0,
+        "width": 260.0,
+        "x": 117.0,
+        "y": 132.0
+      },
+      "relative": [
+        16.0,
+        16.0,
+        130.0,
+        40.0
+      ],
+      "rootMatches": true,
+      "sameDocument": true,
+      "tag": 40.0,
+      "window": [
+        117.0,
+        132.0,
+        260.0,
+        80.0
+      ],
+      "zero": {
+        "bottom": 280.0,
+        "height": 0.0,
+        "left": 155.0,
+        "right": 155.0,
+        "top": 280.0,
+        "width": 0.0,
+        "x": 155.0,
+        "y": 280.0
+      }
+    }
+  },
+  "shutdown": {
+    "stopped": true,
+    "rootCount": 0.0,
+    "pendingTimers": 0.0,
+    "pendingAnimationFrames": 0.0,
+    "pendingWork": 0.0,
+    "errors": [],
+    "nativeModules": {
+      "callableCalls": 0.0,
+      "callableModules": 0.0,
+      "creations": 4.0,
+      "disposals": 2.0,
+      "fixture": {
+        "active": true,
+        "disposals": 0.0,
+        "listeners": 0.0
+      },
+      "installed": true,
+      "loaded": 0.0,
+      "lookups": 5.0,
+      "registered": 5.0,
+      "retainedUntilVMDestroy": 4.0,
+      "runtimeId": "27262977489",
+      "staleCalls": 0.0,
+      "stopped": true
+    }
+  }
+}

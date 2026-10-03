@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "scenario": "metrics-errors",
+  "engine": "hermes",
+  "renderer": "fabric",
+  "displayServer": "headless",
+  "assertionCount": 58,
+  "checks": [
+    {
+      "name": "Live MetricsPanel owns a hook and public listener: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Fresh runtime begins with valid metrics and native modules: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Fixture applies the intended unsupported coordinate transform: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Invalid coordinate contract produces exactly one visible diagnostic: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Repeated invalid samples do not flood diagnostics: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Rejected metrics preserve the last valid RN Dimensions state: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Metrics failure does not starve React state or native commits: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Partial unmount releases hook and public subscriptions under invalid metrics: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Partial unmount retires every Control without stopping the application: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Application has real timers and frame callbacks before stop: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Stop delivers React cleanup exactly once despite invalid metrics: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Stop releases every root and native module authority: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Stop drains React work and cancels native scheduling: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Shutdown preserves the one original diagnostic without resampling: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves the finalized state and cleanup count: viewport/unmount",
+      "passed": true
+    },
+    {
+      "name": "Live MetricsPanel owns a hook and public listener: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Fresh runtime begins with valid metrics and native modules: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Fixture applies the intended unsupported coordinate transform: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Invalid coordinate contract produces exactly one visible diagnostic: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Repeated invalid samples do not flood diagnostics: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Rejected metrics preserve the last valid RN Dimensions state: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Metrics failure does not starve React state or native commits: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Direct-stop case retains live React effects before shutdown: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Application has real timers and frame callbacks before stop: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Stop delivers React cleanup exactly once despite invalid metrics: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Stop releases every root and native module authority: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Stop drains React work and cancels native scheduling: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Shutdown preserves the one original diagnostic without resampling: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves the finalized state and cleanup count: viewport/stop",
+      "passed": true
+    },
+    {
+      "name": "Live MetricsPanel owns a hook and public listener: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Fresh runtime begins with valid metrics and native modules: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Fixture applies the intended unsupported coordinate transform: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Invalid coordinate contract produces exactly one visible diagnostic: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Repeated invalid samples do not flood diagnostics: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Rejected metrics preserve the last valid RN Dimensions state: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Metrics failure does not starve React state or native commits: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Partial unmount releases hook and public subscriptions under invalid metrics: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Partial unmount retires every Control without stopping the application: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Application has real timers and frame callbacks before stop: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Stop delivers React cleanup exactly once despite invalid metrics: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Stop releases every root and native module authority: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Stop drains React work and cancels native scheduling: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Shutdown preserves the one original diagnostic without resampling: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves the finalized state and cleanup count: nonuniform/unmount",
+      "passed": true
+    },
+    {
+      "name": "Live MetricsPanel owns a hook and public listener: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Fresh runtime begins with valid metrics and native modules: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Fixture applies the intended unsupported coordinate transform: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Invalid coordinate contract produces exactly one visible diagnostic: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Repeated invalid samples do not flood diagnostics: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Rejected metrics preserve the last valid RN Dimensions state: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Metrics failure does not starve React state or native commits: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Direct-stop case retains live React effects before shutdown: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Application has real timers and frame callbacks before stop: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Stop delivers React cleanup exactly once despite invalid metrics: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Stop releases every root and native module authority: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Stop drains React work and cancels native scheduling: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Shutdown preserves the one original diagnostic without resampling: nonuniform/stop",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves the finalized state and cleanup count: nonuniform/stop",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "mode": "viewport",
+      "teardown": "unmount",
+      "fixtureGeometry": null,
+      "diagnostics": [
+        "Embedded windows and viewport stretch require a complete React Native metrics adapter"
+      ],
+      "reactCleanupCount": 1.0,
+      "remainingSubscriptions": 0,
+      "shutdown": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "errors": [
+          "Embedded windows and viewport stretch require a complete React Native metrics adapter"
+        ],
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 2.0,
+          "installed": true,
+          "loaded": 0.0,
+          "lookups": 5.0,
+          "registered": 4.0,
+          "retainedUntilVMDestroy": 4.0,
+          "runtimeId": "26809992661",
+          "staleCalls": 0.0,
+          "stopped": true
+        }
+      }
+    },
+    {
+      "mode": "viewport",
+      "teardown": "stop",
+      "fixtureGeometry": null,
+      "diagnostics": [
+        "Embedded windows and viewport stretch require a complete React Native metrics adapter"
+      ],
+      "reactCleanupCount": 1.0,
+      "remainingSubscriptions": 0,
+      "shutdown": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "errors": [
+          "Embedded windows and viewport stretch require a complete React Native metrics adapter"
+        ],
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 2.0,
+          "installed": true,
+          "loaded": 0.0,
+          "lookups": 5.0,
+          "registered": 4.0,
+          "retainedUntilVMDestroy": 4.0,
+          "runtimeId": "31255954895",
+          "staleCalls": 0.0,
+          "stopped": true
+        }
+      }
+    },
+    {
+      "mode": "nonuniform",
+      "teardown": "unmount",
+      "fixtureGeometry": null,
+      "diagnostics": [
+        "React Native window metrics require uniform positive Godot content scaling"
+      ],
+      "reactCleanupCount": 1.0,
+      "remainingSubscriptions": 0,
+      "shutdown": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "errors": [
+          "React Native window metrics require uniform positive Godot content scaling"
+        ],
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 2.0,
+          "installed": true,
+          "loaded": 0.0,
+          "lookups": 5.0,
+          "registered": 4.0,
+          "retainedUntilVMDestroy": 4.0,
+          "runtimeId": "35299264000",
+          "staleCalls": 0.0,
+          "stopped": true
+        }
+      }
+    },
+    {
+      "mode": "nonuniform",
+      "teardown": "stop",
+      "fixtureGeometry": null,
+      "diagnostics": [
+        "React Native window metrics require uniform positive Godot content scaling"
+      ],
+      "reactCleanupCount": 1.0,
+      "remainingSubscriptions": 0,
+      "shutdown": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "errors": [
+          "React Native window metrics require uniform positive Godot content scaling"
+        ],
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 2.0,
+          "installed": true,
+          "loaded": 0.0,
+          "lookups": 5.0,
+          "registered": 4.0,
+          "retainedUntilVMDestroy": 4.0,
+          "runtimeId": "39896221249",
+          "staleCalls": 0.0,
+          "stopped": true
+        }
+      }
+    }
+  ]
+}
