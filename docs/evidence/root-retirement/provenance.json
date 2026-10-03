@@ -149,5 +149,7 @@
     "node scripts/native-sdk.mjs pack --build-dir .deps/build --out build/native-sdk-root-retirement-v2-20261003",
     "node scripts/native-sdk.mjs verify --sdk build/native-sdk-root-retirement-v2-20261003",
     "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-root-retirement-v2-20261003 --out build/adapter-runtime-root-retirement-v2-20261003 --capture"
-  ]
+  ],
+  "testedImplementationCommit": "47432df8b76816a44cf72af2184ab4794c6c5338",
+  "committedSourceIdentityVerified": true
 }

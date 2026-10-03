@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Roots reentrantes comprovadas; próximo: geometria, stacking e clipping de View"
   },
-  "updatedAt": "2026-10-03T23:45:51.177113+00:00",
+  "updatedAt": "2026-10-03T23:48:44.654828+00:00",
   "source": {
-    "commit": "80729da5f7639900d9213c7c686578e2dc1b9419",
-    "url": "https://github.com/journey-studios/godot-fabric/pull/14",
-    "scope": "Base 80729da; fontes locais consumidas identificadas por SHA em root-retirement/provenance.json. GF-07/GF-26/GF-28: 17 Godot/318 checks em macOS arm64 Release, retiro/re-mount/owner switch/stale core/font ownership e pixels. Pin do commit da implementação após commit; CI própria pendente. Nenhum aceite completo ou denominador alterado.",
+    "commit": "47432df8b76816a44cf72af2184ab4794c6c5338",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/ROADMAP.md",
+    "scope": "Implementação 47432df conferida pelos hashes executados: GF-07/GF-26/GF-28 retirement independente, remount/host free/owner switch/stale core/font ownership, 17 Godot/318 checks e pixels. 199 Node/13 Python, 10 nativos, 15 exemplos/605 checks. CI precedente 80729da verde nos cinco jobs; CI desta fatia pendente. Nenhum aceite completo ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -378,7 +378,7 @@
             },
             {
               "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
             }
           ]
         },
@@ -1289,7 +1289,7 @@
             },
             {
               "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
             }
           ]
         },
@@ -1422,7 +1422,7 @@
             },
             {
               "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
             },
             {
               "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
@@ -2455,6 +2455,17 @@
   ],
   "activity": [
     {
+      "id": "root-retirement-source-47432df",
+      "at": "2026-10-03T23:48:44.654828+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Commit 47432df corresponde a todas as fontes nativas, do consumer e do harness realmente executadas; evidências fixadas por SHA. Regressões 199 Node/13 Python, 10 nativos e 15 exemplos/605 checks passaram. GF completos, dependências e decisões permanecem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+    },
+    {
       "id": "root-retirement-local-v2",
       "at": "2026-10-03T23:45:51.177113+00:00",
       "taskIds": [
@@ -2463,7 +2474,7 @@
         "GF-28"
       ],
       "message": "17 execuções Godot/318 checks comprovam retirement independente, remount, host free, owner switch, origem do core sinal e font ownership externa. Capturas verificam pixels. CI anterior 80729da verde em cinco jobs; CI nova pendente. Sem item/checkpoint adicional fechado nem alteração de peso/denominador. Próxima fundação GF-10 coordenada com medidas/input.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
     },
     {
       "id": "alias-scopes-verified-20261003",
