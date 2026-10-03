@@ -35,6 +35,13 @@
     "scene": "examples/metrics/scene.tscn"
   },
   {
+    "id": "services",
+    "title": "Godot game services, coordinated snapshots and Zustand across two roots",
+    "api": "public",
+    "source": "examples/services/App.jsx",
+    "scene": "examples/services/scene.tscn"
+  },
+  {
     "id": "form",
     "title": "Public Button and TextInput in TypeScript",
     "api": "public",

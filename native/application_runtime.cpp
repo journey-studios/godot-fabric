@@ -1,6 +1,7 @@
 #include "application_runtime.h"
 #include "game_service_registry.h"
 #include "fabric_surface.h"
+#include <godot_cpp/variant/callable_custom.hpp>
 #include <godot_cpp/classes/input_event_mouse.hpp>
 #include "godot_component.h"
 #include "input_adapter.h"
@@ -77,9 +78,30 @@ class GodotEventBeat final : public rn::EventBeat {
   using rn::EventBeat::EventBeat;
   void tick() { induce(); }
 };
+// MessageQueue owns this callable independently of any Godot Node. A game
+// callback may free its FabricApplication without returning through that
+// freed object's _process notification stack.
+class GodotHostPhaseCallback final : public CallableCustom {
+ public:
+  explicit GodotHostPhaseCallback(std::function<void()> callback) : callback(std::move(callback)) {}
+  uint32_t hash() const override { return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(this)); }
+  String get_as_text() const override { return "GodotFabric deferred host phase"; }
+  CompareEqualFunc get_compare_equal_func() const override { return [](const CallableCustom *a, const CallableCustom *b) { return a == b; }; }
+  CompareLessFunc get_compare_less_func() const override { return [](const CallableCustom *a, const CallableCustom *b) { return std::less<const CallableCustom *>{}(a, b); }; }
+  ObjectID get_object() const override { return ObjectID(); }
+  bool is_valid() const override { return true; }
+  void call(const Variant **, int count, Variant &result, GDExtensionCallError &failure) const override {
+    result = Variant();
+    failure.error = count ? GDEXTENSION_CALL_ERROR_TOO_MANY_ARGUMENTS : GDEXTENSION_CALL_OK;
+    if (!count) callback();
+  }
+ private:
+  std::function<void()> callback;
+};
 }
 
-struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
+struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
+    std::enable_shared_from_this<fabric_godot::ApplicationRuntime::Impl> {
   struct Root {
     FabricSurface *host{};
     std::string component;
@@ -101,6 +123,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
+  Callable host_phase;
+  bool host_phase_pending{};
   std::shared_ptr<rn::UIManager> ui;
   rn::ComponentDescriptorProviderRegistry providers;
   std::shared_ptr<rn::EventDispatcher> dispatcher;
@@ -215,6 +239,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     });
     native_modules->install(*runtime);
     install_globals();
+  }
+
+  void initialize_host_phase() {
+    std::weak_ptr<Impl> owner = shared_from_this();
+    host_phase = Callable(memnew(GodotHostPhaseCallback([owner] {
+      auto guard = owner.lock();
+      if (!guard) return;
+      guard->host_phase_pending = false;
+      if (guard->stopping || guard->stopped) return;
+      try { guard->game_services->pump_host(); }
+      catch (const std::exception &error) { guard->fail(error.what()); }
+      // No window/Node access or JS drain after a callback may have freed its
+      // application. RN invoker work waits for the next ordinary JS frame.
+    })));
   }
 
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json) {
@@ -421,11 +459,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   void pump(bool frame_tick = false) {
     if (stopped) return;
     try {
-      // Host calls only run on the next Godot process frame, before JS work.
-      // A callback can synchronously stop/free its application; Impl is held
-      // by the public entry guard and no further VM/window work runs afterward.
-      if (frame_tick && !stopping) game_services->pump_host();
-      if (stopped) return;
+      // One independent deferred phase per frame. Never invoke game Callables
+      // while returning through FabricApplication's Godot notification stack.
+      if (frame_tick && !stopping && !host_phase_pending) {
+        host_phase_pending = true;
+        host_phase.call_deferred();
+      }
       // Host configuration failures must remain visible without starving
       // queued React cleanup. Shutdown never depends on window resampling.
       if (!stopping) {
@@ -509,6 +548,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   void stop() {
     if (stopped || stopping) return;
     stopping = true;
+    host_phase_pending = false;
     game_services->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
@@ -877,6 +917,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
         ("viewportUpdates", viewport_updates)("errors", folly::dynamic::array());
     result["nativeModules"] = native_modules->snapshot();
     result["gameServices"] = game_services->snapshot();
+    result["hostPhasePending"] = host_phase_pending;
     result["dimensions"] = device_dimensions();
     for (const auto &error : errors) result["errors"].push_back(error);
     return result;
@@ -961,7 +1002,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
 namespace fabric_godot {
 ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
     const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services)
-    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services))) {}
+    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services))) {
+  impl->initialize_host_phase();
+}
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
 void ApplicationRuntime::load_bundle(const std::string &source, const std::string &source_url) {
   auto guard = impl;

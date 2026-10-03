@@ -7,6 +7,7 @@
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
+#include <folly/json.h>
 #include <stdexcept>
 
 using namespace godot;
@@ -37,6 +38,7 @@ String FabricApplication::get_bundle_path() const { return bundle_path; }
 fabric_godot::ApplicationRuntime *FabricApplication::get_runtime() const { return runtime.get(); }
 int FabricApplication::mount(FabricSurface &host, const String &component, const Dictionary &props) {
   try {
+    if (terminal_stopped) throw std::runtime_error("E_RUNTIME_STOPPED: Application cannot mount after stop");
     if (!runtime) {
       const auto scenario = get_meta("scenario", host.get_meta("scenario", "react"));
       runtime = std::make_unique<fabric_godot::ApplicationRuntime>(host,
@@ -80,26 +82,43 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
     }
     return legacy_id ? legacy_id : runtime->mount(host, utf8(component), utf8(JSON::stringify(props)));
   } catch (const std::exception &error) {
-    if (runtime) runtime->report_error(error.what());
-    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    report_error(error.what());
     if (!bundle_loaded && runtime) runtime->stop();
     return 0;
   }
 }
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
 void FabricApplication::_exit_tree() { stop(); }
-void FabricApplication::stop() { if (runtime) runtime->stop(); else game_services->stop(); }
-bool FabricApplication::is_stopped() const { return runtime && runtime->is_stopped(); }
+void FabricApplication::stop() {
+  if (terminal_stopped) return;
+  terminal_stopped = true;
+  if (runtime) runtime->stop();
+  else game_services->stop();
+}
+bool FabricApplication::is_stopped() const { return terminal_stopped || (runtime && runtime->is_stopped()); }
 String FabricApplication::evaluate(const String &source) { return runtime ? gd(runtime->evaluate(utf8(source))) : String("null"); }
-String FabricApplication::snapshot() { return runtime ? gd(runtime->status()) : String("{}"); }
+String FabricApplication::snapshot() {
+  folly::dynamic result = runtime ? folly::parseJson(runtime->status()) :
+      folly::dynamic::object("stopped", terminal_stopped)("rootCount", 0)("bundleEvaluations", 0)
+          ("gameServices", game_services->snapshot())("errors", folly::dynamic::array());
+  result["runtimeInitialized"] = static_cast<bool>(runtime);
+  for (const auto &error : pre_runtime_errors) result["errors"].push_back(error);
+  return gd(folly::toJson(result));
+}
+void FabricApplication::report_error(const std::string &message) {
+  if (runtime) runtime->report_error(message);
+  else {
+    pre_runtime_errors.push_back(message);
+    UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(message));
+  }
+}
 
 void FabricApplication::invoke_callable(const String &name, const String &method, const Array &args) {
   try {
     if (!runtime) throw std::runtime_error("Callable module requires an initialized application");
     runtime->invoke_callable(utf8(name), utf8(method), utf8(JSON::stringify(args)));
   } catch (const std::exception &error) {
-    if (runtime) runtime->report_error(error.what());
-    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    report_error(error.what());
   }
 }
 
@@ -107,8 +126,7 @@ Ref<GodotFabricBinding> FabricApplication::bind_signal(const String &name, const
     const Array &arg_schema, const Dictionary &options) {
   try { return game_services->bind_signal(name, signal, arg_schema, options); }
   catch (const std::exception &error) {
-    if (runtime) runtime->report_error(error.what());
-    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    report_error(error.what());
     return {};
   }
 }
@@ -116,8 +134,7 @@ Ref<GodotFabricBinding> FabricApplication::bind_state(const String &name, const 
     const Signal &changed, const Variant &value_schema, const Dictionary &options) {
   try { return game_services->bind_state(name, getter, changed, value_schema, options); }
   catch (const std::exception &error) {
-    if (runtime) runtime->report_error(error.what());
-    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    report_error(error.what());
     return {};
   }
 }
@@ -125,8 +142,7 @@ Ref<GodotFabricBinding> FabricApplication::register_method(const String &name, c
     const Array &arg_schema, const Variant &result_schema, const Dictionary &options) {
   try { return game_services->register_method(name, callable, arg_schema, result_schema, options); }
   catch (const std::exception &error) {
-    if (runtime) runtime->report_error(error.what());
-    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    report_error(error.what());
     return {};
   }
 }

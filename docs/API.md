@@ -6,6 +6,11 @@ RN element/document refs, measurement, `setNativeProps`, `NativeModules`,
 Dimensions/PixelRatio. Its [evidence](evidence/native-foundation/README.md)
 is bounded; complete API and platform parity remain roadmap requirements.
 
+The experimental [game-service API](GAME_SERVICES.md) adds the public
+`@godot-fabric/runtime` import: typed calls, signals and revisioned initial state
+connections to GDScript. The [services example](../examples/services/README.md)
+keeps game rules on Godot and shares its React representation through Zustand.
+
 The examples use React and JSX. `react-native` imports resolve to the Godot
 facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
@@ -122,7 +127,7 @@ does so through a Resource/scene wrapper and provisioned private tools.
 [Shared-root evidence](evidence/shared-roots/README.md) covers two nonoverlapping
 roots, updates, replacement, zero-root survival and activation failures.
 Complete SDK singleton activation, reload/restart
-policy, public game services, bootstrap/dev tooling, portals/overlapping-root
+policy, complete game-service codegen, bootstrap/dev tooling, portals/overlapping-root
 input, pause/resume, Activity hidden mode, transformed/multiwindow geometry and
 original mobile multi-root comparison remain open. The pending V2 decisions
 retain their status; these native properties are an experimental validation API.

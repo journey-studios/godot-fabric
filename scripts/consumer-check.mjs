@@ -9,6 +9,8 @@ import { ensureGodotBinary } from "./godot-binary.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const capture = process.argv.includes("--capture");
+const nativeChecks = 40;
+const graphicalChecks = nativeChecks + 3;
 const directory = path.join(root, "build", "consumer");
 await mkdir(directory, { recursive: true });
 await rm(path.join(directory, "report.json"), { force: true });
@@ -42,7 +44,7 @@ async function runtime(label, headed = false) {
   assert.doesNotMatch(log, /(?:^|\n)ERROR:|FABRIC_ERROR/);
   assert.match(log, /CONSUMER_VALIDATION_PASSED/);
   const report = JSON.parse(await readFile(path.join(project, "consumer-report.json"), "utf8"));
-  assert.equal(report.checks.length, headed ? 20 : 18);
+  assert.equal(report.checks.length, headed ? graphicalChecks : nativeChecks);
   assert.ok(report.checks.every(check => check.passed), JSON.stringify(report));
   await writeFile(path.join(directory, label + ".json"), JSON.stringify(report, null, 2) + "\n");
   return report;
@@ -53,7 +55,7 @@ try {
   const manifest = JSON.parse(await readFile(path.join(sdk, "manifest.json"), "utf8"));
   const guide = await readFile(path.join(project, "README.md"), "utf8");
   assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//);
-  assert.ok(guide.includes("https://raw.githubusercontent.com/journey-studios/godot-fabric/" + manifest.sourceCommit + "/docs/evidence/consumer/updated.png"));
+  assert.ok(guide.includes("https://raw.githubusercontent.com/journey-studios/godot-fabric/" + manifest.sourceCommit + "/docs/evidence/game-services/consumer-updated.png"));
   verify(spawnSync("node", ["--version"], { env }).error?.code === "ENOENT", "Consumer cannot find global Node");
   const lockPath = path.join(project, "package-lock.json");
   const originalLock = await readFile(lockPath);
@@ -63,7 +65,7 @@ try {
   verify(native.beforeStop.bundleEvaluations === 1, "Native consumer executes its bundle once");
   if (capture) {
     await runtime("graphical", true);
-    for (const stage of ["initial", "updated"])
+    for (const stage of ["initial", "updated", "resized"])
       await cp(path.join(project, `consumer-${stage}.png`), path.join(directory, stage + ".png"));
   }
   const bundlePath = path.join(project, ".godot_fabric", "app.js");
@@ -136,8 +138,8 @@ try {
   await editor("recovery");
   verify(hash(await readFile(lockPath)) === hash(originalLock), "Failure, dependency checks and recovery preserve the project lockfile");
   verify(hash(await readFile(bundlePath)) === bundleHash, "The original consumer can build again after rejected requests");
-  await writeFile(path.join(directory, "report.json"), JSON.stringify({ schemaVersion: 1, host: "macOS arm64", checks, nativeChecks: 18, graphicalChecks: capture ? 20 : null }, null, 2) + "\n");
-  console.log("CONSUMER_CHECK_PASSED: " + checks.length + " build/ownership checks; 18 native checks");
+  await writeFile(path.join(directory, "report.json"), JSON.stringify({ schemaVersion: 1, host: "macOS arm64", checks, nativeChecks, graphicalChecks: capture ? graphicalChecks : null }, null, 2) + "\n");
+  console.log("CONSUMER_CHECK_PASSED: " + checks.length + " build/ownership checks; " + nativeChecks + " native checks");
 } finally {
   await rm(temporary, { recursive: true, force: true });
   await rm(outside, { recursive: true, force: true });

@@ -65,7 +65,7 @@ test("failed root activation is visible, bounded and leaves no native authority"
     "FABRIC_ERROR: application_path must point to FabricApplication",
     "FABRIC_ERROR: Unregistered AppRegistry component: MissingEntry",
     "FABRIC_ERROR: Unregistered AppRegistry component: toString",
-    "FABRIC_ERROR: Application is stopped",
+    "FABRIC_ERROR: E_RUNTIME_STOPPED: Application cannot mount after stop",
     "FABRIC_ERROR: Missing application bundle; run npm run bundle",
     "FABRIC_ERROR: FabricApplication must be inside the SceneTree",
   ]);

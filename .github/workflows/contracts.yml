@@ -46,6 +46,7 @@ jobs:
       - run: npm run test:runtime
       - run: npm run test:application
       - run: npm run test:modules
+      - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -55,6 +56,10 @@ jobs:
             build/native-modules.log
             build/metrics-errors-report.json
             build/metrics-errors.log
+            build/services-boundaries-report.json
+            build/services-boundaries.log
+            build/services-lifetime-report.json
+            build/services-lifetime.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

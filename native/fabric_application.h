@@ -2,6 +2,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include "game_service_registry.h"
 #include <memory>
+#include <vector>
 
 class FabricSurface;
 namespace fabric_godot { class ApplicationRuntime; }
@@ -36,4 +37,7 @@ class FabricApplication : public godot::Node {
   std::unique_ptr<fabric_godot::ApplicationRuntime> runtime;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   bool bundle_loaded = false;
+  bool terminal_stopped = false;
+  std::vector<std::string> pre_runtime_errors;
+  void report_error(const std::string &message);
 };

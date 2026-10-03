@@ -30,6 +30,26 @@ String gd(const std::string &value) { return String::utf8(value.data(), value.si
 [[noreturn]] void error(const char *code, const std::string &message) {
   throw std::runtime_error(std::string(code) + ": " + message);
 }
+std::string dto_string(std::string value) {
+  if (value.find('\0') != std::string::npos)
+    error("E_SERVICE_DTO_STRING", "Godot String cannot preserve embedded NUL characters");
+  return value;
+}
+std::string dto_string(jsi::Runtime &runtime, const jsi::String &value) {
+  // Check UTF-16 before JSI's UTF-8 conversion can replace lone surrogates.
+  // Godot String accepts Unicode scalars, and its parsers terminate/replace NUL.
+  const auto units = value.utf16(runtime);
+  for (size_t index = 0; index < units.size(); ++index) {
+    const auto unit = units[index];
+    if (!unit) error("E_SERVICE_DTO_STRING", "Godot String cannot preserve embedded NUL characters");
+    if (unit >= 0xd800 && unit <= 0xdbff) {
+      if (++index >= units.size() || units[index] < 0xdc00 || units[index] > 0xdfff)
+        error("E_SERVICE_DTO_STRING", "Godot String cannot preserve unpaired UTF-16 surrogates");
+    } else if (unit >= 0xdc00 && unit <= 0xdfff)
+      error("E_SERVICE_DTO_STRING", "Godot String cannot preserve unpaired UTF-16 surrogates");
+  }
+  return value.utf8(runtime);
+}
 std::string error_code(const std::string &message) {
   const auto end = message.find(':');
   return end == std::string::npos ? "E_SERVICE_HOST" : message.substr(0, end);
@@ -53,7 +73,7 @@ struct VariantDTO {
         return result;
       }
       case Variant::FLOAT: { const double result = value; number(result); return result; }
-      case Variant::STRING: return utf8(value);
+      case Variant::STRING: return dto_string(utf8(value));
       case Variant::ARRAY:
       case Variant::DICTIONARY: break;
       default: error("E_SERVICE_DTO_TYPE", "Only null, bool, numbers, String, Array and Dictionary are DTOs");
@@ -70,7 +90,7 @@ struct VariantDTO {
       const Array keys = dictionary.keys();
       for (int64_t index = 0; index < keys.size(); ++index) {
         if (keys[index].get_type() != Variant::STRING) error("E_SERVICE_DTO_KEY", "DTO object keys must be Strings");
-        result[utf8(keys[index])] = copy(dictionary[keys[index]], depth + 1);
+        result[dto_string(utf8(keys[index]))] = copy(dictionary[keys[index]], depth + 1);
       }
     }
     ancestors.pop_back();
@@ -89,7 +109,7 @@ struct JSDTO {
       const auto result = value.asNumber(); number(result);
       return std::floor(result) == result ? folly::dynamic(static_cast<int64_t>(result)) : folly::dynamic(result);
     }
-    if (value.isString()) return value.asString(runtime).utf8(runtime);
+    if (value.isString()) return dto_string(runtime, value.asString(runtime));
     if (!value.isObject()) error("E_SERVICE_DTO_TYPE", "Only JSON values are DTOs");
     auto object = value.asObject(runtime);
     if (object.isFunction(runtime) || object.isHostObject(runtime)) error("E_SERVICE_DTO_TYPE", "Functions/host objects are not DTOs");
@@ -98,23 +118,54 @@ struct JSDTO {
         error("E_SERVICE_DTO_CYCLE", "Cyclic DTO container");
     ancestors.emplace_back(jsi::Value(runtime, object).asObject(runtime));
     auto result = object.isArray(runtime) ? folly::dynamic::array() : folly::dynamic::object();
+    auto object_class = runtime.global().getPropertyAsObject(runtime, "Object");
+    auto object_prototype = object_class.getPropertyAsObject(runtime, "prototype");
+    auto has_own = object_prototype.getPropertyAsFunction(runtime, "hasOwnProperty");
+    const auto prototype = object_class.getPropertyAsFunction(runtime, "getPrototypeOf").call(runtime, object);
+    // Inspect data descriptors first. Reading the original object's properties
+    // here would execute accessors or silently omit unsupported DTO fields.
+    auto descriptors = object_class.getPropertyAsFunction(runtime, "getOwnPropertyDescriptors")
+        .call(runtime, object).asObject(runtime);
+    auto names = runtime.global().getPropertyAsObject(runtime, "Reflect")
+        .getPropertyAsFunction(runtime, "ownKeys").call(runtime, descriptors).asObject(runtime).asArray(runtime);
+    auto data_descriptor = [&](const jsi::Value &value) {
+      if (!value.isObject()) return false;
+      auto descriptor = value.asObject(runtime);
+      return has_own.callWithThis(runtime, descriptor, "value").getBool() &&
+          descriptor.getProperty(runtime, "enumerable").getBool();
+    };
     if (object.isArray(runtime)) {
       auto array = object.asArray(runtime);
-      for (size_t index = 0; index < array.size(runtime); ++index)
-        result.push_back(copy(array.getValueAtIndex(runtime, index), depth + 1));
+      const auto length = array.size(runtime);
+      auto array_prototype = runtime.global().getPropertyAsObject(runtime, "Array").getProperty(runtime, "prototype");
+      if (!jsi::Value::strictEquals(runtime, prototype, array_prototype) || names.size(runtime) != length + 1)
+        error("E_SERVICE_DTO", "DTO arrays must be dense, have Array.prototype and no extra properties");
+      for (size_t index = 0; index < length; ++index) {
+        const auto key = jsi::String::createFromUtf8(runtime, std::to_string(index));
+        if (!data_descriptor(descriptors.getProperty(runtime, key)))
+          error("E_SERVICE_DTO", "DTO arrays cannot contain holes, accessors or hidden elements");
+      }
+      for (size_t index = 0; index < length; ++index) {
+        const auto key = jsi::String::createFromUtf8(runtime, std::to_string(index));
+        auto descriptor = descriptors.getProperty(runtime, key).asObject(runtime);
+        result.push_back(copy(descriptor.getProperty(runtime, "value"), depth + 1));
+      }
     } else {
-      auto objectClass = runtime.global().getPropertyAsObject(runtime, "Object");
-      const auto prototype = objectClass.getPropertyAsFunction(runtime, "getPrototypeOf").call(runtime, object);
-      if (!prototype.isNull() && !jsi::Value::strictEquals(runtime, prototype, objectClass.getProperty(runtime, "prototype")))
-        error("E_SERVICE_DTO_TYPE", "DTO objects must have Object.prototype or null prototype");
-      const auto symbols = objectClass.getPropertyAsFunction(runtime, "getOwnPropertySymbols").call(runtime, object).asObject(runtime).asArray(runtime);
-      if (symbols.size(runtime)) error("E_SERVICE_DTO_KEY", "Symbol DTO keys are unsupported");
-      // JSI getPropertyNames includes the prototype chain; JSON objects only
-      // transport their own enumerable fields, matching the public DTO copier.
-      const auto names = objectClass.getPropertyAsFunction(runtime, "keys").call(runtime, object).asObject(runtime).asArray(runtime);
+      if (!prototype.isNull() && !jsi::Value::strictEquals(runtime, prototype, jsi::Value(runtime, object_prototype)))
+        error("E_SERVICE_DTO", "DTO objects must have Object.prototype or null prototype");
+      for (size_t index = 0; index < names.size(runtime); ++index) {
+        const auto name = names.getValueAtIndex(runtime, index);
+        if (!name.isString()) error("E_SERVICE_DTO", "Symbol DTO keys are unsupported");
+        const auto key = name.asString(runtime);
+        dto_string(runtime, key);
+        if (!data_descriptor(descriptors.getProperty(runtime, key)))
+          error("E_SERVICE_DTO", "DTO objects cannot contain accessors or hidden properties");
+      }
       for (size_t index = 0; index < names.size(runtime); ++index) {
         const auto name = names.getValueAtIndex(runtime, index).asString(runtime);
-        result[name.utf8(runtime)] = copy(object.getProperty(runtime, name), depth + 1);
+        const auto field = dto_string(runtime, name);
+        auto descriptor = descriptors.getProperty(runtime, name).asObject(runtime);
+        result[field] = copy(descriptor.getProperty(runtime, "value"), depth + 1);
       }
     }
     ancestors.pop_back();

@@ -11,7 +11,7 @@
     "test:nativewind": "npm run bundle && node --test tests/nativewind-contract.test.mjs",
     "start": "node scripts/check.mjs --interactive",
     "test:typography": "npm run bundle && node --test tests/typography-contract.test.mjs tests/typography-native.test.mjs tests/line-height-native.test.mjs",
-    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
+    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
     "check:publication": "node scripts/publication-scan.mjs",
     "test:cold": "npm run bundle && node scripts/cold-start.mjs",
     "parity:inventory": "node scripts/parity-inventory.mjs",
@@ -30,7 +30,8 @@
     "type-check": "tsc -p tsconfig.godot.json",
     "sdk:pack": "node scripts/pack-addon.mjs",
     "consumer:create": "node scripts/create-consumer.mjs",
-    "test:consumer": "node scripts/consumer-check.mjs"
+    "test:consumer": "node scripts/consumer-check.mjs",
+    "test:services": "npm run bundle && node --test --test-concurrency=1 tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",
@@ -39,7 +40,8 @@
     "react-native-chart-kit": "7.0.4",
     "react-native-css-interop": "0.2.7",
     "react-native-svg": "15.15.5",
-    "scheduler": "0.27.0"
+    "scheduler": "0.27.0",
+    "zustand": "5.0.15"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",

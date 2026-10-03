@@ -13,8 +13,9 @@ engine does not need rebuilding.
 
 This is an experimental platform implementation. Native setup and rendering
 are validated on **macOS arm64 with official Godot 4.7.2**. An experimental
-[iOS arm64 build path](docs/IOS_BUILD.md) has device/simulator compile and link
-proof; exported Godot runtime acceptance is pending. Linux, Windows, Android
+[iOS build/export path](docs/IOS_BUILD.md) has arm64 device export/link proof and
+22 runtime checks in an x86_64/Rosetta simulator. Arm64 simulator and physical
+device runtime acceptance remain pending. Linux, Windows, Android
 and Web do not yet have supported build paths.
 
 Setup and the check runner prepare Godot's extension startup list before the
@@ -62,10 +63,12 @@ dependencies. Additional libraries and the lockfile remain project-owned.
 
 The [consumer guide](consumers/minimal/README.md) shows the application Resource,
 scene nodes and registered roots. The [evidence](docs/evidence/consumer/README.md)
-records 18 build/ownership checks, 18 headless and 20 graphical assertions,
-including offline builds and explicit errors. Provisioning is currently from
-source on macOS arm64; public prebuilt artifacts, exports and development tools
-remain open.
+records the original 2B checkpoint. The later
+[game-services evidence](docs/evidence/game-services/README.md) extends it to
+18 build/ownership checks, 40 headless and 43 graphical assertions, including
+offline builds, typed Godot operations, inventory-only resize and explicit errors. Provisioning is
+currently from source on macOS arm64; public prebuilt artifacts, complete
+exports and development tools remain open.
 
 ## Run the SDK laboratory
 
@@ -92,6 +95,7 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 npm run example -- form     # public typed Button/TextInput form
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
+npm run example -- services # typed Godot calls, signals and shared Zustand data
 npm start -- --nativewind   # reactive utility classes and manual theme
 npm start -- --chart        # original React Native Chart Kit
 npm start -- --scroll       # generic scroll, filtering and editing demo
@@ -149,6 +153,21 @@ the assertions behind each image and the remaining GF-05 gaps.
 
 ![Timers commit the completed React state to real Godot Controls](docs/evidence/runtime/complete.png)
 
+### Game services
+
+`npm run example -- services` registers game methods, state getters and signals
+in GDScript, then consumes them through `GodotFabric.call`, `connect` and
+`subscribe`. Zustand holds the UI representation shared by HUD and inventory.
+The game owns health, equipment and accepted jobs: closing inventory while
+equipping leaves the job running and the surviving HUD receives its result.
+
+![Accepted game job completes after inventory unmounts](docs/evidence/game-services/services-completed.png)
+
+The [example](examples/services/README.md) and
+[API guide](docs/GAME_SERVICES.md) explain the initial snapshot race, revisions,
+typed errors, pause, explicit cancellation and cleanup. This implementation
+remains experimental; complete generated specs and RN parity remain open.
+
 ### Components
 
 The build aliases `react-native` to the Godot platform facade and applies
@@ -191,6 +210,7 @@ npm run test:examples                    # all interactive demos, headless and s
 npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
+npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static

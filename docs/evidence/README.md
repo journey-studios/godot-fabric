@@ -16,6 +16,16 @@ The [independent consumer record](consumer/README.md) adds the 2B
 Resource/addon/editor prototype, fresh external TSX project, private/offline
 build and dependency checks, native roots/lifecycle and two actual captures.
 
+The later [game-services record](game-services/README.md) extends that consumer
+with typed Godot operations, state revisions and signals. It also retains the
+services laboratory's pause/job-lifetime captures, dedicated native DTO and
+application-destruction fixtures, and the 15-example regression matrix.
+
+The separate [iOS export/runtime record](../IOS_BUILD.md) has current-source
+native build/package hashes, an unsigned arm64 device export/link and an
+x86_64/Rosetta simulator consumer. Its narrow runtime proof and disclosed
+official-template limitations do not certify the complete iOS port.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

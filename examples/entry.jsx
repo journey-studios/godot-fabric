@@ -28,9 +28,11 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
-if (["shared", "refs", "metrics", "modules"].includes(globalThis.godotScenario)) {
+if (["shared", "refs", "metrics", "services", "service-boundaries", "modules"].includes(globalThis.godotScenario)) {
   if (globalThis.godotScenario === "shared") require("./shared/App");
   else if (globalThis.godotScenario === "refs") require("./refs/App");
+  else if (globalThis.godotScenario === "services") require("./services/App");
+  else if (globalThis.godotScenario === "service-boundaries") require("../tests/services-boundary-fixture");
   else if (globalThis.godotScenario === "metrics") {
     globalThis.GodotMetricsSubscriptionCount = require("../src/window-dimensions").windowSubscriptionCount;
     require("./metrics/App");

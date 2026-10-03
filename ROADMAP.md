@@ -60,9 +60,10 @@ build rejection/recovery and two-root native assertions with real captures.
 [Evidence](docs/evidence/consumer/README.md) records the exact scope.
 GF-28/GF-29 remain In progress; complete installation/update, export,
 diagnostics, development and per-target acceptance remain open. D19–D29 are
-still pending. The next integration slice is sequence 3: typed Godot-to-React
-operations/subscriptions together with surface/ref geometry, followed by
-pause/operation-lifetime coverage for the integrated milestone below.
+still pending. The later [game-services checkpoint](docs/evidence/game-services/README.md)
+extends this same consumer with typed Godot calls, initial-state revision races,
+ordered signals and connection cleanup. Sequence 3 remains In progress for
+complete geometry, activation/restart and integrated milestone coverage below.
 
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit
@@ -75,13 +76,21 @@ tree; generated DeviceInfo/SourceCode bootstrap and original JSI TurboModules
 cover bounded measurements, subscriptions, promises/events and lifetime.
 The [metrics example](examples/metrics/README.md) tests real resize, uniform
 content density, reads without subscribers and Yoga rounding. These items
-remain In progress for their full rows below. Typed game-service operations,
-revisions/connections and the integrated HUD/inventory milestone remain next.
+remain In progress for their full rows below. The
+[services example](examples/services/README.md) now combines typed operations,
+signals, consistent snapshots and Zustand across HUD/inventory. Pause,
+hide/unmount/remount, accepted jobs, cancellation and terminal stop have bounded
+native evidence. Full DTO string-domain parity, codegen, cross-thread execution
+and restart/activation contracts remain open; D19–D32 are still pending.
 
-GF-31 starts with the [iOS arm64 build/link checkpoint](docs/IOS_BUILD.md),
-including device/simulator XCFramework packaging. Godot iOS consumer export,
-runtime/device proof and the other target foundations remain required. This
-is independent of the original RN reference-app CI and does not close GF-35.
+GF-31/GF-35 now include the [iOS export/runtime checkpoint](docs/IOS_BUILD.md):
+three native builds, two XCFramework combinations, unsigned arm64 device
+export/link and 22 runtime checks in an x86_64/Rosetta iOS 18.4 consumer. Arm64
+simulator execution is blocked by missing arm64 code in the official template;
+physical-device, Debug, input/IME/AT and system-service certification remain
+required. A reproduced engine-only mouse error is explicitly recorded. These
+results are independent of the original RN reference-app CI and do not close
+the iOS port or the other target foundations.
 
 ## Release contract and scope
 
@@ -278,6 +287,18 @@ native visual captures. Extend this same consumer with an external module and
 Fabric component in sequence 4, then grow selected library cases. Screenshots
 explain the scenario; they do not replace lifecycle/event/ref assertions.
 
+**Checkpoint 2026-10-03:** the independent consumer demonstrates points 1–4
+through public TSX, one runtime/two roots, typed Godot services and inventory-only
+resize with original refs, stable window metrics and native editing. The separate
+services laboratory demonstrates pause, hide/unmount/remount and accepted-job
+lifetime from points 5–6. This is split evidence, not acceptance of the entire
+integrated milestone: runtime restart and stale refs (6), pause/job lifetime in
+this same provisioned consumer (5–6), and the pending activation/diagnostic contract (7) still need
+the integrated consumer. Boundary/lifetime fixtures additionally prove queued
+revocation, source destruction, terminal stop and synchronous application
+destruction. The next dependency is the external spec/module/component slice
+in sequence 4, coordinated with the View foundation and approved contracts.
+
 ## M0 — Establish a reliable, measurable contract
 
 Owners: public facade/bundler, runtime lifecycle and acceptance harness.
@@ -367,7 +388,7 @@ in M0; certification completes after the host and service contracts exist.
 | GF-32 · P1 · Linux x86_64 | Planned | Build/load/export on a declared distribution baseline, package shared dependencies and verify window/DPI/input/IME/accessibility/system services. Native headless and graphical acceptance run on a fresh consumer, plus exported application evidence | GF-02, GF-09, GF-12, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-33 · P1 · Windows x86_64 | Planned | Establish MSVC/CRT/ABI and DLL discovery/export; verify native startup/shutdown, DPI, keyboard/IME, focus, accessibility and services in exported debug/release consumers. Test installation paths with spaces and fresh machines | GF-02, GF-09, GF-12, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-34 · P1 · Android arm64 | Planned | Integrate NDK/JNI/shared dependencies and exported Gradle project without modifying Godot. Prove startup, hardware touch, keyboard/IME, safe insets/orientation, lifecycle, accessibility, network and OS services on emulator and a physical device; debug/release packaging includes all dependencies | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |
-| GF-35 · P1 · iOS arm64 and simulator | Planned | Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |
+| GF-35 · P1 · iOS arm64 and simulator | In progress | Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-36 · P1 · Native hosted CI and artifacts | Planned | Add actual native compile/import/headless/graphical/export lanes for macOS and each port, plus device/simulator lanes as applicable. Keep contract CI separate; attach version/platform/mode/source hashes and fail on crashes, script errors, missing assertions or stale reports. Some hardware/AT checks may be retained manual release evidence, explicitly named | GF-02, GF-28, GF-32, GF-33, GF-34, GF-35 |
 | GF-37 · P1 · Differential parity certification | Planned | Run the complete GF-01 contract suite against the original pinned RN reference apps and all Godot targets. Compare event sequences/values, ref results, React lifecycle, layout and supported screenshots using predetermined tolerances. Cover errors/denial/unmount/background and physical-device input. Every difference is fixed or a concrete reviewed upstream OS boundary; no blanket or skipped-contract parity claim | GF-01, GF-04, GF-06, GF-08, GF-10, GF-11, GF-12, GF-13, GF-14, GF-15, GF-16, GF-17, GF-18, GF-19, GF-20, GF-21, GF-22, GF-23, GF-24, GF-27, GF-29, GF-36 |
 

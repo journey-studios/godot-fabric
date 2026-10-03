@@ -13,7 +13,7 @@ function failure(code, message) {
 function normalizeError(error) {
   if (error instanceof Error) {
     if (!error.code) {
-      const code = /^\s*(E_[A-Z0-9_]+):/.exec(error.message)?.[1];
+      const code = /^\s*(?:Exception in HostFunction:\s*)?(E_[A-Z0-9_]+):/.exec(error.message)?.[1];
       if (code) error.code = code;
     }
     return error;
@@ -28,12 +28,28 @@ function module() {
   return nativeModule ??= TurboModuleRegistry.getEnforcing("GodotFabricServices");
 }
 
+function string(value, label) {
+  // Godot String cannot preserve NUL. JSI UTF-8 conversion also replaces lone
+  // UTF-16 surrogates; reject both before crossing the boundary without loss.
+  for (let index = 0; index < value.length; index++) {
+    const unit = value.charCodeAt(index);
+    if (unit === 0) throw failure("E_SERVICE_DTO_STRING", `${label} cannot contain NUL`);
+    if (unit >= 0xd800 && unit <= 0xdbff) {
+      const next = value.charCodeAt(++index);
+      if (!(next >= 0xdc00 && next <= 0xdfff))
+        throw failure("E_SERVICE_DTO_STRING", `${label} cannot contain an unpaired UTF-16 surrogate`);
+    } else if (unit >= 0xdc00 && unit <= 0xdfff)
+      throw failure("E_SERVICE_DTO_STRING", `${label} cannot contain an unpaired UTF-16 surrogate`);
+  }
+  return value;
+}
 function record(value, label) {
   if (!value || typeof value !== "object" || Array.isArray(value) ||
       ![Object.prototype, null].includes(Object.getPrototypeOf(value)))
     throw failure("E_SERVICE_DTO", `${label} must be a plain object`);
   const descriptors = Object.getOwnPropertyDescriptors(value);
   for (const key of Reflect.ownKeys(descriptors)) {
+    if (typeof key === "string") string(key, `${label} key`);
     if (typeof key !== "string" || !own(descriptors[key], "value") || !descriptors[key].enumerable)
       throw failure("E_SERVICE_DTO", `${label} cannot contain symbols, accessors or hidden properties`);
   }
@@ -48,7 +64,7 @@ function exact(value, keys, label) {
 function text(value, label) {
   if (typeof value !== "string" || value.length === 0)
     throw failure("E_SERVICE_ADDRESS", `${label} must be a nonempty string`);
-  return value;
+  return string(value, label);
 }
 function address(value) {
   if (typeof value === "string") return { origin: "default", name: text(value, "name") };
@@ -71,7 +87,8 @@ function dto(value, label = "value", traversal = { ancestors: new Set(), nodes: 
   // Match the native transport limits before recursion can exhaust the JS stack.
   if (depth > 32 || ++traversal.nodes > 10000)
     throw failure("E_SERVICE_DTO_LIMIT", `${label} exceeds the DTO depth/node limit`);
-  if (value === null || typeof value === "string" || typeof value === "boolean") return value;
+  if (typeof value === "string") return string(value, label);
+  if (value === null || typeof value === "boolean") return value;
   if (typeof value === "number") {
     if (!Number.isFinite(value) || (Number.isInteger(value) && !Number.isSafeInteger(value)))
       throw failure("E_SERVICE_DTO", `${label} must be finite and integers must be safe`);

@@ -203,7 +203,7 @@ test("native failures release reserved subscriptions and normalize stopped runti
     await assert.rejects(late.ready, error => error.code === "E_RUNTIME_STOPPED");
     late.remove();
     assert.deepEqual(native.removed, [1, 2]);
-    native.call = () => { throw new Error("E_RUNTIME_STOPPED: stopped"); };
+    native.call = () => { throw new Error("Exception in HostFunction: E_RUNTIME_STOPPED: stopped\n\nError: native stack"); };
     let promise;
     assert.doesNotThrow(() => { promise = GodotFabric.call("late", []); });
     await assert.rejects(promise, error => error.code === "E_RUNTIME_STOPPED");
@@ -240,6 +240,52 @@ test("strict DTOs reject coercion, cycles, unsafe numbers, hidden properties and
     await assert.rejects(GodotFabric.call("save", [deep]), error => error.code === "E_SERVICE_DTO_LIMIT");
     await assert.rejects(GodotFabric.call("save", Array(10000).fill(null)), error => error.code === "E_SERVICE_DTO_LIMIT");
     assert.equal((await GodotFabric.call("save", Array(9999).fill(null))).value.length, 9999);
+  });
+});
+
+test("strings reject NUL and lone surrogates in values, keys and addresses before native work", async () => {
+  await fixture(async (GodotFabric, native, errors) => {
+    const invalidStrings = ["a\u0000b", "a\ud800b", "a\udc00b", "\ud800", "\udfff", "\ud800\ud800\udc00"];
+    for (const invalid of invalidStrings) {
+      await assert.rejects(GodotFabric.call("save", [invalid]), error => error.code === "E_SERVICE_DTO_STRING");
+      await assert.rejects(GodotFabric.call("save", [{ [invalid]: "value" }]), error => error.code === "E_SERVICE_DTO_STRING");
+      for (const target of [invalid, { origin: invalid, name: "save" }, { origin: "default", name: invalid },
+        { origin: "default", name: "save", [invalid]: "hidden" }]) {
+        await assert.rejects(GodotFabric.call(target, []), error => error.code === "E_SERVICE_DTO_STRING");
+        assert.throws(() => GodotFabric.subscribe(target, () => {}), error => error.code === "E_SERVICE_DTO_STRING");
+        assert.throws(() => GodotFabric.connect(target, () => {}), error => error.code === "E_SERVICE_DTO_STRING");
+      }
+      const unread = {};
+      Object.defineProperty(unread, invalid, { enumerable: true, get() { throw Error("must not evaluate getter"); } });
+      await assert.rejects(GodotFabric.call("save", [unread]), error => error.code === "E_SERVICE_DTO_STRING");
+    }
+    assert.equal(native.calls.length, 0);
+    assert.equal(native.pending.size, 0);
+    assert.equal(native.listeners.size, 0);
+    assert.deepEqual(errors, []);
+    const target = { origin: "inventário🔑", name: "ação🚀" };
+    const value = { "é😀": "ç🚀", empty: "", validPairs: "\ud800\udc00\udbff\udfff" };
+    assert.deepEqual((await GodotFabric.call(target, [value])).value, [value]);
+    assert.deepEqual(native.calls[0].address, target);
+  });
+});
+
+test("incoming invalid strings never reach handlers or silently change snapshots", async () => {
+  await fixture(async (GodotFabric, native, errors) => {
+    const seen = [];
+    const initial = GodotFabric.connect("initial", value => seen.push(value));
+    native.ack(1, 0, { invalid: "\u0000" });
+    await assert.rejects(initial.ready, error => error.code === "E_SERVICE_DTO_STRING");
+    const signals = GodotFabric.subscribe("signals", value => seen.push(value));
+    native.ack(2); await signals.ready;
+    native.emit(native.event(2, 1, ["\ud800"]));
+    native.emit(native.event(2, 2, [{ "\u0000": "value" }]));
+    native.emit(native.event(2, 3, ["ação🚀"]));
+    assert.deepEqual(seen, ["ação🚀"]);
+    assert.deepEqual(errors.map(values => values[1].code), ["E_SERVICE_DTO_STRING", "E_SERVICE_DTO_STRING"]);
+    signals.remove();
+    native.call = () => Promise.resolve({ origin: "default", name: "result", generation: "1", response: "completion", value: "\udc00" });
+    await assert.rejects(GodotFabric.call("result", []), error => error.code === "E_SERVICE_DTO_STRING");
   });
 });
 

@@ -1,0 +1,323 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "host": "macOS arm64",
+  "godot": "4.7.2-stable (official)",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "checks": [
+    {
+      "name": "Public GodotFabric connections initialize before bounded validation",
+      "passed": true
+    },
+    {
+      "name": "HUD and inventory share one application and one bundle evaluation",
+      "passed": true
+    },
+    {
+      "name": "Game UI roots preserve separate native identities",
+      "passed": true
+    },
+    {
+      "name": "GDScript registers typed methods, signals and state without game C++",
+      "passed": true
+    },
+    {
+      "name": "Coordinated connection retries a getter changed during its initial read",
+      "passed": true
+    },
+    {
+      "name": "A happening emitted during state connection reaches an already-installed subscription",
+      "passed": true
+    },
+    {
+      "name": "Original Fabric paints the current native snapshot in the HUD",
+      "passed": true
+    },
+    {
+      "name": "Initial service connection has no hidden transport errors",
+      "passed": true
+    },
+    {
+      "name": "Consecutive Godot changes update the shared Zustand representation",
+      "passed": true
+    },
+    {
+      "name": "Multiple signal arguments and consecutive happenings retain order without coalescing",
+      "passed": true
+    },
+    {
+      "name": "State revisions and actual native text agree after consecutive updates",
+      "passed": true
+    },
+    {
+      "name": "JavaScript invokes a real GDScript operation through the host work queue",
+      "passed": true
+    },
+    {
+      "name": "A completion response reports the GDScript result rather than mere queue acceptance",
+      "passed": true
+    },
+    {
+      "name": "Invalid typed arguments and missing methods produce distinguishable rejected calls",
+      "passed": true
+    },
+    {
+      "name": "Rejected calls neither mutate game state nor disguise errors as successful results",
+      "passed": true
+    },
+    {
+      "name": "Inventory local React state is independent of the shared game representation",
+      "passed": true
+    },
+    {
+      "name": "Hiding a surface preserves its native identity, connections and local React state",
+      "passed": true
+    },
+    {
+      "name": "Inventory operation returns its declared acceptance before the game job completes",
+      "passed": true
+    },
+    {
+      "name": "The game owns an accepted operation and exposes its job identity",
+      "passed": true
+    },
+    {
+      "name": "UI time advances while the pausable game clock retains its accepted job",
+      "passed": true
+    },
+    {
+      "name": "Scene pause preserves the application and both mounted React roots",
+      "passed": true
+    },
+    {
+      "name": "Closing inventory preserves the HUD, global subscriptions and accepted game operation",
+      "passed": true
+    },
+    {
+      "name": "The accepted job finishes after inventory unmount and updates the surviving HUD",
+      "passed": true
+    },
+    {
+      "name": "Actual native HUD text reflects the game job completion",
+      "passed": true
+    },
+    {
+      "name": "Operation completion retains no old inventory Controls or tags",
+      "passed": true
+    },
+    {
+      "name": "Inventory remount observes the application-owned game representation",
+      "passed": true
+    },
+    {
+      "name": "Remount restores current equipment and resets only local React state",
+      "passed": true
+    },
+    {
+      "name": "A second accepted operation exposes an explicit cancellation target",
+      "passed": true
+    },
+    {
+      "name": "Declared game cancellation completes through a typed method and signal",
+      "passed": true
+    },
+    {
+      "name": "Cancellation does not equip the cancelled item or retain its timer",
+      "passed": true
+    },
+    {
+      "name": "Application stop releases both game UI roots",
+      "passed": true
+    },
+    {
+      "name": "Game-service shutdown leaves no runtime scheduling resources",
+      "passed": true
+    },
+    {
+      "name": "Application stop disconnects every Godot source binding",
+      "passed": true
+    },
+    {
+      "name": "Service shutdown preserves visible failure accounting",
+      "passed": true
+    },
+    {
+      "name": "Finalized service registry retains no bindings, subscribers, tasks or deliveries",
+      "passed": true
+    },
+    {
+      "name": "Repeated application stop preserves finalized service lifetime",
+      "passed": true
+    }
+  ],
+  "displayServer": "headless",
+  "engine": "hermes",
+  "observations": {
+    "afterStop": {
+      "stopped": true,
+      "runtimeInitialized": true,
+      "runtimeId": 27514635728.0,
+      "rootCount": 0.0,
+      "bundleEvaluations": 1.0,
+      "pendingWork": 0.0,
+      "pendingTimers": 0.0,
+      "pendingAnimationFrames": 0.0,
+      "hostPhasePending": false,
+      "errors": [],
+      "gameServices": {
+        "bindings": 0.0,
+        "callbacksRun": 7.0,
+        "errors": [],
+        "eventBudget": 128.0,
+        "eventsSent": 10.0,
+        "hostTasksCanceled": 0.0,
+        "hostTasksRun": 10.0,
+        "pendingEvents": 0.0,
+        "pendingHostTasks": 0.0,
+        "stopped": true,
+        "subscriptions": 0.0,
+        "taskBudget": 64.0
+      },
+      "dimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 0.0,
+          "scale": 1.0,
+          "width": 0.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 650.0,
+          "scale": 1.0,
+          "width": 1020.0
+        }
+      }
+    },
+    "beforeStop": {
+      "damages": [
+        {
+          "amount": 5.0,
+          "reason": "during-connect"
+        },
+        {
+          "amount": 3.0,
+          "reason": "first"
+        },
+        {
+          "amount": 4.0,
+          "reason": "second"
+        },
+        {
+          "amount": 2.0,
+          "reason": "typed call"
+        }
+      ],
+      "disposed": false,
+      "equipment": {
+        "count": 1.0,
+        "item": "bronze-blade"
+      },
+      "equipmentRevision": 1.0,
+      "errors": [
+        {
+          "code": "E_SERVICE_SCHEMA",
+          "message": "E_SERVICE_SCHEMA: DTO does not match the exact declared schema",
+          "name": "player.damage"
+        },
+        {
+          "code": "E_SERVICE_MISSING",
+          "message": "E_SERVICE_MISSING: No binding existed when call was requested",
+          "name": "missing.method"
+        }
+      ],
+      "finished": [
+        {
+          "cancelled": false,
+          "item": "bronze-blade",
+          "job": "equip-1"
+        },
+        {
+          "cancelled": true,
+          "item": "",
+          "job": "equip-2"
+        }
+      ],
+      "health": 86.0,
+      "healthGeneration": "3",
+      "healthRevision": 4.0,
+      "hudCleanups": 0.0,
+      "hudMounts": 1.0,
+      "inventoryCleanups": 1.0,
+      "inventoryMounts": 2.0,
+      "operations": [
+        {
+          "generation": "5",
+          "name": "player.damage",
+          "origin": "default",
+          "response": "completion",
+          "value": 86.0
+        },
+        {
+          "generation": "6",
+          "name": "inventory.equip",
+          "origin": "default",
+          "response": "acceptance",
+          "value": {
+            "item": "bronze-blade",
+            "job": "equip-1"
+          }
+        },
+        {
+          "generation": "6",
+          "name": "inventory.equip",
+          "origin": "default",
+          "response": "acceptance",
+          "value": {
+            "item": "cancelled-item",
+            "job": "equip-2"
+          }
+        },
+        {
+          "generation": "7",
+          "name": "inventory.cancel",
+          "origin": "default",
+          "response": "completion",
+          "value": true
+        }
+      ],
+      "ready": 4.0,
+      "uiTicks": 1.0
+    },
+    "initial": {
+      "damages": [
+        {
+          "amount": 5.0,
+          "reason": "during-connect"
+        }
+      ],
+      "disposed": false,
+      "equipment": {
+        "count": 0.0,
+        "item": "none"
+      },
+      "equipmentRevision": 0.0,
+      "errors": [],
+      "finished": [],
+      "health": 95.0,
+      "healthGeneration": "3",
+      "healthRevision": 1.0,
+      "hudCleanups": 0.0,
+      "hudMounts": 1.0,
+      "inventoryCleanups": 0.0,
+      "inventoryMounts": 1.0,
+      "operations": [],
+      "ready": 4.0,
+      "uiTicks": 0.0
+    }
+  },
+  "renderer": "fabric",
+  "scenario": "services",
+  "zustand": "5.0.15"
+}

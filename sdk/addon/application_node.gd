@@ -1,6 +1,9 @@
 @tool
 extends Node
 
+## Game owners register typed services here, before sibling surfaces mount.
+signal runtime_available(runtime: Node)
+
 @export var application: GodotFabricApplication
 
 func _enter_tree() -> void:
@@ -19,3 +22,4 @@ func _enter_tree() -> void:
   runtime.name = "Runtime"
   runtime.set("bundle_path", application.bundle_file)
   add_child(runtime)
+  runtime_available.emit(runtime)

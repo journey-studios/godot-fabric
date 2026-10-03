@@ -17,6 +17,7 @@ source/framework archives and verifies SHA-256 before extraction.
 | react-native-css-interop | 0.2.7 | See the installed package LICENSE |
 | Tailwind CSS | 3.4.17 | See the installed package LICENSE |
 | React Native Chart Kit | 7.0.4 | See the installed package LICENSE |
+| Zustand | 5.0.15 | MIT; see the installed package LICENSE |
 | Noto Sans / JetBrains Mono | pinned original assets | [SIL OFL 1.1 and asset provenance](assets/fonts/README.md) |
 
 Bundled fonts include their complete license texts alongside the assets.
