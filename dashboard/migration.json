@@ -8,11 +8,11 @@
     "focusSequence": "4",
     "focusTitle": "Carregamento e montagem de extensões externas sobre Codegen/SDK"
   },
-  "updatedAt": "2026-10-03T19:24:03.802100Z",
+  "updatedAt": "2026-10-03T19:36:12.501460Z",
   "source": {
-    "commit": "41cb8883869540524d425e85def17aaafee22cfe",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/ROADMAP.md",
-    "scope": "GF-26 SDK compartilhado e registro externo verificados; montagem/runtime/export de adapter em implementação",
+    "commit": "7a67f9698a7251ecc06c2a612f55550796438f8b",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/7a67f9698a7251ecc06c2a612f55550796438f8b/ROADMAP.md",
+    "scope": "GF-26 SDK/registro e CI nativa comprovados; foco em carregamento, montagem e integração JSX externos",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1223,7 +1223,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Codegen original 0.87.1: 20 testes e seis unidades compiladas, incluindo CI corrigida. Nova base SDK: 22 testes de preflight, 14 de pacote/receipt; cliente C++ relocado linkou host compartilhado e passou 11 casos/207 checks de registro, rollback/cleanup e instalação lazy. Sem VM/Control externos; loader, mount/eventos/comandos, lifecycle de módulo, JSX e export/ABI completos seguem abertos.",
+      "note": "Codegen original 0.87.1: 20 testes e seis unidades compiladas, incluindo CI corrigida. Nova base SDK: 22 testes de preflight, 14 de pacote/receipt; cliente C++ relocado linkou host compartilhado e passou 11 casos/207 checks de registro, rollback/cleanup e instalação lazy. Sem VM/Control externos; loader, mount/eventos/comandos, lifecycle de módulo, JSX e export/ABI completos seguem abertos. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1246,6 +1246,10 @@
             {
               "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
             }
           ]
         },
@@ -1332,7 +1336,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Consumidor separado tem 40 checks headless/43 com render e 18 de tooling; iOS exporta pacote próprio. Instalação/update completos, Codegen/adapters e debug/release por todos os alvos seguem abertos. SDK C++ compartilhado relocável/receipts e link de cliente comprovados em macOS arm64 Release; ativação/export de adapter ainda aberta.",
+      "note": "Consumidor separado tem 40 checks headless/43 com render e 18 de tooling; iOS exporta pacote próprio. Instalação/update completos, Codegen/adapters e debug/release por todos os alvos seguem abertos. SDK C++ compartilhado relocável/receipts e link de cliente comprovados em macOS arm64 Release; ativação/export de adapter ainda aberta. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1355,6 +1359,10 @@
             {
               "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
             }
           ]
         },
@@ -1483,7 +1491,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas.",
+      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada.",
       "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
@@ -1502,6 +1510,10 @@
             {
               "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
             }
           ]
         },
@@ -2378,6 +2390,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "native-sdk-ci-37147754831",
+      "at": "2026-10-03T19:36:12.501460Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "CI completa passou os cinco jobs em 7a67f96. Artefato original do SDK confirma 207 checks, fontes nativas idênticas e cliente relocado linkado. Node real 22.23.2 distinto do local; paridade completa, montagem de adapter e Godot ports permanecem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+    },
     {
       "id": "native-sdk-registry-207",
       "at": "2026-10-03T19:22:18.776792Z",

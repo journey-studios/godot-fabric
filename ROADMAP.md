@@ -131,7 +131,10 @@ lookup/disposal are exercised. [Evidence](docs/evidence/native-sdk/README.md)
 retains consumed-source/binary hashes and separate package/link/registry claims.
 Actual Godot cold start, runtime/roots/modules/services, 15 existing examples
 (605 checks) and the independent consumer (18 tooling + 40 native checks) pass
-against the rebuilt host. Hosted SDK CI remains a separate gate. Runtime loading,
+against the rebuilt host. The [hosted SDK run](https://github.com/journey-studios/godot-fabric/actions/runs/37147754831) passed all five jobs
+at `7a67f96`, with the original artifact confirming the same 207 registry checks.
+Actual CI tooling/native source hashes are [retained separately](docs/evidence/native-sdk/hosted-ci.json).
+Runtime loading,
 external Control mounting, event authority, module lifecycle in a VM, original
 ViewConfig/public JSX activation and all-target export/ABI acceptance remain
 open; GF-26/GF-28/GF-31 are still **In progress**.

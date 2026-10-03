@@ -1,0 +1,185 @@
+{
+  "format": "godot-fabric.experimental-adapter-registry-witness/v1",
+  "checkedAt": "2026-10-03T19:28:38.296Z",
+  "sourceSha256": {
+    "scripts/adapter-registry-check.mjs": "6b28071be5e70ef835ebc56b07b9c402bfac64564e0bace9265d43e891534eb0",
+    "scripts/native-sdk.mjs": "0c2ab23d9fc9905375d7ed7f0f9307633c634eef29b1039f1686ebf977fd1770",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "package-lock.json": "7c19d95a91da6a8aab8e1c5ac818e16a679d9f365b4fb9eaec88b7fcfd69c7fa",
+    "tests/adapters/registry_test.cpp": "02fb33ae96636354189ba12b716e1b1ecda9310f6c7b54bcf2ff17574a80c880",
+    "tests/codegen/NativeCodegenProbe.ts": "643777e7b7f0b4d62e11bc8690faef352e695798020cd6f80e857bf4c2c80b42",
+    "tests/codegen/BadgeNativeComponent.ts": "db601756ca4380e9007f2f90e8a75bf2859ff29b7859dac54110f52525ddbd6a"
+  },
+  "stages": [
+    {
+      "stage": "configure",
+      "exitCode": 0,
+      "log": "logs/configure.log",
+      "logSha256": "34e4e1946b414a9326f5072d9dec1c7619c7eff28a6cadde99960c0d7561ae3b"
+    },
+    {
+      "stage": "compile-link",
+      "exitCode": 0,
+      "log": "logs/compile-link.log",
+      "logSha256": "707154043e381f09e9d557850647bdf45acb0fb3b4850c46000b1eca4f0d0811"
+    },
+    {
+      "stage": "native-dependencies",
+      "exitCode": 0,
+      "log": "logs/native-dependencies.log",
+      "logSha256": "307893abb68fa85f1592f14febc6d69fbb76e684e2c4a19f0d27238e447bdf67"
+    },
+    {
+      "stage": "registry",
+      "exitCode": 0,
+      "log": "logs/registry.log",
+      "logSha256": "7feded998bc1d4dcd077bf6fa0c604191036bfdfd6bd2c06b545d2e94fd35bb3"
+    }
+  ],
+  "passed": true,
+  "sdkManifestSha256": "e968bbb90a19b32237f49a3cb716cc30e292efb1329a37b587673c8e6bec2f9d",
+  "cmakeExecutableSha256": "fe36d9146b81760c77015cf90c3d299eb4da862be0d11f4c2f15ccfc147690b3",
+  "node": {
+    "version": "v22.23.2",
+    "executableSha256": "18e387c90ab8a8400183e8bdd396376e1e875b91b4c874b894dcade7b35bf572"
+  },
+  "nativeClientLinked": true,
+  "registryExecuted": true,
+  "vmCreated": false,
+  "godotEngineStarted": false,
+  "adapterLoaded": false,
+  "componentMounted": false,
+  "abiCertified": false,
+  "binarySha256": "f2af1dee9d82211c6ce1303b7992d3c46e64d1dd082513e6a5d6c00c1703d203",
+  "registry": {
+    "format": "godot-fabric.experimental-adapter-registry-test/v1",
+    "marker": "ADAPTER_REGISTRY_OK",
+    "cases": 11,
+    "checks": 207,
+    "initializers": 27,
+    "viewFactoryCalls": 0,
+    "moduleFactoryCalls": 0,
+    "vmCreated": false,
+    "godotEngineStarted": false
+  },
+  "generatedManifestSha256": "b8b02ffd363b147fc705fe28d5250cfa1765fadca6d93dc8ccd5386f28a46f15",
+  "nativeCombination": {
+    "format": "godot-fabric.experimental-native-combination/v1",
+    "godotCppRevision": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "godotVersion": "4.7.2",
+    "hermesRuntimeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "hermesVersion": "250829098.0.17",
+    "nativeDependencies": [
+      {
+        "name": "fabric_godot",
+        "sha256": "12651ec262946a3a3280af7da8ef3ec8ac2164d7d618a3f51d63aa50950e86ec"
+      },
+      {
+        "name": "hermes",
+        "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79"
+      },
+      {
+        "name": "rn-dependencies",
+        "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+      }
+    ],
+    "purpose": "build-declaration",
+    "reactNativeHeadersSha256": "68c46e65627907bdcf9f51d0e112565b2d48375081f3fa7245c6a712a1bae8cf",
+    "reactNativeVersion": "0.87.1",
+    "sdkHeadersSha256": "b644198338942bbeecf0dd8ea840aa8a361eb30b318aab239316457900b016d6",
+    "sdkRevision": "9b0a6808fd9b6e7fdf5cbc1e91babe068e2378fd0874c4b15c1fced8602a3f69",
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "toolchain": {
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.0.13.5)"
+    }
+  },
+  "linkCommandSha256": "04a2637360ae7247cfd00e19a51e7cc5fafebaf9aa876b439ebcd3a0fc0a513f",
+  "hosted": {
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831",
+    "sourceCommit": "7a67f9698a7251ecc06c2a612f55550796438f8b",
+    "nativeJob": "success",
+    "sdkPackageVerifyWitnessSteps": "success",
+    "artifactName": "adapter-registry-sdk",
+    "rawRegistryReportSha256": "f5646b24060afb2ef06185b18a57e5b43c4a562b49fae64c912dd114130bf571",
+    "rawBuildReceiptSha256": "c81eca2a08e4ed0449ef42b6fa70e8438c3faf72811b3d78d07a4b681264b8cf",
+    "rawPackageReceiptSha256": "798cedc9f960364f33cfdff8592576bc9f5df136bbf11d32464a4d2305efedba",
+    "overallConclusion": "success",
+    "jobs": {
+      "contracts": "success",
+      "native-cold-start": "success",
+      "reference-ios": "success",
+      "reference-android": "success",
+      "parity-comparison": "success"
+    }
+  },
+  "package": {
+    "hostSha256": "12651ec262946a3a3280af7da8ef3ec8ac2164d7d618a3f51d63aa50950e86ec",
+    "compiler": {
+      "executableSha256": "4c458256bcdf913774de1bb4a37768244d3b41f32ad55afb2dfec3432f46f4fe",
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.0.13.5)"
+    },
+    "node": {
+      "executableSha256": "18e387c90ab8a8400183e8bdd396376e1e875b91b4c874b894dcade7b35bf572",
+      "version": "v22.23.2"
+    },
+    "sourceSha256": {
+      "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+      "native/CMakeLists.txt": "fb9ff30e3138283d2d0c10db69ea69dcc973f7be634842aa6c11620796ce6ac9",
+      "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+      "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+      "native/appearance_adapter.cpp": "acadea1a98ed9191974ad8f3124d4f414cd737f42a8121a85947d1308aaef37c",
+      "native/appearance_adapter.h": "76dfc6b40309c8314cb7c8ec43939caaafb22eb000125356bda0981bf3f04a3c",
+      "native/application_runtime.cpp": "a25d55c36c956eafda41d3660196dd7f2504ca0364a36e8634206d8bf2737e0a",
+      "native/application_runtime.h": "20e268e807d65209db595116da72ff487a35dc85bc4f56a98e6722a309e33ce6",
+      "native/fabric_application.cpp": "fec3362d0949c1eeddfc9b3c9db5d2cb5c92ccef6ab9994e04fa939b5e9baa5b",
+      "native/fabric_application.h": "ecd467d21843ebf095d0357fa9744551a0b8fa0798aa6a8306c5abaa2562682a",
+      "native/fabric_surface.cpp": "037db73a8160f87e8b410bafb611902ab0b1b5eab115a5cc162cb62bcfb4bd49",
+      "native/fabric_surface.h": "1fef412a3171b00e44665362ec6a842b51f38d2d1501c0696f1677e4a8aafac8",
+      "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+      "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+      "native/godot-profile.json": "47807122dec3641325452bbc17c2ddd4e19836591897a5bf211774f86597c228",
+      "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+      "native/godot_dom.cpp": "54188de4aa60a663573d2ce1f9f9c621e223ab9332d0681bb5290f66dad5f296",
+      "native/godot_dom.h": "9d2cd34bd38d903129e1fabcddf072ea696daa22df4ba311997552e371bda936",
+      "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+      "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+      "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+      "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+      "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+      "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+      "native/pointer_adapter.cpp": "9c0f9fed40fb63925fce9a3f7a1f1355c064d171dcf253b567d44e5734c6029c",
+      "native/pointer_adapter.h": "339b08f3ed176ff1fc3120fadf8b839e1ec5717d37aa7f0021965fd8d5fdbaea",
+      "native/register.cpp": "18d2e4aa2000e79b55dc3d89d37f3c34d3f09dcd74dd64a09e2f63389bc2b108",
+      "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+      "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+      "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+      "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+      "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+      "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+      "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+      "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+      "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+      "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+      "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+      "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+      "scripts/native-sdk.mjs": "0c2ab23d9fc9905375d7ed7f0f9307633c634eef29b1039f1686ebf977fd1770"
+    },
+    "targetFlagsSha256": {
+      "CMakeFiles/fabric_core.dir/flags.make": "472665a3fef0134157df0f136ff031db54a64c7d1f564a25082aeaf124eff906",
+      "godot-cpp/CMakeFiles/godot-cpp.dir/flags.make": "3c0efdf73155a22c0daf11978b780a5b8b4ff817c941f8ecca73d7b1123acefa"
+    },
+    "adapterLinked": false,
+    "adapterLoaded": false,
+    "runtimeExecuted": false,
+    "runtimeIdentityVerified": false,
+    "abiCertified": false
+  }
+}

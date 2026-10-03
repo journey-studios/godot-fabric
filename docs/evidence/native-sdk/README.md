@@ -52,10 +52,14 @@ on missing markers, malformed counters, source drift or unsuccessful stages.
 Its link imports `fabric_godot`, Hermes and RN dependency shared binaries with
 relative deployment RPATHs; it does not compile another binding archive.
 
-The same witness is added to native CI after setup. Its hosted acceptance is
-separate from the earlier [successful Codegen CI](../codegen/hosted-ci.json)
-and must be confirmed for this delivery's exact head. The local results above
-do not retroactively certify a hosted job or the historical iOS binaries.
+The [hosted run 37147754831](https://github.com/journey-studios/godot-fabric/actions/runs/37147754831) passed all five jobs at
+`7a67f9698a7251ecc06c2a612f55550796438f8b`. The downloaded original SDK artifact confirms package/verify,
+relocated strict client linking and the same **11 cases / 207 checks**.
+[hosted-ci.json](hosted-ci.json) records native source, host/compiler and report
+hashes. Actual CI Node is **22.23.2** and Apple clang is **17.0.0
+(clang-1700.0.13.5)**; local Node/compiler identity remains separate.
+Reference iOS/Android jobs validate original RN apps, not the Godot ports.
+These hosted SDK results do not certify the historical iOS binaries.
 
 No runtime adapter loader, external mount/update/command/event path or initialized
 binding identity in Godot is proved here. The factory stop guard and already
