@@ -8,10 +8,10 @@
     "focusSequence": "4",
     "focusTitle": "Codegen e registro de extensões nativas externas"
   },
-  "updatedAt": "2026-10-03T18:44:17.962892Z",
+  "updatedAt": "2026-10-03T18:50:11.486090Z",
   "source": {
-    "commit": "689c93985ed746a21d8aca3d056070e5d9c8382d",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/ROADMAP.md",
+    "commit": "d28a02476fd682e66a357e83789f5e8e4b049fa7",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/ROADMAP.md",
     "scope": "GF-26 geração/compilação comprovadas; falha CI de seleção Node identificada e correção local verificada; SDK/adapters externos em implementação",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -1237,7 +1237,7 @@
             },
             {
               "label": "Falha CI de seleção Node / correção e compilação local 6/6",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/ci-node-selection.json"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
             }
           ]
         },
@@ -2369,7 +2369,7 @@
         "GF-26"
       ],
       "message": "CI nativa falhou antes de compilar: Node privado não provisionado. Runner aceita Node explícito, workflow seleciona seu executável e preserva default do addon. Três testes e nova compilação 6/6 passaram localmente; CI corrigida ainda pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/ci-node-selection.json"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
     },
     {
       "id": "codegen-original-20-compile-6",
