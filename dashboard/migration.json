@@ -8,10 +8,10 @@
     "focusSequence": "4",
     "focusTitle": "Carregamento e montagem de extensões externas sobre Codegen/SDK"
   },
-  "updatedAt": "2026-10-03T19:22:18.776792Z",
+  "updatedAt": "2026-10-03T19:24:03.802100Z",
   "source": {
-    "commit": "5d46bba77db8f012afb1ef364f719012a932dba5",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/5d46bba77db8f012afb1ef364f719012a932dba5/ROADMAP.md",
+    "commit": "41cb8883869540524d425e85def17aaafee22cfe",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/ROADMAP.md",
     "scope": "GF-26 SDK compartilhado e registro externo verificados; montagem/runtime/export de adapter em implementação",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -1245,7 +1245,7 @@
             },
             {
               "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
             }
           ]
         },
@@ -1354,7 +1354,7 @@
             },
             {
               "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
             }
           ]
         },
@@ -1501,7 +1501,7 @@
             },
             {
               "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
             }
           ]
         },
@@ -2387,7 +2387,7 @@
         "GF-31"
       ],
       "message": "SDK/receipt/preflight verificados: 36 testes Node, cliente C++ relocado com 207 checks. Regressões Godot e consumidor passaram no host reconstruído. Evidência ampliada no checkpoint existente, sem alterar denominador/aceite completo. Nenhuma montagem externa, VM ou ABI completa certificada.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
     },
     {
       "id": "codegen-ci-37145700599",
