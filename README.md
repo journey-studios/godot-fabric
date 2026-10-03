@@ -37,6 +37,19 @@ criteria for RN parity across macOS, Linux, Windows, Android and iOS. The
 [dated parity audit](docs/PARITY.md) separates implemented behavior, incomplete
 contracts and missing APIs against React Native 0.87.1.
 
+## Migration dashboard
+
+Track the complete roadmap, Architecture 2.0 sequence, verified checkpoints,
+dependencies and release acceptance in a local dashboard rendered from JSON:
+
+```sh
+npm run dashboard   # http://127.0.0.1:4317; no npm install or native setup needed
+```
+
+The panel refreshes when `dashboard/migration.json` changes. See the
+[dashboard guide](dashboard/README.md) for progress rules and worktree support,
+and the [implementation-thread prompt](dashboard/AGENT_PROMPT.md) to keep it updated.
+
 ## Independent Godot project
 
 The [provisioned addon prototype](sdk/README.md) supplies the native runtime,

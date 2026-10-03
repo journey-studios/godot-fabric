@@ -1,0 +1,2339 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "Godot Fabric",
+    "target": "1.0",
+    "refreshSeconds": 5,
+    "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
+    "focusSequence": "3",
+    "focusTitle": "Refs, métricas e módulos nativos"
+  },
+  "updatedAt": "2026-10-03T17:10:28.948Z",
+  "source": {
+    "commit": "4085865a309de62cf4e893324f485439f5fb4b55",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/ROADMAP.md",
+    "scope": "main + fatias verificadas da PR #14",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
+  },
+  "phases": [
+    {
+      "id": "M0",
+      "title": "Establish a reliable, measurable contract",
+      "shortTitle": "Contrato e runtime"
+    },
+    {
+      "id": "M1",
+      "title": "Complete the native UI tree",
+      "shortTitle": "Árvore de UI"
+    },
+    {
+      "id": "M2",
+      "title": "Supply the platform runtime and OS behavior",
+      "shortTitle": "Sistema e serviços"
+    },
+    {
+      "id": "M3",
+      "title": "Make the platform extensible and usable outside the demos",
+      "shortTitle": "SDK e extensões"
+    },
+    {
+      "id": "M4",
+      "title": "Port, export and certify each supported OS",
+      "shortTitle": "Plataformas e CI"
+    },
+    {
+      "id": "M5",
+      "title": "Freeze and release 1.0",
+      "shortTitle": "Release 1.0"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "GF-01",
+      "phase": "M0",
+      "priority": "P0",
+      "title": "Full contract inventory and oracle",
+      "status": "in_progress",
+      "acceptance": "Expand the versioned root inventory to types, component props/styles, events, ref commands, globals and applicable OS APIs. Every target contract has an owner and positive/negative fixture. Run shared fixtures against an original pinned RN iOS/Android app and Godot; record semantic traces, layout tolerances and platform applicability before implementation",
+      "dependencies": [],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "O inventário completo de tipos, props, eventos, comandos e globals permanece aberto.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Inventário raiz e fixtures de comparação executáveis",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/compatibility/BASELINE.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-02",
+      "phase": "M0",
+      "priority": "P0",
+      "title": "Clean startup and engine contract",
+      "status": "in_progress",
+      "acceptance": "Reproduce the signal-11 cold import with fresh dependencies/resource cache; isolate load/import/shutdown and fix the root cause. Align extension metadata with the actual minimum supported Godot API. Repeated first installs and failed-start cleanup pass in native CI without retrying away crashes",
+      "dependencies": [
+        "GF-01"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Import direto com cache vazio ainda reproduz o crash upstream. Contenção não fecha o item.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Engine fixada, preflight e contenção de cold start validados",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/cold-start.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-03",
+      "phase": "M0",
+      "priority": "P0",
+      "title": "Public API and typed platform resolution",
+      "status": "in_progress",
+      "acceptance": "Export actual public TextInput/Button contracts, use the original wrapper where viable, and provide strict RN-compatible public types. Resolve `.godot`, `.native`, JS/JSX/TS/TSX, assets and package conditions through a documented consumer bundler. An independent TSX app imports every in-scope root name; implemented APIs run, unfinished contracts still fail visibly",
+      "dependencies": [
+        "GF-01"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Fachada completa, assets e todos os contratos públicos ainda precisam de cobertura.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Imports/types limitados e consumidor TSX independente",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-04",
+      "phase": "M0",
+      "priority": "P0",
+      "title": "Eliminate silently accepted behavior",
+      "status": "in_progress",
+      "acceptance": "Audit facade destructuring, validAttributes, values and event registration. Implement or explicitly reject each unsupported prop/value, including accessibility metadata and userSelect/collapsable semantics; verify updates/removal as well as initial mount. Before 1.0 all applicable target contracts must be implemented, not merely guarded",
+      "dependencies": [
+        "GF-01",
+        "GF-03"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Censo completo de props/valores, updates/removal e implementação final permanece aberto.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Props inválidos rejeitados e recuperação de builds testada",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-05",
+      "phase": "M0",
+      "priority": "P0",
+      "title": "RN bootstrap and JS globals",
+      "status": "in_progress",
+      "acceptance": "Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22",
+      "dependencies": [
+        "GF-01"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Bootstrap completo, idle, erros, globals e starvation seguem pendentes.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "TimerManager, microtasks/immediate e fixtures nativas",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/runtime/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-06",
+      "phase": "M0",
+      "priority": "P1",
+      "title": "React/Fabric semantic suite",
+      "status": "planned",
+      "acceptance": "Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler",
+      "dependencies": [
+        "GF-01",
+        "GF-05"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-07",
+      "phase": "M0",
+      "priority": "P1",
+      "title": "Root and surface lifecycle",
+      "status": "in_progress",
+      "acceptance": "Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions",
+      "dependencies": [
+        "GF-05",
+        "GF-06"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Pausa/resume, overlays e comparação completa permanecem abertos.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Duas roots com props, estado e cleanup em uma aplicação",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/shared-roots/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-08",
+      "phase": "M0",
+      "priority": "P1",
+      "title": "Public refs and native commands",
+      "status": "in_progress",
+      "acceptance": "Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes",
+      "dependencies": [
+        "GF-03",
+        "GF-07"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "PR #14: fatia local validada; refs/comandos completos e certificação seguem abertos.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Refs/NativeDOM originais, measures e invalidação testados",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-09",
+      "phase": "M0",
+      "priority": "P0",
+      "title": "Real metrics and platform identity",
+      "status": "in_progress",
+      "acceptance": "Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices",
+      "dependencies": [
+        "GF-01",
+        "GF-07"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "PR #14: métricas de OS, font scale, insets e dispositivos seguem pendentes.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "DeviceInfo/Dimensions/PixelRatio, resize e densidade reais",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-10",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "View, styles and RTL",
+      "status": "planned",
+      "acceptance": "Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema",
+      "dependencies": [
+        "GF-04",
+        "GF-08",
+        "GF-09",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-11",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Text and fonts",
+      "status": "planned",
+      "acceptance": "Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ",
+      "dependencies": [
+        "GF-08",
+        "GF-09",
+        "GF-10"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-12",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "TextInput and keyboard",
+      "status": "in_progress",
+      "acceptance": "Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements",
+      "dependencies": [
+        "GF-03",
+        "GF-08",
+        "GF-09",
+        "GF-11",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Multiline, IME, seleção completa, teclado móvel e autofill seguem abertos.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "TextInput público de uma linha com edição controlada",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-13",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Input, Pressability and touchables",
+      "status": "planned",
+      "acceptance": "Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation",
+      "dependencies": [
+        "GF-06",
+        "GF-08",
+        "GF-09",
+        "GF-10"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-14",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Scroll and refresh",
+      "status": "planned",
+      "acceptance": "Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption",
+      "dependencies": [
+        "GF-08",
+        "GF-09",
+        "GF-12",
+        "GF-13",
+        "GF-19"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-15",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Virtualized lists",
+      "status": "planned",
+      "acceptance": "Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results",
+      "dependencies": [
+        "GF-10",
+        "GF-14"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-16",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Images and asset pipeline",
+      "status": "planned",
+      "acceptance": "Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22",
+      "dependencies": [
+        "GF-03",
+        "GF-09",
+        "GF-10",
+        "GF-22",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-17",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Shared widgets",
+      "status": "in_progress",
+      "acceptance": "Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases",
+      "dependencies": [
+        "GF-03",
+        "GF-10",
+        "GF-13",
+        "GF-20"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Button público com title/onPress e estados limitados",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-18",
+      "phase": "M1",
+      "priority": "P1",
+      "title": "Modals and safe areas",
+      "status": "planned",
+      "acceptance": "Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation",
+      "dependencies": [
+        "GF-07",
+        "GF-09",
+        "GF-13",
+        "GF-20",
+        "GF-23"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-19",
+      "phase": "M2",
+      "priority": "P1",
+      "title": "Animated and layout animation",
+      "status": "planned",
+      "acceptance": "Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated",
+      "dependencies": [
+        "GF-05",
+        "GF-08",
+        "GF-09",
+        "GF-10",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-20",
+      "phase": "M2",
+      "priority": "P1",
+      "title": "Accessibility",
+      "status": "planned",
+      "acceptance": "Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early",
+      "dependencies": [
+        "GF-04",
+        "GF-07",
+        "GF-09",
+        "GF-13",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-21",
+      "phase": "M2",
+      "priority": "P1",
+      "title": "System environment and app lifecycle",
+      "status": "planned",
+      "acceptance": "Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values",
+      "dependencies": [
+        "GF-05",
+        "GF-07",
+        "GF-09",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-22",
+      "phase": "M2",
+      "priority": "P1",
+      "title": "Networking and web-standard runtime APIs",
+      "status": "planned",
+      "acceptance": "Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal",
+      "dependencies": [
+        "GF-05",
+        "GF-21",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-23",
+      "phase": "M2",
+      "priority": "P1",
+      "title": "Shared device services",
+      "status": "planned",
+      "acceptance": "Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers",
+      "dependencies": [
+        "GF-07",
+        "GF-21",
+        "GF-25"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-24",
+      "phase": "M2",
+      "priority": "P1",
+      "title": "OS-specific public contracts",
+      "status": "planned",
+      "acceptance": "Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract",
+      "dependencies": [
+        "GF-09",
+        "GF-12",
+        "GF-13",
+        "GF-17",
+        "GF-18",
+        "GF-23",
+        "GF-25",
+        "GF-34",
+        "GF-35"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-25",
+      "phase": "M3",
+      "priority": "P0",
+      "title": "TurboModule and event infrastructure",
+      "status": "in_progress",
+      "acceptance": "Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable",
+      "dependencies": [
+        "GF-03",
+        "GF-05",
+        "GF-07"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "PR #14: operações GodotFabric, revisões/conexões e extensões seguem pendentes.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "JSI TurboModules com lookup, promises/events e ownership",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-26",
+      "phase": "M3",
+      "priority": "P1",
+      "title": "Codegen and custom Fabric components",
+      "status": "planned",
+      "acceptance": "Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging",
+      "dependencies": [
+        "GF-08",
+        "GF-10",
+        "GF-25",
+        "GF-31"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-27",
+      "phase": "M3",
+      "priority": "P1",
+      "title": "Selected library certification",
+      "status": "planned",
+      "acceptance": "Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope",
+      "dependencies": [
+        "GF-11",
+        "GF-12",
+        "GF-15",
+        "GF-16",
+        "GF-19",
+        "GF-21",
+        "GF-26"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-28",
+      "phase": "M3",
+      "priority": "P1",
+      "title": "SDK, addon and consumer exports",
+      "status": "in_progress",
+      "acceptance": "Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target",
+      "dependencies": [
+        "GF-03",
+        "GF-07",
+        "GF-25",
+        "GF-26",
+        "GF-31"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Instalação/update completos, extensões e export por alvo seguem abertos.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Addon provisionado e consumidor externo com TSX e duas roots",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-29",
+      "phase": "M3",
+      "priority": "P1",
+      "title": "Development experience",
+      "status": "in_progress",
+      "acceptance": "Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths",
+      "dependencies": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-28"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "Source maps, dev renderer, DevTools e Fast Refresh seguem pendentes.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Editor build hook com erros visíveis e recuperação",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-30",
+      "phase": "M3",
+      "priority": "P1",
+      "title": "Frame, heap and threading budgets",
+      "status": "planned",
+      "acceptance": "Profile mount/layout/shaping/JS and retain reproducible frame-time, Hermes heap/RSS and native-node measurements for idle/forms/charts/10,000 rows. Define target-device budgets before accepting optimization. Implement caching or JS/worker/Rust paths only for measured bottlenecks, preserving JSI ownership, Godot main-thread calls and event/commit ordering. Soak and unmount cycles show bounded steady-state memory. The 48/480-row ScrollView benchmark from the pre-publication prototype was not ported; this item starts without a scroll benchmark",
+      "dependencies": [
+        "GF-11",
+        "GF-15",
+        "GF-19",
+        "GF-28"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-31",
+      "phase": "M4",
+      "priority": "P0",
+      "title": "Portable dependency/build foundation",
+      "status": "in_progress",
+      "acceptance": "Replace macOS-framework assumptions with per-target Hermes, RN dependencies, Fabric/Yoga and godot-cpp builds. Specify ABI/compiler/OS minimums and debug/release combinations, hashes/licenses and loader/export behavior. Build an early Android/iOS startup/JSI/Control spike with official templates and identify native-view/accessibility bridge constraints before committing the port design",
+      "dependencies": [
+        "GF-01"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "PR #14: compile/link/package apenas; execução Godot iOS e outros alvos não certificados.",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "iOS arm64/simulador: compilação, link e XCFramework",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Evidência da fatia validada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/IOS_BUILD.md"
+            }
+          ]
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-32",
+      "phase": "M4",
+      "priority": "P1",
+      "title": "Linux x86_64",
+      "status": "planned",
+      "acceptance": "Build/load/export on a declared distribution baseline, package shared dependencies and verify window/DPI/input/IME/accessibility/system services. Native headless and graphical acceptance run on a fresh consumer, plus exported application evidence",
+      "dependencies": [
+        "GF-02",
+        "GF-09",
+        "GF-12",
+        "GF-20",
+        "GF-21",
+        "GF-23",
+        "GF-28",
+        "GF-31"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-33",
+      "phase": "M4",
+      "priority": "P1",
+      "title": "Windows x86_64",
+      "status": "planned",
+      "acceptance": "Establish MSVC/CRT/ABI and DLL discovery/export; verify native startup/shutdown, DPI, keyboard/IME, focus, accessibility and services in exported debug/release consumers. Test installation paths with spaces and fresh machines",
+      "dependencies": [
+        "GF-02",
+        "GF-09",
+        "GF-12",
+        "GF-20",
+        "GF-21",
+        "GF-23",
+        "GF-28",
+        "GF-31"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-34",
+      "phase": "M4",
+      "priority": "P1",
+      "title": "Android arm64",
+      "status": "planned",
+      "acceptance": "Integrate NDK/JNI/shared dependencies and exported Gradle project without modifying Godot. Prove startup, hardware touch, keyboard/IME, safe insets/orientation, lifecycle, accessibility, network and OS services on emulator and a physical device; debug/release packaging includes all dependencies",
+      "dependencies": [
+        "GF-02",
+        "GF-09",
+        "GF-12",
+        "GF-13",
+        "GF-20",
+        "GF-21",
+        "GF-23",
+        "GF-28",
+        "GF-31"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-35",
+      "phase": "M4",
+      "priority": "P1",
+      "title": "iOS arm64 and simulator",
+      "status": "planned",
+      "acceptance": "Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app",
+      "dependencies": [
+        "GF-02",
+        "GF-09",
+        "GF-12",
+        "GF-13",
+        "GF-20",
+        "GF-21",
+        "GF-23",
+        "GF-28",
+        "GF-31"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-36",
+      "phase": "M4",
+      "priority": "P1",
+      "title": "Native hosted CI and artifacts",
+      "status": "planned",
+      "acceptance": "Add actual native compile/import/headless/graphical/export lanes for macOS and each port, plus device/simulator lanes as applicable. Keep contract CI separate; attach version/platform/mode/source hashes and fail on crashes, script errors, missing assertions or stale reports. Some hardware/AT checks may be retained manual release evidence, explicitly named",
+      "dependencies": [
+        "GF-02",
+        "GF-28",
+        "GF-32",
+        "GF-33",
+        "GF-34",
+        "GF-35"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-37",
+      "phase": "M4",
+      "priority": "P1",
+      "title": "Differential parity certification",
+      "status": "planned",
+      "acceptance": "Run the complete GF-01 contract suite against the original pinned RN reference apps and all Godot targets. Compare event sequences/values, ref results, React lifecycle, layout and supported screenshots using predetermined tolerances. Cover errors/denial/unmount/background and physical-device input. Every difference is fixed or a concrete reviewed upstream OS boundary; no blanket or skipped-contract parity claim",
+      "dependencies": [
+        "GF-01",
+        "GF-04",
+        "GF-06",
+        "GF-08",
+        "GF-10",
+        "GF-11",
+        "GF-12",
+        "GF-13",
+        "GF-14",
+        "GF-15",
+        "GF-16",
+        "GF-17",
+        "GF-18",
+        "GF-19",
+        "GF-20",
+        "GF-21",
+        "GF-22",
+        "GF-23",
+        "GF-24",
+        "GF-27",
+        "GF-29",
+        "GF-36"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-38",
+      "phase": "M5",
+      "priority": "P1",
+      "title": "Version and upgrade policy",
+      "status": "planned",
+      "acceptance": "Publish tested RN/React/Hermes/Godot/toolchain/OS combinations, private-host seam inventory and supported upgrade/backport policy. Recheck latest stable RN, generate/review API diffs and rerun affected codegen/native/differential fixtures. Record additions/removals and migration notes; choose no nightly dependencies by accident",
+      "dependencies": [
+        "GF-26",
+        "GF-28",
+        "GF-36",
+        "GF-37"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-39",
+      "phase": "M5",
+      "priority": "P1",
+      "title": "Release candidate and 1.0",
+      "status": "planned",
+      "acceptance": "Freeze the tested baseline and ship reproducible SDK/addon artifacts, reference consumer projects, installation/export docs and compatibility reports. Pass the checklist below with no unresolved required contract or P0/P1 release defect. A narrower desktop-only or component-subset release must use an alpha/beta label or an explicitly renegotiated scope",
+      "dependencies": [
+        "GF-01",
+        "GF-02",
+        "GF-03",
+        "GF-04",
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-09",
+        "GF-10",
+        "GF-11",
+        "GF-12",
+        "GF-13",
+        "GF-14",
+        "GF-15",
+        "GF-16",
+        "GF-17",
+        "GF-18",
+        "GF-19",
+        "GF-20",
+        "GF-21",
+        "GF-22",
+        "GF-23",
+        "GF-24",
+        "GF-25",
+        "GF-26",
+        "GF-27",
+        "GF-28",
+        "GF-29",
+        "GF-30",
+        "GF-31",
+        "GF-32",
+        "GF-33",
+        "GF-34",
+        "GF-35",
+        "GF-36",
+        "GF-37",
+        "GF-38"
+      ],
+      "releaseRequired": true,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": "GF-40",
+      "phase": "M5",
+      "priority": "P2",
+      "title": "Explicitly later scope",
+      "status": "planned",
+      "acceptance": "Evaluate the 13 unstable/experimental exports, Web/WASM, extra CPU architectures, editor authoring/GDSS extensions and additional native library ports. Create separate specs and versioned support claims; these cannot hide missing stable core behavior in 1.0",
+      "dependencies": [],
+      "releaseRequired": false,
+      "weight": 1,
+      "note": "",
+      "blocker": "",
+      "checkpoints": [
+        {
+          "id": "slice",
+          "label": "Primeira fatia funcional validada no host",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "contract",
+          "label": "Contrato completo descrito no aceite implementado",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "parity",
+          "label": "Casos positivos/negativos e comparação RN certificados",
+          "done": false,
+          "evidence": []
+        },
+        {
+          "id": "targets",
+          "label": "Dependências e alvos aplicáveis aceitos com evidência",
+          "done": false,
+          "evidence": []
+        }
+      ]
+    }
+  ],
+  "sequences": [
+    {
+      "id": "1",
+      "title": "Reliable startup and comparison fixtures",
+      "taskIds": [
+        "GF-01",
+        "GF-02"
+      ],
+      "acceptance": "Reproduce and fix cold-start/root-cause and minimum-version gaps; fresh startup, failed-start cleanup and positive/negative comparison cases remain observable"
+    },
+    {
+      "id": "2A",
+      "title": "Shared application, bootstrap and roots",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07"
+      ],
+      "acceptance": "Start from the reliable baseline; register/mount two distinct roots in one runtime, update props and unmount one without restarting the other; extend the semantic suite with each behavior"
+    },
+    {
+      "id": "2B",
+      "title": "Minimal independent consumer and authoring flow",
+      "taskIds": [
+        "GF-03",
+        "GF-04",
+        "GF-28",
+        "GF-29"
+      ],
+      "acceptance": "Advance alongside 2A; a separate TSX project uses public imports/types and project-owned dependencies, with visible build/unsupported-contract errors and no hidden demo aliases"
+    },
+    {
+      "id": "3",
+      "title": "Geometry, refs and Godot-to-React communication",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-25",
+        "GF-10"
+      ],
+      "acceptance": "Integrate 2A/2B; window/surface metrics, drawing, measures and input agree; typed calls/events respect lifetime, initial-state revisions and stale-reference rejection"
+    },
+    {
+      "id": "4",
+      "title": "External native module and component",
+      "taskIds": [
+        "GF-26",
+        "GF-25",
+        "GF-31"
+      ],
+      "acceptance": "Use the native registry, refs, View foundation and identified binary combination; an independent consumer builds/runs a module and component with specs, events/commands and cleanup without editing the core"
+    },
+    {
+      "id": "5",
+      "title": "Complete UI, interaction and system behavior",
+      "taskIds": [
+        "GF-10",
+        "GF-11",
+        "GF-12",
+        "GF-13",
+        "GF-14",
+        "GF-15",
+        "GF-16",
+        "GF-17",
+        "GF-18",
+        "GF-19",
+        "GF-20",
+        "GF-21",
+        "GF-22",
+        "GF-23",
+        "GF-24"
+      ],
+      "acceptance": "Expand the host/service foundations through the dependency branches below; forms, gestures, animations, scroll/lists, images, widgets, accessibility and services pass their applicable fixtures; OS-specific completion also needs the relevant port"
+    },
+    {
+      "id": "6",
+      "title": "Distributable SDK, selected libraries, development tools and complete ports",
+      "taskIds": [
+        "GF-27",
+        "GF-28",
+        "GF-29",
+        "GF-32",
+        "GF-33",
+        "GF-34",
+        "GF-35"
+      ],
+      "acceptance": "Combine host contracts, extensions and per-target tooling; clean consumers install, debug and export identified artifacts; selected libraries and real input/system integration have target-specific evidence"
+    },
+    {
+      "id": "7",
+      "title": "Complete certification, performance and release",
+      "taskIds": [
+        "GF-30",
+        "GF-36",
+        "GF-37",
+        "GF-38",
+        "GF-39"
+      ],
+      "acceptance": "Close coverage for the promised scope, budgets and soak/recovery cases; verify the actual release head, current stable baseline policy and reproducible SDK/consumer artifacts before 1.0"
+    }
+  ],
+  "releaseChecklist": [
+    {
+      "id": "RC-01",
+      "label": "Full contract inventory has no unassigned stable API, prop/style/event, command, type or global; all required behavior has fresh positive and negative parity evidence. The dated 97-name inventory is not sufficient.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-02",
+      "label": "Required components include View/Text/TextInput, press/touch controls, ScrollView/virtualized lists, images, widgets, refresh, modal and safe-area behavior; all applicable styles, refs and accessibility contracts pass.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-03",
+      "label": "Real system metrics/theme/lifecycle/keyboard, animation, networking and applicable device/OS APIs work; no success-shaped fixed-value shim or silently dropped behavior remains in the supported contract.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-04",
+      "label": "Multiple roots, scene changes, errors and repeated unmount cycles preserve event/commit semantics and release memory/nodes/subscriptions. Dev and production behavior are tested separately.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-05",
+      "label": "A custom TurboModule and custom Fabric component build, run and export in an independent TSX consumer; selected NativeWind/chart package versions pass without importing demo internals.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-06",
+      "label": "Official Godot plus the addon exports debug/release consumers for macOS arm64, Linux x86_64, Windows x86_64, Android arm64 and iOS device/simulator. Cold startup, physical input/IME, OS services and assistive technologies have platform-specific evidence; no engine fork is needed.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-07",
+      "label": "Native CI passes for the actual release head; required manual hardware/AT evidence is attached separately. Contract CI alone is not release proof.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-08",
+      "label": "Declared device/frame/memory budgets and soak/recovery cases pass; errors, crashes, timeouts and stale/missing reports still fail the runner.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "RC-09",
+      "label": "Latest stable RN support is rechecked, pinned and documented, including React/Hermes/Godot/OS minimums and any explicitly approved version choice. License notices, artifact integrity and installation/upgrade/export docs are complete.",
+      "done": false,
+      "evidence": []
+    }
+  ],
+  "integrationChecklist": [
+    {
+      "id": "HUD-1",
+      "label": "Configure the application/addon and run public TSX imports in the separate consumer without editing demo internals. Exercise the provisioned basic editor flow from D18 without requiring global Node; additional dependencies remain project-owned and explicitly installed.",
+      "done": true,
+      "evidence": [
+        {
+          "label": "Consumidor independente: build e roots",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+        }
+      ]
+    },
+    {
+      "id": "HUD-2",
+      "label": "Mount HUD and inventory with separate identities/local state in one Hermes. Share data explicitly when needed; no state-management library is required.",
+      "done": true,
+      "evidence": [
+        {
+          "label": "Consumidor independente: build e roots",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+        }
+      ]
+    },
+    {
+      "id": "HUD-3",
+      "label": "Update the HUD from Godot data/signals, including an initial revision and changes during connection. Invoke a typed game operation from the inventory; observe defined results/errors and event ordering.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "HUD-4",
+      "label": "Resize only the inventory: its constraints/layout and input/measure geometry update while HUD geometry and window metrics retain their meanings.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "HUD-5",
+      "label": "Pause the simulation while UI input/timers remain available. Hide, unmount and remount the inventory according to their distinct lifecycle contracts; the HUD and application remain operant.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "HUD-6",
+      "label": "Close the inventory during an accepted operation; its result must not access the old mount. Repeated mounts/cleanup do not duplicate listeners or leak owned nodes, and runtime restart rejects old refs/callbacks.",
+      "done": false,
+      "evidence": []
+    },
+    {
+      "id": "HUD-7",
+      "label": "Once pending activation/diagnostic contracts are agreed, inject build and activation failures and verify their distinct recovery policies. Outdated build responses cannot become the active generation; source maps identify the executed generation. Do not imply rollback of accepted game operations.",
+      "done": false,
+      "evidence": []
+    }
+  ],
+  "decisions": [
+    {
+      "id": "V2-D01",
+      "title": "Configuração da aplicação e registro automático da entrada",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D02",
+      "title": "Identidade, montagem e atualização das surfaces",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D03",
+      "title": "Leitura inicial e subscription sem perder mudanças",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D04",
+      "title": "Nomes, escopos e argumentos dos signals",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D05",
+      "title": "Registro de métodos e chamadas JavaScript → Godot",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D06",
+      "title": "Conversão de valores e validade das referências",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D07",
+      "title": "Ordem, prioridade e limites da entrega de eventos",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D08",
+      "title": "Posse e cleanup das conexões nativas",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D09",
+      "title": "Autoridade sobre layout e árvore nativa",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D10",
+      "title": "Input, foco e interação com o gameplay",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D11",
+      "title": "Pausa do jogo, background e relógios da UI",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D12",
+      "title": "Janelas, SubViewports e contexto de métricas",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D13",
+      "title": "Registro e descoberta de adapters",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D14",
+      "title": "Compatibilidade binária do SDK e dos adapters",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D15",
+      "title": "Schemas, Codegen e artefatos gerados",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D16",
+      "title": "Contrato completo de um componente nativo",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D17",
+      "title": "Reuso da biblioteca original versus uma facade alternativa",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D18",
+      "title": "Distribuição do SDK e dependências do projeto",
+      "status": "approved"
+    },
+    {
+      "id": "V2-D19",
+      "title": "Builder, protocolo, cache e workspaces",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D20",
+      "title": "Resolução de módulos e identidade única de React",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D21",
+      "title": "Babel, configuração do usuário e NativeWind",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D22",
+      "title": "Ativação de builds e recuperação após falhas",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D23",
+      "title": "Fast Refresh e limites da preservação de estado",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D24",
+      "title": "Assets, recursos importados e manifesto",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D25",
+      "title": "Exportação, targets e falha obrigatória do processo",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D26",
+      "title": "Erros, source maps e diagnósticos",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D27",
+      "title": "Encerramento, cancelamento e trabalho pendente",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D28",
+      "title": "Threads, medição de texto e desempenho",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D29",
+      "title": "Tipos coerentes com build e runtime",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D30",
+      "title": "Identidade Godot e serviços do sistema operacional",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D31",
+      "title": "Certificação, versões e bibliotecas suportadas",
+      "status": "pending"
+    },
+    {
+      "id": "V2-D32",
+      "title": "Migração e relação com a entrega 1.0",
+      "status": "pending"
+    }
+  ],
+  "activity": [
+    {
+      "id": "native-foundation",
+      "at": "2026-10-03T15:24:02Z",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-25",
+        "GF-31"
+      ],
+      "message": "PR #14: refs, métricas, TurboModules e build iOS com evidência local. Aceite completo permanece aberto.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "consumer",
+      "at": "2026-10-02T12:00:00Z",
+      "taskIds": [
+        "GF-03",
+        "GF-04",
+        "GF-28",
+        "GF-29"
+      ],
+      "message": "Consumidor TSX independente e addon provisionado integrados ao main. Fatia 2B documentada; registro pela data da evidência.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ca9e557/docs/evidence/consumer/README.md"
+    },
+    {
+      "id": "shared-roots",
+      "at": "2026-10-02T12:00:00Z",
+      "taskIds": [
+        "GF-07"
+      ],
+      "message": "HUD/Inventory compartilham aplicação com props, estado e cleanup. Fatia 2A documentada; registro pela data da evidência.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ca9e557/docs/evidence/shared-roots/README.md"
+    }
+  ]
+}
