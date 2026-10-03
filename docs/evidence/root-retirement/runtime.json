@@ -1,0 +1,264 @@
+{
+  "format": "godot-fabric.experimental-adapter-runtime-acceptance/v1",
+  "checkedAt": "2026-10-03T23:40:07.769Z",
+  "sourceSha256": {
+    "scripts/adapter-runtime-check.mjs": "d782c48ee5c6af021fd243e0ad94faeb94ef65f1127a6e1db6009f2d371eb02a",
+    "scripts/pack-addon.mjs": "1f7948800d02b62416251ac1b7a88a91a686a3d14d361f1fbd61512fa4617fc9",
+    "sdk/toolchain/build.mjs": "fbbb98dc08ca95e826954d3081a5af3e6344c2eae02337a40200a3b7114bffca",
+    "sdk/toolchain/adapter-plugin.mjs": "9d331d0b71adec8ee51f601a8ea4c2fceb50c62fed5f5f0278caf04d3df2729d",
+    "sdk/toolchain/project-resolution.mjs": "dbfae5774239772f44890419f7c84d880d76cbcb8710dd91c450bcc1ebd93db9",
+    "sdk/toolchain/project-config.mjs": "6057cd12daaf93ee42df9310e87f6a2793ef4356e43ceb82d72265692fd784e2",
+    "sdk/toolchain/project-typecheck.mjs": "f548cd0a3c331dfeb788a18e1bbfbef4cc90692d0f471c68fab501ec5aa92754",
+    "sdk/toolchain/platform-plugin.mjs": "0132f67e02340287228ab2aee610d0590129c556a839242dda52b564f2ce2d24",
+    "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+    "tests/adapters/package/BadgeNativeComponent.ts": "743ed87b2d827cbd04b92f2fc79d247942d930e6721b214320fca8ccf5f89d56",
+    "tests/adapters/package/NativeExternalProbe.ts": "652f3488be23ee4ca8bf13671c52185acd556873d418863e89cee1f82ac1dadb",
+    "tests/adapters/package/adapter.cpp": "026e957339e78d19b580cbc7d68e26062ad354babf7dbffb9b5e8001e73afd70",
+    "tests/adapters/package/index.ts": "526a2d064a70a6de1c0575cf551cf089d08375ced1f3e508c86c554968d37212",
+    "tests/adapters/package/package.json": "861c7356296fb60205bc0ac5d7fa1f708e53c15b364cc05b8f9719e374c53667",
+    "tests/adapters/consumer/ui/index.tsx": "bc67d773dc5c325001e8642f03586b529cf43c973b4410f881c6898f0b5a01d3",
+    "tests/adapters/consumer/validation.gd": "af35c6cce50803bc88afb658ae26142e672450bb8558067a7b585954714a219f",
+    "tests/adapters/consumer/main.tscn": "25b848774f99520ca06b7c2bf845e23f7878fd44dd68cc618ed027f616b94aa2",
+    "tests/adapters/consumer/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2"
+  },
+  "sdkManifestSha256": "2bee2b05a570403bdcd516b2fc5053fabd8c6224e9be100f9bc90dd54523ba9e",
+  "stages": [
+    {
+      "label": "pack-addon",
+      "exitCode": 0,
+      "log": "logs/pack-addon.log",
+      "sha256": "d5d59af9c9ca6ccc61a4aa723ccd8f665965a5d1b8209870949d5751998f0a7a"
+    },
+    {
+      "label": "configure-adapter",
+      "exitCode": 0,
+      "log": "logs/configure-adapter.log",
+      "sha256": "d4e1d28b76fe7a441aca3e71d185ac66a0574837597fc95ef41ab164a1ef4141"
+    },
+    {
+      "label": "compile-link-adapter",
+      "exitCode": 0,
+      "log": "logs/compile-link-adapter.log",
+      "sha256": "3372bfd65564e9789090d5d2044e699800ab645cd774147ab31b7c25ddb4cc68"
+    },
+    {
+      "label": "adapter-dependencies",
+      "exitCode": 0,
+      "log": "logs/adapter-dependencies.log",
+      "sha256": "3d189597eedf553c310a50d04b303d973801fd53503f4a6092b711dd43e6a5bd"
+    },
+    {
+      "label": "build-selected-specs",
+      "exitCode": 0,
+      "log": "logs/build-selected-specs.log",
+      "sha256": "4668a9646ce8ccc3c60ec8025885561cce884d5d048d192fe22cf4a9419f24ff"
+    },
+    {
+      "label": "godot-import",
+      "exitCode": 0,
+      "log": "logs/godot-import.log",
+      "sha256": "2b5821708cb9109773bbe8727933a121abdb6d00376dd36858d3ba577d7f4096"
+    },
+    {
+      "label": "godot-headless",
+      "exitCode": 0,
+      "log": "logs/godot-headless.log",
+      "sha256": "bc46e1bd1df46e0e26c938f72d85ac65407b8081cb9447d48e82f7d50b94b803"
+    },
+    {
+      "label": "godot-external-appearance",
+      "exitCode": 0,
+      "log": "logs/godot-external-appearance.log",
+      "sha256": "7be9e85fed972a671b888e855f641d90fdfe6c7214b9af0c285ae4638d8bacc9"
+    },
+    {
+      "label": "godot-reentrant-stop",
+      "exitCode": 0,
+      "log": "logs/godot-reentrant-stop.log",
+      "sha256": "1843ff0cf5c03e4c9fd5f96ee420533c054773cde312803c8685b839260a085d"
+    },
+    {
+      "label": "godot-reentrant-raf",
+      "exitCode": 0,
+      "log": "logs/godot-reentrant-raf.log",
+      "sha256": "0a3c5a0550930feba32a2bcc27c8f41d12f62bc015f0814c787b653162f61c66"
+    },
+    {
+      "label": "godot-reentrant-timer",
+      "exitCode": 0,
+      "log": "logs/godot-reentrant-timer.log",
+      "sha256": "061e0b4b79d0c57884bd771e5e3893b64e6065d6d577107da7189bccdaeb93f5"
+    },
+    {
+      "label": "godot-root-unmount-resize",
+      "exitCode": 0,
+      "log": "logs/godot-root-unmount-resize.log",
+      "sha256": "0a02442dec77f544dc93bcd7b135c2473fc5f5368ef56dbe49c30b71ee9f95d0"
+    },
+    {
+      "label": "godot-root-unmount-pressed",
+      "exitCode": 0,
+      "log": "logs/godot-root-unmount-pressed.log",
+      "sha256": "9f82b6cc8527b72a5800c6e94b3b28d0756004899bc3e28059c13d2191657d18"
+    },
+    {
+      "label": "godot-root-unmount-raf",
+      "exitCode": 0,
+      "log": "logs/godot-root-unmount-raf.log",
+      "sha256": "0a8d9389962bdf42c3bbacbae142e8f6f255921507d48233297d8be306a70bcb"
+    },
+    {
+      "label": "godot-root-unmount-timer",
+      "exitCode": 0,
+      "log": "logs/godot-root-unmount-timer.log",
+      "sha256": "6357cd88df65795cd9c1d8deafcb01c6f071e632c255ff4787d7046399110592"
+    },
+    {
+      "label": "godot-root-remount-resize",
+      "exitCode": 0,
+      "log": "logs/godot-root-remount-resize.log",
+      "sha256": "583a897b8f6494b55d815d6796296f8fdc231b1ac7a4bb74f96a586a1683ba58"
+    },
+    {
+      "label": "godot-root-free-resize",
+      "exitCode": 0,
+      "log": "logs/godot-root-free-resize.log",
+      "sha256": "0a23f91ab102d1ee8d6abe2c200022d25eff58f9cc56caa302a00bd18d4b3817"
+    },
+    {
+      "label": "godot-root-owner-switch-resize",
+      "exitCode": 0,
+      "log": "logs/godot-root-owner-switch-resize.log",
+      "sha256": "9f8eeb57ee93f3200b48c0546f79ed9de18c0fc9511776b29d338b25c26a6808"
+    },
+    {
+      "label": "godot-root-stale-core-owner-switch-resize",
+      "exitCode": 0,
+      "log": "logs/godot-root-stale-core-owner-switch-resize.log",
+      "sha256": "affbec606c511a376015581d61ea4cfc3a0f406c42446ed914502c15e0de0a53"
+    },
+    {
+      "label": "godot-graphical",
+      "exitCode": 0,
+      "log": "logs/godot-graphical.log",
+      "sha256": "850e9091183e1888d243ca0c40e158864a73a1183e2c1c72a1f8284ff4a9f9ec"
+    },
+    {
+      "label": "godot-root-unmount-graphical",
+      "exitCode": 0,
+      "log": "logs/godot-root-unmount-graphical.log",
+      "sha256": "187186f0218fc5d9a330123b1f0a6658e8588733a226282a40bb26fbbb7fa012"
+    },
+    {
+      "label": "godot-root-remount-graphical",
+      "exitCode": 0,
+      "log": "logs/godot-root-remount-graphical.log",
+      "sha256": "99a7362549fb379506e6180c4af143f065d685ac961f7b929efe33c04dce35cb"
+    },
+    {
+      "label": "godot-root-owner-switch-graphical",
+      "exitCode": 0,
+      "log": "logs/godot-root-owner-switch-graphical.log",
+      "sha256": "0861ff7cf0a52a547d862ed04ca7b037579491afea42234c09174b8577fae3ed"
+    }
+  ],
+  "passed": true,
+  "nativeAdapterLinked": true,
+  "componentMounted": true,
+  "vmCreated": true,
+  "godotEngineStarted": true,
+  "abiCertified": false,
+  "adapterLibrarySha256": "b3ba915b7dbc42baffae6aea3115da685278d166757dc1f72aa6490b62c5435e",
+  "linkCommandSha256": "cfb7dd2ef2703747f2426e85cf013551243fbd3b8498d170655522ff7b531c8f",
+  "selectionSha256": "47acbf8a1c53bd391d22f02debb15f087b296faa04ef9a7c10753ec1d8716b80",
+  "bundleSha256": "6f30999306f887b0c2744d2429c1cc7f5b8448c22e161bc452ea80e17debbda5",
+  "headless": {
+    "checks": 35,
+    "sha256": "49d76c8c325bb459d63e3ec1f079f1e12af38c6d549ebc85492242f6d03133bd",
+    "displayServer": "headless"
+  },
+  "external-appearance": {
+    "checks": 5,
+    "sha256": "1ee9cdb851aa0dc43af2dd1dce137f5b37b931d533d292dee2adaa905d47bc78",
+    "displayServer": "headless"
+  },
+  "reentrant-stop": {
+    "checks": 8,
+    "sha256": "0161f073e4be5c56bbeb9ea16e60b05888392d30f75d584ca3dd6d98fab4e1ac",
+    "displayServer": "headless"
+  },
+  "reentrant-raf": {
+    "checks": 9,
+    "sha256": "823bc0c7a21174ef9f84ead4cd347c96c890b5b8e003b7bb008b30986ffef079",
+    "displayServer": "headless"
+  },
+  "reentrant-timer": {
+    "checks": 9,
+    "sha256": "3fd903ffc449e76d9b2e64eb51a99f4fce652f3329c28ffcc3a23636cea23396",
+    "displayServer": "headless"
+  },
+  "root-unmount-resize": {
+    "checks": 17,
+    "sha256": "85c847808e8b5858e833f42ac64c732351239a8fdbb83e39f56c9c6762f3b254",
+    "displayServer": "headless"
+  },
+  "root-unmount-pressed": {
+    "checks": 17,
+    "sha256": "466f8148cfd55d87c1077b8d066c87dbda8dd94c34f7a67ca6d2907a0938f920",
+    "displayServer": "headless"
+  },
+  "root-unmount-raf": {
+    "checks": 18,
+    "sha256": "29975474184f7611fde181a85118c2db9706185d7c3ce4d944cf81dd38afff1f",
+    "displayServer": "headless"
+  },
+  "root-unmount-timer": {
+    "checks": 18,
+    "sha256": "c56ff9b674451bb0b390f74c6025f675e1e52f6ce984953c0bbdd2cf6b13be97",
+    "displayServer": "headless"
+  },
+  "root-remount-resize": {
+    "checks": 21,
+    "sha256": "ea4958d44c8b2ec6fe9842ccc091a8aaecddaf4be408180969cf5243e923b83f",
+    "displayServer": "headless"
+  },
+  "root-free-resize": {
+    "checks": 17,
+    "sha256": "4c53d39a04de52e41c1907b5407dde4f03e964b4341231575e0f9f7dff2c7e64",
+    "displayServer": "headless"
+  },
+  "root-owner-switch-resize": {
+    "checks": 18,
+    "sha256": "3ed307a7913f1639dec0afb6a09d01597b7d41cb80c557c8b540312cfce323f7",
+    "displayServer": "headless"
+  },
+  "root-stale-core-owner-switch-resize": {
+    "checks": 21,
+    "sha256": "3f52883d95d136a4ab0ac652189323e2fbf04355c75afbc469cec84e35c0673e",
+    "displayServer": "headless"
+  },
+  "graphical": {
+    "checks": 37,
+    "sha256": "0d63ebf866474923f8775a5dd7bf3d073b29bd11f11da691a3b46dfaa93b1cbd",
+    "displayServer": "macOS"
+  },
+  "root-unmount-graphical": {
+    "checks": 21,
+    "sha256": "d6aec26ea31468050314ed71809a16eefd3129685dee0a42cfa184ac5c111041",
+    "displayServer": "macOS"
+  },
+  "root-remount-graphical": {
+    "checks": 25,
+    "sha256": "eb63f1ecc12d408ee73a1a441c1610e7fbc10f76ab2ec7f2dadd2dd99a6064bf",
+    "displayServer": "macOS"
+  },
+  "root-owner-switch-graphical": {
+    "checks": 22,
+    "sha256": "48cad6c5843c3f96fc2db9cfd9a98aa2c868df7d19510b7eca7a31dbc45c28a0",
+    "displayServer": "macOS"
+  }
+}

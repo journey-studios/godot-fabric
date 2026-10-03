@@ -1,0 +1,62 @@
+{
+  "format": "gf07-independent-root-discovery/v1",
+  "gitHead": "80729da5f7639900d9213c7c686578e2dc1b9419",
+  "artifactSha256": {
+    "addons/godot_fabric/native/fabric_godot.dylib": "44078ed4d4c18ce47a676636159319d824b170dd372780287b937528a9601933",
+    "node_modules/@godot-fabric/adapter-fixture/lib/libadapter_fixture.dylib": "a7a154c7414ed7ef1bdd05551aaa23bf308404201c6cb7dc9c1041b1c9db570d",
+    ".godot_fabric/app.js": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+    ".godot_fabric/app.js.adapters.json": "62d8b98f1230b606e302086dc3c62457612617aefcf6fc553cd4840ba4e6c6f4"
+  },
+  "results": [
+    {
+      "mode": "control",
+      "exitCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 2.866,
+      "logSha256": "f0091f5723a7b52dc4f8610ed4977778e3535386fe03d8fc4a5f293434a78a2e"
+    },
+    {
+      "mode": "unmount",
+      "exitCode": -15,
+      "timedOut": true,
+      "elapsedSeconds": 12.014,
+      "logSha256": "44132a60352da0da9bb0741faa8649260ced911b95e36efc4fe19bb495716bab"
+    },
+    {
+      "mode": "remount",
+      "exitCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 0.877,
+      "logSha256": "aac6e5e58ff987b19505d2f4ea63398a42fb1b04d47a1e46451dea176b7591bd"
+    },
+    {
+      "mode": "replacement",
+      "exitCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 0.57,
+      "logSha256": "9e73adeb79b614f2f692503d578c1e1f4b300fd5e654b1d2c51ec52772ef9916"
+    },
+    {
+      "mode": "early",
+      "exitCode": 0,
+      "timedOut": false,
+      "elapsedSeconds": 0.458,
+      "logSha256": "359ed45b8a5fa670b21c5054db6b689cc67e4176cd07e7ecf8087b9fc1f5399b"
+    }
+  ],
+  "nativeRebuilt": false,
+  "engineRebuilt": false,
+  "scriptsSha256": {
+    "validation-unmount.gd": "9bba2dedf3e4c7e3ca0c046d0c4c7d37080463aedb7d7e4a97dae9cb312c2624",
+    "validation-ordinary.gd": "b90fb007a97ca3f1c421928f7ccd16a7963ec6402d4784a134844fd106d750aa"
+  },
+  "baseline": "Original Codegen consumer with two committed roots",
+  "trigger": "External Button.resized synchronously calls first.unmount() during a committed Fabric layout update",
+  "observed": "Ordinary unmount succeeds and the other root rerenders; reentrant unmount frees the emitting Control and fails to return before the isolated-process timeout",
+  "upstreamRegistry": {
+    "source": "ReactCommon/react/renderer/mounting/ShadowTreeRegistry.cpp",
+    "reactNative": "0.87.1",
+    "sha256": "1807c3f984c308382cd44236ea82a93653e275cbc91125d4613c77488709fdfa",
+    "contract": "visit retains a shared lock during its callback; add and remove require an exclusive lock"
+  }
+}

@@ -5,14 +5,14 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "2B",
-    "focusTitle": "Aliases isolados por origem; condições comparadas, completar tipos e resolução"
+    "focusSequence": "3",
+    "focusTitle": "Roots reentrantes comprovadas; próximo: geometria, stacking e clipping de View"
   },
-  "updatedAt": "2026-10-03T22:48:49.480448+00:00",
+  "updatedAt": "2026-10-03T23:45:51.177113+00:00",
   "source": {
-    "commit": "fe056fa98801ad737d2f7a48338338d0f0b10083",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/ROADMAP.md",
-    "scope": "GF-03/GF-28: implementação fe056fa conferida pelos hashes executados; aliases app/lib/SDK isolados, consumer30/40/43, Codegen35/37+8/9/9, Metro13 com duas diferenças explícitas, 199 Node/13 Python e 10 nativos. CI precedente f2eb57f verde nos cinco jobs; CI desta fatia ainda pendente.",
+    "commit": "80729da5f7639900d9213c7c686578e2dc1b9419",
+    "url": "https://github.com/journey-studios/godot-fabric/pull/14",
+    "scope": "Base 80729da; fontes locais consumidas identificadas por SHA em root-retirement/provenance.json. GF-07/GF-26/GF-28: 17 Godot/318 checks em macOS arm64 Release, retiro/re-mount/owner switch/stale core/font ownership e pixels. Pin do commit da implementação após commit; CI própria pendente. Nenhum aceite completo ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Aliases app/lib/SDK isolados no TypeScript original e runtime; literal types e native texts distintos no consumidor30/40/43, React único e hash de recuperação preservados. 54 testes de resolução, 13 Metro, 8 determinismo/transform e 3 hooks passaram. Perfil ESNext/Preserve + Bundler; NodeNext/Node16/CJS, types runtime e .d.ts rejeitados visivelmente. Duas diferenças Metro documentadas. Tipos/imports/assets/profiles completos, workspaces, exports e D20 abertos.",
+      "note": "Aliases app/lib/SDK isolados no TypeScript original e runtime; literal types e native texts distintos no consumidor30/40/43, React único e hash de recuperação preservados. 54 testes de resolução, 13 Metro, 8 determinismo/transform e 3 hooks passaram. Perfil ESNext/Preserve + Bundler; NodeNext/Node16/CJS, types runtime e .d.ts rejeitados visivelmente. Duas diferenças Metro documentadas. Tipos/imports/assets/profiles completos, workspaces, exports e D20 abertos. CI 80729da confirmou cinco jobs da fatia de aliases; esse run precede root retirement.",
       "blocker": "",
       "checkpoints": [
         {
@@ -173,6 +173,10 @@
             {
               "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
               "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+            },
+            {
+              "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701"
             }
           ]
         },
@@ -348,7 +352,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Pausa, hide/unmount/remount e stop terminal validados no laboratório; consumidor mantém HUD após fechar inventário. Restart, ativação, overlays e comparação completa permanecem abertos. Stop reentrante em resize/RAF/timer passou 8/9/9 verificações: autoridade cancelada imediatamente e Controls preservados até retorno da execução. Unmount/destruição independente durante update ainda não cobertos. CI 37153564796 em 9317b46 confirmou 35 headless e 8/9/9 shutdown; a execução com builder explícito também passou 35/37 e 8/9/9 localmente.",
+      "note": "Unmount independente reentrante em resize/pressed/RAF/timer, remount imediato, host livre e troca de aplicação comprovados. Autoridade cessa imediatamente; cleanup/Controls aguardam fase diferida fora do registry visit. Root sobrevivente preserva VM, estado, módulo e scheduling. Sinal core antigo entre runtimes com root/tag repetidos rejeitado; novo botão entrega. Matriz total 17 Godot/318 checks, com três casos gráficos e pixels. Restart/ativação completos, pause/resume, overlays/portals, cancelamento touch/responder e diferencial RN/alvos continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -371,6 +375,10 @@
             {
               "label": "CI shutdown: cinco jobs, consumidor35 e stop 8/9/9",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
             }
           ]
         },
@@ -1239,7 +1247,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Codegen original, SDK/SPI e loader selecionado comprovados nas fatias anteriores. Consumidor Badge/Probe 35 headless/37 gráfico; stop 8/9/9 e 207 registry locais. CI 9317b46 passou cinco jobs e confirmou 35/8/9/9. Builder TSConfig explícito passou os mesmos casos localmente; nova CI pendente. Containers/state/schema completo, async e full RN/all-target/ABI permanecem abertos.",
+      "note": "Codegen original/SDK/SPI/loader comprovados nas fatias anteriores; agora root retirement e stale refs/events passam com Badge/Probe originais e core Button. External ViewProps sem cast para core; cor de fonte externa preservada em 5 checks, contra 2 falhas no binário precedente. Total consumidor17runs/318checks macOS arm64 Release. Containers/state/schema/reflection completo, async, RN diferencial e exports/ABI/alvos continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1278,6 +1286,10 @@
             {
               "label": "CI external Codegen consumer35 e shutdown8/9/9",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
             }
           ]
         },
@@ -1364,7 +1376,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Addon/editor real permite alias do app com nome da dependência nested da lib sem afetar SDK React. Consumer30/40/43, Codegen35/37 e shutdown8/9/9 passaram; lockfile e bundle recuperado idênticos. 199 Node/13 Python e 10 nativos passaram. CI f2eb57f precedente verde nos cinco jobs; fatia nova ainda sem hosted CI. Instalação/update/dev tooling e exports Debug/Release em todos os alvos abertos.",
+      "note": "Addon/editor e consumer30/40/43 precedentes confirmados pela CI 80729da nos cinco jobs. Novo SDK compilado/pack verificado e original-Codegen consumer separado passou 17 Godot/318checks com remount/owner switch e captura/pixels. Esta nova fatia tem evidência local; CI própria ainda pendente. Instalação/update/dev tooling e exports Debug/Release por alvo abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1407,6 +1419,14 @@
             {
               "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
               "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
+            },
+            {
+              "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701"
             }
           ]
         },
@@ -2434,6 +2454,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "root-retirement-local-v2",
+      "at": "2026-10-03T23:45:51.177113+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "17 execuções Godot/318 checks comprovam retirement independente, remount, host free, owner switch, origem do core sinal e font ownership externa. Capturas verificam pixels. CI anterior 80729da verde em cinco jobs; CI nova pendente. Sem item/checkpoint adicional fechado nem alteração de peso/denominador. Próxima fundação GF-10 coordenada com medidas/input.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/root-retirement/README.md"
+    },
     {
       "id": "alias-scopes-verified-20261003",
       "at": "2026-10-03T22:46:45.315700+00:00",

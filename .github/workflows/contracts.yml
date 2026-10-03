@@ -106,6 +106,8 @@ jobs:
             build/adapter-runtime/reentrant-stop.json
             build/adapter-runtime/reentrant-raf.json
             build/adapter-runtime/reentrant-timer.json
+            build/adapter-runtime/root-*.json
+            build/adapter-runtime/external-appearance.json
             build/adapter-runtime/logs/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

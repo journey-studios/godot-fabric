@@ -5,6 +5,7 @@
 
 namespace fabric_godot {
 void apply_appearance(godot::Control &control, const facebook::react::ViewProps &props,
-                      const facebook::react::LayoutMetrics &layout);
+                      const facebook::react::LayoutMetrics &layout,
+                      const ControlProps *text_props = nullptr);
 folly::dynamic appearance_snapshot(const godot::Control &control);
 }

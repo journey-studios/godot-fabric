@@ -261,6 +261,14 @@ remains open.
 
 ![Original Codegen Badge components in two Godot Fabric roots](docs/evidence/native-adapters/initial.png)
 
+The [root-retirement example](examples/native-extension/README.md) also unmounts
+or replaces one root from a native callback while another keeps running. Its
+[318 checks in 17 Godot runs](docs/evidence/root-retirement/README.md) cover
+deferred cleanup, same-host remount, application replacement and rejected stale
+signals. Captures include pixel checks of the surviving native UI.
+
+![The second root keeps rendering after the first unmounts](docs/evidence/root-retirement/root-unmounted.png)
+
 
 Only this renderer, generic demonstration fixtures and public documentation
 are included. The repository starts with a new history; generated dependencies,

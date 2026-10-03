@@ -102,17 +102,56 @@ class GodotHostPhaseCallback final : public CallableCustom {
  private:
   std::function<void()> callback;
 };
+enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key };
+// A Control's connection belongs to its original runtime and mount. Binding a
+// mutable FabricSurface would reroute an old queued signal after an owner switch.
+class GodotCoreControlCallback final : public CallableCustom {
+ public:
+  using Callback = std::function<void(const Variant **)>;
+  GodotCoreControlCallback(int count, Variant::Type type, Callback callback)
+      : count(count), type(type), callback(std::move(callback)) {}
+  uint32_t hash() const override { return static_cast<uint32_t>(reinterpret_cast<uintptr_t>(this)); }
+  String get_as_text() const override { return "GodotFabric originating core Control"; }
+  CompareEqualFunc get_compare_equal_func() const override { return [](const CallableCustom *a, const CallableCustom *b) { return a == b; }; }
+  CompareLessFunc get_compare_less_func() const override { return [](const CallableCustom *a, const CallableCustom *b) { return std::less<const CallableCustom *>{}(a, b); }; }
+  ObjectID get_object() const override { return ObjectID(); }
+  int get_argument_count(bool &valid) const override { valid = true; return count; }
+  bool is_valid() const override { return true; }
+  void call(const Variant **args, int actual_count, Variant &result, GDExtensionCallError &failure) const override {
+    result = Variant();
+    failure.error = GDEXTENSION_CALL_OK;
+    if (actual_count != count) {
+      failure.error = actual_count < count ? GDEXTENSION_CALL_ERROR_TOO_FEW_ARGUMENTS : GDEXTENSION_CALL_ERROR_TOO_MANY_ARGUMENTS;
+      failure.expected = count;
+      return;
+    }
+    if (count && args[0]->get_type() != type) {
+      failure.error = GDEXTENSION_CALL_ERROR_INVALID_ARGUMENT;
+      failure.argument = 0;
+      failure.expected = type;
+      return;
+    }
+    callback(args);
+  }
+ private:
+  int count;
+  Variant::Type type;
+  Callback callback;
+};
 }
 
 struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::enable_shared_from_this<fabric_godot::ApplicationRuntime::Impl> {
   struct Root {
-    FabricSurface *host{};
+    uint64_t host_id{};
+    FabricSurface *host() const { return Object::cast_to<FabricSurface>(ObjectDB::get_instance(host_id)); }
     std::string component;
     Vector2 size;
     std::unique_ptr<fabric_godot::PointerAdapter> pointer;
     int commits{}, mount_reports{}, creates{}, deletes{}, updates{}, events{};
     bool stopping{}, stopped{};
+    bool started{}, start_pending{};
+    folly::dynamic initial_props;
   };
   std::map<int, std::unique_ptr<Root>> roots;
   std::function<fabric_godot::WindowMetrics()> read_window;
@@ -132,6 +171,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   uint64_t next_mount_id{1};
   Callable host_phase;
   bool host_phase_pending{};
+  Callable surface_phase;
+  bool surface_phase_pending{};
+  bool draining_surfaces{};
+  std::map<int, bool> pending_retirements;
   std::shared_ptr<rn::UIManager> ui;
   rn::ComponentDescriptorProviderRegistry providers;
   std::shared_ptr<rn::EventDispatcher> dispatcher;
@@ -166,11 +209,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     Impl &owner;
     explicit ExecutionScope(Impl &owner) : owner(owner) { ++owner.execution_depth; }
     ~ExecutionScope() noexcept {
-      if (--owner.execution_depth || !owner.stop_requested || owner.stopping || owner.stopped) return;
+      if (--owner.execution_depth || owner.stopping || owner.stopped) return;
       // A native setter can emit a Godot signal which requests shutdown while
       // Fabric or Hermes still owns the calling stack. Retire authority now,
       // but keep Controls/ShadowTrees alive until that outer stack unwinds.
-      try { owner.stop(); }
+      try {
+        if (owner.stop_requested) owner.stop();
+        else owner.schedule_surface_phase();
+      }
       catch (const std::exception &error) { owner.fail(error.what()); }
     }
   };
@@ -217,6 +263,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto event_pipe = [this](jsi::Runtime &rt, rn::EventTarget *target,
         const std::string &type, rn::ReactEventPriority priority,
         const rn::EventPayload &payload, rn::HighResTimeStamp timestamp) {
+      if (target) {
+        auto root = roots.find(target->getSurfaceId());
+        if (root == roots.end() || ((root->second->stopping || inactive()) && type != "touchCancel")) return;
+      } else if (inactive()) return;
       rn::UIManagerBinding::getBinding(rt)->dispatchEvent(rt, target, type, priority, payload, timestamp);
     };
     auto state_pipe = [this](const rn::StateUpdate &state) { ui->updateState(state); };
@@ -254,7 +304,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             auto root = roots.find(id);
             if (root == roots.end() || root->second->stopping || root->second->stopped)
               return rn::dom::DOMRect{};
-            auto transform = root->second->host->get_global_transform_with_canvas();
+            auto *host = root->second->host();
+            if (!host) return rn::dom::DOMRect{};
+            auto transform = host->get_global_transform_with_canvas();
             // Layout/offset sizes exclude transforms. Window rectangles include
             // the affine embedding (all four corners, including rotation).
             if (!transforms) {
@@ -286,9 +338,67 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // No window/Node access or JS drain after a callback may have freed its
       // application. RN invoker work waits for the next ordinary JS frame.
     })));
+    surface_phase = Callable(memnew(GodotHostPhaseCallback([owner] {
+      auto guard = owner.lock();
+      if (!guard) return;
+      guard->surface_phase_pending = false;
+      if (guard->inactive() || guard->execution_depth) return;
+      guard->drain_surface_operations();
+    })));
+  }
+
+  void schedule_surface_phase() {
+    if (inactive() || execution_depth || draining_surfaces || surface_phase_pending) return;
+    const bool starts = std::any_of(roots.begin(), roots.end(), [](const auto &entry) {
+      return entry.second->start_pending && !entry.second->stopping;
+    });
+    if (pending_retirements.empty() && !starts) return;
+    surface_phase_pending = true;
+    surface_phase.call_deferred();
+  }
+
+  void start_root(int id) {
+    auto found = roots.find(id);
+    if (found == roots.end() || found->second->stopping || inactive()) return;
+    auto &surface = *found->second;
+    auto *host = surface.host();
+    if (!host || !host->is_inside_tree()) { unmount(id); return; }
+    surface.start_pending = false;
+    rn::LayoutConstraints constraints;
+    constraints.minimumSize = constraints.maximumSize = {static_cast<float>(surface.size.x), static_cast<float>(surface.size.y)};
+    rn::LayoutContext layout;
+    layout.pointScaleFactor = host_metrics.scale;
+    auto tree = std::make_unique<rn::ShadowTree>(id, constraints, layout, *ui, *context);
+    surface.started = true;
+    if (surface.component.empty()) ui->startEmptySurface(std::move(tree));
+    else ui->startSurface(std::move(tree), surface.component, surface.initial_props, rn::DisplayMode::Visible);
+  }
+
+  void drain_surface_operations() {
+    if (execution_depth || draining_surfaces || inactive()) return;
+    draining_surfaces = true;
+    // Never stop/add a ShadowTree inside its own registry visit, or destroy a
+    // Control while a user-owned Godot signal is still being emitted.
+    try {
+      for (int count = 0; !pending_retirements.empty() && count < 256; ++count) {
+        auto request = pending_retirements.extract(pending_retirements.begin());
+        finalize_unmount(request.key(), request.mapped());
+      }
+      std::vector<int> starts;
+      for (const auto &[id, root] : roots) if (root->start_pending && !root->stopping) starts.push_back(id);
+      for (int id : starts) {
+        if (inactive()) break;
+        ExecutionScope execution(*this);
+        start_root(id);
+      }
+    } catch (const std::exception &error) { fail(error.what()); }
+    draining_surfaces = false;
+    schedule_surface_phase();
   }
 
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json) {
+    const bool defer_start = execution_depth != 0;
+    ExecutionScope execution(*this);
     if (inactive()) throw std::runtime_error("Application is stopped");
     if (!host.get_window() || host.get_viewport() != host.get_window() ||
         host.get_window()->get_instance_id() != host_metrics.window_instance_id)
@@ -311,32 +421,34 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const int id = next_surface_id;
     next_surface_id += 10; // RN root tags end in 1; host component tags are even.
     auto root = std::make_unique<Root>();
-    root->host = &host;
+    root->host_id = host.get_instance_id();
     root->component = component;
     root->size = host.get_size();
+    root->initial_props = std::move(props);
     roots.emplace(id, std::move(root));
     auto &surface = *roots.at(id);
     surface.pointer = std::make_unique<fabric_godot::PointerAdapter>(
-        [this, id](Vector2 point) { return hit_test(roots.at(id)->host, point); },
+        [this, id](Vector2 point) {
+          auto root = roots.find(id);
+          auto *host = root == roots.end() || root->second->stopping ? nullptr : root->second->host();
+          return host ? hit_test(host, point) : 0;
+        },
         [this](int tag, Vector2 point) {
           auto found = views.find(tag);
           return found == views.end() ? point : found->second.control->get_global_transform_with_canvas().affine_inverse().xform(point);
         },
         [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); });
-    rn::LayoutConstraints constraints;
-    constraints.minimumSize = constraints.maximumSize = {static_cast<float>(surface.size.x), static_cast<float>(surface.size.y)};
-    rn::LayoutContext layout;
-    layout.pointScaleFactor = host_metrics.scale;
-    auto tree = std::make_unique<rn::ShadowTree>(id, constraints, layout, *ui, *context);
-    if (component.empty()) ui->startEmptySurface(std::move(tree));
-    else ui->startSurface(std::move(tree), component, props, rn::DisplayMode::Visible);
+    if (defer_start) surface.start_pending = true;
+    else start_root(id);
     return id;
   }
   void update_props(int id, const std::string &props_json) {
+    ExecutionScope execution(*this);
     auto found = roots.find(id);
     if (found == roots.end() || found->second->stopping || inactive()) return;
     if (found->second->component.empty()) throw std::runtime_error("Root props require an AppRegistry component");
-    ui->setSurfaceProps(id, found->second->component, folly::parseJson(props_json), rn::DisplayMode::Visible);
+    if (found->second->start_pending) found->second->initial_props = folly::parseJson(props_json);
+    else ui->setSurfaceProps(id, found->second->component, folly::parseJson(props_json), rn::DisplayMode::Visible);
   }
 
   void fail(const std::string &error) {
@@ -373,13 +485,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (next.size.x <= 0 || next.size.y <= 0) return;
     const bool density_changed = next.scale != host_metrics.scale;
     for (auto &[id, root] : roots) {
-      const auto size = root->host->get_size();
-      if ((size == root->size && !density_changed) || size.x <= 0 || size.y <= 0 || root->stopping) continue;
+      if (root->stopping) continue;
+      auto *host = root->host();
+      if (!host) { unmount(id); continue; }
+      const auto size = host->get_size();
+      if ((size == root->size && !density_changed) || size.x <= 0 || size.y <= 0) continue;
       root->size = size;
       rn::LayoutConstraints constraints;
       constraints.minimumSize = constraints.maximumSize = {static_cast<float>(size.x), static_cast<float>(size.y)};
       rn::LayoutContext layout;
       layout.pointScaleFactor = next.scale;
+      if (!root->started) continue;
       ui->getShadowTreeRegistry().visit(id, [&](const rn::ShadowTree &tree) {
         tree.commit([&](const rn::RootShadowNode &node) { return node.clone({id, *context}, constraints, layout); }, {});
       });
@@ -451,14 +567,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::null();
       auto node = ui->findShadowNodeByTag_DEPRECATED(*tag);
-      return node ? rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::toJs(rt, node) : jsi::Value::null();
+      auto root = node ? roots.find(node->getSurfaceId()) : roots.end();
+      return root != roots.end() && !root->second->stopping
+          ? rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::toJs(rt, node) : jsi::Value::null();
     });
     bind("godotMetrics", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (inactive() || count != 1) return jsi::Value::null();
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::null();
       auto found = views.find(*tag);
-      if (found == views.end()) return jsi::Value::null();
+      if (found == views.end() || roots.at(found->second.surface_id)->stopping) return jsi::Value::null();
       auto *control = found->second.control;
       jsi::Object result(rt);
       result.setProperty(rt, "width", control->get_size().x);
@@ -476,7 +594,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::undefined();
       auto found = views.find(*tag);
-      if (found != views.end()) {
+      if (found != views.end() && !roots.at(found->second.surface_id)->stopping) {
         if (args[1].getBool()) found->second.control->grab_focus();
         else found->second.control->release_focus();
       }
@@ -513,6 +631,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         }
       }
       for (auto &[tag, mounted] : views) {
+        if (roots.at(mounted.surface_id)->stopping) continue;
         if (mounted.input) mounted.input->sample();
         if (mounted.scroll) mounted.scroll->sample();
       }
@@ -557,16 +676,38 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (found == roots.end() || found->second->stopping) return;
     auto &root = *found->second;
     root.stopping = true;
+    root.start_pending = false;
+    pending_retirements.emplace(id, legacy_hook);
+    // The Node may be destroyed by the game before deferred React cleanup.
+    // Detach only this root's top-level owned Controls, retaining the entire
+    // native subtree and adapters until the independent phase can dispose it.
+    if (auto *host = root.host()) {
+      std::vector<Control *> detach;
+      for (const auto &[tag, mounted] : views)
+        if (mounted.surface_id == id && mounted.control->get_parent() == host) detach.push_back(mounted.control);
+      for (auto *control : detach) if (control->get_parent() == host) host->remove_child(control);
+    }
+  }
+  void finalize_unmount(int id, bool legacy_hook = false) {
+    ExecutionScope execution(*this);
+    auto found = roots.find(id);
+    if (found == roots.end()) return;
+    auto &root = *found->second;
+    root.stopping = true;
     root.pointer->cancel();
     // React cleanup must run while this ShadowTree is still registered.
     try {
-      if (legacy_hook) evaluate("if(globalThis.GodotApp) GodotApp.stop();");
-      else evaluate("if(globalThis.RN$stopSurface) RN$stopSurface(" + std::to_string(id) + ");");
+      if (root.started) {
+        if (legacy_hook) evaluate("if(globalThis.GodotApp) GodotApp.stop();");
+        else evaluate("if(globalThis.RN$stopSurface) RN$stopSurface(" + std::to_string(id) + ");");
+      }
     } catch (const std::exception &error) { fail(error.what()); }
     for (int i = 0; i < 32; ++i) pump();
     try {
-      ui->getShadowTreeRegistry().visit(id, [](const rn::ShadowTree &tree) { tree.commitEmptyTree(); });
-      ui->stopSurface(id);
+      if (root.started) {
+        ui->getShadowTreeRegistry().visit(id, [](const rn::ShadowTree &tree) { tree.commitEmptyTree(); });
+        ui->stopSurface(id);
+      }
       pump();
     } catch (const std::exception &error) { fail(error.what()); }
     // Failed JS/native teardown cannot retain a tree or event authority.
@@ -584,7 +725,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       ++root.deletes;
     }
     root.stopped = true;
-    root.host->native_unmounted(gd(snapshot(id)));
+    if (auto *host = root.host()) host->native_unmounted(runtime_id, id, gd(snapshot(id)));
     roots.erase(id);
   }
   void stop() {
@@ -593,16 +734,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     stop_requested = false;
     stopping = true;
     host_phase_pending = false;
+    surface_phase_pending = false;
     game_services->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
     std::vector<int> ids;
-    std::vector<uint64_t> host_ids;
-    for (auto &[id, root] : roots) { ids.push_back(id); host_ids.push_back(root->host->get_instance_id()); }
+    std::vector<std::pair<uint64_t, int>> host_ids;
+    for (auto &[id, root] : roots) { ids.push_back(id); host_ids.emplace_back(root->host_id, id); }
     for (int id : ids) {
       auto root = roots.find(id);
-      if (root != roots.end()) unmount(id, root->second->component.empty());
+      if (root != roots.end()) finalize_unmount(id, root->second->component.empty());
     }
+    pending_retirements.clear();
     // Settle service cancellations even when no React root is mounted.
     pump();
     try { native_modules->stop(*runtime); }
@@ -620,12 +763,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     stopped = true;
     // Cache the finalized application state for surfaces whose owner may be
     // destroyed before them. Object IDs avoid retaining the scene objects.
-    for (auto id : host_ids)
-      if (auto *host = Object::cast_to<FabricSurface>(ObjectDB::get_instance(id)))
-        host->native_unmounted(host->snapshot());
+    for (auto [host_id, id] : host_ids)
+      if (auto *host = Object::cast_to<FabricSurface>(ObjectDB::get_instance(host_id)))
+        host->native_unmounted(runtime_id, id, host->snapshot());
   }
 
   void apply(const rn::ShadowView &shadow) {
+    auto root = roots.find(shadow.surfaceId);
+    if (root == roots.end() || root->second->stopping) return;
     auto &mounted = views.at(shadow.tag);
     auto *control = mounted.control;
     auto props = std::static_pointer_cast<const rn::ViewProps>(shadow.props);
@@ -691,7 +836,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       input->set_keep_editing_on_text_submit(true);
       mounted.input->blur_on_submit = native_props->submitBehavior == "blurAndSubmit";
     }
-    fabric_godot::apply_appearance(*control, *native_props, shadow.layoutMetrics);
+    fabric_godot::apply_appearance(*control, *native_props, shadow.layoutMetrics, native_props.get());
     apply_frame(mounted);
   }
 
@@ -713,6 +858,35 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ++roots.at(found->second.surface_id)->events;
     std::static_pointer_cast<const ControlEventEmitter>(found->second.shadow.eventEmitter)->inputEvent(name, std::move(payload));
   }
+  Callable core_control_signal(int surface_id, int tag, uint64_t mount_id, CoreControlSignal signal) {
+    std::weak_ptr<Impl> owner = shared_from_this();
+    const auto thread = host_thread;
+    const bool takes_argument = signal == CoreControlSignal::Change || signal == CoreControlSignal::Submit || signal == CoreControlSignal::Key;
+    return Callable(memnew(GodotCoreControlCallback(takes_argument ? 1 : 0,
+        signal == CoreControlSignal::Key ? Variant::OBJECT : Variant::STRING,
+        [owner, thread, surface_id, tag, mount_id, signal](const Variant **args) {
+          if (std::this_thread::get_id() != thread) return;
+          auto guard = owner.lock();
+          if (!guard || guard->inactive() || guard->retiring.contains(tag)) return;
+          auto root = guard->roots.find(surface_id);
+          auto mounted = guard->views.find(tag);
+          if (root == guard->roots.end() || root->second->stopping || root->second->stopped ||
+              mounted == guard->views.end() || mounted->second.surface_id != surface_id ||
+              mounted->second.mount_id != mount_id || mounted->second.external) return;
+          ExecutionScope execution(*guard);
+          if (signal == CoreControlSignal::Activate) {
+            if (component_kind(mounted->second.shadow) != "button" || !mounted->second.shadow.eventEmitter) return;
+            ++root->second->events;
+            std::static_pointer_cast<const ControlEventEmitter>(mounted->second.shadow.eventEmitter)->activate();
+          } else if (auto *input = mounted->second.input.get()) {
+            if (signal == CoreControlSignal::Change) input->changed(static_cast<String>(*args[0]));
+            else if (signal == CoreControlSignal::FocusEntered) input->focus(true);
+            else if (signal == CoreControlSignal::FocusExited) input->focus(false);
+            else if (signal == CoreControlSignal::Submit) input->submitted();
+            else if (signal == CoreControlSignal::Key) input->key(static_cast<Ref<InputEvent>>(*args[0]));
+          }
+        })));
+  }
   void cancel_subtree(Control *control) {
     for (const auto &[tag, mounted] : views)
       if (mounted.control == control || control->is_ancestor_of(mounted.control)) roots.at(mounted.surface_id)->pointer->removed(tag);
@@ -724,7 +898,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // Its children still receive Godot GUI input; wheels use our viewport route.
       bool ignore = mounted.scroll || component_kind(mounted.shadow) == "text" || component_kind(mounted.shadow) == "paragraph" || props->pointerEvents == rn::PointerEventsMode::None || props->pointerEvents == rn::PointerEventsMode::BoxNone;
       auto *parent = Object::cast_to<Control>(mounted.control->get_parent());
-      while (parent && parent != roots.at(mounted.surface_id)->host) {
+      if (roots.at(mounted.surface_id)->stopping) continue;
+      while (parent && parent != roots.at(mounted.surface_id)->host()) {
         const int parent_tag = tag_for(parent);
         if (parent_tag) {
           auto mode = std::static_pointer_cast<const rn::ViewProps>(views.at(parent_tag).shadow.props)->pointerEvents;
@@ -771,7 +946,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const auto button = mouse->get_button_index();
     if (button < MOUSE_BUTTON_WHEEL_UP || button > MOUSE_BUTTON_WHEEL_RIGHT) return false;
     if (surface.pointer->blocks_native()) return true;
-    const int target = hit_test(surface.host, mouse->get_position());
+    auto *host = surface.host();
+    if (!host || surface.stopping) return false;
+    const int target = hit_test(host, mouse->get_position());
     auto found = views.find(target);
     while (found != views.end()) {
       if (found->second.scroll) {
@@ -787,6 +964,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto found = views.find(tag);
     if (found == views.end()) return;
     const int surface_id = found->second.surface_id;
+    if ((inactive() || roots.at(surface_id)->stopping) && phase != "cancel") return;
     // A retired emitter loses its React handle. Route cancellation through a
     // surviving ancestor so upstream can release its responder/touch history.
     if (phase == "cancel") {
@@ -805,12 +983,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     else emitter->onTouchCancel(std::move(event));
   }
   void uiManagerDidFinishTransaction(std::shared_ptr<const rn::MountingCoordinator> coordinator, bool) override {
+    ExecutionScope execution(*this);
     auto transaction = coordinator->pullTransaction();
     if (!transaction) return;
     auto root_entry = roots.find(transaction->getSurfaceId());
-    if (root_entry == roots.end()) return;
+    if (root_entry == roots.end() || root_entry->second->stopping) return;
     auto &surface = *root_entry->second;
-    auto &host = *surface.host;
+    auto *host_pointer = surface.host();
+    if (!host_pointer || !host_pointer->is_inside_tree()) { unmount(transaction->getSurfaceId()); return; }
+    auto &host = *host_pointer;
     const int surface_id = transaction->getSurfaceId();
     ++surface.commits;
     auto *focused = host.get_viewport()->gui_get_focus_owner();
@@ -822,6 +1003,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     };
     std::map<int, int> inserted_parents;
     for (const auto &mutation : transaction->getMutations()) {
+      if (surface.stopping || inactive()) break;
       if (mutation.type == rn::ShadowViewMutation::Insert)
         inserted_parents[mutation.newChildShadowView.tag] = mutation.parentTag;
       if (mutation.type == rn::ShadowViewMutation::Delete) retiring.insert(mutation.oldChildShadowView.tag);
@@ -830,6 +1012,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     for (const auto &mutation : transaction->getMutations()) {
       const auto &old = mutation.oldChildShadowView;
       const auto &next = mutation.newChildShadowView;
+      if (surface.stopping || inactive()) break;
       switch (mutation.type) {
         case rn::ShadowViewMutation::Create: {
           const auto kind = component_kind(next);
@@ -876,11 +1059,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           else if (kind == "text") control = memnew(Label);
           else if (kind == "button") {
             auto *button = memnew(Button);
-            button->connect("pressed", Callable(&host, "activate").bind(next.tag));
+            button->connect("pressed", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Activate));
             control = button;
           } else if (kind == "input") {
             auto *input = memnew(LineEdit);
-            input->connect("text_changed", Callable(&host, "change").bind(next.tag));
+            input->connect("text_changed", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Change));
             control = input;
           } else if (kind == "svg") {
             control = memnew(GodotSvgNode);
@@ -896,10 +1079,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           if (auto *input = Object::cast_to<LineEdit>(control)) {
             entry->second.input = std::make_unique<fabric_godot::InputAdapter>(*input,
                 [this, tag = next.tag](const std::string &name, folly::dynamic payload) { emit(tag, name, std::move(payload)); });
-            input->connect("focus_entered", Callable(&host, "input_focus").bind(true, next.tag));
-            input->connect("focus_exited", Callable(&host, "input_focus").bind(false, next.tag));
-            input->connect("text_submitted", Callable(&host, "input_submit").bind(next.tag));
-            input->connect("gui_input", Callable(&host, "input_key").bind(next.tag));
+            input->connect("focus_entered", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::FocusEntered));
+            input->connect("focus_exited", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::FocusExited));
+            input->connect("text_submitted", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Submit));
+            input->connect("gui_input", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Key));
           }
           }
           ++surface.creates;
@@ -910,6 +1093,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           auto *control = views.at(next.tag).control;
           if (control->get_parent() != parent(mutation.parentTag))
             parent(mutation.parentTag)->add_child(control);
+          if (surface.stopping || inactive()) break;
           parent(mutation.parentTag)->move_child(control, mutation.index);
           apply(next);
           break;
@@ -937,14 +1121,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // in the SceneTree yet. Finalize their frames after the entire transaction
     // is attached, so native theme/minimum caches cannot retain off-tree sizes.
     for (auto &[tag, mounted] : views) {
+      if (roots.at(mounted.surface_id)->stopping) continue;
       if (!mounted.frame_pending || !mounted.control->is_inside_tree()) continue;
       if (auto *label = Object::cast_to<Label>(mounted.control)) label->update_minimum_size();
       apply_frame(mounted);
       mounted.frame_pending = false;
     }
-    for (auto &[tag, mounted] : views) if (mounted.scroll) mounted.scroll->layout();
+    for (auto &[tag, mounted] : views)
+      if (!roots.at(mounted.surface_id)->stopping && mounted.scroll) mounted.scroll->layout();
     apply_pointer_filters();
     for (auto &[tag, mounted] : views) {
+      if (roots.at(mounted.surface_id)->stopping) continue;
       if (auto *svg = Object::cast_to<GodotSvgNode>(mounted.control); svg && svg->is_inside_tree()) {
         // A paint failure must remain visible without skipping other surfaces
         // or the bookkeeping which finalizes this Fabric mount transaction.
@@ -954,18 +1141,21 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     if (focus_id) {
       for (auto &[tag, mounted] : views)
-        if (mounted.control->get_instance_id() == focus_id && mounted.control->is_inside_tree())
+        if (!roots.at(mounted.surface_id)->stopping && mounted.control->get_instance_id() == focus_id && mounted.control->is_inside_tree())
           mounted.control->grab_focus();
     }
     retiring.clear();
-    ui->reportMount(surface_id);
-    ++surface.mount_reports;
+    if (!surface.stopping && !inactive()) {
+      ui->reportMount(surface_id);
+      ++surface.mount_reports;
+    }
   }
   // Fabric creates speculative shadow nodes. Native objects are allocated only
   // from committed Create mutations, never from this callback.
   void uiManagerDidCreateShadowNode(const rn::ShadowNode &) override {}
   void uiManagerDidDispatchCommand(const std::shared_ptr<const rn::ShadowNode> &node,
       const std::string &name, const folly::dynamic &args) override {
+    ExecutionScope execution(*this);
     auto found = views.find(node->getTag());
     // Ref commands queued before a removal must not target another instance.
     if (found == views.end() || stopped || stopping || stop_requested || retiring.contains(node->getTag()) ||
@@ -993,7 +1183,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   void uiManagerDidSendAccessibilityEvent(const std::shared_ptr<const rn::ShadowNode> &, const std::string &) override { fail("Accessibility adapter is not implemented"); }
   void uiManagerDidSetIsJSResponder(const std::shared_ptr<const rn::ShadowNode> &node, bool active, bool block) override {
     auto root = roots.find(node->getSurfaceId());
-    if (root != roots.end() && (!active || views.contains(node->getTag())))
+    if (root != roots.end() && (!active || (!root->second->stopping && views.contains(node->getTag()))))
       root->second->pointer->responder(node->getTag(), active, block);
   }
   void uiManagerShouldSynchronouslyUpdateViewOnUIThread(rn::Tag, const folly::dynamic &) override { fail("setNativeProps is not implemented"); }
@@ -1026,6 +1216,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
     result["hostPhasePending"] = host_phase_pending;
     result["stopRequested"] = stop_requested;
+    result["pendingRootRetirements"] = pending_retirements.size();
     result["dimensions"] = device_dimensions();
     for (const auto &error : errors) result["errors"].push_back(error);
     return result;
@@ -1042,7 +1233,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto &root = *found->second;
     auto result = std::move(global);
     result["surfaceId"] = id;
-    result["state"] = root.stopped ? "unmounted" : root.commits ? "mounted" : "mounting";
+    result["surfaceGeneration"] = id;
+    result["hostInstanceId"] = static_cast<int64_t>(root.host_id);
+    result["unmountRequested"] = root.stopping && !root.stopped;
+    result["state"] = root.stopped ? "unmounted" : root.stopping ? "retiring" : root.commits ? "mounted" : "mounting";
     result["stopped"] = root.stopped;
     result["applicationStopped"] = stopped;
     result["commits"] = root.commits;
@@ -1143,6 +1337,7 @@ std::string ApplicationRuntime::status() { return folly::toJson(impl->status());
 void ApplicationRuntime::report_error(const std::string &message) { impl->fail(message); }
 bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
   auto found = guard->roots.find(id);
   if (found == guard->roots.end() || found->second->stopping || guard->inactive()) return false;
   auto &root = *found->second;
@@ -1154,40 +1349,52 @@ bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   return blocked || (found != guard->roots.end() && found->second->pointer->blocks_native());
 }
 void ApplicationRuntime::cancel(int id) {
-  auto found = impl->roots.find(id);
-  if (found != impl->roots.end()) found->second->pointer->cancel();
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  auto found = guard->roots.find(id);
+  if (found != guard->roots.end() && !found->second->stopping && !guard->inactive()) found->second->pointer->cancel();
 }
 void ApplicationRuntime::activate(int id, int tag) {
-  auto root = impl->roots.find(id);
-  auto found = impl->views.find(tag);
-  if (root == impl->roots.end() || root->second->stopping || impl->inactive() ||
-      found == impl->views.end() || found->second.surface_id != id || found->second.external ||
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  auto root = guard->roots.find(id);
+  auto found = guard->views.find(tag);
+  if (root == guard->roots.end() || root->second->stopping || guard->inactive() ||
+      found == guard->views.end() || found->second.surface_id != id || found->second.external ||
       component_kind(found->second.shadow) != "button") return;
   ++root->second->events;
   std::static_pointer_cast<const ControlEventEmitter>(found->second.shadow.eventEmitter)->activate();
 }
 void ApplicationRuntime::change(int id, const String &text, int tag) {
-  auto found = impl->views.find(tag);
-  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
-      found != impl->views.end() && found->second.surface_id == id && found->second.input)
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  auto found = guard->views.find(tag);
+  if (!guard->inactive() && guard->roots.contains(id) && !guard->roots.at(id)->stopping &&
+      found != guard->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->changed(text);
 }
 void ApplicationRuntime::focus(int id, bool focused, int tag) {
-  auto found = impl->views.find(tag);
-  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
-      found != impl->views.end() && found->second.surface_id == id && found->second.input)
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  auto found = guard->views.find(tag);
+  if (!guard->inactive() && guard->roots.contains(id) && !guard->roots.at(id)->stopping &&
+      found != guard->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->focus(focused);
 }
 void ApplicationRuntime::submit(int id, int tag) {
-  auto found = impl->views.find(tag);
-  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
-      found != impl->views.end() && found->second.surface_id == id && found->second.input)
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  auto found = guard->views.find(tag);
+  if (!guard->inactive() && guard->roots.contains(id) && !guard->roots.at(id)->stopping &&
+      found != guard->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->submitted();
 }
 void ApplicationRuntime::key(int id, const Ref<InputEvent> &event, int tag) {
-  auto found = impl->views.find(tag);
-  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
-      found != impl->views.end() && found->second.surface_id == id && found->second.input)
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  auto found = guard->views.find(tag);
+  if (!guard->inactive() && guard->roots.contains(id) && !guard->roots.at(id)->stopping &&
+      found != guard->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->key(event);
 }
 }

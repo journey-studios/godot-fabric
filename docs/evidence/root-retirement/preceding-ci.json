@@ -1,0 +1,49 @@
+{
+  "conclusion": "success",
+  "headSha": "80729da5f7639900d9213c7c686578e2dc1b9419",
+  "jobs": [
+    {
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701/job/111310475380",
+      "startedAt": "2026-10-03T22:49:24Z",
+      "completedAt": "2026-10-03T22:50:00Z"
+    },
+    {
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701/job/111310475490",
+      "startedAt": "2026-10-03T22:49:25Z",
+      "completedAt": "2026-10-03T22:56:13Z"
+    },
+    {
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701/job/111310475498",
+      "startedAt": "2026-10-03T22:49:31Z",
+      "completedAt": "2026-10-03T22:59:42Z"
+    },
+    {
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701/job/111310475588",
+      "startedAt": "2026-10-03T22:49:31Z",
+      "completedAt": "2026-10-03T22:56:15Z"
+    },
+    {
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701/job/111312147114",
+      "startedAt": "2026-10-03T22:59:45Z",
+      "completedAt": "2026-10-03T23:00:04Z"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701",
+  "scope": "Preceding importer-scoped alias implementation and existing native lifetime fixtures; does not execute the new independent-root retirement cases"
+}

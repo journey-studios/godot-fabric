@@ -6,8 +6,10 @@ descriptors against the packaged host and exercises registration without
 building another copy of Godot/RN bindings. These are foundation contracts;
 the next executed slice now selects/loads an adapter before bundle evaluation
 and mounts its Control through the original Fabric mutation stream. The
-[independent consumer evidence](evidence/native-adapters/README.md) proves
-35 headless checks and 37 graphical checks on macOS arm64 Release.
+[independent consumer evidence](evidence/native-adapters/README.md) records the
+initial macOS arm64 Release checkpoint; the
+[root-retirement checkpoint](evidence/root-retirement/README.md) extends its
+lifetime and event-origin contracts.
 
 The [original Codegen experiment](CODEGEN.md) remains the source of spec/schema
 derivation. Original React Native generators and descriptors are unchanged.
@@ -122,9 +124,13 @@ Each `AdapterView` owns its callbacks/state and returns an off-tree Godot
 `Control`; the host owns that Control and calls `dispose()` once
 before deleting it. `children_host`, typed ShadowView updates, commands and
 snapshot hooks avoid casting an external generated Props object to the core's
-`ControlProps`. The host applies common ViewProps/Yoga geometry and calls the adapter hooks
-for committed Create/Insert/Update/Remove/Delete mutations. Native allocation
-never happens in speculative ShadowNode callbacks.
+`ControlProps`. The host applies common ViewProps/Yoga geometry and calls the
+adapter hooks for committed Create/Insert/Update/Remove/Delete mutations.
+Common appearance code reads only ViewProps; core text color is applied only
+when the core caller explicitly supplies its own ControlProps. An external
+adapter's generated Props are never used as that core type, and its
+`font_color` override remains under adapter ownership. Native allocation never
+happens in speculative ShadowNode callbacks.
 
 `AdapterViewContext::dispatch_event` is a host-provided function, not a global
 tag lookup. The host validates runtime/root/mount generation, the current committed
@@ -210,4 +216,33 @@ props/events/commands/module and stale-authority checks.
 
 ### Shutdown from a native callback
 
-An application stop requested inside a Fabric/Hermes call retires event and command authority immediately. The host preserves mounted Controls until the outer execution scope returns, then performs original RN teardown. Remaining RAF/timer callbacks cannot resume work during that shutdown. [Executed resize/focus fixtures](evidence/adapter-shutdown/README.md) cover external and internal Button signals. Independent root destruction during update and arbitrary asynchronous cancellation remain separate open contracts.
+An application stop requested inside a Fabric/Hermes call retires event and
+command authority immediately. The host preserves mounted Controls until the
+outer execution scope returns, then performs original RN teardown. Remaining
+RAF/timer callbacks cannot resume work during that shutdown.
+[Executed resize/focus fixtures](evidence/adapter-shutdown/README.md) cover
+external and internal Button signals.
+
+An individual root's `unmount()` also retires authority immediately and clears
+the surface's active ID, but physical deletion always waits for a deferred host
+surface phase. The host detaches and retains its managed Controls so a Godot
+signal can finish without deleting its emitter. That phase performs original
+React/Fabric cleanup and adapter disposal for the retired root. The application's
+renderer, Hermes runtime, modules and remaining RAF/timer callbacks continue for
+other roots.
+
+A reentrant remount reserves a new root identity immediately and defers
+`startSurface` until outside the original Fabric registry visit. Retirement
+completion checks the original application and surface identity before changing
+the host's active binding. Core Button/LineEdit signal connections likewise
+retain a weak reference to their original runtime and immutable surface/tag/mount
+generation; delayed old signals cannot target a replacement owner with reused
+root/tag values. External transports continue using the same committed-emitter
+and mount-generation checks described above.
+
+The [root-retirement evidence](evidence/root-retirement/README.md) records this
+bounded behavior, with [surviving-root](evidence/root-retirement/root-unmounted.png),
+[remount](evidence/root-retirement/root-remounted.png) and
+[owner-switch](evidence/root-retirement/root-owner-switched.png) captures.
+Deleting arbitrary descendants owned by the host, unrestricted adapter
+cancellation and full multi-root input/DOM parity remain separate contracts.

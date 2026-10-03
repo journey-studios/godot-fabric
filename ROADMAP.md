@@ -153,8 +153,9 @@ reproduced Control deletion inside a Godot signal during a Fabric commit. Stop
 now retires authority immediately and delays destruction until execution returns;
 resize/RAF/timer fixtures passed **8/9/9 checks**, and the external consumer
 passed **35 headless/37 graphical** again on the rebuilt host. Native suites
-passed **2/4/2/2** serially. Independent root destruction during updates and
-long-lived async work remain open. Hosted run **37151683147** passed loader
+passed **2/4/2/2** serially. Independent root destruction was not covered in
+that slice; the executed follow-up below adds that coverage. Long-lived async
+work remains open. Hosted run **37151683147** passed loader
 **89** and registry **207** but reproduced the consumer recovery fingerprint
 failure; its external runtime lane did not run. The subsequent
 [shutdown CI](docs/evidence/adapter-shutdown/hosted-ci.json) at
@@ -215,8 +216,28 @@ conditions, declaration execution and unimplemented decorator metadata fail
 visibly. Full types/assets/profiles/Metro/workspaces/exports and all-target
 acceptance remain open; D20 and GF-03/GF-28 remain open. No denominator changes.
 [Preceding resolver CI](docs/evidence/alias-scopes/preceding-ci.json) passed all
-five jobs at `f2eb57f`, before this follow-up; newer hosted CI remains distinct
-from these local executions.
+five jobs at `f2eb57f`. The subsequent scoped-alias CI passed all five jobs at
+`80729da`; its [separate record](docs/evidence/root-retirement/preceding-ci.json)
+predates the root-retirement implementation below.
+
+The [independent-root retirement slice](docs/evidence/root-retirement/README.md)
+now extends 2A with **17 real Godot runs / 318 checks** on macOS arm64 Release.
+Resize/pressed/RAF/timer callbacks can retire one root while another keeps its
+state, Controls, VM, module cache and scheduling. Immediate remount, synchronous
+host free and replacement by another application preserve the current owner
+and reject old refs/events. Cleanup uses original React/Fabric work in a deferred
+Godot phase, outside the original registry visit. A reproduced old core Button
+signal across reused root/tag IDs is now rejected using its originating runtime
+and mount identity; a fresh Button still delivers normally. Original external
+ViewProps no longer enter a core props cast, and adapter font ownership is
+verified against a failing preceding binary. Three graphical root cases also
+check rendered pixels and retain captures. Regressions passed **199 Node/13
+Python**, **10 native tests** and **15 headless examples/605 checks** on the
+rebuilt host. Full GF-07/GF-26/GF-28 acceptance,
+original RN differential lifecycle, other targets/exports and ABI remain open.
+No item, decision or checkpoint denominator closes with this slice. The next
+functional foundation is GF-10 View geometry/stacking/clipping, coordinated
+with GF-08 measures and GF-13 input; its implementation/evidence remain pending.
 
 ## Release contract and scope
 

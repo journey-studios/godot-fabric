@@ -105,20 +105,35 @@ async function check({sdk, out, capture, cmake}) {
     fs.writeFileSync(path.join(project,'.godot/extension_list.cfg'),'res://addons/godot_fabric/fabric.gdextension\n');
     const godot = await ensureGodotBinary();
     run('godot-import',godot,['--path',project,'--headless','--editor','--quit'],env);
-    const lanes = ['headless','reentrant-stop','reentrant-raf','reentrant-timer',...(capture?['graphical']:[])];
+    const lanes = [
+      {name:'headless',checks:35},
+      {name:'external-appearance',checks:5,args:['--external-appearance']},
+      ...['reentrant-stop','reentrant-raf','reentrant-timer'].map(name =>
+        ({name,checks:name==='reentrant-stop'?8:9,args:['--'+name]})),
+      ...['root-unmount-resize','root-unmount-pressed','root-unmount-raf','root-unmount-timer','root-remount-resize'].map(name =>
+        ({name,checks:name==='root-remount-resize'?21:name.endsWith('-raf')||name.endsWith('-timer')?18:17,args:['--'+name]})),
+      {name:'root-free-resize',checks:17,args:['--root-free-resize']},
+      {name:'root-owner-switch-resize',checks:18,args:['--root-owner-switch-resize']},
+      {name:'root-stale-core-owner-switch-resize',checks:21,args:['--root-stale-core-owner-switch-resize']},
+      ...(capture?[
+        {name:'graphical',checks:37,capture:true,stages:['initial','updated']},
+        {name:'root-unmount-graphical',checks:21,capture:true,args:['--root-unmount-resize'],stages:['root-initial','root-unmounted']},
+        {name:'root-remount-graphical',checks:25,capture:true,args:['--root-remount-resize'],stages:['root-initial','root-remounted']},
+        {name:'root-owner-switch-graphical',checks:22,capture:true,args:['--root-owner-switch-resize'],stages:['root-initial','root-owner-switched']},
+      ]:[]),
+    ];
     for (const lane of lanes) {
-      const args = ['--path',project,...(lane!=='graphical'?['--headless']:[]),'--','--validate',
-        ...(lane==='graphical'?['--capture']:[]),...(lane.startsWith('reentrant-')?['--'+lane]:[])];
-      const log = run('godot-'+lane,godot,args,env);
+      const args = ['--path',project,...(!lane.capture?['--headless']:[]),'--','--validate',
+        ...(lane.capture?['--capture']:[]),...(lane.args??[])];
+      const log = run('godot-'+lane.name,godot,args,env);
       if (/SCRIPT ERROR|(?:^|\n)ERROR:|Program crashed|ADAPTER_CHECK_FAILED|FABRIC_ERROR/.test(log) || !log.includes('ADAPTER_RUNTIME_OK:'))
-        throw new Error('Godot '+lane+' failed runtime acceptance; retained logs');
+        throw new Error('Godot '+lane.name+' failed runtime acceptance; retained logs');
       const actual = read(path.join(project,'adapter-report.json'));
-      const expectedChecks = lane === 'reentrant-stop' ? 8 : lane.startsWith('reentrant-') ? 9 : lane === 'graphical' ? 37 : 35;
-      if (actual.checks.length!==expectedChecks || !actual.checks.every(check=>check.passed)) throw new Error('Incomplete adapter runtime report');
-      write(path.join(out,lane+'.json'),actual);
-      report[lane] = {checks:actual.checks.length,sha256:hash(path.join(out,lane+'.json')),displayServer:actual.displayServer};
+      if (actual.checks.length!==lane.checks || !actual.checks.every(check=>check.passed)) throw new Error('Incomplete adapter runtime report: '+lane.name);
+      write(path.join(out,lane.name+'.json'),actual);
+      report[lane.name] = {checks:actual.checks.length,sha256:hash(path.join(out,lane.name+'.json')),displayServer:actual.displayServer};
       report.vmCreated=true;report.godotEngineStarted=true;report.componentMounted=true;
-      if (lane==='graphical') for (const stage of ['initial','updated']) fs.copyFileSync(path.join(project,'adapter-'+stage+'.png'),path.join(out,stage+'.png'));
+      for (const stage of lane.stages??[]) fs.copyFileSync(path.join(project,'adapter-'+stage+'.png'),path.join(out,stage+'.png'));
     }
     verifyCodegen(generation);verifyNativeSdk(sdk);
     if (hash(library)!==report.adapterLibrarySha256 || hash(packet)!==report.selectionSha256 || hash(path.join(sdk,'manifest.json'))!==report.sdkManifestSha256)
@@ -127,7 +142,8 @@ async function check({sdk, out, capture, cmake}) {
     report.passed = true;
     console.log(JSON.stringify({passed:true,nativeAdapterLinked:true,componentMounted:true,headless:report.headless,
       reentrantStop:report['reentrant-stop'],reentrantRaf:report['reentrant-raf'],reentrantTimer:report['reentrant-timer'],
-      graphical:report.graphical??null,abiCertified:false}));
+      rootRetirement:Object.fromEntries(lanes.filter(lane=>lane.name.startsWith('root-')).map(lane=>[lane.name,report[lane.name]])),
+      externalAppearance:report['external-appearance'],graphical:report.graphical??null,abiCertified:false}));
   } catch(error) {report.error=error.message;throw error;}
   finally {save();}
 }

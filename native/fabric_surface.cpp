@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/core/object.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
@@ -91,8 +92,10 @@ bool FabricSurface::mount() {
 }
 void FabricSurface::unmount() {
   if (!surface_id) return;
-  if (auto *owner = application(); owner && owner->get_runtime()) owner->get_runtime()->unmount(surface_id);
+  const int id = surface_id;
+  retired_surface_id = id;
   surface_id = 0;
+  if (auto *owner = application(); owner && owner->get_runtime()) owner->get_runtime()->unmount(id);
 }
 void FabricSurface::stop() {
   // Preserve old validation APIs which explicitly terminate an anonymous app.
@@ -100,7 +103,15 @@ void FabricSurface::stop() {
   if (component_name.is_empty()) { if (auto *owner = application()) owner->stop(); }
   else unmount();
 }
-void FabricSurface::native_unmounted(const String &state) { retired_state = state; surface_id = 0; }
+void FabricSurface::native_unmounted(uint64_t expected_application_id, int expected_surface_id, const String &state) {
+  // A retirement may complete after this same Node has acquired a new root.
+  // Never clear the new mount or replace its inspection cache with an old one.
+  if (application_id != expected_application_id ||
+      (surface_id != expected_surface_id && (surface_id || retired_surface_id != expected_surface_id))) return;
+  retired_state = state;
+  retired_surface_id = expected_surface_id;
+  surface_id = 0;
+}
 void FabricSurface::_exit_tree() {
   if (component_name.is_empty()) stop();
   else unmount();
@@ -132,7 +143,7 @@ int FabricSurface::get_surface_id() const { return surface_id; }
 String FabricSurface::evaluate(const String &source) { if (auto *owner = application()) return owner->evaluate(source); return "null"; }
 String FabricSurface::snapshot() {
   if (auto *owner = application(); owner && owner->get_runtime())
-    return gd(owner->get_runtime()->snapshot(surface_id, utf8(retired_state)));
+    return gd(owner->get_runtime()->snapshot(surface_id ? surface_id : retired_surface_id, utf8(retired_state)));
   return retired_state;
 }
 void FabricSurface::_input(const Ref<InputEvent> &event) {
@@ -142,8 +153,11 @@ void FabricSurface::_input(const Ref<InputEvent> &event) {
       event->get_device() != static_cast<int>(get_meta("validation_input_device"))) {
     get_viewport()->set_input_as_handled(); return;
   }
+  const auto viewport_id = get_viewport()->get_instance_id();
   if (auto *owner = application(); owner && owner->get_runtime() && owner->get_runtime()->input(surface_id, event))
-    get_viewport()->set_input_as_handled();
+    // Input may synchronously remove/free this surface. Do not access this
+    // after calling the runtime; the independent Viewport is the input owner.
+    if (auto *viewport = Object::cast_to<Viewport>(ObjectDB::get_instance(viewport_id))) viewport->set_input_as_handled();
 }
 void FabricSurface::_notification(int what) {
   if (what == NOTIFICATION_WM_WINDOW_FOCUS_OUT && !has_meta("validation_input_device"))

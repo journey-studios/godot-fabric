@@ -32,8 +32,17 @@ x86_64/Rosetta simulator consumer. Its narrow runtime proof and disclosed
 official-template limitations do not certify the complete iOS port.
 
 The [original Codegen record](codegen/README.md) adds upstream TS/Flow generation,
-20 contract tests and six compiled C++ translation units. External native
-adapter loading/rendering and ABI certification remain open.
+20 contract tests and six compiled C++ translation units. That first record did
+not load/render the external adapter; later native-adapter records below add
+that bounded execution. Complete ABI certification remains open.
+
+The [independent-root retirement record](root-retirement/README.md) extends
+GF-07/GF-26/GF-28 with 17 real Godot runs / 318 checks, including callback-driven
+unmount/remount, freed hosts, application replacement and stale core signals
+across reused tags. External font ownership has an executed failing binary
+control. Three graphical root cases retain readbacks and pixel assertions.
+Its source, native/SDK fingerprints and preceding hosted CI are kept separate
+from full lifecycle, RN differential and all-target acceptance.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

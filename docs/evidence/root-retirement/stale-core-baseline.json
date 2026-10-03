@@ -1,0 +1,53 @@
+{
+  "format": "gf07-stale-core-origin-discovery/v1",
+  "fixtureSha256": "26df1e3e382bc452ed090a37708695874c410bc776d2b402d4ba1bcd9f1badda",
+  "hostSha256": "56a8c1ef1c21311e6ee7b22c89bf97548676b06de949f8f6bfa44278e1cc8e33",
+  "runs": [
+    {
+      "mode": "control",
+      "exitCode": 0,
+      "reportSha256": "299f482990edf0cdf365543c13975c03f10dc6052caa38385d44d93d23ca85da",
+      "logSha256": "f5b3b388aba80cccf55b61da75e3aa712b19bacbb85cda19e8f57539c60be784",
+      "oldTag": 14.0,
+      "newTag": 14.0,
+      "oldRuntimeId": 27615299031.0,
+      "newRuntimeId": 29393683996.0,
+      "surfaceIdReused": true,
+      "oldControlRetainedOnCallback": true,
+      "oldControlFreedAfterUnwind": true,
+      "newRootNodesInsideCallback": 0,
+      "newRuntimeEvents": [],
+      "newRuntimeNativeEvents": 0.0,
+      "hostErrors": []
+    },
+    {
+      "mode": "deferred",
+      "exitCode": 0,
+      "reportSha256": "f1ccf3d5a4c5b77f0c9e2d96c1e93ea32e30d5b50cd9531487c4e42baf6d6741",
+      "logSha256": "cbf40353e3a9742001ad44accf9054b1ebf78d6ceb5e6cef6ebd8a9a51c628b1",
+      "oldTag": 14.0,
+      "newTag": 14.0,
+      "oldRuntimeId": 27615299031.0,
+      "newRuntimeId": 29393683996.0,
+      "surfaceIdReused": true,
+      "oldControlRetainedOnCallback": true,
+      "oldControlFreedAfterUnwind": true,
+      "newRootNodesInsideCallback": 0,
+      "newRuntimeEvents": [
+        {
+          "kind": "core",
+          "panel": "first"
+        }
+      ],
+      "newRuntimeNativeEvents": 1.0,
+      "hostErrors": []
+    }
+  ],
+  "causalFinding": "An old core Button Callable binds a mutable FabricSurface plus tag; after cross-owner remount, the host resolves its current application and surface. Deferred old pressed therefore targets the new runtime with the reused tag.",
+  "canonicalFixtureHashes": {
+    "tests/adapters/consumer/validation.gd": "84f6d71f148043f8016cea88efc8349c3e40a340150308ec216b9e0cd71f4ed1",
+    "tests/adapters/consumer/ui/index.tsx": "bc67d773dc5c325001e8642f03586b529cf43c973b4410f881c6898f0b5a01d3"
+  },
+  "residualGodotProcesses": [],
+  "scope": "Control and deferred-signal lanes, without forced notification or Hermes reentry"
+}
