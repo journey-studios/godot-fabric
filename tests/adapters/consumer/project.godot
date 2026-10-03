@@ -1,0 +1,10 @@
+config_version=5
+[application]
+config/name="Godot Fabric adapter acceptance"
+run/main_scene="res://main.tscn"
+[display]
+window/size/viewport_width=1050
+window/size/viewport_height=350
+[rendering]
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.03, 0.06, 0.11, 1)

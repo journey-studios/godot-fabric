@@ -89,6 +89,12 @@ export function legacySendAccessibilityEvent() {
   throw new Error("Accessibility is not implemented in this validation");
 }
 const legacyMethods = {
+  dispatchViewManagerCommand(tag) {
+    // Upstream dispatchCommand falls back here when a retired Fabric public
+    // instance retains its native tag but no longer has a ShadowNode.
+    if (!godotNode(tag)) return;
+    throw new Error("Legacy UIManager.dispatchViewManagerCommand is not supported for a live node");
+  },
   measure(tag, callback) {
     const node = godotNode(tag);
     if (node) NativeDOM.measure(node, callback);

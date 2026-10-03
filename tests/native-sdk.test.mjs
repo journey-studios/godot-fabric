@@ -24,6 +24,7 @@ function fixture(t) {
   write(root, 'scripts/codegen-contract.mjs', fs.readFileSync(path.join(repository, 'scripts/codegen-contract.mjs')));
   write(root, 'native/CMakeLists.txt', 'fixture-not-a-build');
   write(root, 'native/adapter_registry.h', '#pragma once\n#include "turbo_module_registry.h"\n');
+  write(root, 'native/adapter_loader.h', '#pragma once\n#include "adapter_registry.h"\n');
   write(root, 'native/turbo_module_registry.h', '#pragma once\n');
   write(root, 'native/adapter_registry.cpp', '// fixture only\n');
   write(root, 'native/godot-profile.json', '{"enabled_classes":["Control","Button"]}');

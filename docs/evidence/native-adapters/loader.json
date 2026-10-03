@@ -1,0 +1,48 @@
+{
+  "format": "godot-fabric.experimental-adapter-loader-witness/v1",
+  "checkedAt": "2026-10-03T20:06:12.389Z",
+  "sourceSha256": {
+    "scripts/adapter-loader-check.mjs": "65975d399687ca14474acfbc2446c1146ff6b468c071526cc8fd9348997a36bc",
+    "tests/adapters/loader_test.cpp": "3170d761ff6ce3822818b2e05115f72a56ba7094b92cfaf5fcf23a50a95478c9",
+    "tests/codegen/BadgeNativeComponent.ts": "db601756ca4380e9007f2f90e8a75bf2859ff29b7859dac54110f52525ddbd6a",
+    "tests/codegen/NativeCodegenProbe.ts": "643777e7b7f0b4d62e11bc8690faef352e695798020cd6f80e857bf4c2c80b42"
+  },
+  "sdkManifestSha256": "4a90ee941e1774cdec7147da9ee71d7ce9b930e4d067e9face77d563ab11dbd8",
+  "stages": [
+    {
+      "label": "configure",
+      "exitCode": 0,
+      "log": "logs/configure.log",
+      "sha256": "844cb64a5a8a6f1745917bd4071bd07a848d78bdcde5c182d88d8f53ba374766"
+    },
+    {
+      "label": "compile-link",
+      "exitCode": 0,
+      "log": "logs/compile-link.log",
+      "sha256": "f6075abdf6f6ed620d0cd295e350a09edb31e16786253912e8658f42bfb7fcc1"
+    },
+    {
+      "label": "loader",
+      "exitCode": 0,
+      "log": "logs/loader.log",
+      "sha256": "a93358fa8632f3b0dd654e176fd0f41db1d7d13b6f88c7a7791dbb65e88d5d75"
+    }
+  ],
+  "passed": true,
+  "vmCreated": false,
+  "godotEngineStarted": false,
+  "componentMounted": false,
+  "abiCertified": false,
+  "binarySha256": "06fbba21d549ac3466bff72d4ee8be61c54eece576036035b97a4929a627ecf4",
+  "loader": {
+    "abiCertified": false,
+    "viewFactoryCalls": 0,
+    "moduleFactoryCalls": 0,
+    "godotEngineStarted": false,
+    "vmCreated": false,
+    "checks": 89,
+    "cases": 21,
+    "marker": "ADAPTER_LOADER_OK",
+    "format": "godot-fabric.experimental-adapter-loader-test/v1"
+  }
+}

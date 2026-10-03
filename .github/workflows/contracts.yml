@@ -56,6 +56,7 @@ jobs:
       - run: npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk
       - run: npm run sdk:native:verify -- --sdk build/native-sdk
       - run: npm run test:adapters:native -- --sdk build/native-sdk --out build/adapter-registry
+      - run: npm run test:adapters:loader -- --sdk build/native-sdk --out build/adapter-loader
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -68,6 +69,8 @@ jobs:
             build/adapter-registry/report.json
             build/adapter-registry/generated/manifest.json
             build/adapter-registry/logs/*.log
+            build/adapter-loader/report.json
+            build/adapter-loader/logs/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:examples
       - run: npm run test:runtime
@@ -89,6 +92,19 @@ jobs:
             build/services-lifetime.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
+      - name: Original Codegen adapter in a provisioned independent consumer
+        run: |
+          ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
+          "$ADAPTER_TOOL_NODE" scripts/adapter-runtime-check.mjs --sdk build/native-sdk --out build/adapter-runtime
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-adapter-runtime
+          path: |
+            build/adapter-runtime/report.json
+            build/adapter-runtime/headless.json
+            build/adapter-runtime/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

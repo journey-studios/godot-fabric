@@ -137,7 +137,7 @@ function headerTrees(root, buildDir, lock) {
   const godot = path.join(root, '.deps', lock['godot-cpp'].directory);
   return [
     {name: 'sdk', source: path.join(root, 'native'), destination: 'include/sdk',
-      publicFiles: ['adapter_registry.h', 'turbo_module_registry.h']},
+      publicFiles: ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h']},
     {name: 'react-native', source: path.join(rn, 'ReactCommon'), destination: 'include/react-native/ReactCommon'},
     {name: 'react-native-specs', source: path.join(rn, 'React/FBReactNativeSpec'), destination: 'include/react-native/React/FBReactNativeSpec'},
     {name: 'hermes', source: path.join(root, '.deps', lock.hermes.directory, 'destroot/include'), destination: 'include/hermes'},
@@ -165,7 +165,7 @@ function snapshot(options) {
   const lock = readJson(path.join(root, 'dependencies.json'));
   const actual = settings(buildDir, root, options.fixture === true);
   const trees = headerTrees(root, buildDir, lock);
-  for (const name of ['adapter_registry.h', 'turbo_module_registry.h'])
+  for (const name of ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h'])
     if (!exists(path.join(root, 'native', name))) fail('SDK_SPI_MISSING', name);
   const treeInputs = trees.map(tree => ({name: tree.name, destination: tree.destination,
     source: path.relative(root, tree.source).split(path.sep).join('/'),

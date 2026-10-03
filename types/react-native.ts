@@ -11,6 +11,9 @@ export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;
 export declare const TurboModuleRegistry: typeof RN.TurboModuleRegistry;
 export type TurboModule = RN.TurboModule;
 export type EmitterSubscription = RN.EmitterSubscription;
+export type HostComponent<Props extends {}> = RN.HostComponent<Props>;
+export declare const codegenNativeComponent: typeof RN.codegenNativeComponent;
+export declare const codegenNativeCommands: typeof RN.codegenNativeCommands;
 
 /** The implemented Godot subset, derived from the pinned RN declarations. */
 export type ViewStyle = Pick<RN.ViewStyle,

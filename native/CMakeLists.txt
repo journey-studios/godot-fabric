@@ -112,7 +112,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
 if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # Retain the binding objects for the pinned Godot class profile as SDK exports,
   # including classes only an external adapter uses. This is one archive in one

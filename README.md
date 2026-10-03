@@ -251,11 +251,16 @@ contracts; captures independently exercise rendering and logical Viewport input.
 [Third-party licenses](THIRD_PARTY_NOTICES.md)
 
 The [Codegen experiment](docs/CODEGEN.md) uses original RN specs/generators.
-The [native extension foundation](docs/NATIVE_EXTENSIONS.md) adds a shared SDK,
-package preflight and lazy provider registry. An independent C++ client links
-the relocated SDK and passes [207 registry checks](docs/evidence/native-sdk/README.md).
-Runtime adapter loading, custom Control mounting and public JSX integration
-remain the next GF-26 slice.
+The [native extension layer](docs/NATIVE_EXTENSIONS.md) now loads selected
+external Codegen components and TurboModules through the shared SDK. An
+[independent Badge/Probe consumer](examples/native-extension/README.md) passes
+[35 headless / 37 graphical checks](docs/evidence/native-adapters/README.md),
+with typed events, public Commands, re-renders, defaults and cleanup. Loader
+rejection tests cover 21 cases / 89 checks. Full GF-26/export/parity acceptance
+remains open.
+
+![Original Codegen Badge components in two Godot Fabric roots](docs/evidence/native-adapters/initial.png)
+
 
 Only this renderer, generic demonstration fixtures and public documentation
 are included. The repository starts with a new history; generated dependencies,

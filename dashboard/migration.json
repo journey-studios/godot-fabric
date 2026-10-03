@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "4",
-    "focusTitle": "Carregamento e montagem de extensões externas sobre Codegen/SDK"
+    "focusTitle": "Extensões externas comprovadas; próximos gaps de lifecycle e exportação"
   },
-  "updatedAt": "2026-10-03T19:36:12.501460Z",
+  "updatedAt": "2026-10-03T20:22:35.441369Z",
   "source": {
     "commit": "7a67f9698a7251ecc06c2a612f55550796438f8b",
     "url": "https://github.com/journey-studios/godot-fabric/blob/7a67f9698a7251ecc06c2a612f55550796438f8b/ROADMAP.md",
-    "scope": "GF-26 SDK/registro e CI nativa comprovados; foco em carregamento, montagem e integração JSX externos",
+    "scope": "GF-26: loader 21/89 e consumidor Codegen nativo 35/37 comprovados localmente; aceite completo e CI atual pendentes",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1223,12 +1223,12 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Codegen original 0.87.1: 20 testes e seis unidades compiladas, incluindo CI corrigida. Nova base SDK: 22 testes de preflight, 14 de pacote/receipt; cliente C++ relocado linkou host compartilhado e passou 11 casos/207 checks de registro, rollback/cleanup e instalação lazy. Sem VM/Control externos; loader, mount/eventos/comandos, lifecycle de módulo, JSX e export/ABI completos seguem abertos. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada.",
+      "note": "Codegen original e SDK compartilhado seguem comprovados. Novo loader: 21 casos/89 checks, incluindo rejeições antes de static initializers, UUID/receipts, binding witness e rollback. Consumidor JSX externo Badge/Probe passou 35 headless/37 gráficos, com Props/defaults, eventos/Commands originais, duas roots, reorder/remount, callbacks/ref antigos, Promise/emitter e método extraído após stop. Sem ABI/paridade RN total nem exportação todos os alvos; containers/state/async long-lived continuam abertos. CI atual da fatia ainda não confirmada.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Codegen, SDK compartilhado e registro externo isolado comprovados",
+          "label": "Codegen/SDK/registro e montagem de componente/módulo externos comprovados",
           "done": true,
           "evidence": [
             {
@@ -1250,6 +1250,10 @@
             {
               "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Consumidor externo 35/37 e loader 21/89; evidência local da PR",
+              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
             }
           ]
         },
@@ -1336,8 +1340,8 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Consumidor separado tem 40 checks headless/43 com render e 18 de tooling; iOS exporta pacote próprio. Instalação/update completos, Codegen/adapters e debug/release por todos os alvos seguem abertos. SDK C++ compartilhado relocável/receipts e link de cliente comprovados em macOS arm64 Release; ativação/export de adapter ainda aberta. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada.",
-      "blocker": "",
+      "note": "Addon/consumidor tradicional passou 18 tooling/40 nativos no replay; consumidor selecionado Badge/Probe passou 35 headless/37 gráficos com ferramentas privadas e dependências explícitas. Uma execução anterior divergiu no hash após recuperação, sem reprodução no replay: investigar determinismo mantendo a assertion. Instalação/update/exportação debug/release em todos os alvos e contrato completo seguem abertos. Nova CI ainda não confirmada.",
+      "blocker": "Regeneração de bundle: divergência de hash observada em uma sequência de recuperação; replay passou sem alteração do builder. Causa ainda não isolada.",
       "checkpoints": [
         {
           "id": "slice",
@@ -1363,6 +1367,10 @@
             {
               "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Addon ativa packet de seleção e JSX original em consumidor externo",
+              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
             }
           ]
         },
@@ -1491,7 +1499,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada.",
+      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada. Nova fatia macOS identifica UUIDs carregados e hashes de receipts separadamente, com binding witness observado; isso não recertifica iOS histórico, outros modos/alvos ou ABI estável.",
       "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
@@ -2390,6 +2398,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "native-adapter-runtime-20261003",
+      "at": "2026-10-03T20:22:35.441369Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "Prova local: loader 21 casos/89 checks, registry 207, consumidor Codegen 35 headless/37 gráficos e capturas. CI nova configurada ainda sem sucesso confirmado; divergência isolada de hash no consumidor antigo permanece investigada após replay verde. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "native-sdk-ci-37147754831",
       "at": "2026-10-03T19:36:12.501460Z",

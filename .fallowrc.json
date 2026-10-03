@@ -20,7 +20,8 @@
     "src/renderer-proxy.js",
     "src/godot-fabric.js",
     "types/godot-fabric.ts",
-    "tests/types/godot-fabric.tsx"
+    "tests/types/godot-fabric.tsx",
+    "tests/adapters/consumer/ui/index.tsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -31,7 +32,8 @@
   ],
   "includeEntryExports": true,
   "ignoreDependencies": [
-    "scheduler"
+    "scheduler",
+    "@godot-fabric/adapter-fixture"
   ],
   "ignoreExports": [
     {
@@ -129,7 +131,9 @@
         "UIManager",
         "NativeModules",
         "NativeEventEmitter",
-        "TurboModuleRegistry"
+        "TurboModuleRegistry",
+        "codegenNativeComponent",
+        "codegenNativeCommands"
       ]
     },
     {
@@ -192,7 +196,10 @@
             "ViewInstance",
             "findNodeHandle",
             "UIManager",
-            "EmitterSubscription"
+            "EmitterSubscription",
+            "HostComponent",
+            "codegenNativeComponent",
+            "codegenNativeCommands"
           ]
         },
         {
@@ -230,7 +237,10 @@
         "tests/codegen/NativeCodegenProbe.ts",
         "tests/codegen/BadgeNativeComponent.ts",
         "tests/codegen/UnsupportedBadgeNativeComponent.ts",
-        "tests/codegen/NativeFlowProbe.js"
+        "tests/codegen/NativeFlowProbe.js",
+        "tests/adapters/package/index.ts",
+        "tests/adapters/package/BadgeNativeComponent.ts",
+        "tests/adapters/package/NativeExternalProbe.ts"
       ],
       "entryPointRole": "support",
       "usedExports": [
@@ -255,6 +265,29 @@
           "exports": [
             "Spec",
             "default"
+          ]
+        },
+        {
+          "pattern": "tests/adapters/package/BadgeNativeComponent.ts",
+          "exports": [
+            "NativeProps",
+            "Commands",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/adapters/package/NativeExternalProbe.ts",
+          "exports": [
+            "Spec",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/adapters/package/index.ts",
+          "exports": [
+            "Badge",
+            "Commands",
+            "Probe"
           ]
         }
       ]

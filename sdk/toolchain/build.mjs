@@ -1,5 +1,5 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 import { readFile, writeFile, mkdir, rename, rm } from "node:fs/promises";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
@@ -9,6 +9,7 @@ import { build } from "esbuild";
 import { transformAsync } from "@babel/core";
 import { isSdkOwnedSpecifier, platformPlugin } from "./platform-plugin.mjs";
 import { godotExtensions } from "./platform-resolution.mjs";
+import { selectedAdapterInputs, prepareAdapterBuild } from "./adapter-plugin.mjs";
 
 const toolchain = path.dirname(fileURLToPath(import.meta.url));
 const sdk = path.dirname(toolchain);
@@ -51,6 +52,23 @@ async function main() {
   if (dependencies.babel) throw new Error("Project Babel configuration is not supported by this prototype: package.json");
   for (const name of ["babel.config.js", "babel.config.cjs", "babel.config.mjs", "babel.config.json", "babel.config.cts", ".babelrc", ".babelrc.json", ".babelrc.js", ".babelrc.cjs", ".babelrc.mjs", ".babelrc.cts"])
     if (existsSync(path.join(project, name))) throw new Error("Project Babel configuration is not supported by this prototype: " + name);
+  const selected = selectedAdapterInputs(project, dependencies);
+  let nativeCombination, records = [];
+  if (selected.length) {
+    const combinationPath = path.join(sdk, "native/native-combination.json");
+    if (!existsSync(combinationPath) || !manifest.nativeCombinationSha256)
+      throw new Error("E_ADAPTER_SDK_COMBINATION: install an addon provisioned with a verified native SDK");
+    const bytes = await readFile(combinationPath);
+    if (createHash("sha256").update(bytes).digest("hex") !== manifest.nativeCombinationSha256)
+      throw new Error("E_ADAPTER_SDK_COMBINATION: provisioned native combination changed");
+    nativeCombination = JSON.parse(bytes.toString("utf8"));
+    const { preflightAdapters } = await import(pathToFileURL(path.join(toolchain, "scripts/adapter-manifest.mjs")));
+    records = await preflightAdapters({adapters: selected, nativeCombination});
+  }
+  const {coreEventConfigs} = await import(pathToFileURL(path.join(sdk, "src/base-view-config.js")));
+  const adapterBuild = prepareAdapterBuild({project, records, nativeCombination,
+    resolveSdk: id => requireSdk.resolve(id), coreEventConfigs,
+    baseViewConfigPath: path.join(sdk, "src/base-view-config.js")});
   const typecheck = spawnSync(process.execPath, [requireSdk.resolve("typescript/bin/tsc"), "--project", path.join(project, "tsconfig.json")], {
     cwd: project, encoding: "utf8", timeout: 30000,
   });
@@ -75,6 +93,7 @@ async function main() {
           });
         },
       },
+      adapterBuild.plugin,
       platformPlugin(path.join(sdk, "src"), (id) => requireSdk.resolve(id)),
     ],
   });
@@ -84,17 +103,33 @@ async function main() {
     presets: [[requireSdk.resolve("@react-native/babel-preset"), { disableImportExportTransform: true, enableBabelRuntime: false }]],
   });
   const code = transformed.code + "\n";
+  const bundleSha256 = createHash("sha256").update(code).digest("hex");
+  const packet = adapterBuild.selectionPacket(path.relative(project, outfile), bundleSha256);
+  const packetPath = outfile + ".adapters.json";
+  const packetText = packet ? JSON.stringify(packet, null, 2) + "\n" : null;
   await mkdir(path.dirname(outfile), { recursive: true });
   const staging = outfile + ".staging-" + process.pid;
-  try { await writeFile(staging, code); await rename(staging, outfile); }
-  finally { await rm(staging, { force: true }); }
+  const packetStaging = packetPath + ".staging-" + process.pid;
+  try {
+    await writeFile(staging, code);
+    if (packetText) await writeFile(packetStaging, packetText);
+    adapterBuild.assertUnchanged();
+    // Publish selection first; the loader rejects a mixed generation by bundle
+    // hash. The editor starts the runtime only after this builder succeeds.
+    if (packetText) await rename(packetStaging, packetPath);
+    await rename(staging, outfile);
+    if (!packetText) await rm(packetPath, {force: true});
+  } finally { await rm(staging, {force: true}); await rm(packetStaging, {force: true}); }
   const inputs = Object.keys(result.metafile.inputs).map((file) => {
     const absolute = path.resolve(project, file);
     return absolute.startsWith(sdk + path.sep) ? "sdk/" + path.relative(sdk, absolute) : "project/" + path.relative(project, absolute);
   });
   await writeFile(path.join(path.dirname(outfile), "build-report.json"), JSON.stringify({
     schemaVersion: 1, entry: entryArg, bundle: bundleArg, sdkSourceCommit: manifest.sourceCommit,
-    sha256: createHash("sha256").update(code).digest("hex"), inputs,
+    sha256: bundleSha256, inputs,
+    adapterSelection: packetText ? {path: path.relative(project, packetPath).split(path.sep).join("/"),
+      sha256: createHash("sha256").update(packetText).digest("hex"), adapters: records.length,
+      specs: adapterBuild.specCount} : null,
   }, null, 2) + "\n");
   console.log("GODOT_FABRIC_BUILT: " + entryArg);
 }

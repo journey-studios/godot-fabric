@@ -1,5 +1,7 @@
 #include "application_runtime.h"
 #include "game_service_registry.h"
+#include "adapter_registry.h"
+#include <thread>
 #include "fabric_surface.h"
 #include <godot_cpp/variant/callable_custom.hpp>
 #include <godot_cpp/classes/input_event_mouse.hpp>
@@ -56,7 +58,9 @@ using fabric_godot::ControlEventEmitter;
 static std::string component_kind(const rn::ShadowView &shadow) {
   if (shadow.componentName == std::string("ScrollView")) return "scroll";
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
-  return std::static_pointer_cast<const ControlProps>(shadow.props)->kind;
+  if (shadow.componentName == std::string(fabric_godot::ControlName))
+    return std::static_pointer_cast<const ControlProps>(shadow.props)->kind;
+  return shadow.componentName;
 }
 
 namespace {
@@ -123,6 +127,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
+  std::shared_ptr<fabric_godot::AdapterRegistry> adapters;
+  const std::thread::id host_thread{std::this_thread::get_id()};
+  uint64_t next_mount_id{1};
   Callable host_phase;
   bool host_phase_pending{};
   std::shared_ptr<rn::UIManager> ui;
@@ -143,6 +150,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     bool frame_pending{false};
     std::unique_ptr<fabric_godot::InputAdapter> input;
     std::unique_ptr<fabric_godot::ScrollAdapter> scroll;
+    std::unique_ptr<fabric_godot::AdapterView> external;
+    uint64_t mount_id{};
   };
   std::map<int, Mounted> views;
   std::unordered_map<Control *, int> native_tags;
@@ -159,8 +168,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::vector<std::string> errors;
 
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
-      const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services)
-      : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)) {
+      const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
+      std::shared_ptr<fabric_godot::AdapterRegistry> selected)
+      : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)), adapters(std::move(selected)) {
+    if (adapters && !adapters->sealed()) throw std::runtime_error("E_ADAPTER_UNSEALED: application requires a sealed selection");
     // One application owns Hermes, Fabric, scheduling and timers. All native
     // mounting and JS work still execute on Godot's main thread.
     auto config = hermes::vm::RuntimeConfig::Builder().withMicrotaskQueue(true).build();
@@ -204,6 +215,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     providers.add(rn::concreteComponentDescriptorProvider<rn::ParagraphComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::TextComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::RawTextComponentDescriptor>());
+    // Original Fabric registry requests selected descriptors lazily. Requests
+    // only register immutable providers; native objects wait for Create commits.
+    providers.setComponentDescriptorProviderRequest([this](rn::ComponentName name) {
+      if (adapters)
+        if (const auto *component = adapters->requested_component(name)) providers.add(component->provider);
+    });
     ui->setComponentDescriptorRegistry(providers.createComponentDescriptorRegistry({dispatcher, context, nullptr}));
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(ui->getShadowTreeRevisionConsistencyManager());
     rn::RuntimeSchedulerBinding::createAndInstallIfNeeded(*runtime, runtime_scheduler);
@@ -237,6 +254,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             return rn::dom::DOMRect{bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y};
           });
     });
+    if (adapters) adapters->install_modules(*native_modules);
     native_modules->install(*runtime);
     install_globals();
   }
@@ -536,8 +554,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         mounted.control->get_parent()->remove_child(mounted.control);
     for (auto it = views.begin(); it != views.end();) {
       if (it->second.surface_id != id) { ++it; continue; }
+      retiring.insert(it->first);
       native_tags.erase(it->second.control);
+      if (it->second.external) { it->second.external->dispose(); it->second.external.reset(); }
       memdelete(it->second.control);
+      retiring.erase(it->first);
       it = views.erase(it);
       ++root.deletes;
     }
@@ -563,6 +584,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     pump();
     try { native_modules->stop(*runtime); }
     catch (const std::exception &error) { fail(error.what()); }
+    if (adapters) {
+      try { adapters->dispose_modules(); }
+      catch (const std::exception &error) { fail(error.what()); }
+    }
     ui->setDelegate(nullptr);
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(nullptr);
     window_listener.reset();
@@ -585,6 +610,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (mounted.shadow.props && component_kind(mounted.shadow) != kind)
       throw std::runtime_error("A mounted GodotControl cannot change kind; use a different React key");
     const bool initial = !mounted.shadow.props;
+    const auto previous = mounted.shadow;
     mounted.shadow = shadow;
     mounted.frame_pending = true;
     control->set_name(props->testId.empty() ? String("Fabric_") + String::num_int64(shadow.tag) : gd(props->testId));
@@ -593,9 +619,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     control->set_visible(shadow.layoutMetrics.displayType != rn::DisplayType::None);
     control->set_modulate({1, 1, 1, props->opacity});
     control->set_z_index(std::clamp(props->zIndex.value_or(0), -4096, 4096));
-    if (kind == "view")
+    if (kind == "view" || mounted.external)
       control->set_clip_contents(props->yogaStyle.overflow() == facebook::yoga::Overflow::Hidden);
     if (!control->is_visible()) cancel_subtree(control);
+    if (mounted.external) {
+      mounted.external->update(previous, shadow);
+      fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
+      apply_frame(mounted);
+      return;
+    }
     if (mounted.scroll) {
       mounted.scroll->apply(shadow);
       apply_frame(mounted);
@@ -646,14 +678,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // godot-cpp's pinned API predates this public 4.7 method. A real native
     // maximum bounds even themed minimums, without wrappers or scaled widgets.
     mounted.control->call("set_custom_maximum_size", size);
-    if (component_kind(mounted.shadow) != "view")
+    if (!mounted.external && component_kind(mounted.shadow) != "view")
       mounted.control->set_clip_contents(true);
     mounted.control->set_size(size);
   }
   void emit(int tag, const std::string &name, folly::dynamic payload) {
     if (stopped || retiring.contains(tag)) return;
     auto found = views.find(tag);
-    if (found == views.end() || !found->second.shadow.eventEmitter) return;
+    if (found == views.end() || found->second.external || !found->second.shadow.eventEmitter) return;
     if (roots.at(found->second.surface_id)->stopping) return;
     ++roots.at(found->second.surface_id)->events;
     std::static_pointer_cast<const ControlEventEmitter>(found->second.shadow.eventEmitter)->inputEvent(name, std::move(payload));
@@ -760,7 +792,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ++surface.commits;
     auto *focused = host.get_viewport()->gui_get_focus_owner();
     uint64_t focus_id = focused ? focused->get_instance_id() : 0;
-    auto parent = [this, &host, surface_id](int tag) -> Control * { return tag == surface_id ? &host : views.at(tag).control; };
+    auto parent = [this, &host, surface_id](int tag) -> Control * {
+      if (tag == surface_id) return &host;
+      auto &mounted = views.at(tag);
+      return mounted.external ? mounted.external->children_host() : mounted.control;
+    };
     std::map<int, int> inserted_parents;
     for (const auto &mutation : transaction->getMutations()) {
       if (mutation.type == rn::ShadowViewMutation::Insert)
@@ -774,8 +810,45 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       switch (mutation.type) {
         case rn::ShadowViewMutation::Create: {
           const auto kind = component_kind(next);
-          Control *control;
-          if (kind == "scroll") control = memnew(ScrollContainer);
+          Control *control = nullptr;
+          std::unique_ptr<fabric_godot::AdapterView> external;
+          const auto mount_id = next_mount_id++;
+          const auto *selected = adapters ? adapters->component(next.componentHandle) : nullptr;
+          if (selected) {
+            std::weak_ptr<Impl> owner = shared_from_this();
+            const auto thread = host_thread;
+            fabric_godot::AdapterViewContext context{runtime_id, mount_id, surface_id, next.tag,
+                [owner, thread, surface_id, tag = next.tag, mount_id](const fabric_godot::AdapterViewContext::Event &event) {
+                  // Reject on the calling thread before touching host-owned maps.
+                  if (std::this_thread::get_id() != thread || !event) return false;
+                  auto guard = owner.lock();
+                  if (!guard || guard->stopped || guard->stopping || guard->retiring.contains(tag)) return false;
+                  auto root = guard->roots.find(surface_id);
+                  auto mounted = guard->views.find(tag);
+                  if (root == guard->roots.end() || root->second->stopping || root->second->stopped ||
+                      mounted == guard->views.end() || mounted->second.surface_id != surface_id ||
+                      mounted->second.mount_id != mount_id || !mounted->second.external ||
+                      !mounted->second.shadow.eventEmitter) return false;
+                  // Resolve the committed emitter at delivery, never the emitter
+                  // or Control captured by the adapter when it was constructed.
+                  const auto current = mounted->second.shadow;
+                  ++root->second->events;
+                  event(current);
+                  return true;
+                }};
+            external = selected->factory(std::move(context));
+            if (!external) throw std::runtime_error("E_ADAPTER_VIEW: factory returned no view");
+            control = external->control();
+            auto *children = external->children_host();
+            if (!control || control->get_parent() || control->is_inside_tree() || native_tags.contains(control) || !children ||
+                (children != control && !control->is_ancestor_of(children))) {
+              external->dispose();
+              external.reset();
+              // Only an unowned off-tree Control can be reclaimed on rejection.
+              if (control && !control->get_parent() && !control->is_inside_tree() && !native_tags.contains(control)) memdelete(control);
+              throw std::runtime_error("E_ADAPTER_VIEW: expected an off-tree Control and a contained children host");
+            }
+          } else if (kind == "scroll") control = memnew(ScrollContainer);
           else if (kind == "paragraph") control = memnew(GodotParagraph);
           else if (kind == "text") control = memnew(Label);
           else if (kind == "button") {
@@ -793,7 +866,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             control->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
           } else throw std::runtime_error("Unsupported GodotControl kind: " + kind);
           native_tags.emplace(control, next.tag);
-          auto entry = views.emplace(next.tag, Mounted{control, {}, surface_id}).first;
+          auto entry = views.emplace(next.tag, Mounted{control, {}, surface_id, false, {}, {}, std::move(external), mount_id}).first;
+          if (!entry->second.external) {
           if (auto *scroll = Object::cast_to<ScrollContainer>(control))
             entry->second.scroll = std::make_unique<fabric_godot::ScrollAdapter>(*scroll);
           if (auto *input = Object::cast_to<LineEdit>(control)) {
@@ -803,6 +877,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             input->connect("focus_exited", Callable(&host, "input_focus").bind(false, next.tag));
             input->connect("text_submitted", Callable(&host, "input_submit").bind(next.tag));
             input->connect("gui_input", Callable(&host, "input_key").bind(next.tag));
+          }
           }
           ++surface.creates;
           apply(next);
@@ -825,6 +900,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         case rn::ShadowViewMutation::Delete: {
           auto entry = views.extract(old.tag);
           native_tags.erase(entry.mapped().control);
+          if (entry.mapped().external) { entry.mapped().external->dispose(); entry.mapped().external.reset(); }
           memdelete(entry.mapped().control);
           ++surface.deletes;
           break;
@@ -869,7 +945,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       const std::string &name, const folly::dynamic &args) override {
     auto found = views.find(node->getTag());
     // Ref commands queued before a removal must not target another instance.
-    if (found == views.end() || stopped || found->second.surface_id != node->getSurfaceId() || roots.at(found->second.surface_id)->stopping) return;
+    if (found == views.end() || stopped || stopping || retiring.contains(node->getTag()) ||
+        found->second.surface_id != node->getSurfaceId() || roots.at(found->second.surface_id)->stopping ||
+        found->second.shadow.componentHandle != node->getComponentHandle() ||
+        found->second.shadow.eventEmitter != node->getEventEmitter()) return;
+    if (found->second.external) {
+      if (!found->second.external->command(name, args)) fail("Unsupported adapter command: " + name);
+      return;
+    }
     if ((name == "scrollDragStart" || name == "scrollDragTo") && !roots.at(found->second.surface_id)->pointer->owns(node->getTag())) return;
     if (found->second.scroll && found->second.scroll->command(name, args)) return;
     if (name == "setTextAndSelection" && found->second.input) {
@@ -917,6 +1000,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("viewportUpdates", viewport_updates)("errors", folly::dynamic::array());
     result["nativeModules"] = native_modules->snapshot();
     result["gameServices"] = game_services->snapshot();
+    result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
     result["hostPhasePending"] = host_phase_pending;
     result["dimensions"] = device_dimensions();
     for (const auto &error : errors) result["errors"].push_back(error);
@@ -952,7 +1036,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       auto *control = mounted.control;
       auto props = std::static_pointer_cast<const rn::ViewProps>(mounted.shadow.props);
       const auto kind = component_kind(mounted.shadow);
-      const auto native_props = kind == "scroll" || kind == "paragraph" ? nullptr : std::static_pointer_cast<const ControlProps>(mounted.shadow.props);
+      const auto native_props = mounted.external || kind == "scroll" || kind == "paragraph" ? nullptr : std::static_pointer_cast<const ControlProps>(mounted.shadow.props);
       folly::dynamic node = folly::dynamic::object("tag", tag)("id", static_cast<int64_t>(control->get_instance_id()))
           ("testID", props->testId)("kind", kind)("text", native_props ? native_props->text : "")
           ("width", control->get_size().x)("height", control->get_size().y)
@@ -960,6 +1044,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           ("fabricHeight", mounted.shadow.layoutMetrics.frame.size.height)
           ("x", control->get_position().x)("y", control->get_position().y)
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
+      if (mounted.external) { node["adapter"] = mounted.external->snapshot(); node["mountId"] = static_cast<int64_t>(mounted.mount_id); }
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
       if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input")
         node["appearance"] = fabric_godot::appearance_snapshot(*control);
@@ -972,14 +1057,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           node["appearance"]["textColor"] = run["color"];
         }
       }
-      if (auto *input = Object::cast_to<LineEdit>(control)) {
+      if (auto *input = Object::cast_to<LineEdit>(control); input && mounted.input) {
         node["caret"] = input->get_caret_column();
         node["nativeText"] = utf8(input->get_text());
         node["input"] = mounted.input->snapshot();
         node["editable"] = input->is_editable();
         node["placeholder"] = utf8(input->get_placeholder());
       }
-      if (auto *label = Object::cast_to<Label>(control)) {
+      if (auto *label = Object::cast_to<Label>(control); label && native_props) {
         node["nativeText"] = utf8(label->get_text());
         node["lines"] = label->get_line_count();
         node["visibleLines"] = label->get_visible_line_count();
@@ -1001,8 +1086,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
 
 namespace fabric_godot {
 ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
-    const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services)
-    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services))) {
+    const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services,
+    std::shared_ptr<AdapterRegistry> adapters)
+    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services), std::move(adapters))) {
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
@@ -1049,7 +1135,8 @@ void ApplicationRuntime::activate(int id, int tag) {
   auto root = impl->roots.find(id);
   auto found = impl->views.find(tag);
   if (root == impl->roots.end() || root->second->stopping || impl->stopped ||
-      found == impl->views.end() || found->second.surface_id != id || component_kind(found->second.shadow) != "button") return;
+      found == impl->views.end() || found->second.surface_id != id || found->second.external ||
+      component_kind(found->second.shadow) != "button") return;
   ++root->second->events;
   std::static_pointer_cast<const ControlEventEmitter>(found->second.shadow.eventEmitter)->activate();
 }

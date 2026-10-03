@@ -70,6 +70,7 @@ try {
   }
   const bundlePath = path.join(project, ".godot_fabric", "app.js");
   const bundleHash = hash(await readFile(bundlePath));
+  await cp(bundlePath, path.join(directory, "baseline-bundle.js"));
   const inputs = JSON.parse(await readFile(path.join(project, ".godot_fabric", "build-report.json"), "utf8")).inputs;
   await cp(path.join(project, ".godot_fabric", "build-report.json"), path.join(directory, "bundle-report.json"));
   verify(inputs.every(file => !file.includes("examples/") && !file.startsWith("project/../")), "Bundle has no laboratory or external checkout inputs");
@@ -137,6 +138,7 @@ try {
   await writeFile(packagePath, originalPackage);
   await editor("recovery");
   verify(hash(await readFile(lockPath)) === hash(originalLock), "Failure, dependency checks and recovery preserve the project lockfile");
+  await cp(bundlePath, path.join(directory, "recovered-bundle.js"));
   verify(hash(await readFile(bundlePath)) === bundleHash, "The original consumer can build again after rejected requests");
   await writeFile(path.join(directory, "report.json"), JSON.stringify({ schemaVersion: 1, host: "macOS arm64", checks, nativeChecks, graphicalChecks: capture ? graphicalChecks : null }, null, 2) + "\n");
   console.log("CONSUMER_CHECK_PASSED: " + checks.length + " build/ownership checks; " + nativeChecks + " native checks");

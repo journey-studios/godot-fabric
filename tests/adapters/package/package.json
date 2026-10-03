@@ -1,0 +1,7 @@
+{
+  "name": "@godot-fabric/adapter-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.ts",
+  "description": "Original Codegen component/module acceptance fixture"
+}

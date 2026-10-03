@@ -1,5 +1,7 @@
 #include "fabric_application.h"
 #include "application_runtime.h"
+#include "adapter_loader.h"
+#include <godot_cpp/classes/project_settings.hpp>
 #include "fabric_surface.h"
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/engine.hpp>
@@ -9,6 +11,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <folly/json.h>
 #include <stdexcept>
+#include <filesystem>
 
 using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
@@ -29,17 +32,46 @@ void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("set_bundle_path", "path"), &FabricApplication::set_bundle_path);
   ClassDB::bind_method(D_METHOD("get_bundle_path"), &FabricApplication::get_bundle_path);
   ADD_PROPERTY(PropertyInfo(Variant::STRING, "bundle_path", PROPERTY_HINT_FILE, "*.js"), "set_bundle_path", "get_bundle_path");
+  ClassDB::bind_method(D_METHOD("set_adapter_manifest_path", "path"), &FabricApplication::set_adapter_manifest_path);
+  ClassDB::bind_method(D_METHOD("get_adapter_manifest_path"), &FabricApplication::get_adapter_manifest_path);
+  ADD_PROPERTY(PropertyInfo(Variant::STRING, "adapter_manifest_path", PROPERTY_HINT_FILE, "*.json"), "set_adapter_manifest_path", "get_adapter_manifest_path");
+  ClassDB::bind_method(D_METHOD("set_native_combination_path", "path"), &FabricApplication::set_native_combination_path);
+  ClassDB::bind_method(D_METHOD("get_native_combination_path"), &FabricApplication::get_native_combination_path);
+  ADD_PROPERTY(PropertyInfo(Variant::STRING, "native_combination_path", PROPERTY_HINT_FILE, "*.json"), "set_native_combination_path", "get_native_combination_path");
 }
 void FabricApplication::set_bundle_path(const String &path) {
-  if (runtime) { UtilityFunctions::push_error("FABRIC_ERROR: Bundle path cannot change after application initialization"); return; }
+  if (initialization_attempted) { report_error("Bundle path cannot change after application initialization"); return; }
   bundle_path = path;
 }
 String FabricApplication::get_bundle_path() const { return bundle_path; }
+void FabricApplication::set_adapter_manifest_path(const String &path) {
+  if (initialization_attempted) { report_error("Adapter selection cannot change after application initialization"); return; }
+  adapter_manifest_path = path;
+}
+String FabricApplication::get_adapter_manifest_path() const { return adapter_manifest_path; }
+void FabricApplication::set_native_combination_path(const String &path) {
+  if (initialization_attempted) { report_error("Native combination cannot change after application initialization"); return; }
+  native_combination_path = path;
+}
+String FabricApplication::get_native_combination_path() const { return native_combination_path; }
 fabric_godot::ApplicationRuntime *FabricApplication::get_runtime() const { return runtime.get(); }
 int FabricApplication::mount(FabricSurface &host, const String &component, const Dictionary &props) {
   try {
     if (terminal_stopped) throw std::runtime_error("E_RUNTIME_STOPPED: Application cannot mount after stop");
     if (!runtime) {
+      if (initialization_attempted) throw std::runtime_error("E_ADAPTER_RESTART_REQUIRED: failed initialization cannot be retried");
+      initialization_attempted = true;
+      if (!adapter_manifest_path.is_empty()) {
+        auto *settings = ProjectSettings::get_singleton();
+        const auto physical = [settings](const String &resource) {
+          return std::filesystem::canonical(utf8(settings->globalize_path(resource))).string();
+        };
+        adapter_loader = std::make_unique<fabric_godot::AdapterLoader>(
+            physical(adapter_manifest_path),
+            physical(native_combination_path),
+            physical("res://"),
+            physical(bundle_path));
+      }
       const auto scenario = get_meta("scenario", host.get_meta("scenario", "react"));
       runtime = std::make_unique<fabric_godot::ApplicationRuntime>(host,
           [this]() {
@@ -67,7 +99,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             }
             return metrics;
           },
-          utf8(scenario), get_instance_id(), game_services);
+          utf8(scenario), get_instance_id(), game_services, adapter_loader ? adapter_loader->registry() : nullptr);
     }
     int legacy_id = 0;
     if (!bundle_loaded) {
@@ -83,7 +115,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
     return legacy_id ? legacy_id : runtime->mount(host, utf8(component), utf8(JSON::stringify(props)));
   } catch (const std::exception &error) {
     report_error(error.what());
-    if (!bundle_loaded && runtime) runtime->stop();
+    if (!bundle_loaded) stop();
     return 0;
   }
 }
@@ -94,6 +126,10 @@ void FabricApplication::stop() {
   terminal_stopped = true;
   if (runtime) runtime->stop();
   else game_services->stop();
+  if (adapter_loader) {
+    try { adapter_loader->registry()->dispose_modules(); }
+    catch (const std::exception &error) { report_error(error.what()); }
+  }
 }
 bool FabricApplication::is_stopped() const { return terminal_stopped || (runtime && runtime->is_stopped()); }
 String FabricApplication::evaluate(const String &source) { return runtime ? gd(runtime->evaluate(utf8(source))) : String("null"); }
@@ -102,6 +138,8 @@ String FabricApplication::snapshot() {
       folly::dynamic::object("stopped", terminal_stopped)("rootCount", 0)("bundleEvaluations", 0)
           ("gameServices", game_services->snapshot())("errors", folly::dynamic::array());
   result["runtimeInitialized"] = static_cast<bool>(runtime);
+  result["initializationAttempted"] = initialization_attempted;
+  if (adapter_loader) result["adapterLoader"] = adapter_loader->snapshot();
   for (const auto &error : pre_runtime_errors) result["errors"].push_back(error);
   return gd(folly::toJson(result));
 }

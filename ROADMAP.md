@@ -134,10 +134,21 @@ Actual Godot cold start, runtime/roots/modules/services, 15 existing examples
 against the rebuilt host. The [hosted SDK run](https://github.com/journey-studios/godot-fabric/actions/runs/37147754831) passed all five jobs
 at `7a67f96`, with the original artifact confirming the same 207 registry checks.
 Actual CI tooling/native source hashes are [retained separately](docs/evidence/native-sdk/hosted-ci.json).
-Runtime loading,
-external Control mounting, event authority, module lifecycle in a VM, original
-ViewConfig/public JSX activation and all-target export/ABI acceptance remain
-open; GF-26/GF-28/GF-31 are still **In progress**.
+A further [executed external-adapter slice](docs/evidence/native-adapters/README.md)
+now passes 21 loader cases / 89 checks, and an independent original-Codegen
+Badge/Probe consumer passes 35 headless / 37 graphical checks. Its JSX uses the
+original registry, generated Props/emitter/Commands/CxxSpec and a shared native
+host. Two roots exercise reorder, defaults, current/stale callbacks, remount,
+Promise/emitter delivery and extracted-method shutdown. Captures document real
+Godot rendering. Core regressions and the 207-check registry client pass.
+Complete schema/name/reflection coverage, external containers/native state,
+long-lived asynchronous work, full RN differential parity and all-target
+export/ABI acceptance remain open; GF-26/GF-28/GF-31 stay **In progress**.
+A traditional-consumer replay passed 18 tooling / 40 native checks after an
+isolated recovery fingerprint mismatch; the unchanged assertion now retains
+baseline/recovered bundles for investigation. The cause remains open in GF-28.
+New hosted loader/runtime lanes are configured; their current run is recorded
+separately from local execution and the earlier green SDK CI.
 
 ## Release contract and scope
 
