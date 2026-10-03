@@ -8,11 +8,11 @@
     "focusSequence": "2B",
     "focusTitle": "Builder determinístico verificado; alinhar resolução de tipos e runtime"
   },
-  "updatedAt": "2026-10-03T21:16:57.404683Z",
+  "updatedAt": "2026-10-03T21:23:12.716243Z",
   "source": {
-    "commit": "9317b460b30b58cffde61b7ad5d1de7e617db8e0",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/9317b460b30b58cffde61b7ad5d1de7e617db8e0/ROADMAP.md",
-    "scope": "GF-28: TSConfig explícito e determinismo comprovados na árvore de trabalho; pin do commit na entrega. GF-03: aliases/suffixes divergentes reproduzidos e pendentes; CI do shutdown anterior verde.",
+    "commit": "371e7ec2e5179beb7bd369426093d937d7fd0260",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/ROADMAP.md",
+    "scope": "GF-28: TSConfig explícito, cinco regressões causais, consumer 18/40, adapter 35/37+8/9/9 e seis rebuilds verificados; GF-03 aliases/suffixes pendentes. CI shutdown 9317b46 verde; CI novo builder pendente.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1390,7 +1390,7 @@
             },
             {
               "label": "TSConfig: race reproduzido, consumidor18/40 e seis rebuilds iguais",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/bundle-determinism/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
             }
           ]
         },
@@ -2428,7 +2428,7 @@
         "GF-28"
       ],
       "message": "Corrigida inferência dependente da ordem:18 processos diagnóstico, cinco testes causais, consumer 18/40, adapter 35/37+8/9/9, seis rebuilds 154 inputs idênticos. Shutdown CI 9317b46 cinco jobs verdes. Aliases locais e suffixes divergentes reproduzidos, pendentes GF03. Nenhum GF/checkpoint/denominador fechado. Nova CI builder pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/bundle-determinism/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
     },
     {
       "id": "native-stop-reentrancy-20261003",

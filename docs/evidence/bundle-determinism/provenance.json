@@ -90,5 +90,7 @@
     "No generic TSConfig/Metro or arbitrary-library certification.",
     "No byte-identical installation-path claim.",
     "Native host reused from the pinned callback-shutdown build."
-  ]
+  ],
+  "testedImplementationCommit": "371e7ec2e5179beb7bd369426093d937d7fd0260",
+  "committedSourceIdentityVerified": true
 }
