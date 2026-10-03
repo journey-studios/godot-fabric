@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#151b19">
+  <title>Godot Fabric · Migração</title>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Ir para o dashboard</a>
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="Godot Fabric, visão geral"><span class="brand-symbol">f<span>▧</span></span><span>godot fabric<small>migration tracker</small></span></a>
+    <div class="sidebar-caption">WORKSPACE / 01</div>
+    <nav aria-label="Navegação principal">
+      <a href="#overview" class="nav-link active" data-nav="overview"><span>◉</span>Visão geral</a>
+      <a href="#roadmap" class="nav-link" data-nav="roadmap"><span>▤</span>Roadmap<span class="nav-count" id="nav-count">—</span></a>
+      <a href="#sequence" class="nav-link" data-nav="sequence"><span>⇢</span>Sequência de migração</a>
+      <a href="#acceptance" class="nav-link" data-nav="acceptance"><span>◇</span>Critérios de aceite</a>
+      <a href="#decisions" class="nav-link" data-nav="decisions"><span>⌘</span>Decisões</a>
+      <a href="#activity" class="nav-link" data-nav="activity"><span>↺</span>Atividade</a>
+    </nav>
+    <div class="sidebar-footer"><span class="tiny-label">PRÓXIMA VERSÃO</span><strong>1.0<span>↗</span></strong><p>React Native.<br>Dentro do Godot.</p><a href="./AGENT_PROMPT.md" target="_blank" rel="noopener">Instruções para o Codex ↗</a></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><span><span class="muted">Projeto</span><span class="slash">/</span>Godot Fabric<span class="slash">/</span><strong>Migração</strong></span><div class="topbar-actions"><button id="live-toggle" class="live-button" aria-pressed="true"><i></i>Ao vivo</button><a class="icon-button" href="./migration.json" target="_blank" rel="noopener" aria-label="Abrir JSON">{ }</a></div></header>
+    <main id="main">
+      <section id="overview" aria-labelledby="page-title">
+        <div class="page-heading"><div><div class="eyebrow">ARQUITETURA 2.0 → RELEASE 1.0</div><h1 id="page-title">Cada entrega, mais perto.</h1><p>Acompanhe a migração do Godot Fabric, do primeiro contrato à release.</p></div><button id="refresh" class="button">↻ <span>Atualizar</span></button></div>
+        <div id="connection" class="connection" role="status" aria-live="polite">Conectando ao JSON…</div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <div id="summary" class="loading-panel">Carregando o roadmap…</div>
+        <div id="phase-map" class="phase-map" aria-label="Progresso por fase"></div>
+      </section>
+      <section id="roadmap" class="section" aria-labelledby="roadmap-title">
+        <div class="section-heading"><div><span class="eyebrow">O CAMINHO COMPLETO</span><h2 id="roadmap-title">Roadmap <span id="roadmap-count" class="heading-count"></span></h2></div><span class="section-hint">Abra um item para ver aceite e evidências</span></div>
+        <div class="filters"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Buscar item, contrato ou ID…" aria-label="Buscar no roadmap"><kbd>/</kbd></label><label class="sr-only" for="phase-filter">Filtrar fase</label><select id="phase-filter"><option value="all">Todas as fases</option></select><label class="sr-only" for="status-filter">Filtrar status</label><select id="status-filter"><option value="all">Todos os status</option><option value="in_progress">Em andamento</option><option value="planned">Planejado</option><option value="blocked">Bloqueado</option><option value="complete">Concluído</option></select><label class="sr-only" for="priority-filter">Filtrar prioridade</label><select id="priority-filter"><option value="all">Prioridade</option><option>P0</option><option>P1</option><option>P2</option></select><button id="clear-filters" class="text-button" hidden>Limpar</button></div>
+        <div id="tasks"></div>
+      </section>
+      <section id="sequence" class="section" aria-labelledby="sequence-title"><div class="section-heading"><div><span class="eyebrow">ARQUITETURA 2.0</span><h2 id="sequence-title">Sequência de migração</h2></div><span class="section-hint">2A e 2B avançam em paralelo</span></div><div id="sequences" class="sequence-grid"></div></section>
+      <section id="acceptance" class="section" aria-labelledby="acceptance-title"><div class="section-heading"><div><span class="eyebrow">DEFINIÇÃO DE PRONTO</span><h2 id="acceptance-title">Critérios de aceite</h2></div><span class="section-hint">Evidência executada em cada fechamento</span></div><div class="acceptance-grid"><article class="panel"><div class="panel-heading"><h3>Primeiro marco integrado</h3><span class="pill">HUD + inventário</span></div><p class="muted">Consumidor independente, duas roots e operações com lifetime definido.</p><div id="integration-checklist"></div></article><article class="panel"><div class="panel-heading"><h3>Release 1.0</h3><span id="release-count" class="pill"></span></div><p class="muted">Contrato completo e exportações comprovadas nos cinco sistemas.</p><div id="release-checklist"></div></article></div></section>
+      <section id="decisions" class="section" aria-labelledby="decisions-title"><div class="section-heading"><div><span class="eyebrow">CONTRATOS DA ARQUITETURA</span><h2 id="decisions-title">Decisões <span id="decision-count" class="heading-count"></span></h2></div><span class="section-hint">Aprovação e implementação têm evidências próprias</span></div><details class="panel decision-panel"><summary><span>Ver o registro completo de decisões</span><span id="decision-summary"></span></summary><div id="decision-list" class="decision-list"></div></details></section>
+      <section id="activity" class="section" aria-labelledby="activity-title"><div class="section-heading"><div><span class="eyebrow">REGISTRO DE ENTREGAS</span><h2 id="activity-title">Últimos avanços</h2></div><a id="implementation-pr" class="text-link" target="_blank" rel="noopener">PR de implementação ↗</a></div><div id="activity-list" class="activity-list"></div></section>
+      <footer class="footer"><span>GODOT FABRIC <span class="muted">/ Migration tracker</span></span><span>Renderizado a partir de <a href="./migration.json" target="_blank" rel="noopener">migration.json ↗</a></span></footer>
+    </main>
+  </div>
+</body>
+</html>
