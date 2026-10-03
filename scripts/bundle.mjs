@@ -3,6 +3,8 @@ import { transformAsync } from "@babel/core";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { createRequire } from "node:module";
+import { platformPlugin } from "../sdk/toolchain/platform-plugin.mjs";
 import { godotExtensions } from "./platform-resolution.mjs";
 import {
   compileNativeWind,
@@ -10,6 +12,7 @@ import {
 } from "./nativewind-compile.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+const requireSdk = createRequire(import.meta.url);
 await mkdir(path.join(root, "build"), { recursive: true });
 await compileNativeWind();
 const result = await build({
@@ -25,88 +28,18 @@ const result = await build({
   metafile: true,
   plugins: [
     {
-      name: "godot-platform",
+      name: "laboratory-nativewind",
       setup(builder) {
-        builder.onResolve({ filter: /(?:^|\/)renderApplication$/ }, ({ importer }) => {
-          if (importer.endsWith("/ReactNative/AppRegistryImpl.js"))
-            return { path: path.join(root, "src/render-application.jsx") };
-        });
-        builder.onResolve({ filter: /^react-native-reanimated$/ }, () => ({
-          path: path.join(root, "src/unsupported-reanimated.js"),
-        }));
-        builder.onResolve(
-          { filter: /^react-native-safe-area-context$/ },
-          () => ({
-            path: path.join(root, "src/unsupported-safe-area.js"),
-          }),
-        );
-        builder.onLoad(
-          {
-            filter:
-              /(?:examples\/(?:nativewind|typography)\/App\.jsx|react-native-css-interop\/dist\/doctor\.native\.js)$/,
-          },
+        builder.onLoad({ filter: /(?:examples\/(?:nativewind|typography)\/App\.jsx|react-native-css-interop\/dist\/doctor\.native\.js)$/ },
           async ({ path: filename }) => ({
-            contents: (
-              await transformAsync(await readFile(filename, "utf8"), {
-                filename,
-                configFile: false,
-                babelrc: false,
-                presets: ["nativewind/babel"],
-              })
-            ).code,
+            contents: (await transformAsync(await readFile(filename, "utf8"), {
+              filename, configFile: false, babelrc: false, presets: ["nativewind/babel"],
+            })).code,
             loader: "js",
-          }),
-        );
-        builder.onResolve({ filter: /^react-native$/ }, () => ({
-          path: path.join(root, "src/react-native-platform.jsx"),
-        }));
-        builder.onResolve({ filter: /^react-native-svg$/ }, () => ({
-          path: path.join(root, "src/svg.jsx"),
-        }));
-        builder.onResolve(
-          {
-            filter:
-              /react-native\/Libraries\/ReactPrivate\/ReactNativePrivateInterface$/,
-          },
-          () => ({ path: path.join(root, "src/private-interface.js") }),
-        );
-        builder.onResolve(
-          {
-            filter:
-              /react-native\/Libraries\/ReactPrivate\/ReactNativePrivateInitializeCore$/,
-          },
-          () => ({ path: path.join(root, "src/initialize.js") }),
-        );
-        for (const [pattern, file] of [
-          [/\/Utilities\/Platform$/, "platform.js"],
-          [/\/ReactNative\/UIManager$/, "ui-manager.js"],
-          [/\/BatchedBridge\/NativeModules$/, "native-modules.js"],
-        ])
-          builder.onResolve({ filter: pattern }, () => ({
-            path: path.join(root, "src", file),
           }));
-        builder.onLoad(
-          { filter: /node_modules\/react-native\/.*\.js$/ },
-          async ({ path: filename }) => {
-            const transformed = await transformAsync(
-              await readFile(filename, "utf8"),
-              {
-                filename,
-                configFile: false,
-                babelrc: false,
-                presets: [
-                  [
-                    "@react-native/babel-preset",
-                    { disableImportExportTransform: true },
-                  ],
-                ],
-              },
-            );
-            return { contents: transformed.code, loader: "js" };
-          },
-        );
       },
     },
+    platformPlugin(path.join(root, "src"), (id) => requireSdk.resolve(id)),
   ],
 });
 assertNativeWindBundle(Object.keys(result.metafile.inputs));

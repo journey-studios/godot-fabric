@@ -50,8 +50,10 @@ Ref<Font> ParagraphLayout::font(const rn::TextAttributes &a) const {
   if (auto it = fonts_.find(key); it != fonts_.end()) return it->second;
   if (family != "NotoSans" && family != "JetBrainsMono")
     throw std::runtime_error("Godot font family is not registered: " + family);
+  const auto filename = String::utf8(family.c_str()) + ".ttf";
+  const auto addon_font = String("res://addons/godot_fabric/assets/fonts/") + filename;
   Ref<Font> base = ResourceLoader::get_singleton()->load(
-      String("res://assets/fonts/") + String::utf8(family.c_str()) + ".ttf");
+      ResourceLoader::get_singleton()->exists(addon_font) ? addon_font : String("res://assets/fonts/") + filename);
   if (base.is_null()) throw std::runtime_error("Godot font asset is unavailable: " + family);
   Ref<FontVariation> variation;
   variation.instantiate();
