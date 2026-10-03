@@ -36,3 +36,5 @@ Godot's Button signal; the captures prove rendering, not hardware input/IME.
 [Consumer JSX](../../tests/adapters/consumer/ui/index.tsx) ·
 [Validation](../../tests/adapters/consumer/validation.gd) ·
 [Executed evidence and gaps](../../docs/evidence/native-adapters/README.md)
+
+[Native callback shutdown](../../docs/evidence/adapter-shutdown/README.md) adds 26 executed resize/RAF/timer checks, immediate event retirement and captures including internal Controls. Full root destruction/async cancellation remains open.

@@ -4,6 +4,8 @@ var app: Node
 var first: Control
 var second: Control
 var before_stop: Dictionary
+var reentrant_calls := 0
+var retained_during_stop := false
 func check(value: bool, name: String) -> void:
   checks.append({"name": name, "passed": value})
   if not value: push_error("ADAPTER_CHECK_FAILED: " + name)
@@ -27,7 +29,41 @@ func _ready() -> void:
   app = $Application/Runtime
   first = $First
   second = $Second
-  run_probe()
+  if OS.get_cmdline_user_args().has("--reentrant-stop"): run_reentrant_stop("resize")
+  elif OS.get_cmdline_user_args().has("--reentrant-raf"): run_reentrant_stop("raf")
+  elif OS.get_cmdline_user_args().has("--reentrant-timer"): run_reentrant_stop("timer")
+  else: run_probe()
+func run_reentrant_stop(mode: String) -> void:
+  await frames()
+  var button := first.find_child("first-a",true,false)
+  check(button is Button and not node(second,"second-a").is_empty(), "Reentrant-stop fixture has real external Controls in both roots")
+  if not button is Button: finish(); return
+  if mode != "resize": app.call("evaluate", "AdapterFixture.focus('first-a')")
+  button.connect("resized" if mode == "resize" else "focus_exited", func():
+    reentrant_calls += 1
+    app.call("stop")
+    # Do not reenter Hermes from its current Fabric commit. Native signals and
+    # a host snapshot establish the immediate cancellation boundary directly.
+    retained_during_stop = is_instance_valid(button) and data(app).stopRequested and data(app).rootCount == 2
+    button.emit_signal("pressed")
+    first.find_child("first-internal",true,false).emit_signal("pressed")
+  )
+  before_stop = data(app)
+  if mode == "resize": app.call("evaluate", "AdapterFixture.action('first','resize')")
+  else:
+    var schedule := "requestAnimationFrame" if mode == "raf" else "setTimeout"
+    app.call("evaluate", "globalThis.afterReentrantStop=0; " + schedule + "(()=>AdapterFixture.focus('first-b'),0); " + schedule + "(()=>globalThis.afterReentrantStop++,0)")
+  await frames()
+  check(reentrant_calls == 1, "A native signal synchronously requests application stop during " + mode)
+  check(retained_during_stop, "Stop retires authority while preserving the Control until the emitting stack returns")
+  var after := data(app)
+  check(after.stopped and not after.stopRequested and after.rootCount == 0 and after.pendingWork == 0, "Deferred teardown completes once the outer execution stack unwinds")
+  check(data(first).nodes.is_empty() and data(second).nodes.is_empty(), "Reentrant shutdown clears both external native trees")
+  check(stats().probe.disposals == stats().probe.creates and stats().probe.stopped and stats().cleanups == 2, "Views, module providers and React effects dispose once on reentrant stop")
+  check(stats().probe.rejected == 1 and stats().events.is_empty() and data(first).events == 0, "External and core pressed signals after the stop request cannot enqueue events")
+  if mode != "resize": check(js("globalThis.afterReentrantStop") == 0, "Remaining " + mode + " callbacks do not execute after the stop request")
+  check(after.errors.is_empty(), "Reentrant shutdown finishes without a host error")
+  finish()
 func run_probe() -> void:
   await frames()
   var a := node(first, "first-a")

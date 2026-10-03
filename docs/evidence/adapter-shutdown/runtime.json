@@ -1,0 +1,127 @@
+{
+  "format": "godot-fabric.experimental-adapter-runtime-acceptance/v1",
+  "checkedAt": "2026-10-03T20:58:34.185Z",
+  "sourceSha256": {
+    "scripts/adapter-runtime-check.mjs": "766819a2590bb9766967ca41081ca622e85cda07dc6993198063653bb8205cf3",
+    "scripts/pack-addon.mjs": "7b173397887046e551b024cbc85ebb3603e4fe64926ca2d2f10d3d489bdf0ee2",
+    "sdk/toolchain/build.mjs": "4f695aa00d18e5edc6161e11f785ca6bb2c04fa719b383eb513cdd45ad5d55cd",
+    "sdk/toolchain/adapter-plugin.mjs": "9d331d0b71adec8ee51f601a8ea4c2fceb50c62fed5f5f0278caf04d3df2729d",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+    "tests/adapters/package/BadgeNativeComponent.ts": "743ed87b2d827cbd04b92f2fc79d247942d930e6721b214320fca8ccf5f89d56",
+    "tests/adapters/package/NativeExternalProbe.ts": "652f3488be23ee4ca8bf13671c52185acd556873d418863e89cee1f82ac1dadb",
+    "tests/adapters/package/adapter.cpp": "026e957339e78d19b580cbc7d68e26062ad354babf7dbffb9b5e8001e73afd70",
+    "tests/adapters/package/index.ts": "526a2d064a70a6de1c0575cf551cf089d08375ced1f3e508c86c554968d37212",
+    "tests/adapters/package/package.json": "861c7356296fb60205bc0ac5d7fa1f708e53c15b364cc05b8f9719e374c53667",
+    "tests/adapters/consumer/ui/index.tsx": "4ec5f2ac1d02f3492cee3e370d2dc5b7de25a1f5f5af036b7ffed9480c1bfcec",
+    "tests/adapters/consumer/validation.gd": "545418e41bc3e81efbae846e280134ada38a458a14fe5ea7c0acd70ca2311e08",
+    "tests/adapters/consumer/main.tscn": "25b848774f99520ca06b7c2bf845e23f7878fd44dd68cc618ed027f616b94aa2",
+    "tests/adapters/consumer/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2"
+  },
+  "sdkManifestSha256": "14af403afd368419b83b4259290cc554b712a8994afc44ab646dd0da2137a01b",
+  "stages": [
+    {
+      "label": "pack-addon",
+      "exitCode": 0,
+      "log": "logs/pack-addon.log",
+      "sha256": "f535ccef9f52d4c5d66d0a1367bfcf4711958a4e7b8c81d92b456f0c59d74fc5"
+    },
+    {
+      "label": "configure-adapter",
+      "exitCode": 0,
+      "log": "logs/configure-adapter.log",
+      "sha256": "ef1b9afc2d85d6e49d8f80d1ab7888ac35736e49c05e6076ac4c703e2b629548"
+    },
+    {
+      "label": "compile-link-adapter",
+      "exitCode": 0,
+      "log": "logs/compile-link-adapter.log",
+      "sha256": "8d043440e99f484c21562e41763e2ad33dd6ec2dd52185b88928e5a3365604ba"
+    },
+    {
+      "label": "adapter-dependencies",
+      "exitCode": 0,
+      "log": "logs/adapter-dependencies.log",
+      "sha256": "6a040bbebf1ca6c9d5f9920be6b9e0f5b4b1b084c6a0ed5234a370ceb7ec67e0"
+    },
+    {
+      "label": "build-selected-specs",
+      "exitCode": 0,
+      "log": "logs/build-selected-specs.log",
+      "sha256": "18836a6ef6a6e4e06fbfafc545e09eebf6768329d623f5473ba8f86010bf69d8"
+    },
+    {
+      "label": "godot-import",
+      "exitCode": 0,
+      "log": "logs/godot-import.log",
+      "sha256": "26da5b550cff9050c100988f81ab566872c9d89d86a9edfb90c4156f5c5815fa"
+    },
+    {
+      "label": "godot-headless",
+      "exitCode": 0,
+      "log": "logs/godot-headless.log",
+      "sha256": "620b0bc9f2f05a68340dad30a476c2b05855be8a296f93a1d779d1562918bbc2"
+    },
+    {
+      "label": "godot-reentrant-stop",
+      "exitCode": 0,
+      "log": "logs/godot-reentrant-stop.log",
+      "sha256": "ded1844a99faf1a8fdb2a5b53b919dea962a76e33b9d1889156f406deb9bb9e1"
+    },
+    {
+      "label": "godot-reentrant-raf",
+      "exitCode": 0,
+      "log": "logs/godot-reentrant-raf.log",
+      "sha256": "2565ae2d8ced91e56f57966b6cbe1549a59287140cbd58376a461aa3abb2444f"
+    },
+    {
+      "label": "godot-reentrant-timer",
+      "exitCode": 0,
+      "log": "logs/godot-reentrant-timer.log",
+      "sha256": "06f5cfd9fd4ea313d1adf25a58751bbd2e44e678904754f438b0f846a14ab98f"
+    },
+    {
+      "label": "godot-graphical",
+      "exitCode": 0,
+      "log": "logs/godot-graphical.log",
+      "sha256": "a9acda81b26f21c619e7e9e673f10bd8b17617d170d4a386be780a2ce6be4b46"
+    }
+  ],
+  "passed": true,
+  "nativeAdapterLinked": true,
+  "componentMounted": true,
+  "vmCreated": true,
+  "godotEngineStarted": true,
+  "abiCertified": false,
+  "adapterLibrarySha256": "a7a154c7414ed7ef1bdd05551aaa23bf308404201c6cb7dc9c1041b1c9db570d",
+  "linkCommandSha256": "53960a510118ebfafa36a4cc868242c8114fff708867f114ba3d0ef475521c6e",
+  "selectionSha256": "4a0a6c5a5cb8bbb8b2f98d7c7bc3c7e20df50af96fba106bc8baed992b38d48d",
+  "bundleSha256": "301cc84233af0126b4a954f6037f6bb7ea910b888ddc16a684abd9d07adcf11c",
+  "headless": {
+    "checks": 35,
+    "sha256": "f421717c50d7d3bef7c05d6e4e754138134c828fa3ed921ad5c1e64d07fb3bb8",
+    "displayServer": "headless"
+  },
+  "reentrant-stop": {
+    "checks": 8,
+    "sha256": "6fe187b3c99b1e40dfd635e3bfd41d2b389eef63c8309cecb7308afb78fbcb50",
+    "displayServer": "headless"
+  },
+  "reentrant-raf": {
+    "checks": 9,
+    "sha256": "79fc90f55f521664e6e1453a31b0a4ca311950d4065499f565f0757c9da69ca9",
+    "displayServer": "headless"
+  },
+  "reentrant-timer": {
+    "checks": 9,
+    "sha256": "2516ef5356451c2aad05a86eb0c8f78e6b15f39d75bcbdb441bf96b4bf652001",
+    "displayServer": "headless"
+  },
+  "graphical": {
+    "checks": 37,
+    "sha256": "74b6914d61b5c5a3e098864db91495e6b4e6c99bb72cabc7129d934e30fdc905",
+    "displayServer": "macOS"
+  }
+}

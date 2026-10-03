@@ -159,6 +159,21 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   int next_frame{1};
   bool stopped{false};
   bool stopping{false};
+  bool stop_requested{false};
+  bool inactive() const { return stopped || stopping || stop_requested; }
+  int execution_depth{};
+  struct ExecutionScope {
+    Impl &owner;
+    explicit ExecutionScope(Impl &owner) : owner(owner) { ++owner.execution_depth; }
+    ~ExecutionScope() noexcept {
+      if (--owner.execution_depth || !owner.stop_requested || owner.stopping || owner.stopped) return;
+      // A native setter can emit a Godot signal which requests shutdown while
+      // Fabric or Hermes still owns the calling stack. Retire authority now,
+      // but keep Controls/ShadowTrees alive until that outer stack unwinds.
+      try { owner.stop(); }
+      catch (const std::exception &error) { owner.fail(error.what()); }
+    }
+  };
   Vector2 viewport_size;
   std::shared_ptr<fabric_godot::TextLayout> text_layout;
   std::shared_ptr<fabric_godot::ParagraphLayout> paragraph_layout;
@@ -274,7 +289,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
 
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json) {
-    if (stopped || stopping) throw std::runtime_error("Application is stopped");
+    if (inactive()) throw std::runtime_error("Application is stopped");
     if (!host.get_window() || host.get_viewport() != host.get_window() ||
         host.get_window()->get_instance_id() != host_metrics.window_instance_id)
       throw std::runtime_error("Fabric surfaces require the application's native Window; SubViewport and cross-window hosting need a metrics adapter");
@@ -319,7 +334,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   void update_props(int id, const std::string &props_json) {
     auto found = roots.find(id);
-    if (found == roots.end() || found->second->stopping || stopped) return;
+    if (found == roots.end() || found->second->stopping || inactive()) return;
     if (found->second->component.empty()) throw std::runtime_error("Root props require an AppRegistry component");
     ui->setSurfaceProps(id, found->second->component, folly::parseJson(props_json), rn::DisplayMode::Visible);
   }
@@ -406,6 +421,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     timer_manager->setRuntimeExecutor([this](rn::RawCallback &&callback) {
       const auto id = dispatching_timer;
       work.push_back([this, id, callback = std::move(callback)](jsi::Runtime &rt) {
+        if (inactive()) return;
         try { callback(rt); }
         catch (const std::exception &error) { fail(error.what()); }
         // Upstream erases one-shot callbacks after invocation. A throwing
@@ -417,7 +433,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     timer_manager->attachGlobals(*runtime);
     clear_timer.emplace(runtime->global().getPropertyAsFunction(*runtime, "clearTimeout"));
     bind("godotRuntimeActive", 0, [this](auto &, auto &, const auto *, size_t) {
-      return jsi::Value(!stopping && !stopped);
+      return jsi::Value(!inactive());
     });
     bind("requestAnimationFrame", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (!count || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
@@ -431,14 +447,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return jsi::Value::undefined();
     });
     bind("godotNode", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
-      if (stopping || stopped || count != 1) return jsi::Value::null();
+      if (stopping || stop_requested || stopped || count != 1) return jsi::Value::null();
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::null();
       auto node = ui->findShadowNodeByTag_DEPRECATED(*tag);
       return node ? rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::toJs(rt, node) : jsi::Value::null();
     });
     bind("godotMetrics", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
-      if (count != 1) return jsi::Value::null();
+      if (inactive() || count != 1) return jsi::Value::null();
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::null();
       auto found = views.find(*tag);
@@ -456,7 +472,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return jsi::Value(std::move(result));
     });
     bind("godotFocus", 2, [this](auto &, auto &, const jsi::Value *args, size_t count) {
-      if (count != 2 || !args[1].isBool()) return jsi::Value::undefined();
+      if (inactive() || count != 2 || !args[1].isBool()) return jsi::Value::undefined();
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::undefined();
       auto found = views.find(*tag);
@@ -472,10 +488,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         "warn:(...a)=>nativeLoggingHook(a.join(' '),1),error:(...a)=>nativeLoggingHook(a.join(' '),2)};");
   }
   jsi::Value evaluate(const std::string &source) {
+    ExecutionScope execution(*this);
     return runtime->evaluateJavaScript(std::make_shared<jsi::StringBuffer>(source), bundle_url);
   }
   void pump(bool frame_tick = false) {
-    if (stopped) return;
+    ExecutionScope execution(*this);
+    if (stopped || stop_requested) return;
     try {
       // One independent deferred phase per frame. Never invoke game Callables
       // while returning through FabricApplication's Godot notification stack.
@@ -508,30 +526,33 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         for (const auto &[id, callback] : frame_callbacks) frame_ids.push_back(id);
       const double frame_time = now_ms();
       for (int id : frame_ids) {
+        if (stop_requested) break;
         auto callback = frame_callbacks.extract(id);
         if (callback.empty()) continue;
         ++frame_callbacks_run;
         try { callback.mapped().call(*runtime, frame_time); }
         catch (const std::exception &error) { fail(error.what()); }
-        runtime->drainMicrotasks();
+        if (!stop_requested) runtime->drainMicrotasks();
       }
       // Bound a frame's work. Timers created by a callback run on a later tick.
-      if (!stopping)
+      if (!stopping && !stop_requested)
         for (auto id : timer_registry->take_due(now_ms())) {
+          if (stop_requested) break;
           dispatching_timer = id;
           timer_manager->callTimer(id);
         }
-      for (int limit = 0; !work.empty() && limit < 256; ++limit) {
+      for (int limit = 0; !stop_requested && !work.empty() && limit < 256; ++limit) {
         auto callback = std::move(work.front());
         work.pop_front();
         try { callback(*runtime); }
         catch (const std::exception &error) { fail(error.what()); }
-        runtime->drainMicrotasks();
+        if (!stop_requested) runtime->drainMicrotasks();
       }
-      runtime->drainMicrotasks();
+      if (!stop_requested) runtime->drainMicrotasks();
     } catch (const std::exception &error) { fail(error.what()); }
   }
   void unmount(int id, bool legacy_hook = false) {
+    ExecutionScope execution(*this);
     auto found = roots.find(id);
     if (found == roots.end() || found->second->stopping) return;
     auto &root = *found->second;
@@ -568,6 +589,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   void stop() {
     if (stopped || stopping) return;
+    if (execution_depth) { stop_requested = true; return; }
+    stop_requested = false;
     stopping = true;
     host_phase_pending = false;
     game_services->stop();
@@ -683,7 +706,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     mounted.control->set_size(size);
   }
   void emit(int tag, const std::string &name, folly::dynamic payload) {
-    if (stopped || retiring.contains(tag)) return;
+    if (inactive() || retiring.contains(tag)) return;
     auto found = views.find(tag);
     if (found == views.end() || found->second.external || !found->second.shadow.eventEmitter) return;
     if (roots.at(found->second.surface_id)->stopping) return;
@@ -822,7 +845,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
                   // Reject on the calling thread before touching host-owned maps.
                   if (std::this_thread::get_id() != thread || !event) return false;
                   auto guard = owner.lock();
-                  if (!guard || guard->stopped || guard->stopping || guard->retiring.contains(tag)) return false;
+                  if (!guard || guard->stopped || guard->stopping || guard->stop_requested || guard->retiring.contains(tag)) return false;
                   auto root = guard->roots.find(surface_id);
                   auto mounted = guard->views.find(tag);
                   if (root == guard->roots.end() || root->second->stopping || root->second->stopped ||
@@ -945,7 +968,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       const std::string &name, const folly::dynamic &args) override {
     auto found = views.find(node->getTag());
     // Ref commands queued before a removal must not target another instance.
-    if (found == views.end() || stopped || stopping || retiring.contains(node->getTag()) ||
+    if (found == views.end() || stopped || stopping || stop_requested || retiring.contains(node->getTag()) ||
         found->second.surface_id != node->getSurfaceId() || roots.at(found->second.surface_id)->stopping ||
         found->second.shadow.componentHandle != node->getComponentHandle() ||
         found->second.shadow.eventEmitter != node->getEventEmitter()) return;
@@ -1002,6 +1025,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
     result["hostPhasePending"] = host_phase_pending;
+    result["stopRequested"] = stop_requested;
     result["dimensions"] = device_dimensions();
     for (const auto &error : errors) result["errors"].push_back(error);
     return result;
@@ -1099,13 +1123,15 @@ void ApplicationRuntime::load_bundle(const std::string &source, const std::strin
   ++guard->bundle_evaluations;
 }
 void ApplicationRuntime::invoke_callable(const std::string &name, const std::string &method, const std::string &args_json) {
-  impl->native_modules->invoke_callable(name, method, folly::parseJson(args_json));
+  auto guard = impl;
+  Impl::ExecutionScope execution(*guard);
+  guard->native_modules->invoke_callable(name, method, folly::parseJson(args_json));
 }
 int ApplicationRuntime::mount(FabricSurface &host, const std::string &component, const std::string &props_json) { auto guard = impl; return guard->mount(host, component, props_json); }
 void ApplicationRuntime::update_props(int id, const std::string &props_json) { auto guard = impl; guard->update_props(id, props_json); }
 void ApplicationRuntime::unmount(int id) { auto guard = impl; guard->unmount(id); }
 void ApplicationRuntime::stop() { auto guard = impl; guard->stop(); }
-bool ApplicationRuntime::is_stopped() const { return impl->stopped || impl->stopping; }
+bool ApplicationRuntime::is_stopped() const { return impl->inactive(); }
 void ApplicationRuntime::pump(bool frame) { auto guard = impl; guard->pump(frame); }
 std::string ApplicationRuntime::evaluate(const std::string &source) {
   auto guard = impl;
@@ -1118,7 +1144,7 @@ void ApplicationRuntime::report_error(const std::string &message) { impl->fail(m
 bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   auto guard = impl;
   auto found = guard->roots.find(id);
-  if (found == guard->roots.end() || found->second->stopping || guard->stopped) return false;
+  if (found == guard->roots.end() || found->second->stopping || guard->inactive()) return false;
   auto &root = *found->second;
   if (guard->wheel(root, event)) { guard->pump(); return true; }
   bool blocked = root.pointer->blocks_native();
@@ -1134,7 +1160,7 @@ void ApplicationRuntime::cancel(int id) {
 void ApplicationRuntime::activate(int id, int tag) {
   auto root = impl->roots.find(id);
   auto found = impl->views.find(tag);
-  if (root == impl->roots.end() || root->second->stopping || impl->stopped ||
+  if (root == impl->roots.end() || root->second->stopping || impl->inactive() ||
       found == impl->views.end() || found->second.surface_id != id || found->second.external ||
       component_kind(found->second.shadow) != "button") return;
   ++root->second->events;
@@ -1142,25 +1168,25 @@ void ApplicationRuntime::activate(int id, int tag) {
 }
 void ApplicationRuntime::change(int id, const String &text, int tag) {
   auto found = impl->views.find(tag);
-  if (!impl->stopped && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
+  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
       found != impl->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->changed(text);
 }
 void ApplicationRuntime::focus(int id, bool focused, int tag) {
   auto found = impl->views.find(tag);
-  if (!impl->stopped && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
+  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
       found != impl->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->focus(focused);
 }
 void ApplicationRuntime::submit(int id, int tag) {
   auto found = impl->views.find(tag);
-  if (!impl->stopped && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
+  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
       found != impl->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->submitted();
 }
 void ApplicationRuntime::key(int id, const Ref<InputEvent> &event, int tag) {
   auto found = impl->views.find(tag);
-  if (!impl->stopped && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
+  if (!impl->inactive() && impl->roots.contains(id) && !impl->roots.at(id)->stopping &&
       found != impl->views.end() && found->second.surface_id == id && found->second.input)
     found->second.input->key(event);
 }

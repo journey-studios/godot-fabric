@@ -103,13 +103,16 @@ async function check({sdk, out, capture, cmake}) {
     fs.writeFileSync(path.join(project,'.godot/extension_list.cfg'),'res://addons/godot_fabric/fabric.gdextension\n');
     const godot = await ensureGodotBinary();
     run('godot-import',godot,['--path',project,'--headless','--editor','--quit'],env);
-    for (const lane of capture ? ['headless','graphical'] : ['headless']) {
-      const args = ['--path',project,...(lane==='headless'?['--headless']:[]),'--','--validate',...(lane==='graphical'?['--capture']:[])];
+    const lanes = ['headless','reentrant-stop','reentrant-raf','reentrant-timer',...(capture?['graphical']:[])];
+    for (const lane of lanes) {
+      const args = ['--path',project,...(lane!=='graphical'?['--headless']:[]),'--','--validate',
+        ...(lane==='graphical'?['--capture']:[]),...(lane.startsWith('reentrant-')?['--'+lane]:[])];
       const log = run('godot-'+lane,godot,args,env);
       if (/SCRIPT ERROR|(?:^|\n)ERROR:|Program crashed|ADAPTER_CHECK_FAILED|FABRIC_ERROR/.test(log) || !log.includes('ADAPTER_RUNTIME_OK:'))
         throw new Error('Godot '+lane+' failed runtime acceptance; retained logs');
       const actual = read(path.join(project,'adapter-report.json'));
-      if (actual.checks.length<35 || !actual.checks.every(check=>check.passed)) throw new Error('Incomplete adapter runtime report');
+      const expectedChecks = lane === 'reentrant-stop' ? 8 : lane.startsWith('reentrant-') ? 9 : lane === 'graphical' ? 37 : 35;
+      if (actual.checks.length!==expectedChecks || !actual.checks.every(check=>check.passed)) throw new Error('Incomplete adapter runtime report');
       write(path.join(out,lane+'.json'),actual);
       report[lane] = {checks:actual.checks.length,sha256:hash(path.join(out,lane+'.json')),displayServer:actual.displayServer};
       report.vmCreated=true;report.godotEngineStarted=true;report.componentMounted=true;
@@ -120,7 +123,9 @@ async function check({sdk, out, capture, cmake}) {
       throw new Error('Runtime artifacts changed during acceptance');
     for (const [file, digest] of Object.entries(report.sourceSha256)) if (hash(path.join(root,file))!==digest) throw new Error('Acceptance source changed: '+file);
     report.passed = true;
-    console.log(JSON.stringify({passed:true,nativeAdapterLinked:true,componentMounted:true,headless:report.headless,graphical:report.graphical??null,abiCertified:false}));
+    console.log(JSON.stringify({passed:true,nativeAdapterLinked:true,componentMounted:true,headless:report.headless,
+      reentrantStop:report['reentrant-stop'],reentrantRaf:report['reentrant-raf'],reentrantTimer:report['reentrant-timer'],
+      graphical:report.graphical??null,abiCertified:false}));
   } catch(error) {report.error=error.message;throw error;}
   finally {save();}
 }

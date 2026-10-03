@@ -207,3 +207,7 @@ The executed fixture is a leaf Button: external child containers, rejected
 factories, complex native state/measurement and their failure transactions still
 need dedicated acceptance. Keep these gaps separate from the already executed
 props/events/commands/module and stale-authority checks.
+
+### Shutdown from a native callback
+
+An application stop requested inside a Fabric/Hermes call retires event and command authority immediately. The host preserves mounted Controls until the outer execution scope returns, then performs original RN teardown. Remaining RAF/timer callbacks cannot resume work during that shutdown. [Executed resize/focus fixtures](evidence/adapter-shutdown/README.md) cover external and internal Button signals. Independent root destruction during update and arbitrary asynchronous cancellation remain separate open contracts.

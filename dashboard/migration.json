@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "4",
-    "focusTitle": "Extensões externas comprovadas; próximos gaps de lifecycle e exportação"
+    "focusTitle": "Shutdown nativo verificado; determinismo do builder como próximo bloqueio"
   },
-  "updatedAt": "2026-10-03T20:28:31.322985Z",
+  "updatedAt": "2026-10-03T20:56:28.110465Z",
   "source": {
     "commit": "fbd045385ba2ef33d16f21fdd5b9bf193296fa19",
     "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/ROADMAP.md",
-    "scope": "GF-26: loader 21/89 e consumidor Codegen nativo 35/37 comprovados localmente; aceite completo e CI atual pendentes",
+    "scope": "GF-07/GF-26: stop reentrante 8/9/9 e consumidor 35/37 locais; CI anterior falhou em regeneração de bundle, causa em investigação",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -340,7 +340,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Pausa, hide/unmount/remount e stop terminal validados no laboratório; consumidor mantém HUD após fechar inventário. Restart, ativação, overlays e comparação completa permanecem abertos.",
+      "note": "Pausa, hide/unmount/remount e stop terminal validados no laboratório; consumidor mantém HUD após fechar inventário. Restart, ativação, overlays e comparação completa permanecem abertos. Stop reentrante em resize/RAF/timer passou 8/9/9 verificações: autoridade cancelada imediatamente e Controls preservados até retorno da execução. Unmount/destruição independente durante update ainda não cobertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -355,6 +355,10 @@
             {
               "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
               "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
             }
           ]
         },
@@ -1223,7 +1227,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Codegen original e SDK compartilhado seguem comprovados. Novo loader: 21 casos/89 checks, incluindo rejeições antes de static initializers, UUID/receipts, binding witness e rollback. Consumidor JSX externo Badge/Probe passou 35 headless/37 gráficos, com Props/defaults, eventos/Commands originais, duas roots, reorder/remount, callbacks/ref antigos, Promise/emitter e método extraído após stop. Sem ABI/paridade RN total nem exportação todos os alvos; containers/state/async long-lived continuam abertos. CI atual da fatia ainda não confirmada.",
+      "note": "Codegen original e SDK compartilhado seguem comprovados. Novo loader: 21 casos/89 checks, incluindo rejeições antes de static initializers, UUID/receipts, binding witness e rollback. Consumidor JSX externo Badge/Probe passou 35 headless/37 gráficos, com Props/defaults, eventos/Commands originais, duas roots, reorder/remount, callbacks/ref antigos, Promise/emitter e método extraído após stop. Sem ABI/paridade RN total nem exportação todos os alvos; containers/state/async long-lived continuam abertos. CI 37151683147 passou loader 89/registry 207, mas falhou na regeneração do consumidor; a lane runtime externo não executou. Stop nativo adicional passou 8/9/9 e consumidor 35/37 localmente; CI desta correção ainda não confirmada.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1254,6 +1258,10 @@
             {
               "label": "Consumidor externo 35/37 e loader 21/89; evidência local da PR",
               "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+            },
+            {
+              "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
             }
           ]
         },
@@ -1340,8 +1348,8 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Addon/consumidor tradicional passou 18 tooling/40 nativos no replay; consumidor selecionado Badge/Probe passou 35 headless/37 gráficos com ferramentas privadas e dependências explícitas. Uma execução anterior divergiu no hash após recuperação, sem reprodução no replay: investigar determinismo mantendo a assertion. Instalação/update/exportação debug/release em todos os alvos e contrato completo seguem abertos. Nova CI ainda não confirmada.",
-      "blocker": "Regeneração de bundle: divergência de hash observada em uma sequência de recuperação; replay passou sem alteração do builder. Causa ainda não isolada.",
+      "note": "Addon/consumidor tradicional passou 18 tooling/40 nativos no replay; consumidor selecionado Badge/Probe passou 35 headless/37 gráficos com ferramentas privadas e dependências explícitas. Divergência de hash reproduzida também na CI 37151683147; diagnóstico isolou variação antes do Babel com fontes idênticas. Causa/correção ainda em investigação, mantendo a assertion. Instalação/update/exportação debug/release em todos os alvos e contrato completo seguem abertos. Nova CI anterior falhou no consumidor; runtime externo não executou.",
+      "blocker": "Regeneração de bundle: fingerprint divergiu localmente e na CI 37151683147. Repro isolado varia saída esbuild com fontes idênticas; correção ainda não validada.",
       "checkpoints": [
         {
           "id": "slice",
@@ -2398,6 +2406,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "native-stop-reentrancy-20261003",
+      "at": "2026-10-03T20:56:28.110465Z",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Falha Control freed inside signal reproduzida. Novo host passou resize/RAF/timer 8/9/9, consumidor 35/37 e suites 2/4/2/2 em série. CI anterior passou 89/207 mas reproduziu hash divergente do consumidor. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "native-adapter-runtime-20261003",
       "at": "2026-10-03T20:28:31.322985Z",

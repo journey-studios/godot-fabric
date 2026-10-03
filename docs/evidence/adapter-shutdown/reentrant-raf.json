@@ -1,0 +1,264 @@
+{
+  "afterStop": {
+    "adapterLoader": {
+      "abiCertified": false,
+      "adapters": [
+        {
+          "entryResolved": true,
+          "id": "RuntimeFixture",
+          "librarySha256": "a7a154c7414ed7ef1bdd05551aaa23bf308404201c6cb7dc9c1041b1c9db570d",
+          "libraryUUID": "71bb5737444a3a778dfad63bc576078b"
+        }
+      ],
+      "bundle": {
+        "path": ".godot_fabric/app.js",
+        "sha256": "301cc84233af0126b4a954f6037f6bb7ea910b888ddc16a684abd9d07adcf11c"
+      },
+      "enabled": true,
+      "librariesProcessPinned": true,
+      "loadedImageFilesMatchedReceipts": true,
+      "loadedImageUUIDsMatched": true,
+      "loadedImages": {
+        "hermes": {
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "uuid": "ca5e6a87f63d3babb4d697eacbcc62eb"
+        },
+        "host": {
+          "sha256": "44078ed4d4c18ce47a676636159319d824b170dd372780287b937528a9601933",
+          "uuid": "375edc5500503fcbb77c643d0bfd5fcf"
+        },
+        "rn-dependencies": {
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "uuid": "569960d1c7b538a7a1abc61bed902131"
+        }
+      },
+      "runtimeIdentityVerified": false,
+      "selectedFilesVerified": 24
+    },
+    "adapters": {
+      "adapters": [
+        "RuntimeFixture"
+      ],
+      "components": [
+        "ExternalBadge"
+      ],
+      "moduleProvidersInstalled": true,
+      "modules": [
+        "ExternalProbe"
+      ],
+      "sealed": true,
+      "stopped": true
+    },
+    "animationFramesRun": 1,
+    "bundleEvaluations": 1,
+    "dimensions": {
+      "screen": {
+        "fontScale": 1,
+        "height": 0,
+        "scale": 1,
+        "width": 0
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 64,
+        "scale": 1,
+        "width": 64
+      }
+    },
+    "errors": [],
+    "gameServices": {
+      "bindings": 0,
+      "callbacksRun": 0,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 0,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 0,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": true,
+      "subscriptions": 0,
+      "taskBudget": 64
+    },
+    "hostPhasePending": false,
+    "initializationAttempted": true,
+    "nativeModules": {
+      "callableCalls": 0,
+      "callableModules": 0,
+      "creations": 5,
+      "disposals": 3,
+      "installed": true,
+      "loaded": 0,
+      "lookups": 6,
+      "registered": 6,
+      "retainedUntilVMDestroy": 5,
+      "runtimeId": "27615299031",
+      "staleCalls": 0,
+      "stopped": true
+    },
+    "pendingAnimationFrames": 0,
+    "pendingTimers": 0,
+    "pendingWork": 0,
+    "rootCount": 0,
+    "runtimeId": 27615299031,
+    "runtimeInitialized": true,
+    "stopRequested": false,
+    "stopped": true,
+    "textMeasurements": 6,
+    "timerEngine": "react-native/TimerManager",
+    "viewportUpdates": 0,
+    "windowListener": false
+  },
+  "beforeStop": {
+    "adapterLoader": {
+      "abiCertified": false,
+      "adapters": [
+        {
+          "entryResolved": true,
+          "id": "RuntimeFixture",
+          "librarySha256": "a7a154c7414ed7ef1bdd05551aaa23bf308404201c6cb7dc9c1041b1c9db570d",
+          "libraryUUID": "71bb5737444a3a778dfad63bc576078b"
+        }
+      ],
+      "bundle": {
+        "path": ".godot_fabric/app.js",
+        "sha256": "301cc84233af0126b4a954f6037f6bb7ea910b888ddc16a684abd9d07adcf11c"
+      },
+      "enabled": true,
+      "librariesProcessPinned": true,
+      "loadedImageFilesMatchedReceipts": true,
+      "loadedImageUUIDsMatched": true,
+      "loadedImages": {
+        "hermes": {
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "uuid": "ca5e6a87f63d3babb4d697eacbcc62eb"
+        },
+        "host": {
+          "sha256": "44078ed4d4c18ce47a676636159319d824b170dd372780287b937528a9601933",
+          "uuid": "375edc5500503fcbb77c643d0bfd5fcf"
+        },
+        "rn-dependencies": {
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "uuid": "569960d1c7b538a7a1abc61bed902131"
+        }
+      },
+      "runtimeIdentityVerified": false,
+      "selectedFilesVerified": 24
+    },
+    "adapters": {
+      "adapters": [
+        "RuntimeFixture"
+      ],
+      "components": [
+        "ExternalBadge"
+      ],
+      "moduleProvidersInstalled": true,
+      "modules": [
+        "ExternalProbe"
+      ],
+      "sealed": true,
+      "stopped": false
+    },
+    "animationFramesRun": 0,
+    "bundleEvaluations": 1,
+    "dimensions": {
+      "screen": {
+        "fontScale": 1,
+        "height": 0,
+        "scale": 1,
+        "width": 0
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 64,
+        "scale": 1,
+        "width": 64
+      }
+    },
+    "errors": [],
+    "gameServices": {
+      "bindings": 0,
+      "callbacksRun": 0,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 0,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 0,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": false,
+      "subscriptions": 0,
+      "taskBudget": 64
+    },
+    "hostPhasePending": false,
+    "initializationAttempted": true,
+    "nativeModules": {
+      "callableCalls": 0,
+      "callableModules": 0,
+      "creations": 5,
+      "disposals": 0,
+      "installed": true,
+      "loaded": 5,
+      "lookups": 6,
+      "registered": 6,
+      "retainedUntilVMDestroy": 0,
+      "runtimeId": "27615299031",
+      "staleCalls": 0,
+      "stopped": false
+    },
+    "pendingAnimationFrames": 0,
+    "pendingTimers": 0,
+    "pendingWork": 0,
+    "rootCount": 2,
+    "runtimeId": 27615299031,
+    "runtimeInitialized": true,
+    "stopRequested": false,
+    "stopped": false,
+    "textMeasurements": 6,
+    "timerEngine": "react-native/TimerManager",
+    "viewportUpdates": 0,
+    "windowListener": false
+  },
+  "checks": [
+    {
+      "name": "Reentrant-stop fixture has real external Controls in both roots",
+      "passed": true
+    },
+    {
+      "name": "A native signal synchronously requests application stop during raf",
+      "passed": true
+    },
+    {
+      "name": "Stop retires authority while preserving the Control until the emitting stack returns",
+      "passed": true
+    },
+    {
+      "name": "Deferred teardown completes once the outer execution stack unwinds",
+      "passed": true
+    },
+    {
+      "name": "Reentrant shutdown clears both external native trees",
+      "passed": true
+    },
+    {
+      "name": "Views, module providers and React effects dispose once on reentrant stop",
+      "passed": true
+    },
+    {
+      "name": "External and core pressed signals after the stop request cannot enqueue events",
+      "passed": true
+    },
+    {
+      "name": "Remaining raf callbacks do not execute after the stop request",
+      "passed": true
+    },
+    {
+      "name": "Reentrant shutdown finishes without a host error",
+      "passed": true
+    }
+  ],
+  "displayServer": "headless",
+  "format": "godot-fabric.experimental-adapter-runtime-witness/v1",
+  "godot": "4.7.2-stable (official)",
+  "reactNative": "0.87.1"
+}

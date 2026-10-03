@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {AppRegistry, View, Text} from 'react-native';
+import {AppRegistry, View, Text, Button} from 'react-native';
 import {Badge, Commands, Probe} from '@godot-fabric/adapter-fixture';
 
 const controls = new Map<string, any>();
@@ -28,6 +28,7 @@ function Showcase({panel}: {panel: string}) {
   const [order, setOrder] = useState(['a', 'b']);
   const [phase, setPhase] = useState(0);
   const [defaults, setDefaults] = useState(false);
+  const [resized, setResized] = useState(false);
   useEffect(() => {
     mounts++;
     setters.set(panel, action => {
@@ -35,6 +36,7 @@ function Showcase({panel}: {panel: string}) {
       else if (action === 'update') setPhase(1);
       else if (action === 'defaults') setDefaults(true);
       else if (action === 'remove') setOrder(value => value.filter(key => key !== 'a'));
+      else if (action === 'resize') setResized(true);
     });
     return () => {cleanups++; setters.delete(panel);};
   }, [panel]);
@@ -44,9 +46,10 @@ function Showcase({panel}: {panel: string}) {
     {order.map(key => <Badge key={key} ref={value => {
       const id = `${panel}-${key}`;
       if (value) controls.set(id, value); else controls.delete(id);
-    }} testID={`${panel}-${key}`} style={{height: 52, width: '100%', backgroundColor: '#31597e'}}
+    }} testID={`${panel}-${key}`} style={{height: resized ? 64 : 52, width: '100%', backgroundColor: '#31597e'}}
       {...(defaults && key === 'a' ? {} : {caption: `${panel} ${key} ${phase ? 'updated' : 'initial'}`, count: phase ? 18 : 7, enabled: !phase})}
       onBadgeActivate={event => {events.push({panel, key, phase, ...event.nativeEvent});}} />)}
+    <Button testID={`${panel}-internal`} title="Core callback" onPress={() => {events.push({panel, kind: 'core'});}} />
   </View>;
 }
 AppRegistry.registerComponent('AdapterShowcase', () => Showcase);

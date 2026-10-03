@@ -1,0 +1,19 @@
+{
+  "runId": 37151683147,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37151683147",
+  "testedHead": "41cfcc8181d6db5f641db97488c9f1ca6b96a08b",
+  "workflowConclusion": "failure",
+  "contracts": "success",
+  "originalIOSReference": "success",
+  "originalAndroidReference": "success",
+  "native": {
+    "loaderPassed": true,
+    "loaderChecks": 89,
+    "registryPassed": true,
+    "registryChecks": 207,
+    "consumerRecoveryFingerprint": "failure",
+    "externalRuntimeLane": "not executed after consumer failure"
+  },
+  "currentShutdownImplementationTestedByThisRun": false,
+  "fullParityCertified": false
+}

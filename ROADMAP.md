@@ -147,6 +147,16 @@ export/ABI acceptance remain open; GF-26/GF-28/GF-31 stay **In progress**.
 A traditional-consumer replay passed 18 tooling / 40 native checks after an
 isolated recovery fingerprint mismatch; the unchanged assertion now retains
 baseline/recovered bundles for investigation. The cause remains open in GF-28.
+An additional [native shutdown slice](docs/evidence/adapter-shutdown/README.md)
+reproduced Control deletion inside a Godot signal during a Fabric commit. Stop
+now retires authority immediately and delays destruction until execution returns;
+resize/RAF/timer fixtures passed **8/9/9 checks**, and the external consumer
+passed **35 headless/37 graphical** again on the rebuilt host. Native suites
+passed **2/4/2/2** serially. Independent root destruction during updates and
+long-lived async work remain open. Hosted run **37151683147** passed loader
+**89** and registry **207** but reproduced the consumer recovery fingerprint
+failure; its external runtime lane did not run. Current shutdown CI remains
+unconfirmed. No GF acceptance, dependency or denominator is closed by this slice.
 New hosted loader/runtime lanes are configured; their current run is recorded
 separately from local execution and the earlier green SDK CI.
 
