@@ -16,6 +16,7 @@ class FabricApplication : public godot::Node {
   godot::String evaluate(const godot::String &source);
   godot::String snapshot();
   void stop();
+  void invoke_callable(const godot::String &name, const godot::String &method, const godot::Array &args);
   bool is_stopped() const;
   void set_bundle_path(const godot::String &path);
   godot::String get_bundle_path() const;

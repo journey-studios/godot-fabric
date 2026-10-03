@@ -6,6 +6,11 @@ export declare const AppRegistry: Pick<typeof RN.AppRegistry, "getAppKeys"> & {
     provider: Parameters<typeof RN.AppRegistry.registerComponent>[1]): string;
 };
 export declare const RootTagContext: typeof RN.RootTagContext;
+export declare const NativeModules: typeof RN.NativeModules;
+export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;
+export declare const TurboModuleRegistry: typeof RN.TurboModuleRegistry;
+export type TurboModule = RN.TurboModule;
+export type EmitterSubscription = RN.EmitterSubscription;
 
 /** The implemented Godot subset, derived from the pinned RN declarations. */
 export type ViewStyle = Pick<RN.ViewStyle,
@@ -20,7 +25,17 @@ export type ViewStyle = Pick<RN.ViewStyle,
 export type TextStyle = ViewStyle & Pick<RN.TextStyle, "fontSize" | "color" | "fontFamily" | "fontWeight" | "lineHeight" | "letterSpacing" | "textAlign">;
 export type InputStyle = ViewStyle & Pick<RN.TextStyle, "fontSize"> & { color?: string };
 export type StyleProp<T> = RN.StyleProp<T>;
-export type NativeInstance = Pick<RN.TextInputInstance, "focus" | "blur" | "isFocused" | "measure" | "measureInWindow">;
+export type NativeInstance = Pick<RN.TextInputInstance, "focus" | "blur" | "isFocused" | "measure" | "measureInWindow" | "setNativeProps" |
+  "getBoundingClientRect" | "isConnected" | "parentNode" | "childNodes" | "children" |
+  "ownerDocument" | "getRootNode" | "contains" | "compareDocumentPosition" | "textContent" |
+  "offsetWidth" | "offsetHeight" | "offsetLeft" | "offsetTop" | "offsetParent" |
+  "clientWidth" | "clientHeight" | "scrollWidth" | "scrollHeight" | "scrollLeft" | "scrollTop"> & {
+  measureLayout(relative: number | NativeInstance,
+    onSuccess: Parameters<RN.ViewInstance["measureLayout"]>[1], onFail?: () => void): void;
+};
+export type ViewInstance = NativeInstance;
+export declare const findNodeHandle: typeof RN.findNodeHandle;
+export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureInWindow" | "measureLayout">;
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }

@@ -1,4 +1,5 @@
 import "./runtime";
+import "./native-module-runtime";
 
 // The native host installs Hermes/Fabric and TimerManager first; the portable
 // RN microtask/immediate modules initialize before the renderer evaluates.

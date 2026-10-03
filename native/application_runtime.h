@@ -8,12 +8,19 @@
 
 class FabricSurface;
 namespace fabric_godot {
+struct WindowMetrics {
+  godot::Vector2 size;
+  godot::Vector2 screen;
+  double scale{1};
+  uint64_t window_instance_id{};
+};
 class ApplicationRuntime {
  public:
-  ApplicationRuntime(FabricSurface &theme_source, std::function<godot::Vector2()> window_size,
+  ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
       const std::string &scenario, uint64_t runtime_id);
   ~ApplicationRuntime();
-  void load_bundle(const std::string &source);
+  void load_bundle(const std::string &source, const std::string &source_url);
+  void invoke_callable(const std::string &name, const std::string &method, const std::string &args_json);
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json);
   void update_props(int surface_id, const std::string &props_json);
   void unmount(int surface_id);

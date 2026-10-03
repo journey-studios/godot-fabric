@@ -9,6 +9,8 @@
 #include "appearance_adapter.h"
 #include "paragraph_view.h"
 #include "timer_registry.h"
+#include "turbo_module_registry.h"
+#include "godot_dom.h"
 #include <react/runtime/TimerManager.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/text/TextComponentDescriptor.h>
@@ -23,8 +25,10 @@
 #include <godot_cpp/classes/panel.hpp>
 #include <godot_cpp/classes/text_server.hpp>
 #include <godot_cpp/classes/viewport.hpp>
+#include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <hermes/hermes.h>
+#include <jsi/JSIDynamic.h>
 #include <folly/json.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/core/EventQueueProcessor.h>
@@ -34,6 +38,8 @@
 #include <react/renderer/uimanager/UIManagerBinding.h>
 #include <react/renderer/uimanager/UIManagerDelegate.h>
 #include <chrono>
+#include <cmath>
+#include <limits>
 #include <deque>
 #include <map>
 #include <set>
@@ -58,6 +64,13 @@ double now_ms() {
 }
 std::string utf8(const String &value) { return value.utf8().get_data(); }
 String gd(const std::string &value) { return String::utf8(value.c_str()); }
+std::optional<rn::Tag> native_tag(const jsi::Value &value) {
+  if (!value.isNumber()) return std::nullopt;
+  const auto number = value.asNumber();
+  if (!std::isfinite(number) || std::trunc(number) != number || number <= 0 ||
+      number > std::numeric_limits<rn::Tag>::max()) return std::nullopt;
+  return static_cast<rn::Tag>(number);
+}
 class GodotEventBeat final : public rn::EventBeat {
  public:
   using rn::EventBeat::EventBeat;
@@ -75,14 +88,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     bool stopping{}, stopped{};
   };
   std::map<int, std::unique_ptr<Root>> roots;
-  std::function<Vector2()> window_size;
+  std::function<fabric_godot::WindowMetrics()> read_window;
+  fabric_godot::WindowMetrics host_metrics;
   uint64_t runtime_id;
   int next_surface_id{1};
   int bundle_evaluations{};
+  std::string bundle_url{"godot-fabric.js"};
   std::vector<OnSurfaceStartCallback> surface_callbacks;
   std::unique_ptr<facebook::hermes::HermesRuntime> runtime;
   std::shared_ptr<rn::ContextContainer> context;
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
+  std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
   std::shared_ptr<rn::UIManager> ui;
   rn::ComponentDescriptorProviderRegistry providers;
   std::shared_ptr<rn::EventDispatcher> dispatcher;
@@ -113,10 +129,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   std::shared_ptr<fabric_godot::ParagraphLayout> paragraph_layout;
   std::optional<jsi::Function> window_listener;
   int viewport_updates{};
+  std::string metrics_error;
   std::vector<std::string> errors;
 
-  explicit Impl(FabricSurface &theme_source, std::function<Vector2()> metrics,
-      const std::string &scenario, uint64_t id) : window_size(std::move(metrics)), runtime_id(id) {
+  explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
+      const std::string &scenario, uint64_t id) : read_window(std::move(metrics)), runtime_id(id) {
     // One application owns Hermes, Fabric, scheduling and timers. All native
     // mounting and JS work still execute on Godot's main thread.
     auto config = hermes::vm::RuntimeConfig::Builder().withMicrotaskQueue(true).build();
@@ -129,7 +146,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     paragraph_layout = std::make_shared<fabric_godot::ParagraphLayout>(context, text_layout->font(),
         [this](const std::string &error) { fail(error); });
     context->insert("TextLayoutManager", std::shared_ptr<rn::TextLayoutManager>(paragraph_layout));
-    viewport_size = window_size();
+    host_metrics = read_window();
+    viewport_size = host_metrics.size;
     runtime->global().setProperty(*runtime, "godotScenario", jsi::String::createFromUtf8(*runtime, scenario));
     rn::RuntimeExecutor executor = [this](rn::RawCallback &&callback) {
       work.push_back(std::move(callback));
@@ -163,11 +181,43 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(ui->getShadowTreeRevisionConsistencyManager());
     rn::RuntimeSchedulerBinding::createAndInstallIfNeeded(*runtime, runtime_scheduler);
     rn::UIManagerBinding::createAndInstallIfNeeded(*runtime, ui);
+    native_modules = std::make_unique<fabric_godot::TurboModuleRegistry>(runtime_id, runtime_scheduler);
+    if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
+    native_modules->add_feature_flags();
+    native_modules->add_source_code([this] { return bundle_url; });
+    native_modules->add_device_info([this] {
+      return folly::dynamic::object("Dimensions", device_dimensions());
+    });
+    native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+      return std::make_shared<fabric_godot::GodotDOM>(invoker,
+          [this](rn::SurfaceId id, rn::dom::DOMRect rect, bool transforms) {
+            auto root = roots.find(id);
+            if (root == roots.end() || root->second->stopping || root->second->stopped)
+              return rn::dom::DOMRect{};
+            auto transform = root->second->host->get_global_transform_with_canvas();
+            // Layout/offset sizes exclude transforms. Window rectangles include
+            // the affine embedding (all four corners, including rotation).
+            if (!transforms) {
+              rect.x += transform.get_origin().x;
+              rect.y += transform.get_origin().y;
+              return rect;
+            }
+            const Vector2 corners[] = {Vector2(rect.x, rect.y), Vector2(rect.x + rect.width, rect.y),
+                Vector2(rect.x, rect.y + rect.height), Vector2(rect.x + rect.width, rect.y + rect.height)};
+            Rect2 bounds(transform.xform(corners[0]), Vector2());
+            for (int index = 1; index < 4; ++index) bounds.expand_to(transform.xform(corners[index]));
+            return rn::dom::DOMRect{bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y};
+          });
+    });
+    native_modules->install(*runtime);
     install_globals();
   }
 
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json) {
     if (stopped || stopping) throw std::runtime_error("Application is stopped");
+    if (!host.get_window() || host.get_viewport() != host.get_window() ||
+        host.get_window()->get_instance_id() != host_metrics.window_instance_id)
+      throw std::runtime_error("Fabric surfaces require the application's native Window; SubViewport and cross-window hosting need a metrics adapter");
     auto props = folly::parseJson(props_json);
     if (!component.empty()) {
       auto registry = runtime->global().getProperty(*runtime, "RN$AppRegistry");
@@ -201,7 +251,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     rn::LayoutConstraints constraints;
     constraints.minimumSize = constraints.maximumSize = {static_cast<float>(surface.size.x), static_cast<float>(surface.size.y)};
     rn::LayoutContext layout;
-    layout.pointScaleFactor = 1;
+    layout.pointScaleFactor = host_metrics.scale;
     auto tree = std::make_unique<rn::ShadowTree>(id, constraints, layout, *ui, *context);
     if (component.empty()) ui->startEmptySurface(std::move(tree));
     else ui->startSurface(std::move(tree), component, props, rn::DisplayMode::Visible);
@@ -227,30 +277,51 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     jsi::Object result(rt);
     result.setProperty(rt, "width", viewport_size.x);
     result.setProperty(rt, "height", viewport_size.y);
-    // Logical Godot viewport coordinates; OS DPI/accessibility scaling is a
-    // separate platform feature, not yet exposed by this surface.
-    result.setProperty(rt, "scale", 1);
+    result.setProperty(rt, "scale", host_metrics.scale);
     result.setProperty(rt, "fontScale", 1);
     return result;
   }
+  folly::dynamic device_dimensions() const {
+    auto metrics = [&](Vector2 size) {
+      // Font scaling remains the actual Fabric layout multiplier (1). OS text
+      // preferences/insets are still pending; they are not fabricated here.
+      return folly::dynamic::object("width", size.x)("height", size.y)
+          ("scale", host_metrics.scale)("fontScale", 1);
+    };
+    return folly::dynamic::object("window", metrics(host_metrics.size))
+        ("screen", metrics(host_metrics.screen));
+  }
   void update_viewport() {
+    const auto next = read_window();
+    if (next.window_instance_id != host_metrics.window_instance_id)
+      throw std::runtime_error("A live Fabric application cannot migrate between native Windows");
+    if (next.size.x <= 0 || next.size.y <= 0) return;
+    const bool density_changed = next.scale != host_metrics.scale;
     for (auto &[id, root] : roots) {
       const auto size = root->host->get_size();
-      if (size == root->size || size.x <= 0 || size.y <= 0 || root->stopping) continue;
+      if ((size == root->size && !density_changed) || size.x <= 0 || size.y <= 0 || root->stopping) continue;
       root->size = size;
       rn::LayoutConstraints constraints;
       constraints.minimumSize = constraints.maximumSize = {static_cast<float>(size.x), static_cast<float>(size.y)};
       rn::LayoutContext layout;
-      layout.pointScaleFactor = 1;
+      layout.pointScaleFactor = next.scale;
       ui->getShadowTreeRegistry().visit(id, [&](const rn::ShadowTree &tree) {
         tree.commit([&](const rn::RootShadowNode &node) { return node.clone({id, *context}, constraints, layout); }, {});
       });
     }
-    const auto size = window_size();
-    if (size == viewport_size || size.x <= 0 || size.y <= 0) return;
-    viewport_size = size;
+    if (next.size == host_metrics.size && next.screen == host_metrics.screen &&
+        !density_changed) return;
+    host_metrics = next;
+    viewport_size = next.size;
     ++viewport_updates;
-    work.push_back([this](jsi::Runtime &rt) {
+    work.push_back([this, dimensions = device_dimensions()](jsi::Runtime &rt) {
+      auto emitter = rt.global().getProperty(rt, "__rctDeviceEventEmitter");
+      if (emitter.isObject()) {
+        auto object = emitter.asObject(rt);
+        object.getPropertyAsFunction(rt, "emit").callWithThis(rt, object,
+            jsi::String::createFromAscii(rt, "didUpdateDimensions"),
+            jsi::valueFromDynamic(rt, dimensions));
+      }
       if (window_listener) window_listener->call(rt, window_metrics(rt));
     });
   }
@@ -299,9 +370,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
       if (count && args[0].isNumber()) frame_callbacks.erase(static_cast<int>(args[0].asNumber()));
       return jsi::Value::undefined();
     });
+    bind("godotNode", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
+      if (stopping || stopped || count != 1) return jsi::Value::null();
+      auto tag = native_tag(args[0]);
+      if (!tag) return jsi::Value::null();
+      auto node = ui->findShadowNodeByTag_DEPRECATED(*tag);
+      return node ? rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::toJs(rt, node) : jsi::Value::null();
+    });
     bind("godotMetrics", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
-      if (!count) return jsi::Value::null();
-      auto found = views.find(static_cast<int>(args[0].asNumber()));
+      if (count != 1) return jsi::Value::null();
+      auto tag = native_tag(args[0]);
+      if (!tag) return jsi::Value::null();
+      auto found = views.find(*tag);
       if (found == views.end()) return jsi::Value::null();
       auto *control = found->second.control;
       jsi::Object result(rt);
@@ -316,8 +396,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
       return jsi::Value(std::move(result));
     });
     bind("godotFocus", 2, [this](auto &, auto &, const jsi::Value *args, size_t count) {
-      if (count < 2) return jsi::Value::undefined();
-      auto found = views.find(static_cast<int>(args[0].asNumber()));
+      if (count != 2 || !args[1].isBool()) return jsi::Value::undefined();
+      auto tag = native_tag(args[0]);
+      if (!tag) return jsi::Value::undefined();
+      auto found = views.find(*tag);
       if (found != views.end()) {
         if (args[1].getBool()) found->second.control->grab_focus();
         else found->second.control->release_focus();
@@ -330,12 +412,22 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
         "warn:(...a)=>nativeLoggingHook(a.join(' '),1),error:(...a)=>nativeLoggingHook(a.join(' '),2)};");
   }
   jsi::Value evaluate(const std::string &source) {
-    return runtime->evaluateJavaScript(std::make_shared<jsi::StringBuffer>(source), "godot-fabric.js");
+    return runtime->evaluateJavaScript(std::make_shared<jsi::StringBuffer>(source), bundle_url);
   }
   void pump(bool frame_tick = false) {
     if (stopped) return;
     try {
-      update_viewport();
+      // Host configuration failures must remain visible without starving
+      // queued React cleanup. Shutdown never depends on window resampling.
+      if (!stopping) {
+        try { update_viewport(); metrics_error.clear(); }
+        catch (const std::exception &error) {
+          if (metrics_error != error.what()) {
+            metrics_error = error.what();
+            fail(metrics_error);
+          }
+        }
+      }
       for (auto &[tag, mounted] : views) {
         if (mounted.input) mounted.input->sample();
         if (mounted.scroll) mounted.scroll->sample();
@@ -414,6 +506,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     std::vector<uint64_t> host_ids;
     for (auto &[id, root] : roots) { ids.push_back(id); host_ids.push_back(root->host->get_instance_id()); }
     for (int id : ids) unmount(id, roots.at(id)->component.empty());
+    try { native_modules->stop(*runtime); }
+    catch (const std::exception &error) { fail(error.what()); }
     ui->setDelegate(nullptr);
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(nullptr);
     window_listener.reset();
@@ -766,6 +860,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())
         ("viewportUpdates", viewport_updates)("errors", folly::dynamic::array());
+    result["nativeModules"] = native_modules->snapshot();
+    result["dimensions"] = device_dimensions();
     for (const auto &error : errors) result["errors"].push_back(error);
     return result;
   }
@@ -847,11 +943,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
 };
 
 namespace fabric_godot {
-ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<Vector2()> window_size,
+ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
     const std::string &scenario, uint64_t runtime_id)
-    : impl(std::make_unique<Impl>(theme_source, std::move(window_size), scenario, runtime_id)) {}
+    : impl(std::make_unique<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id)) {}
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
-void ApplicationRuntime::load_bundle(const std::string &source) { impl->evaluate(source); ++impl->bundle_evaluations; }
+void ApplicationRuntime::load_bundle(const std::string &source, const std::string &source_url) {
+  impl->bundle_url = source_url;
+  impl->evaluate(source);
+  ++impl->bundle_evaluations;
+}
+void ApplicationRuntime::invoke_callable(const std::string &name, const std::string &method, const std::string &args_json) {
+  impl->native_modules->invoke_callable(name, method, folly::parseJson(args_json));
+}
 int ApplicationRuntime::mount(FabricSurface &host, const std::string &component, const std::string &props_json) { return impl->mount(host, component, props_json); }
 void ApplicationRuntime::update_props(int id, const std::string &props_json) { impl->update_props(id, props_json); }
 void ApplicationRuntime::unmount(int id) { impl->unmount(id); }

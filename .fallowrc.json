@@ -14,7 +14,8 @@
     "src/unsupported-safe-area.js",
     "types/react-native.ts",
     "tests/types/consumer.tsx",
-    "consumers/minimal/ui/index.tsx"
+    "consumers/minimal/ui/index.tsx",
+    "src/renderer-proxy.js"
   ],
   "ignorePatterns": [
     "build/**",
@@ -48,7 +49,8 @@
         "getNativeTagFromPublicInstance",
         "getNodeFromPublicInstance",
         "legacySendAccessibilityEvent",
-        "UIManager"
+        "UIManager",
+        "getInternalInstanceHandleFromPublicInstance"
       ]
     },
     {
@@ -117,7 +119,12 @@
         "TextInput",
         "Button",
         "AppRegistry",
-        "RootTagContext"
+        "RootTagContext",
+        "findNodeHandle",
+        "UIManager",
+        "NativeModules",
+        "NativeEventEmitter",
+        "TurboModuleRegistry"
       ]
     },
     {
@@ -127,6 +134,19 @@
         "presets",
         "corePlugins",
         "theme"
+      ]
+    },
+    {
+      "file": "src/renderer-proxy.js",
+      "exports": [
+        "dispatchCommand",
+        "findHostInstance_DEPRECATED",
+        "findNodeHandle",
+        "sendAccessibilityEvent",
+        "isChildPublicInstance",
+        "getNodeFromInternalInstanceHandle",
+        "getPublicInstanceFromInternalInstanceHandle",
+        "getPublicInstanceFromRootTag"
       ]
     }
   ],
@@ -159,7 +179,15 @@
             "Button",
             "StyleSheet",
             "AppRegistry",
-            "RootTagContext"
+            "RootTagContext",
+            "NativeModules",
+            "NativeEventEmitter",
+            "TurboModuleRegistry",
+            "TurboModule",
+            "ViewInstance",
+            "findNodeHandle",
+            "UIManager",
+            "EmitterSubscription"
           ]
         },
         {
