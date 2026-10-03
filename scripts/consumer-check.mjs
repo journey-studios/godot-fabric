@@ -12,7 +12,8 @@ const capture = process.argv.includes("--capture");
 const directory = path.join(root, "build", "consumer");
 await mkdir(directory, { recursive: true });
 await rm(path.join(directory, "report.json"), { force: true });
-const project = await mkdtemp(path.join(tmpdir(), "godot-fabric-consumer-"));
+const temporary = await mkdtemp(path.join(tmpdir(), "godot-fabric-consumer-"));
+const project = path.join(temporary, "project");
 const outside = await mkdtemp(path.join(tmpdir(), "godot-fabric-output-control-"));
 const sdk = path.join(project, "addons", "godot_fabric");
 const env = { ...process.env, PATH: "/usr/bin:/bin", NODE_PATH: "" };
@@ -21,7 +22,7 @@ const checks = [];
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 function verify(condition, name) { checks.push({ name, passed: !!condition }); assert.ok(condition, name); }
 async function run(label, command, args, expected = 0, environment = env) {
-  const result = spawnSync(command, args, { cwd: project, env: environment, encoding: "utf8", timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
+  const result = spawnSync(command, args, { cwd: label === "provision" ? root : project, env: environment, encoding: "utf8", timeout: 180000, maxBuffer: 8 * 1024 * 1024 });
   const log = (result.stdout ?? "") + (result.stderr ?? "");
   await writeFile(path.join(directory, label + ".log"), log);
   assert.equal(result.error, undefined, log);
@@ -47,11 +48,12 @@ async function runtime(label, headed = false) {
   return report;
 }
 try {
-  await cp(path.join(root, "consumers", "minimal"), project, { recursive: true, filter: (file) => !/\.(?:uid|import)$/.test(file) });
-  await run("provision", process.execPath, [path.join(root, "scripts", "pack-addon.mjs"), sdk], 0, process.env);
+  await run("provision", process.execPath, [path.join(root, "scripts", "create-consumer.mjs"), project], 0, process.env);
   await cp(path.join(sdk, "manifest.json"), path.join(directory, "sdk-manifest.json"));
-  await mkdir(path.join(project, ".godot"));
-  await writeFile(path.join(project, ".godot", "extension_list.cfg"), "res://addons/godot_fabric/fabric.gdextension\n");
+  const manifest = JSON.parse(await readFile(path.join(sdk, "manifest.json"), "utf8"));
+  const guide = await readFile(path.join(project, "README.md"), "utf8");
+  assert.doesNotMatch(guide, /\]\(\.\.\/\.\.\//);
+  assert.ok(guide.includes("https://raw.githubusercontent.com/journey-studios/godot-fabric/" + manifest.sourceCommit + "/docs/evidence/consumer/updated.png"));
   verify(spawnSync("node", ["--version"], { env }).error?.code === "ENOENT", "Consumer cannot find global Node");
   const lockPath = path.join(project, "package-lock.json");
   const originalLock = await readFile(lockPath);
@@ -137,6 +139,6 @@ try {
   await writeFile(path.join(directory, "report.json"), JSON.stringify({ schemaVersion: 1, host: "macOS arm64", checks, nativeChecks: 18, graphicalChecks: capture ? 20 : null }, null, 2) + "\n");
   console.log("CONSUMER_CHECK_PASSED: " + checks.length + " build/ownership checks; 18 native checks");
 } finally {
-  await rm(project, { recursive: true, force: true });
+  await rm(temporary, { recursive: true, force: true });
   await rm(outside, { recursive: true, force: true });
 }

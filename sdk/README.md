@@ -24,6 +24,8 @@ Use a directory that does not exist. The command copies the
 prepares extension discovery before the first editor import. It preserves
 existing directories by rejecting them. Open the resulting `project.godot`
 with the official engine, edit `ui/index.tsx`, then press Play.
+Its copied README links guides and captures to the provisioned source commit,
+so they remain usable outside this checkout after that commit is published.
 
 To provision only an addon into a **new** directory:
 
@@ -86,8 +88,8 @@ npm run test:consumer
 npm run test:consumer -- --capture
 ```
 
-The harness provisions a fresh project outside the SDK checkout, strips global
-Node from its environment, exercises the actual plugin in the normal editor
+The harness invokes `consumer:create` for a fresh project outside the SDK
+checkout, strips global Node from its environment, exercises the actual plugin in the normal editor
 MainLoop and runs native/graphical assertions. It also rebuilds with network
 access denied and tests project library ownership/React identity and recovery.
 Raw reports/logs go to `build/consumer`; the harness removes only its own

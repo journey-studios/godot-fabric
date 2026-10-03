@@ -28,6 +28,10 @@ the editor MainLoop with a SceneTree test script. The editor hook is exercised
 automatically; the physical Play shortcut and an embedded editor game window
 are not claimed as separately measured UI automation.
 
+The harness provisions through the same `consumer:create` entrypoint as the
+authoring guide. It also verifies that the copied README's image/documentation
+links target the provisioned source commit and do not rely on the SDK checkout.
+
 The consumer environment uses only `/usr/bin:/bin` in PATH and an empty
 `NODE_PATH`; invoking global `node` fails with ENOENT. The plugin invokes the
 addon's private executable. A separate build under macOS `sandbox-exec` denies
