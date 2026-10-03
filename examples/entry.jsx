@@ -28,8 +28,14 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
-if (globalThis.godotScenario === "shared") {
-  require("./shared/App");
+if (["shared", "refs", "metrics", "modules"].includes(globalThis.godotScenario)) {
+  if (globalThis.godotScenario === "shared") require("./shared/App");
+  else if (globalThis.godotScenario === "refs") require("./refs/App");
+  else if (globalThis.godotScenario === "metrics") {
+    globalThis.GodotMetricsSubscriptionCount = require("../src/window-dimensions").windowSubscriptionCount;
+    require("./metrics/App");
+  }
+  else require("../tests/turbo-modules-fixture");
 } else {
 globalThis.GodotApp = {
   run(name, ...args) {

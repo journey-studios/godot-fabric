@@ -26,6 +26,7 @@
     "test:examples": "node scripts/examples-check.mjs",
     "test:runtime": "npm run bundle && node --test tests/runtime-native.test.mjs",
     "test:application": "npm run bundle && node --test tests/shared-application-native.test.mjs",
+    "test:modules": "npm run bundle && node --test tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs",
     "type-check": "tsc -p tsconfig.godot.json",
     "sdk:pack": "node scripts/pack-addon.mjs",
     "consumer:create": "node scripts/create-consumer.mjs",
