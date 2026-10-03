@@ -8,11 +8,11 @@
     "focusSequence": "4",
     "focusTitle": "Codegen e registro de extensões nativas externas"
   },
-  "updatedAt": "2026-10-03T18:21:12.038377Z",
+  "updatedAt": "2026-10-03T18:23:11.243914Z",
   "source": {
-    "commit": "747776a400d38529292c69063ac51ea3143a5d57",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/747776a400d38529292c69063ac51ea3143a5d57/ROADMAP.md",
-    "scope": "main adad606 integrado preservando trabalho; serviços/consumidor e iOS registrados; fatia GF-26 original Codegen com hashes de fonte e compilação; publicação manual por data_ref",
+    "commit": "689c93985ed746a21d8aca3d056070e5d9c8382d",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/ROADMAP.md",
+    "scope": "Fatia GF-26 Codegen original executada e commitada; checkpoints de serviços/consumidor e iOS registrados; main adad606 integrado; dados da PR #14 para publicação manual antes do merge",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1233,7 +1233,7 @@
           "evidence": [
             {
               "label": "Codegen 20 testes / 6 unidades C++; fonte e hashes registrados",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
             }
           ]
         },
@@ -2365,7 +2365,7 @@
         "GF-26"
       ],
       "message": "Primeira fatia GF-26 comprovada: parsers/generadores originais TS/Flow, 20 testes e 6 unidades C++ compiladas. Manifesto conserva runtime/ABI falsos. Provider/view externo e export pendentes; pesos e denominador preservados.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
     },
     {
       "id": "dashboard-unmerged-data-ref-adad606",
