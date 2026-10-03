@@ -34,6 +34,13 @@ independent unmount/remount over one runtime. Native positive/negative checks
 and captures exercise two nonoverlapping roots; full bootstrap, portals,
 pause/resume, SDK activation and original RN multi-root comparison remain open.
 
+The [2B independent consumer](evidence/consumer/README.md) now provisions a
+Resource/scene/editor prototype with private tools, project-owned TSX and
+dependencies, protected React identity and offline/no-global-Node build checks.
+Its native roots/props/state/lifecycle and captures are separately validated.
+This advances GF-28/GF-29 without closing their complete SDK/export/dev-tool or
+per-target acceptance; pending V2 decisions retain their status.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

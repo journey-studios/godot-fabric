@@ -7,7 +7,9 @@ discovery, binary compatibility, spec/Codegen, native component behavior and lib
 reuse classification contracts, plus the self-contained SDK distribution direction. Its
 [decision register](ARCHITECTURE_V2_DECISIONS.md) tracks approved and pending
 choices. Shared native application/registered-root ownership has a bounded
-implementation; the resource/SDK/game-service interfaces remain pending.
+implementation. A resource/addon/editor authoring prototype now supplies an
+independent consumer; complete SDK activation and game-service interfaces
+remain pending.
 
 ```mermaid
 flowchart LR
@@ -53,6 +55,27 @@ flowchart LR
 
 The GDExtension loads Hermes and ReactNativeDependencies frameworks generated
 by setup. The official Godot executable remains separate and unchanged.
+
+## Independent consumer authoring
+
+The [SDK prototype](../sdk/README.md) provisions the native addon/frameworks,
+fonts, compatible React/RN/types and private Node/builder into
+`addons/godot_fabric`. A separate project owns its entry TSX, package/lockfile,
+scene and `GodotFabricApplication` Resource. The EditorPlugin builds that entry
+before Play; type/build failures return false and preserve the previous bundle.
+It never installs project dependencies or falls back to global Node.
+
+The scene's Resource wrapper creates a native `FabricApplication/Runtime`
+child during game execution. Named surfaces reference that owner and select
+entries/props through original AppRegistry. Surfaces skip automatic React
+mounting in editor-hint mode. Font loading prefers the addon path; laboratory
+fixtures retain their fallback. Both builders share the same host seams,
+while the laboratory alone retains the NativeWind compilation path.
+
+The synchronous oneshot production builder, Resource format and scene wrapper
+are experimental validation mechanisms. They do not settle the pending builder,
+activation/generation/reload, diagnostics or export decisions. See the
+[independent-consumer evidence](evidence/consumer/README.md).
 
 ## Text
 
@@ -104,7 +127,7 @@ shutdown on scene exit. Expected failures remain visible even after cleanup.
 
 The [shared example](../examples/shared/README.md) and
 [evidence](evidence/shared-roots/README.md) document the native owner prototype.
-The SDK's primary-application/resource activation, complete pause/resume,
+The SDK's complete primary-application/resource activation, pause/resume,
 overlays/portals, multiwindow/ref geometry, dev renderer and original RN
 multi-root comparison are still open. The main-thread executor remains;
 this change does not resolve the pending thread/shutdown/activation decisions.

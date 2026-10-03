@@ -48,9 +48,21 @@ registers HUD/Inventory through the original AppRegistry and validates root prop
 independent state/input/constraints, module stores, unmount/remount and live
 application scheduling with no mounted roots. This is the bounded 2A prototype:
 full bootstrap, pause/resume, overlays/portals, reference comparison and the
-resource/editor SDK are still open. D19–D32 remain pending.
+complete SDK activation are still open. D19–D32 remain pending.
 The [shared-root evidence](docs/evidence/shared-roots/README.md) retains local
 positive/negative checks, real captures and the 12-example regression matrix.
+
+The bounded [2B consumer/addon prototype](consumers/minimal/README.md) now runs
+separate project TSX through resource-based entry configuration, a scene owner,
+provisioned private tools and the editor build hook. A fresh external consumer
+passes offline/no-global-Node builds, dependency/React-identity checks, visible
+build rejection/recovery and two-root native assertions with real captures.
+[Evidence](docs/evidence/consumer/README.md) records the exact scope.
+GF-28/GF-29 remain In progress; complete installation/update, export,
+diagnostics, development and per-target acceptance remain open. D19–D29 are
+still pending. The next integration slice is sequence 3: typed Godot-to-React
+operations/subscriptions together with surface/ref geometry, followed by
+pause/operation-lifetime coverage for the integrated milestone below.
 
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit
@@ -324,8 +336,8 @@ consumer project can write TSX, add native functionality, debug and export.
 | GF-25 · P0 · TurboModule and event infrastructure | Planned | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
 | GF-26 · P1 · Codegen and custom Fabric components | Planned | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
 | GF-27 · P1 · Selected library certification | Planned | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
-| GF-28 · P1 · SDK, addon and consumer exports | Planned | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
-| GF-29 · P1 · Development experience | Planned | Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths | GF-05, GF-06, GF-07, GF-28 |
+| GF-28 · P1 · SDK, addon and consumer exports | In progress | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
+| GF-29 · P1 · Development experience | In progress | Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths | GF-05, GF-06, GF-07, GF-28 |
 | GF-30 · P1 · Frame, heap and threading budgets | Planned | Profile mount/layout/shaping/JS and retain reproducible frame-time, Hermes heap/RSS and native-node measurements for idle/forms/charts/10,000 rows. Define target-device budgets before accepting optimization. Implement caching or JS/worker/Rust paths only for measured bottlenecks, preserving JSI ownership, Godot main-thread calls and event/commit ordering. Soak and unmount cycles show bounded steady-state memory. The 48/480-row ScrollView benchmark from the pre-publication prototype was not ported; this item starts without a scroll benchmark | GF-11, GF-15, GF-19, GF-28 |
 
 ## M4 — Port, export and certify each supported OS

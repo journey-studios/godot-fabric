@@ -38,7 +38,9 @@ source with strict TypeScript. Third-party declaration bodies use
 and signatures. Positive consumer assignments and negative unsupported-prop
 fixtures run in CI. AppRegistry's registration subset and RootTagContext are
 also typed. Other facade exports do not yet have Godot declarations;
-this is not the complete typed SDK or an independently packaged consumer.
+this is not the complete typed SDK. The
+[independent consumer](../consumers/minimal/README.md) now packages this bounded
+type surface with a provisioned addon; full SDK types remain open.
 
 The bundler accepts TS/TSX. Both resolvers prefer `.ts`, then `.tsx`, then
 JavaScript; within an extension they prefer `.godot`, then `.native`, then
@@ -108,15 +110,35 @@ and application shutdown on `stop()`/scene exit. A new anonymous scene, or
 reentry of the same surface, retires the stopped implicit owner and creates a
 fresh runtime with fresh React/module state. This compatibility path does not
 restart an explicitly shared application. These fixtures do not demonstrate named
-registration or an independent consumer SDK. New UI should use registered roots.
+registration. New UI should use registered roots; the independent consumer
+does so through a Resource/scene wrapper and provisioned private tools.
 
 [Shared-root evidence](evidence/shared-roots/README.md) covers two nonoverlapping
 roots, updates, replacement, zero-root survival and activation failures.
-App-resource/EditorPlugin authoring, SDK singleton activation, reload/restart
+Complete SDK singleton activation, reload/restart
 policy, public game services, bootstrap/dev tooling, portals/overlapping-root
 input, pause/resume, Activity hidden mode, transformed/multiwindow geometry and
 original mobile multi-root comparison remain open. The pending V2 decisions
 retain their status; these native properties are an experimental validation API.
+
+## Provisioned consumer prototype
+
+The [consumer](../consumers/minimal/README.md) imports public React/RN, selects
+its TSX entry through a `GodotFabricApplication` Resource, and mounts HUD and
+Inventory through one scene-owned native runtime. The editor builder reads
+`godot_fabric/application`; the Application wrapper references the same Resource.
+Managed output is `res://.godot_fabric/app.js`. Format version 1 and these
+authoring properties are experimental.
+
+The addon provides private Node/tools and protects SDK React/RN identity for
+project library imports. Project-owned additional dependencies must be declared
+and installed explicitly. Missing tools, type/syntax errors, incompatible core
+versions and unsupported Babel configuration reject the editor build. The
+[SDK guide](../sdk/README.md) explains provisioning, dependency boundaries and
+current resolution/NativeWind limits. The automatic headless editor check
+exercises `_build`; graphical consumer checks exercise native rendering/input
+separately. Full `GodotFabric` game services, singleton activation, development
+tooling and exports remain pending.
 
 ## Text details
 

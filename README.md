@@ -37,7 +37,24 @@ criteria for RN parity across macOS, Linux, Windows, Android and iOS. The
 [dated parity audit](docs/PARITY.md) separates implemented behavior, incomplete
 contracts and missing APIs against React Native 0.87.1.
 
-## Run
+## Independent Godot project
+
+The [provisioned addon prototype](sdk/README.md) supplies the native runtime,
+compatible React/RN, narrowed types and private build tools. After a platform
+developer provisions it, the basic consumer opens `project.godot`, edits its
+own TSX and presses Play; global Node is not required and Play never installs
+dependencies. Additional libraries and the lockfile remain project-owned.
+
+![Independent consumer: native input and Godot props update React](docs/evidence/consumer/updated.png)
+
+The [consumer guide](consumers/minimal/README.md) shows the application Resource,
+scene nodes and registered roots. The [evidence](docs/evidence/consumer/README.md)
+records 18 build/ownership checks, 18 headless and 20 graphical assertions,
+including offline builds and explicit errors. Provisioning is currently from
+source on macOS arm64; public prebuilt artifacts, exports and development tools
+remain open.
+
+## Run the SDK laboratory
 
 Requirements: macOS arm64, Node 22.13+, npm, Python 3.12+, Xcode Command Line Tools,
 and [official Godot 4.7.2](https://github.com/godotengine/godot-builds/releases/tag/4.7.2-stable).
@@ -147,8 +164,10 @@ function Counter() {
 ```
 
 Complete class strings must appear in `tailwind.config.cjs` content paths.
-This repository is a runnable platform prototype; it is not yet a published
-npm package or a drop-in addon with prebuilt binaries.
+This repository is a runnable platform prototype with an independently
+provisioned consumer. It is not yet a published npm package or a drop-in addon
+release with prebuilt binaries. The consumer builder does not yet run the
+laboratory's NativeWind compilation path.
 
 ## Verify
 
@@ -156,6 +175,7 @@ npm package or a drop-in addon with prebuilt binaries.
 npm run test:examples                    # all interactive demos, headless and sequential
 npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:application                 # shared roots and rejected activation/lifetime cases
+npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static

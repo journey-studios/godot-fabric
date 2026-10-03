@@ -45,6 +45,15 @@ jobs:
       - run: npm run test:examples
       - run: npm run test:runtime
       - run: npm run test:application
+      - run: npm run test:consumer
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: independent-consumer
+          path: |
+            build/consumer/*.json
+            build/consumer/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

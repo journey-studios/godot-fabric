@@ -1,0 +1,19 @@
+config_version=5
+
+[application]
+config/name="Godot Fabric Consumer"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1080
+window/size/viewport_height=600
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.035, 0.047, 0.075, 1)
+
+[editor_plugins]
+enabled=PackedStringArray("res://addons/godot_fabric/plugin.cfg")
+
+[godot_fabric]
+application="res://ui/application.tres"

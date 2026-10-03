@@ -13,13 +13,15 @@
     "src/unsupported-reanimated.js",
     "src/unsupported-safe-area.js",
     "types/react-native.ts",
-    "tests/types/consumer.tsx"
+    "tests/types/consumer.tsx",
+    "consumers/minimal/ui/index.tsx"
   ],
   "ignorePatterns": [
     "build/**",
     "addons/**",
     "evidence/**",
-    ".deps/**"
+    ".deps/**",
+    "consumers/minimal/ui/platform.native.ts"
   ],
   "includeEntryExports": true,
   "ignoreDependencies": [
@@ -28,7 +30,9 @@
   "ignoreExports": [
     {
       "file": "src/render-application.jsx",
-      "exports": ["default"]
+      "exports": [
+        "default"
+      ]
     },
     {
       "file": "src/private-interface.js",
@@ -135,12 +139,15 @@
       "entryPoints": [
         "scripts/*.mjs",
         "tailwind.config.cjs",
-        "src/nativewind.css"
+        "src/nativewind.css",
+        "sdk/toolchain/*.mjs",
+        "consumers/minimal/ui/platform.godot.ts"
       ],
       "entryPointRole": "support",
       "toolingDependencies": [
         "@react-native/babel-preset",
-        "tailwindcss"
+        "tailwindcss",
+        "@babel/core"
       ],
       "usedExports": [
         {
@@ -153,6 +160,12 @@
             "StyleSheet",
             "AppRegistry",
             "RootTagContext"
+          ]
+        },
+        {
+          "pattern": "consumers/minimal/ui/platform.godot.ts",
+          "exports": [
+            "platformMessage"
           ]
         }
       ]

@@ -2,6 +2,7 @@
 #include "fabric_application.h"
 #include "application_runtime.h"
 #include <godot_cpp/classes/json.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/core/object.hpp>
@@ -39,7 +40,7 @@ void FabricSurface::_bind_methods() {
   ClassDB::bind_method(D_METHOD("input_submit", "text", "tag"), &FabricSurface::input_submit);
   ClassDB::bind_method(D_METHOD("input_key", "event", "tag"), &FabricSurface::input_key);
 }
-void FabricSurface::_ready() { mount(); }
+void FabricSurface::_ready() { if (!Engine::get_singleton()->is_editor_hint()) mount(); }
 bool FabricSurface::mount() {
   if (surface_id) return true;
   if (!is_inside_tree()) return false;
