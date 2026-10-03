@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceCommit": "8f5980ce5707bfd639abd58b052c54c150ce69cb",
+  "sourceCommit": "ae44f0b4c82a80b1bcfbd347c2b7453108fb85da",
   "sourceDirty": false,
   "sourceHashes": {
     ".github/workflows/contracts.yml": "f05f1054cf83368b9d3bd937499a20a62c5b668baa3007d0ca9e883dc26edff0",
@@ -21,8 +21,8 @@
     "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
     "package-lock.json": "ea614009079c32c261f173140b79933b1ca45b8e3e79b5d62633c73061328932",
     "scripts/bundle.mjs": "11845d9a00513cfc8ce8eca37b03ef9209a2a06ff370e4b7f8f4881bb9610399",
-    "scripts/consumer-check.mjs": "207571bd04ec80c4a608fd8322b2746fefa1a89919d63a0a3e26e63d315bee7c",
-    "scripts/create-consumer.mjs": "0c6c60f529f25091b2c761a33334b988d59f9bee4b0b3a01e05b6493afbb7de2",
+    "scripts/consumer-check.mjs": "c2094319267585d37a080a428d3e35bcd860814424cf1cfda180094bb9863a00",
+    "scripts/create-consumer.mjs": "0909b1e01442223f21135844f3ee6338bd53ef48f814fd507b1f85ebad3db55d",
     "scripts/pack-addon.mjs": "e6fa431cf36af2c17c3dbbdbc82853de40b23a4d4c7f035a225bf012f0a7d84c",
     "scripts/platform-resolution.mjs": "10c1909888e90e20af98f327f0bdb89cab160a475588ca6bd5ba0509945b57c3",
     "sdk/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -35,7 +35,7 @@
     "sdk/toolchain/platform-plugin.mjs": "5c4e3dc5d3ee0c9752e61292e43d423a23df78080d4b75df0b10aa48eb3a776a",
     "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f"
   },
-  "sdkManifestSha256": "186513d957af1a585fd6e4824b7ad6ed2044428bfcf435b0accddd13481d5529",
+  "sdkManifestSha256": "afe151bff299b8a6a021753fa164156e0b1410417d1d931b7191b37ddcb9d0b9",
   "nativeSha256": "e63c399548da53673369f06d1646d0d5e0d7375081ea32d0c0a6e9ece782f437",
   "lockfileSha256": "ea614009079c32c261f173140b79933b1ca45b8e3e79b5d62633c73061328932",
   "nodeArchiveSha256": "23b25245dcfb9af7262f8ff142e9e2e0af025368117329e7a7458a51e5922f53",
@@ -43,7 +43,7 @@
   "evidenceHashes": {
     "initial.png": "79f59e90186852c2e893376a743cbbe8168274f24c0e59852ed9fc0df9425763",
     "updated.png": "fdd916ac3011204040f5c6e2d4d9ecc349ee95d4dbeb1130de4f422ad6bd3249",
-    "matrix.json": "9eee1f09ac8616506ae6a69cb037c334d177016e33cad231c37112f8eb6b7d59"
+    "matrix.json": "d86605993fea12dc5eb84edd82c6eb3d1e9bb71a50c51c72bd4cd60ec535481a"
   },
   "reportPolicy": "Raw reports/logs and full SDK manifest remain in ignored build/consumer or CI artifacts. Source hashes identify the tested implementation; later documentation-only commits do not change it."
 }
