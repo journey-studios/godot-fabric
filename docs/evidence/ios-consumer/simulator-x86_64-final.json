@@ -1,0 +1,716 @@
+{
+  "schemaVersion": 1,
+  "target": "ios-simulator",
+  "architecture": "x86_64",
+  "configuration": "Release",
+  "minimumIOS": "15.1",
+  "godotVersion": "4.7.2.stable.official.ed1daf0bf",
+  "godotRebuilt": false,
+  "consumerExported": true,
+  "runtimeExecuted": true,
+  "physicalDeviceExecuted": false,
+  "debugRuntimeExecuted": false,
+  "interaction": "Godot BaseButton.pressed signal; physical touch/IME not exercised",
+  "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-18-4",
+  "device": "iPhone 16e",
+  "simulatorArchitecture": "x86_64",
+  "report": {
+    "afterStop": {
+      "animationFramesRun": 0.0,
+      "applicationStopped": true,
+      "bundleEvaluations": 1.0,
+      "commits": 3.0,
+      "creates": 6.0,
+      "deletes": 6.0,
+      "dimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1170.0,
+          "scale": 1.0,
+          "width": 2532.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 1170.0,
+          "scale": 1.0,
+          "width": 2532.0
+        }
+      },
+      "errors": [],
+      "events": 0.0,
+      "gameServices": {
+        "bindings": 0.0,
+        "callbacksRun": 0.0,
+        "errors": [],
+        "eventBudget": 128.0,
+        "eventsSent": 0.0,
+        "hostTasksCanceled": 0.0,
+        "hostTasksRun": 0.0,
+        "pendingEvents": 0.0,
+        "pendingHostTasks": 0.0,
+        "stopped": true,
+        "subscriptions": 0.0,
+        "taskBudget": 64.0
+      },
+      "hostPhasePending": false,
+      "mountReports": 3.0,
+      "nativeModules": {
+        "callableCalls": 0.0,
+        "callableModules": 0.0,
+        "creations": 4.0,
+        "disposals": 2.0,
+        "installed": true,
+        "loaded": 0.0,
+        "lookups": 5.0,
+        "registered": 5.0,
+        "retainedUntilVMDestroy": 4.0,
+        "runtimeId": "25333597493",
+        "staleCalls": 0.0,
+        "stopped": true
+      },
+      "nativeTags": 0.0,
+      "nodes": [],
+      "pendingAnimationFrames": 0.0,
+      "pendingTimers": 0.0,
+      "pendingWork": 0.0,
+      "pointer": {
+        "activeTouches": 0.0,
+        "blockNative": false,
+        "cancels": 0.0,
+        "ends": 0.0,
+        "grants": 0.0,
+        "moves": 0.0,
+        "releases": 0.0,
+        "responder": 0.0,
+        "starts": 0.0
+      },
+      "retiringTags": 0.0,
+      "rootCount": 0.0,
+      "runtimeId": 25333597493.0,
+      "state": "unmounted",
+      "stopped": true,
+      "surfaceId": 11.0,
+      "textMeasurements": 12.0,
+      "timerEngine": "react-native/TimerManager",
+      "updates": 0.0,
+      "viewport": {
+        "height": 1170.0,
+        "width": 2532.0
+      },
+      "viewportUpdates": 0.0,
+      "windowListener": false
+    },
+    "architecture": "x86_64",
+    "beforeStop": {
+      "animationFramesRun": 0.0,
+      "applicationStopped": false,
+      "bundleEvaluations": 1.0,
+      "commits": 1.0,
+      "creates": 6.0,
+      "deletes": 0.0,
+      "dimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 1170.0,
+          "scale": 1.0,
+          "width": 2532.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 1170.0,
+          "scale": 1.0,
+          "width": 2532.0
+        }
+      },
+      "errors": [],
+      "events": 0.0,
+      "gameServices": {
+        "bindings": 0.0,
+        "callbacksRun": 0.0,
+        "errors": [],
+        "eventBudget": 128.0,
+        "eventsSent": 0.0,
+        "hostTasksCanceled": 0.0,
+        "hostTasksRun": 0.0,
+        "pendingEvents": 0.0,
+        "pendingHostTasks": 0.0,
+        "stopped": false,
+        "subscriptions": 0.0,
+        "taskBudget": 64.0
+      },
+      "hostPhasePending": false,
+      "mountReports": 1.0,
+      "nativeModules": {
+        "callableCalls": 0.0,
+        "callableModules": 0.0,
+        "creations": 4.0,
+        "disposals": 0.0,
+        "installed": true,
+        "loaded": 4.0,
+        "lookups": 5.0,
+        "registered": 5.0,
+        "retainedUntilVMDestroy": 0.0,
+        "runtimeId": "25333597493",
+        "staleCalls": 0.0,
+        "stopped": false
+      },
+      "nativeTags": 6.0,
+      "nodes": [
+        {
+          "appearance": {
+            "background": "00000000",
+            "borderColor": "00000000",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "textColor": "f8fafcff"
+          },
+          "ellipses": 0.0,
+          "fabricHeight": 67.0,
+          "fabricWidth": 2452.0,
+          "focused": false,
+          "fontSize": 48.0,
+          "height": 67.0,
+          "id": 28722595148.0,
+          "kind": "paragraph",
+          "lineMetrics": [
+            {
+              "ascent": 52.0,
+              "baseline": 52.0,
+              "height": 67.0,
+              "width": 414.0,
+              "x": 0.0
+            }
+          ],
+          "lines": 1.0,
+          "measuredHeight": 67.0,
+          "measuredWidth": 414.0,
+          "nativeFontSize": 48.0,
+          "nativeText": "Props from Godot",
+          "opacity": 1.0,
+          "runs": [
+            {
+              "color": "f8fafcff",
+              "end": 16.0,
+              "fontFamily": "",
+              "fontSize": 48.0,
+              "fontWeight": 400.0,
+              "lineHeight": 0.0,
+              "start": 0.0
+            }
+          ],
+          "tag": 26.0,
+          "testID": "ios-title",
+          "text": "",
+          "visible": true,
+          "visibleLines": 1.0,
+          "width": 2452.0,
+          "x": 40.0,
+          "y": 160.0
+        },
+        {
+          "appearance": {
+            "background": "00000000",
+            "borderColor": "00000000",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "textColor": "94a3b8ff"
+          },
+          "ellipses": 0.0,
+          "fabricHeight": 45.0,
+          "fabricWidth": 2452.0,
+          "focused": false,
+          "fontSize": 32.0,
+          "height": 45.0,
+          "id": 28789704004.0,
+          "kind": "paragraph",
+          "lineMetrics": [
+            {
+              "ascent": 35.0,
+              "baseline": 35.0,
+              "height": 45.0,
+              "width": 372.0,
+              "x": 0.0
+            }
+          ],
+          "lines": 1.0,
+          "measuredHeight": 45.0,
+          "measuredWidth": 372.0,
+          "nativeFontSize": 32.0,
+          "nativeText": "React + Hermes + Godot",
+          "opacity": 1.0,
+          "runs": [
+            {
+              "color": "94a3b8ff",
+              "end": 22.0,
+              "fontFamily": "",
+              "fontSize": 32.0,
+              "fontWeight": 400.0,
+              "lineHeight": 0.0,
+              "start": 0.0
+            }
+          ],
+          "tag": 30.0,
+          "testID": "",
+          "text": "",
+          "visible": true,
+          "visibleLines": 1.0,
+          "width": 2452.0,
+          "x": 40.0,
+          "y": 255.0
+        },
+        {
+          "appearance": {
+            "background": "00000000",
+            "borderColor": "00000000",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "textColor": "a7f3d0ff"
+          },
+          "ellipses": 0.0,
+          "fabricHeight": 67.0,
+          "fabricWidth": 2452.0,
+          "focused": false,
+          "fontSize": 48.0,
+          "height": 67.0,
+          "id": 28856812881.0,
+          "kind": "paragraph",
+          "lineMetrics": [
+            {
+              "ascent": 52.0,
+              "baseline": 52.0,
+              "height": 67.0,
+              "width": 193.0,
+              "x": 0.0
+            }
+          ],
+          "lines": 1.0,
+          "measuredHeight": 67.0,
+          "measuredWidth": 193.0,
+          "nativeFontSize": 48.0,
+          "nativeText": "Count: 0",
+          "opacity": 1.0,
+          "runs": [
+            {
+              "color": "a7f3d0ff",
+              "end": 8.0,
+              "fontFamily": "",
+              "fontSize": 48.0,
+              "fontWeight": 400.0,
+              "lineHeight": 0.0,
+              "start": 0.0
+            }
+          ],
+          "tag": 34.0,
+          "testID": "ios-counter",
+          "text": "",
+          "visible": true,
+          "visibleLines": 1.0,
+          "width": 2452.0,
+          "x": 40.0,
+          "y": 328.0
+        },
+        {
+          "appearance": {
+            "background": "0284c7ff",
+            "borderColor": "00000000",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              8.0,
+              8.0,
+              8.0,
+              8.0
+            ],
+            "textColor": "ffffffff"
+          },
+          "fabricHeight": 44.0,
+          "fabricWidth": 2452.0,
+          "focused": false,
+          "height": 44.0,
+          "id": 28923921736.0,
+          "kind": "button",
+          "nativeText": "Increment",
+          "opacity": 1.0,
+          "tag": 36.0,
+          "testID": "ios-increment",
+          "text": "Increment",
+          "visible": true,
+          "width": 2452.0,
+          "x": 40.0,
+          "y": 423.0
+        },
+        {
+          "appearance": {
+            "background": "101b2eff",
+            "borderColor": "00000000",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "fabricHeight": 1170.0,
+          "fabricWidth": 2532.0,
+          "focused": false,
+          "height": 1170.0,
+          "id": 28672263504.0,
+          "kind": "view",
+          "opacity": 1.0,
+          "tag": 38.0,
+          "testID": "ios-panel",
+          "text": "",
+          "visible": true,
+          "width": 2532.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        {
+          "appearance": {
+            "background": "00000000",
+            "borderColor": "00000000",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "fabricHeight": 1170.0,
+          "fabricWidth": 2532.0,
+          "focused": false,
+          "height": 1170.0,
+          "id": 28621931861.0,
+          "kind": "view",
+          "opacity": 1.0,
+          "tag": 40.0,
+          "testID": "",
+          "text": "",
+          "visible": true,
+          "width": 2532.0,
+          "x": 0.0,
+          "y": 0.0
+        }
+      ],
+      "pendingAnimationFrames": 0.0,
+      "pendingTimers": 0.0,
+      "pendingWork": 0.0,
+      "pointer": {
+        "activeTouches": 0.0,
+        "blockNative": false,
+        "cancels": 0.0,
+        "ends": 0.0,
+        "grants": 0.0,
+        "moves": 0.0,
+        "releases": 0.0,
+        "responder": 0.0,
+        "starts": 0.0
+      },
+      "retiringTags": 0.0,
+      "rootCount": 1.0,
+      "runtimeId": 25333597493.0,
+      "state": "mounted",
+      "stopped": false,
+      "surfaceId": 11.0,
+      "textMeasurements": 12.0,
+      "timerEngine": "react-native/TimerManager",
+      "updates": 0.0,
+      "viewport": {
+        "height": 1170.0,
+        "width": 2532.0
+      },
+      "viewportUpdates": 0.0,
+      "windowListener": false
+    },
+    "checks": [
+      {
+        "name": "Executed the exported iOS app",
+        "passed": true
+      },
+      {
+        "name": "Engine runtime reports the requested architecture",
+        "passed": true
+      },
+      {
+        "name": "Mobile Compatibility renderer is active",
+        "passed": true
+      },
+      {
+        "name": "Hidden JavaScript bundle is available in the PCK",
+        "passed": true
+      },
+      {
+        "name": "Private Node toolchain is excluded from runtime resources",
+        "passed": true
+      },
+      {
+        "name": "Static GDExtension registered both host classes",
+        "passed": true
+      },
+      {
+        "name": "Original Hermes executes JavaScript",
+        "passed": true
+      },
+      {
+        "name": "Original pinned React runs in Hermes",
+        "passed": true
+      },
+      {
+        "name": "One application mounts one root and evaluates one bundle",
+        "passed": true
+      },
+      {
+        "name": "React commits initial props and native text",
+        "passed": true
+      },
+      {
+        "name": "The React tree creates real Godot Controls",
+        "passed": true
+      },
+      {
+        "name": "Native button signal dispatches React onPress and rerender",
+        "passed": true
+      },
+      {
+        "name": "Prop update preserves local React state",
+        "passed": true
+      },
+      {
+        "name": "Prop updates retain root identity",
+        "passed": true
+      },
+      {
+        "name": "Rendered native UI capture saved",
+        "passed": true
+      },
+      {
+        "name": "Unmount removes Controls and executes effect cleanup",
+        "passed": true
+      },
+      {
+        "name": "Root remount succeeds",
+        "passed": true
+      },
+      {
+        "name": "Remount resets state and executes a new effect",
+        "passed": true
+      },
+      {
+        "name": "Runtime remains free of Fabric errors",
+        "passed": true
+      },
+      {
+        "name": "Shutdown releases native tags, roots and timers",
+        "passed": true
+      },
+      {
+        "name": "Shutdown stops Hermes application and native modules",
+        "passed": true
+      },
+      {
+        "name": "Shutdown remains free of runtime errors",
+        "passed": true
+      }
+    ],
+    "displayServer": "iOS",
+    "host": "exported-ios-consumer",
+    "os": "iOS",
+    "passed": true,
+    "renderer": "gl_compatibility",
+    "schemaVersion": 1
+  },
+  "processExitedAfterQuit": false,
+  "knownEngineDiagnostics": [
+    {
+      "text": "ERROR: Mouse is not supported by this display server.\n   at: mouse_get_position (servers/display/display_server.cpp:536)\n",
+      "count": 1,
+      "scope": "root Window startup in official Godot engine, reproduced without SDK or GDExtension",
+      "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/window.cpp#L1588-L1590",
+      "baselineEvidenceSHA256": "b7363da351c26c39e7198a90fadbdd4dda5f39f9cc64c37c0f0c7a619417e24d"
+    }
+  ],
+  "cleanup": {
+    "isolatedAppTerminatedByRunner": true,
+    "isolatedAppUninstalled": true,
+    "ownedSimulatorShutdown": true
+  },
+  "versions": {
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "godot": "4.7.2",
+    "godotCpp": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "cmake": "3.31.6"
+  },
+  "toolchain": {
+    "xcode": "Xcode 26.2\nBuild version 17C52",
+    "sdk": "iphonesimulator",
+    "sdkVersion": "26.2"
+  },
+  "nativeSourceSHA256": {
+    "native/CMakeLists.txt": "4076d864029a51b8959f612cb6db24fbcd65b168ca592567160be30cbb1cdd5a",
+    "scripts/setup.py": "db2304da8dc8f1e29d6297846ed431f502bc14ce981f5614223525c622f626b6",
+    "scripts/ios-build.py": "b607edd970bce2be71cedbe7e241d952eeb82491dfd4845d96eb7837521d1bdd",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/appearance_adapter.cpp": "acadea1a98ed9191974ad8f3124d4f414cd737f42a8121a85947d1308aaef37c",
+    "native/application_runtime.cpp": "a25d55c36c956eafda41d3660196dd7f2504ca0364a36e8634206d8bf2737e0a",
+    "native/fabric_application.cpp": "fec3362d0949c1eeddfc9b3c9db5d2cb5c92ccef6ab9994e04fa939b5e9baa5b",
+    "native/fabric_surface.cpp": "037db73a8160f87e8b410bafb611902ab0b1b5eab115a5cc162cb62bcfb4bd49",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/godot_dom.cpp": "54188de4aa60a663573d2ce1f9f9c621e223ab9332d0681bb5290f66dad5f296",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/pointer_adapter.cpp": "9c0f9fed40fb63925fce9a3f7a1f1355c064d171dcf253b567d44e5734c6029c",
+    "native/register.cpp": "18d2e4aa2000e79b55dc3d89d37f3c34d3f09dcd74dd64a09e2f63389bc2b108",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/appearance_adapter.h": "76dfc6b40309c8314cb7c8ec43939caaafb22eb000125356bda0981bf3f04a3c",
+    "native/application_runtime.h": "20e268e807d65209db595116da72ff487a35dc85bc4f56a98e6722a309e33ce6",
+    "native/fabric_application.h": "ecd467d21843ebf095d0357fa9744551a0b8fa0798aa6a8306c5abaa2562682a",
+    "native/fabric_surface.h": "1fef412a3171b00e44665362ec6a842b51f38d2d1501c0696f1677e4a8aafac8",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.h": "9d2cd34bd38d903129e1fabcddf072ea696daa22df4ba311997552e371bda936",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.h": "339b08f3ed176ff1fc3120fadf8b839e1ec5717d37aa7f0021965fd8d5fdbaea",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "native/godot-profile.json": "47807122dec3641325452bbc17c2ddd4e19836591897a5bf211774f86597c228"
+  },
+  "nativeSourcesMatchWorkingTree": true,
+  "nativeArchiveSHA256": "8b898fef41e4f02a612fccc4f2478956ba8fba57c588226aef8f8159475bcc18",
+  "template": {
+    "templateSHA256": "fd3280d10dc75356dded006f6f8813f40a5aebd32d128592b781256d8ffbdff4",
+    "engineLibrarySHA256": "70eb90ffd6dc850d3724a81e73368476cdcf5f8a98735f8306f20dbfd0951b5b",
+    "slice": "ios-arm64_x86_64-simulator",
+    "declaredArchitectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "actualArchitectures": [
+      "x86_64"
+    ]
+  },
+  "appBinarySHA256": "b9b26ed5aadf680091d45a2d0a01f0d05a93347956886ebea972a704bb997dbe",
+  "bundleSHA256": "2986d3ffdc4855cd2c91e64fbcefb541b59b264341ba0da460d4ac55747d675b",
+  "sdkProvisionSourceCommit": "2e196936aaa23ff4222e8d40c6b08c848df58b7a",
+  "sdkSourceSHA256": {
+    "application_node.gd": "f067803676b490b35be024e7490cef7052a832f2de85931b56b5e307d8fb50e0",
+    "application_resource.gd": "1c02b968903d490dcd51f21de2ebc9de9339f5b647f47e0a1bc791f0e586ad95",
+    "build.gd": "42381651d22d3e4d3959b44ac6680243cd9c24354c5e07890594ea895d1999a2",
+    "fabric.gdextension": "56a6c889efcad6b5863b57bf476ce0fc4d65ff92b7bc9f1c6c87621846e095ba",
+    "godot_fabric.gd": "60b489212e635bfbf2ab999426a849c9c45d813ae9b0a8a8d60a590c75df2f49",
+    "ios_export.gd": "febbd6a5b1d3547d360d75607f73644a9454ce108f83a8c87d800dc43024ca88",
+    "plugin.gd": "322b5efa75f0f615eb630b1d8da5f15f58f500e695290d300d17829d975a4183",
+    "src/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/app-registry.js": "370c319308002e4ab052cb9609348b6f096262ed926a5b60bc8d2faa6da7988b",
+    "src/components.jsx": "9a854bdd8151fe74dc8856c0620052175fe2d7685ad712019ccea54c85a7a77c",
+    "src/control-contracts.mjs": "777e4a764a65265b478631c5d5c53c8dd5750a770eaf8427c99c509e6dd7244b",
+    "src/godot-fabric.js": "dd6bc4004ba89e2417bdf3a937ee01dc72eed8078615fffc6bd128dccf7baf79",
+    "src/initialize.js": "0249dbe800e0f39c0f1067086c9ad1ea92b3cb767a53867ba7a23bf12ec2df89",
+    "src/native-module-runtime.js": "2af346160e265ee65892d05fb051d20b8cc06de2a79b655d4f38ac78ad6907f3",
+    "src/native-modules.js": "21f658161bea9c98e95c9f5e0e0ef455cbca9a44c03de560eb5f421ae291d393",
+    "src/nativewind.css": "cc1a7ad0d019ddb1d32d0ecb588ba0ac26ce41d8625dd6c366348b25f83a28ec",
+    "src/platform-environment.js": "6548474d905e5ee9429b15524386e39b7e15f184d13e1d7f4eb65d53089c7f50",
+    "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+    "src/private-interface.js": "a3a2a2f885047852ac5f6aec9b1093b79afd179f214606530f3301bae78f6e79",
+    "src/public-input.jsx": "051dc0be7bdf80eb5464cfd189171f4c7adf65eeb62b349318adac0c07ebebb5",
+    "src/react-native-platform.jsx": "baa7790953a66c9e930f3976b9a8c84cd7da82fdf1cdc04ac1fd5d2da5f94eae",
+    "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+    "src/renderer-proxy.js": "862c448204ea1ea25c7857c0210e8490962e685df93ed8cf077ab16b82b0e760",
+    "src/runtime.js": "3da190a8f7e39baa1b97ea31774ac8db87b914c4167e759c2b85141b8fa1864c",
+    "src/scroll-view.jsx": "3344473085edb8669cfa5a6e61400110cc3cb8dd300fc3c61ff325de1d6a1294",
+    "src/svg-contract.mjs": "b9b78a864ca065925a45ebc4bb882aa8f04a21021a493a6270c9f5719f79404f",
+    "src/svg.jsx": "02cce209d3cf7d1b120173dfd62eab2d231e2f39628ce57d70552616cfb99f3b",
+    "src/text.jsx": "765834eca6c7c7ba2312f808390244c9aae754d19d3cab414e83a3852df46ff8",
+    "src/ui-manager.js": "74e917cabdd6c61d2255dcd17f744d55a2b85c4dcd69ccdeff812f2b6e53704d",
+    "src/unsupported-reanimated.js": "addae9e2157e684a39ca4b60cfeedf2e2ce7ac4d30794112133c38b9a4f3c564",
+    "src/unsupported-safe-area.js": "6436fd1148bc907767463556dfc33e06c382a614809ae6698c60046d65aa926a",
+    "src/window-dimensions.js": "8846a80c7dcab98fb7b8401b8260415da0e0e64fbf4f93506ae10170ac171e6a",
+    "toolchain/build.mjs": "85b92d166b499ec93574ec6ed4a0bd21e6dfb62d76bd62fe2f92b657cb940ccb",
+    "toolchain/platform-plugin.mjs": "01e949e8dd075317cb0600fa5168cb9e1dac80b361924a2d9bee5d7f39877fd6",
+    "toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+    "types/.gdignore": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "types/godot-fabric.ts": "782f8f2ffdb9160bb200051c81be9d97eda378bf5ad40c4e0e96cb6f4a836da1",
+    "types/react-native.ts": "70f8466d4a30798cc62b6655d2c2e27d5c8246403c9b85eaaf6c688a771762a6"
+  },
+  "fixtureSourceSHA256": {
+    "project.godot": "11209287ccf9ab0872343c8ce6181625dd446594c2a840f1cefc0c8146c0339e",
+    "main.tscn": "c862835e3a71ac4f978daac62870cae76513ce2b00dee1cf5a11e8384a701546",
+    "validation.gd": "0cb22855709f17ecd10ab47b144985947360e9622a6db8ac10112b4229d89ecd",
+    "ui/index.tsx": "5649e5932e9a139b3e12ade4e1d839e93af4e20f81d12aeda1a9f1a92e986779",
+    "ui/application.tres": "6d542e6e93974e9b023db9873536a2e79e8e6c842f3e9e67a483861095d34c38",
+    "export_presets.cfg": "4fb2d377e1dbbe98dcc5550d4532fc977e2059438e747984482622d9d836acb9"
+  },
+  "pack": {
+    "format": 4,
+    "fileCount": 27,
+    "bundleEmbeddedByteForByte": true,
+    "buildToolchainExcluded": true,
+    "editorScriptsExcluded": true,
+    "pckSHA256": "eec54fa969e674a3f8fda6291a32562b212e875c04d50aca256e3a51b281810c"
+  },
+  "exportSourceSHA256": {
+    "fabric.gdextension": "a637bbd04639fd4240a90b7ad9a71f21328b82aca35bc00717688ae1ba9dd6f0",
+    "scripts/ios-consumer-export.py": "0b3427953db1930061960b3b4136a0150a67933ce926a980610ece50d4ce3fcf",
+    "sdk/addon/plugin.gd": "322b5efa75f0f615eb630b1d8da5f15f58f500e695290d300d17829d975a4183",
+    "sdk/addon/ios_export.gd": "febbd6a5b1d3547d360d75607f73644a9454ce108f83a8c87d800dc43024ca88"
+  },
+  "captureSHA256": "73f596eda0086cb035d19bd45e72ff210c8ba0a2d8f5ac13a44b171c2486ee43"
+}

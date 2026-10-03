@@ -4,6 +4,7 @@ Run after setup has downloaded the pinned sources/dependencies:
   python3 scripts/ios-build.py --target ios-simulator
   python3 scripts/ios-build.py --target ios-device
   python3 scripts/ios-build.py --xcframework
+  python3 scripts/ios-build.py --target ios-simulator --architecture x86_64
 
 The witness is a linked Mach-O executable, not an exported app or runtime proof.
 Hermes and RN dependency frameworks remain dynamic: the consumer must link,
@@ -66,7 +67,11 @@ def dependencies(target):
     return {str(library.relative_to(PROJECT)): sha256(library) for library in libraries}
 
 
-def build(target, configuration, jobs):
+def build_key(target, architecture):
+    return target if architecture == "arm64" else f"{target}-{architecture}"
+
+
+def build(target, configuration, jobs, architecture="arm64"):
     cmake = DEPS / "python/bin/cmake"
     if not cmake.exists():
         raise RuntimeError("Pinned CMake is missing; run npm run setup")
@@ -74,27 +79,28 @@ def build(target, configuration, jobs):
     sdk_path = run("xcrun", "--sdk", sdk, "--show-sdk-path")
     dependency_hashes = dependencies(target)
     source_hashes = inputs()
-    output = DEPS / f"build-{target}" / configuration
+    key = build_key(target, architecture)
+    output = DEPS / f"build-{key}" / configuration
     output.mkdir(parents=True, exist_ok=True)
     log_path = output / "build.log"
     with log_path.open("w") as log:
         run(cmake, "-S", PROJECT / "native", "-B", output,
-            "-DCMAKE_SYSTEM_NAME=iOS", "-DCMAKE_SYSTEM_PROCESSOR=arm64",
+            "-DCMAKE_SYSTEM_NAME=iOS", f"-DCMAKE_SYSTEM_PROCESSOR={architecture}",
             f"-DCMAKE_OSX_SYSROOT={sdk_path}",
-            "-DCMAKE_OSX_ARCHITECTURES=arm64", "-DCMAKE_OSX_DEPLOYMENT_TARGET=15.1",
+            f"-DCMAKE_OSX_ARCHITECTURES={architecture}", "-DCMAKE_OSX_DEPLOYMENT_TARGET=15.1",
             f"-DCMAKE_BUILD_TYPE={configuration}",
             "-DGODOTCPP_TARGET=" + ("template_release" if configuration == "Release" else "template_debug"),
             log=log)
-        print(f"Building {target} {configuration}; log: {log_path}", flush=True)
+        print(f"Building {target} {architecture} {configuration}; log: {log_path}", flush=True)
         run(cmake, "--build", output, "--parallel", jobs,
             "--target", "fabric_godot", "fabric_ios_link_smoke", log=log)
     if inputs() != source_hashes:
         raise RuntimeError("Native sources changed during the build; rerun before publishing evidence")
     binding_configuration = "template_release" if configuration == "Release" else "template_debug"
-    bindings = output / "bin" / f"libgodot-cpp.ios.{binding_configuration}.arm64.a"
+    bindings = output / "bin" / f"libgodot-cpp.ios.{binding_configuration}.{architecture}.a"
     if not bindings.is_file():
-        raise RuntimeError(f"Matching arm64 godot-cpp archive is missing: {bindings}")
-    destination = PROJECT / "addons/ios" / target / configuration
+        raise RuntimeError(f"Matching {architecture} godot-cpp archive is missing: {bindings}")
+    destination = PROJECT / "addons/ios" / key / configuration
     destination.mkdir(parents=True, exist_ok=True)
     archive = destination / "libfabric_godot.a"
     # Merge our extension, upstream Fabric/Yoga and godot-cpp archives. Dynamic
@@ -102,6 +108,8 @@ def build(target, configuration, jobs):
     run("xcrun", "libtool", "-static", "-o", archive, output / "libfabric_godot.a",
         output / "libfabric_core.a", bindings)
     witness = output / "fabric_ios_link_smoke"
+    if run("xcrun", "lipo", "-archs", archive).split() != [architecture]:
+        raise RuntimeError(f"Combined archive has the wrong architecture: {archive}")
     symbols = run("xcrun", "nm", "-g", witness)
     if not any(line.endswith(" T _fabric_library_init") for line in symbols.splitlines()):
         raise RuntimeError("The link witness did not retain the GDExtension entry symbol")
@@ -110,7 +118,7 @@ def build(target, configuration, jobs):
     if not any(line.strip() == f"platform {expected_platform}" for line in witness_build.splitlines()):
         raise RuntimeError(f"Link witness has the wrong platform for {target}: {witness_build}")
     manifest = {
-        "schemaVersion": 1, "target": target, "architecture": "arm64",
+        "schemaVersion": 1, "target": target, "architecture": architecture,
         "configuration": configuration, "minimumIOS": "15.1",
         "sourceCommit": run("git", "rev-parse", "HEAD"),
         "sourceDirty": bool(run("git", "status", "--porcelain")),
@@ -136,10 +144,10 @@ def build(target, configuration, jobs):
     print(f"GODOT_FABRIC_IOS_BUILD_PASSED: {manifest_path}")
 
 
-def xcframework(configuration):
+def xcframework(configuration, architecture="arm64"):
     root = PROJECT / "addons/ios"
     archives = [root / target / configuration / "libfabric_godot.a"
-                for target in ("ios-device", "ios-simulator")]
+                for target in ("ios-device", build_key("ios-simulator", architecture))]
     manifests = [archive.with_name("build-manifest.json") for archive in archives]
     data = [json.loads(manifest.read_text()) for manifest in manifests]
     if data[0]["sourceSHA256"] != data[1]["sourceSHA256"] or data[0]["versions"] != data[1]["versions"]:
@@ -149,7 +157,8 @@ def xcframework(configuration):
     for archive, manifest in zip(archives, data):
         if sha256(archive) != manifest["archiveSHA256"]:
             raise RuntimeError(f"Archive changed after its build proof: {archive}")
-    output = root / f"godot_fabric.{configuration.lower()}.xcframework"
+    suffix = "" if architecture == "arm64" else f".{architecture}-simulator"
+    output = root / f"godot_fabric.{configuration.lower()}{suffix}.xcframework"
     if output.exists():
         raise RuntimeError(f"XCFramework already exists; preserve it or select a fresh output: {output}")
     run("xcodebuild", "-create-xcframework", "-library", archives[0],
@@ -163,16 +172,20 @@ def main():
     selection.add_argument("--target", choices=("ios-simulator", "ios-device"))
     selection.add_argument("--xcframework", action="store_true")
     parser.add_argument("--configuration", choices=("Debug", "Release"), default="Release")
+    parser.add_argument("--architecture", choices=("arm64", "x86_64"), default="arm64",
+                        help="Simulator architecture; device archives always use arm64")
     parser.add_argument("--jobs", type=int, default=4)
     options = parser.parse_args()
     if platform.system() != "Darwin" or not shutil.which("xcrun"):
         raise RuntimeError("iOS native builds require macOS with Xcode")
     if options.jobs < 1:
         parser.error("--jobs must be positive")
+    if options.target == "ios-device" and options.architecture != "arm64":
+        parser.error("iOS devices require --architecture arm64")
     if options.xcframework:
-        xcframework(options.configuration)
+        xcframework(options.configuration, options.architecture)
     else:
-        build(options.target, options.configuration, options.jobs)
+        build(options.target, options.configuration, options.jobs, options.architecture)
 
 
 if __name__ == "__main__":
