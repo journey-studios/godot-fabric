@@ -50,7 +50,26 @@ terminar. Não invente percentuais, evidências ou aprovações arquiteturais.
 
 O dashboard público está configurado para GitHub Pages em
 https://journey-studios.github.io/godot-fabric/. Inclua o JSON atualizado na
-entrega da implementação: o deploy automático ocorre quando a mudança chega
-ao main. Verifique o workflow `Migration dashboard Pages` antes de afirmar
+entrega da implementação. Para publicar antes do merge, siga o disparo
+manual abaixo; o deploy automático continua ocorrendo ao chegar ao main. Verifique o workflow `Migration dashboard Pages` antes de afirmar
 que o site público já mostra a atualização. Alterações somente locais não
 atualizam o Pages.
+
+## Publicar progresso sem merge
+
+Faça commit e push de `dashboard/migration.json` na sua branch. O workflow
+busca somente esse JSON, fixa o commit resolvido, valida os dados e usa o
+renderer do main. A branch precisa conter o JSON; um arquivo local não basta.
+
+```sh
+gh workflow run dashboard-pages.yml --ref main -f data_ref="SUA_BRANCH"
+```
+
+Na interface: Actions → Migration dashboard Pages → Run workflow, selecione
+`main` para o workflow e informe sua branch em `data_ref` (também aceita SHA
+ou tag). Confirme o sucesso da execução antes de dizer que publicou.
+O mesmo site público é substituído pela publicação mais recente. O painel
+mostra branch, commit do JSON e se esse commit está integrado ao main.
+Um push relevante no main volta a publicar os dados do main; para restaurar
+manualmente, dispare com `data_ref=main`. Não execute o workflow com
+`--ref SUA_BRANCH`: o deploy é permitido apenas pelo workflow do main.
