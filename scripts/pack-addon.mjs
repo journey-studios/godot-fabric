@@ -70,7 +70,8 @@ async function main() {
   const sourceFiles = {};
   const provenanceFiles = new Set(run("git", ["-C", root, "ls-files", "-z", "sdk", "src", "types", "native", "dependencies.json", "package-lock.json", "fabric.gdextension"]).split("\0").filter(Boolean));
   for (const file of ["scripts/codegen.mjs", "scripts/codegen-contract.mjs", "scripts/adapter-manifest.mjs", "scripts/pack-addon.mjs",
-    "sdk/toolchain/adapter-plugin.mjs", "src/base-view-config.js"]) provenanceFiles.add(file);
+    "sdk/toolchain/adapter-plugin.mjs", "sdk/toolchain/project-config.mjs",
+    "sdk/toolchain/project-typecheck.mjs", "src/base-view-config.js"]) provenanceFiles.add(file);
   for (const file of [...provenanceFiles].sort())
     sourceFiles[file] = hash(await readFile(path.join(root, file)));
   if (nativeSdk) {

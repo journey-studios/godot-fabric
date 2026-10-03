@@ -6,14 +6,17 @@ import path from "node:path";
 import vm from "node:vm";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
+import {createRequire} from "node:module";
 import {build} from "esbuild";
 import ts from "typescript";
+import {prepareProjectResolution} from "../sdk/toolchain/project-resolution.mjs";
+const requireHere = createRequire(import.meta.url);
 
 const builderPath = fileURLToPath(new URL("../sdk/toolchain/build.mjs", import.meta.url));
 const sha256 = value => crypto.createHash("sha256").update(value).digest("hex");
 
-// Read only the real build call's tsconfig expression. Do not execute the SDK
-// script (which typechecks, bundles and publishes) or project configuration JS.
+// Validate the option wired into the actual build call, then use that same
+// resolver's effective config. No SDK script or arbitrary project JS executes.
 function projectTsconfig(project) {
   const source = ts.createSourceFile(builderPath, fs.readFileSync(builderPath, "utf8"),
     ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
@@ -30,28 +33,29 @@ function projectTsconfig(project) {
   assert.ok(ts.isObjectLiteralExpression(options));
   const properties = options.properties.filter(property => ts.isPropertyAssignment(property)
     && (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name))
-    && property.name.text === "tsconfig");
-  assert.equal(properties.length, 1, "The real SDK build must select the project's tsconfig explicitly");
-  function value(node) {
-    if (ts.isStringLiteral(node)) return node.text;
-    if (ts.isIdentifier(node) && node.text === "project") return project;
-    if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)
-        && ts.isIdentifier(node.expression.expression) && node.expression.expression.text === "path"
-        && node.expression.name.text === "join") return path.join(...node.arguments.map(value));
-    assert.fail("The tsconfig expression must be a project path, without executing build code");
-  }
-  const filename = value(properties[0].initializer);
-  assert.equal(filename, path.join(project, "tsconfig.json"));
-  return filename;
+    && ["tsconfig", "tsconfigRaw"].includes(property.name.text));
+  assert.equal(properties.length, 1, "The builder must select exactly one explicit effective configuration");
+  const selected = properties[0];
+  assert.equal(selected.name.text, "tsconfigRaw");
+  assert.ok(ts.isPropertyAccessExpression(selected.initializer));
+  assert.equal(selected.initializer.expression.text, "resolution");
+  assert.equal(selected.initializer.name.text, "tsconfigRaw");
+  const resolution = prepareProjectResolution({project, sdk: path.join(project, "addon"),
+    dependencies: JSON.parse(fs.readFileSync(path.join(project, "package.json"))), resolveSdk: requireHere.resolve});
+  assert.ok(resolution.tsconfigRaw && resolution.tsconfigRaw.compilerOptions);
+  assert.equal(resolution.tsconfigRaw.compilerOptions.paths, undefined);
+  assert.equal(resolution.tsconfigRaw.compilerOptions.baseUrl, undefined);
+  return resolution.tsconfigRaw;
 }
 
-function fixture(t, {strict = true, jsx = false, inherited = false} = {}) {
+function fixture(t, {strict = true, jsx = false, inherited = false, target} = {}) {
   // Canonicalize the temporary directory's symlink before resolving either import spelling;
   // otherwise a symlink alias would create a different, unrelated repro.
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "godot-bundle-determinism-")));
   t.after(() => fs.rmSync(root, {recursive: true, force: true}));
-  const compilerOptions = {strict, ...(jsx ? {jsx: "react-jsx", jsxImportSource: "owned-jsx"} : {})};
+  const compilerOptions = {strict, ...(target ? {target} : {}), module: "ESNext", moduleResolution: "Bundler", moduleSuffixes: [".godot", ".native", ""], ...(jsx ? {jsx: "react-jsx", jsxImportSource: "owned-jsx"} : {})};
   const files = {
+    "package.json": JSON.stringify({dependencies: {"package-branch": "1.0.0", ...(jsx ? {"owned-jsx": "1.0.0"} : {})}}),
     "tsconfig.json": JSON.stringify(inherited ? {extends: "./config/base.json"} : {compilerOptions}),
     "entry.ts": 'import "./first"; require("package-branch");',
     [jsx ? "first.jsx" : "first.js"]: 'import Native from "./addon/facade"; globalThis.first = Native;'
@@ -82,7 +86,8 @@ async function compile(project, order, {explicit = true} = {}) {
   const result = await build({
     absWorkingDir: project.root, entryPoints: ["entry.ts"], outfile: "bundle.js",
     write: false, bundle: true, platform: "neutral", format: "iife", metafile: true,
-    ...(explicit ? {tsconfig: projectTsconfig(project.root)} : {}),
+    ...(explicit === "file" ? {tsconfig: path.join(project.root, "tsconfig.json")}
+      : explicit ? {tsconfigRaw: projectTsconfig(project.root)} : {}),
     plugins: [{
       name: "controlled-relative-import-and-native-alias",
       setup(builder) {
@@ -154,5 +159,25 @@ for (const inherited of [false, true]) {
       assert.equal(context.element.props.label, "project JSX");
       assert.equal(context.element.key, "row");
     }
+  });
+}
+
+for (const [target, own, assignments] of [["ES2019", false, 1], ["ES2022", true, 0], ["ESNext", true, 0]]) {
+  test(`effective inherited ${target} preserves original class-field semantics`, async t => {
+    const project = fixture(t, {target, inherited: true});
+    fs.rmSync(path.join(project.root, "addon/original.js"));
+    fs.writeFileSync(path.join(project.root, "addon/original.ts"), `
+      class Base { set observed(value) { globalThis.fieldAssignments = (globalThis.fieldAssignments ?? 0) + 1; } }
+      class Item extends Base { observed = 7; }
+      globalThis.classFieldOwn = Object.prototype.hasOwnProperty.call(new Item(), 'observed');
+      export default {value: 1};`);
+    const raw = await bothOrders(project);
+    const original = await compile(project, "relative-first", {explicit: "file"});
+    for (const result of [...raw, original]) {
+      assert.equal(result.context.classFieldOwn, own);
+      assert.equal(result.context.fieldAssignments ?? 0, assignments);
+    }
+    assert.equal(raw[0].code, raw[1].code);
+    assert.equal(raw[0].code, original.code, "The effective public raw options retain original esbuild config behavior");
   });
 }

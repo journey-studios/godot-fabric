@@ -1,0 +1,73 @@
+{
+  "format": "godot-fabric.executed-alias-scopes-provenance/v1",
+  "checkedAt": "2026-10-03T22:46:45.315700+00:00",
+  "sourceBaseCommit": "f2eb57f14dcc6f0c25750ff6284f9244d4b3e617",
+  "sourceDirtyDuringExecution": true,
+  "sourceSha256": {
+    "scripts/adapter-runtime-check.mjs": "0d073e9f9fd7aee00d42adedbac580c3a3d5abd785a61f9067e1741910555204",
+    "scripts/pack-addon.mjs": "1f7948800d02b62416251ac1b7a88a91a686a3d14d361f1fbd61512fa4617fc9",
+    "sdk/toolchain/build.mjs": "fbbb98dc08ca95e826954d3081a5af3e6344c2eae02337a40200a3b7114bffca",
+    "sdk/toolchain/adapter-plugin.mjs": "9d331d0b71adec8ee51f601a8ea4c2fceb50c62fed5f5f0278caf04d3df2729d",
+    "sdk/toolchain/project-resolution.mjs": "dbfae5774239772f44890419f7c84d880d76cbcb8710dd91c450bcc1ebd93db9",
+    "sdk/toolchain/project-config.mjs": "6057cd12daaf93ee42df9310e87f6a2793ef4356e43ceb82d72265692fd784e2",
+    "sdk/toolchain/project-typecheck.mjs": "f548cd0a3c331dfeb788a18e1bbfbef4cc90692d0f471c68fab501ec5aa92754",
+    "sdk/toolchain/platform-plugin.mjs": "0132f67e02340287228ab2aee610d0590129c556a839242dda52b564f2ce2d24",
+    "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+    "tests/adapters/package/BadgeNativeComponent.ts": "743ed87b2d827cbd04b92f2fc79d247942d930e6721b214320fca8ccf5f89d56",
+    "tests/adapters/package/NativeExternalProbe.ts": "652f3488be23ee4ca8bf13671c52185acd556873d418863e89cee1f82ac1dadb",
+    "tests/adapters/package/adapter.cpp": "026e957339e78d19b580cbc7d68e26062ad354babf7dbffb9b5e8001e73afd70",
+    "tests/adapters/package/index.ts": "526a2d064a70a6de1c0575cf551cf089d08375ced1f3e508c86c554968d37212",
+    "tests/adapters/package/package.json": "861c7356296fb60205bc0ac5d7fa1f708e53c15b364cc05b8f9719e374c53667",
+    "tests/adapters/consumer/ui/index.tsx": "4ec5f2ac1d02f3492cee3e370d2dc5b7de25a1f5f5af036b7ffed9480c1bfcec",
+    "tests/adapters/consumer/validation.gd": "545418e41bc3e81efbae846e280134ada38a458a14fe5ea7c0acd70ca2311e08",
+    "tests/adapters/consumer/main.tscn": "25b848774f99520ca06b7c2bf845e23f7878fd44dd68cc618ed027f616b94aa2",
+    "tests/adapters/consumer/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2",
+    "scripts/consumer-check.mjs": "e5f245409e2dac482bc50cefa7838fd6b27b888eedc46a546d54b6108a7d2faa",
+    "tests/project-resolution.test.mjs": "4fa9ec590655aef7a918525a0b499934ecb20ed700a2077f0dc5927fdc49f1e6",
+    "tests/package-conditions.test.mjs": "f3f44ac827a9e630d161a8d11ca6943c06042a7ac56b7b429e16b8dc8d653267",
+    "tests/bundle-determinism.test.mjs": "cb4b6a373c749211d6c6bfac88505dadafb3f141dc6673780eb8116fb1d86c56",
+    "package.json": "ccc3a48133b3a7b96022fbfa9aa7f4e6f767f8be612c50f34849a4ee951094c4",
+    "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87"
+  },
+  "versions": {
+    "node": "22.23.3",
+    "typescript": "6.0.3",
+    "esbuild": "0.25.12",
+    "metroResolver": "0.87.1",
+    "react": "19.2.3",
+    "reactNative": "0.87.1",
+    "hermes": "250829098.0.17",
+    "godot": "4.7.2"
+  },
+  "platform": "macOS arm64",
+  "configuration": "Release",
+  "nativeHostSha256": "44078ed4d4c18ce47a676636159319d824b170dd372780287b937528a9601933",
+  "nativeSdkManifestSha256": "14af403afd368419b83b4259290cc554b712a8994afc44ab646dd0da2137a01b",
+  "nativeReceiptEvidence": "../adapter-shutdown/provenance.json",
+  "nativeSourcesRebuiltForThisJsChange": false,
+  "sdkDependencyLockfileSha256": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87",
+  "projectLockfileSha256": "89de230d7484f241d6b67027550e15bfb0dddde08aa3994aa4c8125ea92a4866",
+  "consumerBundleSha256": {
+    "baseline-bundle.js": "942d8f60d5572c4e62b7e5b3020836515dc6cce2cc7179e71d9410091fc02219",
+    "recovered-bundle.js": "942d8f60d5572c4e62b7e5b3020836515dc6cce2cc7179e71d9410091fc02219"
+  },
+  "selectedAdapterBundleSha256": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+  "selectionSha256": "62d8b98f1230b606e302086dc3c62457612617aefcf6fc553cd4840ba4e6c6f4",
+  "commands": [
+    "node --test tests/project-resolution.test.mjs tests/package-conditions.test.mjs tests/bundle-determinism.test.mjs tests/platform-seams.test.mjs",
+    "npm run test:contracts",
+    "npm run bundle && node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+    "npm run test:consumer -- --capture",
+    "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-shutdown-v3-20261003 --out build/adapter-runtime-scopes-final-20261003 --capture",
+    "npm run check:static"
+  ],
+  "limits": [
+    "Bounded ESNext/Preserve + Bundler and fixed suffix profile; not full Metro/TSConfig acceptance",
+    "No Godot engine or export template rebuild",
+    "Actual exported consumers and other OS targets are not certified by these local captures"
+  ]
+}

@@ -195,6 +195,37 @@ try {
   await writeFile(entryPath, 'import { marker as directMarker } from "consumer-helper";\n' + libraryEntry.replace('{marker}</Text>', '{marker + directMarker}</Text>'));
   assert.match(await editor("undeclared-direct-dependency", 1), /Declare consumer-helper in the project's dependencies/);
   verify(hash(await readFile(bundlePath)) === nestedHash, "A transitive package cannot silently become an undeclared direct app dependency");
+  // A library's declarations and runtime keep its nested helper even when
+  // the application uses that exact package spelling for a local source alias.
+  await rm(path.join(project, "ui/library.d.ts"));
+  await writeFile(path.join(nestedHelper, "package.json"), JSON.stringify({name: "consumer-helper", version: "1.0.0", main: "index.js", types: "index.d.ts"}));
+  await writeFile(path.join(nestedHelper, "index.d.ts"), 'export declare const marker: "Nested helper · project SDK React identity";\n');
+  await writeFile(path.join(library, "package.json"), JSON.stringify({name: "consumer-ui-lib", version: "1.0.0", main: "index.js", types: "index.d.ts", dependencies: {"consumer-helper": "1.0.0"}}));
+  await writeFile(path.join(library, "index.d.ts"), 'import { marker } from "consumer-helper"; export declare function useMarker(): typeof marker;\n');
+  await writeFile(path.join(project, "ui/helper.godot.ts"), 'export const marker = "Application alias marker" as const;\n');
+  await writeFile(configPath, JSON.stringify({...config, compilerOptions: {...config.compilerOptions, paths: {...config.compilerOptions.paths, "consumer-helper": ["./ui/helper"]}}}));
+  const collisionEntry = 'import { marker as appMarker } from "consumer-helper";\n' + libraryEntry
+    .replace("flex: 1, padding: 20, gap: 10", "flex: 1, padding: 16, gap: 6")
+    .replace('const marker = useMarker();', 'const marker = useMarker(); const typedLibrary: "Nested helper · project SDK React identity" = marker; const typedApp: "Application alias marker" = appMarker;')
+    .replace('<Text testID="library-marker">{marker}</Text>', '<Text testID="library-marker" style={{color: "#a7f3d0", fontSize: 13}}>{typedLibrary}</Text><Text testID="application-alias-marker" style={{color: "#c4b5fd", fontSize: 13}}>{typedApp}</Text>');
+  await writeFile(entryPath, collisionEntry);
+  await editor("alias-package-coexistence");
+  const coexistence = await runtime("alias-package-native");
+  verify(["Application alias marker", "Nested helper · project SDK React identity"].every(text => coexistence.beforeStop.nodes.some(node => node.nativeText === text)), "App alias and identically named nested dependency retain distinct literal types and native text");
+  const coexistenceInputs = JSON.parse(await readFile(path.join(project, ".godot_fabric", "build-report.json"), "utf8")).inputs;
+  verify(coexistenceInputs.includes("project/ui/helper.godot.ts") && coexistenceInputs.includes("project/node_modules/consumer-ui-lib/node_modules/consumer-helper/index.js") && !coexistenceInputs.some(file => file.includes("consumer-ui-lib/node_modules/react")), "Both alias and package enter the graph while original SDK React remains unique");
+  const coexistenceHash = hash(await readFile(bundlePath));
+  await writeFile(entryPath, collisionEntry.replace('typedLibrary: "Nested helper · project SDK React identity"', 'typedLibrary: "Application alias marker"'));
+  assert.match(await editor("alias-package-wrong-type", 1), /TypeScript failed[\s\S]*not assignable/);
+  verify(hash(await readFile(bundlePath)) === coexistenceHash, "A wrong cross-scope literal type fails without replacing the valid coexistence bundle");
+  await writeFile(entryPath, collisionEntry);
+  if (capture) {
+    await runtime("alias-package-graphical", true);
+    for (const stage of ["initial", "updated", "resized"])
+      await cp(path.join(project, `consumer-${stage}.png`), path.join(directory, "coexistence-" + stage + ".png"));
+  }
+  await writeFile(configPath, originalConfig);
+  await rm(path.join(project, "ui/helper.godot.ts"));
   await writeFile(entryPath, originalEntry);
   await writeFile(packagePath, originalPackage);
   await editor("recovery");

@@ -67,14 +67,14 @@ async function main() {
   const adapterBuild = prepareAdapterBuild({project, records, nativeCombination,
     resolveSdk: id => requireSdk.resolve(id), coreEventConfigs,
     baseViewConfigPath: path.join(sdk, "src/base-view-config.js")});
-  const typecheck = spawnSync(process.execPath, [requireSdk.resolve("typescript/bin/tsc"), "--project", path.join(project, "tsconfig.json")], {
+  const typecheck = spawnSync(process.execPath, [path.join(toolchain, "project-typecheck.mjs"), project, sdk, resolution.configFingerprint], {
     cwd: project, encoding: "utf8", timeout: 30000,
   });
   if (typecheck.error || typecheck.status !== 0)
     throw new Error("TypeScript failed\n" + (typecheck.stdout ?? "") + (typecheck.stderr ?? "") + (typecheck.error?.message ?? ""));
   const result = await build({
     absWorkingDir: project, entryPoints: [entry], outfile, write: false,
-    tsconfig: path.join(project, "tsconfig.json"),
+    tsconfigRaw: resolution.tsconfigRaw, conditions: resolution.conditions,
     bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
     mainFields: ["main"], resolveExtensions: resolution.resolveExtensions,

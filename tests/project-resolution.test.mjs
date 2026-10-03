@@ -8,6 +8,7 @@ import test from "node:test";
 import {build} from "esbuild";
 import ts from "typescript";
 import {prepareProjectResolution} from "../sdk/toolchain/project-resolution.mjs";
+import {checkProjectTypes} from "../sdk/toolchain/project-typecheck.mjs";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 
 const requireOriginal = createRequire(import.meta.url);
@@ -48,15 +49,48 @@ async function prepare(f) {
 }
 async function bundle(f, prepared = undefined) {
   const resolution = prepared ?? await prepare(f);
-  const result = await build({absWorkingDir: f.project, entryPoints: ["ui/index.ts"], write: false,
-    tsconfig: path.join(f.project, "tsconfig.json"), bundle: true, format: "iife", platform: "neutral",
+  const result = await build({absWorkingDir: f.project, entryPoints: [f.entry ?? "ui/index.ts"], write: false,
+    tsconfigRaw: resolution.tsconfigRaw, conditions: resolution.conditions,
+    bundle: true, format: "iife", platform: "neutral",
     mainFields: ["main"], resolveExtensions: resolution.resolveExtensions, metafile: true, logLevel: "silent",
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
     plugins: [resolution.plugin, platformPlugin(path.join(f.sdk, "src"), f.resolveSdk)]});
   const context = {};
   vm.runInNewContext(result.outputFiles[0].text, context);
   resolution.assertUnchanged();
-  return {resolution, context, inputs: Object.keys(result.metafile.inputs).map(name => path.resolve(f.project, name))};
+  return {resolution, context, code: result.outputFiles[0].text,
+    inputs: Object.keys(result.metafile.inputs).map(name => path.resolve(f.project, name))};
+}
+
+function declaration(f, folder, contents) {
+  const filename = path.join(f.project, folder, "package.json");
+  f.write(folder + "/package.json", {...JSON.parse(fs.readFileSync(filename, "utf8")), types: "index.d.ts"});
+  f.write(folder + "/index.d.ts", contents);
+}
+
+function assertTypes(resolution, errorCode) {
+  const result = resolution.checkTypes();
+  if (errorCode === undefined) assert.equal(result.errorCount, 0,
+    result.diagnostics.map(d => ts.flattenDiagnosticMessageText(d.messageText, "\n")).join("\n"));
+  else {
+    assert.ok(result.errorCount > 0, "The original checker must reject the intentional type error");
+    assert.ok(result.diagnostics.some(d => d.code === errorCode));
+  }
+  return result;
+}
+
+function originalDiagnostics(f) {
+  const parsed = ts.getParsedCommandLineOfConfigFile(path.join(f.project, "tsconfig.json"), {}, {
+    ...ts.sys, onUnRecoverableConfigFileDiagnostic: d => assert.fail(ts.flattenDiagnosticMessageText(d.messageText, "\n")),
+  });
+  return ts.getPreEmitDiagnostics(ts.createProgram(parsed.fileNames, {...parsed.options, noEmit: true}));
+}
+
+function originalReactTypes(f) {
+  for (const name of ["@types/react", "csstype"]) {
+    const source = path.dirname(requireOriginal.resolve(name + "/package.json"));
+    fs.cpSync(source, path.join(f.sdk, "toolchain/node_modules", name), {recursive: true});
+  }
 }
 function originalTypeScriptResolution(f, specifier) {
   const filename = path.join(f.project, "tsconfig.json");
@@ -245,7 +279,7 @@ test("the config snapshot stays valid after a build and rejects changed root con
 
 test("the config snapshot also guards inherited configuration", async t => {
   const f = fixture(t);
-  f.write("config/base.json", {compilerOptions: {moduleSuffixes: suffixes}});
+  f.write("config/base.json", {compilerOptions: {module: "ESNext", moduleResolution: "Bundler", moduleSuffixes: suffixes}});
   f.write("tsconfig.json", {extends: "./config/base.json"});
   const prepared = await prepare(f);
   assert.doesNotThrow(() => prepared.assertUnchanged());
@@ -282,26 +316,64 @@ for (const declared of [false, true]) {
   });
 }
 
-test("an application alias cannot redirect an installed library's real transitive import", async t => {
-  const f = fixture(t, {dependencies: {library: "1.0.0"}, compilerOptions: {paths: {leaf: ["./ui/local-leaf.ts"]}}});
-  f.write("ui/local-leaf.ts", "export const answer = 'application alias';");
+function collidingLibrary(t, intentionalError = false) {
+  const f = fixture(t, {dependencies: {library: "1.0.0"},
+    compilerOptions: {types: [], paths: {leaf: ["./ui/local-leaf.ts"]}}});
+  f.write("ui/local-leaf.ts", "export const answer: 'application alias' = 'application alias';");
   const library = installed(f, "library", "exports.answer = require('leaf').answer;", {dependencies: {leaf: "1.0.0"}});
-  installed(f, "leaf", "exports.answer = 'nested dependency';", {parent: library});
-  f.write("ui/index.ts", "import {answer} from 'library'; globalThis.result = answer;");
-  await assert.rejects(() => bundle(f), diagnostic("E_PROJECT_ALIAS"));
+  declaration(f, library, "export {answer} from 'leaf';");
+  const leaf = installed(f, "leaf", "exports.answer = 'nested dependency';", {parent: library});
+  declaration(f, leaf, "export const answer: 'nested dependency';");
+  f.write("ui/index.ts", "import {answer as local} from 'leaf'; import {answer as fromLib} from 'library';"
+    + " const app: 'application alias' = local; const nested: '"
+    + (intentionalError ? "application alias" : "nested dependency") + "' = fromLib;"
+    + " (globalThis as any).result = {local, fromLib};");
+  return f;
+}
+
+test("application and library aliases coexist with distinct original declaration ownership", async t => {
+  const f = collidingLibrary(t);
+  // This is the causal control: plain project-wide paths alter the library's
+  // reexported type even though its runtime dependency remains a different file.
+  assert.ok(originalDiagnostics(f).some(d => d.code === 2322));
+  const resolution = await prepare(f);
+  assertTypes(resolution);
+  const result = await bundle(f, resolution);
+  assert.equal(result.context.result.local, "application alias");
+  assert.equal(result.context.result.fromLib, "nested dependency");
+  assert.ok(result.inputs.includes(path.join(f.project, "node_modules/library/node_modules/leaf/index.js")));
 });
 
-test("an application alias cannot redirect a private SDK dependency", async t => {
-  const f = fixture(t, {compilerOptions: {paths: {"@react-native/normalize-colors": ["./ui/colors.ts"]}}});
-  f.write("ui/colors.ts", "export default 'application alias';");
-  installed(f, "@react-native/normalize-colors", "module.exports = 'original private dependency';",
+test("the scoped original checker rejects treating the library's type as the application's alias", async t => {
+  const f = collidingLibrary(t, true);
+  assert.equal(originalDiagnostics(f).length, 0, "The global-alias control falsely accepts the wrong library type");
+  assertTypes(await prepare(f), 2322);
+});
+
+test("application aliases coexist with private SDK runtime and declaration imports", async t => {
+  const f = fixture(t, {compilerOptions: {types: [], paths: {
+    "@react-native/normalize-colors": ["./ui/colors.ts"],
+    "react-native": ["./addons/godot_fabric/types/react-native.ts"],
+  }}});
+  f.write("ui/colors.ts", "const colors: 'application alias' = 'application alias'; export default colors;");
+  const colors = installed(f, "@react-native/normalize-colors", "module.exports = 'original private dependency';",
     {parent: "addons/godot_fabric/toolchain"});
+  declaration(f, colors, "declare const colors: 'original private dependency'; export default colors;");
   f.write("addons/godot_fabric/toolchain/node_modules/react-native/private-fixture.ts",
     "import colors from '@react-native/normalize-colors'; export const value = colors;");
   f.write("addons/godot_fabric/src/react-native-platform.jsx",
     "export {value} from '../toolchain/node_modules/react-native/private-fixture.ts';");
-  f.write("ui/index.ts", "import {value} from 'react-native'; globalThis.result = value;");
-  await assert.rejects(() => bundle(f), diagnostic("E_PROJECT_SDK_IDENTITY"));
+  f.write("addons/godot_fabric/types/react-native.ts",
+    "export {value} from '../toolchain/node_modules/react-native/private-fixture';");
+  f.write("ui/index.ts", "import local from '@react-native/normalize-colors'; import {value} from 'react-native';"
+    + " const app: 'application alias' = local; const sdk: 'original private dependency' = value;"
+    + " (globalThis as any).result = {local, sdk: value};");
+  const resolution = await prepare(f);
+  assertTypes(resolution);
+  const result = await bundle(f, resolution);
+  assert.equal(result.context.result.local, "application alias");
+  assert.equal(result.context.result.sdk, "original private dependency");
+  assert.ok(result.inputs.includes(path.join(f.project, colors, "index.js")));
 });
 
 test("a project can resolve its declared #imports map without a TS alias", async t => {
@@ -391,7 +463,7 @@ for (const inherited of [false, true]) {
     const f = fixture(t);
     const relative = inherited ? "config/base.json" : "tsconfig.json";
     if (inherited) {
-      f.write(relative, {compilerOptions: {moduleSuffixes: suffixes}});
+      f.write(relative, {compilerOptions: {module: "ESNext", moduleResolution: "Bundler", moduleSuffixes: suffixes}});
       f.write("tsconfig.json", {extends: "./" + relative});
     }
     const target = path.join(f.project, relative);
@@ -411,3 +483,120 @@ for (const inherited of [false, true]) {
     assert.throws(() => prepared.assertUnchanged(), diagnostic("E_PROJECT_CONFIG_CHANGED"));
   });
 }
+
+test("the original checker and runtime retain import and require condition modes", async t => {
+  const f = fixture(t, {dependencies: {modes: "1.0.0"}, compilerOptions: {module: "Preserve", types: []}});
+  const folder = installed(f, "modes", "throw new Error('The unexported main must not execute');");
+  const manifest = JSON.parse(fs.readFileSync(path.join(f.project, folder, "package.json"), "utf8"));
+  f.write(folder + "/package.json", {...manifest, exports: {".": {
+    import: {types: "./import.d.ts", default: "./import.js"},
+    require: {types: "./require.d.ts", default: "./require.js"},
+  }}});
+  for (const mode of ["import", "require"]) {
+    f.write(folder + "/" + mode + ".js", "exports.value = '" + mode + "';");
+    f.write(folder + "/" + mode + ".d.ts", "export const value: '" + mode + "';");
+  }
+  f.write("ui/index.ts", "import {value as esm} from 'modes'; import cjs = require('modes');"
+    + " const imported: 'import' = esm; const required: 'require' = cjs.value;"
+    + " (globalThis as any).result = {esm, cjs: cjs.value};");
+  const resolution = await prepare(f);
+  assertTypes(resolution);
+  const result = await bundle(f, resolution);
+  assert.equal(result.context.result.esm, "import");
+  assert.equal(result.context.result.cjs, "require");
+});
+
+test("scoped package types retain the reserved SDK React identity beside a false nested React", async t => {
+  const prefix = "./addons/godot_fabric/toolchain/node_modules/@types/react";
+  const f = fixture(t, {dependencies: {library: "1.0.0"}, compilerOptions: {types: [], paths: {
+    react: [prefix], "react/*": [prefix + "/*"],
+  }}});
+  sdkPackages(f);
+  originalReactTypes(f);
+  const library = installed(f, "library", "exports.React = require('react');", {dependencies: {react: "1.0.0"}});
+  declaration(f, library, "export {default as React} from 'react';");
+  const spoof = installed(f, "react", "throw new Error('Nested React must remain unused');", {parent: library});
+  declaration(f, spoof, "declare const React: {version: number}; export default React;");
+  f.write("ui/index.ts", "import React from 'react'; import {React as nested} from 'library';"
+    + " const directVersion: string = React.version; const nestedVersion: string = nested.version;"
+    + " (globalThis as any).result = {same: React === nested, version: nested.version};");
+  const resolution = await prepare(f);
+  assertTypes(resolution);
+  const result = await bundle(f, resolution);
+  assert.equal(result.context.result.same, true);
+  assert.equal(result.context.result.version, requireOriginal("react").version);
+  assert.ok(!result.inputs.includes(path.join(f.project, spoof, "index.js")));
+});
+
+test("effective scoped config preserves inherited JSX and strict:false while exposing strict errors", async t => {
+  const f = fixture(t);
+  sdkPackages(f);
+  originalReactTypes(f);
+  f.write("config/base.json", {compilerOptions: {
+    module: "ESNext", moduleResolution: "Bundler", moduleSuffixes: suffixes, types: [],
+    strict: false, jsx: "react-jsx", paths: {
+      leaf: ["../ui/leaf.ts"],
+      react: ["../addons/godot_fabric/toolchain/node_modules/@types/react"],
+      "react/*": ["../addons/godot_fabric/toolchain/node_modules/@types/react/*"],
+    },
+  }});
+  f.write("tsconfig.json", {extends: "./config/base.json", include: ["ui/**/*"]});
+  fs.rmSync(path.join(f.project, "ui/index.ts"));
+  f.write("ui/leaf.ts", "export const answer = 'owned JSX';");
+  f.entry = "ui/index.tsx";
+  f.write(f.entry, "import {answer} from 'leaf'; function identity(value) { return value; }"
+    + " (globalThis as any).result = <span>{identity(answer)}</span>;");
+  const resolution = await prepare(f);
+  assertTypes(resolution);
+  const result = await bundle(f, resolution);
+  assert.equal(result.context.result.type, "span");
+  assert.equal(result.context.result.props.children, "owned JSX");
+  const emitted = ts.createSourceFile("bundle.js", result.code, ts.ScriptTarget.Latest);
+  const first = emitted.statements[0];
+  assert.equal(ts.isExpressionStatement(first) && ts.isStringLiteral(first.expression)
+    && first.expression.text === "use strict", false);
+  f.write("tsconfig.json", {extends: "./config/base.json", compilerOptions: {strict: true}, include: ["ui/**/*"]});
+  assertTypes(await prepare(f), 7006);
+});
+
+for (const [module, moduleResolution] of [["NodeNext", "NodeNext"], ["Node16", "Node16"], ["CommonJS", "Bundler"]]) {
+  test("an unvalidated module profile is rejected: " + module + "/" + moduleResolution, async t => {
+    const f = fixture(t, {compilerOptions: {module, moduleResolution}});
+    await assert.rejects(() => prepare(f), diagnostic("E_PROJECT_MODULE_PROFILE"));
+  });
+}
+
+test("runtime conditions cannot activate the declaration-only types condition", async t => {
+  const f = fixture(t, {compilerOptions: {customConditions: ["types"]}});
+  await assert.rejects(() => prepare(f), diagnostic("E_PROJECT_CONDITION_PROFILE"));
+});
+
+test("a package's default runtime export cannot point to a declaration-only file", async t => {
+  const f = fixture(t, {dependencies: {typesOnly: "1.0.0"}});
+  const folder = installed(f, "typesOnly", "throw new Error('Unexported fallback must not execute');");
+  f.write(folder + "/package.json", {name: "typesOnly", exports: {".": {default: "./runtime.d.ts"}}});
+  f.write(folder + "/runtime.d.ts", "export const value: string;");
+  f.write("ui/index.ts", "import 'typesOnly'; (globalThis as any).result = 'side effect import';");
+  await assert.rejects(() => bundle(f), diagnostic("E_PROJECT_PATH"));
+});
+
+test("the typecheck worker accepts the builder's captured config without emitting files", async t => {
+  const f = fixture(t, {compilerOptions: {types: []}});
+  f.write("ui/index.ts", "export const answer: number = 42;");
+  const resolution = await prepare(f);
+  const result = checkProjectTypes({project: f.project, sdk: f.sdk,
+    expectedConfigFingerprint: resolution.configFingerprint});
+  assert.equal(result.errorCount, 0);
+  assert.equal(result.configFingerprint, resolution.configFingerprint);
+  assert.equal(fs.existsSync(path.join(f.project, "ui/index.js")), false);
+});
+
+test("the typecheck worker rejects configuration saved after the builder's preflight", async t => {
+  const f = fixture(t, {compilerOptions: {types: []}});
+  f.write("ui/index.ts", "export const answer: number = 42;");
+  const resolution = await prepare(f);
+  fs.appendFileSync(path.join(f.project, "tsconfig.json"), "\n");
+  assert.throws(() => checkProjectTypes({project: f.project, sdk: f.sdk,
+    expectedConfigFingerprint: resolution.configFingerprint}), diagnostic("E_PROJECT_CONFIG_CHANGED"));
+  assert.equal(fs.existsSync(path.join(f.project, "ui/index.js")), false);
+});

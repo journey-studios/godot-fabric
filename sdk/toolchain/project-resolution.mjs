@@ -5,6 +5,7 @@ import {isDeepStrictEqual} from "node:util";
 import ts from "typescript";
 import {isSdkOwnedSpecifier} from "./platform-plugin.mjs";
 import {godotExtensions} from "./platform-resolution.mjs";
+import {projectCompilerProfiles} from "./project-config.mjs";
 
 const suffixes = [".godot", ".native", ""];
 const facades = new Map([
@@ -124,6 +125,11 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
         fail("E_PROJECT_ALIAS", `${key}: aliases may address only project source files`);
     }
   }
+  const profiles = projectCompilerProfiles(parsed.options, typeMaps);
+  const configFingerprint = hash(JSON.stringify([...snapshots.values()]
+    .sort((a, b) => (a.filename + a.mode).localeCompare(b.filename + b.mode))
+    .map(({filename, mode, physical, sha256}) => [path.relative(project, filename), mode,
+      path.relative(project, physical), sha256])));
 
   const manifestCache = new Map(), packageRoots = new Map();
   function manifestAt(root) {
@@ -175,31 +181,61 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
     if (!declared && owner.manifest.name !== name)
       fail("E_PROJECT_DEPENDENCY", `${name}: undeclared import in ${owner.manifest.name ?? "installed package"} dependencies`);
   }
+  const canonicalName = filename => ts.sys.useCaseSensitiveFileNames ? filename : filename.toLowerCase();
+  const appTypeCache = ts.createModuleResolutionCache(project, canonicalName, profiles.appOptions);
+  const packageTypeCache = ts.createModuleResolutionCache(project, canonicalName, profiles.packageOptions);
+  function privateImporter(filename) {
+    const physical = fs.existsSync(filename) ? fs.realpathSync(filename) : filename;
+    return inside(sdk, physical) || installedOwner(physical) !== null;
+  }
+  function checkTypes() {
+    const compilerOptions = {...profiles.appOptions, noEmit: true};
+    const host = ts.createCompilerHost(compilerOptions);
+    host.resolveModuleNameLiterals = (literals, containingFile, redirectedReference, options, sourceFile) => {
+      const privateOwner = privateImporter(containingFile);
+      const lookupOptions = privateOwner ? profiles.packageOptions : profiles.appOptions;
+      const cache = privateOwner ? packageTypeCache : appTypeCache;
+      return literals.map(literal => ts.resolveModuleName(literal.text, containingFile, lookupOptions,
+        host, cache, redirectedReference, ts.getModeForUsageLocation(sourceFile, literal, options)));
+    };
+    const program = ts.createProgram({rootNames: parsed.fileNames, options: compilerOptions,
+      projectReferences: parsed.projectReferences, host});
+    const diagnostics = ts.getPreEmitDiagnostics(program);
+    assertUnchanged();
+    return {diagnostics, errorCount: diagnostics.filter(item => item.category === ts.DiagnosticCategory.Error).length};
+  }
 
   const skip = Symbol("project-resolution-recursion");
   const plugin = {
     name: "project-owned-resolution",
     setup(builder) {
+      builder.onLoad({filter: /\.d\.[cm]?ts$/}, () => {
+        fail("E_PROJECT_PATH", "Declaration-only files cannot execute in the runtime bundle");
+      });
       builder.onResolve({filter: /.*/}, async args => {
         if (args.pluginData === skip || (args.namespace && args.namespace !== "file")) return;
         const importer = args.importer ? fs.realpathSync(args.importer) : null;
         const sdkOwned = isSdkOwnedSpecifier(args.path);
-        const alias = bare(args.path) ? matchingAlias(paths, args.path) : undefined;
         // SDK internals keep their provisioned dependency graph and original
         // platform/Codegen hooks. Named React/RN imports have one SDK identity.
-        if (importer && inside(sdk, importer)) {
-          if (alias && !sdkOwned)
-            fail("E_PROJECT_SDK_IDENTITY", `${alias}: a project alias collides with a private SDK import`);
-          return;
-        }
+        if (importer && inside(sdk, importer)) return;
         const importerOwner = importer ? installedOwner(importer) : null;
-        if (alias && importerOwner && !sdkOwned)
-          fail("E_PROJECT_ALIAS", `${alias}: a project alias collides with an installed package import; use an application-specific alias`);
+        const alias = !importerOwner && bare(args.path) && !sdkOwned ? matchingAlias(paths, args.path) : undefined;
         const privateImport = args.path.startsWith("#") && !alias;
         if (privateImport && !matchingAlias((importerOwner ? importerOwner.manifest.imports : dependencies.imports) ?? {}, args.path))
           fail("E_PROJECT_DEPENDENCY", `${args.path}: private import must be declared in the importing package's imports map`);
         if (bare(args.path) && !alias && !sdkOwned && !privateImport) requireOwned(packageName(args.path), importerOwner);
-        const resolved = await builder.resolve(args.path, {
+        let specifier = args.path;
+        if (alias) {
+          const mode = args.kind === "require-call" || args.kind === "require-resolve"
+            ? ts.ModuleKind.CommonJS : ts.ModuleKind.ESNext;
+          const typed = ts.resolveModuleName(args.path, args.importer, profiles.appOptions,
+            ts.sys, appTypeCache, undefined, mode).resolvedModule;
+          if (!typed || /\.d\.[cm]?ts$/.test(typed.resolvedFileName))
+            fail("E_PROJECT_ALIAS", `${alias}: runtime alias must resolve to a project source, not declarations only`);
+          specifier = typed.resolvedFileName;
+        }
+        const resolved = await builder.resolve(specifier, {
           importer: args.importer, resolveDir: args.resolveDir, namespace: args.namespace,
           kind: args.kind, with: args.with, pluginData: skip,
         });
@@ -210,6 +246,8 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
         if (resolved.external || (resolved.namespace && resolved.namespace !== "file"))
           fail("E_PROJECT_PATH", "External or virtual project modules are not supported by this prototype");
         const physical = fs.realpathSync(resolved.path);
+        if (/\.d\.[cm]?ts$/.test(physical))
+          fail(alias ? "E_PROJECT_ALIAS" : "E_PROJECT_PATH", "Declaration-only files cannot execute in the runtime bundle");
         if (sdkOwned) {
           if (!inside(sdk, physical)) fail("E_PROJECT_SDK_IDENTITY", "SDK-owned modules must resolve inside the provisioned SDK");
           return resolved;
@@ -247,5 +285,6 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
         fail("E_PROJECT_CONFIG_CHANGED", "Project configuration or dependency declarations changed after preflight");
     }
   }
-  return {plugin, resolveExtensions: [...godotExtensions], assertUnchanged};
+  return {plugin, resolveExtensions: [...godotExtensions], assertUnchanged,
+    tsconfigRaw: profiles.tsconfigRaw, conditions: profiles.conditions, checkTypes, configFingerprint};
 }

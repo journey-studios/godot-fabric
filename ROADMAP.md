@@ -186,8 +186,9 @@ passed **40/43**, and the nested-dependency variant **40**. SDK React identity,
 lockfile ownership and exact-byte recovery remain verified. Relative imports
 cannot bypass package declarations; ordinary project files with RN-like names
 retain their own implementations. Unsupported suffix orders/type spoofing,
-escaping aliases and app aliases colliding with package/private SDK imports
-fail explicitly. Config/manifest snapshots reject changing or stale declarations
+escaping aliases fail explicitly. At `dde5485`, app aliases colliding with
+package/private SDK imports were also rejected; the follow-up below removes
+that bounded restriction. Config/manifest snapshots reject changing or stale declarations
 before publication. Original Codegen adapter runtime passed **35/37** and
 shutdown **8/9/9** on the same native SDK.
 Local gates also passed **172 Node/13 Python**, **10 native tests** and the
@@ -195,6 +196,27 @@ Local gates also passed **172 Node/13 Python**, **10 native tests** and the
 conditions, arbitrary resolution/transform settings, all-target SDK/export
 acceptance and D20 remain open. No GF or denominator closes with this slice;
 its newer hosted acceptance is tracked separately from the preceding green run.
+
+The [scoped-alias follow-up](docs/evidence/alias-scopes/README.md) now preserves
+application, nested-library and SDK ownership in both original TypeScript
+checking and runtime resolution. The actual addon/editor consumer passed
+**30 tooling/40 native/43 graphical** checks; its colliding-name variant proves
+distinct literal types and rendered values, unchanged SDK React identity,
+lockfile ownership and exact-byte recovery. Wrong cross-scope types fail before
+publication. Local gates passed **199 Node/13 Python**, **78 targeted** and
+**10 serial native tests**. Codegen adapter runtime passed **35/37** and shutdown **8/9/9**.
+Eight determinism/transform controls retain the reproduced race negative,
+strict:false, inherited JSX and class-field behavior.
+Original Metro 0.87.1 comparisons cover eight conditional-export/import profiles
+and author key order/exact targets; missing-target fallback and external
+`#imports` remain two explicitly tested differences. ESNext/Preserve + Bundler
+is the bounded compiler profile; NodeNext/Node16/CJS emit, runtime `types`
+conditions, declaration execution and unimplemented decorator metadata fail
+visibly. Full types/assets/profiles/Metro/workspaces/exports and all-target
+acceptance remain open; D20 and GF-03/GF-28 remain open. No denominator changes.
+[Preceding resolver CI](docs/evidence/alias-scopes/preceding-ci.json) passed all
+five jobs at `f2eb57f`, before this follow-up; newer hosted CI remains distinct
+from these local executions.
 
 ## Release contract and scope
 

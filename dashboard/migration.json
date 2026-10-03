@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "2B",
-    "focusTitle": "Aliases e dependências validados no addon; completar resolução e exports"
+    "focusTitle": "Aliases isolados por origem; condições comparadas, completar tipos e resolução"
   },
-  "updatedAt": "2026-10-03T22:09:37.060842+00:00",
+  "updatedAt": "2026-10-03T22:46:45.315700+00:00",
   "source": {
-    "commit": "dde5485591b818def8d0b03443494d60c101389f",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/ROADMAP.md",
-    "scope": "GF-03/GF-28: implementação dde5485 conferida pelos hashes consumidos; consumer27/40/43, aliases40/43, nested40, adapter35/37+8/9/9, 172 Node/13 Python, 10 nativos e 15 exemplos/605 checks. CI precedente9c75031 verde; CI resolver pendente.",
+    "commit": "f2eb57f14dcc6f0c25750ff6284f9244d4b3e617",
+    "url": "https://github.com/journey-studios/godot-fabric/pull/14",
+    "scope": "GF-03/GF-28: working tree verificada sobre f2eb57f; aliases app/lib/SDK isolados em tipos/runtime, consumer30/40/43, Codegen35/37+8/9/9, Metro13 com duas diferenças explícitas, 199 Node/13 Python e 10 nativos. CI precedente f2eb57f fechou cinco jobs; CI desta fatia ainda pendente.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "TSConfig efetivo/herdado, paths locais e dependências por importer passaram no addon real: consumer27/40/43, aliases40/43, nested40. 43 testes de resolução +3 de hooks comprovam ownership, React único, snapshots e nomes locais preservados. Suffixes fora do perfil fixo, aliases fora/SDK e colisões com pacote/SDK privado falham visivelmente. Tipos/imports completos, assets, conditions/exports, layouts alternativos e D20 permanecem abertos.",
+      "note": "Aliases app/lib/SDK isolados no TypeScript original e runtime; literal types e native texts distintos no consumidor30/40/43, React único e hash de recuperação preservados. 54 testes de resolução, 13 Metro, 8 determinismo/transform e 3 hooks passaram. Perfil ESNext/Preserve + Bundler; NodeNext/Node16/CJS, types runtime e .d.ts rejeitados visivelmente. Duas diferenças Metro documentadas. Tipos/imports/assets/profiles completos, workspaces, exports e D20 abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -169,6 +169,10 @@
             {
               "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+            },
+            {
+              "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/alias-scopes/README.md"
             }
           ]
         },
@@ -1360,7 +1364,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Addon real com aliases herdados e dependências sem hoisting: 27 tooling, 40 nativas, 43 gráficas; lockfile e hash exato de recuperação preservados. Adapter Codegen35/37 e shutdown8/9/9 passaram no SDK nativo existente. CI precedente9c75031 fechou cinco jobs da correção TSConfig; CI desta resolução ainda pendente. Instalação/update, dev tooling e exports Debug/Release em todos alvos permanecem abertos.",
+      "note": "Addon/editor real permite alias do app com nome da dependência nested da lib sem afetar SDK React. Consumer30/40/43, Codegen35/37 e shutdown8/9/9 passaram; lockfile e bundle recuperado idênticos. 199 Node/13 Python e 10 nativos passaram. CI f2eb57f precedente verde nos cinco jobs; fatia nova ainda sem hosted CI. Instalação/update/dev tooling e exports Debug/Release em todos os alvos abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1399,6 +1403,10 @@
             {
               "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+            },
+            {
+              "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/alias-scopes/README.md"
             }
           ]
         },
@@ -2426,6 +2434,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "alias-scopes-verified-20261003",
+      "at": "2026-10-03T22:46:45.315700+00:00",
+      "taskIds": [
+        "GF-03",
+        "GF-28"
+      ],
+      "message": "Tipos e runtime isolam aliases do app, lib e SDK; consumidor30/40/43 e Codegen35/37+8/9/9 passaram. 199 Node/13 Python e 10 nativos; Metro13 registra duas diferenças. CI precedente f2eb57f verde; nenhuma conclusão GF/checkpoint/denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "gf03-project-resolution-local",
       "at": "2026-10-03T22:04:11.238720+00:00",

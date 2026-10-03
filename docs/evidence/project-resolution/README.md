@@ -21,10 +21,12 @@ publication against changes during a build.
 For this prototype, effective `moduleSuffixes` must remain exactly
 `[".godot", ".native", ""]`. An unsupported order fails visibly before
 publishing. Local aliases cannot target SDK internals, installed packages,
-declaration-only files or paths outside the project. Collisions with imports
-inside installed libraries or the private SDK are rejected: esbuild applies
-project aliases globally, so silently accepting them could replace a library's
-own dependency. Full Metro behavior and D20 remain open.
+declaration-only files or paths outside the project. At `dde5485`, collisions with imports inside installed libraries or the private
+SDK were rejected. The [scoped-alias follow-up](../alias-scopes/README.md)
+removes that restriction after separating original TypeScript declaration
+lookup from SDK runtime lookup. Its controls also correct the earlier
+assumption: esbuild did not redirect the tested nested library. Full Metro
+behavior and D20 remain open.
 
 The shared RN hooks were also restricted to the provisioned RN tree and exact
 public internal specifiers. A project file named `Utilities/Platform`,
