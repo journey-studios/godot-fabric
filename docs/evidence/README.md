@@ -16,6 +16,11 @@ The [independent consumer record](consumer/README.md) adds the 2B
 Resource/addon/editor prototype, fresh external TSX project, private/offline
 build and dependency checks, native roots/lifecycle and two actual captures.
 
+The later [project-resolution record](project-resolution/README.md) exercises
+inherited local aliases and non-hoisted dependencies through that normal addon.
+Its actual Godot captures and positive/negative cases retain SDK React identity,
+type/runtime source agreement, lockfile ownership and exact-byte recovery.
+
 The later [game-services record](game-services/README.md) extends that consumer
 with typed Godot operations, state revisions and signals. It also retains the
 services laboratory's pause/job-lifetime captures, dedicated native DTO and

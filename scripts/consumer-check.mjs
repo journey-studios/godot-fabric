@@ -81,6 +81,8 @@ try {
   const originalEntry = await readFile(entryPath, "utf8");
   const packagePath = path.join(project, "package.json");
   const originalPackage = await readFile(packagePath, "utf8");
+  const configPath = path.join(project, "tsconfig.json");
+  const originalConfig = await readFile(configPath, "utf8");
   for (const [name, source, diagnostic] of [
     ["syntax", originalEntry + "\nconst broken = ;\n", /TypeScript failed/],
     ["unsupported-type", originalEntry.replace('title="Increment local"', 'title="Increment local" accessibilityLabel="unsupported"'), /accessibilityLabel/],
@@ -134,6 +136,65 @@ try {
   verify(withLibrary.beforeStop.nodes.some(node => node.nativeText === "Project library React identity"), "An explicitly provided project library executes hooks with the SDK React identity");
   const libraryInputs = JSON.parse(await readFile(path.join(project, ".godot_fabric", "build-report.json"), "utf8")).inputs;
   verify(libraryInputs.includes("project/node_modules/consumer-ui-lib/index.js") && !libraryInputs.some(file => file.includes("consumer-ui-lib/node_modules/react")), "Library code is project-owned; duplicated React cannot enter the graph");
+
+  // Exercise the normal provisioned builder, including inherited project paths.
+  const baseConfigPath = path.join(project, "ui.base.json");
+  const config = JSON.parse(originalConfig);
+  const aliasOptions = {...config.compilerOptions, paths: {...config.compilerOptions.paths, "@ui/*": ["./ui/*"]}};
+  await writeFile(baseConfigPath, JSON.stringify({compilerOptions: aliasOptions}));
+  await writeFile(configPath, JSON.stringify({extends: "./ui.base.json", include: config.include}));
+  const aliasEntry = originalEntry.replace('from "./store"', 'from "@ui/store"').replace('from "./platform"', 'from "@ui/platform"');
+  await writeFile(entryPath, aliasEntry);
+  await writeFile(packagePath, originalPackage);
+  await editor("local-alias");
+  const withAliases = await runtime("local-alias-native");
+  verify(withAliases.beforeStop.bundleEvaluations === 1, "Inherited local aliases execute through one original React application");
+  const aliasInputs = JSON.parse(await readFile(path.join(project, ".godot_fabric", "build-report.json"), "utf8")).inputs;
+  verify(aliasInputs.includes("project/ui/store.ts") && aliasInputs.includes("project/ui/platform.godot.ts") && !aliasInputs.includes("project/ui/platform.native.ts"), "Local alias types and runtime select the same project Godot sources");
+  if (capture) {
+    await runtime("local-alias-graphical", true);
+    for (const stage of ["initial", "updated", "resized"])
+      await cp(path.join(project, `consumer-${stage}.png`), path.join(directory, "alias-" + stage + ".png"));
+  }
+  const aliasHash = hash(await readFile(bundlePath));
+  const escapedPlatform = path.join(outside, "platform.ts");
+  await writeFile(escapedPlatform, 'export const platformMessage = "Project TSX · Godot platform source";\n');
+  for (const [label, target] of [["alias-outside", escapedPlatform], ["alias-symlink", "./ui/linked-platform.ts"]]) {
+    if (label === "alias-symlink") await symlink(escapedPlatform, path.join(project, "ui/linked-platform.ts"));
+    await writeFile(baseConfigPath, JSON.stringify({compilerOptions: {...aliasOptions, paths: {...aliasOptions.paths, "@ui/platform": [target]}}}));
+    assert.match(await editor(label, 1), /E_PROJECT_ALIAS/);
+    verify(hash(await readFile(bundlePath)) === aliasHash, label + " failure preserves the previous alias bundle");
+  }
+  await rm(path.join(project, "ui/linked-platform.ts"));
+  await writeFile(baseConfigPath, JSON.stringify({compilerOptions: {...aliasOptions, moduleSuffixes: ["", ".godot", ".native"]}}));
+  assert.match(await editor("suffix-divergence", 1), /E_PROJECT_SUFFIXES/);
+  verify(hash(await readFile(bundlePath)) === aliasHash, "Divergent type/runtime suffix settings fail without publishing a mismatched bundle");
+  await writeFile(path.join(project, "ui/fake-react.ts"), "export const unrelated = true;\n");
+  await writeFile(baseConfigPath, JSON.stringify({compilerOptions: {...aliasOptions, paths: {...aliasOptions.paths, react: ["./ui/fake-react.ts"]}}}));
+  assert.match(await editor("sdk-type-spoof", 1), /E_PROJECT_SDK_IDENTITY/);
+  verify(hash(await readFile(bundlePath)) === aliasHash, "A project type alias cannot replace the SDK React identity");
+  await rm(path.join(project, "ui/fake-react.ts"));
+  await writeFile(configPath, originalConfig);
+  await rm(baseConfigPath);
+
+  const nestedHelper = path.join(library, "node_modules", "consumer-helper");
+  await mkdir(nestedHelper, {recursive: true});
+  await writeFile(path.join(nestedHelper, "package.json"), JSON.stringify({name: "consumer-helper", version: "1.0.0", main: "index.js"}));
+  await writeFile(path.join(nestedHelper, "index.js"), 'exports.marker = "Nested helper · project SDK React identity";\n');
+  await writeFile(path.join(library, "package.json"), JSON.stringify({name: "consumer-ui-lib", version: "1.0.0", main: "index.js", dependencies: {"consumer-helper": "1.0.0"}}));
+  await writeFile(path.join(library, "index.js"), 'import React from "react"; import { marker } from "consumer-helper"; export function useMarker() { return React.useState(marker)[0]; }\n');
+  await writeFile(packagePath, JSON.stringify({...JSON.parse(originalPackage), dependencies: {"consumer-ui-lib": "1.0.0"}}));
+  await writeFile(entryPath, libraryEntry);
+  await editor("nested-dependency");
+  const nested = await runtime("nested-dependency-native");
+  verify(nested.beforeStop.nodes.some(node => node.nativeText === "Nested helper · project SDK React identity"), "A declared transitive helper executes from its importing package without hoisting");
+  const nestedInputs = JSON.parse(await readFile(path.join(project, ".godot_fabric", "build-report.json"), "utf8")).inputs;
+  verify(nestedInputs.includes("project/node_modules/consumer-ui-lib/node_modules/consumer-helper/index.js") && !nestedInputs.some(file => file.includes("consumer-ui-lib/node_modules/react")), "Nested dependency ownership preserves the one SDK React instance");
+  const nestedHash = hash(await readFile(bundlePath));
+  await writeFile(path.join(project, "ui/library.d.ts"), 'declare module "consumer-ui-lib" { export function useMarker(): string; }\ndeclare module "consumer-helper" { export const marker: string; }\n');
+  await writeFile(entryPath, 'import { marker as directMarker } from "consumer-helper";\n' + libraryEntry.replace('{marker}</Text>', '{marker + directMarker}</Text>'));
+  assert.match(await editor("undeclared-direct-dependency", 1), /Declare consumer-helper in the project's dependencies/);
+  verify(hash(await readFile(bundlePath)) === nestedHash, "A transitive package cannot silently become an undeclared direct app dependency");
   await writeFile(entryPath, originalEntry);
   await writeFile(packagePath, originalPackage);
   await editor("recovery");

@@ -172,12 +172,29 @@ cover both orders, strict:false, JSX and inherited settings. The actual consumer
 passed **18 tooling/40 native** checks with exact recovery hashes preserved;
 selected-adapter runtime passed **35/37** and shutdown **8/9/9** again. Six more
 builds kept the same bundle/selection bytes and all 154 inputs. Current local
-contracts passed **126 Node/13 Python**. New builder CI remains separate from the
-preceding green shutdown CI. The [resolution probes](docs/evidence/bundle-determinism/resolution-gaps.json)
-also reproduce two GF-03 gaps: local `paths` aliases rejected as packages and
-editable `moduleSuffixes` choosing a different type source from the fixed runtime
-suffix order. Those contracts, all-target exports and complete SDK acceptance
-remain open; no GF or denominator closes with this fix.
+contracts passed **126 Node/13 Python**. Its
+[hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37154927839)
+at `9c75031` subsequently passed all five jobs; it predates the resolution
+implementation below. The [resolution probes](docs/evidence/bundle-determinism/resolution-gaps.json)
+remain discovery evidence for that next slice.
+
+The [GF-03 project-resolution slice](docs/evidence/project-resolution/README.md)
+now executes inherited local `paths` aliases and declared dependencies installed
+inside their importing libraries through the normal addon/editor. The fresh
+consumer passed **27 tooling/40 native/43 graphical** checks; its alias variant
+passed **40/43**, and the nested-dependency variant **40**. SDK React identity,
+lockfile ownership and exact-byte recovery remain verified. Relative imports
+cannot bypass package declarations; ordinary project files with RN-like names
+retain their own implementations. Unsupported suffix orders/type spoofing,
+escaping aliases and app aliases colliding with package/private SDK imports
+fail explicitly. Config/manifest snapshots reject changing or stale declarations
+before publication. Original Codegen adapter runtime passed **35/37** and
+shutdown **8/9/9** on the same native SDK.
+Local gates also passed **172 Node/13 Python**, **10 native tests** and the
+**15 headless examples/605 checks**. Complete types, assets, exports/package
+conditions, arbitrary resolution/transform settings, all-target SDK/export
+acceptance and D20 remain open. No GF or denominator closes with this slice;
+its newer hosted acceptance is tracked separately from the preceding green run.
 
 ## Release contract and scope
 

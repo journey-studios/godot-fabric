@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "2B",
-    "focusTitle": "Builder determinístico verificado; alinhar resolução de tipos e runtime"
+    "focusTitle": "Aliases e dependências validados no addon; completar resolução e exports"
   },
-  "updatedAt": "2026-10-03T21:23:12.716243Z",
+  "updatedAt": "2026-10-03T22:06:28.590177+00:00",
   "source": {
-    "commit": "371e7ec2e5179beb7bd369426093d937d7fd0260",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/ROADMAP.md",
-    "scope": "GF-28: TSConfig explícito, cinco regressões causais, consumer 18/40, adapter 35/37+8/9/9 e seis rebuilds verificados; GF-03 aliases/suffixes pendentes. CI shutdown 9317b46 verde; CI novo builder pendente.",
+    "commit": "9c75031eaab462dad830be9d58119a826f228505",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/ROADMAP.md",
+    "scope": "GF-03/GF-28: resolução executada sobre base9c75031, fontes exatas nos receipts; consumer27/40/43, aliases40/43, nested40, adapter35/37+8/9/9, 172 Node/13 Python, 10 nativos e 15 exemplos/605 checks. Fixação do SHA final após commit; CI resolver pendente.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "API GodotFabric tipada e imports originais no consumidor. TSConfig explícito passou controles strict:false/JSX/extends, com replay real 18/40 e 35/37. Dois gaps comprovados: paths local passa no tsc mas ownership rejeita como pacote; moduleSuffixes editado muda fonte de tipos enquanto runtime usa ordem fixa. Alinhar ou rejeitar divergências; fachada completa/assets/condições permanecem abertos.",
+      "note": "TSConfig efetivo/herdado, paths locais e dependências por importer passaram no addon real: consumer27/40/43, aliases40/43, nested40. 43 testes de resolução +3 de hooks comprovam ownership, React único, snapshots e nomes locais preservados. Suffixes fora do perfil fixo, aliases fora/SDK e colisões com pacote/SDK privado falham visivelmente. Tipos/imports completos, assets, conditions/exports, layouts alternativos e D20 permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -165,6 +165,10 @@
             {
               "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
               "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/project-resolution/README.md"
             }
           ]
         },
@@ -1356,7 +1360,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Race de TSConfig reproduzido em 18 processos com 154 inputs idênticos: inferido 2 hashes, explícito 1. Correção usa tsconfig do projeto sem normalização/retry: cinco testes causais, consumer 18/40 com hash exato preservado, adapter 35/37+8/9/9 e seis rebuilds bundle/selection iguais. CI histórica9317b46 verde certifica shutdown, não esta nova correção; nova CI pendente. Instalação/update/exports debug/release todos alvos e aceite completo permanecem abertos.",
+      "note": "Addon real com aliases herdados e dependências sem hoisting: 27 tooling, 40 nativas, 43 gráficas; lockfile e hash exato de recuperação preservados. Adapter Codegen35/37 e shutdown8/9/9 passaram no SDK nativo existente. CI precedente9c75031 fechou cinco jobs da correção TSConfig; CI desta resolução ainda pendente. Instalação/update, dev tooling e exports Debug/Release em todos alvos permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1391,6 +1395,10 @@
             {
               "label": "TSConfig: race reproduzido, consumidor18/40 e seis rebuilds iguais",
               "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
+            },
+            {
+              "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/project-resolution/README.md"
             }
           ]
         },
@@ -2418,6 +2426,25 @@
     }
   ],
   "activity": [
+    {
+      "id": "gf03-project-resolution-local",
+      "at": "2026-10-03T22:04:11.238720+00:00",
+      "taskIds": [
+        "GF-03",
+        "GF-28"
+      ],
+      "message": "Aliases herdados e dependências sem hoisting executados no addon: 27/40/43, aliases40/43, nested40; adapter35/37+8/9/9 e 46 testes. Perfis não suportados falham; nenhum aceite GF/dependência/denominador fechado. Evidência local com fontes exatas; CI desta fatia pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/project-resolution/README.md"
+    },
+    {
+      "id": "bundle-determinism-hosted-success-9c75031",
+      "at": "2026-10-03T22:04:11.238720+00:00",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "CI37154927839 completou cinco jobs em 9c75031 para a entrega anterior de TSConfig explícito. Certifica aquele commit; não certifica o resolver novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839"
+    },
     {
       "id": "bundle-tsconfig-determinism-20261003",
       "at": "2026-10-03T21:16:57.404683Z",

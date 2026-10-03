@@ -53,8 +53,8 @@ artifacts, upgrades and target-specific distribution remain open in GF-28/GF-31.
 The plugin adds **Project → Tools → Godot Fabric: Build UI** and implements
 Godot's [`EditorPlugin._build()`](https://docs.godotengine.org/en/stable/classes/class_editorplugin.html#class-editorplugin-private-method-build)
 hook. The editor runs a synchronous child builder before Play. Failure returns
-`false`, with the diagnostic in the Output panel. The build runs strict
-TypeScript, bundles the project entry with the shared Godot platform seams and
+`false`, with the diagnostic in the Output panel. The build checks the project's
+TypeScript settings, bundles the project entry with the shared Godot platform seams and
 applies the original RN Babel transforms. It publishes the JS file after those
 steps succeed. Syntax/type, Resource, missing-tool and dependency failures
 preserve the previous bundle; Play is blocked instead of silently using it.
@@ -73,8 +73,31 @@ This build uses the provisioned executable directly. It never falls back to
 global Node, installs packages or edits a project lockfile. Additional packages
 must be explicitly declared and installed by the project's chosen package
 manager before building. The tested library fixture uses a conventional local
-`node_modules`; Yarn PnP, workspaces, alternate installation layouts and complete
+`node_modules`, including a dependency installed only inside its importing
+library. Direct app imports require project declarations; a library's imports
+use its own dependency/optionalDependency/peerDependency declarations and
+resolution directory. The build never requires every transitive package to be
+hoisted into the project root. Yarn PnP, workspaces, alternate installation layouts and complete
 Metro/package-conditions behavior are not certified.
+
+Local `compilerOptions.paths` aliases work through the effective project
+TSConfig, including `extends` and its inherited path base. For example, add
+`"@ui/*": ["./ui/*"]` alongside the template's SDK type mappings, then import
+`@ui/store` or `@ui/platform`. TypeScript and the bundle both select
+`ui/platform.godot.ts`. Aliases must address local implementation files within
+the project; SDK implementations, declaration-only files, installed packages
+and paths escaping through symlinks are rejected. Keep aliases specific to the
+app: an alias matching an installed library's or private SDK's import is
+explicitly rejected instead of replacing that library's dependency.
+
+This prototype requires effective `moduleSuffixes` of exactly
+`[".godot", ".native", ""]`. Other orders fail with `E_PROJECT_SUFFIXES`
+before publishing, preventing types and runtime from selecting different
+platform implementations. React/RN/runtime type mappings must retain the
+template's physical SDK surface (`E_PROJECT_SDK_IDENTITY`). Configuration and
+dependency-manifest changes during a build reject publication with
+`E_PROJECT_CONFIG_CHANGED`. See the
+[executed module-resolution cases](../docs/evidence/project-resolution/README.md).
 
 React and all its subpaths resolve to the SDK identity, including imports from
 project libraries. React Native resolves to the SDK's bounded facade/original

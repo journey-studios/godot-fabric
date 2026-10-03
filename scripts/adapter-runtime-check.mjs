@@ -28,7 +28,8 @@ async function check({sdk, out, capture, cmake}) {
   if (parent !== path.dirname(out)) throw new Error('Output parent must be canonical');
   fs.mkdirSync(out); fs.mkdirSync(path.join(out,'logs'));
   const inputs = ['scripts/adapter-runtime-check.mjs','scripts/pack-addon.mjs','sdk/toolchain/build.mjs',
-    'sdk/toolchain/adapter-plugin.mjs','scripts/codegen.mjs','scripts/codegen-contract.mjs','scripts/adapter-manifest.mjs',
+    'sdk/toolchain/adapter-plugin.mjs','sdk/toolchain/project-resolution.mjs','sdk/toolchain/platform-plugin.mjs',
+    'sdk/toolchain/platform-resolution.mjs','scripts/codegen.mjs','scripts/codegen-contract.mjs','scripts/adapter-manifest.mjs',
     ...fs.readdirSync(path.join(root,'tests/adapters/package')).map(name=>'tests/adapters/package/'+name),
     'tests/adapters/consumer/ui/index.tsx','tests/adapters/consumer/validation.gd','tests/adapters/consumer/main.tscn',
     'tests/adapters/consumer/tsconfig.json','sdk/addon/application_node.gd'];

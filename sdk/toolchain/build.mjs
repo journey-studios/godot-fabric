@@ -7,8 +7,8 @@ import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { build } from "esbuild";
 import { transformAsync } from "@babel/core";
-import { isSdkOwnedSpecifier, platformPlugin } from "./platform-plugin.mjs";
-import { godotExtensions } from "./platform-resolution.mjs";
+import { platformPlugin } from "./platform-plugin.mjs";
+import { prepareProjectResolution } from "./project-resolution.mjs";
 import { selectedAdapterInputs, prepareAdapterBuild } from "./adapter-plugin.mjs";
 
 const toolchain = path.dirname(fileURLToPath(import.meta.url));
@@ -46,12 +46,10 @@ async function main() {
     const version = dependencies.dependencies?.[name] ?? dependencies.devDependencies?.[name] ?? dependencies.peerDependencies?.[name];
     if (version && version !== manifest[name]) throw new Error(`${name} must match SDK version ${manifest[name]}`);
   }
-  for (const name of Object.keys(dependencies.dependencies ?? {}))
-    if (!isSdkOwnedSpecifier(name) && !existsSync(path.join(project, "node_modules", name, "package.json")))
-      throw new Error(`Missing project dependency ${name}; install it explicitly with the project's package manager`);
   if (dependencies.babel) throw new Error("Project Babel configuration is not supported by this prototype: package.json");
   for (const name of ["babel.config.js", "babel.config.cjs", "babel.config.mjs", "babel.config.json", "babel.config.cts", ".babelrc", ".babelrc.json", ".babelrc.js", ".babelrc.cjs", ".babelrc.mjs", ".babelrc.cts"])
     if (existsSync(path.join(project, name))) throw new Error("Project Babel configuration is not supported by this prototype: " + name);
+  const resolution = prepareProjectResolution({project, sdk, dependencies, resolveSdk: id => requireSdk.resolve(id)});
   const selected = selectedAdapterInputs(project, dependencies);
   let nativeCombination, records = [];
   if (selected.length) {
@@ -79,21 +77,9 @@ async function main() {
     tsconfig: path.join(project, "tsconfig.json"),
     bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
-    mainFields: ["main"], resolveExtensions: godotExtensions,
+    mainFields: ["main"], resolveExtensions: resolution.resolveExtensions,
     plugins: [
-      {
-        name: "project-owned-dependencies",
-        setup(builder) {
-          builder.onResolve({ filter: /^[^./]/ }, (args) => {
-            if (args.importer.startsWith(sdk + path.sep) || isSdkOwnedSpecifier(args.path)) return;
-            const name = args.path.startsWith("@") ? args.path.split("/").slice(0, 2).join("/") : args.path.split("/")[0];
-            if (!args.importer.includes(path.sep + "node_modules" + path.sep) && !dependencies.dependencies?.[name])
-              throw new Error(`Declare ${name} in the project's dependencies and install it explicitly; Play does not install packages`);
-            if (!existsSync(path.join(project, "node_modules", name, "package.json")))
-              throw new Error(`Missing project dependency ${name}; install it explicitly with the project's package manager`);
-          });
-        },
-      },
+      resolution.plugin,
       adapterBuild.plugin,
       platformPlugin(path.join(sdk, "src"), (id) => requireSdk.resolve(id)),
     ],
@@ -114,6 +100,7 @@ async function main() {
   try {
     await writeFile(staging, code);
     if (packetText) await writeFile(packetStaging, packetText);
+    resolution.assertUnchanged();
     adapterBuild.assertUnchanged();
     // Publish selection first; the loader rejects a mixed generation by bundle
     // hash. The editor starts the runtime only after this builder succeeds.

@@ -68,4 +68,7 @@ certify a newer builder. GF-03/GF-26/GF-28 remain In progress.
 alias rejection and a `moduleSuffixes` type/runtime mismatch. The generic CJS
 control observed the same execution behavior for inferred and explicit strict
 configuration; arbitrary-library compatibility remains unverified. These are
-GF-03 follow-up contracts, not completed functionality.
+GF-03 follow-up discovery evidence. The later
+[project-resolution slice](../project-resolution/README.md) implements local
+aliases and rejects suffix divergence explicitly; complete module resolution
+and arbitrary-library compatibility remain open.
