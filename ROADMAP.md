@@ -11,6 +11,17 @@ See [current capabilities and gaps](docs/PARITY.md), the
 [97-name API inventory](docs/compatibility/react-native-0.87.1.json) and
 [retained runtime evidence](docs/evidence/README.md).
 
+The [migration dashboard](dashboard/README.md) reads
+[migration.json](dashboard/migration.json). Update its checkpoints, evidence,
+remaining work, focus and history with every verified implementation slice.
+The required item acceptance below remains authoritative; the dashboard
+calculates checkpoint progress and does not replace full contract certification.
+After committing and pushing the JSON, an implementation branch can publish
+through `gh workflow run dashboard-pages.yml --ref main -f data_ref="BRANCH"`.
+Confirm that exact workflow's successful deployment before reporting a public
+update. The renderer comes from `main`; the published data identifies its branch
+and resolved commit. Automatic deployment from `main` also remains enabled.
+
 ## Current position
 
 The public repository, MIT license, pinned source dependencies, standalone
@@ -35,7 +46,7 @@ GF-05 is **In progress**: upstream TimerManager, portable RN microtask/immediate
 modules, a public runtime example and four additional shared oracle cases are
 implemented. [Runtime evidence](docs/evidence/runtime/README.md) records native
 checks/captures and the remaining bootstrap, idle/error/global and starvation
-gaps. GF-09 system metrics remain Planned; this slice does not complete GF-05.
+gaps. The later DeviceInfo checkpoint starts GF-09; it does not complete GF-05.
 
 The [runnable examples](examples/README.md) expose existing fixtures in a shared
 project; they are a prerequisite for GF-28, not the independent packaged consumer
@@ -60,14 +71,173 @@ build rejection/recovery and two-root native assertions with real captures.
 [Evidence](docs/evidence/consumer/README.md) records the exact scope.
 GF-28/GF-29 remain In progress; complete installation/update, export,
 diagnostics, development and per-target acceptance remain open. D19–D29 are
-still pending. The next integration slice is sequence 3: typed Godot-to-React
-operations/subscriptions together with surface/ref geometry, followed by
-pause/operation-lifetime coverage for the integrated milestone below.
+still pending. The later [game-services checkpoint](docs/evidence/game-services/README.md)
+extends this same consumer with typed Godot calls, initial-state revision races,
+ordered signals and connection cleanup. Sequence 3 remains In progress for
+complete geometry, activation/restart and integrated milestone coverage below.
 
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit
 release scope. P0 describes urgency, not the full release checklist. Module
 owners below are implementation boundaries, not assigned people.
+
+The [native foundation checkpoint](docs/evidence/native-foundation/README.md)
+starts GF-08/GF-09/GF-25: original RN public refs and NativeDOM use the Fabric
+tree; generated DeviceInfo/SourceCode bootstrap and original JSI TurboModules
+cover bounded measurements, subscriptions, promises/events and lifetime.
+The [metrics example](examples/metrics/README.md) tests real resize, uniform
+content density, reads without subscribers and Yoga rounding. These items
+remain In progress for their full rows below. The
+[services example](examples/services/README.md) now combines typed operations,
+signals, consistent snapshots and Zustand across HUD/inventory. Pause,
+hide/unmount/remount, accepted jobs, cancellation and terminal stop have bounded
+native evidence. Full DTO string-domain parity, codegen, cross-thread execution
+and restart/activation contracts remain open; D19–D32 are still pending.
+
+GF-31/GF-35 now include the [iOS export/runtime checkpoint](docs/IOS_BUILD.md):
+three native builds, two XCFramework combinations, unsigned arm64 device
+export/link and 22 runtime checks in an x86_64/Rosetta iOS 18.4 consumer. Arm64
+simulator execution is blocked by missing arm64 code in the official template;
+physical-device, Debug, input/IME/AT and system-service certification remain
+required. A reproduced engine-only mouse error is explicitly recorded. These
+results are independent of the original RN reference-app CI and do not close
+the iOS port or the other target foundations.
+
+GF-26 is **In progress**: the standalone [Codegen experiment](docs/CODEGEN.md)
+uses the original pinned parser/generators for a TurboModule and Fabric Badge
+spec, producing common C++ and ViewConfig artifacts with reproducible checks.
+The isolated compilation witness instantiates the generated descriptor and a
+typed Promise/event TurboModule against the existing macOS arm64 Release build.
+The [executed evidence](docs/evidence/codegen/README.md) retains 20 Node tests,
+six compiled translation units and explicit generation/runtime distinctions.
+The first hosted Codegen attempt failed on its assumed private Node path before
+compilation. Explicit CI Node selection now has three tests and a fresh local
+six-unit witness. The corrected [hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37145700599)
+passed all five jobs at `5d46bba`, including the six-unit Codegen compilation.
+Its [artifact evidence](docs/evidence/codegen/hosted-ci.json) records the actual
+CI Node 22.23.2 separately from declared addon Node 22.23.3.
+It rejects unsupported schema, collisions and stale inputs/artifacts. This
+first slice does not register a native provider or draw the Badge. The next
+slice must expose external factories/adapters safely, remove the fixed native
+component assumptions, integrate specs before bundling and prove a consumer's
+props/events/commands, defaults, stale refs and cleanup without core edits.
+
+The next verified GF-26 foundation now provides a
+[shared native SDK and registration SPI](docs/NATIVE_EXTENSIONS.md): 22 preflight
+tests, 14 SDK receipt/packaging tests and an independent relocated C++ client
+with 11 cases / 207 registry checks. Original generated descriptors link to the
+shared host; rollback/reentrant cleanup, lazy selection/installation and terminal
+lookup/disposal are exercised. [Evidence](docs/evidence/native-sdk/README.md)
+retains consumed-source/binary hashes and separate package/link/registry claims.
+Actual Godot cold start, runtime/roots/modules/services, 15 existing examples
+(605 checks) and the independent consumer (18 tooling + 40 native checks) pass
+against the rebuilt host. The [hosted SDK run](https://github.com/journey-studios/godot-fabric/actions/runs/37147754831) passed all five jobs
+at `7a67f96`, with the original artifact confirming the same 207 registry checks.
+Actual CI tooling/native source hashes are [retained separately](docs/evidence/native-sdk/hosted-ci.json).
+A further [executed external-adapter slice](docs/evidence/native-adapters/README.md)
+now passes 21 loader cases / 89 checks, and an independent original-Codegen
+Badge/Probe consumer passes 35 headless / 37 graphical checks. Its JSX uses the
+original registry, generated Props/emitter/Commands/CxxSpec and a shared native
+host. Two roots exercise reorder, defaults, current/stale callbacks, remount,
+Promise/emitter delivery and extracted-method shutdown. Captures document real
+Godot rendering. Core regressions and the 207-check registry client pass.
+Complete schema/name/reflection coverage, external containers/native state,
+long-lived asynchronous work, full RN differential parity and all-target
+export/ABI acceptance remain open; GF-26/GF-28/GF-31 stay **In progress**.
+A traditional-consumer replay passed 18 tooling / 40 native checks after an
+isolated recovery fingerprint mismatch; the unchanged assertion now retains
+baseline/recovered bundles for investigation. That failure is historical; the
+executed fix is described below.
+An additional [native shutdown slice](docs/evidence/adapter-shutdown/README.md)
+reproduced Control deletion inside a Godot signal during a Fabric commit. Stop
+now retires authority immediately and delays destruction until execution returns;
+resize/RAF/timer fixtures passed **8/9/9 checks**, and the external consumer
+passed **35 headless/37 graphical** again on the rebuilt host. Native suites
+passed **2/4/2/2** serially. Independent root destruction was not covered in
+that slice; the executed follow-up below adds that coverage. Long-lived async
+work remains open. Hosted run **37151683147** passed loader
+**89** and registry **207** but reproduced the consumer recovery fingerprint
+failure; its external runtime lane did not run. The subsequent
+[shutdown CI](docs/evidence/adapter-shutdown/hosted-ci.json) at
+`9317b46` passed all five jobs, with **35 headless** and **8/9/9 shutdown**
+checks confirmed in its artifact; it predates the new builder correction. No
+GF acceptance, dependency or denominator is closed by this slice.
+Hosted evidence remains separate from graphical local execution and complete
+RN/all-target acceptance.
+
+An [explicit project-TSConfig slice](docs/evidence/bundle-determinism/README.md)
+now fixes a reproduced import/alias ordering race in esbuild. Eighteen diagnostic
+processes kept the same 154 physical/transformed inputs: inferred configuration
+produced two bundle hashes, explicit configuration one. Five causal Node tests
+cover both orders, strict:false, JSX and inherited settings. The actual consumer
+passed **18 tooling/40 native** checks with exact recovery hashes preserved;
+selected-adapter runtime passed **35/37** and shutdown **8/9/9** again. Six more
+builds kept the same bundle/selection bytes and all 154 inputs. Current local
+contracts passed **126 Node/13 Python**. Its
+[hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37154927839)
+at `9c75031` subsequently passed all five jobs; it predates the resolution
+implementation below. The [resolution probes](docs/evidence/bundle-determinism/resolution-gaps.json)
+remain discovery evidence for that next slice.
+
+The [GF-03 project-resolution slice](docs/evidence/project-resolution/README.md)
+now executes inherited local `paths` aliases and declared dependencies installed
+inside their importing libraries through the normal addon/editor. The fresh
+consumer passed **27 tooling/40 native/43 graphical** checks; its alias variant
+passed **40/43**, and the nested-dependency variant **40**. SDK React identity,
+lockfile ownership and exact-byte recovery remain verified. Relative imports
+cannot bypass package declarations; ordinary project files with RN-like names
+retain their own implementations. Unsupported suffix orders/type spoofing,
+escaping aliases fail explicitly. At `dde5485`, app aliases colliding with
+package/private SDK imports were also rejected; the follow-up below removes
+that bounded restriction. Config/manifest snapshots reject changing or stale declarations
+before publication. Original Codegen adapter runtime passed **35/37** and
+shutdown **8/9/9** on the same native SDK.
+Local gates also passed **172 Node/13 Python**, **10 native tests** and the
+**15 headless examples/605 checks**. Complete types, assets, exports/package
+conditions, arbitrary resolution/transform settings, all-target SDK/export
+acceptance and D20 remain open. No GF or denominator closes with this slice;
+its newer hosted acceptance is tracked separately from the preceding green run.
+
+The [scoped-alias follow-up](docs/evidence/alias-scopes/README.md) now preserves
+application, nested-library and SDK ownership in both original TypeScript
+checking and runtime resolution. The actual addon/editor consumer passed
+**30 tooling/40 native/43 graphical** checks; its colliding-name variant proves
+distinct literal types and rendered values, unchanged SDK React identity,
+lockfile ownership and exact-byte recovery. Wrong cross-scope types fail before
+publication. Local gates passed **199 Node/13 Python**, **78 targeted** and
+**10 serial native tests**. Codegen adapter runtime passed **35/37** and shutdown **8/9/9**.
+Eight determinism/transform controls retain the reproduced race negative,
+strict:false, inherited JSX and class-field behavior.
+Original Metro 0.87.1 comparisons cover eight conditional-export/import profiles
+and author key order/exact targets; missing-target fallback and external
+`#imports` remain two explicitly tested differences. ESNext/Preserve + Bundler
+is the bounded compiler profile; NodeNext/Node16/CJS emit, runtime `types`
+conditions, declaration execution and unimplemented decorator metadata fail
+visibly. Full types/assets/profiles/Metro/workspaces/exports and all-target
+acceptance remain open; D20 and GF-03/GF-28 remain open. No denominator changes.
+[Preceding resolver CI](docs/evidence/alias-scopes/preceding-ci.json) passed all
+five jobs at `f2eb57f`. The subsequent scoped-alias CI passed all five jobs at
+`80729da`; its [separate record](docs/evidence/root-retirement/preceding-ci.json)
+predates the root-retirement implementation below.
+
+The [independent-root retirement slice](docs/evidence/root-retirement/README.md)
+now extends 2A with **17 real Godot runs / 318 checks** on macOS arm64 Release.
+Resize/pressed/RAF/timer callbacks can retire one root while another keeps its
+state, Controls, VM, module cache and scheduling. Immediate remount, synchronous
+host free and replacement by another application preserve the current owner
+and reject old refs/events. Cleanup uses original React/Fabric work in a deferred
+Godot phase, outside the original registry visit. A reproduced old core Button
+signal across reused root/tag IDs is now rejected using its originating runtime
+and mount identity; a fresh Button still delivers normally. Original external
+ViewProps no longer enter a core props cast, and adapter font ownership is
+verified against a failing preceding binary. Three graphical root cases also
+check rendered pixels and retain captures. Regressions passed **199 Node/13
+Python**, **10 native tests** and **15 headless examples/605 checks** on the
+rebuilt host. Full GF-07/GF-26/GF-28 acceptance,
+original RN differential lifecycle, other targets/exports and ABI remain open.
+No item, decision or checkpoint denominator closes with this slice. The next
+functional foundation is GF-10 View geometry/stacking/clipping, coordinated
+with GF-08 measures and GF-13 input; its implementation/evidence remain pending.
 
 ## Release contract and scope
 
@@ -264,6 +434,18 @@ native visual captures. Extend this same consumer with an external module and
 Fabric component in sequence 4, then grow selected library cases. Screenshots
 explain the scenario; they do not replace lifecycle/event/ref assertions.
 
+**Checkpoint 2026-10-03:** the independent consumer demonstrates points 1–4
+through public TSX, one runtime/two roots, typed Godot services and inventory-only
+resize with original refs, stable window metrics and native editing. The separate
+services laboratory demonstrates pause, hide/unmount/remount and accepted-job
+lifetime from points 5–6. This is split evidence, not acceptance of the entire
+integrated milestone: runtime restart and stale refs (6), pause/job lifetime in
+this same provisioned consumer (5–6), and the pending activation/diagnostic contract (7) still need
+the integrated consumer. Boundary/lifetime fixtures additionally prove queued
+revocation, source destruction, terminal stop and synchronous application
+destruction. The next dependency is the external spec/module/component slice
+in sequence 4, coordinated with the View foundation and approved contracts.
+
 ## M0 — Establish a reliable, measurable contract
 
 Owners: public facade/bundler, runtime lifecycle and acceptance harness.
@@ -279,8 +461,8 @@ and expose a contract failure without hidden no-ops or stale evidence.
 | GF-05 · P0 · RN bootstrap and JS globals | In progress | Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22 | GF-01 |
 | GF-06 · P1 · React/Fabric semantic suite | Planned | Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler | GF-01, GF-05 |
 | GF-07 · P1 · Root and surface lifecycle | In progress | Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions | GF-05, GF-06 |
-| GF-08 · P1 · Public refs and native commands | Planned | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
-| GF-09 · P0 · Real metrics and platform identity | Planned | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
+| GF-08 · P1 · Public refs and native commands | In progress | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
+| GF-09 · P0 · Real metrics and platform identity | In progress | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
 
 **GF-02 checkpoint (2026-10-02):** the extension minimum now matches the tested
 Godot 4.7.2 runtime. Setup rejects a different engine before downloads/build
@@ -333,8 +515,8 @@ consumer project can write TSX, add native functionality, debug and export.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-25 · P0 · TurboModule and event infrastructure | Planned | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
-| GF-26 · P1 · Codegen and custom Fabric components | Planned | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
+| GF-25 · P0 · TurboModule and event infrastructure | In progress | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
+| GF-26 · P1 · Codegen and custom Fabric components | In progress | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
 | GF-27 · P1 · Selected library certification | Planned | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
 | GF-28 · P1 · SDK, addon and consumer exports | In progress | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
 | GF-29 · P1 · Development experience | In progress | Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths | GF-05, GF-06, GF-07, GF-28 |
@@ -349,11 +531,11 @@ in M0; certification completes after the host and service contracts exist.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-31 · P0 · Portable dependency/build foundation | Planned | Replace macOS-framework assumptions with per-target Hermes, RN dependencies, Fabric/Yoga and godot-cpp builds. Specify ABI/compiler/OS minimums and debug/release combinations, hashes/licenses and loader/export behavior. Build an early Android/iOS startup/JSI/Control spike with official templates and identify native-view/accessibility bridge constraints before committing the port design | GF-01 |
+| GF-31 · P0 · Portable dependency/build foundation | In progress | Replace macOS-framework assumptions with per-target Hermes, RN dependencies, Fabric/Yoga and godot-cpp builds. Specify ABI/compiler/OS minimums and debug/release combinations, hashes/licenses and loader/export behavior. Build an early Android/iOS startup/JSI/Control spike with official templates and identify native-view/accessibility bridge constraints before committing the port design | GF-01 |
 | GF-32 · P1 · Linux x86_64 | Planned | Build/load/export on a declared distribution baseline, package shared dependencies and verify window/DPI/input/IME/accessibility/system services. Native headless and graphical acceptance run on a fresh consumer, plus exported application evidence | GF-02, GF-09, GF-12, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-33 · P1 · Windows x86_64 | Planned | Establish MSVC/CRT/ABI and DLL discovery/export; verify native startup/shutdown, DPI, keyboard/IME, focus, accessibility and services in exported debug/release consumers. Test installation paths with spaces and fresh machines | GF-02, GF-09, GF-12, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-34 · P1 · Android arm64 | Planned | Integrate NDK/JNI/shared dependencies and exported Gradle project without modifying Godot. Prove startup, hardware touch, keyboard/IME, safe insets/orientation, lifecycle, accessibility, network and OS services on emulator and a physical device; debug/release packaging includes all dependencies | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |
-| GF-35 · P1 · iOS arm64 and simulator | Planned | Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |
+| GF-35 · P1 · iOS arm64 and simulator | In progress | Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app | GF-02, GF-09, GF-12, GF-13, GF-20, GF-21, GF-23, GF-28, GF-31 |
 | GF-36 · P1 · Native hosted CI and artifacts | Planned | Add actual native compile/import/headless/graphical/export lanes for macOS and each port, plus device/simulator lanes as applicable. Keep contract CI separate; attach version/platform/mode/source hashes and fail on crashes, script errors, missing assertions or stale reports. Some hardware/AT checks may be retained manual release evidence, explicitly named | GF-02, GF-28, GF-32, GF-33, GF-34, GF-35 |
 | GF-37 · P1 · Differential parity certification | Planned | Run the complete GF-01 contract suite against the original pinned RN reference apps and all Godot targets. Compare event sequences/values, ref results, React lifecycle, layout and supported screenshots using predetermined tolerances. Cover errors/denial/unmount/background and physical-device input. Every difference is fixed or a concrete reviewed upstream OS boundary; no blanket or skipped-contract parity claim | GF-01, GF-04, GF-06, GF-08, GF-10, GF-11, GF-12, GF-13, GF-14, GF-15, GF-16, GF-17, GF-18, GF-19, GF-20, GF-21, GF-22, GF-23, GF-24, GF-27, GF-29, GF-36 |
 

@@ -16,6 +16,34 @@ The [independent consumer record](consumer/README.md) adds the 2B
 Resource/addon/editor prototype, fresh external TSX project, private/offline
 build and dependency checks, native roots/lifecycle and two actual captures.
 
+The later [project-resolution record](project-resolution/README.md) exercises
+inherited local aliases and non-hoisted dependencies through that normal addon.
+Its actual Godot captures and positive/negative cases retain SDK React identity,
+type/runtime source agreement, lockfile ownership and exact-byte recovery.
+
+The later [game-services record](game-services/README.md) extends that consumer
+with typed Godot operations, state revisions and signals. It also retains the
+services laboratory's pause/job-lifetime captures, dedicated native DTO and
+application-destruction fixtures, and the 15-example regression matrix.
+
+The separate [iOS export/runtime record](../IOS_BUILD.md) has current-source
+native build/package hashes, an unsigned arm64 device export/link and an
+x86_64/Rosetta simulator consumer. Its narrow runtime proof and disclosed
+official-template limitations do not certify the complete iOS port.
+
+The [original Codegen record](codegen/README.md) adds upstream TS/Flow generation,
+20 contract tests and six compiled C++ translation units. That first record did
+not load/render the external adapter; later native-adapter records below add
+that bounded execution. Complete ABI certification remains open.
+
+The [independent-root retirement record](root-retirement/README.md) extends
+GF-07/GF-26/GF-28 with 17 real Godot runs / 318 checks, including callback-driven
+unmount/remount, freed hosts, application replacement and stale core signals
+across reused tags. External font ownership has an executed failing binary
+control. Three graphical root cases retain readbacks and pixel assertions.
+Its source, native/SDK fingerprints and preceding hosted CI are kept separate
+from full lifecycle, RN differential and all-target acceptance.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

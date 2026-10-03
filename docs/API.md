@@ -1,5 +1,23 @@
 # API and compatibility limits
 
+The [native modules and refs checkpoint](NATIVE_MODULES.md) documents original
+RN element/document refs, measurement, `setNativeProps`, `NativeModules`,
+`TurboModuleRegistry`, `NativeEventEmitter` and DeviceInfo-backed
+Dimensions/PixelRatio. Its [evidence](evidence/native-foundation/README.md)
+is bounded; complete API and platform parity remain roadmap requirements.
+
+The experimental [game-service API](GAME_SERVICES.md) adds the public
+`@godot-fabric/runtime` import: typed calls, signals and revisioned initial state
+connections to GDScript. The [services example](../examples/services/README.md)
+keeps game rules on Godot and shares its React representation through Zustand.
+
+The [Codegen experiment](CODEGEN.md) derives common C++/ViewConfig contracts from
+original RN specs. The experimental [native extension SDK](NATIVE_EXTENSIONS.md)
+now selects an external package, registers its original generated descriptor and
+module, and mounts its Godot Control through Fabric. This remains a bounded
+macOS arm64 implementation; unrestricted schema/package support, other targets
+and native adapter exports remain open.
+
 The examples use React and JSX. `react-native` imports resolve to the Godot
 facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
@@ -91,10 +109,24 @@ entries. Each `FabricSurface` Control uses:
 | `component_name` | AppRegistry entry key; HUD and Inventory use different registered components |
 | `initial_props` | Dictionary serialized through Godot JSON for that root; use JSON-compatible values |
 | `update_props(props)` | Replace root props, preserving root/component identity and local state; before mounting, save props for the next mount |
-| `mount()` | Mount a registered entry, or return true if already mounted; return false with a visible error on failure |
-| `unmount()` / named `stop()` | React cleanup, native tree/tag release and input cancellation for this root |
+| `mount()` | Mount a registered entry, or return true if already mounted; reentrant mounting reserves a new root identity and defers starting Fabric until the current native stack returns; return false with a visible error on failure |
+| `unmount()` / named `stop()` | Immediately retire this root's input/event/command authority; defer original React cleanup, input cancellation and native tree/tag deletion to the host's surface phase |
 | `get_surface_id()` | Current native root tag, or zero after unmount; remount receives a new identity |
 | `hide()` / `show()` | Godot visibility; the mounted React state and effects continue |
+
+`unmount()` sets `get_surface_id()` to zero before returning. The root snapshot
+reports `retiring` while physical cleanup is pending; mounted Controls are
+detached and retained until the deferred phase, rather than deleted from their
+own Godot signal stack. React effects and the original Fabric ShadowTree are
+cleaned up in that phase, so this API does not promise synchronous effect
+cleanup or immediate disconnection of upstream DOM refs.
+
+Calling `unmount(); mount()` from a resize or input callback creates a new
+generation on the same host. Its deferred `startSurface` avoids adding a new
+ShadowTree while the original Fabric registry is being visited. Completion of
+the old retirement is qualified by application and surface identity; it cannot
+clear a replacement mount, including one owned by another application whose
+root IDs start again at one.
 
 Control sizes provide separate Yoga constraints. The module store is shared
 only because both roots import the same module and subscribe explicitly; React
@@ -103,7 +135,14 @@ when replacing UI scenes. Removing a surface unmounts only its root. Removing
 the owner or calling `FabricApplication.stop()` shuts down all its roots and
 scheduling. This prototype's stopped owner cannot be restarted; retaining
 Hermes until owner destruction allows diagnostic `evaluate()`/`snapshot()`.
-These diagnostic methods are not the planned `GodotFabric` game-service API.
+These diagnostic methods are separate from the typed `GodotFabric` game-service API.
+
+An individual root retirement preserves the application's renderer, Hermes
+runtime, module instances and scheduling queues. Surviving roots can continue
+state updates, events and remaining RAF/timer callbacks. Native core Button and
+LineEdit connections capture their originating runtime, surface, tag and mount
+generation. A queued old signal therefore cannot acquire a replacement root's
+authority by following the host's current `application_path`.
 
 The legacy anonymous single-root fixtures retain implicit owner lookup, root 1
 and application shutdown on `stop()`/scene exit. A new anonymous scene, or
@@ -115,8 +154,14 @@ does so through a Resource/scene wrapper and provisioned private tools.
 
 [Shared-root evidence](evidence/shared-roots/README.md) covers two nonoverlapping
 roots, updates, replacement, zero-root survival and activation failures.
+The [root-retirement checkpoint](evidence/root-retirement/README.md) adds the
+reentrant retirement/replacement boundary and deferred core-signal origin.
+Its [surviving-root capture](evidence/root-retirement/root-unmounted.png),
+[remounted-root capture](evidence/root-retirement/root-remounted.png) and
+[owner-switch capture](evidence/root-retirement/root-owner-switched.png)
+show the corresponding native UI states.
 Complete SDK singleton activation, reload/restart
-policy, public game services, bootstrap/dev tooling, portals/overlapping-root
+policy, complete game-service codegen, bootstrap/dev tooling, portals/overlapping-root
 input, pause/resume, Activity hidden mode, transformed/multiwindow geometry and
 original mobile multi-root comparison remain open. The pending V2 decisions
 retain their status; these native properties are an experimental validation API.
@@ -185,8 +230,10 @@ negative native checks. This is a partial GF-05 bootstrap: idle callbacks,
 unhandled rejection/error-handler parity, URL/encoding/abort globals and
 microtask starvation protection remain uncertified. No worker thread is used.
 
-The build currently targets macOS arm64 only. Linux, Windows, iOS, Android and
-Web need their own dependency/toolchain and runtime validation. Installing
+Native runtime acceptance currently targets macOS arm64. The experimental
+[iOS build path](IOS_BUILD.md) has arm64 device/simulator build and link proof;
+exported runtime acceptance remains pending. Linux, Windows, Android and Web
+need their own dependency/toolchain and runtime validation. Installing
 Godot on those systems does not by itself make this GDExtension available.
 
 Two named surfaces are exercised by the shared example. Portals, overlapping

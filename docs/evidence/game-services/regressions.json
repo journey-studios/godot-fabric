@@ -1,0 +1,1064 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "host": "macOS arm64",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "checks": {
+    "modules": {
+      "checks": [
+        {
+          "name": "Both module fixtures mount through original AppRegistry",
+          "passed": true
+        },
+        {
+          "name": "Both native-module runtimes initialize without host errors",
+          "passed": true
+        },
+        {
+          "name": "Separate applications own different native module instances and runtime identities",
+          "passed": true
+        },
+        {
+          "name": "SourceCode reports the exact bundle URL evaluated by this application: FirstModuleApplication",
+          "passed": true
+        },
+        {
+          "name": "SourceCode reports the exact bundle URL evaluated by this application: SecondModuleApplication",
+          "passed": true
+        },
+        {
+          "name": "Mutating one native module leaves the other runtime's state unchanged",
+          "passed": true
+        },
+        {
+          "name": "Native callable-module routing preserves per-runtime ownership",
+          "passed": true
+        },
+        {
+          "name": "Upstream get returns null for missing modules",
+          "passed": true
+        },
+        {
+          "name": "Original NativeModules reads the missing native JSI provider",
+          "passed": true
+        },
+        {
+          "name": "Upstream getEnforcing reports missing modules",
+          "passed": true
+        },
+        {
+          "name": "Public NativeModules and TurboModuleRegistry share the SourceCode provider",
+          "passed": true
+        },
+        {
+          "name": "Generated SourceCode contract returns the application's real bundle URL",
+          "passed": true
+        },
+        {
+          "name": "Public NativeModules and TurboModuleRegistry share the original C++ feature flag module",
+          "passed": true
+        },
+        {
+          "name": "Original generated feature flag methods return the pinned upstream boolean and numeric defaults",
+          "passed": true
+        },
+        {
+          "name": "TurboModuleRegistry and NativeModules share one lazy native module identity",
+          "passed": true
+        },
+        {
+          "name": "Native constants identify the runtime and concrete C++ implementation",
+          "passed": true
+        },
+        {
+          "name": "Native synchronous invocation returns its result",
+          "passed": true
+        },
+        {
+          "name": "Original TurboModule returns undefined for unregistered properties",
+          "passed": true
+        },
+        {
+          "name": "Native argument validation rejects invalid types",
+          "passed": true
+        },
+        {
+          "name": "Native argument validation rejects overflowing numeric results",
+          "passed": true
+        },
+        {
+          "name": "Native synchronous exceptions reach JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Native asynchronous operation does not settle reentrantly",
+          "passed": true
+        },
+        {
+          "name": "Typed native events enter RN's executor without reentrant listeners",
+          "passed": true
+        },
+        {
+          "name": "Original NativeEventEmitter increments the native listener count",
+          "passed": true
+        },
+        {
+          "name": "Original registerCallableModule preserves lazy callable factories",
+          "passed": true
+        },
+        {
+          "name": "Repeated callable registration before invocation preserves the first lazy factory",
+          "passed": true
+        },
+        {
+          "name": "Two typed native events preserve emission order",
+          "passed": true
+        },
+        {
+          "name": "NativeEventEmitter receives its original device-emitter payload",
+          "passed": true
+        },
+        {
+          "name": "Native Promise fulfills through the upstream async bridge",
+          "passed": true
+        },
+        {
+          "name": "Native Promise rejects with a distinguishable error",
+          "passed": true
+        },
+        {
+          "name": "Double subscription cleanup is idempotent and releases native listeners",
+          "passed": true
+        },
+        {
+          "name": "Removed listeners do not receive subsequent native events",
+          "passed": true
+        },
+        {
+          "name": "Native callable invocation constructs once and preserves ordered arguments",
+          "passed": true
+        },
+        {
+          "name": "Repeated callable registration after invocation preserves the resolved module without calling a replacement factory",
+          "passed": true
+        },
+        {
+          "name": "Legacy cleanup after native disposal is idempotent and releases the JS subscription",
+          "passed": true
+        },
+        {
+          "name": "Cached native method rejects after module disposal",
+          "passed": true
+        },
+        {
+          "name": "Cached typed subscription factory rejects after module disposal",
+          "passed": true
+        },
+        {
+          "name": "Queued typed and legacy native events cannot cross module disposal",
+          "passed": true
+        },
+        {
+          "name": "Accepted pending operation rejects when its native module is disposed",
+          "passed": true
+        },
+        {
+          "name": "Upstream get returns null for missing modules",
+          "passed": true
+        },
+        {
+          "name": "Original NativeModules reads the missing native JSI provider",
+          "passed": true
+        },
+        {
+          "name": "Upstream getEnforcing reports missing modules",
+          "passed": true
+        },
+        {
+          "name": "Public NativeModules and TurboModuleRegistry share the SourceCode provider",
+          "passed": true
+        },
+        {
+          "name": "Generated SourceCode contract returns the application's real bundle URL",
+          "passed": true
+        },
+        {
+          "name": "Public NativeModules and TurboModuleRegistry share the original C++ feature flag module",
+          "passed": true
+        },
+        {
+          "name": "Original generated feature flag methods return the pinned upstream boolean and numeric defaults",
+          "passed": true
+        },
+        {
+          "name": "TurboModuleRegistry and NativeModules share one lazy native module identity",
+          "passed": true
+        },
+        {
+          "name": "Native constants identify the runtime and concrete C++ implementation",
+          "passed": true
+        },
+        {
+          "name": "Native synchronous invocation returns its result",
+          "passed": true
+        },
+        {
+          "name": "Original TurboModule returns undefined for unregistered properties",
+          "passed": true
+        },
+        {
+          "name": "Native argument validation rejects invalid types",
+          "passed": true
+        },
+        {
+          "name": "Native argument validation rejects overflowing numeric results",
+          "passed": true
+        },
+        {
+          "name": "Native synchronous exceptions reach JavaScript",
+          "passed": true
+        },
+        {
+          "name": "Native asynchronous operation does not settle reentrantly",
+          "passed": true
+        },
+        {
+          "name": "Typed native events enter RN's executor without reentrant listeners",
+          "passed": true
+        },
+        {
+          "name": "Original NativeEventEmitter increments the native listener count",
+          "passed": true
+        },
+        {
+          "name": "Original registerCallableModule preserves lazy callable factories",
+          "passed": true
+        },
+        {
+          "name": "Repeated callable registration before invocation preserves the first lazy factory",
+          "passed": true
+        },
+        {
+          "name": "Two typed native events preserve emission order",
+          "passed": true
+        },
+        {
+          "name": "NativeEventEmitter receives its original device-emitter payload",
+          "passed": true
+        },
+        {
+          "name": "Native Promise fulfills through the upstream async bridge",
+          "passed": true
+        },
+        {
+          "name": "Native Promise rejects with a distinguishable error",
+          "passed": true
+        },
+        {
+          "name": "Double subscription cleanup is idempotent and releases native listeners",
+          "passed": true
+        },
+        {
+          "name": "Removed listeners do not receive subsequent native events",
+          "passed": true
+        },
+        {
+          "name": "Native callable invocation constructs once and preserves ordered arguments",
+          "passed": true
+        },
+        {
+          "name": "Repeated callable registration after invocation preserves the resolved module without calling a replacement factory",
+          "passed": true
+        },
+        {
+          "name": "Repeated explicit disposal closes the native module once",
+          "passed": true
+        },
+        {
+          "name": "Shutdown releases module caches and callable factories: first",
+          "passed": true
+        },
+        {
+          "name": "Shutdown disposes each native module and clears listener counts exactly once: first",
+          "passed": true
+        },
+        {
+          "name": "Runtime shutdown preserves visible error accounting and releases all roots: first",
+          "passed": true
+        },
+        {
+          "name": "Shutdown releases module caches and callable factories: second",
+          "passed": true
+        },
+        {
+          "name": "Shutdown disposes each native module and clears listener counts exactly once: second",
+          "passed": true
+        },
+        {
+          "name": "Runtime shutdown preserves visible error accounting and releases all roots: second",
+          "passed": true
+        },
+        {
+          "name": "A retained native method cannot reenter a stopped runtime generation",
+          "passed": true
+        },
+        {
+          "name": "An extracted TurboModule method remains safe after cache disposal",
+          "passed": true
+        },
+        {
+          "name": "An extracted SourceCode method cannot access its disposed application URL getter",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "00a9cd76526e173bbf4f602e3fe1feb4aa10101689843c589b95c3159be9b2c7"
+    },
+    "sharedApplication": {
+      "checks": [
+        {
+          "name": "Native roots receive distinct IDs",
+          "passed": true
+        },
+        {
+          "name": "Both roots use the same Hermes runtime",
+          "passed": true
+        },
+        {
+          "name": "Application bundle executes once",
+          "passed": true
+        },
+        {
+          "name": "Original RootTagContext identifies each root",
+          "passed": true
+        },
+        {
+          "name": "Both roots commit native Controls",
+          "passed": true
+        },
+        {
+          "name": "Each root uses its own Control constraints",
+          "passed": true
+        },
+        {
+          "name": "An event cannot target another root through a borrowed tag",
+          "passed": true
+        },
+        {
+          "name": "HUD native input reaches only the HUD React root",
+          "passed": true
+        },
+        {
+          "name": "Inventory native input reaches only the Inventory React root",
+          "passed": true
+        },
+        {
+          "name": "Resizing one surface preserves the other root's constraints",
+          "passed": true
+        },
+        {
+          "name": "Local React state stays independent",
+          "passed": true
+        },
+        {
+          "name": "Explicit module store updates both roots",
+          "passed": true
+        },
+        {
+          "name": "Prop updates preserve root identity and local state",
+          "passed": true
+        },
+        {
+          "name": "AppRegistry receives updated root props",
+          "passed": true
+        },
+        {
+          "name": "Unmount removes only the selected native tree and releases every tag",
+          "passed": true
+        },
+        {
+          "name": "React cleanup belongs to the unmounted root",
+          "passed": true
+        },
+        {
+          "name": "Surviving root preserves state",
+          "passed": true
+        },
+        {
+          "name": "Unmount releases root subscriptions without clearing the store",
+          "passed": true
+        },
+        {
+          "name": "Application timers survive an individual unmount",
+          "passed": true
+        },
+        {
+          "name": "A detached surface can mount again",
+          "passed": true
+        },
+        {
+          "name": "Remount allocates a new root identity",
+          "passed": true
+        },
+        {
+          "name": "Remount resets local state and preserves application state",
+          "passed": true
+        },
+        {
+          "name": "Retired tags cannot identify the new native tree",
+          "passed": true
+        },
+        {
+          "name": "Queued activation with a retired tag cannot affect the new root",
+          "passed": true
+        },
+        {
+          "name": "Hiding preserves the React root and effects",
+          "passed": true
+        },
+        {
+          "name": "Removing a Godot Node unmounts its root without restarting Hermes",
+          "passed": true
+        },
+        {
+          "name": "A replacement scene node reuses the live application and module cache",
+          "passed": true
+        },
+        {
+          "name": "A replacement root starts fresh local state over the existing store",
+          "passed": true
+        },
+        {
+          "name": "Application remains alive with zero mounted roots",
+          "passed": true
+        },
+        {
+          "name": "The live application can mount after all roots were removed",
+          "passed": true
+        },
+        {
+          "name": "A new root receives fresh identity over persistent module state",
+          "passed": true
+        },
+        {
+          "name": "Root lifecycle and input complete without host errors",
+          "passed": true
+        },
+        {
+          "name": "Application shutdown removes all roots and scheduling resources",
+          "passed": true
+        },
+        {
+          "name": "Application shutdown releases remaining React effects",
+          "passed": true
+        },
+        {
+          "name": "Surface can inspect finalized shutdown after its application Node is freed",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "18ce86fb91e2b2e4fcff686b269a604e0fb38bcdaa2de8ad407ba4ecd7b80757"
+    },
+    "sharedClock": {
+      "checks": [
+        {
+          "name": "Native roots receive distinct IDs",
+          "passed": true
+        },
+        {
+          "name": "Both roots use the same Hermes runtime",
+          "passed": true
+        },
+        {
+          "name": "Application bundle executes once",
+          "passed": true
+        },
+        {
+          "name": "Original RootTagContext identifies each root",
+          "passed": true
+        },
+        {
+          "name": "Both roots commit native Controls",
+          "passed": true
+        },
+        {
+          "name": "Each root uses its own Control constraints",
+          "passed": true
+        },
+        {
+          "name": "An event cannot target another root through a borrowed tag",
+          "passed": true
+        },
+        {
+          "name": "HUD native input reaches only the HUD React root",
+          "passed": true
+        },
+        {
+          "name": "Inventory native input reaches only the Inventory React root",
+          "passed": true
+        },
+        {
+          "name": "Resizing one surface preserves the other root's constraints",
+          "passed": true
+        },
+        {
+          "name": "Local React state stays independent",
+          "passed": true
+        },
+        {
+          "name": "Explicit module store updates both roots",
+          "passed": true
+        },
+        {
+          "name": "Prop updates preserve root identity and local state",
+          "passed": true
+        },
+        {
+          "name": "AppRegistry receives updated root props",
+          "passed": true
+        },
+        {
+          "name": "Unmount removes only the selected native tree and releases every tag",
+          "passed": true
+        },
+        {
+          "name": "React cleanup belongs to the unmounted root",
+          "passed": true
+        },
+        {
+          "name": "Surviving root preserves state",
+          "passed": true
+        },
+        {
+          "name": "Unmount releases root subscriptions without clearing the store",
+          "passed": true
+        },
+        {
+          "name": "Application timers survive an individual unmount",
+          "passed": true
+        },
+        {
+          "name": "A detached surface can mount again",
+          "passed": true
+        },
+        {
+          "name": "Remount allocates a new root identity",
+          "passed": true
+        },
+        {
+          "name": "Remount resets local state and preserves application state",
+          "passed": true
+        },
+        {
+          "name": "Retired tags cannot identify the new native tree",
+          "passed": true
+        },
+        {
+          "name": "Queued activation with a retired tag cannot affect the new root",
+          "passed": true
+        },
+        {
+          "name": "Hiding preserves the React root and effects",
+          "passed": true
+        },
+        {
+          "name": "Removing a Godot Node unmounts its root without restarting Hermes",
+          "passed": true
+        },
+        {
+          "name": "A replacement scene node reuses the live application and module cache",
+          "passed": true
+        },
+        {
+          "name": "A replacement root starts fresh local state over the existing store",
+          "passed": true
+        },
+        {
+          "name": "Application remains alive with zero mounted roots",
+          "passed": true
+        },
+        {
+          "name": "The live application can mount after all roots were removed",
+          "passed": true
+        },
+        {
+          "name": "A new root receives fresh identity over persistent module state",
+          "passed": true
+        },
+        {
+          "name": "Root lifecycle and input complete without host errors",
+          "passed": true
+        },
+        {
+          "name": "Application shutdown removes all roots and scheduling resources",
+          "passed": true
+        },
+        {
+          "name": "Application shutdown releases remaining React effects",
+          "passed": true
+        },
+        {
+          "name": "Surface can inspect finalized shutdown after its application Node is freed",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "a31e1def895b0a8f911c08f9e0e26fb169121e3009f8e9e8ad27dbc25d224c9d"
+    },
+    "activationFailures": {
+      "checks": [
+        {
+          "name": "A wrong application path cannot allocate a native root",
+          "passed": true
+        },
+        {
+          "name": "An unregistered entry fails before allocating a ShadowTree",
+          "passed": true
+        },
+        {
+          "name": "Prototype properties cannot masquerade as registered entries",
+          "passed": true
+        },
+        {
+          "name": "Mount failures reach the application diagnostic channel",
+          "passed": true
+        },
+        {
+          "name": "The live application accepts a registered entry after a rejected mount",
+          "passed": true
+        },
+        {
+          "name": "Failed mounts do not reevaluate the bundle",
+          "passed": true
+        },
+        {
+          "name": "Registry rejects unsupported or duplicate registration: duplicate",
+          "passed": true
+        },
+        {
+          "name": "Registry rejects unsupported or duplicate registration: section",
+          "passed": true
+        },
+        {
+          "name": "Registry rejects unsupported or duplicate registration: reserved",
+          "passed": true
+        },
+        {
+          "name": "Duplicate registration cannot replace a live entry",
+          "passed": true
+        },
+        {
+          "name": "Shutdown clears all resources after rejected mounts",
+          "passed": true
+        },
+        {
+          "name": "A stopped application cannot silently restart",
+          "passed": true
+        },
+        {
+          "name": "Missing bundle cannot leave a partially mounted root",
+          "passed": true
+        },
+        {
+          "name": "Failed initialization releases scheduling resources",
+          "passed": true
+        },
+        {
+          "name": "Failed bundle load remains visible and is never counted as evaluated",
+          "passed": true
+        },
+        {
+          "name": "An off-tree owner is rejected without an unbounded deferred retry",
+          "passed": true
+        },
+        {
+          "name": "A surface with a freed owner exposes an empty native tree",
+          "passed": true
+        },
+        {
+          "name": "Owner destruction starts with a committed root and a live application timer",
+          "passed": true
+        },
+        {
+          "name": "Destroying a live owner releases its runtime resources while surface Nodes survive",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "a7164c75b333a2e02d6d623efb5158f22069f7a1016648254c9300e8a6c7ba9e"
+    },
+    "runtimeErrors": {
+      "checks": [
+        {
+          "name": "Throwing callbacks finish without hanging the pump",
+          "passed": true
+        },
+        {
+          "name": "Each uncaught callback exception reaches the host error channel",
+          "passed": true
+        },
+        {
+          "name": "An interval survives a callback exception and can cancel itself on its next invocation",
+          "passed": true
+        },
+        {
+          "name": "A failed callback cannot prevent unrelated queued work",
+          "passed": true
+        },
+        {
+          "name": "Failed one-shot callbacks release native registrations",
+          "passed": true
+        },
+        {
+          "name": "Shutdown also completes after callback failures",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "19477d94f1771f7c109fd3c27c1bb068bf148e7e6a5641cad449e6e24bc65cf7"
+    },
+    "metricsErrors": {
+      "checks": [
+        {
+          "name": "Live MetricsPanel owns a hook and public listener: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Fresh runtime begins with valid metrics and native modules: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Fixture applies the intended unsupported coordinate transform: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Invalid coordinate contract produces exactly one visible diagnostic: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Repeated invalid samples do not flood diagnostics: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Rejected metrics preserve the last valid RN Dimensions state: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Metrics failure does not starve React state or native commits: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Partial unmount releases hook and public subscriptions under invalid metrics: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Partial unmount retires every Control without stopping the application: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Application has real timers and frame callbacks before stop: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Stop delivers React cleanup exactly once despite invalid metrics: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Stop releases every root and native module authority: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Stop drains React work and cancels native scheduling: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Shutdown preserves the one original diagnostic without resampling: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Repeated stop preserves the finalized state and cleanup count: viewport/unmount",
+          "passed": true
+        },
+        {
+          "name": "Live MetricsPanel owns a hook and public listener: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Fresh runtime begins with valid metrics and native modules: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Fixture applies the intended unsupported coordinate transform: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Invalid coordinate contract produces exactly one visible diagnostic: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Repeated invalid samples do not flood diagnostics: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Rejected metrics preserve the last valid RN Dimensions state: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Metrics failure does not starve React state or native commits: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Direct-stop case retains live React effects before shutdown: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Application has real timers and frame callbacks before stop: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Stop delivers React cleanup exactly once despite invalid metrics: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Stop releases every root and native module authority: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Stop drains React work and cancels native scheduling: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Shutdown preserves the one original diagnostic without resampling: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Repeated stop preserves the finalized state and cleanup count: viewport/stop",
+          "passed": true
+        },
+        {
+          "name": "Live MetricsPanel owns a hook and public listener: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Fresh runtime begins with valid metrics and native modules: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Fixture applies the intended unsupported coordinate transform: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Invalid coordinate contract produces exactly one visible diagnostic: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Repeated invalid samples do not flood diagnostics: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Rejected metrics preserve the last valid RN Dimensions state: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Metrics failure does not starve React state or native commits: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Partial unmount releases hook and public subscriptions under invalid metrics: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Partial unmount retires every Control without stopping the application: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Application has real timers and frame callbacks before stop: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Stop delivers React cleanup exactly once despite invalid metrics: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Stop releases every root and native module authority: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Stop drains React work and cancels native scheduling: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Shutdown preserves the one original diagnostic without resampling: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Repeated stop preserves the finalized state and cleanup count: nonuniform/unmount",
+          "passed": true
+        },
+        {
+          "name": "Live MetricsPanel owns a hook and public listener: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Fresh runtime begins with valid metrics and native modules: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Fixture applies the intended unsupported coordinate transform: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Invalid coordinate contract produces exactly one visible diagnostic: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Repeated invalid samples do not flood diagnostics: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Rejected metrics preserve the last valid RN Dimensions state: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Metrics failure does not starve React state or native commits: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Direct-stop case retains live React effects before shutdown: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Application has real timers and frame callbacks before stop: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Stop delivers React cleanup exactly once despite invalid metrics: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Stop releases every root and native module authority: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Stop drains React work and cancels native scheduling: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Shutdown preserves the one original diagnostic without resampling: nonuniform/stop",
+          "passed": true
+        },
+        {
+          "name": "Repeated stop preserves the finalized state and cleanup count: nonuniform/stop",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "a55f9f194e55c836c3d53932d1e717fe4ddf9fee14de7d7b4a5328059830d375"
+    },
+    "parityGodot": {
+      "checks": [
+        {
+          "id": "native-layout",
+          "passed": true
+        },
+        {
+          "id": "native-measure",
+          "passed": true
+        },
+        {
+          "id": "automatic-batching",
+          "passed": true
+        },
+        {
+          "id": "keyed-reorder",
+          "passed": true
+        },
+        {
+          "id": "memo",
+          "passed": true
+        },
+        {
+          "id": "context-update",
+          "passed": true
+        },
+        {
+          "id": "external-store",
+          "passed": true
+        },
+        {
+          "id": "transition-commit",
+          "passed": true
+        },
+        {
+          "id": "timer-arguments-cancellation",
+          "passed": true
+        },
+        {
+          "id": "interval-arguments-cancellation",
+          "passed": true
+        },
+        {
+          "id": "microtask-immediate-order",
+          "passed": true
+        },
+        {
+          "id": "animation-frame-clock",
+          "passed": true
+        },
+        {
+          "id": "unmount-cleanup",
+          "passed": true
+        }
+      ],
+      "rawReportSHA256": "3a9b984e3ef394480e46a8e4824e00613de03b939e4884206e5e73c8de18400a"
+    },
+    "coldStart": {
+      "schemaVersion": 1,
+      "godot": "4.7.2",
+      "platform": "darwin",
+      "architecture": "arm64",
+      "status": "passed",
+      "runs": [
+        {
+          "freshResources": true,
+          "startupFiles": [
+            "extension_list.cfg"
+          ],
+          "cases": [
+            {
+              "scenario": "react",
+              "checks": 36
+            },
+            {
+              "scenario": "typography",
+              "checks": 50
+            }
+          ],
+          "warmImport": "passed"
+        },
+        {
+          "freshResources": true,
+          "startupFiles": [
+            "extension_list.cfg"
+          ],
+          "cases": [
+            {
+              "scenario": "react",
+              "checks": 36
+            },
+            {
+              "scenario": "typography",
+              "checks": 50
+            }
+          ],
+          "warmImport": "passed"
+        }
+      ]
+    }
+  },
+  "contracts": {
+    "node": 47,
+    "python": 10,
+    "strictTypes": true,
+    "staticAnalysis": "passed",
+    "hostedCI": "must verify published head"
+  }
+}

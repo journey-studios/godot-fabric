@@ -26,6 +26,9 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [shared](shared/README.md) | Two AppRegistry roots, props and independent lifetimes | Public | [App](shared/App.jsx) · [scene](shared/scene.tscn) |
 | [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
+| [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
+| [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
+| [services](services/README.md) | Typed GDScript calls/signals, consistent state and shared Zustand data | Public | [App](services/App.jsx) · [scene](services/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
 | [react](react/README.md) | State, keyed reconciliation, effects, Suspense and errors | Internal | [App](react/App.jsx) · [scene](react/scene.tscn) |
 | [layout](layout/README.md) | Intrinsic text measurement and responsive layout | Internal | [App](layout/App.jsx) · [scene](layout/scene.tscn) |
@@ -59,6 +62,13 @@ The [shared application](shared/README.md) adds explicit native application and
 surface properties. Its controls use public RN imports; final resource/SDK
 authoring and multi-root mobile reference certification remain open.
 
+![Game state reaches both roots through typed services](../docs/evidence/game-services/services-remounted.png)
+
+The [services example](services/README.md) adds GDScript methods/signals, a
+consistent initial snapshot, shared Zustand state, pause and accepted-job
+lifetime. Its images and positive/negative assertions have a separate
+[evidence record](../docs/evidence/game-services/README.md).
+
 ## Validation and images
 
 ```sh
@@ -82,7 +92,9 @@ are in [validation evidence](../docs/evidence/README.md).
 
 The parity case always runs automatically; it has no manual gallery mode or
 capture flag. Its reference runners launch original RN on iOS/Android. They
-do not establish Godot support on either OS. Godot builds remain macOS arm64.
+do not establish Godot support on either OS. The separate
+[iOS consumer experiment](../docs/IOS_BUILD.md) records its narrower export and
+runtime proof; the interactive catalog remains a macOS arm64 laboratory.
 
 ## Organization
 

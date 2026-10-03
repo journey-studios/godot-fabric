@@ -16,6 +16,13 @@ import {
 import { PublicInput } from "./public-input";
 import { validateButton, validateInput } from "./control-contracts.mjs";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
+export { default as NativeModules } from "./native-modules";
+export { default as NativeEventEmitter } from "react-native/Libraries/EventEmitter/NativeEventEmitter";
+export * as TurboModuleRegistry from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+export { default as codegenNativeComponent } from "react-native/Libraries/Utilities/codegenNativeComponent";
+export { default as codegenNativeCommands } from "react-native/Libraries/Utilities/codegenNativeCommands";
+export { findNodeHandle } from "./renderer-proxy";
+export { UIManager } from "./private-interface";
 export { AppRegistry, RootTagContext } from "./app-registry";
 export {
   Dimensions,

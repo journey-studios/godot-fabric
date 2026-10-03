@@ -1,0 +1,48 @@
+{
+  "at": "2026-10-03T20:22:35.441369Z",
+  "platform": "macOS arm64",
+  "configuration": "Release",
+  "contracts": {
+    "nodeChecks": 121,
+    "pythonChecks": 13,
+    "passed": true
+  },
+  "registry": {
+    "cases": 11,
+    "checks": 207,
+    "passed": true
+  },
+  "loader": {
+    "cases": 21,
+    "checks": 89,
+    "passed": true
+  },
+  "externalConsumer": {
+    "headless": 35,
+    "graphical": 37,
+    "passed": true
+  },
+  "coreNativeSuites": {
+    "runtime": 2,
+    "application": 4,
+    "modules": 2,
+    "services": 2,
+    "passed": true
+  },
+  "examples": {
+    "cases": 15,
+    "checks": 605,
+    "passed": true
+  },
+  "traditionalConsumer": {
+    "tooling": 18,
+    "native": 40,
+    "replayPassed": true,
+    "priorRecoveryFingerprintMismatch": true,
+    "causeIsolated": false,
+    "assertionPreserved": true
+  },
+  "staticPassed": true,
+  "publicationPassed": true,
+  "hostedCurrentRunSucceeded": false
+}

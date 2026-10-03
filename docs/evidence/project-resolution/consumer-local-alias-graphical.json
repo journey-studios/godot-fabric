@@ -1,0 +1,267 @@
+{
+  "format": "godot-fabric.executed-project-resolution-consumer/v1",
+  "sourceReportSha256": "04d44d5b0d00fd5d6d9a798d44e091090ec2579858718a8a1b75d9f0d5242c65",
+  "case": "local-alias-graphical",
+  "host": "independent-consumer",
+  "displayServer": "macOS",
+  "checks": [
+    {
+      "name": "External TSX mounts native trees",
+      "passed": true
+    },
+    {
+      "name": "Resource config produces one shared application and one bundle evaluation",
+      "passed": true
+    },
+    {
+      "name": "Consumer roots have distinct identities",
+      "passed": true
+    },
+    {
+      "name": "Scene props reach registered public components",
+      "passed": true
+    },
+    {
+      "name": "Consumer resolution selects project .godot.ts",
+      "passed": true
+    },
+    {
+      "name": "Addon fonts and host load without runtime errors",
+      "passed": true
+    },
+    {
+      "name": "Consumer has no laboratory asset directory",
+      "passed": true
+    },
+    {
+      "name": "Public TextInput commits a native editor",
+      "passed": true
+    },
+    {
+      "name": "SDK runtime_available hook binds GDScript services before consumer roots mount",
+      "passed": true
+    },
+    {
+      "name": "Public typed state and signal subscriptions initialize in the independent SDK consumer",
+      "passed": true
+    },
+    {
+      "name": "State snapshot retries a changed getter and exposes the current revision",
+      "passed": true
+    },
+    {
+      "name": "Initial snapshot race preserves its signal occurrence exactly once",
+      "passed": true
+    },
+    {
+      "name": "Game-owned state rerenders both independent native roots",
+      "passed": true
+    },
+    {
+      "name": "Consumer capture saved: initial",
+      "passed": true
+    },
+    {
+      "name": "Native input updates only its own React root",
+      "passed": true
+    },
+    {
+      "name": "Project-owned store updates both roots",
+      "passed": true
+    },
+    {
+      "name": "Native editing rerenders the consumer component",
+      "passed": true
+    },
+    {
+      "name": "Godot prop updates preserve local React state",
+      "passed": true
+    },
+    {
+      "name": "Prop updates retain root identity",
+      "passed": true
+    },
+    {
+      "name": "Consumer capture saved: updated",
+      "passed": true
+    },
+    {
+      "name": "Typed calls queue GDScript work outside the JavaScript render stack",
+      "passed": true
+    },
+    {
+      "name": "Typed consumer call settles through the native SDK transport",
+      "passed": true
+    },
+    {
+      "name": "Completion metadata and result correspond to the executed GDScript method",
+      "passed": true
+    },
+    {
+      "name": "Consecutive Godot signals preserve every occurrence and its argument order",
+      "passed": true
+    },
+    {
+      "name": "Typed state updates pair the same revision with both native trees",
+      "passed": true
+    },
+    {
+      "name": "Inventory-only resize changes its Yoga constraints while preserving HUD constraints",
+      "passed": true
+    },
+    {
+      "name": "Independent resize preserves root identity and local React state",
+      "passed": true
+    },
+    {
+      "name": "Surface constraints do not replace original RN window and screen metrics",
+      "passed": true
+    },
+    {
+      "name": "Original public View refs measure both resized consumer surfaces",
+      "passed": true
+    },
+    {
+      "name": "Public measureInWindow agrees with Godot global geometry after inventory-only resize",
+      "passed": true
+    },
+    {
+      "name": "Native editing after resize reaches only the inventory React root",
+      "passed": true
+    },
+    {
+      "name": "Consumer capture saved: resized",
+      "passed": true
+    },
+    {
+      "name": "Restoring inventory constraints updates layout and the same public ref without remount",
+      "passed": true
+    },
+    {
+      "name": "Consumer unmount preserves the other native tree",
+      "passed": true
+    },
+    {
+      "name": "Closing one consumer root preserves application-owned game connections",
+      "passed": true
+    },
+    {
+      "name": "Consumer root mounts again",
+      "passed": true
+    },
+    {
+      "name": "Remount resets local state and preserves the project store",
+      "passed": true
+    },
+    {
+      "name": "Remount observes current GDScript state without installing duplicate game subscriptions",
+      "passed": true
+    },
+    {
+      "name": "Consumer lifecycle remains free of native errors",
+      "passed": true
+    },
+    {
+      "name": "Consumer shutdown releases native tags, roots and timers",
+      "passed": true
+    },
+    {
+      "name": "Final React cleanup removes shared SDK service listeners exactly once",
+      "passed": true
+    },
+    {
+      "name": "SDK shutdown disconnects GDScript sources and clears service queues and bindings",
+      "passed": true
+    },
+    {
+      "name": "Stopped consumer handlers cannot receive later game signals",
+      "passed": true
+    }
+  ],
+  "geometry": {
+    "resized": {
+      "hud": {
+        "height": 552,
+        "width": 484,
+        "x": 24,
+        "y": 24
+      },
+      "inventory": {
+        "height": 552,
+        "width": 430,
+        "x": 544,
+        "y": 24
+      }
+    },
+    "windowMetrics": {
+      "screen": {
+        "fontScale": 1,
+        "height": 1964,
+        "scale": 1,
+        "width": 3024
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 600,
+        "scale": 1,
+        "width": 1080
+      }
+    }
+  },
+  "beforeStop": {
+    "bundleEvaluations": 1,
+    "rootCount": 2,
+    "applicationStopped": false,
+    "state": "mounted",
+    "nativeTags": 14,
+    "retiringTags": 0,
+    "creates": 14,
+    "deletes": 0,
+    "pendingWork": 0,
+    "pendingTimers": 0,
+    "pendingAnimationFrames": 0,
+    "errors": [],
+    "gameServices": {
+      "bindings": 3,
+      "callbacksRun": 2,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 1,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 2,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": false,
+      "subscriptions": 2,
+      "taskBudget": 64
+    }
+  },
+  "afterStop": {
+    "bundleEvaluations": 1,
+    "rootCount": 0,
+    "applicationStopped": true,
+    "state": "unmounted",
+    "nativeTags": 0,
+    "retiringTags": 0,
+    "creates": 14,
+    "deletes": 14,
+    "pendingWork": 0,
+    "pendingTimers": 0,
+    "pendingAnimationFrames": 0,
+    "errors": [],
+    "gameServices": {
+      "bindings": 0,
+      "callbacksRun": 3,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 7,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 3,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": true,
+      "subscriptions": 0,
+      "taskBudget": 64
+    }
+  }
+}

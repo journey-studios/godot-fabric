@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "host": "macOS arm64",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "mode": "headless",
+  "cases": [
+    {
+      "scenario": "shared",
+      "checks": 35,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "9f7a4616ad94bae23c1d3d446bf2854940be857e0f8d50f04d8ab1a707f4cd3c"
+    },
+    {
+      "scenario": "counter",
+      "checks": 19,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "7144e29d9c9432678f985a7264d270293bc931c06a4ef9f6c406eb9734619514"
+    },
+    {
+      "scenario": "runtime",
+      "checks": 23,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "0840f443265924b6b9800f596f871383ab8475b436d206f34eb5c3b220830af2"
+    },
+    {
+      "scenario": "refs",
+      "checks": 23,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "6b5eaa9178456f7945fd50902cdb8221e7364570598d3c988625bff55daabca5"
+    },
+    {
+      "scenario": "metrics",
+      "checks": 64,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "e2937ea6cefb8fb1f6e790be7038e72bcf7414b206809e9a99d482f9bd29cf72"
+    },
+    {
+      "scenario": "services",
+      "checks": 36,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "fc03c6569f4f60f58bc397d4a9971dd5d2c11da7775fd3704dbe52cea60d0aee"
+    },
+    {
+      "scenario": "form",
+      "checks": 39,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "3cb717984a2acd028344f23b397a43a7b892827e6da0908a4e3d00af9882922f"
+    },
+    {
+      "scenario": "react",
+      "checks": 36,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "f2c9b1e0c175e75a9a6b07f7b2effa77d8a0f1a9b39f7e978076149f4b74b716"
+    },
+    {
+      "scenario": "layout",
+      "checks": 47,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "4b66fddf51a6f703f5d0fa8e33ebee73809a283098d2891ec77c67ec056ff185"
+    },
+    {
+      "scenario": "input",
+      "checks": 45,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "9bfff9954db9ab26d7a4f1df7f119574a1c8855b66f75973ed5bb6a90d482180"
+    },
+    {
+      "scenario": "pressable",
+      "checks": 43,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "d25e581405fd664cafed090568f6104afe908440fbb4c65a2f3103037a7bebf5"
+    },
+    {
+      "scenario": "scroll",
+      "checks": 62,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "db09e5bb9b5145274c38414c07399d6502bde6f8bc15f50460a299072f94e52c"
+    },
+    {
+      "scenario": "chart",
+      "checks": 34,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "ef463ef57d6462c1f1611f0cb2f33163633240a4539673a0d3acfc057a42bbd0"
+    },
+    {
+      "scenario": "nativewind",
+      "checks": 49,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "e6f84e59b541067a8418bab1565eb42ea32416c2ead5d10193f1ba4d4aff0d1a"
+    },
+    {
+      "scenario": "typography",
+      "checks": 50,
+      "passed": true,
+      "displayServer": "headless",
+      "rawReportSHA256": "25a0ec81eca78cebdd8ac689c26532f174393edfa445fc769f59f33f4752c1c7"
+    }
+  ],
+  "totalChecks": 605
+}

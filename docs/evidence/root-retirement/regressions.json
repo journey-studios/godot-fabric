@@ -1,0 +1,144 @@
+{
+  "format": "godot-fabric.root-retirement-regressions/v1",
+  "checkedAt": "2026-10-03T23:46:46.629761+00:00",
+  "nativeHostSha256": "ef8cb2108b86d11ddb643bb02fd7f95db557f2d69ce475a2d20c22e07b1b448d",
+  "nodeContractTests": 199,
+  "pythonTests": 13,
+  "nativeTests": 10,
+  "exampleCases": 15,
+  "exampleChecks": 605,
+  "examples": [
+    {
+      "name": "chart",
+      "checks": 34,
+      "sha256": "d700de690eb60a2d22231394c8fd59d38a3eb77300f476688256c4b5ada49dc1",
+      "passed": true
+    },
+    {
+      "name": "counter",
+      "checks": 19,
+      "sha256": "119861254dd8f7ff8f110dcfa753784677f95a435588ed3e81ff76ec3df0a50c",
+      "passed": true
+    },
+    {
+      "name": "form",
+      "checks": 39,
+      "sha256": "71fc78bb2280c4246ab99417e801d515470db291c09818c35e7aa11cb5f10c37",
+      "passed": true
+    },
+    {
+      "name": "input",
+      "checks": 45,
+      "sha256": "3142f594719bb45f645bf82fa28fa828988444a719fbe607118c04fdfb82fc78",
+      "passed": true
+    },
+    {
+      "name": "layout",
+      "checks": 47,
+      "sha256": "3ba8818fd6b9b3a5f3091b9256fa94050e64c31ba35f0fc763c430af2d684754",
+      "passed": true
+    },
+    {
+      "name": "metrics",
+      "checks": 64,
+      "sha256": "0372e687364fd32671535d5eecf0d33f3ecccacaea52d8ee029c159a38b19b6f",
+      "passed": true
+    },
+    {
+      "name": "nativewind",
+      "checks": 49,
+      "sha256": "b8d6afbfd4b45593a07d5f8b23ff142568a7a038fcf2d1b192e9ebe034008060",
+      "passed": true
+    },
+    {
+      "name": "pressable",
+      "checks": 43,
+      "sha256": "9b5428c7ef8875873c6adc2695ce04f69291ee1930f20d7a323c1469127ba012",
+      "passed": true
+    },
+    {
+      "name": "react",
+      "checks": 36,
+      "sha256": "d8cf5247a802182a724b123b75f990eefe78c4ae79b63a2ca43095a06571200a",
+      "passed": true
+    },
+    {
+      "name": "refs",
+      "checks": 23,
+      "sha256": "cebee04b4d4dab97935604b13d7dc9af5ddac8d85f2c67fb7d08683172d1a1f9",
+      "passed": true
+    },
+    {
+      "name": "runtime",
+      "checks": 23,
+      "sha256": "26c047f44b80e8505692159c2de7eb9e62e25e456ce27daf94abfb72fd2d1f96",
+      "passed": true
+    },
+    {
+      "name": "scroll",
+      "checks": 62,
+      "sha256": "c59762a199c47532716893e9e66ce4de001e94f4ba09bda7bfee455ad36b730a",
+      "passed": true
+    },
+    {
+      "name": "services",
+      "checks": 36,
+      "sha256": "505634d76003534bdce14f5224d92064d7e7417dfc317c27c345b7e21630348b",
+      "passed": true
+    },
+    {
+      "name": "shared",
+      "checks": 35,
+      "sha256": "67a57000a4f4a31046b9fb5a3b9dbaf2562d8b45218be39ce7a6e493382a53c3",
+      "passed": true
+    },
+    {
+      "name": "typography",
+      "checks": 50,
+      "sha256": "48d8c7a07f24498a7ee33ae00a9bbee014c38b4f7d883e3c789ac2594ac3d397",
+      "passed": true
+    }
+  ],
+  "stages": [
+    {
+      "label": "contracts",
+      "command": "npm run test:contracts",
+      "logSha256": "d0011b1d972123572770e49cba3dfde0d83ee2f1fb43ec7eca2335546a9de0f5",
+      "exitCode": 0
+    },
+    {
+      "label": "native-core",
+      "command": "npm run bundle && node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+      "logSha256": "077d0c6101f014c3954b0fd81d2bd44de7b8cbcea5cee405a7641d2abcb48cbf",
+      "exitCode": 0
+    },
+    {
+      "label": "native-metrics-failure",
+      "command": "node --test tests/metrics-errors-native.test.mjs",
+      "logSha256": "8c493a9f38a543d4b33107bbf507b7a499c8c24b17db023cda0ca5bf84830008",
+      "exitCode": 0
+    },
+    {
+      "label": "examples",
+      "command": "npm run test:examples",
+      "logSha256": "64857a713798821e5a1ce1629551c5b7a3ebabe09a9a7e14b01549d67fa1b5ab",
+      "exitCode": 0
+    }
+  ],
+  "sourceSha256": {
+    "scripts/examples-check.mjs": "5089e26109695e471e18aeb2066990924a01855003d39b35c872ba95f9678cb3",
+    "scripts/examples-catalog.mjs": "f10865401a330b0b3ba3187edfc0ee13515d5493874a15bc1e01ce0d22b63d4c",
+    "tests/runtime-native.test.mjs": "4fcf14a706afb5230c71c30f8b8ff128da3229910f9e535811498f7d1ad48a9d",
+    "tests/shared-application-native.test.mjs": "f2091002472157eff12aa34a0d8bfd7c7f00e7a255f3d19b6f5cbf24220bd4bd",
+    "tests/native-modules-native.test.mjs": "baa4c70b0f0fb72bc772ac4310c66a49b4e173e691e28d8dac6f22f387ca343e",
+    "tests/metrics-errors-native.test.mjs": "049a775ff4a361a7d6b1245a935fa80960436d6092328ef62087b6570ee313cf",
+    "tests/services-boundaries-native.test.mjs": "2e5ea6e667e28378598a01c9b82312a783fc3af37524ed934a2483f2c7b2a2c7",
+    "tests/services-lifetime-native.test.mjs": "7932f3078f94af222e5c322b226ae0bca1aa724842005d29d6386be38e21b996"
+  },
+  "passed": true,
+  "limits": [
+    "Local macOS arm64 Release regressions",
+    "Headless examples; graphical root evidence is recorded separately",
+    "Not hosted CI or full RN contract/target certification"
+  ]
+}

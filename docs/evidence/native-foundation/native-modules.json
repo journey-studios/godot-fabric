@@ -1,0 +1,375 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "scenario": "modules",
+  "engine": "hermes",
+  "renderer": "fabric",
+  "displayServer": "headless",
+  "assertionCount": 76,
+  "checks": [
+    {
+      "name": "Both module fixtures mount through original AppRegistry",
+      "passed": true
+    },
+    {
+      "name": "Both native-module runtimes initialize without host errors",
+      "passed": true
+    },
+    {
+      "name": "Separate applications own different native module instances and runtime identities",
+      "passed": true
+    },
+    {
+      "name": "SourceCode reports the exact bundle URL evaluated by this application: FirstModuleApplication",
+      "passed": true
+    },
+    {
+      "name": "SourceCode reports the exact bundle URL evaluated by this application: SecondModuleApplication",
+      "passed": true
+    },
+    {
+      "name": "Mutating one native module leaves the other runtime's state unchanged",
+      "passed": true
+    },
+    {
+      "name": "Native callable-module routing preserves per-runtime ownership",
+      "passed": true
+    },
+    {
+      "name": "Upstream get returns null for missing modules",
+      "passed": true
+    },
+    {
+      "name": "Original NativeModules reads the missing native JSI provider",
+      "passed": true
+    },
+    {
+      "name": "Upstream getEnforcing reports missing modules",
+      "passed": true
+    },
+    {
+      "name": "Public NativeModules and TurboModuleRegistry share the SourceCode provider",
+      "passed": true
+    },
+    {
+      "name": "Generated SourceCode contract returns the application's real bundle URL",
+      "passed": true
+    },
+    {
+      "name": "Public NativeModules and TurboModuleRegistry share the original C++ feature flag module",
+      "passed": true
+    },
+    {
+      "name": "Original generated feature flag methods return the pinned upstream boolean and numeric defaults",
+      "passed": true
+    },
+    {
+      "name": "TurboModuleRegistry and NativeModules share one lazy native module identity",
+      "passed": true
+    },
+    {
+      "name": "Native constants identify the runtime and concrete C++ implementation",
+      "passed": true
+    },
+    {
+      "name": "Native synchronous invocation returns its result",
+      "passed": true
+    },
+    {
+      "name": "Original TurboModule returns undefined for unregistered properties",
+      "passed": true
+    },
+    {
+      "name": "Native argument validation rejects invalid types",
+      "passed": true
+    },
+    {
+      "name": "Native argument validation rejects overflowing numeric results",
+      "passed": true
+    },
+    {
+      "name": "Native synchronous exceptions reach JavaScript",
+      "passed": true
+    },
+    {
+      "name": "Native asynchronous operation does not settle reentrantly",
+      "passed": true
+    },
+    {
+      "name": "Typed native events enter RN's executor without reentrant listeners",
+      "passed": true
+    },
+    {
+      "name": "Original NativeEventEmitter increments the native listener count",
+      "passed": true
+    },
+    {
+      "name": "Original registerCallableModule preserves lazy callable factories",
+      "passed": true
+    },
+    {
+      "name": "Repeated callable registration before invocation preserves the first lazy factory",
+      "passed": true
+    },
+    {
+      "name": "Two typed native events preserve emission order",
+      "passed": true
+    },
+    {
+      "name": "NativeEventEmitter receives its original device-emitter payload",
+      "passed": true
+    },
+    {
+      "name": "Native Promise fulfills through the upstream async bridge",
+      "passed": true
+    },
+    {
+      "name": "Native Promise rejects with a distinguishable error",
+      "passed": true
+    },
+    {
+      "name": "Double subscription cleanup is idempotent and releases native listeners",
+      "passed": true
+    },
+    {
+      "name": "Removed listeners do not receive subsequent native events",
+      "passed": true
+    },
+    {
+      "name": "Native callable invocation constructs once and preserves ordered arguments",
+      "passed": true
+    },
+    {
+      "name": "Repeated callable registration after invocation preserves the resolved module without calling a replacement factory",
+      "passed": true
+    },
+    {
+      "name": "Legacy cleanup after native disposal is idempotent and releases the JS subscription",
+      "passed": true
+    },
+    {
+      "name": "Cached native method rejects after module disposal",
+      "passed": true
+    },
+    {
+      "name": "Cached typed subscription factory rejects after module disposal",
+      "passed": true
+    },
+    {
+      "name": "Queued typed and legacy native events cannot cross module disposal",
+      "passed": true
+    },
+    {
+      "name": "Accepted pending operation rejects when its native module is disposed",
+      "passed": true
+    },
+    {
+      "name": "Upstream get returns null for missing modules",
+      "passed": true
+    },
+    {
+      "name": "Original NativeModules reads the missing native JSI provider",
+      "passed": true
+    },
+    {
+      "name": "Upstream getEnforcing reports missing modules",
+      "passed": true
+    },
+    {
+      "name": "Public NativeModules and TurboModuleRegistry share the SourceCode provider",
+      "passed": true
+    },
+    {
+      "name": "Generated SourceCode contract returns the application's real bundle URL",
+      "passed": true
+    },
+    {
+      "name": "Public NativeModules and TurboModuleRegistry share the original C++ feature flag module",
+      "passed": true
+    },
+    {
+      "name": "Original generated feature flag methods return the pinned upstream boolean and numeric defaults",
+      "passed": true
+    },
+    {
+      "name": "TurboModuleRegistry and NativeModules share one lazy native module identity",
+      "passed": true
+    },
+    {
+      "name": "Native constants identify the runtime and concrete C++ implementation",
+      "passed": true
+    },
+    {
+      "name": "Native synchronous invocation returns its result",
+      "passed": true
+    },
+    {
+      "name": "Original TurboModule returns undefined for unregistered properties",
+      "passed": true
+    },
+    {
+      "name": "Native argument validation rejects invalid types",
+      "passed": true
+    },
+    {
+      "name": "Native argument validation rejects overflowing numeric results",
+      "passed": true
+    },
+    {
+      "name": "Native synchronous exceptions reach JavaScript",
+      "passed": true
+    },
+    {
+      "name": "Native asynchronous operation does not settle reentrantly",
+      "passed": true
+    },
+    {
+      "name": "Typed native events enter RN's executor without reentrant listeners",
+      "passed": true
+    },
+    {
+      "name": "Original NativeEventEmitter increments the native listener count",
+      "passed": true
+    },
+    {
+      "name": "Original registerCallableModule preserves lazy callable factories",
+      "passed": true
+    },
+    {
+      "name": "Repeated callable registration before invocation preserves the first lazy factory",
+      "passed": true
+    },
+    {
+      "name": "Two typed native events preserve emission order",
+      "passed": true
+    },
+    {
+      "name": "NativeEventEmitter receives its original device-emitter payload",
+      "passed": true
+    },
+    {
+      "name": "Native Promise fulfills through the upstream async bridge",
+      "passed": true
+    },
+    {
+      "name": "Native Promise rejects with a distinguishable error",
+      "passed": true
+    },
+    {
+      "name": "Double subscription cleanup is idempotent and releases native listeners",
+      "passed": true
+    },
+    {
+      "name": "Removed listeners do not receive subsequent native events",
+      "passed": true
+    },
+    {
+      "name": "Native callable invocation constructs once and preserves ordered arguments",
+      "passed": true
+    },
+    {
+      "name": "Repeated callable registration after invocation preserves the resolved module without calling a replacement factory",
+      "passed": true
+    },
+    {
+      "name": "Repeated explicit disposal closes the native module once",
+      "passed": true
+    },
+    {
+      "name": "Shutdown releases module caches and callable factories: first",
+      "passed": true
+    },
+    {
+      "name": "Shutdown disposes each native module and clears listener counts exactly once: first",
+      "passed": true
+    },
+    {
+      "name": "Runtime shutdown preserves visible error accounting and releases all roots: first",
+      "passed": true
+    },
+    {
+      "name": "Shutdown releases module caches and callable factories: second",
+      "passed": true
+    },
+    {
+      "name": "Shutdown disposes each native module and clears listener counts exactly once: second",
+      "passed": true
+    },
+    {
+      "name": "Runtime shutdown preserves visible error accounting and releases all roots: second",
+      "passed": true
+    },
+    {
+      "name": "A retained native method cannot reenter a stopped runtime generation",
+      "passed": true
+    },
+    {
+      "name": "An extracted TurboModule method remains safe after cache disposal",
+      "passed": true
+    },
+    {
+      "name": "An extracted SourceCode method cannot access its disposed application URL getter",
+      "passed": true
+    }
+  ],
+  "shutdown": {
+    "first": {
+      "stopped": true,
+      "rootCount": 0.0,
+      "pendingTimers": 0.0,
+      "pendingAnimationFrames": 0.0,
+      "pendingWork": 0.0,
+      "errors": [],
+      "nativeModules": {
+        "callableCalls": 2.0,
+        "callableModules": 0.0,
+        "creations": 5.0,
+        "disposals": 3.0,
+        "fixture": {
+          "active": false,
+          "disposals": 1.0,
+          "listeners": 0.0
+        },
+        "installed": true,
+        "loaded": 0.0,
+        "lookups": 15.0,
+        "registered": 5.0,
+        "retainedUntilVMDestroy": 5.0,
+        "runtimeId": "26726106575",
+        "staleCalls": 0.0,
+        "stopped": true
+      }
+    },
+    "second": {
+      "stopped": true,
+      "rootCount": 0.0,
+      "pendingTimers": 0.0,
+      "pendingAnimationFrames": 0.0,
+      "pendingWork": 0.0,
+      "errors": [],
+      "nativeModules": {
+        "callableCalls": 2.0,
+        "callableModules": 0.0,
+        "creations": 5.0,
+        "disposals": 3.0,
+        "fixture": {
+          "active": false,
+          "disposals": 1.0,
+          "listeners": 0.0
+        },
+        "installed": true,
+        "loaded": 0.0,
+        "lookups": 15.0,
+        "registered": 5.0,
+        "retainedUntilVMDestroy": 5.0,
+        "runtimeId": "26809992659",
+        "staleCalls": 0.0,
+        "stopped": true
+      }
+    }
+  }
+}

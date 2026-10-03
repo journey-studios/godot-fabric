@@ -35,6 +35,7 @@ test("snapshot covers the complete canonical roadmap, sequences and release gate
   assert.deepEqual(data.tasks.map(task => task.id), parsed.tasks.map(task => task.id));
   assert.deepEqual(data.tasks.map(task => task.acceptance), parsed.tasks.map(task => task.acceptance));
   assert.deepEqual(data.tasks.map(task => task.dependencies), parsed.tasks.map(task => task.dependencies));
+  assert.deepEqual(data.tasks.map(task => task.status), parsed.tasks.map(task => task.status));
   assert.equal(data.tasks.length, 40);
   assert.equal(data.phases.length, 6);
   assert.equal(data.sequences.length, 8);
@@ -91,14 +92,17 @@ test("invalid status, cycles, missing references and arbitrary URLs are rejected
 });
 
 test("sync preserves recorded work and history but rejects removed IDs", () => {
-  const updated = roadmap.replace(/\| GF-08 · P1 · (.*?) \| Planned \|/, "| GF-08 · P1 · $1 | In progress |");
+  const stale = roadmap.replace(/\| GF-08 · P1 · (.*?) \| (?:Planned|In progress) \|/, "| GF-08 · P1 · $1 | Planned |");
+  assert.match(stale, /\| GF-08 · P1 · .*? \| Planned \|/);
+  const updated = stale.replace(/\| GF-08 · P1 · (.*?) \| Planned \|/, "| GF-08 · P1 · $1 | In progress |");
   const next = syncRoadmap(data, updated);
+  assert.doesNotThrow(() => validate(next));
   assert.deepEqual(next.tasks[7].checkpoints, data.tasks[7].checkpoints);
   assert.deepEqual(next.activity, data.activity);
   assert.deepEqual(next.decisions, data.decisions);
   assert.throws(() => syncRoadmap(data, updated.replace(/^\| GF-40 .*\n/m, "")), /IDs removidos/);
   // Reading an old roadmap cannot quietly turn verified slices back into Planned.
-  assert.throws(() => validate(syncRoadmap(data, roadmap)), /planejado com checkpoints/);
+  assert.throws(() => validate(syncRoadmap(data, stale)), /planejado com checkpoints/);
 });
 
 test("server observes external JSON updates, rejects corruption and recovers", async t => {

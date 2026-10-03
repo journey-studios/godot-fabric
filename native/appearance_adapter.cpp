@@ -18,7 +18,7 @@ Color native_color(rn::SharedColor color) {
 std::string hex(Color color) { return color.to_html(true).utf8().get_data(); }
 }
 void apply_appearance(Control &control, const rn::ViewProps &props,
-                      const rn::LayoutMetrics &layout) {
+                      const rn::LayoutMetrics &layout, const ControlProps *text_props) {
   const bool label = Object::cast_to<Label>(&control) != nullptr;
   const bool panel = Object::cast_to<Panel>(&control) != nullptr;
   const bool widget = Object::cast_to<Button>(&control) || Object::cast_to<LineEdit>(&control);
@@ -54,9 +54,10 @@ void apply_appearance(Control &control, const rn::ViewProps &props,
       else control.remove_theme_stylebox_override(key);
     }
   } else control.add_theme_stylebox_override(label ? "normal" : "panel", style);
-  if (label || widget) {
-    const auto &text = static_cast<const ControlProps &>(props);
-    if (text.color) control.add_theme_color_override("font_color", native_color(text.color));
+  // External components own their generated Props and font overrides. Only
+  // callers that already hold the core ControlProps may apply core text color.
+  if ((label || widget) && text_props) {
+    if (text_props->color) control.add_theme_color_override("font_color", native_color(text_props->color));
     else control.remove_theme_color_override("font_color");
   }
 }

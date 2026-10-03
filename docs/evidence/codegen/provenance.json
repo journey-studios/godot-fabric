@@ -1,0 +1,38 @@
+{
+  "format": "godot-fabric.codegen-checkpoint-provenance/v1",
+  "recordedAt": "2026-10-03T18:12:05.767507+00:00",
+  "sourceCommit": "85c88a9239ba23c0790ffd07c649c9aa0e50a63c",
+  "sourceDirty": true,
+  "sourceSha256": {
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/codegen-native-compile.py": "0f08e5e4dfb7c9334f4935717701db20ad00f6c98e63d81e4d3c8906f41698b1",
+    "tests/codegen.test.mjs": "fa4fb848cac0bd361600dcd867d997ec7aac4d0d9dfab65d47b2b0f587bb39a6",
+    "tests/codegen/native_compile.cpp": "92a11ba5ec9879b5fb24cfbbfa00beb40fb0d0f3674bb495f6643735660f7738",
+    "tests/codegen/NativeCodegenProbe.ts": "643777e7b7f0b4d62e11bc8690faef352e695798020cd6f80e857bf4c2c80b42",
+    "tests/codegen/NativeFlowProbe.js": "bf0f97e99aea49381714370d13ad90bd65ce7fcc749dad6327a7245189abb3ac",
+    "tests/codegen/BadgeNativeComponent.ts": "db601756ca4380e9007f2f90e8a75bf2859ff29b7859dac54110f52525ddbd6a",
+    "tests/codegen/UnsupportedBadgeNativeComponent.ts": "46fd1acd170220c6d5786dfa23409a68ae95b97abf97777dd033d49bebf8ed11",
+    "tests/codegen/native-combination.json": "81b8398be923baa41a64f00a9410d7ca16b24ee043bb1754224eca34bdc96b47",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "package-lock.json": "7c19d95a91da6a8aab8e1c5ac818e16a679d9f365b4fb9eaec88b7fcfd69c7fa"
+  },
+  "rawNativeReportSha256": "bf38921bee67e08b8eaa0ac25151797b9cd5d61135bba2d8598a3f15b011cd25",
+  "artifactSha256": {
+    "native-compile.json": "9d91000cf9001621692e30b28809e22f89f7d3314015e048d312e1f60fe3a3ff",
+    "generated-manifest.json": "838a848fc094812d2bdf8db863ae85d58566cad5f13e436a47d5372bd0758a39",
+    "validation.json": "93a50675d8d1918c4037f9f798eab3dca046a9fa395a240f1045e338790486fd"
+  },
+  "claims": {
+    "originalGeneratorsUsed": true,
+    "generationVerified": true,
+    "cppTranslationUnitsCompiled": true,
+    "adapterLinked": false,
+    "adapterLoaded": false,
+    "godotComponentRendered": false,
+    "runtimeExecuted": false,
+    "abiCertified": false,
+    "syntheticDeclarationAttested": false
+  },
+  "integrationNote": "Native compilation/source hashes remain the earlier checkpoint. validation.json additionally records the executed contract/dashboard checks after merging main adad606."
+}

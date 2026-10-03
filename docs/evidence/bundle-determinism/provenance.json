@@ -1,0 +1,96 @@
+{
+  "format": "godot-fabric.experimental-bundle-determinism-provenance/v1",
+  "checkedAt": "2026-10-03T21:12:29.702072Z",
+  "sourceBaseCommit": "9317b460b30b58cffde61b7ad5d1de7e617db8e0",
+  "sourceDirtyDuringExecution": true,
+  "sourceSha256": {
+    "sdk/toolchain/build.mjs": "17a886bbf9f1cd9090cf32a5e15795bbbd911403f6e78ebc9440e317ba0c0d72",
+    "scripts/consumer-check.mjs": "f787a5fb616fe08c54776703dbd2cdd73d6c9a99119d395c19403f47f680bf35",
+    "scripts/adapter-runtime-check.mjs": "766819a2590bb9766967ca41081ca622e85cda07dc6993198063653bb8205cf3",
+    "scripts/pack-addon.mjs": "7b173397887046e551b024cbc85ebb3603e4fe64926ca2d2f10d3d489bdf0ee2",
+    "sdk/toolchain/adapter-plugin.mjs": "9d331d0b71adec8ee51f601a8ea4c2fceb50c62fed5f5f0278caf04d3df2729d",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+    "tests/adapters/package/BadgeNativeComponent.ts": "743ed87b2d827cbd04b92f2fc79d247942d930e6721b214320fca8ccf5f89d56",
+    "tests/adapters/package/NativeExternalProbe.ts": "652f3488be23ee4ca8bf13671c52185acd556873d418863e89cee1f82ac1dadb",
+    "tests/adapters/package/adapter.cpp": "026e957339e78d19b580cbc7d68e26062ad354babf7dbffb9b5e8001e73afd70",
+    "tests/adapters/package/index.ts": "526a2d064a70a6de1c0575cf551cf089d08375ced1f3e508c86c554968d37212",
+    "tests/adapters/package/package.json": "861c7356296fb60205bc0ac5d7fa1f708e53c15b364cc05b8f9719e374c53667",
+    "tests/adapters/consumer/ui/index.tsx": "4ec5f2ac1d02f3492cee3e370d2dc5b7de25a1f5f5af036b7ffed9480c1bfcec",
+    "tests/adapters/consumer/validation.gd": "545418e41bc3e81efbae846e280134ada38a458a14fe5ea7c0acd70ca2311e08",
+    "tests/adapters/consumer/main.tscn": "25b848774f99520ca06b7c2bf845e23f7878fd44dd68cc618ed027f616b94aa2",
+    "tests/adapters/consumer/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2",
+    "tests/bundle-determinism.test.mjs": "bc7d980d2e12f94849d412334d1c9f0664fc4bdca059dbdc1e953257af0e343c",
+    "package.json": "f0be751d577359b1eb856ada8a41a4405a21012a223219774d80a5b71a3ab846"
+  },
+  "versions": {
+    "node": "22.23.3",
+    "esbuild": "0.25.12",
+    "typescript": "6.0.3",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "godot": "4.7.2.stable.official.ed1daf0bf"
+  },
+  "platform": "macOS arm64",
+  "configuration": "Release",
+  "sdkManifestSha256": "14af403afd368419b83b4259290cc554b712a8994afc44ab646dd0da2137a01b",
+  "nativeCombination": {
+    "format": "godot-fabric.experimental-native-combination/v1",
+    "godotCppRevision": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "godotVersion": "4.7.2",
+    "hermesRuntimeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "hermesVersion": "250829098.0.17",
+    "nativeDependencies": [
+      {
+        "name": "fabric_godot",
+        "sha256": "44078ed4d4c18ce47a676636159319d824b170dd372780287b937528a9601933"
+      },
+      {
+        "name": "hermes",
+        "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79"
+      },
+      {
+        "name": "rn-dependencies",
+        "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+      }
+    ],
+    "purpose": "build-declaration",
+    "reactNativeHeadersSha256": "68c46e65627907bdcf9f51d0e112565b2d48375081f3fa7245c6a712a1bae8cf",
+    "reactNativeVersion": "0.87.1",
+    "sdkHeadersSha256": "077948465e4ec72a522ae713d32cae1fa881fad5ab8e768b18ddf12207a8669d",
+    "sdkRevision": "a45b9d573b139779da2d0d58e98737fdd61308096bc79f12875aaf0c7f1fd8d9",
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "toolchain": {
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    }
+  },
+  "nativeImplementationCommit": "9d14553b1cdf46e5d213685c754ab603d2fb6871",
+  "nativeReceiptEvidence": "../adapter-shutdown/provenance.json",
+  "nativeSourcesRebuiltForThisJsChange": false,
+  "adapterLibrarySha256": "a7a154c7414ed7ef1bdd05551aaa23bf308404201c6cb7dc9c1041b1c9db570d",
+  "selectionSha256": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+  "bundleSha256": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+  "traditionalConsumerBundleSha256": "942d8f60d5572c4e62b7e5b3020836515dc6cce2cc7179e71d9410091fc02219",
+  "commands": [
+    "node --test tests/bundle-determinism.test.mjs",
+    "npm run test:consumer",
+    "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-shutdown-v3-20261003 --out build/adapter-runtime-determinism-20261003 --capture",
+    "Six sequential private-Node SDK builder processes for the same selected-adapter project; compare bundle/selection/input hashes after each process"
+  ],
+  "limits": [
+    "Local macOS arm64 Release only; hosted results tracked separately.",
+    "No generic TSConfig/Metro or arbitrary-library certification.",
+    "No byte-identical installation-path claim.",
+    "Native host reused from the pinned callback-shutdown build."
+  ],
+  "testedImplementationCommit": "371e7ec2e5179beb7bd369426093d937d7fd0260",
+  "committedSourceIdentityVerified": true
+}

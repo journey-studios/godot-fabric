@@ -1,0 +1,104 @@
+{
+  "format": "godot-fabric.experimental-adapter-registry-witness/v1",
+  "checkedAt": "2026-10-03T20:11:11.286Z",
+  "sourceSha256": {
+    "scripts/adapter-registry-check.mjs": "6b28071be5e70ef835ebc56b07b9c402bfac64564e0bace9265d43e891534eb0",
+    "scripts/native-sdk.mjs": "46a89009a339b73540ace307eb1fc7cab52104adf7878d804a360346b4dd586f",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "package-lock.json": "7c19d95a91da6a8aab8e1c5ac818e16a679d9f365b4fb9eaec88b7fcfd69c7fa",
+    "tests/adapters/registry_test.cpp": "02fb33ae96636354189ba12b716e1b1ecda9310f6c7b54bcf2ff17574a80c880",
+    "tests/codegen/NativeCodegenProbe.ts": "643777e7b7f0b4d62e11bc8690faef352e695798020cd6f80e857bf4c2c80b42",
+    "tests/codegen/BadgeNativeComponent.ts": "db601756ca4380e9007f2f90e8a75bf2859ff29b7859dac54110f52525ddbd6a"
+  },
+  "stages": [
+    {
+      "stage": "configure",
+      "exitCode": 0,
+      "log": "logs/configure.log",
+      "logSha256": "86fae31cfd67072bd3acc6e77965c139ee2bdf561822164f7ff284d264ed80ed"
+    },
+    {
+      "stage": "compile-link",
+      "exitCode": 0,
+      "log": "logs/compile-link.log",
+      "logSha256": "98367da3ee59e38c973f52f795bb05966c526a1280f19ea988429abd8f2330af"
+    },
+    {
+      "stage": "native-dependencies",
+      "exitCode": 0,
+      "log": "logs/native-dependencies.log",
+      "logSha256": "693aed029940cc06e20812539e41fb30482ab4d2e2aadef11382cacad9487422"
+    },
+    {
+      "stage": "registry",
+      "exitCode": 0,
+      "log": "logs/registry.log",
+      "logSha256": "4d08cc8ff044051b1367ae05715cc96fa8d27759774d1c229047f9ce52295b04"
+    }
+  ],
+  "passed": true,
+  "sdkManifestSha256": "4a90ee941e1774cdec7147da9ee71d7ce9b930e4d067e9face77d563ab11dbd8",
+  "cmakeExecutableSha256": "4d0ff5954e9a07669723e85335a3eaefbf6800baf99c05fc7d74f245ad093eae",
+  "node": {
+    "version": "v22.23.3",
+    "executableSha256": "68f4d07ca49e0500cc135c7e0a445093e228e42e126ac22306d045f0a8c2636b"
+  },
+  "nativeClientLinked": true,
+  "registryExecuted": true,
+  "vmCreated": false,
+  "godotEngineStarted": false,
+  "adapterLoaded": false,
+  "componentMounted": false,
+  "abiCertified": false,
+  "binarySha256": "ab6457e1bf204e3c74e7b285a66357001e96c0b393545135b22335f788bdac78",
+  "registry": {
+    "format": "godot-fabric.experimental-adapter-registry-test/v1",
+    "marker": "ADAPTER_REGISTRY_OK",
+    "cases": 11,
+    "checks": 207,
+    "initializers": 27,
+    "viewFactoryCalls": 0,
+    "moduleFactoryCalls": 0,
+    "vmCreated": false,
+    "godotEngineStarted": false
+  },
+  "generatedManifestSha256": "7f94e3116314a5054fe2a1589630d4cad11fc0c0986ff1d0e0e67daebf514d24",
+  "nativeCombination": {
+    "format": "godot-fabric.experimental-native-combination/v1",
+    "godotCppRevision": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "godotVersion": "4.7.2",
+    "hermesRuntimeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "hermesVersion": "250829098.0.17",
+    "nativeDependencies": [
+      {
+        "name": "fabric_godot",
+        "sha256": "d5f7a7265c7508ffdc845a778e987e2c0d3f3f96aff5be1c956fd6d989d1dd67"
+      },
+      {
+        "name": "hermes",
+        "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79"
+      },
+      {
+        "name": "rn-dependencies",
+        "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+      }
+    ],
+    "purpose": "build-declaration",
+    "reactNativeHeadersSha256": "68c46e65627907bdcf9f51d0e112565b2d48375081f3fa7245c6a712a1bae8cf",
+    "reactNativeVersion": "0.87.1",
+    "sdkHeadersSha256": "077948465e4ec72a522ae713d32cae1fa881fad5ab8e768b18ddf12207a8669d",
+    "sdkRevision": "832c90dee5b11aa324de5952b0bd66dfe4f81d31c363deaae740499bc898f084",
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "toolchain": {
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    }
+  },
+  "linkCommandSha256": "374cf87ef188674dd582fe6f4a858589d988f1d553cdb919c5227e950d64da87"
+}

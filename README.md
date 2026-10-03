@@ -12,8 +12,11 @@ engine does not need rebuilding.
 ## Status
 
 This is an experimental platform implementation. Native setup and rendering
-are validated on **macOS arm64 with official Godot 4.7.2**. Linux, Windows,
-iOS, Android and Web do not yet have supported build paths.
+are validated on **macOS arm64 with official Godot 4.7.2**. An experimental
+[iOS build/export path](docs/IOS_BUILD.md) has arm64 device export/link proof and
+22 runtime checks in an x86_64/Rosetta simulator. Arm64 simulator and physical
+device runtime acceptance remain pending. Linux, Windows, Android
+and Web do not yet have supported build paths.
 
 Setup and the check runner prepare Godot's extension startup list before the
 first import. This avoids a Godot 4.7.2 editor crash when an import-only scan
@@ -36,6 +39,17 @@ The [1.0 roadmap](ROADMAP.md) maps priorities, dependencies and acceptance
 criteria for RN parity across macOS, Linux, Windows, Android and iOS. The
 [dated parity audit](docs/PARITY.md) separates implemented behavior, incomplete
 contracts and missing APIs against React Native 0.87.1.
+
+The [native foundation checkpoint](docs/evidence/native-foundation/README.md)
+exercises original RN refs, Fabric prop commits and JSI TurboModules. The
+[refs example](examples/refs/README.md) measures scaled and rotated Godot
+surfaces, then replaces a child and unmounts one root while retaining refs.
+The [metrics example](examples/metrics/README.md) exercises original RN
+Dimensions/PixelRatio, live resize and Yoga rounding with Godot content scale.
+
+![Original RN refs in transformed Godot surfaces](docs/evidence/native-foundation/refs-initial.png)
+
+![RN window metrics at Godot content scale 2](docs/evidence/native-foundation/metrics-scaled.png)
 
 ## Migration dashboard
 
@@ -62,10 +76,12 @@ dependencies. Additional libraries and the lockfile remain project-owned.
 
 The [consumer guide](consumers/minimal/README.md) shows the application Resource,
 scene nodes and registered roots. The [evidence](docs/evidence/consumer/README.md)
-records 18 build/ownership checks, 18 headless and 20 graphical assertions,
-including offline builds and explicit errors. Provisioning is currently from
-source on macOS arm64; public prebuilt artifacts, exports and development tools
-remain open.
+records the original 2B checkpoint. The later
+[game-services evidence](docs/evidence/game-services/README.md) extends it to
+18 build/ownership checks, 40 headless and 43 graphical assertions, including
+offline builds, typed Godot operations, inventory-only resize and explicit errors. Provisioning is
+currently from source on macOS arm64; public prebuilt artifacts, complete
+exports and development tools remain open.
 
 ## Run the SDK laboratory
 
@@ -91,12 +107,15 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 ```sh
 npm run example -- form     # public typed Button/TextInput form
 npm run example -- shared   # two registered roots in one Hermes application
+npm run example -- refs     # original RN refs and transformed window geometry
+npm run example -- services # typed Godot calls, signals and shared Zustand data
 npm start -- --nativewind   # reactive utility classes and manual theme
 npm start -- --chart        # original React Native Chart Kit
 npm start -- --scroll       # generic scroll, filtering and editing demo
 npm start                  # React state, keys, Suspense and error boundaries
 npm run bundle             # rebuild after JSX/style changes
 npm run setup              # rebuild after native C++ changes
+npm run test:modules       # original JSI modules, promises, events and disposal
 ```
 
 The [examples catalog](examples/README.md) has runnable scenes, JSX/TSX and per-case
@@ -147,6 +166,21 @@ the assertions behind each image and the remaining GF-05 gaps.
 
 ![Timers commit the completed React state to real Godot Controls](docs/evidence/runtime/complete.png)
 
+### Game services
+
+`npm run example -- services` registers game methods, state getters and signals
+in GDScript, then consumes them through `GodotFabric.call`, `connect` and
+`subscribe`. Zustand holds the UI representation shared by HUD and inventory.
+The game owns health, equipment and accepted jobs: closing inventory while
+equipping leaves the job running and the surviving HUD receives its result.
+
+![Accepted game job completes after inventory unmounts](docs/evidence/game-services/services-completed.png)
+
+The [example](examples/services/README.md) and
+[API guide](docs/GAME_SERVICES.md) explain the initial snapshot race, revisions,
+typed errors, pause, explicit cancellation and cleanup. This implementation
+remains experimental; complete generated specs and RN parity remain open.
+
 ### Components
 
 The build aliases `react-native` to the Godot platform facade and applies
@@ -189,6 +223,8 @@ npm run test:examples                    # all interactive demos, headless and s
 npm run test:runtime                     # native deadline budget and callback error recovery
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
+npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
+npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
@@ -213,6 +249,26 @@ contracts; captures independently exercise rendering and logical Viewport input.
 [1.0 roadmap](ROADMAP.md) · [Parity audit](docs/PARITY.md) ·
 [Findings](docs/research/README.md) · [Validation evidence](docs/evidence/README.md) ·
 [Third-party licenses](THIRD_PARTY_NOTICES.md)
+
+The [Codegen experiment](docs/CODEGEN.md) uses original RN specs/generators.
+The [native extension layer](docs/NATIVE_EXTENSIONS.md) now loads selected
+external Codegen components and TurboModules through the shared SDK. An
+[independent Badge/Probe consumer](examples/native-extension/README.md) passes
+[35 headless / 37 graphical checks](docs/evidence/native-adapters/README.md),
+with typed events, public Commands, re-renders, defaults and cleanup. Loader
+rejection tests cover 21 cases / 89 checks. Full GF-26/export/parity acceptance
+remains open.
+
+![Original Codegen Badge components in two Godot Fabric roots](docs/evidence/native-adapters/initial.png)
+
+The [root-retirement example](examples/native-extension/README.md) also unmounts
+or replaces one root from a native callback while another keeps running. Its
+[318 checks in 17 Godot runs](docs/evidence/root-retirement/README.md) cover
+deferred cleanup, same-host remount, application replacement and rejected stale
+signals. Captures include pixel checks of the surviving native UI.
+
+![The second root keeps rendering after the first unmounts](docs/evidence/root-retirement/root-unmounted.png)
+
 
 Only this renderer, generic demonstration fixtures and public documentation
 are included. The repository starts with a new history; generated dependencies,

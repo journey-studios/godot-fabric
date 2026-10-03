@@ -1,0 +1,218 @@
+{
+  "format": "godot-fabric.executed-project-resolution-verification/v1",
+  "checkedAt": "2026-10-03T22:06:28.590177+00:00",
+  "platform": "macOS arm64",
+  "configuration": "Release",
+  "sourceBaseCommit": "9c75031eaab462dad830be9d58119a826f228505",
+  "results": {
+    "targeted": {
+      "command": "node --test tests/project-resolution.test.mjs tests/platform-seams.test.mjs",
+      "nodeGroups": [
+        46
+      ],
+      "nodeTests": 46,
+      "passed": true,
+      "skipped": 0,
+      "logSha256": "3a0a381e736b1b96c0a0a3b2d312580353ebc7ce81f3433b0ef1be5724d0923e"
+    },
+    "contracts": {
+      "command": "npm run test:contracts",
+      "nodeGroups": [
+        6,
+        8,
+        158
+      ],
+      "nodeTests": 172,
+      "passed": true,
+      "skipped": 0,
+      "logSha256": "70b162a8893a83648067cd60631e42b04cc44a90ecafeb59b29708fed680a3fd",
+      "pythonTests": 13
+    },
+    "nativeRegressions": {
+      "command": "npm run bundle && node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+      "nodeGroups": [
+        10
+      ],
+      "nodeTests": 10,
+      "passed": true,
+      "skipped": 0,
+      "logSha256": "5106a5634169e6570f268a2bed8161bbb197c3c178b7550c0ad54c0fa4acc389"
+    },
+    "examples": {
+      "command": "npm run test:examples",
+      "examples": 15,
+      "checks": 605,
+      "rows": [
+        {
+          "id": "shared",
+          "checks": 35,
+          "passed": true,
+          "reportSha256": "9fb5902e8c1cbfa3e52eddd73079f6fb1171229547593df4fc7b14a3154b109f"
+        },
+        {
+          "id": "counter",
+          "checks": 19,
+          "passed": true,
+          "reportSha256": "1074e2b6cbdb4ccfddccfccf677d99043c2bb29058e2f8ff726f0387d251768c"
+        },
+        {
+          "id": "runtime",
+          "checks": 23,
+          "passed": true,
+          "reportSha256": "c60d3c296ab0672a2fcb2ac4d966d21c0dc4eb9b5bbddcb9cb570e7dedaf0abc"
+        },
+        {
+          "id": "refs",
+          "checks": 23,
+          "passed": true,
+          "reportSha256": "c6de463a25e4fb6e85423c6bc38c2dae5ee943b739021ab4361b2fcb9157b198"
+        },
+        {
+          "id": "metrics",
+          "checks": 64,
+          "passed": true,
+          "reportSha256": "9ecb81d46264eb2287757ab9d8a215da2154f2f1c3531701b050b61196f24901"
+        },
+        {
+          "id": "services",
+          "checks": 36,
+          "passed": true,
+          "reportSha256": "ca74036faaf1f393bbbce70a89fed3a4842e2bdb640a3a9dc488303a5e980d7f"
+        },
+        {
+          "id": "form",
+          "checks": 39,
+          "passed": true,
+          "reportSha256": "b9491ed28e9c4f1ade4bafca4fb5460dfe2751725ab9ed50d7519f09dfe56dc8"
+        },
+        {
+          "id": "react",
+          "checks": 36,
+          "passed": true,
+          "reportSha256": "078f93671a191da50c907e7d1fd1cd1f189fac829b319d546788185643b2ebc8"
+        },
+        {
+          "id": "layout",
+          "checks": 47,
+          "passed": true,
+          "reportSha256": "ae19e7c313bfb91fe49e1fd44e4549619f0118131d4fa8249147a1edbf30a733"
+        },
+        {
+          "id": "input",
+          "checks": 45,
+          "passed": true,
+          "reportSha256": "1bed5df215a5cd8c54ecbc64363270366301ee91ce76e0cc0882dd0b7f0b33bd"
+        },
+        {
+          "id": "pressable",
+          "checks": 43,
+          "passed": true,
+          "reportSha256": "29b1c9b3d13e95e0fd9c488ed20394b4b7f567386e91191d8fb14f2c41cc457c"
+        },
+        {
+          "id": "scroll",
+          "checks": 62,
+          "passed": true,
+          "reportSha256": "a01cfb68b5070763944747bad0eb7dc7e65478ebcf8c9b0892efb7dfb12925c3"
+        },
+        {
+          "id": "chart",
+          "checks": 34,
+          "passed": true,
+          "reportSha256": "7923a0c547a63927dea7dd103efe49ebfb480e9aecd5eb52a5a7c65eb1a894b6"
+        },
+        {
+          "id": "nativewind",
+          "checks": 49,
+          "passed": true,
+          "reportSha256": "37ac75fedd6cb47eb727aec04c5531bc9ea09b6dc67e55d30f1c666138763108"
+        },
+        {
+          "id": "typography",
+          "checks": 50,
+          "passed": true,
+          "reportSha256": "5ed71765a82b9804b41a0463b282cedee1eb767c27b201a33b70ad37a65b5765"
+        }
+      ],
+      "mode": "headless"
+    },
+    "static": {
+      "command": "npm run check:static",
+      "passed": true,
+      "logSha256": "0d1d46ebb467f51efaad4377c47ff152e4f8a592d1b2678f82117f6d1d25cab3"
+    },
+    "consumer": {
+      "command": "npm run test:consumer -- --capture",
+      "tooling": 27,
+      "cases": [
+        {
+          "case": "headless",
+          "checks": 40,
+          "passed": true,
+          "reportSha256": "51405633c64bc54297a6800026223e62428020b4a1f09db323a4b4f1bde6bf12"
+        },
+        {
+          "case": "graphical",
+          "checks": 43,
+          "passed": true,
+          "reportSha256": "04d44d5b0d00fd5d6d9a798d44e091090ec2579858718a8a1b75d9f0d5242c65"
+        },
+        {
+          "case": "project-library-native",
+          "checks": 40,
+          "passed": true,
+          "reportSha256": "3f6911717b53e5dcb2b9b06f95f96a5c70fc0d56db4a077e244a68fc1472e7f5"
+        },
+        {
+          "case": "local-alias-native",
+          "checks": 40,
+          "passed": true,
+          "reportSha256": "51405633c64bc54297a6800026223e62428020b4a1f09db323a4b4f1bde6bf12"
+        },
+        {
+          "case": "local-alias-graphical",
+          "checks": 43,
+          "passed": true,
+          "reportSha256": "04d44d5b0d00fd5d6d9a798d44e091090ec2579858718a8a1b75d9f0d5242c65"
+        },
+        {
+          "case": "nested-dependency-native",
+          "checks": 40,
+          "passed": true,
+          "reportSha256": "8fea56c84653df371d43f3d6810da6c15f59499f0785f5a24c7d852b1f1b763e"
+        }
+      ],
+      "exactRecoveryHashPreserved": true,
+      "projectLockfilePreserved": true
+    },
+    "dashboard": {
+      "commands": [
+        "npm run dashboard:check",
+        "npm run test:dashboard",
+        "npm run dashboard:build"
+      ],
+      "passed": true,
+      "tests": 8,
+      "logSha256": {
+        "check": "fa1536a7b999174c29b0c5d7703d18785f58a256a3d2b2326e306feb00ce3d51",
+        "test": "ed7acc9daf1f5e15b8711539cae7dc0f4b03ea01e37d42efb4a908e2656900c8",
+        "build": "b08d576a4a4d4fa5d5f03f096cdf0d71c70affd99785855f378e6a4fb6c0b6b2"
+      },
+      "checkpointsClosedByThisSlice": 0,
+      "denominatorUnchanged": true
+    },
+    "publication": {
+      "command": "npm run check:publication",
+      "passed": true,
+      "files": 507,
+      "failures": [],
+      "logSha256": "8c81f8967a621770cc526771f4f5f2e3a9e482f723c389d614f0fc55614d3725"
+    }
+  },
+  "claims": {
+    "fullReactNativeParity": false,
+    "completeMetroResolution": false,
+    "allTargetExports": false,
+    "gfAcceptanceClosed": false
+  }
+}

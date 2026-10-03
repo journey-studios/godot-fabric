@@ -1,0 +1,160 @@
+{
+  "format": "godot-fabric.experimental-codegen/v1",
+  "schemaProfile": "godot-fabric.experimental-common-cxx/v1",
+  "libraryName": "CodegenFixture",
+  "nativeCombination": {
+    "declaration": {
+      "format": "godot-fabric.experimental-native-combination/v1",
+      "godotCppRevision": "test-fixture-no-headers",
+      "godotVersion": "4.7.2",
+      "hermesRuntimeSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+      "hermesVersion": "250829098.0.17",
+      "nativeDependencies": [
+        {
+          "name": "test-fixture",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+        }
+      ],
+      "purpose": "test-fixture",
+      "reactNativeHeadersSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "reactNativeVersion": "0.87.1",
+      "sdkHeadersSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "sdkRevision": "test-fixture-no-native-binary",
+      "target": {
+        "architecture": "x86_64",
+        "configuration": "Release",
+        "minimumOS": "15.1",
+        "platform": "ios-simulator"
+      },
+      "toolchain": {
+        "name": "test-fixture",
+        "version": "not-a-compiler-proof"
+      }
+    },
+    "sha256": "79f089d00a9adcd6282d1f8c167c5baf0bd7a204bafb97007f6bffd06b440ba5"
+  },
+  "tools": {
+    "package": "@react-native/codegen",
+    "version": "0.87.1",
+    "integrity": "sha512-qbaqEdlUfj2vRgvWTpMoNgHnEqAhAYJLUrpGkb0WC9n0kdtqUvgigpz4bDktZwolM9BemXwgGFgyiAnbs3t0xw==",
+    "installPath": "node_modules/@react-native/codegen",
+    "sourceTreeSha256": "11e4d94099a6d46cc36e60d0732f57fbc9a236c25edc9e11908219e6a371fceb",
+    "lockfileSha256": "7c19d95a91da6a8aab8e1c5ac818e16a679d9f365b4fb9eaec88b7fcfd69c7fa",
+    "parserDependencies": [
+      {
+        "package": "@babel/parser",
+        "version": "7.29.9",
+        "integrity": "sha512-CjXrNHTnvqBVqHgdBysY3vk2T8tpJHb5/RMeHJBTyVa9xgugCB0CJTx/3oO8RV2QRQP391RWpB7D6hLjm8V9uA==",
+        "installPath": "node_modules/@babel/parser",
+        "sourceTreeSha256": "5cc8755402ae79e90eeac98c36d92065c9c119effd405761d70f27a236279782"
+      },
+      {
+        "package": "hermes-parser",
+        "version": "0.36.1",
+        "integrity": "sha512-GApNk4zLHi2UWoWZZkx7LNCOSzLSc5lB55pZ/PhK7ycFeg7u5LcF88p/WbpIi1XUDtE0MpHE3uRR3u3KB7TjSQ==",
+        "installPath": "node_modules/hermes-parser",
+        "sourceTreeSha256": "9f209c65a7afd28cd44fb889fd393138ac3aedebe4300c2763ddb413b08625f5"
+      },
+      {
+        "package": "hermes-estree",
+        "version": "0.36.1",
+        "integrity": "sha512-guv1nQ6IJ7S83NRFPWc3SA7IBZrdNC9kapwOq6uXvF4wP+sDCgjzQbKPCoyYmoyZRzztF/n/c36l/rccCZSiCw==",
+        "installPath": "node_modules/hermes-estree",
+        "sourceTreeSha256": "1976ac515c45be39a7ec93e469f23516c88532dcd39aa98e9da8176cf524f0a4"
+      }
+    ],
+    "nodeVersion": "v22.23.3",
+    "wrapperSources": [
+      {
+        "path": "scripts/codegen-contract.mjs",
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703"
+      },
+      {
+        "path": "scripts/codegen.mjs",
+        "sha256": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "path": "BadgeNativeComponent.ts",
+      "sha256": "db601756ca4380e9007f2f90e8a75bf2859ff29b7859dac54110f52525ddbd6a"
+    },
+    {
+      "path": "NativeCodegenProbe.ts",
+      "sha256": "643777e7b7f0b4d62e11bc8690faef352e695798020cd6f80e857bf4c2c80b42"
+    }
+  ],
+  "schema": {
+    "path": "schema.json",
+    "sha256": "e854eda364375ffd95b91a642bd96e4a3ce32b5a61858521df97f243df40d442"
+  },
+  "artifacts": [
+    {
+      "path": "cpp/CodegenFixtureJSI.h",
+      "sha256": "0a7407548a406a5fef490bec0e9e49d5b526a99d1cfaa3f38ff3449b1bf8d2f0",
+      "generator": "generateModuleH"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/ComponentDescriptors.cpp",
+      "sha256": "fa7ad1285ea4a6d21fdcd64240faf1a3b2f41ea8690fdcead9f74785efbffaab",
+      "generator": "generateComponentDescriptorCpp"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/ComponentDescriptors.h",
+      "sha256": "7da76578068e06a3d125729ff4f3dc08c99807d8828d12e1d61ecf41c85445ee",
+      "generator": "generateComponentDescriptorH"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/EventEmitters.cpp",
+      "sha256": "bd8a759010d9b7b4dd52bcea458e3963be2e3d93e2ab3e403fa0112f09bb24f1",
+      "generator": "generateEventEmitterCpp"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/EventEmitters.h",
+      "sha256": "2b37c0f6c364cfe8ef35fee62f018c248c95af794f191241c43b14c4639431d6",
+      "generator": "generateEventEmitterH"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/Props.cpp",
+      "sha256": "c3169131d1d9084e5f4ac0bee02958fe1c6daf0258291cb16ead2058a106f060",
+      "generator": "generatePropsCpp"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/Props.h",
+      "sha256": "628382ca61f39344b6e4400b7cbccab6ab2788a1d3995ebf030b70f2b9401b80",
+      "generator": "generatePropsH"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/ShadowNodes.cpp",
+      "sha256": "52031b768ee903b0074e047eba8fa8677643119a1b85b7f6addefba8938cce5f",
+      "generator": "generateShadowNodeCpp"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/ShadowNodes.h",
+      "sha256": "8f2fe8cf4c033312e23e1662a62541b4fe55c207adc5e869cd254a38414c791b",
+      "generator": "generateShadowNodeH"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/States.cpp",
+      "sha256": "7fed0142c9dc56554b98b74c0ac7b5b83789f093cb764a440dab6af7ee0288c4",
+      "generator": "generateStateCpp"
+    },
+    {
+      "path": "cpp/react/renderer/components/CodegenFixture/States.h",
+      "sha256": "7860d719b908cc55fdf4f4a81f8dfd85b546cc00b72b7bed2c6d4f534774c656",
+      "generator": "generateStateH"
+    },
+    {
+      "path": "viewconfigs/CodegenBadgeNativeViewConfig.js",
+      "sha256": "780da480c91db956ff282e7ebffcd86764af4c89d441016b36cc5c6ecf0f997a",
+      "generator": "generateViewConfigJs"
+    }
+  ],
+  "claims": {
+    "nativeCompiled": false,
+    "nativeLoaded": false,
+    "runtimeExecuted": false,
+    "abiCertified": false
+  }
+}

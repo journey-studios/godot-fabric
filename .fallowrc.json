@@ -16,7 +16,12 @@
     "src/unsupported-safe-area.js",
     "types/react-native.ts",
     "tests/types/consumer.tsx",
-    "consumers/minimal/ui/index.tsx"
+    "consumers/minimal/ui/index.tsx",
+    "src/renderer-proxy.js",
+    "src/godot-fabric.js",
+    "types/godot-fabric.ts",
+    "tests/types/godot-fabric.tsx",
+    "tests/adapters/consumer/ui/index.tsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -27,7 +32,8 @@
   ],
   "includeEntryExports": true,
   "ignoreDependencies": [
-    "scheduler"
+    "scheduler",
+    "@godot-fabric/adapter-fixture"
   ],
   "ignoreExports": [
     {
@@ -50,7 +56,8 @@
         "getNativeTagFromPublicInstance",
         "getNodeFromPublicInstance",
         "legacySendAccessibilityEvent",
-        "UIManager"
+        "UIManager",
+        "getInternalInstanceHandleFromPublicInstance"
       ]
     },
     {
@@ -119,7 +126,14 @@
         "TextInput",
         "Button",
         "AppRegistry",
-        "RootTagContext"
+        "RootTagContext",
+        "findNodeHandle",
+        "UIManager",
+        "NativeModules",
+        "NativeEventEmitter",
+        "TurboModuleRegistry",
+        "codegenNativeComponent",
+        "codegenNativeCommands"
       ]
     },
     {
@@ -129,6 +143,19 @@
         "presets",
         "corePlugins",
         "theme"
+      ]
+    },
+    {
+      "file": "src/renderer-proxy.js",
+      "exports": [
+        "dispatchCommand",
+        "findHostInstance_DEPRECATED",
+        "findNodeHandle",
+        "sendAccessibilityEvent",
+        "isChildPublicInstance",
+        "getNodeFromInternalInstanceHandle",
+        "getPublicInstanceFromInternalInstanceHandle",
+        "getPublicInstanceFromRootTag"
       ]
     }
   ],
@@ -161,7 +188,18 @@
             "Button",
             "StyleSheet",
             "AppRegistry",
-            "RootTagContext"
+            "RootTagContext",
+            "NativeModules",
+            "NativeEventEmitter",
+            "TurboModuleRegistry",
+            "TurboModule",
+            "ViewInstance",
+            "findNodeHandle",
+            "UIManager",
+            "EmitterSubscription",
+            "HostComponent",
+            "codegenNativeComponent",
+            "codegenNativeCommands"
           ]
         },
         {
@@ -169,8 +207,93 @@
           "exports": [
             "platformMessage"
           ]
+        },
+        {
+          "pattern": "types/godot-fabric.ts",
+          "exports": [
+            "GodotDTO",
+            "ServiceAddress",
+            "ServiceAcknowledgement",
+            "ServiceSnapshot",
+            "ServiceCallResult",
+            "ServiceSubscription",
+            "GodotFabric"
+          ]
+        },
+        {
+          "pattern": "src/godot-fabric.js",
+          "exports": [
+            "GodotFabric"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "original-rn-codegen-specs",
+      "enablers": [
+        "@react-native/codegen"
+      ],
+      "entryPoints": [
+        "tests/codegen/NativeCodegenProbe.ts",
+        "tests/codegen/BadgeNativeComponent.ts",
+        "tests/codegen/UnsupportedBadgeNativeComponent.ts",
+        "tests/codegen/NativeFlowProbe.js",
+        "tests/adapters/package/index.ts",
+        "tests/adapters/package/BadgeNativeComponent.ts",
+        "tests/adapters/package/NativeExternalProbe.ts"
+      ],
+      "entryPointRole": "support",
+      "usedExports": [
+        {
+          "pattern": "tests/codegen/NativeCodegenProbe.ts",
+          "exports": [
+            "Spec",
+            "ProbeResult",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/codegen/*NativeComponent.ts",
+          "exports": [
+            "NativeProps",
+            "Commands",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/codegen/NativeFlowProbe.js",
+          "exports": [
+            "Spec",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/adapters/package/BadgeNativeComponent.ts",
+          "exports": [
+            "NativeProps",
+            "Commands",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/adapters/package/NativeExternalProbe.ts",
+          "exports": [
+            "Spec",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/adapters/package/index.ts",
+          "exports": [
+            "Badge",
+            "Commands",
+            "Probe"
+          ]
         }
       ]
     }
+  ],
+  "ignoreUnresolvedImports": [
+    "@godot-fabric/runtime"
   ]
 }

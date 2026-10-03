@@ -1,0 +1,12 @@
+{
+  "format": "godot-fabric.bundle-determinism-mutation/v1",
+  "baselineCommit": "9317b460b30b58cffde61b7ad5d1de7e617db8e0",
+  "baselineBuilderSha256": "4f695aa00d18e5edc6161e11f785ca6bb2c04fa719b383eb513cdd45ad5d55cd",
+  "testSha256": "bc7d980d2e12f94849d412334d1c9f0664fc4bdca059dbdc1e953257af0e343c",
+  "scope": "isolated copied test and historical builder; existing dependencies symlinked; no production mutation",
+  "expectedExitCode": 1,
+  "actualExitCode": 1,
+  "passed": 1,
+  "failed": 4,
+  "failure": "four positive cases reject omitted explicit project tsconfig; inferred negative control passes"
+}

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Refs, métricas e módulos nativos"
+    "focusTitle": "Roots reentrantes comprovadas; próximo: geometria, stacking e clipping de View"
   },
-  "updatedAt": "2026-10-03T17:10:28.948Z",
+  "updatedAt": "2026-10-03T23:48:44.654828+00:00",
   "source": {
-    "commit": "4085865a309de62cf4e893324f485439f5fb4b55",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/ROADMAP.md",
-    "scope": "main + fatias verificadas da PR #14",
+    "commit": "47432df8b76816a44cf72af2184ab4794c6c5338",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/ROADMAP.md",
+    "scope": "Implementação 47432df conferida pelos hashes executados: GF-07/GF-26/GF-28 retirement independente, remount/host free/owner switch/stale core/font ownership, 17 Godot/318 checks e pixels. 199 Node/13 Python, 10 nativos, 15 exemplos/605 checks. CI precedente 80729da verde nos cinco jobs; CI desta fatia pendente. Nenhum aceite completo ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fachada completa, assets e todos os contratos públicos ainda precisam de cobertura.",
+      "note": "Aliases app/lib/SDK isolados no TypeScript original e runtime; literal types e native texts distintos no consumidor30/40/43, React único e hash de recuperação preservados. 54 testes de resolução, 13 Metro, 8 determinismo/transform e 3 hooks passaram. Perfil ESNext/Preserve + Bundler; NodeNext/Node16/CJS, types runtime e .d.ts rejeitados visivelmente. Duas diferenças Metro documentadas. Tipos/imports/assets/profiles completos, workspaces, exports e D20 abertos. CI 80729da confirmou cinco jobs da fatia de aliases; esse run precede root retirement.",
       "blocker": "",
       "checkpoints": [
         {
@@ -161,6 +161,22 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+            },
+            {
+              "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+            },
+            {
+              "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701"
             }
           ]
         },
@@ -197,7 +213,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Censo completo de props/valores, updates/removal e implementação final permanece aberto.",
+      "note": "DTOs rejeitam 64 casos exatos nativos, strings inválidas, accessors/hidden keys e dados fora dos limites antes de executar Callables. Censo completo de props/valores, updates/removal e implementação final segue aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -208,6 +224,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -332,7 +352,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Pausa/resume, overlays e comparação completa permanecem abertos.",
+      "note": "Unmount independente reentrante em resize/pressed/RAF/timer, remount imediato, host livre e troca de aplicação comprovados. Autoridade cessa imediatamente; cleanup/Controls aguardam fase diferida fora do registry visit. Root sobrevivente preserva VM, estado, módulo e scheduling. Sinal core antigo entre runtimes com root/tag repetidos rejeitado; novo botão entrega. Matriz total 17 Godot/318 checks, com três casos gráficos e pixels. Restart/ativação completos, pause/resume, overlays/portals, cancelamento touch/responder e diferencial RN/alvos continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -343,6 +363,22 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/shared-roots/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+            },
+            {
+              "label": "CI shutdown: cinco jobs, consumidor35 e stop 8/9/9",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
             }
           ]
         },
@@ -379,7 +415,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: fatia local validada; refs/comandos completos e certificação seguem abertos.",
+      "note": "Consumidor: measureInWindow e refs permanecem válidos ao redimensionar só o inventário. Refs/comandos completos, geometria de input sob todos os transforms e certificação permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -390,6 +426,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -426,7 +466,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: métricas de OS, font scale, insets e dispositivos seguem pendentes.",
+      "note": "Constraints do inventário mudam sem alterar geometria do HUD ou métricas window/screen. Insets, font scale do OS, multi-window e dispositivos seguem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -437,6 +477,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -1150,7 +1194,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: operações GodotFabric, revisões/conexões e extensões seguem pendentes.",
+      "note": "Calls, snapshots/revisões, signals, DTOs, rebind/generation e destruição síncrona executados no Hermes/Godot. NativeModules compat completo, callable modules, extensão externa, byte/time budgets e cross-thread permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1161,6 +1205,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -1189,7 +1237,7 @@
       "phase": "M3",
       "priority": "P1",
       "title": "Codegen and custom Fabric components",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging",
       "dependencies": [
         "GF-08",
@@ -1199,14 +1247,51 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Codegen original/SDK/SPI/loader comprovados nas fatias anteriores; agora root retirement e stale refs/events passam com Badge/Probe originais e core Button. External ViewProps sem cast para core; cor de fonte externa preservada em 5 checks, contra 2 falhas no binário precedente. Total consumidor17runs/318checks macOS arm64 Release. Containers/state/schema/reflection completo, async, RN diferencial e exports/ABI/alvos continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "label": "Codegen/SDK/registro e montagem de componente/módulo externos comprovados",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Codegen 20 testes / 6 unidades C++; fonte e hashes registrados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
+            },
+            {
+              "label": "Falha CI de seleção Node / correção e compilação local 6/6",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
+            },
+            {
+              "label": "CI corrigida: cinco jobs e seis unidades Codegen compiladas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37145700599"
+            },
+            {
+              "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Consumidor externo 35/37 e loader 21/89; evidência local da PR",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+            },
+            {
+              "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+            },
+            {
+              "label": "CI external Codegen consumer35 e shutdown8/9/9",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -1291,7 +1376,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Instalação/update completos, extensões e export por alvo seguem abertos.",
+      "note": "Addon/editor e consumer30/40/43 precedentes confirmados pela CI 80729da nos cinco jobs. Novo SDK compilado/pack verificado e original-Codegen consumer separado passou 17 Godot/318checks com remount/owner switch e captura/pixels. Esta nova fatia tem evidência local; CI própria ainda pendente. Instalação/update/dev tooling e exports Debug/Release por alvo abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1302,6 +1387,46 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Addon ativa packet de seleção e JSX original em consumidor externo",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+            },
+            {
+              "label": "TSConfig: race reproduzido, consumidor18/40 e seis rebuilds iguais",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
+            },
+            {
+              "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+            },
+            {
+              "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+            },
+            {
+              "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701"
             }
           ]
         },
@@ -1430,8 +1555,8 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: compile/link/package apenas; execução Godot iOS e outros alvos não certificados.",
-      "blocker": "",
+      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada. Nova fatia macOS identifica UUIDs carregados e hashes de receipts separadamente, com binding witness observado; isso não recertifica iOS histórico, outros modos/alvos ou ABI estável.",
+      "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
           "id": "slice",
@@ -1441,6 +1566,18 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
             }
           ]
         },
@@ -1614,7 +1751,7 @@
       "phase": "M4",
       "priority": "P1",
       "title": "iOS arm64 and simulator",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app",
       "dependencies": [
         "GF-02",
@@ -1629,14 +1766,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
-      "blocker": "",
+      "note": "Consumer próprio executou 22/22 no iOS 18.4 x86_64/Rosetta; device arm64 export/link unsigned. Device físico, Debug, touch/IME/AT e serviços ainda não certificados; simulador arm64 tem bloqueio específico da template oficial.",
+      "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "label": "iOS: consumer exportado/linkado e runtime x86_64/Rosetta 22/22",
+          "done": true,
+          "evidence": [
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -2111,14 +2253,24 @@
     {
       "id": "HUD-3",
       "label": "Update the HUD from Godot data/signals, including an initial revision and changes during connection. Invoke a typed game operation from the inventory; observe defined results/errors and event ordering.",
-      "done": false,
-      "evidence": []
+      "done": true,
+      "evidence": [
+        {
+          "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+        }
+      ]
     },
     {
       "id": "HUD-4",
       "label": "Resize only the inventory: its constraints/layout and input/measure geometry update while HUD geometry and window metrics retain their meanings.",
-      "done": false,
-      "evidence": []
+      "done": true,
+      "evidence": [
+        {
+          "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+        }
+      ]
     },
     {
       "id": "HUD-5",
@@ -2302,6 +2454,180 @@
     }
   ],
   "activity": [
+    {
+      "id": "root-retirement-source-47432df",
+      "at": "2026-10-03T23:48:44.654828+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Commit 47432df corresponde a todas as fontes nativas, do consumer e do harness realmente executadas; evidências fixadas por SHA. Regressões 199 Node/13 Python, 10 nativos e 15 exemplos/605 checks passaram. GF completos, dependências e decisões permanecem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+    },
+    {
+      "id": "root-retirement-local-v2",
+      "at": "2026-10-03T23:45:51.177113+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "17 execuções Godot/318 checks comprovam retirement independente, remount, host free, owner switch, origem do core sinal e font ownership externa. Capturas verificam pixels. CI anterior 80729da verde em cinco jobs; CI nova pendente. Sem item/checkpoint adicional fechado nem alteração de peso/denominador. Próxima fundação GF-10 coordenada com medidas/input.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+    },
+    {
+      "id": "alias-scopes-verified-20261003",
+      "at": "2026-10-03T22:46:45.315700+00:00",
+      "taskIds": [
+        "GF-03",
+        "GF-28"
+      ],
+      "message": "Implementação fe056fa conferida pelos hashes executados. Tipos e runtime isolam aliases do app, lib e SDK; consumidor30/40/43 e Codegen35/37+8/9/9 passaram. 199 Node/13 Python e 10 nativos; Metro13 registra duas diferenças. CI precedente f2eb57f verde; nenhuma conclusão GF/checkpoint/denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+    },
+    {
+      "id": "gf03-project-resolution-local",
+      "at": "2026-10-03T22:04:11.238720+00:00",
+      "taskIds": [
+        "GF-03",
+        "GF-28"
+      ],
+      "message": "Aliases herdados e dependências sem hoisting executados no addon: 27/40/43, aliases40/43, nested40; adapter35/37+8/9/9 e 46 testes. Perfis não suportados falham; nenhum aceite GF/dependência/denominador fechado. Evidência local com fontes exatas; CI desta fatia pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+    },
+    {
+      "id": "bundle-determinism-hosted-success-9c75031",
+      "at": "2026-10-03T22:04:11.238720+00:00",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "CI37154927839 completou cinco jobs em 9c75031 para a entrega anterior de TSConfig explícito. Certifica aquele commit; não certifica o resolver novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839"
+    },
+    {
+      "id": "bundle-tsconfig-determinism-20261003",
+      "at": "2026-10-03T21:16:57.404683Z",
+      "taskIds": [
+        "GF-03",
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Corrigida inferência dependente da ordem:18 processos diagnóstico, cinco testes causais, consumer 18/40, adapter 35/37+8/9/9, seis rebuilds 154 inputs idênticos. Shutdown CI 9317b46 cinco jobs verdes. Aliases locais e suffixes divergentes reproduzidos, pendentes GF03. Nenhum GF/checkpoint/denominador fechado. Nova CI builder pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
+    },
+    {
+      "id": "native-stop-reentrancy-20261003",
+      "at": "2026-10-03T21:00:19.977979Z",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Falha Control freed inside signal reproduzida. Novo host passou resize/RAF/timer 8/9/9, consumidor 35/37 e suites 2/4/2/2 em série. CI anterior passou 89/207 mas reproduziu hash divergente do consumidor. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+    },
+    {
+      "id": "native-adapter-runtime-20261003",
+      "at": "2026-10-03T20:28:31.322985Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "Prova local: loader 21 casos/89 checks, registry 207, consumidor Codegen 35 headless/37 gráficos e capturas. CI nova configurada ainda sem sucesso confirmado; divergência observada de hash no consumidor antigo permanece investigada após replay verde. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+    },
+    {
+      "id": "native-sdk-ci-37147754831",
+      "at": "2026-10-03T19:36:12.501460Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "CI completa passou os cinco jobs em 7a67f96. Artefato original do SDK confirma 207 checks, fontes nativas idênticas e cliente relocado linkado. Node real 22.23.2 distinto do local; paridade completa, montagem de adapter e Godot ports permanecem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+    },
+    {
+      "id": "native-sdk-registry-207",
+      "at": "2026-10-03T19:22:18.776792Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "SDK/receipt/preflight verificados: 36 testes Node, cliente C++ relocado com 207 checks. Regressões Godot e consumidor passaram no host reconstruído. Evidência ampliada no checkpoint existente, sem alterar denominador/aceite completo. Nenhuma montagem externa, VM ou ABI completa certificada.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+    },
+    {
+      "id": "codegen-ci-37145700599",
+      "at": "2026-10-03T19:06:46.695413Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "CI corrigida passou os cinco jobs em 5d46bba. Artefato original confirma 6/6 unidades C++; Node real 22.23.2 e compiler/SDK registrados. Sem prova de link/load/runtime de adapter externo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37145700599"
+    },
+    {
+      "id": "codegen-ci-node-selection-correction",
+      "at": "2026-10-03T18:44:17.962892Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "CI nativa falhou antes de compilar: Node privado não provisionado. Runner aceita Node explícito, workflow seleciona seu executável e preserva default do addon. Três testes e nova compilação 6/6 passaram localmente; CI corrigida ainda pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
+    },
+    {
+      "id": "codegen-original-20-compile-6",
+      "at": "2026-10-03T18:21:12.038377Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "Primeira fatia GF-26 comprovada: parsers/generadores originais TS/Flow, 20 testes e 6 unidades C++ compiladas. Manifesto conserva runtime/ABI falsos. Provider/view externo e export pendentes; pesos e denominador preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
+    },
+    {
+      "id": "dashboard-unmerged-data-ref-adad606",
+      "at": "2026-10-03T18:21:12.038377Z",
+      "taskIds": [],
+      "message": "main adad606 integrado sem perda; novo fluxo permite publicar JSON da branch com workflow do main e data_ref após commit/push. Publicação ainda pendente de execução bem-sucedida.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/16"
+    },
+    {
+      "id": "game-services-consumer-969a95d",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [
+        "GF-03",
+        "GF-04",
+        "GF-07",
+        "GF-08",
+        "GF-09",
+        "GF-25",
+        "GF-28"
+      ],
+      "message": "Registro das fatias já executadas: serviços GDScript/React, DTO 133 e lifetime 15; consumidor 40/43 mais 18 tooling. HUD-3/HUD-4 comprovados; HUD-5/6 completos e restart seguem pendentes. Não fecha aceite GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+    },
+    {
+      "id": "ios-consumer-93f5bb3",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [
+        "GF-28",
+        "GF-31",
+        "GF-35"
+      ],
+      "message": "Três builds/dois XCFrameworks, device arm64 unsigned export/link e 22/22 no x86_64/Rosetta. GF-35 inicia fatia; template arm64, device físico, Debug e interação/AT permanecem abertos. Denominadores e pesos preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+    },
+    {
+      "id": "dashboard-main-ba61ac6",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [],
+      "message": "main ba61ac6 integrado preservando trabalho; painel desta implementação observa seu JSON em 127.0.0.1:4318. Site público depende de merge em main e workflow de deploy aprovado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "native-foundation",
       "at": "2026-10-03T15:24:02Z",

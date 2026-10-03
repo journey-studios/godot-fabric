@@ -1,0 +1,374 @@
+{
+  "afterStop": {
+    "adapterLoader": {
+      "abiCertified": false,
+      "adapters": [
+        {
+          "entryResolved": true,
+          "id": "RuntimeFixture",
+          "librarySha256": "9e15f1af0b8c3518806494ad3f1aa9e12049c5e20fc3b3b8fd17c0319ffa12c9",
+          "libraryUUID": "3ed09bf2357f31b4bd79ed7ef832acd2"
+        }
+      ],
+      "bundle": {
+        "path": ".godot_fabric/app.js",
+        "sha256": "b9b118a3e0a387a144e8ef62d6619ca9bc9af789f3a3b074fe92e4229cf04b8c"
+      },
+      "enabled": true,
+      "librariesProcessPinned": true,
+      "loadedImageFilesMatchedReceipts": true,
+      "loadedImageUUIDsMatched": true,
+      "loadedImages": {
+        "hermes": {
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "uuid": "ca5e6a87f63d3babb4d697eacbcc62eb"
+        },
+        "host": {
+          "sha256": "d5f7a7265c7508ffdc845a778e987e2c0d3f3f96aff5be1c956fd6d989d1dd67",
+          "uuid": "fad3ebbd68473cb7a3c16dfa48ec993c"
+        },
+        "rn-dependencies": {
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "uuid": "569960d1c7b538a7a1abc61bed902131"
+        }
+      },
+      "runtimeIdentityVerified": false,
+      "selectedFilesVerified": 24
+    },
+    "adapters": {
+      "adapters": [
+        "RuntimeFixture"
+      ],
+      "components": [
+        "ExternalBadge"
+      ],
+      "moduleProvidersInstalled": true,
+      "modules": [
+        "ExternalProbe"
+      ],
+      "sealed": true,
+      "stopped": true
+    },
+    "animationFramesRun": 0,
+    "bundleEvaluations": 1,
+    "dimensions": {
+      "screen": {
+        "fontScale": 1,
+        "height": 1964,
+        "scale": 1,
+        "width": 3024
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 350,
+        "scale": 1,
+        "width": 1050
+      }
+    },
+    "errors": [],
+    "gameServices": {
+      "bindings": 0,
+      "callbacksRun": 0,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 0,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 0,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": true,
+      "subscriptions": 0,
+      "taskBudget": 64
+    },
+    "hostPhasePending": false,
+    "initializationAttempted": true,
+    "nativeModules": {
+      "callableCalls": 0,
+      "callableModules": 0,
+      "creations": 5,
+      "disposals": 3,
+      "installed": true,
+      "loaded": 0,
+      "lookups": 6,
+      "registered": 6,
+      "retainedUntilVMDestroy": 5,
+      "runtimeId": "28034729433",
+      "staleCalls": 0,
+      "stopped": true
+    },
+    "pendingAnimationFrames": 0,
+    "pendingTimers": 0,
+    "pendingWork": 0,
+    "rootCount": 0,
+    "runtimeId": 28034729433,
+    "runtimeInitialized": true,
+    "stopped": true,
+    "textMeasurements": 6,
+    "timerEngine": "react-native/TimerManager",
+    "viewportUpdates": 0,
+    "windowListener": false
+  },
+  "beforeStop": {
+    "adapterLoader": {
+      "abiCertified": false,
+      "adapters": [
+        {
+          "entryResolved": true,
+          "id": "RuntimeFixture",
+          "librarySha256": "9e15f1af0b8c3518806494ad3f1aa9e12049c5e20fc3b3b8fd17c0319ffa12c9",
+          "libraryUUID": "3ed09bf2357f31b4bd79ed7ef832acd2"
+        }
+      ],
+      "bundle": {
+        "path": ".godot_fabric/app.js",
+        "sha256": "b9b118a3e0a387a144e8ef62d6619ca9bc9af789f3a3b074fe92e4229cf04b8c"
+      },
+      "enabled": true,
+      "librariesProcessPinned": true,
+      "loadedImageFilesMatchedReceipts": true,
+      "loadedImageUUIDsMatched": true,
+      "loadedImages": {
+        "hermes": {
+          "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+          "uuid": "ca5e6a87f63d3babb4d697eacbcc62eb"
+        },
+        "host": {
+          "sha256": "d5f7a7265c7508ffdc845a778e987e2c0d3f3f96aff5be1c956fd6d989d1dd67",
+          "uuid": "fad3ebbd68473cb7a3c16dfa48ec993c"
+        },
+        "rn-dependencies": {
+          "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156",
+          "uuid": "569960d1c7b538a7a1abc61bed902131"
+        }
+      },
+      "runtimeIdentityVerified": false,
+      "selectedFilesVerified": 24
+    },
+    "adapters": {
+      "adapters": [
+        "RuntimeFixture"
+      ],
+      "components": [
+        "ExternalBadge"
+      ],
+      "moduleProvidersInstalled": true,
+      "modules": [
+        "ExternalProbe"
+      ],
+      "sealed": true,
+      "stopped": false
+    },
+    "animationFramesRun": 0,
+    "bundleEvaluations": 1,
+    "dimensions": {
+      "screen": {
+        "fontScale": 1,
+        "height": 1964,
+        "scale": 1,
+        "width": 3024
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 350,
+        "scale": 1,
+        "width": 1050
+      }
+    },
+    "errors": [],
+    "gameServices": {
+      "bindings": 0,
+      "callbacksRun": 0,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 0,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 0,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": false,
+      "subscriptions": 0,
+      "taskBudget": 64
+    },
+    "hostPhasePending": false,
+    "initializationAttempted": true,
+    "nativeModules": {
+      "callableCalls": 0,
+      "callableModules": 0,
+      "creations": 5,
+      "disposals": 0,
+      "installed": true,
+      "loaded": 5,
+      "lookups": 6,
+      "registered": 6,
+      "retainedUntilVMDestroy": 0,
+      "runtimeId": "28034729433",
+      "staleCalls": 0,
+      "stopped": false
+    },
+    "pendingAnimationFrames": 0,
+    "pendingTimers": 0,
+    "pendingWork": 0,
+    "rootCount": 2,
+    "runtimeId": 28034729433,
+    "runtimeInitialized": true,
+    "stopped": false,
+    "textMeasurements": 6,
+    "timerEngine": "react-native/TimerManager",
+    "viewportUpdates": 0,
+    "windowListener": false
+  },
+  "checks": [
+    {
+      "name": "Original generated descriptor mounts real Godot Controls in both roots",
+      "passed": true
+    },
+    {
+      "name": "External components share one Hermes VM across independent Fabric roots",
+      "passed": true
+    },
+    {
+      "name": "Identified external library loads before one bundle evaluation",
+      "passed": true
+    },
+    {
+      "name": "Runtime witness does not claim ABI certification",
+      "passed": true
+    },
+    {
+      "name": "Selected providers are sealed and installed per application",
+      "passed": true
+    },
+    {
+      "name": "Original Props reach the external adapter without core ControlProps casts",
+      "passed": true
+    },
+    {
+      "name": "Yoga commits native geometry for the external Control",
+      "passed": true
+    },
+    {
+      "name": "The generated host component uses a real Godot Button",
+      "passed": true
+    },
+    {
+      "name": "Factories run only for committed native views and one lazy TurboModule",
+      "passed": true
+    },
+    {
+      "name": "Original generated CxxSpec runs a synchronous method in Hermes",
+      "passed": true
+    },
+    {
+      "name": "Original AsyncPromise resolves through the application CallInvoker",
+      "passed": true
+    },
+    {
+      "name": "Original Codegen EventEmitter delivers the TurboModule event once",
+      "passed": true
+    },
+    {
+      "name": "Native Button signal invokes the original typed component emitter once",
+      "passed": true
+    },
+    {
+      "name": "Typed component delivery remains scoped to its committed root",
+      "passed": true
+    },
+    {
+      "name": "Rendered capture: initial",
+      "passed": true
+    },
+    {
+      "name": "Keyed React reorder preserves native instance identity and factories",
+      "passed": true
+    },
+    {
+      "name": "Original named Codegen Commands target the current external mount",
+      "passed": true
+    },
+    {
+      "name": "Re-render updates immutable generated Props without recreating the Control",
+      "passed": true
+    },
+    {
+      "name": "An external prop update preserves the other root",
+      "passed": true
+    },
+    {
+      "name": "A retained native transport resolves the current committed emitter",
+      "passed": true
+    },
+    {
+      "name": "Typed event payload and React callback follow the latest render",
+      "passed": true
+    },
+    {
+      "name": "An off-thread callback cannot touch host maps or emit into React",
+      "passed": true
+    },
+    {
+      "name": "Rejected off-thread delivery leaves the event count unchanged",
+      "passed": true
+    },
+    {
+      "name": "Removing props restores original Codegen defaults",
+      "passed": true
+    },
+    {
+      "name": "Rendered capture: updated",
+      "passed": true
+    },
+    {
+      "name": "React removal disposes the external callbacks before native Control deletion",
+      "passed": true
+    },
+    {
+      "name": "A captured transport loses authority when its mount is retired",
+      "passed": true
+    },
+    {
+      "name": "A stale public ref cannot command a surviving native instance",
+      "passed": true
+    },
+    {
+      "name": "An individual root teardown releases its external views and React effects",
+      "passed": true
+    },
+    {
+      "name": "A callback captured by an unmounted root cannot enter the live application",
+      "passed": true
+    },
+    {
+      "name": "The live application can remount a selected external component",
+      "passed": true
+    },
+    {
+      "name": "Remount obtains fresh Control, Fabric tag and host authority identity",
+      "passed": true
+    },
+    {
+      "name": "Remount reuses the module and bundle while constructing new views",
+      "passed": true
+    },
+    {
+      "name": "Application stop removes all remaining external native trees",
+      "passed": true
+    },
+    {
+      "name": "Application stop retires selected module providers and native scheduling",
+      "passed": true
+    },
+    {
+      "name": "An extracted generated method cannot mutate a disposed native module",
+      "passed": true
+    },
+    {
+      "name": "Original component/module lifecycle completes without host errors",
+      "passed": true
+    }
+  ],
+  "displayServer": "macOS",
+  "format": "godot-fabric.experimental-adapter-runtime-witness/v1",
+  "godot": "4.7.2-stable (official)",
+  "reactNative": "0.87.1"
+}

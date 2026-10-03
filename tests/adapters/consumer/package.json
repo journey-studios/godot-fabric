@@ -1,0 +1,7 @@
+{
+  "name":"godot-fabric-adapter-consumer",
+  "version":"0.0.0",
+  "private":true,
+  "dependencies":{"@godot-fabric/adapter-fixture":"0.0.0"},
+  "godotFabric":{"adapters":[{"package":"@godot-fabric/adapter-fixture"}]}
+}

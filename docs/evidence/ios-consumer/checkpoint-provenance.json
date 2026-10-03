@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "kind": "curated_ios_consumer_checkpoint",
+  "sourceCommit": "2e196936aaa23ff4222e8d40c6b08c848df58b7a",
+  "sourceDirty": true,
+  "sourceSHA256": {
+    "scripts/ios-consumer-export.py": "0b3427953db1930061960b3b4136a0150a67933ce926a980610ece50d4ce3fcf",
+    "scripts/ios-build.py": "b607edd970bce2be71cedbe7e241d952eeb82491dfd4845d96eb7837521d1bdd",
+    "fabric.gdextension": "a637bbd04639fd4240a90b7ad9a71f21328b82aca35bc00717688ae1ba9dd6f0",
+    "sdk/addon/plugin.gd": "322b5efa75f0f615eb630b1d8da5f15f58f500e695290d300d17829d975a4183",
+    "sdk/addon/ios_export.gd": "febbd6a5b1d3547d360d75607f73644a9454ce108f83a8c87d800dc43024ca88"
+  },
+  "artifactSHA256": {
+    "arm64-template-block.json": "a4790daa32886173ed4ec62d32f8dcf38e966c9486b5eaf7b89224b7adcb404a",
+    "engine-baseline-fixture/export_presets.cfg": "384326b6303a134afddd018d0db94ed57fa4321e8b97e3f71af0843bf9f2994c",
+    "engine-baseline-fixture/icon.svg": "9d034db15932e7bf8f23bb33af4410de28b8354b2072ac75d938c4c7ee5c714b",
+    "engine-baseline-fixture/main.tscn": "b03e7841dc5a8f038a1c7bd960840b7288d13e69db23f935cc65a5239c9cafe4",
+    "engine-baseline-fixture/project.godot": "f52b0c9a28626d203a2e24a2a13e13122815e7850965ef9cb33cf0c93383c2df",
+    "engine-baseline-fixture/validation.gd": "4b9405862b5e197afba915b3e718455e8554c1acdb1585043be73e92ddfd276f",
+    "engine-baseline.json": "b7363da351c26c39e7198a90fadbdd4dda5f39f9cc64c37c0f0c7a619417e24d",
+    "native-builds.json": "40acd25f50edc952178f8341e1ee240facb724d5b8c7417b7245b4d5e8dad719",
+    "simulator-x86_64-checkpoint.json": "233bc3c6e47feaaabe10f600a15a46a6a0d277dbf709e6d43dee27bf4b011159",
+    "simulator-x86_64-checkpoint.png": "73f596eda0086cb035d19bd45e72ff210c8ba0a2d8f5ac13a44b171c2486ee43"
+  },
+  "claims": {
+    "nativeBuildAndLink": true,
+    "x86_64SimulatorRuntimeExecuted": true,
+    "arm64SimulatorRuntimeExecuted": false,
+    "physicalDeviceExecuted": false,
+    "debugRuntimeExecuted": false,
+    "godotRebuilt": false
+  },
+  "limitations": [
+    "Simulator runtime record identifies an earlier native package; nativeSourcesMatchWorkingTree=false",
+    "Official arm64 simulator template lacks actual arm64 engine code",
+    "One exact engine startup mouse error is disclosed and independently reproduced without Fabric",
+    "Programmatic native button signal tested; physical touch/IME/accessibility and mobile OS services remain open",
+    "UIKit process was explicitly terminated by the runner after runtime shutdown; natural process exit is not claimed"
+  ],
+  "rawLogsVersioned": false
+}

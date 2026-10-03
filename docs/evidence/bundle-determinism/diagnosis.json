@@ -1,0 +1,230 @@
+{
+  "format": "godot-fabric.experimental-build-diagnosis/v1",
+  "esbuild": "0.25.12",
+  "node": "22.23.3",
+  "platform": "macOS arm64",
+  "write": false,
+  "sameProject": true,
+  "processes": 18,
+  "inputsUnchanged": true,
+  "transformedOnLoadUnchanged": true,
+  "sourceReproducerSha256": "1258a237054d421f6ac179ff5fa5964164dd00edaec46b89bc603ba99f220baa",
+  "configurations": {
+    "inferred": {
+      "processes": 6,
+      "rawHashes": [
+        "81e57bd0ca00f6db91164c2376bfd8ce8e189f7f809165a807ea62b39d81443e",
+        "cdb92ecfd02b2256e3868717cdf655ceb3a11d4a66d46a8e167f3d187fc5924a"
+      ],
+      "finalHashes": [
+        "045347f7c4b183c786c92a9bb2646cf9cc56ad190caddd0d476daf0d82a0da14",
+        "3967b98698e063d62a7af993f8443ad6530b4975a5f58a85223520c44b65dba4"
+      ]
+    },
+    "explicit": {
+      "processes": 6,
+      "rawHashes": [
+        "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec"
+      ],
+      "finalHashes": [
+        "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a"
+      ]
+    },
+    "raw": {
+      "processes": 6,
+      "rawHashes": [
+        "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec"
+      ],
+      "finalHashes": [
+        "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a"
+      ]
+    }
+  },
+  "executions": [
+    {
+      "mode": "inferred",
+      "order": "relative-first",
+      "iteration": "0",
+      "rawHash": "81e57bd0ca00f6db91164c2376bfd8ce8e189f7f809165a807ea62b39d81443e",
+      "finalHash": "3967b98698e063d62a7af993f8443ad6530b4975a5f58a85223520c44b65dba4",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "inferred",
+      "order": "alias-first",
+      "iteration": "1",
+      "rawHash": "81e57bd0ca00f6db91164c2376bfd8ce8e189f7f809165a807ea62b39d81443e",
+      "finalHash": "3967b98698e063d62a7af993f8443ad6530b4975a5f58a85223520c44b65dba4",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "inferred",
+      "order": "natural",
+      "iteration": "2",
+      "rawHash": "cdb92ecfd02b2256e3868717cdf655ceb3a11d4a66d46a8e167f3d187fc5924a",
+      "finalHash": "045347f7c4b183c786c92a9bb2646cf9cc56ad190caddd0d476daf0d82a0da14",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "inferred",
+      "order": "relative-first",
+      "iteration": "3",
+      "rawHash": "81e57bd0ca00f6db91164c2376bfd8ce8e189f7f809165a807ea62b39d81443e",
+      "finalHash": "3967b98698e063d62a7af993f8443ad6530b4975a5f58a85223520c44b65dba4",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "inferred",
+      "order": "alias-first",
+      "iteration": "4",
+      "rawHash": "81e57bd0ca00f6db91164c2376bfd8ce8e189f7f809165a807ea62b39d81443e",
+      "finalHash": "3967b98698e063d62a7af993f8443ad6530b4975a5f58a85223520c44b65dba4",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "inferred",
+      "order": "natural",
+      "iteration": "5",
+      "rawHash": "cdb92ecfd02b2256e3868717cdf655ceb3a11d4a66d46a8e167f3d187fc5924a",
+      "finalHash": "045347f7c4b183c786c92a9bb2646cf9cc56ad190caddd0d476daf0d82a0da14",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "explicit",
+      "order": "relative-first",
+      "iteration": "0",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "explicit",
+      "order": "alias-first",
+      "iteration": "1",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "explicit",
+      "order": "natural",
+      "iteration": "2",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "explicit",
+      "order": "relative-first",
+      "iteration": "3",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "explicit",
+      "order": "alias-first",
+      "iteration": "4",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "explicit",
+      "order": "natural",
+      "iteration": "5",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "raw",
+      "order": "relative-first",
+      "iteration": "0",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "raw",
+      "order": "alias-first",
+      "iteration": "1",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "raw",
+      "order": "natural",
+      "iteration": "2",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "raw",
+      "order": "relative-first",
+      "iteration": "3",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "raw",
+      "order": "alias-first",
+      "iteration": "4",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    },
+    {
+      "mode": "raw",
+      "order": "natural",
+      "iteration": "5",
+      "rawHash": "58dc13a37daf8807702d28200bf8b94b1b254352b11d06f9cd41dcbbc37887ec",
+      "finalHash": "93943c95a326784947c1075b9e8538db2d4a87ddc37c701d681fd0bea4b74e8a",
+      "inputHash": "516e084cbe8ae87cd1f769e3b6a1f865e4f3a92de40e54e5b7b68242d637b2b4",
+      "inputCount": 154,
+      "loadHash": "7cb8cf39c4fa8a9ce190d756736ac498613f8cc71f2002a07ef380abd33a6985"
+    }
+  ],
+  "limits": [
+    "Diagnostic observes the bundler graph without executing Godot.",
+    "The prior failed hosted bundle bytes were not retained; this is a local reproduction of a concrete cause, not a byte diff of that run.",
+    "Hashes identify this project and installation layout only."
+  ]
+}

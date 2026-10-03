@@ -1,0 +1,150 @@
+{
+  "format": "godot-fabric.executed-alias-scopes-verification/v1",
+  "checkedAt": "2026-10-03T22:46:45.315700+00:00",
+  "sourceBaseCommit": "f2eb57f14dcc6f0c25750ff6284f9244d4b3e617",
+  "platform": "macOS arm64",
+  "configuration": "Release",
+  "results": {
+    "targeted": {
+      "command": "node --test tests/project-resolution.test.mjs tests/package-conditions.test.mjs tests/bundle-determinism.test.mjs tests/platform-seams.test.mjs",
+      "nodeGroups": [
+        78
+      ],
+      "nodeTests": 78,
+      "passed": true,
+      "skipped": 0,
+      "logSha256": "2f68ba60f6c16bdf813cb3d186092fc0446a472366cf9a37e485d0280a8b43e3"
+    },
+    "contracts": {
+      "command": "npm run test:contracts",
+      "nodeGroups": [
+        6,
+        8,
+        185
+      ],
+      "nodeTests": 199,
+      "passed": true,
+      "skipped": 0,
+      "logSha256": "613ae87637aea1080f4662bd137f23d1b30c78c344116f57f3af1e1d5c804747",
+      "pythonTests": 13
+    },
+    "nativeRegressions": {
+      "command": "npm run bundle && node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+      "nodeGroups": [
+        10
+      ],
+      "nodeTests": 10,
+      "passed": true,
+      "skipped": 0,
+      "logSha256": "6797641162fa326546b4064964611a364c4dc72cecdf3f38ceea0b06b83f3d8f"
+    },
+    "static": {
+      "command": "npm run check:static",
+      "passed": true,
+      "logSha256": "fb3186c3f320d79918a9b445bd9c4ba16d685e8750dd33338ba27eff4a1dac7a"
+    },
+    "consumer": {
+      "command": "npm run test:consumer -- --capture",
+      "toolingChecks": 30,
+      "reports": [
+        {
+          "case": "headless",
+          "checks": 40,
+          "passed": true,
+          "sourceReportSha256": "51405633c64bc54297a6800026223e62428020b4a1f09db323a4b4f1bde6bf12"
+        },
+        {
+          "case": "graphical",
+          "checks": 43,
+          "passed": true,
+          "sourceReportSha256": "04d44d5b0d00fd5d6d9a798d44e091090ec2579858718a8a1b75d9f0d5242c65"
+        },
+        {
+          "case": "local-alias-native",
+          "checks": 40,
+          "passed": true,
+          "sourceReportSha256": "51405633c64bc54297a6800026223e62428020b4a1f09db323a4b4f1bde6bf12"
+        },
+        {
+          "case": "local-alias-graphical",
+          "checks": 43,
+          "passed": true,
+          "sourceReportSha256": "04d44d5b0d00fd5d6d9a798d44e091090ec2579858718a8a1b75d9f0d5242c65"
+        },
+        {
+          "case": "nested-dependency-native",
+          "checks": 40,
+          "passed": true,
+          "sourceReportSha256": "8fea56c84653df371d43f3d6810da6c15f59499f0785f5a24c7d852b1f1b763e"
+        },
+        {
+          "case": "alias-package-native",
+          "checks": 40,
+          "passed": true,
+          "sourceReportSha256": "55ba2339fcf800236d6d44946adf00f1aa4e75b7eec4b8e10abe19005319c2ef"
+        },
+        {
+          "case": "alias-package-graphical",
+          "checks": 43,
+          "passed": true,
+          "sourceReportSha256": "a1abb194abb628be14b7112b7225e9d8bd06711904b9c71bcf2e875e2e86faab"
+        }
+      ],
+      "logSha256": "1ea21c72206f8d0ba345506aa6b841a5e4570b53161400caf518d93df31192c4"
+    },
+    "metroOracle": {
+      "version": "0.87.1",
+      "runtime": "esbuild 0.25.12",
+      "fixtures": 13,
+      "exactTargetComparisons": 8,
+      "keyOrderComparisons": 2,
+      "declaredIncompatibilities": [
+        "Missing exports target: Metro warns/falls back; SDK fails",
+        "External dependency #imports target: Metro rejects; SDK uses declared nested dependency"
+      ],
+      "profile": {
+        "platform": "godot",
+        "mainFields": [
+          "main"
+        ],
+        "conditions": [
+          [],
+          [
+            "godot"
+          ]
+        ],
+        "implicitRNConditions": false
+      },
+      "testSha256": "f3f44ac827a9e630d161a8d11ca6943c06042a7ac56b7b429e16b8dc8d653267"
+    },
+    "dashboard": {
+      "commands": [
+        "npm run dashboard:check",
+        "npm run test:dashboard",
+        "npm run dashboard:build"
+      ],
+      "passed": true,
+      "nodeTests": 8,
+      "checkpointCountsUnchanged": {
+        "done": 16,
+        "total": 156
+      },
+      "taskCountsUnchanged": {
+        "total": 40,
+        "releaseRequired": 39,
+        "complete": 0
+      }
+    },
+    "publication": {
+      "command": "npm run check:publication",
+      "passed": true,
+      "files": 520,
+      "logSha256": "1df93ed80cb637e3b78a2e75e58f38c26313df13500bd6de8b80a31fb01376bd"
+    }
+  },
+  "limitations": [
+    "Local current source; preceding hosted CI is separate",
+    "No full GF acceptance, dependency closure, checkpoint or denominator change",
+    "Earlier 15-example/605-check execution remains in preceding resolution evidence; that matrix was not rerun for this consumer-only builder slice"
+  ]
+}

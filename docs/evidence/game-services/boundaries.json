@@ -1,0 +1,2209 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "host": "macOS arm64",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "scenario": "service-boundaries",
+  "engine": "hermes",
+  "renderer": "fabric",
+  "displayServer": "headless",
+  "checks": [
+    {
+      "name": "All boundary schemas and bindings register before mounting Hermes",
+      "passed": true
+    },
+    {
+      "name": "Godot fixture constructs accented Unicode scalars and valid emoji pairs in keys and values",
+      "passed": true
+    },
+    {
+      "name": "Real Hermes connects every boundary state through the coordinated native protocol",
+      "passed": true
+    },
+    {
+      "name": "Original RN AppRegistry mounts the isolated Fabric root",
+      "passed": true
+    },
+    {
+      "name": "Initial Godot-to-Hermes DTO preserves accented and supplementary Unicode keys and values",
+      "passed": true
+    },
+    {
+      "name": "Initial state accepts exactly 10000 nodes including its value-array root",
+      "passed": true
+    },
+    {
+      "name": "Initial state accepts a real DTO value at depth32",
+      "passed": true
+    },
+    {
+      "name": "Four ready logical connections own four native subscription IDs",
+      "passed": true
+    },
+    {
+      "name": "Values accepted in initial state also arrive through real typed native events",
+      "passed": true
+    },
+    {
+      "name": "A state event retains the changed supplementary Unicode value and original key",
+      "passed": true
+    },
+    {
+      "name": "The event tuple does not spend a data node from the 10000-node payload budget",
+      "passed": true
+    },
+    {
+      "name": "The event tuple does not add a depth to the state payload",
+      "passed": true
+    },
+    {
+      "name": "Initial and updated boundary values retain monotonic revisions in one generation: unicode",
+      "passed": true
+    },
+    {
+      "name": "Initial and updated boundary values retain monotonic revisions in one generation: nodes",
+      "passed": true
+    },
+    {
+      "name": "Initial and updated boundary values retain monotonic revisions in one generation: depth",
+      "passed": true
+    },
+    {
+      "name": "All boundary calls settle through the original native Promise bridge",
+      "passed": true
+    },
+    {
+      "name": "JS-to-Godot-to-JS roundtrip preserves accented and supplementary Unicode keys and values",
+      "passed": true
+    },
+    {
+      "name": "The actual GDScript method receives the exact Unicode scalars without replacement",
+      "passed": true
+    },
+    {
+      "name": "A 10000-node args DTO executes with address metadata counted independently",
+      "passed": true
+    },
+    {
+      "name": "A call accepts depth32 including its outer args-array root",
+      "passed": true
+    },
+    {
+      "name": "Facade and direct native reject every over-limit, inadmissible-string or invalid-shape DTO asynchronously",
+      "passed": true
+    },
+    {
+      "name": "Each DTO failure reports its precise size-limit, string or structural contract",
+      "passed": true
+    },
+    {
+      "name": "Both copiers reject invalid keys and accessors without executing getters",
+      "passed": true
+    },
+    {
+      "name": "Rejected boundary calls do not execute or mutate a Godot owner",
+      "passed": true
+    },
+    {
+      "name": "Handled Promise failures do not disguise an unexpected runtime or event error",
+      "passed": true
+    },
+    {
+      "name": "Valid plain and null-prototype Unicode objects and native dense arrays still complete",
+      "passed": true
+    },
+    {
+      "name": "A legitimate object preserves its Unicode keys and values through both DTO boundaries: unicodeNative",
+      "passed": true
+    },
+    {
+      "name": "A legitimate object preserves its Unicode keys and values through both DTO boundaries: nullPrototypeFacade",
+      "passed": true
+    },
+    {
+      "name": "A legitimate object preserves its Unicode keys and values through both DTO boundaries: nullPrototypeNative",
+      "passed": true
+    },
+    {
+      "name": "A direct native call retains every element of a legitimate dense Array",
+      "passed": true
+    },
+    {
+      "name": "Only the seven valid boundary calls execute their Godot methods; no rejected DTO invokes a getter or Callable",
+      "passed": true
+    },
+    {
+      "name": "Removing a binding reaches the public lifecycle diagnostic exactly once",
+      "passed": true
+    },
+    {
+      "name": "Queued data cannot cross removal of its binding generation",
+      "passed": true
+    },
+    {
+      "name": "A removed address can reconnect to a fresh binding generation",
+      "passed": true
+    },
+    {
+      "name": "Rebinding restores current game data under a distinct generation",
+      "passed": true
+    },
+    {
+      "name": "A queued call cannot invoke the replacement behind the same address",
+      "passed": true
+    },
+    {
+      "name": "Neither the old nor replacement method executes the stale queued call",
+      "passed": true
+    },
+    {
+      "name": "A new call executes the current method generation",
+      "passed": true
+    },
+    {
+      "name": "The native fixture queues real host work beyond one 64-task frame budget",
+      "passed": true
+    },
+    {
+      "name": "The native fixture queues real signals beyond one 128-event frame budget",
+      "passed": true
+    },
+    {
+      "name": "Budgeted service backlog completes while original RN timer and frame callbacks stay live",
+      "passed": true
+    },
+    {
+      "name": "Every queued operation reaches the current game method without silent dropping",
+      "passed": true
+    },
+    {
+      "name": "Native operations preserve accepted call order across multiple host budgets",
+      "passed": true
+    },
+    {
+      "name": "Every scalar event retains its value and revision across multiple event budgets",
+      "passed": true
+    },
+    {
+      "name": "Native budgets drain the complete backlog without retaining task or event queues",
+      "passed": true
+    },
+    {
+      "name": "An independently owned source connects before deletion",
+      "passed": true
+    },
+    {
+      "name": "Queued source deletion invalidates its subscription",
+      "passed": true
+    },
+    {
+      "name": "Freed Godot owners cannot deliver queued values or retain native callback authority",
+      "passed": true
+    },
+    {
+      "name": "Repeated public cleanup releases every native subscription ID",
+      "passed": true
+    },
+    {
+      "name": "Shutdown begins with a real accepted host operation pending",
+      "passed": true
+    },
+    {
+      "name": "Shutdown rejects queued work without executing its game Callable",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized native service state",
+      "passed": true
+    },
+    {
+      "name": "Shutdown retires every original Fabric root and native module",
+      "passed": true
+    },
+    {
+      "name": "Shutdown releases native binding, subscription and queued-work authority",
+      "passed": true
+    },
+    {
+      "name": "Shutdown drains real RN work without unexpected error accounting",
+      "passed": true
+    },
+    {
+      "name": "All real Godot signal connections are released by shutdown",
+      "passed": true
+    },
+    {
+      "name": "unicode reports native completion",
+      "passed": true
+    },
+    {
+      "name": "nodes reports native completion",
+      "passed": true
+    },
+    {
+      "name": "depth reports native completion",
+      "passed": true
+    },
+    {
+      "name": "nodesFacade rejects the precise E_SERVICE_DTO_LIMIT contract",
+      "passed": true
+    },
+    {
+      "name": "depthFacade rejects the precise E_SERVICE_DTO_LIMIT contract",
+      "passed": true
+    },
+    {
+      "name": "nulValueFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulKeyFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulNameFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulOriginFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulKeyGetterFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateValueFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateKeyFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateNameFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateOriginFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateKeyGetterFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateValueFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateKeyFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateNameFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateOriginFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateKeyGetterFacade rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "objectAccessorFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectHiddenFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectHiddenExtraFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectSymbolFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectPrototypeFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayHoleFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayExtraFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arraySymbolFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayHiddenFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayAccessorFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayPrototypeNullFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayPrototypeCustomFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "outerArgsAccessorFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "addressAccessorFacade rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "nodesNative rejects the precise E_SERVICE_DTO_LIMIT contract",
+      "passed": true
+    },
+    {
+      "name": "depthNative rejects the precise E_SERVICE_DTO_LIMIT contract",
+      "passed": true
+    },
+    {
+      "name": "nulValueNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulKeyNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulNameNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulOriginNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "nulKeyGetterNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateValueNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateKeyNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateNameNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateOriginNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "highSurrogateKeyGetterNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateValueNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateKeyNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateNameNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateOriginNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "lowSurrogateKeyGetterNative rejects the precise E_SERVICE_DTO_STRING contract",
+      "passed": true
+    },
+    {
+      "name": "objectAccessorNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectHiddenNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectHiddenExtraNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectSymbolNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "objectPrototypeNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayHoleNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayExtraNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arraySymbolNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayHiddenNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayAccessorNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayPrototypeNullNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "arrayPrototypeCustomNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "outerArgsAccessorNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "addressAccessorNative rejects the precise E_SERVICE_DTO contract",
+      "passed": true
+    },
+    {
+      "name": "unicodeNative reports native completion",
+      "passed": true
+    },
+    {
+      "name": "nullPrototypeFacade reports native completion",
+      "passed": true
+    },
+    {
+      "name": "nullPrototypeNative reports native completion",
+      "passed": true
+    },
+    {
+      "name": "arrayNative reports native completion",
+      "passed": true
+    },
+    {
+      "name": "generation rejects the precise E_SERVICE_GENERATION contract",
+      "passed": true
+    },
+    {
+      "name": "newGeneration reports native completion",
+      "passed": true
+    },
+    {
+      "name": "stopped rejects the precise E_SERVICE_STOPPED contract",
+      "passed": true
+    },
+    {
+      "name": "Cached native reserve fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Game service runtime stopped",
+      "passed": true
+    },
+    {
+      "name": "Cached native connect fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Game service runtime stopped",
+      "passed": true
+    },
+    {
+      "name": "Cached native call fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Game service runtime stopped",
+      "passed": true
+    },
+    {
+      "name": "Cached native onEvent fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Cannot subscribe after shutdown",
+      "passed": true
+    },
+    {
+      "name": "Native remove remains idempotent after runtime shutdown",
+      "passed": true
+    }
+  ],
+  "limits": {
+    "callArgs": "one integral DTO root",
+    "depth": 32,
+    "eventTuple": "protocol; arguments share a budget at depth0",
+    "nodes": 10000
+  },
+  "strings": {
+    "parityGap": "GF-25/1.0: Full JavaScript/JSON string-domain parity remains unresolved; rejection prevents data loss",
+    "rejection": "E_SERVICE_DTO_STRING for NUL and unpaired UTF16 surrogates",
+    "testedRoundtrip": "Accented and supplementary Unicode scalars in keys and values"
+  },
+  "javascript": {
+    "burst": [
+      {
+        "ordinal": 0.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 1.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 2.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 3.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 4.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 5.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 6.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 7.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 8.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 9.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 10.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 11.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 12.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 13.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 14.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 15.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 16.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 17.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 18.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 19.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 20.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 21.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 22.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 23.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 24.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 25.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 26.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 27.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 28.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 29.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 30.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 31.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 32.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 33.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 34.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 35.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 36.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 37.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 38.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 39.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 40.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 41.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 42.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 43.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 44.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 45.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 46.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 47.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 48.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 49.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 50.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 51.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 52.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 53.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 54.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 55.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 56.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 57.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 58.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 59.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 60.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 61.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 62.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 63.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 64.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 65.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 66.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 67.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 68.0,
+        "value": 2.0
+      },
+      {
+        "ordinal": 69.0,
+        "value": 2.0
+      }
+    ],
+    "checks": [
+      {
+        "name": "unicode reports native completion",
+        "passed": true
+      },
+      {
+        "name": "nodes reports native completion",
+        "passed": true
+      },
+      {
+        "name": "depth reports native completion",
+        "passed": true
+      },
+      {
+        "name": "nodesFacade rejects the precise E_SERVICE_DTO_LIMIT contract",
+        "passed": true
+      },
+      {
+        "name": "depthFacade rejects the precise E_SERVICE_DTO_LIMIT contract",
+        "passed": true
+      },
+      {
+        "name": "nulValueFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulKeyFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulNameFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulOriginFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulKeyGetterFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateValueFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateKeyFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateNameFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateOriginFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateKeyGetterFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateValueFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateKeyFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateNameFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateOriginFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateKeyGetterFacade rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "objectAccessorFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectHiddenFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectHiddenExtraFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectSymbolFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectPrototypeFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayHoleFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayExtraFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arraySymbolFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayHiddenFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayAccessorFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayPrototypeNullFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayPrototypeCustomFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "outerArgsAccessorFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "addressAccessorFacade rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "nodesNative rejects the precise E_SERVICE_DTO_LIMIT contract",
+        "passed": true
+      },
+      {
+        "name": "depthNative rejects the precise E_SERVICE_DTO_LIMIT contract",
+        "passed": true
+      },
+      {
+        "name": "nulValueNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulKeyNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulNameNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulOriginNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "nulKeyGetterNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateValueNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateKeyNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateNameNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateOriginNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "highSurrogateKeyGetterNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateValueNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateKeyNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateNameNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateOriginNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "lowSurrogateKeyGetterNative rejects the precise E_SERVICE_DTO_STRING contract",
+        "passed": true
+      },
+      {
+        "name": "objectAccessorNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectHiddenNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectHiddenExtraNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectSymbolNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "objectPrototypeNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayHoleNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayExtraNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arraySymbolNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayHiddenNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayAccessorNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayPrototypeNullNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "arrayPrototypeCustomNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "outerArgsAccessorNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "addressAccessorNative rejects the precise E_SERVICE_DTO contract",
+        "passed": true
+      },
+      {
+        "name": "unicodeNative reports native completion",
+        "passed": true
+      },
+      {
+        "name": "nullPrototypeFacade reports native completion",
+        "passed": true
+      },
+      {
+        "name": "nullPrototypeNative reports native completion",
+        "passed": true
+      },
+      {
+        "name": "arrayNative reports native completion",
+        "passed": true
+      },
+      {
+        "name": "generation rejects the precise E_SERVICE_GENERATION contract",
+        "passed": true
+      },
+      {
+        "name": "newGeneration reports native completion",
+        "passed": true
+      },
+      {
+        "name": "stopped rejects the precise E_SERVICE_STOPPED contract",
+        "passed": true
+      },
+      {
+        "name": "Cached native reserve fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Game service runtime stopped",
+        "passed": true
+      },
+      {
+        "name": "Cached native connect fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Game service runtime stopped",
+        "passed": true
+      },
+      {
+        "name": "Cached native call fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Game service runtime stopped",
+        "passed": true
+      },
+      {
+        "name": "Cached native onEvent fails before allocating work after stop: Exception in HostFunction: E_RUNTIME_STOPPED: Cannot subscribe after shutdown",
+        "passed": true
+      },
+      {
+        "name": "Native remove remains idempotent after runtime shutdown",
+        "passed": true
+      }
+    ],
+    "clocks": {
+      "frame": 1.0,
+      "timer": 1.0
+    },
+    "diagnostics": [
+      {
+        "code": "E_SERVICE_BINDING_REMOVED",
+        "message": "E_SERVICE_BINDING_REMOVED: E_SERVICE_BINDING_REMOVED: Registration owner removed binding"
+      },
+      {
+        "code": "E_SERVICE_OWNER",
+        "message": "E_SERVICE_OWNER: E_SERVICE_OWNER: Source owner was freed or queued for deletion"
+      }
+    ],
+    "disposed": true,
+    "getterCalls": 0.0,
+    "rejected": {
+      "addressAccessorFacade": "E_SERVICE_DTO",
+      "addressAccessorNative": "E_SERVICE_DTO",
+      "arrayAccessorFacade": "E_SERVICE_DTO",
+      "arrayAccessorNative": "E_SERVICE_DTO",
+      "arrayExtraFacade": "E_SERVICE_DTO",
+      "arrayExtraNative": "E_SERVICE_DTO",
+      "arrayHiddenFacade": "E_SERVICE_DTO",
+      "arrayHiddenNative": "E_SERVICE_DTO",
+      "arrayHoleFacade": "E_SERVICE_DTO",
+      "arrayHoleNative": "E_SERVICE_DTO",
+      "arrayPrototypeCustomFacade": "E_SERVICE_DTO",
+      "arrayPrototypeCustomNative": "E_SERVICE_DTO",
+      "arrayPrototypeNullFacade": "E_SERVICE_DTO",
+      "arrayPrototypeNullNative": "E_SERVICE_DTO",
+      "arraySymbolFacade": "E_SERVICE_DTO",
+      "arraySymbolNative": "E_SERVICE_DTO",
+      "depthFacade": "E_SERVICE_DTO_LIMIT",
+      "depthNative": "E_SERVICE_DTO_LIMIT",
+      "generation": "E_SERVICE_GENERATION",
+      "highSurrogateKeyFacade": "E_SERVICE_DTO_STRING",
+      "highSurrogateKeyGetterFacade": "E_SERVICE_DTO_STRING",
+      "highSurrogateKeyGetterNative": "E_SERVICE_DTO_STRING",
+      "highSurrogateKeyNative": "E_SERVICE_DTO_STRING",
+      "highSurrogateNameFacade": "E_SERVICE_DTO_STRING",
+      "highSurrogateNameNative": "E_SERVICE_DTO_STRING",
+      "highSurrogateOriginFacade": "E_SERVICE_DTO_STRING",
+      "highSurrogateOriginNative": "E_SERVICE_DTO_STRING",
+      "highSurrogateValueFacade": "E_SERVICE_DTO_STRING",
+      "highSurrogateValueNative": "E_SERVICE_DTO_STRING",
+      "lowSurrogateKeyFacade": "E_SERVICE_DTO_STRING",
+      "lowSurrogateKeyGetterFacade": "E_SERVICE_DTO_STRING",
+      "lowSurrogateKeyGetterNative": "E_SERVICE_DTO_STRING",
+      "lowSurrogateKeyNative": "E_SERVICE_DTO_STRING",
+      "lowSurrogateNameFacade": "E_SERVICE_DTO_STRING",
+      "lowSurrogateNameNative": "E_SERVICE_DTO_STRING",
+      "lowSurrogateOriginFacade": "E_SERVICE_DTO_STRING",
+      "lowSurrogateOriginNative": "E_SERVICE_DTO_STRING",
+      "lowSurrogateValueFacade": "E_SERVICE_DTO_STRING",
+      "lowSurrogateValueNative": "E_SERVICE_DTO_STRING",
+      "nodesFacade": "E_SERVICE_DTO_LIMIT",
+      "nodesNative": "E_SERVICE_DTO_LIMIT",
+      "nulKeyFacade": "E_SERVICE_DTO_STRING",
+      "nulKeyGetterFacade": "E_SERVICE_DTO_STRING",
+      "nulKeyGetterNative": "E_SERVICE_DTO_STRING",
+      "nulKeyNative": "E_SERVICE_DTO_STRING",
+      "nulNameFacade": "E_SERVICE_DTO_STRING",
+      "nulNameNative": "E_SERVICE_DTO_STRING",
+      "nulOriginFacade": "E_SERVICE_DTO_STRING",
+      "nulOriginNative": "E_SERVICE_DTO_STRING",
+      "nulValueFacade": "E_SERVICE_DTO_STRING",
+      "nulValueNative": "E_SERVICE_DTO_STRING",
+      "objectAccessorFacade": "E_SERVICE_DTO",
+      "objectAccessorNative": "E_SERVICE_DTO",
+      "objectHiddenExtraFacade": "E_SERVICE_DTO",
+      "objectHiddenExtraNative": "E_SERVICE_DTO",
+      "objectHiddenFacade": "E_SERVICE_DTO",
+      "objectHiddenNative": "E_SERVICE_DTO",
+      "objectPrototypeFacade": "E_SERVICE_DTO",
+      "objectPrototypeNative": "E_SERVICE_DTO",
+      "objectSymbolFacade": "E_SERVICE_DTO",
+      "objectSymbolNative": "E_SERVICE_DTO",
+      "outerArgsAccessorFacade": "E_SERVICE_DTO",
+      "outerArgsAccessorNative": "E_SERVICE_DTO",
+      "stopped": "E_SERVICE_STOPPED"
+    },
+    "results": {
+      "arrayNative": {
+        "allNull": true,
+        "generation": "6",
+        "length": 2.0,
+        "response": "completion"
+      },
+      "depth": {
+        "depth": 31.0,
+        "generation": "7",
+        "response": "completion"
+      },
+      "newGeneration": {
+        "generation": "10",
+        "response": "completion",
+        "value": 2.0
+      },
+      "nodes": {
+        "allNull": true,
+        "generation": "6",
+        "length": 9998.0,
+        "response": "completion"
+      },
+      "nullPrototypeFacade": {
+        "generation": "5",
+        "keyPresent": true,
+        "keys": [
+          [
+            233.0,
+            128512.0
+          ]
+        ],
+        "response": "completion",
+        "value": "ç🚀",
+        "valueCodes": [
+          231.0,
+          128640.0
+        ]
+      },
+      "nullPrototypeNative": {
+        "generation": "5",
+        "keyPresent": true,
+        "keys": [
+          [
+            233.0,
+            128512.0
+          ]
+        ],
+        "response": "completion",
+        "value": "ç🚀",
+        "valueCodes": [
+          231.0,
+          128640.0
+        ]
+      },
+      "unicode": {
+        "generation": "5",
+        "keyPresent": true,
+        "keys": [
+          [
+            233.0,
+            128512.0
+          ]
+        ],
+        "response": "completion",
+        "value": "ç🚀",
+        "valueCodes": [
+          231.0,
+          128640.0
+        ]
+      },
+      "unicodeNative": {
+        "generation": "5",
+        "keyPresent": true,
+        "keys": [
+          [
+            233.0,
+            128512.0
+          ]
+        ],
+        "response": "completion",
+        "value": "ç🚀",
+        "valueCodes": [
+          231.0,
+          128640.0
+        ]
+      }
+    },
+    "states": {
+      "depth": {
+        "failed": null,
+        "ready": true,
+        "snapshots": [
+          {
+            "depth": 32.0,
+            "generation": "3",
+            "revision": 0.0
+          },
+          {
+            "depth": 32.0,
+            "generation": "3",
+            "revision": 1.0
+          }
+        ]
+      },
+      "newGeneration": {
+        "failed": null,
+        "ready": true,
+        "snapshots": [
+          {
+            "generation": "9",
+            "revision": 0.0,
+            "value": 9.0
+          },
+          {
+            "generation": "9",
+            "revision": 1.0,
+            "value": 100.0
+          },
+          {
+            "generation": "9",
+            "revision": 2.0,
+            "value": 101.0
+          },
+          {
+            "generation": "9",
+            "revision": 3.0,
+            "value": 102.0
+          },
+          {
+            "generation": "9",
+            "revision": 4.0,
+            "value": 103.0
+          },
+          {
+            "generation": "9",
+            "revision": 5.0,
+            "value": 104.0
+          },
+          {
+            "generation": "9",
+            "revision": 6.0,
+            "value": 105.0
+          },
+          {
+            "generation": "9",
+            "revision": 7.0,
+            "value": 106.0
+          },
+          {
+            "generation": "9",
+            "revision": 8.0,
+            "value": 107.0
+          },
+          {
+            "generation": "9",
+            "revision": 9.0,
+            "value": 108.0
+          },
+          {
+            "generation": "9",
+            "revision": 10.0,
+            "value": 109.0
+          },
+          {
+            "generation": "9",
+            "revision": 11.0,
+            "value": 110.0
+          },
+          {
+            "generation": "9",
+            "revision": 12.0,
+            "value": 111.0
+          },
+          {
+            "generation": "9",
+            "revision": 13.0,
+            "value": 112.0
+          },
+          {
+            "generation": "9",
+            "revision": 14.0,
+            "value": 113.0
+          },
+          {
+            "generation": "9",
+            "revision": 15.0,
+            "value": 114.0
+          },
+          {
+            "generation": "9",
+            "revision": 16.0,
+            "value": 115.0
+          },
+          {
+            "generation": "9",
+            "revision": 17.0,
+            "value": 116.0
+          },
+          {
+            "generation": "9",
+            "revision": 18.0,
+            "value": 117.0
+          },
+          {
+            "generation": "9",
+            "revision": 19.0,
+            "value": 118.0
+          },
+          {
+            "generation": "9",
+            "revision": 20.0,
+            "value": 119.0
+          },
+          {
+            "generation": "9",
+            "revision": 21.0,
+            "value": 120.0
+          },
+          {
+            "generation": "9",
+            "revision": 22.0,
+            "value": 121.0
+          },
+          {
+            "generation": "9",
+            "revision": 23.0,
+            "value": 122.0
+          },
+          {
+            "generation": "9",
+            "revision": 24.0,
+            "value": 123.0
+          },
+          {
+            "generation": "9",
+            "revision": 25.0,
+            "value": 124.0
+          },
+          {
+            "generation": "9",
+            "revision": 26.0,
+            "value": 125.0
+          },
+          {
+            "generation": "9",
+            "revision": 27.0,
+            "value": 126.0
+          },
+          {
+            "generation": "9",
+            "revision": 28.0,
+            "value": 127.0
+          },
+          {
+            "generation": "9",
+            "revision": 29.0,
+            "value": 128.0
+          },
+          {
+            "generation": "9",
+            "revision": 30.0,
+            "value": 129.0
+          },
+          {
+            "generation": "9",
+            "revision": 31.0,
+            "value": 130.0
+          },
+          {
+            "generation": "9",
+            "revision": 32.0,
+            "value": 131.0
+          },
+          {
+            "generation": "9",
+            "revision": 33.0,
+            "value": 132.0
+          },
+          {
+            "generation": "9",
+            "revision": 34.0,
+            "value": 133.0
+          },
+          {
+            "generation": "9",
+            "revision": 35.0,
+            "value": 134.0
+          },
+          {
+            "generation": "9",
+            "revision": 36.0,
+            "value": 135.0
+          },
+          {
+            "generation": "9",
+            "revision": 37.0,
+            "value": 136.0
+          },
+          {
+            "generation": "9",
+            "revision": 38.0,
+            "value": 137.0
+          },
+          {
+            "generation": "9",
+            "revision": 39.0,
+            "value": 138.0
+          },
+          {
+            "generation": "9",
+            "revision": 40.0,
+            "value": 139.0
+          },
+          {
+            "generation": "9",
+            "revision": 41.0,
+            "value": 140.0
+          },
+          {
+            "generation": "9",
+            "revision": 42.0,
+            "value": 141.0
+          },
+          {
+            "generation": "9",
+            "revision": 43.0,
+            "value": 142.0
+          },
+          {
+            "generation": "9",
+            "revision": 44.0,
+            "value": 143.0
+          },
+          {
+            "generation": "9",
+            "revision": 45.0,
+            "value": 144.0
+          },
+          {
+            "generation": "9",
+            "revision": 46.0,
+            "value": 145.0
+          },
+          {
+            "generation": "9",
+            "revision": 47.0,
+            "value": 146.0
+          },
+          {
+            "generation": "9",
+            "revision": 48.0,
+            "value": 147.0
+          },
+          {
+            "generation": "9",
+            "revision": 49.0,
+            "value": 148.0
+          },
+          {
+            "generation": "9",
+            "revision": 50.0,
+            "value": 149.0
+          },
+          {
+            "generation": "9",
+            "revision": 51.0,
+            "value": 150.0
+          },
+          {
+            "generation": "9",
+            "revision": 52.0,
+            "value": 151.0
+          },
+          {
+            "generation": "9",
+            "revision": 53.0,
+            "value": 152.0
+          },
+          {
+            "generation": "9",
+            "revision": 54.0,
+            "value": 153.0
+          },
+          {
+            "generation": "9",
+            "revision": 55.0,
+            "value": 154.0
+          },
+          {
+            "generation": "9",
+            "revision": 56.0,
+            "value": 155.0
+          },
+          {
+            "generation": "9",
+            "revision": 57.0,
+            "value": 156.0
+          },
+          {
+            "generation": "9",
+            "revision": 58.0,
+            "value": 157.0
+          },
+          {
+            "generation": "9",
+            "revision": 59.0,
+            "value": 158.0
+          },
+          {
+            "generation": "9",
+            "revision": 60.0,
+            "value": 159.0
+          },
+          {
+            "generation": "9",
+            "revision": 61.0,
+            "value": 160.0
+          },
+          {
+            "generation": "9",
+            "revision": 62.0,
+            "value": 161.0
+          },
+          {
+            "generation": "9",
+            "revision": 63.0,
+            "value": 162.0
+          },
+          {
+            "generation": "9",
+            "revision": 64.0,
+            "value": 163.0
+          },
+          {
+            "generation": "9",
+            "revision": 65.0,
+            "value": 164.0
+          },
+          {
+            "generation": "9",
+            "revision": 66.0,
+            "value": 165.0
+          },
+          {
+            "generation": "9",
+            "revision": 67.0,
+            "value": 166.0
+          },
+          {
+            "generation": "9",
+            "revision": 68.0,
+            "value": 167.0
+          },
+          {
+            "generation": "9",
+            "revision": 69.0,
+            "value": 168.0
+          },
+          {
+            "generation": "9",
+            "revision": 70.0,
+            "value": 169.0
+          },
+          {
+            "generation": "9",
+            "revision": 71.0,
+            "value": 170.0
+          },
+          {
+            "generation": "9",
+            "revision": 72.0,
+            "value": 171.0
+          },
+          {
+            "generation": "9",
+            "revision": 73.0,
+            "value": 172.0
+          },
+          {
+            "generation": "9",
+            "revision": 74.0,
+            "value": 173.0
+          },
+          {
+            "generation": "9",
+            "revision": 75.0,
+            "value": 174.0
+          },
+          {
+            "generation": "9",
+            "revision": 76.0,
+            "value": 175.0
+          },
+          {
+            "generation": "9",
+            "revision": 77.0,
+            "value": 176.0
+          },
+          {
+            "generation": "9",
+            "revision": 78.0,
+            "value": 177.0
+          },
+          {
+            "generation": "9",
+            "revision": 79.0,
+            "value": 178.0
+          },
+          {
+            "generation": "9",
+            "revision": 80.0,
+            "value": 179.0
+          },
+          {
+            "generation": "9",
+            "revision": 81.0,
+            "value": 180.0
+          },
+          {
+            "generation": "9",
+            "revision": 82.0,
+            "value": 181.0
+          },
+          {
+            "generation": "9",
+            "revision": 83.0,
+            "value": 182.0
+          },
+          {
+            "generation": "9",
+            "revision": 84.0,
+            "value": 183.0
+          },
+          {
+            "generation": "9",
+            "revision": 85.0,
+            "value": 184.0
+          },
+          {
+            "generation": "9",
+            "revision": 86.0,
+            "value": 185.0
+          },
+          {
+            "generation": "9",
+            "revision": 87.0,
+            "value": 186.0
+          },
+          {
+            "generation": "9",
+            "revision": 88.0,
+            "value": 187.0
+          },
+          {
+            "generation": "9",
+            "revision": 89.0,
+            "value": 188.0
+          },
+          {
+            "generation": "9",
+            "revision": 90.0,
+            "value": 189.0
+          },
+          {
+            "generation": "9",
+            "revision": 91.0,
+            "value": 190.0
+          },
+          {
+            "generation": "9",
+            "revision": 92.0,
+            "value": 191.0
+          },
+          {
+            "generation": "9",
+            "revision": 93.0,
+            "value": 192.0
+          },
+          {
+            "generation": "9",
+            "revision": 94.0,
+            "value": 193.0
+          },
+          {
+            "generation": "9",
+            "revision": 95.0,
+            "value": 194.0
+          },
+          {
+            "generation": "9",
+            "revision": 96.0,
+            "value": 195.0
+          },
+          {
+            "generation": "9",
+            "revision": 97.0,
+            "value": 196.0
+          },
+          {
+            "generation": "9",
+            "revision": 98.0,
+            "value": 197.0
+          },
+          {
+            "generation": "9",
+            "revision": 99.0,
+            "value": 198.0
+          },
+          {
+            "generation": "9",
+            "revision": 100.0,
+            "value": 199.0
+          },
+          {
+            "generation": "9",
+            "revision": 101.0,
+            "value": 200.0
+          },
+          {
+            "generation": "9",
+            "revision": 102.0,
+            "value": 201.0
+          },
+          {
+            "generation": "9",
+            "revision": 103.0,
+            "value": 202.0
+          },
+          {
+            "generation": "9",
+            "revision": 104.0,
+            "value": 203.0
+          },
+          {
+            "generation": "9",
+            "revision": 105.0,
+            "value": 204.0
+          },
+          {
+            "generation": "9",
+            "revision": 106.0,
+            "value": 205.0
+          },
+          {
+            "generation": "9",
+            "revision": 107.0,
+            "value": 206.0
+          },
+          {
+            "generation": "9",
+            "revision": 108.0,
+            "value": 207.0
+          },
+          {
+            "generation": "9",
+            "revision": 109.0,
+            "value": 208.0
+          },
+          {
+            "generation": "9",
+            "revision": 110.0,
+            "value": 209.0
+          },
+          {
+            "generation": "9",
+            "revision": 111.0,
+            "value": 210.0
+          },
+          {
+            "generation": "9",
+            "revision": 112.0,
+            "value": 211.0
+          },
+          {
+            "generation": "9",
+            "revision": 113.0,
+            "value": 212.0
+          },
+          {
+            "generation": "9",
+            "revision": 114.0,
+            "value": 213.0
+          },
+          {
+            "generation": "9",
+            "revision": 115.0,
+            "value": 214.0
+          },
+          {
+            "generation": "9",
+            "revision": 116.0,
+            "value": 215.0
+          },
+          {
+            "generation": "9",
+            "revision": 117.0,
+            "value": 216.0
+          },
+          {
+            "generation": "9",
+            "revision": 118.0,
+            "value": 217.0
+          },
+          {
+            "generation": "9",
+            "revision": 119.0,
+            "value": 218.0
+          },
+          {
+            "generation": "9",
+            "revision": 120.0,
+            "value": 219.0
+          },
+          {
+            "generation": "9",
+            "revision": 121.0,
+            "value": 220.0
+          },
+          {
+            "generation": "9",
+            "revision": 122.0,
+            "value": 221.0
+          },
+          {
+            "generation": "9",
+            "revision": 123.0,
+            "value": 222.0
+          },
+          {
+            "generation": "9",
+            "revision": 124.0,
+            "value": 223.0
+          },
+          {
+            "generation": "9",
+            "revision": 125.0,
+            "value": 224.0
+          },
+          {
+            "generation": "9",
+            "revision": 126.0,
+            "value": 225.0
+          },
+          {
+            "generation": "9",
+            "revision": 127.0,
+            "value": 226.0
+          },
+          {
+            "generation": "9",
+            "revision": 128.0,
+            "value": 227.0
+          },
+          {
+            "generation": "9",
+            "revision": 129.0,
+            "value": 228.0
+          },
+          {
+            "generation": "9",
+            "revision": 130.0,
+            "value": 229.0
+          },
+          {
+            "generation": "9",
+            "revision": 131.0,
+            "value": 230.0
+          },
+          {
+            "generation": "9",
+            "revision": 132.0,
+            "value": 231.0
+          },
+          {
+            "generation": "9",
+            "revision": 133.0,
+            "value": 232.0
+          },
+          {
+            "generation": "9",
+            "revision": 134.0,
+            "value": 233.0
+          },
+          {
+            "generation": "9",
+            "revision": 135.0,
+            "value": 234.0
+          },
+          {
+            "generation": "9",
+            "revision": 136.0,
+            "value": 235.0
+          },
+          {
+            "generation": "9",
+            "revision": 137.0,
+            "value": 236.0
+          },
+          {
+            "generation": "9",
+            "revision": 138.0,
+            "value": 237.0
+          },
+          {
+            "generation": "9",
+            "revision": 139.0,
+            "value": 238.0
+          },
+          {
+            "generation": "9",
+            "revision": 140.0,
+            "value": 239.0
+          }
+        ]
+      },
+      "nodes": {
+        "failed": null,
+        "ready": true,
+        "snapshots": [
+          {
+            "allNull": true,
+            "generation": "2",
+            "length": 9999.0,
+            "revision": 0.0
+          },
+          {
+            "allNull": true,
+            "generation": "2",
+            "length": 9999.0,
+            "revision": 1.0
+          }
+        ]
+      },
+      "oldGeneration": {
+        "failed": null,
+        "ready": true,
+        "snapshots": [
+          {
+            "generation": "4",
+            "revision": 0.0,
+            "value": 3.0
+          }
+        ]
+      },
+      "owner": {
+        "failed": null,
+        "ready": true,
+        "snapshots": [
+          {
+            "generation": "11",
+            "revision": 0.0,
+            "value": 7.0
+          }
+        ]
+      },
+      "unicode": {
+        "failed": null,
+        "ready": true,
+        "snapshots": [
+          {
+            "generation": "1",
+            "keyPresent": true,
+            "keys": [
+              [
+                233.0,
+                128512.0
+              ]
+            ],
+            "revision": 0.0,
+            "value": "ç🚀",
+            "valueCodes": [
+              231.0,
+              128640.0
+            ]
+          },
+          {
+            "generation": "1",
+            "keyPresent": true,
+            "keys": [
+              [
+                233.0,
+                128512.0
+              ]
+            ],
+            "revision": 1.0,
+            "value": "ã🧭",
+            "valueCodes": [
+              227.0,
+              129517.0
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "beforeStop": {
+    "stopped": false,
+    "runtimeInitialized": true,
+    "runtimeId": 27212645845.0,
+    "rootCount": 1.0,
+    "bundleEvaluations": 1.0,
+    "pendingWork": 0.0,
+    "pendingTimers": 0.0,
+    "pendingAnimationFrames": 0.0,
+    "hostPhasePending": false,
+    "errors": [],
+    "gameServices": {
+      "bindings": 8.0,
+      "callbacksRun": 84.0,
+      "errors": [],
+      "eventBudget": 128.0,
+      "eventsSent": 145.0,
+      "hostTasksCanceled": 0.0,
+      "hostTasksRun": 85.0,
+      "pendingEvents": 0.0,
+      "pendingHostTasks": 1.0,
+      "stopped": false,
+      "subscriptions": 0.0,
+      "taskBudget": 64.0
+    },
+    "dimensions": {
+      "screen": {
+        "fontScale": 1.0,
+        "height": 0.0,
+        "scale": 1.0,
+        "width": 0.0
+      },
+      "window": {
+        "fontScale": 1.0,
+        "height": 64.0,
+        "scale": 1.0,
+        "width": 64.0
+      }
+    }
+  },
+  "afterStop": {
+    "stopped": true,
+    "runtimeInitialized": true,
+    "runtimeId": 27212645845.0,
+    "rootCount": 0.0,
+    "bundleEvaluations": 1.0,
+    "pendingWork": 0.0,
+    "pendingTimers": 0.0,
+    "pendingAnimationFrames": 0.0,
+    "hostPhasePending": false,
+    "errors": [],
+    "gameServices": {
+      "bindings": 0.0,
+      "callbacksRun": 84.0,
+      "errors": [],
+      "eventBudget": 128.0,
+      "eventsSent": 145.0,
+      "hostTasksCanceled": 1.0,
+      "hostTasksRun": 85.0,
+      "pendingEvents": 0.0,
+      "pendingHostTasks": 0.0,
+      "stopped": true,
+      "subscriptions": 0.0,
+      "taskBudget": 64.0
+    },
+    "dimensions": {
+      "screen": {
+        "fontScale": 1.0,
+        "height": 0.0,
+        "scale": 1.0,
+        "width": 0.0
+      },
+      "window": {
+        "fontScale": 1.0,
+        "height": 64.0,
+        "scale": 1.0,
+        "width": 64.0
+      }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "displayServer": "headless",
+  "exampleCount": 14,
+  "assertionCount": 569,
+  "examples": [
+    {
+      "example": "chart",
+      "assertionCount": 34,
+      "passed": true,
+      "rawReportSHA256": "347acb00e80e6263c344174fe6b0cbe4984d0857e48b2ce132e23e157f15ef0f"
+    },
+    {
+      "example": "counter",
+      "assertionCount": 19,
+      "passed": true,
+      "rawReportSHA256": "0544f791c05627c1a5319446bcdec6deb3a16dd6dd0ffa91a27b9a7d94547451"
+    },
+    {
+      "example": "form",
+      "assertionCount": 39,
+      "passed": true,
+      "rawReportSHA256": "7a6d800afe441e4e2e341a1260fc3170d25d10a8949c56787e1ffecd5bd6baba"
+    },
+    {
+      "example": "input",
+      "assertionCount": 45,
+      "passed": true,
+      "rawReportSHA256": "24128d8b081fd7cb13fc30337f538628b6fe7ef973bcdccfa76f070b63d64ddb"
+    },
+    {
+      "example": "layout",
+      "assertionCount": 47,
+      "passed": true,
+      "rawReportSHA256": "e25c1cc69485cc30476eddf17371ddf7576aab57ddc12c99b075d4fc03e844d1"
+    },
+    {
+      "example": "metrics",
+      "assertionCount": 64,
+      "passed": true,
+      "rawReportSHA256": "104404cd6289684d91cfb48793e550c57af3420b77f79a26600799bdf64f1add"
+    },
+    {
+      "example": "nativewind",
+      "assertionCount": 49,
+      "passed": true,
+      "rawReportSHA256": "1574d8d9ec395a669f615dde01b5f24638b796ff3cd944018f5e6d0148762ff5"
+    },
+    {
+      "example": "pressable",
+      "assertionCount": 43,
+      "passed": true,
+      "rawReportSHA256": "aa715533d704a12c70873b11ec07dd10522d37926ccadd2edc2f00684a177b00"
+    },
+    {
+      "example": "react",
+      "assertionCount": 36,
+      "passed": true,
+      "rawReportSHA256": "15de8a14f756da8ccade0ce5d4df0b47b1fc4559bf44e4dc2153ba7d62c7e9c2"
+    },
+    {
+      "example": "refs",
+      "assertionCount": 23,
+      "passed": true,
+      "rawReportSHA256": "7d76b44fb5ed8f85e8a47c12675246a2f79c53f9894868ca374d3bd360abdb1f"
+    },
+    {
+      "example": "runtime",
+      "assertionCount": 23,
+      "passed": true,
+      "rawReportSHA256": "3ba1d9b08f6d5a701cfa1ce0d9703a3e6c5be70929d2117d8c257fbfd6fe877f"
+    },
+    {
+      "example": "scroll",
+      "assertionCount": 62,
+      "passed": true,
+      "rawReportSHA256": "3842aa042dd6fffdace686b9303a73955f1fd62b80e560be4cb1a53f7ae33695"
+    },
+    {
+      "example": "shared",
+      "assertionCount": 35,
+      "passed": true,
+      "rawReportSHA256": "28cae3adce86d688ee7ba9a583f1e35ee360ef953d9adf35180baa9c9980122f"
+    },
+    {
+      "example": "typography",
+      "assertionCount": 50,
+      "passed": true,
+      "rawReportSHA256": "3018ae796107609f3cc4ad28593e86f9dbe936b686df469a3f5234dfa512bd46"
+    }
+  ]
+}

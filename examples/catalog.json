@@ -21,6 +21,27 @@
     "scene": "examples/runtime/scene.tscn"
   },
   {
+    "id": "refs",
+    "title": "Original RN refs in transformed Godot surfaces",
+    "api": "public",
+    "source": "examples/refs/App.jsx",
+    "scene": "examples/refs/scene.tscn"
+  },
+  {
+    "id": "metrics",
+    "title": "Original RN dimensions, content density and subscription lifetime",
+    "api": "public",
+    "source": "examples/metrics/App.jsx",
+    "scene": "examples/metrics/scene.tscn"
+  },
+  {
+    "id": "services",
+    "title": "Godot game services, coordinated snapshots and Zustand across two roots",
+    "api": "public",
+    "source": "examples/services/App.jsx",
+    "scene": "examples/services/scene.tscn"
+  },
+  {
     "id": "form",
     "title": "Public Button and TextInput in TypeScript",
     "api": "public",

@@ -1,5 +1,6 @@
 #include "fabric_surface.h"
 #include "fabric_application.h"
+#include "game_service_registry.h"
 #include "svg_node.h"
 #include "paragraph_view.h"
 #include <godot_cpp/godot.hpp>
@@ -8,6 +9,7 @@ void initialize_fabric(godot::ModuleInitializationLevel level) {
   if (level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
     godot::ClassDB::register_class<GodotSvgNode>();
     godot::ClassDB::register_class<GodotParagraph>();
+    godot::ClassDB::register_class<GodotFabricBinding>();
     godot::ClassDB::register_class<FabricApplication>();
     godot::ClassDB::register_class<FabricSurface>();
   }

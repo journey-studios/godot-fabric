@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "host": "macOS arm64",
+  "checks": [
+    {
+      "name": "Consumer cannot find global Node",
+      "passed": true
+    },
+    {
+      "name": "Editor build preserves the project lockfile",
+      "passed": true
+    },
+    {
+      "name": "Native consumer executes its bundle once",
+      "passed": true
+    },
+    {
+      "name": "Bundle has no laboratory or external checkout inputs",
+      "passed": true
+    },
+    {
+      "name": "Consumer and types select the Godot platform source",
+      "passed": true
+    },
+    {
+      "name": "Provisioned build works with network denied and no global Node",
+      "passed": true
+    },
+    {
+      "name": "syntax failure preserves the previous bundle",
+      "passed": true
+    },
+    {
+      "name": "unsupported-type failure preserves the previous bundle",
+      "passed": true
+    },
+    {
+      "name": "An invalid Resource cannot replace the bundle",
+      "passed": true
+    },
+    {
+      "name": "Missing private tools reject builds without global fallback or installation",
+      "passed": true
+    },
+    {
+      "name": "An output symlink outside the project is rejected",
+      "passed": true
+    },
+    {
+      "name": "Project Babel configuration is rejected explicitly rather than ignored",
+      "passed": true
+    },
+    {
+      "name": "Incompatible renderer version cannot replace the bundle",
+      "passed": true
+    },
+    {
+      "name": "An absent project library is diagnosed without implicit installation",
+      "passed": true
+    },
+    {
+      "name": "An explicitly provided project library executes hooks with the SDK React identity",
+      "passed": true
+    },
+    {
+      "name": "Library code is project-owned; duplicated React cannot enter the graph",
+      "passed": true
+    },
+    {
+      "name": "Inherited local aliases execute through one original React application",
+      "passed": true
+    },
+    {
+      "name": "Local alias types and runtime select the same project Godot sources",
+      "passed": true
+    },
+    {
+      "name": "alias-outside failure preserves the previous alias bundle",
+      "passed": true
+    },
+    {
+      "name": "alias-symlink failure preserves the previous alias bundle",
+      "passed": true
+    },
+    {
+      "name": "Divergent type/runtime suffix settings fail without publishing a mismatched bundle",
+      "passed": true
+    },
+    {
+      "name": "A project type alias cannot replace the SDK React identity",
+      "passed": true
+    },
+    {
+      "name": "A declared transitive helper executes from its importing package without hoisting",
+      "passed": true
+    },
+    {
+      "name": "Nested dependency ownership preserves the one SDK React instance",
+      "passed": true
+    },
+    {
+      "name": "A transitive package cannot silently become an undeclared direct app dependency",
+      "passed": true
+    },
+    {
+      "name": "Failure, dependency checks and recovery preserve the project lockfile",
+      "passed": true
+    },
+    {
+      "name": "The original consumer can build again after rejected requests",
+      "passed": true
+    }
+  ],
+  "nativeChecks": 40,
+  "graphicalChecks": 43
+}

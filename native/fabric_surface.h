@@ -28,7 +28,7 @@ class FabricSurface : public godot::Control {
   void set_initial_props(const godot::Dictionary &props);
   godot::Dictionary get_initial_props() const;
   int get_surface_id() const;
-  void native_unmounted(const godot::String &state);
+  void native_unmounted(uint64_t expected_application_id, int expected_surface_id, const godot::String &state);
   void activate(int tag);
   void change(const godot::String &text, int tag);
   void input_focus(bool focused, int tag);
@@ -43,5 +43,6 @@ class FabricSurface : public godot::Control {
   godot::Dictionary initial_props;
   uint64_t application_id = 0;
   int surface_id = 0;
+  int retired_surface_id = 0;
   godot::String retired_state = R"({"surfaceId":0,"state":"unmounted","stopped":false,"applicationStopped":false,"nodes":[],"nativeTags":0,"errors":[],"pendingTimers":0,"pendingWork":0,"pendingAnimationFrames":0})";
 };

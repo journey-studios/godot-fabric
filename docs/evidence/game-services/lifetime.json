@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "host": "macOS arm64",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "react": "19.2.3",
+  "reactNative": "0.87.1",
+  "hermes": "250829098.0.17",
+  "scenario": "service-lifetime",
+  "engine": "hermes",
+  "renderer": "fabric",
+  "displayServer": "headless",
+  "checks": [
+    {
+      "name": "Service registration exists before any Hermes or Fabric root is initialized",
+      "passed": true
+    },
+    {
+      "name": "An unmounted application reports its pre-runtime lifecycle",
+      "passed": true
+    },
+    {
+      "name": "Repeated pre-mount stop and token removal preserve terminal state",
+      "passed": true
+    },
+    {
+      "name": "Pre-mount shutdown disconnects the real Godot binding",
+      "passed": true
+    },
+    {
+      "name": "A stopped owner rejects root activation before constructing Hermes",
+      "passed": true
+    },
+    {
+      "name": "Rejected activation retains its precise visible error in pre-runtime diagnostics",
+      "passed": true
+    },
+    {
+      "name": "Stop remains idempotent after rejected activation",
+      "passed": true
+    },
+    {
+      "name": "A fresh application activates a real upstream Fabric tree after the terminal-owner case",
+      "passed": true
+    },
+    {
+      "name": "The destructive game call queues without executing on the evaluate stack",
+      "passed": true
+    },
+    {
+      "name": "A real GDScript callback synchronously frees its application and returns to the independent deferred host phase",
+      "passed": true
+    },
+    {
+      "name": "A surviving surface keeps finalized diagnostics after its application is destroyed",
+      "passed": true
+    },
+    {
+      "name": "Synchronous application destruction releases its actual native Controls and tags",
+      "passed": true
+    },
+    {
+      "name": "Synchronous destruction leaves no scheduler resources or deferred host authority",
+      "passed": true
+    },
+    {
+      "name": "The executing game operation is cancelled and its bindings are revoked during owner destruction",
+      "passed": true
+    },
+    {
+      "name": "Destruction has no unexpected Fabric or runtime diagnostics",
+      "passed": true
+    }
+  ],
+  "observations": {
+    "afterFree": {
+      "stopped": true,
+      "applicationStopped": true,
+      "runtimeId": 27548190166.0,
+      "surfaceId": 1.0,
+      "rootCount": 0.0,
+      "bundleEvaluations": 1.0,
+      "nativeTags": 0.0,
+      "creates": 3.0,
+      "deletes": 3.0,
+      "pendingWork": 0.0,
+      "pendingTimers": 0.0,
+      "pendingAnimationFrames": 0.0,
+      "hostPhasePending": false,
+      "errors": [],
+      "gameServices": {
+        "bindings": 0.0,
+        "callbacksRun": 1.0,
+        "errors": [],
+        "eventBudget": 128.0,
+        "eventsSent": 0.0,
+        "hostTasksCanceled": 1.0,
+        "hostTasksRun": 1.0,
+        "pendingEvents": 0.0,
+        "pendingHostTasks": 0.0,
+        "stopped": true,
+        "subscriptions": 0.0,
+        "taskBudget": 64.0
+      },
+      "dimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 0.0,
+          "scale": 1.0,
+          "width": 0.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 64.0,
+          "scale": 1.0,
+          "width": 64.0
+        }
+      },
+      "viewport": {
+        "height": 200.0,
+        "width": 320.0
+      }
+    },
+    "beforeFree": {
+      "stopped": false,
+      "applicationStopped": false,
+      "runtimeId": 27548190166.0,
+      "surfaceId": 1.0,
+      "rootCount": 1.0,
+      "bundleEvaluations": 1.0,
+      "nativeTags": 3.0,
+      "creates": 3.0,
+      "deletes": 0.0,
+      "pendingWork": 0.0,
+      "pendingTimers": 0.0,
+      "pendingAnimationFrames": 0.0,
+      "hostPhasePending": false,
+      "errors": [],
+      "gameServices": {
+        "bindings": 1.0,
+        "callbacksRun": 0.0,
+        "errors": [],
+        "eventBudget": 128.0,
+        "eventsSent": 0.0,
+        "hostTasksCanceled": 0.0,
+        "hostTasksRun": 0.0,
+        "pendingEvents": 0.0,
+        "pendingHostTasks": 0.0,
+        "stopped": false,
+        "subscriptions": 0.0,
+        "taskBudget": 64.0
+      },
+      "dimensions": {
+        "screen": {
+          "fontScale": 1.0,
+          "height": 0.0,
+          "scale": 1.0,
+          "width": 0.0
+        },
+        "window": {
+          "fontScale": 1.0,
+          "height": 64.0,
+          "scale": 1.0,
+          "width": 64.0
+        }
+      },
+      "viewport": {
+        "height": 200.0,
+        "width": 320.0
+      }
+    },
+    "stopBeforeMount": {
+      "stopped": true,
+      "runtimeInitialized": false,
+      "rootCount": 0.0,
+      "bundleEvaluations": 0.0,
+      "errors": [
+        "E_RUNTIME_STOPPED: Application cannot mount after stop"
+      ],
+      "gameServices": {
+        "bindings": 0.0,
+        "callbacksRun": 0.0,
+        "errors": [],
+        "eventBudget": 128.0,
+        "eventsSent": 0.0,
+        "hostTasksCanceled": 0.0,
+        "hostTasksRun": 0.0,
+        "pendingEvents": 0.0,
+        "pendingHostTasks": 0.0,
+        "stopped": true,
+        "subscriptions": 0.0,
+        "taskBudget": 64.0
+      }
+    }
+  }
+}

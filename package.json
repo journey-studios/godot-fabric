@@ -16,7 +16,7 @@
     "test:nativewind": "npm run bundle && node --test tests/nativewind-contract.test.mjs",
     "start": "node scripts/check.mjs --interactive",
     "test:typography": "npm run bundle && node --test tests/typography-contract.test.mjs tests/typography-native.test.mjs tests/line-height-native.test.mjs",
-    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
+    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs tests/codegen.test.mjs tests/adapter-plugin.test.mjs tests/adapter-manifest.test.mjs tests/native-sdk.test.mjs tests/bundle-determinism.test.mjs tests/project-resolution.test.mjs tests/package-conditions.test.mjs tests/platform-seams.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
     "check:publication": "node scripts/publication-scan.mjs",
     "test:cold": "npm run bundle && node scripts/cold-start.mjs",
     "parity:inventory": "node scripts/parity-inventory.mjs",
@@ -31,10 +31,20 @@
     "test:examples": "node scripts/examples-check.mjs",
     "test:runtime": "npm run bundle && node --test tests/runtime-native.test.mjs",
     "test:application": "npm run bundle && node --test tests/shared-application-native.test.mjs",
+    "test:modules": "npm run bundle && node --test tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs",
     "type-check": "tsc -p tsconfig.godot.json",
     "sdk:pack": "node scripts/pack-addon.mjs",
     "consumer:create": "node scripts/create-consumer.mjs",
-    "test:consumer": "node scripts/consumer-check.mjs"
+    "test:consumer": "node scripts/consumer-check.mjs",
+    "test:services": "npm run bundle && node --test --test-concurrency=1 tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+    "test:codegen": "node --test tests/codegen.test.mjs",
+    "test:codegen:native": "python3 scripts/codegen-native-compile.py --out build/codegen-native-compile",
+    "sdk:native:pack": "node scripts/native-sdk.mjs pack",
+    "sdk:native:verify": "node scripts/native-sdk.mjs verify",
+    "test:adapters": "node --test tests/adapter-plugin.test.mjs tests/adapter-manifest.test.mjs tests/native-sdk.test.mjs",
+    "test:adapters:native": "node scripts/adapter-registry-check.mjs",
+    "test:adapters:loader": "node scripts/adapter-loader-check.mjs",
+    "test:adapters:runtime": "node scripts/adapter-runtime-check.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",
@@ -43,15 +53,18 @@
     "react-native-chart-kit": "7.0.4",
     "react-native-css-interop": "0.2.7",
     "react-native-svg": "15.15.5",
-    "scheduler": "0.27.0"
+    "scheduler": "0.27.0",
+    "zustand": "5.0.15"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
     "@react-native/babel-preset": "0.87.1",
+    "@react-native/codegen": "0.87.1",
     "@types/react": "19.2.3",
     "esbuild": "0.25.12",
     "fallow": "3.18.0",
     "jscpd": "5.4.0",
+    "metro-resolver": "0.87.1",
     "tailwindcss": "3.4.17",
     "typescript": "6.0.3"
   },
