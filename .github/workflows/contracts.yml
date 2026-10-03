@@ -53,6 +53,22 @@ jobs:
             build/codegen-native-compile/generated/schema.json
             build/codegen-native-compile/logs/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk
+      - run: npm run sdk:native:verify -- --sdk build/native-sdk
+      - run: npm run test:adapters:native -- --sdk build/native-sdk --out build/adapter-registry
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: adapter-registry-sdk
+          path: |
+            .deps/build/native-sdk-build.json
+            build/native-sdk/manifest.json
+            build/native-sdk/receipt.json
+            build/native-sdk/native-combination.json
+            build/adapter-registry/report.json
+            build/adapter-registry/generated/manifest.json
+            build/adapter-registry/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:examples
       - run: npm run test:runtime
       - run: npm run test:application

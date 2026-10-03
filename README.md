@@ -250,10 +250,12 @@ contracts; captures independently exercise rendering and logical Viewport input.
 [Findings](docs/research/README.md) · [Validation evidence](docs/evidence/README.md) ·
 [Third-party licenses](THIRD_PARTY_NOTICES.md)
 
-The [Codegen experiment](docs/CODEGEN.md) begins external extension tooling:
-original RN specs generate common C++ and ViewConfigs with reproducible
-manifests. Native provider registration and custom component mounting remain
-the next GF-26 slice.
+The [Codegen experiment](docs/CODEGEN.md) uses original RN specs/generators.
+The [native extension foundation](docs/NATIVE_EXTENSIONS.md) adds a shared SDK,
+package preflight and lazy provider registry. An independent C++ client links
+the relocated SDK and passes [207 registry checks](docs/evidence/native-sdk/README.md).
+Runtime adapter loading, custom Control mounting and public JSX integration
+remain the next GF-26 slice.
 
 Only this renderer, generic demonstration fixtures and public documentation
 are included. The repository starts with a new history; generated dependencies,

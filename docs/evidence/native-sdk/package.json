@@ -1,0 +1,132 @@
+{
+  "format": "godot-fabric.experimental-native-sdk/v1",
+  "target": {
+    "architecture": "arm64",
+    "configuration": "Release",
+    "minimumOS": "13.0",
+    "platform": "macos"
+  },
+  "nativeHostBuildRecorded": true,
+  "hostSha256": "76c9c47d3fb49c37d3162c6a7be27465b86f190d209de2d862de929a3fe844f2",
+  "compiler": {
+    "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+    "name": "AppleClang",
+    "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+  },
+  "node": {
+    "executableSha256": "68f4d07ca49e0500cc135c7e0a445093e228e42e126ac22306d045f0a8c2636b",
+    "version": "v22.23.3"
+  },
+  "combination": {
+    "format": "godot-fabric.experimental-native-combination/v1",
+    "godotCppRevision": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "godotVersion": "4.7.2",
+    "hermesRuntimeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "hermesVersion": "250829098.0.17",
+    "nativeDependencies": [
+      {
+        "name": "fabric_godot",
+        "sha256": "76c9c47d3fb49c37d3162c6a7be27465b86f190d209de2d862de929a3fe844f2"
+      },
+      {
+        "name": "hermes",
+        "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79"
+      },
+      {
+        "name": "rn-dependencies",
+        "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+      }
+    ],
+    "purpose": "build-declaration",
+    "reactNativeHeadersSha256": "68c46e65627907bdcf9f51d0e112565b2d48375081f3fa7245c6a712a1bae8cf",
+    "reactNativeVersion": "0.87.1",
+    "sdkHeadersSha256": "b644198338942bbeecf0dd8ea840aa8a361eb30b318aab239316457900b016d6",
+    "sdkRevision": "1bb30a528dc5e61379df21c2fadba980e8713a0be56cdcf669571c9ba6f3ae9d",
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "toolchain": {
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    }
+  },
+  "manifestSha256": "49030eb7afb44b3461daccd25911516ff0668dd8e91245133668d86f1206912f",
+  "packagedFiles": 2697,
+  "headers": [
+    {
+      "name": "sdk",
+      "files": 2,
+      "sha256": "fb74d04c26ffcb3697328a0306fd3e4a7c6de25cb9749268360d679dce0f7bb5"
+    },
+    {
+      "name": "react-native",
+      "files": 751,
+      "sha256": "475b86f9e18556ffa42be9bde141a0d7e82a53379af57c5dd2a2e24f4fce1e49"
+    },
+    {
+      "name": "react-native-specs",
+      "files": 8,
+      "sha256": "dbbc5fefebc6d4fc6a9eab5ca5c514164c7d54df3592bd369a983c10f90d40f9"
+    },
+    {
+      "name": "hermes",
+      "files": 46,
+      "sha256": "87b434e7d534fdcfe8f583f6636628f3db56cd05cb9c337b6dffd77715f20ee9"
+    },
+    {
+      "name": "rn-dependencies",
+      "files": 1701,
+      "sha256": "99d68f6562fb67573d7c1c47a248a723647f59d7288b6accbaad8aa823dd0de0"
+    },
+    {
+      "name": "godot-cpp",
+      "files": 69,
+      "sha256": "20043b5df29b21fd9f5a0db46f272e9c719d95c29c35e72efbb5eadc0a029714"
+    },
+    {
+      "name": "godot-cpp-generated",
+      "files": 91,
+      "sha256": "6adf18a173b426c987ca39a994f2b8ae61e9cb1ac4e629c54bb8209c96ebe664"
+    },
+    {
+      "name": "godot-cpp-interface",
+      "files": 1,
+      "sha256": "5f25d23f298fd9343fab768fe32ba6ee8c6148483e6a8e7b91633b01240c544c"
+    }
+  ],
+  "upstreamSources": [
+    {
+      "name": "react-native",
+      "files": 475,
+      "sha256": "8a67ede2f96d62558d16bf054f64630addde6ac08005d049ebfd49ddce2dbcf1"
+    },
+    {
+      "name": "godot-cpp",
+      "files": 32,
+      "sha256": "bdb0f5d85cf0539d2939ead00becc63e63f323e0e6fc343187a89a817aed1009"
+    },
+    {
+      "name": "godot-cpp-generated",
+      "files": 69,
+      "sha256": "7e335e297e10768547a6cac8dcfaec5a5cfe6942de38aa03a8ae80802002e312"
+    }
+  ],
+  "targetFlagsSha256": {
+    "CMakeFiles/fabric_core.dir/flags.make": "f890b11e6409ceec85ed99ffd888ed90809cbedc89012fe2c1996c12057fa3c9",
+    "godot-cpp/CMakeFiles/godot-cpp.dir/flags.make": "c67213759db7ed0fe434276fa7fba10ade33a3d90407270448b8b5eb2d9bfcca"
+  },
+  "omittedIncludes": [
+    ".deps/package/ReactCommon/react/runtime/nativeviewconfig/platform/cxx"
+  ],
+  "claims": {
+    "adapterLinked": false,
+    "adapterLoaded": false,
+    "runtimeExecuted": false,
+    "runtimeIdentityVerified": false,
+    "abiCertified": false
+  },
+  "rawPackageReceiptSha256": "8efe7687bbe237dbeb66028129edc0e25033cbfb3f0583fbed2a62b5e397bb44"
+}

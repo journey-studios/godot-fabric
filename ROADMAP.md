@@ -122,6 +122,20 @@ slice must expose external factories/adapters safely, remove the fixed native
 component assumptions, integrate specs before bundling and prove a consumer's
 props/events/commands, defaults, stale refs and cleanup without core edits.
 
+The next verified GF-26 foundation now provides a
+[shared native SDK and registration SPI](docs/NATIVE_EXTENSIONS.md): 22 preflight
+tests, 14 SDK receipt/packaging tests and an independent relocated C++ client
+with 11 cases / 207 registry checks. Original generated descriptors link to the
+shared host; rollback/reentrant cleanup, lazy selection/installation and terminal
+lookup/disposal are exercised. [Evidence](docs/evidence/native-sdk/README.md)
+retains consumed-source/binary hashes and separate package/link/registry claims.
+Actual Godot cold start, runtime/roots/modules/services, 15 existing examples
+(605 checks) and the independent consumer (18 tooling + 40 native checks) pass
+against the rebuilt host. Hosted SDK CI remains a separate gate. Runtime loading,
+external Control mounting, event authority, module lifecycle in a VM, original
+ViewConfig/public JSX activation and all-target export/ABI acceptance remain
+open; GF-26/GF-28/GF-31 are still **In progress**.
+
 ## Release contract and scope
 
 1. Ordinary public RN imports and TypeScript/TSX work, including stable

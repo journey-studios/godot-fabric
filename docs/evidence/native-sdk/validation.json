@@ -1,0 +1,157 @@
+{
+  "checkedAt": "2026-10-03T19:20:56.915696+00:00",
+  "host": "macOS arm64",
+  "configuration": "Release",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "node": "22.23.3",
+  "contracts": {
+    "nodeTests": 111,
+    "pythonTests": 13,
+    "failed": 0,
+    "skipped": 0,
+    "typeCheck": "passed"
+  },
+  "adapterPreflightTests": 22,
+  "sdkDryTests": 14,
+  "registry": {
+    "cases": 11,
+    "checks": 207,
+    "nativeClientLinked": true,
+    "registryExecuted": true,
+    "vmCreated": false,
+    "godotEngineStarted": false,
+    "componentMounted": false
+  },
+  "examples": [
+    {
+      "scenario": "chart",
+      "checks": 34,
+      "reportSha256": "f9781432793b76401f66ca50f1ca6f613193fbe7a1d1df76174f0a64c5d463a3"
+    },
+    {
+      "scenario": "counter",
+      "checks": 19,
+      "reportSha256": "7144e29d9c9432678f985a7264d270293bc931c06a4ef9f6c406eb9734619514"
+    },
+    {
+      "scenario": "form",
+      "checks": 39,
+      "reportSha256": "3cb717984a2acd028344f23b397a43a7b892827e6da0908a4e3d00af9882922f"
+    },
+    {
+      "scenario": "input",
+      "checks": 45,
+      "reportSha256": "7da82e8df62e9c38e032e92b38a6da96d3f46aff848e7c5dd78ea48137e6e00a"
+    },
+    {
+      "scenario": "layout",
+      "checks": 47,
+      "reportSha256": "4b66fddf51a6f703f5d0fa8e33ebee73809a283098d2891ec77c67ec056ff185"
+    },
+    {
+      "scenario": "metrics",
+      "checks": 64,
+      "reportSha256": "e2937ea6cefb8fb1f6e790be7038e72bcf7414b206809e9a99d482f9bd29cf72"
+    },
+    {
+      "scenario": "nativewind",
+      "checks": 49,
+      "reportSha256": "e6f84e59b541067a8418bab1565eb42ea32416c2ead5d10193f1ba4d4aff0d1a"
+    },
+    {
+      "scenario": "pressable",
+      "checks": 43,
+      "reportSha256": "38914fc73396cfa4b703a055da53847591246d6a25f0306f71d1e5012e27082b"
+    },
+    {
+      "scenario": "react",
+      "checks": 36,
+      "reportSha256": "034f91a05683cf60ae3b32f5494cb5c87ce998acbe993afd733248e670b25c8f"
+    },
+    {
+      "scenario": "refs",
+      "checks": 23,
+      "reportSha256": "6b5eaa9178456f7945fd50902cdb8221e7364570598d3c988625bff55daabca5"
+    },
+    {
+      "scenario": "runtime",
+      "checks": 23,
+      "reportSha256": "84808bc0ffc180f9d6370ad87a997f8abb92b9bd943e07015f5e4c1b28c43ec1"
+    },
+    {
+      "scenario": "scroll",
+      "checks": 62,
+      "reportSha256": "be6046a87da35ccbf4b34dfceaaab9cd9ff78bd183ae8d2534765e94ace80906"
+    },
+    {
+      "scenario": "services",
+      "checks": 36,
+      "reportSha256": "fc03c6569f4f60f58bc397d4a9971dd5d2c11da7775fd3704dbe52cea60d0aee"
+    },
+    {
+      "scenario": "shared",
+      "checks": 35,
+      "reportSha256": "31f132b876caaa178bd5e0a33fda1dc6cc70db044da691a2b17ca628fb5a248c"
+    },
+    {
+      "scenario": "typography",
+      "checks": 50,
+      "reportSha256": "25a0ec81eca78cebdd8ac689c26532f174393edfa445fc769f59f33f4752c1c7"
+    }
+  ],
+  "exampleTotalChecks": 605,
+  "consumer": {
+    "toolingChecks": 18,
+    "nativeChecks": 40,
+    "graphicalChecks": null
+  },
+  "nativeRegressionSuites": {
+    "runtime": 2,
+    "application": 4,
+    "modules": 2,
+    "services": 2
+  },
+  "coldStart": "two fresh imports, runtime checks and warm imports passed",
+  "static": "passed",
+  "publication": "passed",
+  "logs": {
+    "cold": {
+      "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+    },
+    "runtime": {
+      "logSha256": "ed9f28ae3e9bf6553639fa3d14e0c37685c9380002d6e0c4022f9cc5e017b8b8"
+    },
+    "application": {
+      "logSha256": "18dfdc43ca3d628ad5efb09d4a7d57dfc3c30256e11b307394cb692aac279a95"
+    },
+    "modules": {
+      "logSha256": "a5acc6ee047de4d6a979fde555d0de4d208d2985769185673bc692e65d022ad1"
+    },
+    "services": {
+      "logSha256": "54035b3e8c953c749b370ac61a13e9c58b1bfef920a2fd90e1e9207d4707cb8b"
+    },
+    "examples": {
+      "logSha256": "64857a713798821e5a1ce1629551c5b7a3ebabe09a9a7e14b01549d67fa1b5ab"
+    },
+    "consumer": {
+      "logSha256": "8181a221eb2ef7bfae6fb2f25d0343474db84287dae9c293778c4a54d4d8f817"
+    },
+    "contracts": {
+      "logSha256": "e3b0f6cccf5559cd3a1b1b04b532e41c953cb99f51b78640f50edf6560478a9d"
+    },
+    "static": {
+      "logSha256": "48cc6c597c96bfd24a9a0c4e81f72e50b10a54ce6e15ce3ca99e8914f3bdd507"
+    },
+    "publication": {
+      "logSha256": "daba0f57d08f73272dfacba45b86eed168f0541896f8b3416f217ab5a5f78af6"
+    }
+  },
+  "hostedSDKCI": "pending",
+  "limits": [
+    "No runtime adapter loader or external Control mounted",
+    "No Hermes VM created in registry witness",
+    "No initialized Godot/RN/JSI binding identity certification",
+    "No complete ABI, export or other-platform SDK certification",
+    "Disposed factory guard and extracted-method lifetime still require real-VM integration cases"
+  ]
+}

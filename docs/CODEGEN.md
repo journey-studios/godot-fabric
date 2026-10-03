@@ -106,7 +106,13 @@ retains the actual compiler/Node identities and bounded compilation claims.
 [The executed checkpoint](evidence/codegen/README.md) retains the 20-test and
 six-translation-unit results, hashes, target and limitations.
 
-## Next native integration
+## Native extension foundation and remaining integration
+
+The [shared SDK and registration SPI](NATIVE_EXTENSIONS.md) now provide a
+packaged host, read-only manifest preflight and lazy original providers.
+A relocated native client links the packaged SDK and passes
+[207 registry checks](evidence/native-sdk/README.md), without creating a VM
+or Control. This does not activate external adapters in ApplicationRuntime.
 
 The renderer currently has a fixed provider/mount/command path for its own
 components. Merely adding a generated descriptor is insufficient: an unknown

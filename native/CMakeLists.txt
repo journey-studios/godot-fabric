@@ -101,14 +101,28 @@ target_include_directories(timer_registry_test PRIVATE "${RN}")
 
 set(GODOTCPP_TARGET template_release CACHE STRING "Godot binding build configuration")
 set(GODOTCPP_BUILD_PROFILE "${CMAKE_CURRENT_SOURCE_DIR}/godot-profile.json" CACHE FILEPATH "" FORCE)
+if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  # An external adapter imports these same bindings and their initialized global
+  # state from the host. A second godot-cpp archive would create another state.
+  set(GODOTCPP_SYMBOL_VISIBILITY visible CACHE STRING "Shared native SDK binding visibility" FORCE)
+endif()
 add_subdirectory("../.deps/godot-cpp-da26c1732ee8656ef9ccad587cbdd55acf8637c8" godot-cpp)
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   set(FABRIC_GODOT_LIBRARY_TYPE STATIC)
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp register.cpp)
-target_link_libraries(fabric_godot PRIVATE fabric_core godot-cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp register.cpp)
+if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  # Retain the binding objects for the pinned Godot class profile as SDK exports,
+  # including classes only an external adapter uses. This is one archive in one
+  # shared host; adapters never link that archive themselves. Upstream RN sources
+  # retain their existing link selection; strict adapter linking identifies any
+  # additional RN export required by the supported SPI.
+  target_link_libraries(fabric_godot PRIVATE fabric_core "$<LINK_LIBRARY:WHOLE_ARCHIVE,godot-cpp>")
+else()
+  target_link_libraries(fabric_godot PRIVATE fabric_core godot-cpp)
+endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # A static GDExtension links into the exported Xcode app. Its upstream Hermes
   # and RN dependencies remain dynamic frameworks and must be embedded/signed.
@@ -123,4 +137,31 @@ else()
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../addons"
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "@loader_path/frameworks")
+  if(APPLE AND CMAKE_BUILD_TYPE STREQUAL "Release" AND CMAKE_OSX_ARCHITECTURES STREQUAL "arm64"
+      AND CMAKE_GENERATOR STREQUAL "Unix Makefiles")
+    # Build tools may supply an explicit Node on CI; local private Node is merely
+    # a preferred search location. No dependency is downloaded by these hooks.
+    file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../dependencies.json" FABRIC_DEPENDENCIES_JSON)
+    string(JSON FABRIC_NODE_VERSION GET "${FABRIC_DEPENDENCIES_JSON}" node version)
+    find_program(FABRIC_SDK_NODE NAMES node
+      HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/node-v${FABRIC_NODE_VERSION}-darwin-arm64/bin"
+      REQUIRED)
+    set(FABRIC_SDK_INPUTS "${CMAKE_BINARY_DIR}/native-sdk-inputs.json")
+    add_custom_target(fabric_sdk_capture
+      COMMAND "${FABRIC_SDK_NODE}" "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/native-sdk.mjs" capture
+        --build-dir "${CMAKE_BINARY_DIR}"
+      BYPRODUCTS "${FABRIC_SDK_INPUTS}"
+      VERBATIM)
+    # PRE_BUILD is PRE_LINK with Make/Ninja. Explicit dependencies instead capture
+    # inputs before either archive compiles, after generated headers are ready.
+    add_dependencies(fabric_sdk_capture generate_bindings)
+    add_dependencies(fabric_core fabric_sdk_capture)
+    add_dependencies(godot-cpp fabric_sdk_capture)
+    add_dependencies(fabric_godot fabric_sdk_capture)
+    set_property(TARGET fabric_godot APPEND PROPERTY LINK_DEPENDS "${FABRIC_SDK_INPUTS}")
+    add_custom_command(TARGET fabric_godot POST_BUILD
+      COMMAND "${FABRIC_SDK_NODE}" "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/native-sdk.mjs" record
+        --build-dir "${CMAKE_BINARY_DIR}" --host "$<TARGET_FILE:fabric_godot>"
+      VERBATIM)
+  endif()
 endif()
