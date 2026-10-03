@@ -76,6 +76,7 @@ async function main() {
     throw new Error("TypeScript failed\n" + (typecheck.stdout ?? "") + (typecheck.stderr ?? "") + (typecheck.error?.message ?? ""));
   const result = await build({
     absWorkingDir: project, entryPoints: [entry], outfile, write: false,
+    tsconfig: path.join(project, "tsconfig.json"),
     bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
     mainFields: ["main"], resolveExtensions: godotExtensions,

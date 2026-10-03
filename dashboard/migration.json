@@ -5,14 +5,14 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "4",
-    "focusTitle": "Shutdown nativo verificado; determinismo do builder como próximo bloqueio"
+    "focusSequence": "2B",
+    "focusTitle": "Builder determinístico verificado; alinhar resolução de tipos e runtime"
   },
-  "updatedAt": "2026-10-03T21:00:19.977979Z",
+  "updatedAt": "2026-10-03T21:16:57.404683Z",
   "source": {
-    "commit": "9d14553b1cdf46e5d213685c754ab603d2fb6871",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/ROADMAP.md",
-    "scope": "GF-07/GF-26: stop reentrante 8/9/9 e consumidor 35/37 locais; CI anterior falhou em regeneração de bundle, causa em investigação",
+    "commit": "9317b460b30b58cffde61b7ad5d1de7e617db8e0",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/9317b460b30b58cffde61b7ad5d1de7e617db8e0/ROADMAP.md",
+    "scope": "GF-28: TSConfig explícito e determinismo comprovados na árvore de trabalho; pin do commit na entrega. GF-03: aliases/suffixes divergentes reproduzidos e pendentes; CI do shutdown anterior verde.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "API pública GodotFabric tipada no consumidor independente, com calls/connect/subscribe. Fachada completa, assets e todos os contratos públicos permanecem abertos.",
+      "note": "API GodotFabric tipada e imports originais no consumidor. TSConfig explícito passou controles strict:false/JSX/extends, com replay real 18/40 e 35/37. Dois gaps comprovados: paths local passa no tsc mas ownership rejeita como pacote; moduleSuffixes editado muda fonte de tipos enquanto runtime usa ordem fixa. Alinhar ou rejeitar divergências; fachada completa/assets/condições permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -340,7 +340,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Pausa, hide/unmount/remount e stop terminal validados no laboratório; consumidor mantém HUD após fechar inventário. Restart, ativação, overlays e comparação completa permanecem abertos. Stop reentrante em resize/RAF/timer passou 8/9/9 verificações: autoridade cancelada imediatamente e Controls preservados até retorno da execução. Unmount/destruição independente durante update ainda não cobertos.",
+      "note": "Pausa, hide/unmount/remount e stop terminal validados no laboratório; consumidor mantém HUD após fechar inventário. Restart, ativação, overlays e comparação completa permanecem abertos. Stop reentrante em resize/RAF/timer passou 8/9/9 verificações: autoridade cancelada imediatamente e Controls preservados até retorno da execução. Unmount/destruição independente durante update ainda não cobertos. CI 37153564796 em 9317b46 confirmou 35 headless e 8/9/9 shutdown; a execução com builder explícito também passou 35/37 e 8/9/9 localmente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -359,6 +359,10 @@
             {
               "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
               "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+            },
+            {
+              "label": "CI shutdown: cinco jobs, consumidor35 e stop 8/9/9",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
             }
           ]
         },
@@ -1227,7 +1231,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Codegen original e SDK compartilhado seguem comprovados. Novo loader: 21 casos/89 checks, incluindo rejeições antes de static initializers, UUID/receipts, binding witness e rollback. Consumidor JSX externo Badge/Probe passou 35 headless/37 gráficos, com Props/defaults, eventos/Commands originais, duas roots, reorder/remount, callbacks/ref antigos, Promise/emitter e método extraído após stop. Sem ABI/paridade RN total nem exportação todos os alvos; containers/state/async long-lived continuam abertos. CI 37151683147 passou loader 89/registry 207, mas falhou na regeneração do consumidor; a lane runtime externo não executou. Stop nativo adicional passou 8/9/9 e consumidor 35/37 localmente; CI desta correção ainda não confirmada.",
+      "note": "Codegen original, SDK/SPI e loader selecionado comprovados nas fatias anteriores. Consumidor Badge/Probe 35 headless/37 gráfico; stop 8/9/9 e 207 registry locais. CI 9317b46 passou cinco jobs e confirmou 35/8/9/9. Builder TSConfig explícito passou os mesmos casos localmente; nova CI pendente. Containers/state/schema completo, async e full RN/all-target/ABI permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1262,6 +1266,10 @@
             {
               "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
               "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+            },
+            {
+              "label": "CI external Codegen consumer35 e shutdown8/9/9",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
             }
           ]
         },
@@ -1348,8 +1356,8 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Addon/consumidor tradicional passou 18 tooling/40 nativos no replay; consumidor selecionado Badge/Probe passou 35 headless/37 gráficos com ferramentas privadas e dependências explícitas. Divergência de hash reproduzida também na CI 37151683147; diagnóstico isolou variação antes do Babel com fontes idênticas. Causa/correção ainda em investigação, mantendo a assertion. Instalação/update/exportação debug/release em todos os alvos e contrato completo seguem abertos. Nova CI anterior falhou no consumidor; runtime externo não executou.",
-      "blocker": "Regeneração de bundle: fingerprint divergiu localmente e na CI 37151683147. Repro isolado varia saída esbuild com fontes idênticas; correção ainda não validada.",
+      "note": "Race de TSConfig reproduzido em 18 processos com 154 inputs idênticos: inferido 2 hashes, explícito 1. Correção usa tsconfig do projeto sem normalização/retry: cinco testes causais, consumer 18/40 com hash exato preservado, adapter 35/37+8/9/9 e seis rebuilds bundle/selection iguais. CI histórica9317b46 verde certifica shutdown, não esta nova correção; nova CI pendente. Instalação/update/exports debug/release todos alvos e aceite completo permanecem abertos.",
+      "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
@@ -1379,6 +1387,10 @@
             {
               "label": "Addon ativa packet de seleção e JSX original em consumidor externo",
               "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+            },
+            {
+              "label": "TSConfig: race reproduzido, consumidor18/40 e seis rebuilds iguais",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/bundle-determinism/README.md"
             }
           ]
         },
@@ -2406,6 +2418,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "bundle-tsconfig-determinism-20261003",
+      "at": "2026-10-03T21:16:57.404683Z",
+      "taskIds": [
+        "GF-03",
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Corrigida inferência dependente da ordem:18 processos diagnóstico, cinco testes causais, consumer 18/40, adapter 35/37+8/9/9, seis rebuilds 154 inputs idênticos. Shutdown CI 9317b46 cinco jobs verdes. Aliases locais e suffixes divergentes reproduzidos, pendentes GF03. Nenhum GF/checkpoint/denominador fechado. Nova CI builder pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/bundle-determinism/README.md"
+    },
     {
       "id": "native-stop-reentrancy-20261003",
       "at": "2026-10-03T21:00:19.977979Z",

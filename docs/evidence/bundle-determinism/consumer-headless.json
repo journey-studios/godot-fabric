@@ -1,0 +1,1079 @@
+{
+  "afterStop": {
+    "adapters": {
+      "selected": false
+    },
+    "animationFramesRun": 0,
+    "applicationStopped": true,
+    "bundleEvaluations": 1,
+    "commits": 10,
+    "creates": 14,
+    "deletes": 14,
+    "dimensions": {
+      "screen": {
+        "fontScale": 1,
+        "height": 0,
+        "scale": 1,
+        "width": 0
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 64,
+        "scale": 1,
+        "width": 64
+      }
+    },
+    "errors": [],
+    "events": 4,
+    "gameServices": {
+      "bindings": 0,
+      "callbacksRun": 3,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 7,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 3,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": true,
+      "subscriptions": 0,
+      "taskBudget": 64
+    },
+    "hostPhasePending": false,
+    "mountReports": 10,
+    "nativeModules": {
+      "callableCalls": 0,
+      "callableModules": 0,
+      "creations": 5,
+      "disposals": 3,
+      "installed": true,
+      "loaded": 0,
+      "lookups": 6,
+      "registered": 5,
+      "retainedUntilVMDestroy": 5,
+      "runtimeId": "28101838298",
+      "staleCalls": 0,
+      "stopped": true
+    },
+    "nativeTags": 0,
+    "nodes": [],
+    "pendingAnimationFrames": 0,
+    "pendingTimers": 0,
+    "pendingWork": 0,
+    "pointer": {
+      "activeTouches": 0,
+      "blockNative": false,
+      "cancels": 0,
+      "ends": 0,
+      "grants": 0,
+      "moves": 0,
+      "releases": 0,
+      "responder": 0,
+      "starts": 0
+    },
+    "retiringTags": 0,
+    "rootCount": 0,
+    "runtimeId": 28101838298,
+    "state": "unmounted",
+    "stopRequested": false,
+    "stopped": true,
+    "surfaceId": 1,
+    "textMeasurements": 128,
+    "timerEngine": "react-native/TimerManager",
+    "updates": 17,
+    "viewport": {
+      "height": 552,
+      "width": 484
+    },
+    "viewportUpdates": 0,
+    "windowListener": false
+  },
+  "beforeStop": {
+    "adapters": {
+      "selected": false
+    },
+    "animationFramesRun": 0,
+    "applicationStopped": false,
+    "bundleEvaluations": 1,
+    "commits": 2,
+    "creates": 14,
+    "deletes": 0,
+    "dimensions": {
+      "screen": {
+        "fontScale": 1,
+        "height": 0,
+        "scale": 1,
+        "width": 0
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 64,
+        "scale": 1,
+        "width": 64
+      }
+    },
+    "errors": [],
+    "events": 1,
+    "gameServices": {
+      "bindings": 3,
+      "callbacksRun": 2,
+      "errors": [],
+      "eventBudget": 128,
+      "eventsSent": 1,
+      "hostTasksCanceled": 0,
+      "hostTasksRun": 2,
+      "pendingEvents": 0,
+      "pendingHostTasks": 0,
+      "stopped": false,
+      "subscriptions": 2,
+      "taskBudget": 64
+    },
+    "hostPhasePending": false,
+    "mountReports": 2,
+    "nativeModules": {
+      "callableCalls": 0,
+      "callableModules": 0,
+      "creations": 5,
+      "disposals": 0,
+      "installed": true,
+      "loaded": 5,
+      "lookups": 6,
+      "registered": 5,
+      "retainedUntilVMDestroy": 0,
+      "runtimeId": "28101838298",
+      "staleCalls": 0,
+      "stopped": false
+    },
+    "nativeTags": 14,
+    "nodes": [
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "94a3b8ff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 18,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 13,
+        "height": 18,
+        "id": 28923921905,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 14,
+            "baseline": 14,
+            "height": 18,
+            "width": 223,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 18,
+        "measuredWidth": 223,
+        "nativeFontSize": 13,
+        "nativeText": "Project TSX · Godot platform source",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "94a3b8ff",
+            "end": 35,
+            "fontFamily": "",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 4,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 22
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "f8fafcff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 42,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 30,
+        "height": 42,
+        "id": 28991030773,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 33,
+            "baseline": 33,
+            "height": 42,
+            "width": 228,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 42,
+        "measuredWidth": 228,
+        "nativeFontSize": 30,
+        "nativeText": "Consumer HUD",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "f8fafcff",
+            "end": 12,
+            "fontFamily": "",
+            "fontSize": 30,
+            "fontWeight": 700,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 8,
+        "testID": "hud-title",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 50
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "94a3b8ff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 23,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 16,
+        "height": 23,
+        "id": 29058139641,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 18,
+            "baseline": 18,
+            "height": 23,
+            "width": 194,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 23,
+        "measuredWidth": 194,
+        "nativeFontSize": 16,
+        "nativeText": "Root 1 · private SDK tools",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "94a3b8ff",
+            "end": 26,
+            "fontFamily": "",
+            "fontSize": 16,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 12,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 102
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "ffffffff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 34,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 24,
+        "height": 34,
+        "id": 29125248509,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 26,
+            "baseline": 26,
+            "height": 34,
+            "width": 87,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 34,
+        "measuredWidth": 87,
+        "nativeFontSize": 24,
+        "nativeText": "Local: 0",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "ffffffff",
+            "end": 8,
+            "fontFamily": "",
+            "fontSize": 24,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 16,
+        "testID": "hud-local",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 135
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "a7f3d0ff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 34,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 24,
+        "height": 34,
+        "id": 29192357377,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 26,
+            "baseline": 26,
+            "height": 34,
+            "width": 108,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 34,
+        "measuredWidth": 108,
+        "nativeFontSize": 24,
+        "nativeText": "Shared: 0",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "a7f3d0ff",
+            "end": 9,
+            "fontFamily": "",
+            "fontSize": 24,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 20,
+        "testID": "hud-shared",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 179
+      },
+      {
+        "appearance": {
+          "background": "0284c7ff",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            8,
+            8,
+            8,
+            8
+          ],
+          "textColor": "ffffffff"
+        },
+        "fabricHeight": 44,
+        "fabricWidth": 440,
+        "focused": false,
+        "height": 44,
+        "id": 29259466245,
+        "kind": "button",
+        "nativeText": "Increment local",
+        "opacity": 1,
+        "tag": 22,
+        "testID": "hud-increment",
+        "text": "Increment local",
+        "visible": true,
+        "width": 440,
+        "x": 22,
+        "y": 223
+      },
+      {
+        "appearance": {
+          "background": "0f766eff",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            8,
+            8,
+            8,
+            8
+          ],
+          "textColor": "ffffffff"
+        },
+        "fabricHeight": 44,
+        "fabricWidth": 440,
+        "focused": false,
+        "height": 44,
+        "id": 29326575113,
+        "kind": "button",
+        "nativeText": "Publish shared",
+        "opacity": 1,
+        "tag": 24,
+        "testID": "hud-publish",
+        "text": "Publish shared",
+        "visible": true,
+        "width": 440,
+        "x": 22,
+        "y": 277
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "fbbf24ff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 26,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 18,
+        "height": 26,
+        "id": 29393683981,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 20,
+            "baseline": 20,
+            "height": 26,
+            "width": 142,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 26,
+        "measuredWidth": 142,
+        "nativeFontSize": 18,
+        "nativeText": "Game health: 95",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "fbbf24ff",
+            "end": 15,
+            "fontFamily": "",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 28,
+        "testID": "hud-health",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 331
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "94a3b8ff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 18,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 13,
+        "height": 18,
+        "id": 29460792849,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 14,
+            "baseline": 14,
+            "height": 18,
+            "width": 171,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 18,
+        "measuredWidth": 171,
+        "nativeFontSize": 13,
+        "nativeText": "Game revision: 1 · events: 1",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "94a3b8ff",
+            "end": 28,
+            "fontFamily": "",
+            "fontSize": 13,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 32,
+        "testID": "hud-events",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 367
+      },
+      {
+        "appearance": {
+          "background": "b45309ff",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            8,
+            8,
+            8,
+            8
+          ],
+          "textColor": "ffffffff"
+        },
+        "fabricHeight": 44,
+        "fabricWidth": 440,
+        "focused": false,
+        "height": 44,
+        "id": 29527901717,
+        "kind": "button",
+        "nativeText": "Damage game health",
+        "opacity": 1,
+        "tag": 34,
+        "testID": "hud-damage",
+        "text": "Damage game health",
+        "visible": true,
+        "width": 440,
+        "x": 22,
+        "y": 395
+      },
+      {
+        "appearance": {
+          "background": "1e293bff",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            8,
+            8,
+            8,
+            8
+          ],
+          "textColor": "ffffffff"
+        },
+        "caret": 0,
+        "editable": true,
+        "fabricHeight": 44,
+        "fabricWidth": 440,
+        "focused": false,
+        "height": 44,
+        "id": 29595010585,
+        "input": {
+          "composing": false,
+          "deferredCommands": 0,
+          "editing": false,
+          "eventCount": 0,
+          "pendingEdit": false,
+          "rejectedCommands": 0,
+          "selection": {
+            "end": 0,
+            "start": 0
+          }
+        },
+        "kind": "input",
+        "nativeText": "",
+        "opacity": 1,
+        "placeholder": "Type in this root",
+        "tag": 36,
+        "testID": "hud-input",
+        "text": "",
+        "visible": true,
+        "width": 440,
+        "x": 22,
+        "y": 449
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "textColor": "cbd5e1ff"
+        },
+        "ellipses": 0,
+        "fabricHeight": 23,
+        "fabricWidth": 440,
+        "focused": false,
+        "fontSize": 16,
+        "height": 23,
+        "id": 29645342236,
+        "kind": "paragraph",
+        "lineMetrics": [
+          {
+            "ascent": 18,
+            "baseline": 18,
+            "height": 23,
+            "width": 51,
+            "x": 0
+          }
+        ],
+        "lines": 1,
+        "measuredHeight": 23,
+        "measuredWidth": 51,
+        "nativeFontSize": 16,
+        "nativeText": "Input: ",
+        "opacity": 1,
+        "runs": [
+          {
+            "color": "cbd5e1ff",
+            "end": 7,
+            "fontFamily": "",
+            "fontSize": 16,
+            "fontWeight": 400,
+            "lineHeight": 0,
+            "start": 0
+          }
+        ],
+        "tag": 40,
+        "testID": "hud-query",
+        "text": "",
+        "visible": true,
+        "visibleLines": 1,
+        "width": 440,
+        "x": 22,
+        "y": 503
+      },
+      {
+        "appearance": {
+          "background": "101b2eff",
+          "borderColor": "0284c7ff",
+          "borderWidths": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "cornerRadii": [
+            16,
+            16,
+            16,
+            16
+          ]
+        },
+        "fabricHeight": 552,
+        "fabricWidth": 484,
+        "focused": false,
+        "height": 552,
+        "id": 28873590254,
+        "kind": "view",
+        "opacity": 1,
+        "tag": 42,
+        "testID": "hud-panel",
+        "text": "",
+        "visible": true,
+        "width": 484,
+        "x": 0,
+        "y": 0
+      },
+      {
+        "appearance": {
+          "background": "00000000",
+          "borderColor": "00000000",
+          "borderWidths": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "cornerRadii": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "fabricHeight": 552,
+        "fabricWidth": 484,
+        "focused": false,
+        "height": 552,
+        "id": 28823258596,
+        "kind": "view",
+        "opacity": 1,
+        "tag": 44,
+        "testID": "",
+        "text": "",
+        "visible": true,
+        "width": 484,
+        "x": 0,
+        "y": 0
+      }
+    ],
+    "pendingAnimationFrames": 0,
+    "pendingTimers": 0,
+    "pendingWork": 0,
+    "pointer": {
+      "activeTouches": 0,
+      "blockNative": false,
+      "cancels": 0,
+      "ends": 0,
+      "grants": 0,
+      "moves": 0,
+      "releases": 0,
+      "responder": 0,
+      "starts": 0
+    },
+    "retiringTags": 0,
+    "rootCount": 2,
+    "runtimeId": 28101838298,
+    "state": "mounted",
+    "stopRequested": false,
+    "stopped": false,
+    "surfaceId": 1,
+    "textMeasurements": 32,
+    "timerEngine": "react-native/TimerManager",
+    "updates": 8,
+    "viewport": {
+      "height": 552,
+      "width": 484
+    },
+    "viewportUpdates": 0,
+    "windowListener": false
+  },
+  "checks": [
+    {
+      "name": "External TSX mounts native trees",
+      "passed": true
+    },
+    {
+      "name": "Resource config produces one shared application and one bundle evaluation",
+      "passed": true
+    },
+    {
+      "name": "Consumer roots have distinct identities",
+      "passed": true
+    },
+    {
+      "name": "Scene props reach registered public components",
+      "passed": true
+    },
+    {
+      "name": "Consumer resolution selects project .godot.ts",
+      "passed": true
+    },
+    {
+      "name": "Addon fonts and host load without runtime errors",
+      "passed": true
+    },
+    {
+      "name": "Consumer has no laboratory asset directory",
+      "passed": true
+    },
+    {
+      "name": "Public TextInput commits a native editor",
+      "passed": true
+    },
+    {
+      "name": "SDK runtime_available hook binds GDScript services before consumer roots mount",
+      "passed": true
+    },
+    {
+      "name": "Public typed state and signal subscriptions initialize in the independent SDK consumer",
+      "passed": true
+    },
+    {
+      "name": "State snapshot retries a changed getter and exposes the current revision",
+      "passed": true
+    },
+    {
+      "name": "Initial snapshot race preserves its signal occurrence exactly once",
+      "passed": true
+    },
+    {
+      "name": "Game-owned state rerenders both independent native roots",
+      "passed": true
+    },
+    {
+      "name": "Native input updates only its own React root",
+      "passed": true
+    },
+    {
+      "name": "Project-owned store updates both roots",
+      "passed": true
+    },
+    {
+      "name": "Native editing rerenders the consumer component",
+      "passed": true
+    },
+    {
+      "name": "Godot prop updates preserve local React state",
+      "passed": true
+    },
+    {
+      "name": "Prop updates retain root identity",
+      "passed": true
+    },
+    {
+      "name": "Typed calls queue GDScript work outside the JavaScript render stack",
+      "passed": true
+    },
+    {
+      "name": "Typed consumer call settles through the native SDK transport",
+      "passed": true
+    },
+    {
+      "name": "Completion metadata and result correspond to the executed GDScript method",
+      "passed": true
+    },
+    {
+      "name": "Consecutive Godot signals preserve every occurrence and its argument order",
+      "passed": true
+    },
+    {
+      "name": "Typed state updates pair the same revision with both native trees",
+      "passed": true
+    },
+    {
+      "name": "Inventory-only resize changes its Yoga constraints while preserving HUD constraints",
+      "passed": true
+    },
+    {
+      "name": "Independent resize preserves root identity and local React state",
+      "passed": true
+    },
+    {
+      "name": "Surface constraints do not replace original RN window and screen metrics",
+      "passed": true
+    },
+    {
+      "name": "Original public View refs measure both resized consumer surfaces",
+      "passed": true
+    },
+    {
+      "name": "Public measureInWindow agrees with Godot global geometry after inventory-only resize",
+      "passed": true
+    },
+    {
+      "name": "Native editing after resize reaches only the inventory React root",
+      "passed": true
+    },
+    {
+      "name": "Restoring inventory constraints updates layout and the same public ref without remount",
+      "passed": true
+    },
+    {
+      "name": "Consumer unmount preserves the other native tree",
+      "passed": true
+    },
+    {
+      "name": "Closing one consumer root preserves application-owned game connections",
+      "passed": true
+    },
+    {
+      "name": "Consumer root mounts again",
+      "passed": true
+    },
+    {
+      "name": "Remount resets local state and preserves the project store",
+      "passed": true
+    },
+    {
+      "name": "Remount observes current GDScript state without installing duplicate game subscriptions",
+      "passed": true
+    },
+    {
+      "name": "Consumer lifecycle remains free of native errors",
+      "passed": true
+    },
+    {
+      "name": "Consumer shutdown releases native tags, roots and timers",
+      "passed": true
+    },
+    {
+      "name": "Final React cleanup removes shared SDK service listeners exactly once",
+      "passed": true
+    },
+    {
+      "name": "SDK shutdown disconnects GDScript sources and clears service queues and bindings",
+      "passed": true
+    },
+    {
+      "name": "Stopped consumer handlers cannot receive later game signals",
+      "passed": true
+    }
+  ],
+  "displayServer": "headless",
+  "geometry": {
+    "resized": {
+      "hud": {
+        "height": 552,
+        "width": 484,
+        "x": 24,
+        "y": 24
+      },
+      "inventory": {
+        "height": 552,
+        "width": 430,
+        "x": 544,
+        "y": 24
+      }
+    },
+    "windowMetrics": {
+      "screen": {
+        "fontScale": 1,
+        "height": 0,
+        "scale": 1,
+        "width": 0
+      },
+      "window": {
+        "fontScale": 1,
+        "height": 64,
+        "scale": 1,
+        "width": 64
+      }
+    }
+  },
+  "host": "independent-consumer",
+  "schemaVersion": 1
+}

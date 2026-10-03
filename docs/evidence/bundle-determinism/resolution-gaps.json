@@ -1,0 +1,121 @@
+{
+  "format": "godot-fabric.gf03-tsconfig-gap-summary/v1",
+  "classification": "discovered-pending-contracts",
+  "currentFix": {
+    "projectTsconfigExplicit": true,
+    "blockedByTheseGaps": false,
+    "claim": "determinism for unchanged inputs in one supported project only"
+  },
+  "tools": {
+    "node": "v22.23.3",
+    "typescript": "6.0.3",
+    "esbuild": "0.25.12"
+  },
+  "scope": {
+    "fixtures": "generic isolated TypeScript/CommonJS",
+    "esbuildWrite": false,
+    "appBundleWritten": false,
+    "nativeBuildExecuted": false
+  },
+  "sourceSha256": {
+    "sdk/toolchain/build.mjs": "17a886bbf9f1cd9090cf32a5e15795bbbd911403f6e78ebc9440e317ba0c0d72",
+    "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f"
+  },
+  "gaps": [
+    {
+      "id": "local-paths-ownership",
+      "status": "reproduced",
+      "tscErrors": 0,
+      "esbuildWithoutOwnershipPassed": true,
+      "ownershipPluginFromCurrentBuilder": true,
+      "importSpecifier": "@ui/Value",
+      "intendedResolvedPath": "ui/Value.ts",
+      "rejection": "Declare @ui/Value in the project's dependencies and install it explicitly; Play does not install packages",
+      "nextContract": "Validate ownership after local alias resolution or explicitly reject unsupported local aliases."
+    },
+    {
+      "id": "module-suffixes-order",
+      "status": "reproduced",
+      "tscErrors": 0,
+      "configuredModuleSuffixes": [
+        "",
+        ".godot",
+        ".native"
+      ],
+      "typeScriptResolved": "ui/choice.ts",
+      "esbuildResolved": "ui/choice.godot.ts",
+      "executedGenericValue": "godot",
+      "nextContract": "Derive runtime suffix order from supported TypeScript settings or reject divergence."
+    }
+  ],
+  "sloppyCommonJs": {
+    "format": "godot-fabric.gf03-sloppy-cjs-probe/v1",
+    "node": "v22.23.3",
+    "esbuild": "0.25.12",
+    "write": false,
+    "appBundleWritten": false,
+    "nativeBuildExecuted": false,
+    "lanes": [
+      {
+        "name": "inferred",
+        "bundleSha256": "ba3ff6288836b9b6e31e60b838d6ddf58673e9bfafd0d57cca325f5998671d58",
+        "strictDirectiveCount": 1,
+        "inputs": [
+          "node_modules/sloppy-helper/index.cjs",
+          "index.ts"
+        ],
+        "result": {
+          "receiverIsGlobal": false,
+          "topLevelThisIsExports": true,
+          "assignment": "ReferenceError"
+        },
+        "undeclaredGlobalCreated": false
+      },
+      {
+        "name": "explicitStrict",
+        "bundleSha256": "2559a46fcfdad3821eb43fd3e048adcc8a8dce0452a35389bd1aef1e74ec6234",
+        "strictDirectiveCount": 2,
+        "inputs": [
+          "node_modules/sloppy-helper/index.cjs",
+          "index.ts"
+        ],
+        "result": {
+          "receiverIsGlobal": false,
+          "topLevelThisIsExports": true,
+          "assignment": "ReferenceError"
+        },
+        "undeclaredGlobalCreated": false
+      },
+      {
+        "name": "explicitLoose",
+        "bundleSha256": "e136729a2eb92e7bb4a71f8ddb3325eb82da747374b46f4c5a67c6e4de1624d1",
+        "strictDirectiveCount": 0,
+        "inputs": [
+          "node_modules/sloppy-helper/index.cjs",
+          "index.ts"
+        ],
+        "result": {
+          "receiverIsGlobal": true,
+          "topLevelThisIsExports": true,
+          "assignment": "global"
+        },
+        "undeclaredGlobalCreated": true
+      }
+    ],
+    "semanticsChangedByExplicitStrict": false,
+    "rawCommonJs": {
+      "result": {
+        "receiverIsGlobal": true,
+        "topLevelThisIsExports": true,
+        "assignment": "global"
+      },
+      "undeclaredGlobalCreated": true
+    },
+    "interpretation": "The inferred strict project bundle already changes this sloppy CJS behavior; selecting its tsconfig explicitly adds an inner strict directive but does not change these observed semantics. Explicit alwaysStrict:false is a separate control."
+  },
+  "limitations": [
+    "No runtime Godot/Hermes execution.",
+    "No app consumer bundles written.",
+    "These probes do not certify arbitrary TSConfig, JSX providers, Babel plugins or dependency installation layouts."
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "format": "godot-fabric.executed-hosted-shutdown/v1",
+  "headSha": "9317b460b30b58cffde61b7ad5d1de7e617db8e0",
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796/job/111292210686"
+    },
+    {
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796/job/111292210883"
+    },
+    {
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796/job/111292210914"
+    },
+    {
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796/job/111292210964"
+    },
+    {
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796/job/111294049463"
+    }
+  ],
+  "artifact": "native-adapter-runtime",
+  "reportSha256": "37bea7cefa89f6507252f7b68a35a929064139d37962b5465c74363bf5c3175c",
+  "checks": {
+    "headless": {
+      "checks": 35,
+      "passed": true,
+      "reportSha256": "8c2a0219a402c6daa88b13dcbdca2c3ce477811d8d6eed50915777b9a78f715a"
+    },
+    "reentrant-stop": {
+      "checks": 8,
+      "passed": true,
+      "reportSha256": "0bb673e3f44d0a61d25b3fb093fef041bf36634ce74ac17bba642b31f8b7ebc6"
+    },
+    "reentrant-raf": {
+      "checks": 9,
+      "passed": true,
+      "reportSha256": "100e2cb62076a9745ae49d05845e4bccf33f7634490de28071239b27d7fe54dc"
+    },
+    "reentrant-timer": {
+      "checks": 9,
+      "passed": true,
+      "reportSha256": "64ee7189a1a25dec38408c0e6fd22232949c74ea42c585f4227513cc29a679de"
+    }
+  },
+  "sourceSha256": {
+    "scripts/adapter-runtime-check.mjs": "766819a2590bb9766967ca41081ca622e85cda07dc6993198063653bb8205cf3",
+    "scripts/pack-addon.mjs": "7b173397887046e551b024cbc85ebb3603e4fe64926ca2d2f10d3d489bdf0ee2",
+    "sdk/toolchain/build.mjs": "4f695aa00d18e5edc6161e11f785ca6bb2c04fa719b383eb513cdd45ad5d55cd",
+    "sdk/toolchain/adapter-plugin.mjs": "9d331d0b71adec8ee51f601a8ea4c2fceb50c62fed5f5f0278caf04d3df2729d",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+    "tests/adapters/package/BadgeNativeComponent.ts": "743ed87b2d827cbd04b92f2fc79d247942d930e6721b214320fca8ccf5f89d56",
+    "tests/adapters/package/NativeExternalProbe.ts": "652f3488be23ee4ca8bf13671c52185acd556873d418863e89cee1f82ac1dadb",
+    "tests/adapters/package/adapter.cpp": "026e957339e78d19b580cbc7d68e26062ad354babf7dbffb9b5e8001e73afd70",
+    "tests/adapters/package/index.ts": "526a2d064a70a6de1c0575cf551cf089d08375ced1f3e508c86c554968d37212",
+    "tests/adapters/package/package.json": "861c7356296fb60205bc0ac5d7fa1f708e53c15b364cc05b8f9719e374c53667",
+    "tests/adapters/consumer/ui/index.tsx": "4ec5f2ac1d02f3492cee3e370d2dc5b7de25a1f5f5af036b7ffed9480c1bfcec",
+    "tests/adapters/consumer/validation.gd": "545418e41bc3e81efbae846e280134ada38a458a14fe5ea7c0acd70ca2311e08",
+    "tests/adapters/consumer/main.tscn": "25b848774f99520ca06b7c2bf845e23f7878fd44dd68cc618ed027f616b94aa2",
+    "tests/adapters/consumer/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2"
+  },
+  "sdkManifestSha256": "2f2a4219b16cce5248877c37108ffdfbd1a861329c2b6e37687cd53bbee9a6b9",
+  "scope": "Historical hosted callback-shutdown acceptance before the explicit-TSConfig builder change. Reference jobs exercise original RN apps, not Godot ports.",
+  "newBuilderCertified": false,
+  "fullParityCertified": false,
+  "graphical": false
+}

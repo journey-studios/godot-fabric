@@ -52,3 +52,9 @@ files for diagnosis. It does not certify the shutdown implementation above.
 Reproduce with the pinned private Node and verified native SDK:
 `node scripts/adapter-runtime-check.mjs --sdk <SDK> --out build/<new-directory>
 --capture`. This executes the regular consumer and all three shutdown modes.
+
+A subsequent [hosted run](hosted-ci.json) at `9317b46` passed all five jobs.
+Its native adapter artifact confirms **35 headless** and **8/9/9 shutdown**
+checks. No graphical case ran there. This verifies the callback-shutdown host
+before the later explicit-TSConfig builder change; reference jobs remain
+original RN apps, and complete RN parity remains open.

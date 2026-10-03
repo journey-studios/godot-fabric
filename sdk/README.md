@@ -59,6 +59,16 @@ applies the original RN Babel transforms. It publishes the JS file after those
 steps succeed. Syntax/type, Resource, missing-tool and dependency failures
 preserve the previous bundle; Play is blocked instead of silently using it.
 
+The type checker and esbuild both receive the project's `tsconfig.json`
+explicitly. The builder uses that file's supported JSX/strict settings and
+inheritance, rather than letting the first import of an SDK facade determine
+them. A facade reached through both an ESM import and a CommonJS native-module
+alias previously acquired different strict directives depending on resolution
+order. Recovery keeps the exact-byte bundle assertion; see the
+[executed determinism regression](../docs/evidence/bundle-determinism/README.md).
+This proof covers unchanged inputs in one project, not byte-identical bundles
+across different installation paths or every TypeScript compiler option.
+
 This build uses the provisioned executable directly. It never falls back to
 global Node, installs packages or edits a project lockfile. Additional packages
 must be explicitly declared and installed by the project's chosen package
@@ -98,8 +108,12 @@ temporary projects. See [retained evidence and captures](../docs/evidence/consum
 The later [services checkpoint](../docs/evidence/game-services/README.md)
 adds typed GDScript operations/state/signals and inventory-only resize through
 original refs to this consumer. The standalone [Codegen experiment](../docs/CODEGEN.md)
-is platform tooling; spec processing/native extensions are not integrated into
-the addon Play hook yet.
+uses original pinned generators. The later
+[external-adapter checkpoint](../docs/NATIVE_EXTENSIONS.md) integrates explicitly
+selected package specs into the addon builder and mounts their generated
+components/modules through a verified shared native SDK. Its runtime proof is
+bounded to macOS arm64 Release; arbitrary packages and complete exports remain
+open.
 
 GF-28/GF-29 remain **In progress**. D19–D29 retain their pending status; this
 prototype provides evidence for those decisions, without deciding exports,

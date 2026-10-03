@@ -146,7 +146,8 @@ long-lived asynchronous work, full RN differential parity and all-target
 export/ABI acceptance remain open; GF-26/GF-28/GF-31 stay **In progress**.
 A traditional-consumer replay passed 18 tooling / 40 native checks after an
 isolated recovery fingerprint mismatch; the unchanged assertion now retains
-baseline/recovered bundles for investigation. The cause remains open in GF-28.
+baseline/recovered bundles for investigation. That failure is historical; the
+executed fix is described below.
 An additional [native shutdown slice](docs/evidence/adapter-shutdown/README.md)
 reproduced Control deletion inside a Godot signal during a Fabric commit. Stop
 now retires authority immediately and delays destruction until execution returns;
@@ -155,10 +156,28 @@ passed **35 headless/37 graphical** again on the rebuilt host. Native suites
 passed **2/4/2/2** serially. Independent root destruction during updates and
 long-lived async work remain open. Hosted run **37151683147** passed loader
 **89** and registry **207** but reproduced the consumer recovery fingerprint
-failure; its external runtime lane did not run. Current shutdown CI remains
-unconfirmed. No GF acceptance, dependency or denominator is closed by this slice.
-New hosted loader/runtime lanes are configured; their current run is recorded
-separately from local execution and the earlier green SDK CI.
+failure; its external runtime lane did not run. The subsequent
+[shutdown CI](docs/evidence/adapter-shutdown/hosted-ci.json) at
+`9317b46` passed all five jobs, with **35 headless** and **8/9/9 shutdown**
+checks confirmed in its artifact; it predates the new builder correction. No
+GF acceptance, dependency or denominator is closed by this slice.
+Hosted evidence remains separate from graphical local execution and complete
+RN/all-target acceptance.
+
+An [explicit project-TSConfig slice](docs/evidence/bundle-determinism/README.md)
+now fixes a reproduced import/alias ordering race in esbuild. Eighteen diagnostic
+processes kept the same 154 physical/transformed inputs: inferred configuration
+produced two bundle hashes, explicit configuration one. Five causal Node tests
+cover both orders, strict:false, JSX and inherited settings. The actual consumer
+passed **18 tooling/40 native** checks with exact recovery hashes preserved;
+selected-adapter runtime passed **35/37** and shutdown **8/9/9** again. Six more
+builds kept the same bundle/selection bytes and all 154 inputs. Current local
+contracts passed **126 Node/13 Python**. New builder CI remains separate from the
+preceding green shutdown CI. The [resolution probes](docs/evidence/bundle-determinism/resolution-gaps.json)
+also reproduce two GF-03 gaps: local `paths` aliases rejected as packages and
+editable `moduleSuffixes` choosing a different type source from the fixed runtime
+suffix order. Those contracts, all-target exports and complete SDK acceptance
+remain open; no GF or denominator closes with this fix.
 
 ## Release contract and scope
 
