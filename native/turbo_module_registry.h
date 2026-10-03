@@ -9,6 +9,7 @@
 #include <string>
 
 namespace fabric_godot {
+class GameServiceRegistry;
 // The platform owns providers and lifetime. The JSI binding, TurboModule
 // HostObjects, property cache, promises and typed event emitters remain RN's.
 // All methods run on the application's JS/main thread, before VM destruction.
@@ -29,6 +30,7 @@ class TurboModuleRegistry {
   // Physical pixel metrics follow RN's schema, including densityDpi.
   void add_device_info(std::function<folly::dynamic()> constants);
   void add_feature_flags();
+  void add_game_services(const std::shared_ptr<GameServiceRegistry> &services);
   void add_fixture();
   void install(facebook::jsi::Runtime &runtime);
   // Queues a call through RN's scheduler. Arguments are copied DTOs; no JS

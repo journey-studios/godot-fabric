@@ -13,13 +13,18 @@ using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
 static String gd(const std::string &value) { return String::utf8(value.c_str()); }
 
-FabricApplication::FabricApplication() { set_process_mode(PROCESS_MODE_ALWAYS); set_process(true); }
+FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_godot::GameServiceRegistry>()) {
+  set_process_mode(PROCESS_MODE_ALWAYS); set_process(true);
+}
 FabricApplication::~FabricApplication() { stop(); }
 void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("evaluate", "source"), &FabricApplication::evaluate);
   ClassDB::bind_method(D_METHOD("snapshot"), &FabricApplication::snapshot);
   ClassDB::bind_method(D_METHOD("stop"), &FabricApplication::stop);
   ClassDB::bind_method(D_METHOD("invoke_callable", "name", "method", "args"), &FabricApplication::invoke_callable);
+  ClassDB::bind_method(D_METHOD("bind_signal", "name", "signal", "arg_schema", "options"), &FabricApplication::bind_signal, DEFVAL(Dictionary()));
+  ClassDB::bind_method(D_METHOD("bind_state", "name", "getter", "changed", "value_schema", "options"), &FabricApplication::bind_state, DEFVAL(Dictionary()));
+  ClassDB::bind_method(D_METHOD("register_method", "name", "callable", "arg_schema", "result_schema", "options"), &FabricApplication::register_method, DEFVAL(Dictionary()));
   ClassDB::bind_method(D_METHOD("set_bundle_path", "path"), &FabricApplication::set_bundle_path);
   ClassDB::bind_method(D_METHOD("get_bundle_path"), &FabricApplication::get_bundle_path);
   ADD_PROPERTY(PropertyInfo(Variant::STRING, "bundle_path", PROPERTY_HINT_FILE, "*.js"), "set_bundle_path", "get_bundle_path");
@@ -60,7 +65,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             }
             return metrics;
           },
-          utf8(scenario), get_instance_id());
+          utf8(scenario), get_instance_id(), game_services);
     }
     int legacy_id = 0;
     if (!bundle_loaded) {
@@ -83,7 +88,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
 }
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
 void FabricApplication::_exit_tree() { stop(); }
-void FabricApplication::stop() { if (runtime) runtime->stop(); }
+void FabricApplication::stop() { if (runtime) runtime->stop(); else game_services->stop(); }
 bool FabricApplication::is_stopped() const { return runtime && runtime->is_stopped(); }
 String FabricApplication::evaluate(const String &source) { return runtime ? gd(runtime->evaluate(utf8(source))) : String("null"); }
 String FabricApplication::snapshot() { return runtime ? gd(runtime->status()) : String("{}"); }
@@ -95,5 +100,33 @@ void FabricApplication::invoke_callable(const String &name, const String &method
   } catch (const std::exception &error) {
     if (runtime) runtime->report_error(error.what());
     else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+  }
+}
+
+Ref<GodotFabricBinding> FabricApplication::bind_signal(const String &name, const Signal &signal,
+    const Array &arg_schema, const Dictionary &options) {
+  try { return game_services->bind_signal(name, signal, arg_schema, options); }
+  catch (const std::exception &error) {
+    if (runtime) runtime->report_error(error.what());
+    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    return {};
+  }
+}
+Ref<GodotFabricBinding> FabricApplication::bind_state(const String &name, const Callable &getter,
+    const Signal &changed, const Variant &value_schema, const Dictionary &options) {
+  try { return game_services->bind_state(name, getter, changed, value_schema, options); }
+  catch (const std::exception &error) {
+    if (runtime) runtime->report_error(error.what());
+    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    return {};
+  }
+}
+Ref<GodotFabricBinding> FabricApplication::register_method(const String &name, const Callable &callable,
+    const Array &arg_schema, const Variant &result_schema, const Dictionary &options) {
+  try { return game_services->register_method(name, callable, arg_schema, result_schema, options); }
+  catch (const std::exception &error) {
+    if (runtime) runtime->report_error(error.what());
+    else UtilityFunctions::push_error(String("FABRIC_ERROR: ") + gd(error.what()));
+    return {};
   }
 }

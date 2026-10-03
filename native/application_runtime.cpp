@@ -1,4 +1,5 @@
 #include "application_runtime.h"
+#include "game_service_registry.h"
 #include "fabric_surface.h"
 #include <godot_cpp/classes/input_event_mouse.hpp>
 #include "godot_component.h"
@@ -99,6 +100,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   std::shared_ptr<rn::ContextContainer> context;
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
+  std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   std::shared_ptr<rn::UIManager> ui;
   rn::ComponentDescriptorProviderRegistry providers;
   std::shared_ptr<rn::EventDispatcher> dispatcher;
@@ -133,7 +135,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   std::vector<std::string> errors;
 
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
-      const std::string &scenario, uint64_t id) : read_window(std::move(metrics)), runtime_id(id) {
+      const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services)
+      : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)) {
     // One application owns Hermes, Fabric, scheduling and timers. All native
     // mounting and JS work still execute on Godot's main thread.
     auto config = hermes::vm::RuntimeConfig::Builder().withMicrotaskQueue(true).build();
@@ -182,6 +185,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
     rn::RuntimeSchedulerBinding::createAndInstallIfNeeded(*runtime, runtime_scheduler);
     rn::UIManagerBinding::createAndInstallIfNeeded(*runtime, ui);
     native_modules = std::make_unique<fabric_godot::TurboModuleRegistry>(runtime_id, runtime_scheduler);
+    native_modules->add_game_services(game_services);
     if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
     native_modules->add_feature_flags();
     native_modules->add_source_code([this] { return bundle_url; });
@@ -417,6 +421,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   void pump(bool frame_tick = false) {
     if (stopped) return;
     try {
+      // Host calls only run on the next Godot process frame, before JS work.
+      // A callback can synchronously stop/free its application; Impl is held
+      // by the public entry guard and no further VM/window work runs afterward.
+      if (frame_tick && !stopping) game_services->pump_host();
+      if (stopped) return;
       // Host configuration failures must remain visible without starving
       // queued React cleanup. Shutdown never depends on window resampling.
       if (!stopping) {
@@ -500,12 +509,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
   void stop() {
     if (stopped || stopping) return;
     stopping = true;
+    game_services->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
     std::vector<int> ids;
     std::vector<uint64_t> host_ids;
     for (auto &[id, root] : roots) { ids.push_back(id); host_ids.push_back(root->host->get_instance_id()); }
-    for (int id : ids) unmount(id, roots.at(id)->component.empty());
+    for (int id : ids) {
+      auto root = roots.find(id);
+      if (root != roots.end()) unmount(id, root->second->component.empty());
+    }
+    // Settle service cancellations even when no React root is mounted.
+    pump();
     try { native_modules->stop(*runtime); }
     catch (const std::exception &error) { fail(error.what()); }
     ui->setDelegate(nullptr);
@@ -861,6 +876,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())
         ("viewportUpdates", viewport_updates)("errors", folly::dynamic::array());
     result["nativeModules"] = native_modules->snapshot();
+    result["gameServices"] = game_services->snapshot();
     result["dimensions"] = device_dimensions();
     for (const auto &error : errors) result["errors"].push_back(error);
     return result;
@@ -944,39 +960,43 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate {
 
 namespace fabric_godot {
 ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
-    const std::string &scenario, uint64_t runtime_id)
-    : impl(std::make_unique<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id)) {}
+    const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services)
+    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services))) {}
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
 void ApplicationRuntime::load_bundle(const std::string &source, const std::string &source_url) {
-  impl->bundle_url = source_url;
-  impl->evaluate(source);
-  ++impl->bundle_evaluations;
+  auto guard = impl;
+  guard->bundle_url = source_url;
+  guard->evaluate(source);
+  ++guard->bundle_evaluations;
 }
 void ApplicationRuntime::invoke_callable(const std::string &name, const std::string &method, const std::string &args_json) {
   impl->native_modules->invoke_callable(name, method, folly::parseJson(args_json));
 }
-int ApplicationRuntime::mount(FabricSurface &host, const std::string &component, const std::string &props_json) { return impl->mount(host, component, props_json); }
-void ApplicationRuntime::update_props(int id, const std::string &props_json) { impl->update_props(id, props_json); }
-void ApplicationRuntime::unmount(int id) { impl->unmount(id); }
-void ApplicationRuntime::stop() { impl->stop(); }
+int ApplicationRuntime::mount(FabricSurface &host, const std::string &component, const std::string &props_json) { auto guard = impl; return guard->mount(host, component, props_json); }
+void ApplicationRuntime::update_props(int id, const std::string &props_json) { auto guard = impl; guard->update_props(id, props_json); }
+void ApplicationRuntime::unmount(int id) { auto guard = impl; guard->unmount(id); }
+void ApplicationRuntime::stop() { auto guard = impl; guard->stop(); }
 bool ApplicationRuntime::is_stopped() const { return impl->stopped || impl->stopping; }
-void ApplicationRuntime::pump(bool frame) { impl->pump(frame); }
+void ApplicationRuntime::pump(bool frame) { auto guard = impl; guard->pump(frame); }
 std::string ApplicationRuntime::evaluate(const std::string &source) {
-  try { return impl->evaluate(source).toString(*impl->runtime).utf8(*impl->runtime); }
-  catch (const std::exception &error) { impl->fail(error.what()); return "null"; }
+  auto guard = impl;
+  try { return guard->evaluate(source).toString(*guard->runtime).utf8(*guard->runtime); }
+  catch (const std::exception &error) { guard->fail(error.what()); return "null"; }
 }
 std::string ApplicationRuntime::snapshot(int id, const std::string &retired) { return impl->snapshot(id, retired); }
 std::string ApplicationRuntime::status() { return folly::toJson(impl->status()); }
 void ApplicationRuntime::report_error(const std::string &message) { impl->fail(message); }
 bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
-  auto found = impl->roots.find(id);
-  if (found == impl->roots.end() || found->second->stopping || impl->stopped) return false;
+  auto guard = impl;
+  auto found = guard->roots.find(id);
+  if (found == guard->roots.end() || found->second->stopping || guard->stopped) return false;
   auto &root = *found->second;
-  if (impl->wheel(root, event)) { impl->pump(); return true; }
+  if (guard->wheel(root, event)) { guard->pump(); return true; }
   bool blocked = root.pointer->blocks_native();
   if (!root.pointer->input(event)) return false;
-  impl->pump();
-  return blocked || root.pointer->blocks_native();
+  guard->pump();
+  found = guard->roots.find(id);
+  return blocked || (found != guard->roots.end() && found->second->pointer->blocks_native());
 }
 void ApplicationRuntime::cancel(int id) {
   auto found = impl->roots.find(id);

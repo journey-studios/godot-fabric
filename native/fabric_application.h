@@ -1,5 +1,6 @@
 #pragma once
 #include <godot_cpp/classes/node.hpp>
+#include "game_service_registry.h"
 #include <memory>
 
 class FabricSurface;
@@ -17,6 +18,12 @@ class FabricApplication : public godot::Node {
   godot::String snapshot();
   void stop();
   void invoke_callable(const godot::String &name, const godot::String &method, const godot::Array &args);
+  godot::Ref<GodotFabricBinding> bind_signal(const godot::String &name, const godot::Signal &signal,
+      const godot::Array &arg_schema, const godot::Dictionary &options = {});
+  godot::Ref<GodotFabricBinding> bind_state(const godot::String &name, const godot::Callable &getter,
+      const godot::Signal &changed, const godot::Variant &value_schema, const godot::Dictionary &options = {});
+  godot::Ref<GodotFabricBinding> register_method(const godot::String &name, const godot::Callable &callable,
+      const godot::Array &arg_schema, const godot::Variant &result_schema, const godot::Dictionary &options = {});
   bool is_stopped() const;
   void set_bundle_path(const godot::String &path);
   godot::String get_bundle_path() const;
@@ -27,5 +34,6 @@ class FabricApplication : public godot::Node {
  private:
   godot::String bundle_path = "res://build/app.js";
   std::unique_ptr<fabric_godot::ApplicationRuntime> runtime;
+  std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   bool bundle_loaded = false;
 };

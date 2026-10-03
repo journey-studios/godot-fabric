@@ -107,7 +107,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp turbo_module_registry.cpp godot_dom.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp register.cpp)
 target_link_libraries(fabric_godot PRIVATE fabric_core godot-cpp)
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # A static GDExtension links into the exported Xcode app. Its upstream Hermes

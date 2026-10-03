@@ -8,6 +8,7 @@
 
 class FabricSurface;
 namespace fabric_godot {
+class GameServiceRegistry;
 struct WindowMetrics {
   godot::Vector2 size;
   godot::Vector2 screen;
@@ -17,7 +18,7 @@ struct WindowMetrics {
 class ApplicationRuntime {
  public:
   ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
-      const std::string &scenario, uint64_t runtime_id);
+      const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> game_services);
   ~ApplicationRuntime();
   void load_bundle(const std::string &source, const std::string &source_url);
   void invoke_callable(const std::string &name, const std::string &method, const std::string &args_json);
@@ -40,6 +41,6 @@ class ApplicationRuntime {
   void key(int surface_id, const godot::Ref<godot::InputEvent> &event, int tag);
  private:
   struct Impl;
-  std::unique_ptr<Impl> impl;
+  std::shared_ptr<Impl> impl;
 };
 }

@@ -2,6 +2,12 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { transformAsync } from "@babel/core";
 
+// Only this exact runtime import is SDK-owned; arbitrary package subpaths keep
+// the consumer's dependency rules and cannot accidentally escape into the SDK.
+export function isSdkOwnedSpecifier(specifier) {
+  return specifier === "@godot-fabric/runtime" || /^react(?:\/|$)|^react-native(?:\/|$)/.test(specifier);
+}
+
 // Shared native-host seams. Consumers and the laboratory use the same facade
 // and original RN transforms; only their application entrypoints differ.
 export function platformPlugin(platformRoot, resolveSdk) {
@@ -20,6 +26,7 @@ export function platformPlugin(platformRoot, resolveSdk) {
           return { path: path.join(platformRoot, "render-application.jsx") };
       });
       for (const [pattern, file] of [
+        [/^@godot-fabric\/runtime$/, "godot-fabric.js"],
         [/^react-native$/, "react-native-platform.jsx"],
         [/^react-native-svg$/, "svg.jsx"],
         [/^react-native-reanimated$/, "unsupported-reanimated.js"],

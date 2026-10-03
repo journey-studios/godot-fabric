@@ -15,7 +15,10 @@
     "types/react-native.ts",
     "tests/types/consumer.tsx",
     "consumers/minimal/ui/index.tsx",
-    "src/renderer-proxy.js"
+    "src/renderer-proxy.js",
+    "src/godot-fabric.js",
+    "types/godot-fabric.ts",
+    "tests/types/godot-fabric.tsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -195,8 +198,29 @@
           "exports": [
             "platformMessage"
           ]
+        },
+        {
+          "pattern": "types/godot-fabric.ts",
+          "exports": [
+            "GodotDTO",
+            "ServiceAddress",
+            "ServiceAcknowledgement",
+            "ServiceSnapshot",
+            "ServiceCallResult",
+            "ServiceSubscription",
+            "GodotFabric"
+          ]
+        },
+        {
+          "pattern": "src/godot-fabric.js",
+          "exports": [
+            "GodotFabric"
+          ]
         }
       ]
     }
+  ],
+  "ignoreUnresolvedImports": [
+    "@godot-fabric/runtime"
   ]
 }

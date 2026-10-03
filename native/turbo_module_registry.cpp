@@ -1,4 +1,5 @@
 #include "turbo_module_registry.h"
+#include "game_service_registry.h"
 
 #include <ReactCommon/TurboModuleBinding.h>
 #include <jsi/JSIDynamic.h>
@@ -390,6 +391,12 @@ void TurboModuleRegistry::add_feature_flags() {
       [](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
         return std::make_shared<rn::NativeReactNativeFeatureFlags>(invoker);
       });
+}
+void TurboModuleRegistry::add_game_services(const std::shared_ptr<GameServiceRegistry> &services) {
+  if (!services) throw std::invalid_argument("Game services require the application's registry");
+  add("GodotFabricServices", [services](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+    return services->create_module(invoker);
+  }, [services] { services->stop(); });
 }
 void TurboModuleRegistry::add_fixture() {
   auto fixture = std::make_shared<FixtureState>(state_->runtime_id);
