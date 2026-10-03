@@ -48,14 +48,21 @@ registers HUD/Inventory through the original AppRegistry and validates root prop
 independent state/input/constraints, module stores, unmount/remount and live
 application scheduling with no mounted roots. This is the bounded 2A prototype:
 full bootstrap, pause/resume, overlays/portals, reference comparison and the
-resource/editor SDK are still open. D19–D32 remain pending.
+complete SDK activation are still open. D19–D32 remain pending.
 The [shared-root evidence](docs/evidence/shared-roots/README.md) retains local
 positive/negative checks, real captures and the 12-example regression matrix.
 
-The bounded 2B consumer/addon slice is being implemented: separate project TSX,
-resource-based entry configuration, provisioned private tools and editor Play
-build checks. GF-28/GF-29 are In progress for this slice only; their full SDK,
-export, diagnostics, development and per-target acceptance remain open.
+The bounded [2B consumer/addon prototype](consumers/minimal/README.md) now runs
+separate project TSX through resource-based entry configuration, a scene owner,
+provisioned private tools and the editor build hook. A fresh external consumer
+passes offline/no-global-Node builds, dependency/React-identity checks, visible
+build rejection/recovery and two-root native assertions with real captures.
+[Evidence](docs/evidence/consumer/README.md) records the exact scope.
+GF-28/GF-29 remain In progress; complete installation/update, export,
+diagnostics, development and per-target acceptance remain open. D19–D29 are
+still pending. The next integration slice is sequence 3: typed Godot-to-React
+operations/subscriptions together with surface/ref geometry, followed by
+pause/operation-lifetime coverage for the integrated milestone below.
 
 Priority meanings: **P0** blocks dependable development or the architecture;
 **P1** is required to complete the 1.0 contract; **P2** extends the explicit

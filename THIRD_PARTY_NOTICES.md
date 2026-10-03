@@ -12,6 +12,7 @@ source/framework archives and verifies SHA-256 before extraction.
 | Yoga | bundled with React Native 0.87.1 | [MIT](https://github.com/facebook/yoga/blob/main/LICENSE) |
 | godot-cpp | da26c1732ee8656ef9ccad587cbdd55acf8637c8 | [MIT](https://github.com/godotengine/godot-cpp/blob/da26c1732ee8656ef9ccad587cbdd55acf8637c8/LICENSE.md) |
 | Godot | official 4.7.2, separately installed | [MIT and third-party notices](https://godotengine.org/license/) |
+| Private Node.js | 22.23.3, macOS arm64 provisioning | Complete LICENSE in the downloaded official Node archive, including third-party notices |
 | NativeWind | 4.2.7 | See the installed package LICENSE |
 | react-native-css-interop | 0.2.7 | See the installed package LICENSE |
 | Tailwind CSS | 3.4.17 | See the installed package LICENSE |
@@ -23,3 +24,8 @@ No third-party framework binaries or vendored upstream source trees are committe
 Setup obtains them from the URLs recorded in the native dependency lock.
 ReactNativeDependencies includes additional upstream libraries; its downloaded
 artifact and upstream React Native sources retain their associated notices.
+
+Provisioned addon directories include the Node distribution and its license,
+the installed JavaScript packages with their license files, native Hermes,
+React Native and godot-cpp licenses, font licenses and this notice. They are
+generated locally or by CI; no prebuilt public addon release is shipped yet.
