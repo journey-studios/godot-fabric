@@ -197,5 +197,7 @@
     "types/godot-fabric.ts": "782f8f2ffdb9160bb200051c81be9d97eda378bf5ad40c4e0e96cb6f4a836da1",
     "types/react-native.ts": "347b951da0f19e8e4f96c7da606947f8e23620590172f9d2cd22573106ad1048"
   },
-  "bundleSourceIdentityVerified": true
+  "bundleSourceIdentityVerified": true,
+  "testedImplementationCommit": "fbd045385ba2ef33d16f21fdd5b9bf193296fa19",
+  "committedSourceIdentityVerified": true
 }

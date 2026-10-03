@@ -8,10 +8,10 @@
     "focusSequence": "4",
     "focusTitle": "Extensões externas comprovadas; próximos gaps de lifecycle e exportação"
   },
-  "updatedAt": "2026-10-03T20:22:35.441369Z",
+  "updatedAt": "2026-10-03T20:28:31.322985Z",
   "source": {
-    "commit": "7a67f9698a7251ecc06c2a612f55550796438f8b",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/7a67f9698a7251ecc06c2a612f55550796438f8b/ROADMAP.md",
+    "commit": "fbd045385ba2ef33d16f21fdd5b9bf193296fa19",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/ROADMAP.md",
     "scope": "GF-26: loader 21/89 e consumidor Codegen nativo 35/37 comprovados localmente; aceite completo e CI atual pendentes",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -1253,7 +1253,7 @@
             },
             {
               "label": "Consumidor externo 35/37 e loader 21/89; evidência local da PR",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
             }
           ]
         },
@@ -1370,7 +1370,7 @@
             },
             {
               "label": "Addon ativa packet de seleção e JSX original em consumidor externo",
-              "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
             }
           ]
         },
@@ -2400,14 +2400,14 @@
   "activity": [
     {
       "id": "native-adapter-runtime-20261003",
-      "at": "2026-10-03T20:22:35.441369Z",
+      "at": "2026-10-03T20:28:31.322985Z",
       "taskIds": [
         "GF-26",
         "GF-28",
         "GF-31"
       ],
-      "message": "Prova local: loader 21 casos/89 checks, registry 207, consumidor Codegen 35 headless/37 gráficos e capturas. CI nova configurada ainda sem sucesso confirmado; divergência isolada de hash no consumidor antigo permanece investigada após replay verde. Checkpoints/denominador preservados; nenhum GF fechado.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+      "message": "Prova local: loader 21 casos/89 checks, registry 207, consumidor Codegen 35 headless/37 gráficos e capturas. CI nova configurada ainda sem sucesso confirmado; divergência observada de hash no consumidor antigo permanece investigada após replay verde. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
     },
     {
       "id": "native-sdk-ci-37147754831",
