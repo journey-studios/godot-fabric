@@ -26,6 +26,10 @@ native build/package hashes, an unsigned arm64 device export/link and an
 x86_64/Rosetta simulator consumer. Its narrow runtime proof and disclosed
 official-template limitations do not certify the complete iOS port.
 
+The [original Codegen record](codegen/README.md) adds upstream TS/Flow generation,
+20 contract tests and six compiled C++ translation units. External native
+adapter loading/rendering and ABI certification remain open.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

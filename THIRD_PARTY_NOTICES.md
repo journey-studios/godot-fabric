@@ -8,6 +8,7 @@ source/framework archives and verifies SHA-256 before extraction.
 | --- | --- | --- |
 | React | 19.2.3 | [MIT](https://github.com/facebook/react/blob/v19.2.3/LICENSE) |
 | React Native / Fabric | 0.87.1 | [MIT](https://github.com/facebook/react-native/blob/v0.87.1/LICENSE) |
+| React Native Codegen | 0.87.1 | MIT; original package in the same React Native release |
 | Hermes | 250829098.0.17 | [MIT](https://github.com/facebook/hermes/blob/main/LICENSE) |
 | Yoga | bundled with React Native 0.87.1 | [MIT](https://github.com/facebook/yoga/blob/main/LICENSE) |
 | godot-cpp | da26c1732ee8656ef9ccad587cbdd55acf8637c8 | [MIT](https://github.com/godotengine/godot-cpp/blob/da26c1732ee8656ef9ccad587cbdd55acf8637c8/LICENSE.md) |

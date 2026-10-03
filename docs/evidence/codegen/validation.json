@@ -1,0 +1,59 @@
+{
+  "format": "godot-fabric.codegen-checkpoint-validation/v1",
+  "recordedAt": "2026-10-03T18:12:05.767507+00:00",
+  "codegenTests": {
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "original TS/Flow generation, tool identity, nested resolution, schema/drift/collision/negative CLI contracts"
+  },
+  "integratedContracts": {
+    "nodePassed": 74,
+    "nodeSuites": [
+      6,
+      7,
+      61
+    ],
+    "pythonPassed": 10,
+    "typecheckPassed": true,
+    "logSha256": "b9890bf5cbe2eae004b2205a2be9f0d2f45d09c802027a2e9416125457405e7f"
+  },
+  "compiledTranslationUnits": 6,
+  "runnerGuards": [
+    {
+      "case": "existing-output",
+      "exitCode": 2,
+      "expectedExitCode": 2,
+      "existingReportPreserved": true,
+      "passed": true
+    },
+    {
+      "case": "outside-build",
+      "exitCode": 2,
+      "expectedExitCode": 2,
+      "existingReportPreserved": true,
+      "passed": true
+    }
+  ],
+  "runtimeExecuted": false,
+  "abiCertified": false,
+  "integratedContractsAfterMain": {
+    "recordedAt": "2026-10-03T18:22:42.598978+00:00",
+    "sourceCommit": "747776a400d38529292c69063ac51ea3143a5d57",
+    "sourceDirty": true,
+    "nodePassed": 75,
+    "nodeSuites": [
+      6,
+      8,
+      61
+    ],
+    "pythonPassed": 10,
+    "typecheckPassed": true,
+    "logSha256": "e84b2e3c13364601b43475fb5a3c002811db1d30124137b1bfaf08cf98a2b1a3",
+    "dashboardCheckPassed": true,
+    "dashboardTestsPassed": 8,
+    "dashboardBuildPassed": true,
+    "staticAnalysisPassed": true,
+    "publicationScanPassed": true
+  }
+}

@@ -5,14 +5,14 @@
     "target": "1.0",
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
-    "focusSequence": "3",
-    "focusTitle": "Refs, métricas e módulos nativos"
+    "focusSequence": "4",
+    "focusTitle": "Codegen e registro de extensões nativas externas"
   },
-  "updatedAt": "2026-10-03T17:10:28.948Z",
+  "updatedAt": "2026-10-03T18:21:12.038377Z",
   "source": {
-    "commit": "4085865a309de62cf4e893324f485439f5fb4b55",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/ROADMAP.md",
-    "scope": "main + fatias verificadas da PR #14",
+    "commit": "747776a400d38529292c69063ac51ea3143a5d57",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/747776a400d38529292c69063ac51ea3143a5d57/ROADMAP.md",
+    "scope": "main adad606 integrado preservando trabalho; serviços/consumidor e iOS registrados; fatia GF-26 original Codegen com hashes de fonte e compilação; publicação manual por data_ref",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fachada completa, assets e todos os contratos públicos ainda precisam de cobertura.",
+      "note": "API pública GodotFabric tipada no consumidor independente, com calls/connect/subscribe. Fachada completa, assets e todos os contratos públicos permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -161,6 +161,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -197,7 +201,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Censo completo de props/valores, updates/removal e implementação final permanece aberto.",
+      "note": "DTOs rejeitam 64 casos exatos nativos, strings inválidas, accessors/hidden keys e dados fora dos limites antes de executar Callables. Censo completo de props/valores, updates/removal e implementação final segue aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -208,6 +212,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -332,7 +340,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Pausa/resume, overlays e comparação completa permanecem abertos.",
+      "note": "Pausa, hide/unmount/remount e stop terminal validados no laboratório; consumidor mantém HUD após fechar inventário. Restart, ativação, overlays e comparação completa permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -343,6 +351,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/shared-roots/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -379,7 +391,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: fatia local validada; refs/comandos completos e certificação seguem abertos.",
+      "note": "Consumidor: measureInWindow e refs permanecem válidos ao redimensionar só o inventário. Refs/comandos completos, geometria de input sob todos os transforms e certificação permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -390,6 +402,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -426,7 +442,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: métricas de OS, font scale, insets e dispositivos seguem pendentes.",
+      "note": "Constraints do inventário mudam sem alterar geometria do HUD ou métricas window/screen. Insets, font scale do OS, multi-window e dispositivos seguem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -437,6 +453,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -1150,7 +1170,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: operações GodotFabric, revisões/conexões e extensões seguem pendentes.",
+      "note": "Calls, snapshots/revisões, signals, DTOs, rebind/generation e destruição síncrona executados no Hermes/Godot. NativeModules compat completo, callable modules, extensão externa, byte/time budgets e cross-thread permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1161,6 +1181,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -1189,7 +1213,7 @@
       "phase": "M3",
       "priority": "P1",
       "title": "Codegen and custom Fabric components",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging",
       "dependencies": [
         "GF-08",
@@ -1199,14 +1223,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Fatia verificada: Codegen original 0.87.1 TS/Flow, 20/20 testes e 6/6 unidades C++ macOS arm64 Release. Sem adapter externo carregado/renderizado ou ABI certificada. Provider/mount externo, bundler/export e contrato completo seguem abertos.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "label": "Geração original TS/Flow e compilação C++ isolada comprovadas",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Codegen 20 testes / 6 unidades C++; fonte e hashes registrados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -1291,7 +1320,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Instalação/update completos, extensões e export por alvo seguem abertos.",
+      "note": "Consumidor separado tem 40 checks headless/43 com render e 18 de tooling; iOS exporta pacote próprio. Instalação/update completos, Codegen/adapters e debug/release por todos os alvos seguem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1302,6 +1331,14 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
             }
           ]
         },
@@ -1430,8 +1467,8 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: compile/link/package apenas; execução Godot iOS e outros alvos não certificados.",
-      "blocker": "",
+      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos.",
+      "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
           "id": "slice",
@@ -1441,6 +1478,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
             }
           ]
         },
@@ -1614,7 +1655,7 @@
       "phase": "M4",
       "priority": "P1",
       "title": "iOS arm64 and simulator",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app",
       "dependencies": [
         "GF-02",
@@ -1629,14 +1670,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
-      "blocker": "",
+      "note": "Consumer próprio executou 22/22 no iOS 18.4 x86_64/Rosetta; device arm64 export/link unsigned. Device físico, Debug, touch/IME/AT e serviços ainda não certificados; simulador arm64 tem bloqueio específico da template oficial.",
+      "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "label": "iOS: consumer exportado/linkado e runtime x86_64/Rosetta 22/22",
+          "done": true,
+          "evidence": [
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -2111,14 +2157,24 @@
     {
       "id": "HUD-3",
       "label": "Update the HUD from Godot data/signals, including an initial revision and changes during connection. Invoke a typed game operation from the inventory; observe defined results/errors and event ordering.",
-      "done": false,
-      "evidence": []
+      "done": true,
+      "evidence": [
+        {
+          "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+        }
+      ]
     },
     {
       "id": "HUD-4",
       "label": "Resize only the inventory: its constraints/layout and input/measure geometry update while HUD geometry and window metrics retain their meanings.",
-      "done": false,
-      "evidence": []
+      "done": true,
+      "evidence": [
+        {
+          "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+        }
+      ]
     },
     {
       "id": "HUD-5",
@@ -2302,6 +2358,55 @@
     }
   ],
   "activity": [
+    {
+      "id": "codegen-original-20-compile-6",
+      "at": "2026-10-03T18:21:12.038377Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "Primeira fatia GF-26 comprovada: parsers/generadores originais TS/Flow, 20 testes e 6 unidades C++ compiladas. Manifesto conserva runtime/ABI falsos. Provider/view externo e export pendentes; pesos e denominador preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/codegen/README.md"
+    },
+    {
+      "id": "dashboard-unmerged-data-ref-adad606",
+      "at": "2026-10-03T18:21:12.038377Z",
+      "taskIds": [],
+      "message": "main adad606 integrado sem perda; novo fluxo permite publicar JSON da branch com workflow do main e data_ref após commit/push. Publicação ainda pendente de execução bem-sucedida.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/16"
+    },
+    {
+      "id": "game-services-consumer-969a95d",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [
+        "GF-03",
+        "GF-04",
+        "GF-07",
+        "GF-08",
+        "GF-09",
+        "GF-25",
+        "GF-28"
+      ],
+      "message": "Registro das fatias já executadas: serviços GDScript/React, DTO 133 e lifetime 15; consumidor 40/43 mais 18 tooling. HUD-3/HUD-4 comprovados; HUD-5/6 completos e restart seguem pendentes. Não fecha aceite GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+    },
+    {
+      "id": "ios-consumer-93f5bb3",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [
+        "GF-28",
+        "GF-31",
+        "GF-35"
+      ],
+      "message": "Três builds/dois XCFrameworks, device arm64 unsigned export/link e 22/22 no x86_64/Rosetta. GF-35 inicia fatia; template arm64, device físico, Debug e interação/AT permanecem abertos. Denominadores e pesos preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+    },
+    {
+      "id": "dashboard-main-ba61ac6",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [],
+      "message": "main ba61ac6 integrado preservando trabalho; painel desta implementação observa seu JSON em 127.0.0.1:4318. Site público depende de merge em main e workflow de deploy aprovado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "native-foundation",
       "at": "2026-10-03T15:24:02Z",

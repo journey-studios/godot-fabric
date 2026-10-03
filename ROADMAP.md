@@ -11,6 +11,17 @@ See [current capabilities and gaps](docs/PARITY.md), the
 [97-name API inventory](docs/compatibility/react-native-0.87.1.json) and
 [retained runtime evidence](docs/evidence/README.md).
 
+The [migration dashboard](dashboard/README.md) reads
+[migration.json](dashboard/migration.json). Update its checkpoints, evidence,
+remaining work, focus and history with every verified implementation slice.
+The required item acceptance below remains authoritative; the dashboard
+calculates checkpoint progress and does not replace full contract certification.
+After committing and pushing the JSON, an implementation branch can publish
+through `gh workflow run dashboard-pages.yml --ref main -f data_ref="BRANCH"`.
+Confirm that exact workflow's successful deployment before reporting a public
+update. The renderer comes from `main`; the published data identifies its branch
+and resolved commit. Automatic deployment from `main` also remains enabled.
+
 ## Current position
 
 The public repository, MIT license, pinned source dependencies, standalone
@@ -91,6 +102,19 @@ physical-device, Debug, input/IME/AT and system-service certification remain
 required. A reproduced engine-only mouse error is explicitly recorded. These
 results are independent of the original RN reference-app CI and do not close
 the iOS port or the other target foundations.
+
+GF-26 is **In progress**: the standalone [Codegen experiment](docs/CODEGEN.md)
+uses the original pinned parser/generators for a TurboModule and Fabric Badge
+spec, producing common C++ and ViewConfig artifacts with reproducible checks.
+The isolated compilation witness instantiates the generated descriptor and a
+typed Promise/event TurboModule against the existing macOS arm64 Release build.
+The [executed evidence](docs/evidence/codegen/README.md) retains 20 Node tests,
+six compiled translation units and explicit generation/runtime distinctions.
+It rejects unsupported schema, collisions and stale inputs/artifacts. This
+first slice does not register a native provider or draw the Badge. The next
+slice must expose external factories/adapters safely, remove the fixed native
+component assumptions, integrate specs before bundling and prove a consumer's
+props/events/commands, defaults, stale refs and cleanup without core edits.
 
 ## Release contract and scope
 
@@ -369,7 +393,7 @@ consumer project can write TSX, add native functionality, debug and export.
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
 | GF-25 · P0 · TurboModule and event infrastructure | In progress | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
-| GF-26 · P1 · Codegen and custom Fabric components | Planned | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
+| GF-26 · P1 · Codegen and custom Fabric components | In progress | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
 | GF-27 · P1 · Selected library certification | Planned | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
 | GF-28 · P1 · SDK, addon and consumer exports | In progress | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
 | GF-29 · P1 · Development experience | In progress | Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths | GF-05, GF-06, GF-07, GF-28 |

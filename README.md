@@ -224,6 +224,7 @@ npm run test:runtime                     # native deadline budget and callback e
 npm run test:application                 # shared roots and rejected activation/lifetime cases
 npm run test:consumer -- --capture        # fresh external project, private tools, real readbacks
 npm run test:services                    # real Hermes DTO, revocation and destruction boundaries
+npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run check:static
@@ -248,6 +249,11 @@ contracts; captures independently exercise rendering and logical Viewport input.
 [1.0 roadmap](ROADMAP.md) · [Parity audit](docs/PARITY.md) ·
 [Findings](docs/research/README.md) · [Validation evidence](docs/evidence/README.md) ·
 [Third-party licenses](THIRD_PARTY_NOTICES.md)
+
+The [Codegen experiment](docs/CODEGEN.md) begins external extension tooling:
+original RN specs generate common C++ and ViewConfigs with reproducible
+manifests. Native provider registration and custom component mounting remain
+the next GF-26 slice.
 
 Only this renderer, generic demonstration fixtures and public documentation
 are included. The repository starts with a new history; generated dependencies,

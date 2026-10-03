@@ -1,0 +1,22 @@
+{
+  "format": "godot-fabric.experimental-native-combination/v1",
+  "purpose": "test-fixture",
+  "sdkRevision": "test-fixture-no-native-binary",
+  "sdkHeadersSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "reactNativeVersion": "0.87.1",
+  "reactNativeHeadersSha256": "1111111111111111111111111111111111111111111111111111111111111111",
+  "hermesVersion": "250829098.0.17",
+  "hermesRuntimeSha256": "2222222222222222222222222222222222222222222222222222222222222222",
+  "godotVersion": "4.7.2",
+  "godotCppRevision": "test-fixture-no-headers",
+  "target": {
+    "platform": "ios-simulator",
+    "architecture": "x86_64",
+    "configuration": "Release",
+    "minimumOS": "15.1"
+  },
+  "toolchain": {"name": "test-fixture", "version": "not-a-compiler-proof"},
+  "nativeDependencies": [
+    {"name": "test-fixture", "sha256": "3333333333333333333333333333333333333333333333333333333333333333"}
+  ]
+}

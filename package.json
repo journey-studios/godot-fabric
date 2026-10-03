@@ -16,7 +16,7 @@
     "test:nativewind": "npm run bundle && node --test tests/nativewind-contract.test.mjs",
     "start": "node scripts/check.mjs --interactive",
     "test:typography": "npm run bundle && node --test tests/typography-contract.test.mjs tests/typography-native.test.mjs tests/line-height-native.test.mjs",
-    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
+    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs tests/codegen.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
     "check:publication": "node scripts/publication-scan.mjs",
     "test:cold": "npm run bundle && node scripts/cold-start.mjs",
     "parity:inventory": "node scripts/parity-inventory.mjs",
@@ -36,7 +36,9 @@
     "sdk:pack": "node scripts/pack-addon.mjs",
     "consumer:create": "node scripts/create-consumer.mjs",
     "test:consumer": "node scripts/consumer-check.mjs",
-    "test:services": "npm run bundle && node --test --test-concurrency=1 tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs"
+    "test:services": "npm run bundle && node --test --test-concurrency=1 tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+    "test:codegen": "node --test tests/codegen.test.mjs",
+    "test:codegen:native": "python3 scripts/codegen-native-compile.py --out build/codegen-native-compile"
   },
   "dependencies": {
     "nativewind": "4.2.7",
@@ -51,6 +53,7 @@
   "devDependencies": {
     "@babel/core": "7.29.0",
     "@react-native/babel-preset": "0.87.1",
+    "@react-native/codegen": "0.87.1",
     "@types/react": "19.2.3",
     "esbuild": "0.25.12",
     "fallow": "3.18.0",

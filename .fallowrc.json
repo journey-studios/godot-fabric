@@ -220,6 +220,44 @@
           ]
         }
       ]
+    },
+    {
+      "name": "original-rn-codegen-specs",
+      "enablers": [
+        "@react-native/codegen"
+      ],
+      "entryPoints": [
+        "tests/codegen/NativeCodegenProbe.ts",
+        "tests/codegen/BadgeNativeComponent.ts",
+        "tests/codegen/UnsupportedBadgeNativeComponent.ts",
+        "tests/codegen/NativeFlowProbe.js"
+      ],
+      "entryPointRole": "support",
+      "usedExports": [
+        {
+          "pattern": "tests/codegen/NativeCodegenProbe.ts",
+          "exports": [
+            "Spec",
+            "ProbeResult",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/codegen/*NativeComponent.ts",
+          "exports": [
+            "NativeProps",
+            "Commands",
+            "default"
+          ]
+        },
+        {
+          "pattern": "tests/codegen/NativeFlowProbe.js",
+          "exports": [
+            "Spec",
+            "default"
+          ]
+        }
+      ]
     }
   ],
   "ignoreUnresolvedImports": [

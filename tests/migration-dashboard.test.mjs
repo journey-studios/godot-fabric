@@ -35,6 +35,7 @@ test("snapshot covers the complete canonical roadmap, sequences and release gate
   assert.deepEqual(data.tasks.map(task => task.id), parsed.tasks.map(task => task.id));
   assert.deepEqual(data.tasks.map(task => task.acceptance), parsed.tasks.map(task => task.acceptance));
   assert.deepEqual(data.tasks.map(task => task.dependencies), parsed.tasks.map(task => task.dependencies));
+  assert.deepEqual(data.tasks.map(task => task.status), parsed.tasks.map(task => task.status));
   assert.equal(data.tasks.length, 40);
   assert.equal(data.phases.length, 6);
   assert.equal(data.sequences.length, 8);

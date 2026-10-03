@@ -95,6 +95,12 @@ access denied and tests project library ownership/React identity and recovery.
 Raw reports/logs go to `build/consumer`; the harness removes only its own
 temporary projects. See [retained evidence and captures](../docs/evidence/consumer/README.md).
 
+The later [services checkpoint](../docs/evidence/game-services/README.md)
+adds typed GDScript operations/state/signals and inventory-only resize through
+original refs to this consumer. The standalone [Codegen experiment](../docs/CODEGEN.md)
+is platform tooling; spec processing/native extensions are not integrated into
+the addon Play hook yet.
+
 GF-28/GF-29 remain **In progress**. D19–D29 retain their pending status; this
 prototype provides evidence for those decisions, without deciding exports,
 reload/restart, artifact generations, complete types or dev tooling.

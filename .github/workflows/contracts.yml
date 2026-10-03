@@ -42,6 +42,17 @@ jobs:
           ditto -x -k .deps/godot.zip .deps/godot
           echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
       - run: npm run setup
+      - run: npm run test:codegen:native
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: codegen-native-compile
+          path: |
+            build/codegen-native-compile/report.json
+            build/codegen-native-compile/generated/manifest.json
+            build/codegen-native-compile/generated/schema.json
+            build/codegen-native-compile/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:examples
       - run: npm run test:runtime
       - run: npm run test:application

@@ -11,6 +11,10 @@ The experimental [game-service API](GAME_SERVICES.md) adds the public
 connections to GDScript. The [services example](../examples/services/README.md)
 keeps game rules on Godot and shares its React representation through Zustand.
 
+The standalone [Codegen experiment](CODEGEN.md) derives common C++/ViewConfig
+contracts from original RN specs. It does not yet register or render an
+external component; native adapters and builder/export integration remain open.
+
 The examples use React and JSX. `react-native` imports resolve to the Godot
 facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
@@ -114,7 +118,7 @@ when replacing UI scenes. Removing a surface unmounts only its root. Removing
 the owner or calling `FabricApplication.stop()` shuts down all its roots and
 scheduling. This prototype's stopped owner cannot be restarted; retaining
 Hermes until owner destruction allows diagnostic `evaluate()`/`snapshot()`.
-These diagnostic methods are not the planned `GodotFabric` game-service API.
+These diagnostic methods are separate from the typed `GodotFabric` game-service API.
 
 The legacy anonymous single-root fixtures retain implicit owner lookup, root 1
 and application shutdown on `stop()`/scene exit. A new anonymous scene, or
