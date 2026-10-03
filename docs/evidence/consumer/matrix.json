@@ -7,333 +7,73 @@
   "reactNative": "0.87.1",
   "hermes": "250829098.0.17",
   "node": "22.23.3",
-  "sourceCommit": "b5c475ec34ead9380f6d0faec770f65a3c8d86dc",
-  "sourceDirty": true,
+  "sourceCommit": "8f5980ce5707bfd639abd58b052c54c150ce69cb",
+  "sourceDirty": false,
   "command": "npm run test:consumer -- --capture",
   "runs": [
     {
       "name": "report",
       "report": "build/consumer/report.json",
       "sha256": "aa5426259fd2a4d2f2b9b6055378bed7bd4f45ae1f85ccabfa432149d391e9fd",
-      "checks": [
-        {
-          "name": "Consumer cannot find global Node",
-          "passed": true
-        },
-        {
-          "name": "Editor build preserves the project lockfile",
-          "passed": true
-        },
-        {
-          "name": "Native consumer executes its bundle once",
-          "passed": true
-        },
-        {
-          "name": "Bundle has no laboratory or external checkout inputs",
-          "passed": true
-        },
-        {
-          "name": "Consumer and types select the Godot platform source",
-          "passed": true
-        },
-        {
-          "name": "Provisioned build works with network denied and no global Node",
-          "passed": true
-        },
-        {
-          "name": "syntax failure preserves the previous bundle",
-          "passed": true
-        },
-        {
-          "name": "unsupported-type failure preserves the previous bundle",
-          "passed": true
-        },
-        {
-          "name": "An invalid Resource cannot replace the bundle",
-          "passed": true
-        },
-        {
-          "name": "Missing private tools reject builds without global fallback or installation",
-          "passed": true
-        },
-        {
-          "name": "An output symlink outside the project is rejected",
-          "passed": true
-        },
-        {
-          "name": "Project Babel configuration is rejected explicitly rather than ignored",
-          "passed": true
-        },
-        {
-          "name": "Incompatible renderer version cannot replace the bundle",
-          "passed": true
-        },
-        {
-          "name": "An absent project library is diagnosed without implicit installation",
-          "passed": true
-        },
-        {
-          "name": "An explicitly provided project library executes hooks with the SDK React identity",
-          "passed": true
-        },
-        {
-          "name": "Library code is project-owned; duplicated React cannot enter the graph",
-          "passed": true
-        },
-        {
-          "name": "Failure, dependency checks and recovery preserve the project lockfile",
-          "passed": true
-        },
-        {
-          "name": "The original consumer can build again after rejected requests",
-          "passed": true
-        }
+      "checks": 18,
+      "assertionNames": [
+        "Consumer cannot find global Node",
+        "Editor build preserves the project lockfile",
+        "Native consumer executes its bundle once",
+        "Bundle has no laboratory or external checkout inputs",
+        "Consumer and types select the Godot platform source",
+        "Provisioned build works with network denied and no global Node",
+        "syntax failure preserves the previous bundle",
+        "unsupported-type failure preserves the previous bundle",
+        "An invalid Resource cannot replace the bundle",
+        "Missing private tools reject builds without global fallback or installation",
+        "An output symlink outside the project is rejected",
+        "Project Babel configuration is rejected explicitly rather than ignored",
+        "Incompatible renderer version cannot replace the bundle",
+        "An absent project library is diagnosed without implicit installation",
+        "An explicitly provided project library executes hooks with the SDK React identity",
+        "Library code is project-owned; duplicated React cannot enter the graph",
+        "Failure, dependency checks and recovery preserve the project lockfile",
+        "The original consumer can build again after rejected requests"
       ]
     },
     {
       "name": "headless",
       "report": "build/consumer/headless.json",
       "sha256": "cbcdc61e4a34af6ceb6db6b501921a6b5e9c22579b7b08d3ae6dc325b42dd499",
-      "checks": [
-        {
-          "name": "External TSX mounts native trees",
-          "passed": true
-        },
-        {
-          "name": "Resource config produces one shared application and one bundle evaluation",
-          "passed": true
-        },
-        {
-          "name": "Consumer roots have distinct identities",
-          "passed": true
-        },
-        {
-          "name": "Scene props reach registered public components",
-          "passed": true
-        },
-        {
-          "name": "Consumer resolution selects project .godot.ts",
-          "passed": true
-        },
-        {
-          "name": "Addon fonts and host load without runtime errors",
-          "passed": true
-        },
-        {
-          "name": "Consumer has no laboratory asset directory",
-          "passed": true
-        },
-        {
-          "name": "Public TextInput commits a native editor",
-          "passed": true
-        },
-        {
-          "name": "Native input updates only its own React root",
-          "passed": true
-        },
-        {
-          "name": "Project-owned store updates both roots",
-          "passed": true
-        },
-        {
-          "name": "Native editing rerenders the consumer component",
-          "passed": true
-        },
-        {
-          "name": "Godot prop updates preserve local React state",
-          "passed": true
-        },
-        {
-          "name": "Prop updates retain root identity",
-          "passed": true
-        },
-        {
-          "name": "Consumer unmount preserves the other native tree",
-          "passed": true
-        },
-        {
-          "name": "Consumer root mounts again",
-          "passed": true
-        },
-        {
-          "name": "Remount resets local state and preserves the project store",
-          "passed": true
-        },
-        {
-          "name": "Consumer lifecycle remains free of native errors",
-          "passed": true
-        },
-        {
-          "name": "Consumer shutdown releases native tags, roots and timers",
-          "passed": true
-        }
+      "checks": 18,
+      "assertionNames": [
+        "External TSX mounts native trees",
+        "Resource config produces one shared application and one bundle evaluation",
+        "Consumer roots have distinct identities",
+        "Scene props reach registered public components",
+        "Consumer resolution selects project .godot.ts",
+        "Addon fonts and host load without runtime errors",
+        "Consumer has no laboratory asset directory",
+        "Public TextInput commits a native editor",
+        "Native input updates only its own React root",
+        "Project-owned store updates both roots",
+        "Native editing rerenders the consumer component",
+        "Godot prop updates preserve local React state",
+        "Prop updates retain root identity",
+        "Consumer unmount preserves the other native tree",
+        "Consumer root mounts again",
+        "Remount resets local state and preserves the project store",
+        "Consumer lifecycle remains free of native errors",
+        "Consumer shutdown releases native tags, roots and timers"
       ]
     },
     {
       "name": "graphical",
       "report": "build/consumer/graphical.json",
       "sha256": "fb155ba5420888836a1193457eb56e70477baf674b7a63848d18fe8d269b2984",
-      "checks": [
-        {
-          "name": "External TSX mounts native trees",
-          "passed": true
-        },
-        {
-          "name": "Resource config produces one shared application and one bundle evaluation",
-          "passed": true
-        },
-        {
-          "name": "Consumer roots have distinct identities",
-          "passed": true
-        },
-        {
-          "name": "Scene props reach registered public components",
-          "passed": true
-        },
-        {
-          "name": "Consumer resolution selects project .godot.ts",
-          "passed": true
-        },
-        {
-          "name": "Addon fonts and host load without runtime errors",
-          "passed": true
-        },
-        {
-          "name": "Consumer has no laboratory asset directory",
-          "passed": true
-        },
-        {
-          "name": "Public TextInput commits a native editor",
-          "passed": true
-        },
-        {
-          "name": "Consumer capture saved: initial",
-          "passed": true
-        },
-        {
-          "name": "Native input updates only its own React root",
-          "passed": true
-        },
-        {
-          "name": "Project-owned store updates both roots",
-          "passed": true
-        },
-        {
-          "name": "Native editing rerenders the consumer component",
-          "passed": true
-        },
-        {
-          "name": "Godot prop updates preserve local React state",
-          "passed": true
-        },
-        {
-          "name": "Prop updates retain root identity",
-          "passed": true
-        },
-        {
-          "name": "Consumer capture saved: updated",
-          "passed": true
-        },
-        {
-          "name": "Consumer unmount preserves the other native tree",
-          "passed": true
-        },
-        {
-          "name": "Consumer root mounts again",
-          "passed": true
-        },
-        {
-          "name": "Remount resets local state and preserves the project store",
-          "passed": true
-        },
-        {
-          "name": "Consumer lifecycle remains free of native errors",
-          "passed": true
-        },
-        {
-          "name": "Consumer shutdown releases native tags, roots and timers",
-          "passed": true
-        }
-      ]
+      "checks": 20
     },
     {
       "name": "project-library-native",
       "report": "build/consumer/project-library-native.json",
       "sha256": "807bf725e73ea94fa3b6de1ad29b84cfdf572f98f288844a459b7aa93f12b6dd",
-      "checks": [
-        {
-          "name": "External TSX mounts native trees",
-          "passed": true
-        },
-        {
-          "name": "Resource config produces one shared application and one bundle evaluation",
-          "passed": true
-        },
-        {
-          "name": "Consumer roots have distinct identities",
-          "passed": true
-        },
-        {
-          "name": "Scene props reach registered public components",
-          "passed": true
-        },
-        {
-          "name": "Consumer resolution selects project .godot.ts",
-          "passed": true
-        },
-        {
-          "name": "Addon fonts and host load without runtime errors",
-          "passed": true
-        },
-        {
-          "name": "Consumer has no laboratory asset directory",
-          "passed": true
-        },
-        {
-          "name": "Public TextInput commits a native editor",
-          "passed": true
-        },
-        {
-          "name": "Native input updates only its own React root",
-          "passed": true
-        },
-        {
-          "name": "Project-owned store updates both roots",
-          "passed": true
-        },
-        {
-          "name": "Native editing rerenders the consumer component",
-          "passed": true
-        },
-        {
-          "name": "Godot prop updates preserve local React state",
-          "passed": true
-        },
-        {
-          "name": "Prop updates retain root identity",
-          "passed": true
-        },
-        {
-          "name": "Consumer unmount preserves the other native tree",
-          "passed": true
-        },
-        {
-          "name": "Consumer root mounts again",
-          "passed": true
-        },
-        {
-          "name": "Remount resets local state and preserves the project store",
-          "passed": true
-        },
-        {
-          "name": "Consumer lifecycle remains free of native errors",
-          "passed": true
-        },
-        {
-          "name": "Consumer shutdown releases native tags, roots and timers",
-          "passed": true
-        }
-      ]
+      "checks": 18
     }
   ],
   "regressions": {

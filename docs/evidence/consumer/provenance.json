@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceCommit": "b5c475ec34ead9380f6d0faec770f65a3c8d86dc",
-  "sourceDirty": true,
+  "sourceCommit": "8f5980ce5707bfd639abd58b052c54c150ce69cb",
+  "sourceDirty": false,
   "sourceHashes": {
     ".github/workflows/contracts.yml": "f05f1054cf83368b9d3bd937499a20a62c5b668baa3007d0ca9e883dc26edff0",
     "consumers/minimal/.gitignore": "02362cb835892488933acb983fe9c6e99aafcc0e762af53ba96d49c63b04d203",
@@ -35,7 +35,7 @@
     "sdk/toolchain/platform-plugin.mjs": "5c4e3dc5d3ee0c9752e61292e43d423a23df78080d4b75df0b10aa48eb3a776a",
     "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f"
   },
-  "sdkManifestSha256": "0c14f3dd47817372328746b3d64349fc9804e786a292cc3f7b8b65ce5824d474",
+  "sdkManifestSha256": "186513d957af1a585fd6e4824b7ad6ed2044428bfcf435b0accddd13481d5529",
   "nativeSha256": "e63c399548da53673369f06d1646d0d5e0d7375081ea32d0c0a6e9ece782f437",
   "lockfileSha256": "ea614009079c32c261f173140b79933b1ca45b8e3e79b5d62633c73061328932",
   "nodeArchiveSha256": "23b25245dcfb9af7262f8ff142e9e2e0af025368117329e7a7458a51e5922f53",
@@ -43,7 +43,7 @@
   "evidenceHashes": {
     "initial.png": "79f59e90186852c2e893376a743cbbe8168274f24c0e59852ed9fc0df9425763",
     "updated.png": "fdd916ac3011204040f5c6e2d4d9ecc349ee95d4dbeb1130de4f422ad6bd3249",
-    "matrix.json": "8a550a7aab63ca7b0f2932b8628c008546c770864d7e12209217dc15983211c5"
+    "matrix.json": "9eee1f09ac8616506ae6a69cb037c334d177016e33cad231c37112f8eb6b7d59"
   },
   "reportPolicy": "Raw reports/logs and full SDK manifest remain in ignored build/consumer or CI artifacts. Source hashes identify the tested implementation; later documentation-only commits do not change it."
 }
