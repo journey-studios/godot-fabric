@@ -32,7 +32,8 @@
     "tests/pointer-query-fault-fixture.jsx",
     "tests/pointer-document-fixture.jsx",
     "tests/pointer-resolver-fault-fixture.jsx",
-    "tests/pointer-up-fixture.jsx"
+    "tests/pointer-up-fixture.jsx",
+    "tests/pointer-document-up-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",

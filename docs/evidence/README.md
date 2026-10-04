@@ -305,3 +305,12 @@ Original gates, Raw/state/batching, membership, retirement/remount, stop and
 one root throw34 are observed separately. All public flags remain off;
 broader faults/events/responders/mobile and full GF acceptances stay open.
 Hosted CI and this slice's Pages publication remain distinct from local proof.
+
+The [Document pointerup record](pointer-document-up/README.md) adds eight
+original/current SDK × four flag executions: 1,371 headless checks, a separate
+243-check actual macOS capture lane and 20 independently decoded pixels.
+Original Document D-only and element I-and-D methods, nonempty own-root Map
+queries, exact Event identity, healthy legacy pooling, removal, negative A while
+B held, Cancel and stop are verified. Down regression passes 2,723 checks.
+Hosted Document Up is pending; native/SDK bytes reuse the separately proven
+View Up implementation and full event/RN/ABI acceptance remains open.

@@ -57,7 +57,8 @@
     "test:pointers:query-faults": "node --test tests/pointer-query-fault-native.test.mjs",
     "test:pointers:documents": "node --test tests/pointer-document-native.test.mjs",
     "test:pointers:resolver-faults": "node --test tests/pointer-resolver-fault-native.test.mjs",
-    "test:pointers:up": "node --test tests/pointer-up-native.test.mjs"
+    "test:pointers:up": "node --test tests/pointer-up-native.test.mjs",
+    "test:pointers:documents:up": "node --test tests/pointer-document-up-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

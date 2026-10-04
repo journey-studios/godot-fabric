@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Pointerup View com CI auditada; Document Up e flags em validação"
+    "focusTitle": "Document Up e flags validados; próximos: once/abort e refs"
   },
-  "updatedAt": "2026-10-04T23:11:31.339284+00:00",
+  "updatedAt": "2026-10-04T23:26:48.291688+00:00",
   "source": {
-    "commit": "f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
-    "scope": "Up View/both flags: 62/62 headless e 90/90 viewport/24 pixels; anterior 54/62 com oito falhas, mesmo SDK atual e 18 RN. Implementação f7c2cf6 verificada contra 81 pins de código/configuração; execução base 3ca4174/árvore dirty preservada. Os 16 comandos de regressão, SDK novo, consumer e 13 adapters/213 checks passaram; query/getter antigos preservam 12/3 falhas. Hosted Up CI37241023275/head041688c passou cinco jobs; 62 Up+3400 anteriores em13 reports e16pins no checkout5250225 auditados. BinárioCI runner-declared, controle/capturas locais. Pages 37241041419 publicou data041688c, build/deploy e JSON público/local completos conferidos. ABI/flags false, sem GF/checkpoint/peso/denominador fechado.",
+    "commit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
+    "scope": "Document/documentElement Up: oito lanes originais/current × quatro flags,1371 headless; viewport243/20pixels+2counter/save. Event=== entre fases, rootTag/surface e componentes do root nativo, capture-only36false→37true, A negativo enquanto B held, remove/Cancel/stop executados. Down2723,contracts255Node/13Python e static passaram.15produtores/22RN+55native+3config=71inputs atuais conferidos; base0a2f01e/dirty preservada, pin pós-commit pendente. Native/SDK bytes f7 preservados; CI específica pendente. CI ViewUp041 passou5jobs/62+3400checks e16pins; Pages37242930291/data0a2 público/local inteiro confirmado. Sem GF/checkpoint/peso/denominador fechado. ViewUp novamente62/62; controle nativo anterior54/62/oitofalhas no mesmo SDK atualizado, restauração byteexact.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -362,7 +362,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Uma falha em publicInstance preserva callback TouchStart/Raw/update funcional e exatamente um commit nativo de React (2→3).65checks/85viewport, mesmo bundle/IDs no controle anterior3falhas. Prioridades completas, StrictMode/dev/transitions/Suspense/Activity/stores/paridade ampla abertos. CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up original View agora incrementa React em exatamente um commit por terminal (62/90 local); sua CI passou cinco jobs/head041688c; o aceite amplo segue aberto. Regressões de Up e SDK novo passaram em 16 comandos; CI de Up passou cinco jobs/head041688c; artefatos auditados62+3400 checks/13 reports.",
+      "note": "DocumentUp: oito lanes1371 e viewport243/20pixels. Doc+element quatrocallbacks no mesmo Event original incrementam quatro vezes em exatamente um commit React/nativo; Raw/Discrete→Default preservados. Down2723/255Node13Python/static passaram. ViewUpCI041 passada; CI DocumentUp pendente. StrictMode/dev/transitions/Suspense/Activity/stores/prioridades completas e paridade ampla abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -445,7 +445,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Duas raízes compartilham Hermes/query; B completa gesto enquanto A permanece pressionada depois do getterfault. CancelA/nextDownUp/stop balanceados, diagnóstico único mantido.65checks/85viewport. Retire/remount reentrante e demais lifetimes do getter pendentes; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up negativo de B realmente consulta seus Maps enquanto A held, termina B e preserva A; stop balanceado passa local (62/90). Regressões de Up e SDK novo passaram em 16 comandos; CI de Up passou cinco jobs/head041688c; artefatos auditados62+3400 checks/13 reports.",
+      "note": "Duas raízes no mesmo Hermes mantêm Documents próprios. DocumentUp A negativo enquanto B held não consulta componentes estrangeiros nem muda B; Bpositivo, remoçãofinal, Cancel e stop balanceados passam1371/243. Primeiro Down deB noRef preserva null antes/depois daquery; positivoUp após materialização. Retire/remount/reentrância/demaislifetimes e CI DocumentUp pendentes; ViewUpCI041 passou.",
       "blocker": "",
       "checkpoints": [
         {
@@ -552,7 +552,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Query engloba leiturasstateNode/canonical/publicInstance; executado apenas getterpublicInstance real, descriptor completo restaurado antesthrow e SDK0nesseinstante.7queriesfalse posteriores legítimas.65/85,23pins locais. Types/commands completos, demais slots/proxies/getters/reentrância/hardware/mobile/performance abertos; flags públicas off; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up opt-in usa tabela estrita36/37 sobre Maps originais; View/capture-only passa local62/90. Document/flags e demais categorias continuam abertos. Regressões de Up e SDK novo passaram em 16 comandos; CI de Up passou cinco jobs/head041688c; artefatos auditados62+3400 checks/13 reports.",
+      "note": "DocumentUp SDK current admite36/37 em Maps originais sem nova produção nativa. DocumentD-only e element/ViewI-and-D preservam quatroflags/métodos originais, roothandle/surfaceId e todoscomponentes da própria árvore verificados.1371/243local e71inputs atuais conferidos; CI específica pendente. Types/commands completos, demaisproxies/getters/reentrância,hardware/mobile/performance abertos; flags públicas off.",
       "blocker": "",
       "checkpoints": [
         {
@@ -942,7 +942,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Up View com ambas as flags passa 62/62 e 90 checks viewport/24 pixels. Host anterior mantém 54/62 com oito negativos no mesmo SDK atual. Bubble 36=true/capture 36=false→37=true, B consultado false sem Up, Raw/React/um commit e cleanup passam. Os 16 comandos de regressão e SDK novo passaram; CI de Up passou cinco jobs/head041688c; artefatos auditados62+3400 checks/13 reports; Pages 37241041419/data041688c e JSON público/local confirmados. Document/flags/once/remove/abort/captured-Up/DownUpID, move/hover/responders/coalescing/reentrância/mobile/dev/performance continuam abertos.",
+      "note": "DocumentUp:1371 checks/oito lanes originais/current quatroflags; viewport243/20pixels. Doc/element/both/capture-only fases exatas, mesmoEventUp, Raw/payload/timestamp/ID e umcommit, query36/37ownsroot, Anegativo/Bheld, remoçãofinal/Cancel/stop passam. Down2723/contracts255Node13Python/static verdes; CI DocumentUp pendente. ViewUp62/90 e CI041 cincojobs/62+3400checks auditados; Pages37242930291/data0a2 confirmado. Once/abort/refslifecycle/capturedUp/DownUpID/move/hover/responders/coalescing/mobile/dev/performance abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2833,6 +2833,30 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-four-flags-local-verified-20261004",
+      "at": "2026-10-04T23:26:48.291688+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Document/documentElement Up passou1371checks em oito SDK/flaglanes e243viewport/20pixels. Event=== entre fases, tags/ownroot originais, capture-only, Anegativo/Bheld, remove/Cancel/stop provados; Down2723/contracts255Node13Python/static passaram. Capturas nativas/documentação incluídas. Native/SDK produção f7unchanged; pin implementação e CI específica pendentes. Nenhum novo fechamento/checkpoint ou denominador. ViewUp62/62 e controle anterior54/62/oito negativos no mesmo SDK atual preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "pointer-up-hosted-pages-verified-37242930291",
+      "at": "2026-10-04T23:13:58.019758+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37242930291 concluiu build/deploy com renderer do main/data0a2f01e; JSON público completo e API local conferidos contra commit. Publicada auditoriaCI ViewUp041/62+3400checks. DocumentoUp local ainda não consta nessa publicação. Sem fechamentoGF/checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37242930291"
+    },
     {
       "id": "pointer-up-hosted-artifacts-verified-37241023275",
       "at": "2026-10-04T23:11:31.339284+00:00",

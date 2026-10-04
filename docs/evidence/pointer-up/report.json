@@ -689,8 +689,8 @@
     },
     "dashboardPublication": {
       "status": "verified-branch-data-publication",
-      "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37241041419",
-      "dataCommit": "041688ca37d8dde73b58bae3888ba80298c32c8d",
+      "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37242930291",
+      "dataCommit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
       "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
       "buildAndDeployPassed": true,
       "completePublicJSONEqualsCommittedData": true,

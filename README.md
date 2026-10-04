@@ -452,3 +452,16 @@ builds and environment-specific logs are excluded.
 
 The project's own code is [MIT licensed](LICENSE). Dependencies and bundled
 fonts retain the licenses listed in [third-party notices](THIRD_PARTY_NOTICES.md).
+
+The [Document pointerup example](examples/pointer-document-up/README.md) extends
+the opt-in to original Document and documentElement Maps under all four flag
+combinations. Eight lanes pass 1,371 headless checks; the actual macOS viewport
+passes 243 checks and 20 native pixels. Document capture/bubble increment A
+twice in one commit while B stays unchanged. Methods follow the original gates;
+Event identity, own-root queries, removal, Cancel and stop are checked.
+[Evidence and limits](docs/evidence/pointer-document-up/README.md) keep this
+local proof separate from its pending hosted CI.
+
+| Before Document Up | After Document capture and bubble |
+| --- | --- |
+| [![Native Document Up counters A0/B0](docs/evidence/pointer-document-up/initial.png)](examples/pointer-document-up/README.md) | [![Native callbacks update A2/B0 in one commit](docs/evidence/pointer-document-up/updated.png)](examples/pointer-document-up/README.md) |

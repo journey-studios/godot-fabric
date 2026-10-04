@@ -1,18 +1,19 @@
 {
-  "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37241041419",
+  "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37242930291",
   "status": "success",
   "buildAndDeployPassed": true,
-  "dataCommit": "041688ca37d8dde73b58bae3888ba80298c32c8d",
+  "dataCommit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
   "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
   "publicFullJSONMatchesCommittedData": true,
   "localLiveAPIEqualsCommittedData": true,
   "onlyRemovedGeneratedPublicationMetadata": true,
   "publication": {
     "ref": "codex/react-native-parity-roadmap",
-    "commit": "041688ca37d8dde73b58bae3888ba80298c32c8d",
+    "commit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
     "inMain": false,
-    "at": "2026-10-04T22:42:43.510Z"
+    "at": "2026-10-04T23:12:54.779Z"
   },
-  "publicJSONSha256": "933d750487290aa57196c3a972cb01a63ed1daa20856ab72b3cf84359998bbec",
-  "rawPublicJSONExcluded": true
+  "publicJSONSha256": "715e0198b9ff0bc171956b46f928fa06aa1b49dbc70873d11b32439bf6604541",
+  "rawPublicJSONExcluded": true,
+  "verifiedAt": "2026-10-04T23:13:58.019758+00:00"
 }

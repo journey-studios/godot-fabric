@@ -41,21 +41,24 @@ function record(name, label, expectedCurrent, receiver, event) {
     globalEventMatches: globalThis.event === event,
     payloadId: payloadId(native), nativeTarget: native?.target ?? null,
     timeStamp: event.timeStamp ?? null, nativeTimeStamp: native?.timeStamp ?? native?.timestamp ?? null,
-    currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority()});
+    currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority(),
+    ...(active.eventType === "pointerup" ? {pointerId: native?.pointerId ?? null,
+      buttons: native?.buttons ?? null, pressure: native?.pressure ?? null, pointerType: native?.pointerType ?? null} : {})});
   active.eventRefs.push(event);
-  if (native != null && panel != null) panel.setCount(value => value + 1);
+  if (native != null && panel != null &&
+      (panel.eventType !== "pointerup" || !["TouchEnd", "TouchCancel"].includes(label))) panel.setCount(value => value + 1);
 }
 function reset(name) {
   const panel = panels.get(name);
   if (panel == null) return;
   for (const binding of panel.bindings.splice(0)) {
-    if (!binding.keep) binding.ref.removeEventListener("pointerdown", binding.callback, binding.capture);
+    if (!binding.keep) binding.ref.removeEventListener(binding.eventType, binding.callback, binding.capture);
   }
   panel.controller = null;
 }
-function Fixture({name, noRef = false}) {
+function Fixture({name, noRef = false, eventType = "pointerdown"}) {
   const panel = useRef({refs: {}, bindings: [], name, noRef, doc: null, element: null, surfaceId: null,
-    leafTag: null, sentinelTag: null, controller: null}).current;
+    leafTag: null, sentinelTag: null, controller: null, eventType}).current;
   const [count, setCount] = useState(0), [revision, setRevision] = useState(0), [faultTouch, setFaultTouch] = useState(false);
   Object.assign(panel, {count, setCount, revision, setRevision, faultTouch, setFaultTouch});
   panels.set(name, panel);
@@ -66,9 +69,13 @@ function Fixture({name, noRef = false}) {
   return <View testID={name + "-parent"} pointerEvents="box-none" style={{flex: 1, backgroundColor: "#0f172a"}}>
     <View ref={noRef ? undefined : ref => { panel.refs.leaf = ref; }} testID={name + "-leaf"}
       onTouchStart={faultTouch ? function(event) { record(name, "TouchStart", event.currentTarget, this, event); } : undefined}
+      onTouchEnd={panel.eventType === "pointerup" ? function(event) { record(name, "TouchEnd", event.currentTarget, this, event); } : undefined}
+      onTouchCancel={panel.eventType === "pointerup" ? function(event) { record(name, "TouchCancel", event.currentTarget, this, event); } : undefined}
       style={{position: "absolute", left: 20, top: 20, width: 110, height: 70, backgroundColor: "#2563eb"}} />
     <View testID={name + "-sentinel"}
-      onPointerDown={function(event) { record(name, "JSX", event.currentTarget, this, event); }}
+      onPointerDown={panel.eventType === "pointerdown" ? function(event) { record(name, "JSX", event.currentTarget, this, event); } : undefined}
+      onPointerUp={panel.eventType === "pointerup" ? function(event) { record(name, "JSX", event.currentTarget, this, event); } : undefined}
+      onTouchEnd={panel.eventType === "pointerup" ? function(event) { record(name, "TouchEnd", event.currentTarget, this, event); } : undefined}
       style={{position: "absolute", left: 200, top: 20, width: 120, height: 70, backgroundColor: "#0f766e"}} />
     <View testID={name + "-counter"} style={{position: "absolute", left: 20, top: 170, height: 15,
       width: 20 + count * 4, backgroundColor: "#fde047"}} />
@@ -78,11 +85,18 @@ function Fixture({name, noRef = false}) {
 }
 AppRegistry.registerComponent("PointerDocumentProbe", () => Fixture);
 function raw(channel, value) {
-  if (active == null || (value.eventName !== "topPointerDown" && !(active.kind === "rootfault" && value.eventName === "topTouchStart"))) return;
+  if (active == null) return;
+  const selected = active.eventType === "pointerup"
+    ? ["topPointerDown", "topPointerUp", "topTouchEnd", "topTouchCancel"].includes(value.eventName)
+    : value.eventName === "topPointerDown" || (active.kind === "rootfault" && value.eventName === "topTouchStart");
+  if (!selected) return;
   active.raw.push({sequence: ++sequence, channel, type: value.eventName, payloadId: payloadId(value.nativeEvent),
-    target: value.nativeEvent.target, timeStamp: value.nativeEvent.timeStamp ?? value.nativeEvent.timestamp ?? null});
+    target: value.nativeEvent.target, timeStamp: value.nativeEvent.timeStamp ?? value.nativeEvent.timestamp ?? null,
+    ...(active.eventType === "pointerup" ? {pointerId: value.nativeEvent.pointerId ?? null,
+      buttons: value.nativeEvent.buttons ?? null, pressure: value.nativeEvent.pressure ?? null,
+      pointerType: value.nativeEvent.pointerType ?? null} : {})});
 }
-for (const type of ["topPointerDown", "topTouchStart"]) RawEventEmitter.addListener(type, value => raw("typed", value));
+for (const type of ["topPointerDown", "topTouchStart", "topPointerUp", "topTouchEnd", "topTouchCancel"]) RawEventEmitter.addListener(type, value => raw("typed", value));
 RawEventEmitter.addListener("*", value => raw("star", value));
 function bindRoot(name, surfaceId, leafTag, sentinelTag) {
   const panel = panels.get(name), doc = OriginalRenderer.getPublicInstanceFromRootTag(surfaceId);
@@ -108,11 +122,13 @@ function capability(name) {
 }
 function add(panel, ref, label, capture = false, options = {}, keep = false) {
   const callback = function(event) { record(panel.name, label, ref, this, event); };
-  ref.addEventListener("pointerdown", callback, {...options, capture});
-  panel.bindings.push({ref, callback, capture, keep, label});
+  ref.addEventListener(panel.eventType, callback, {...options, capture});
+  panel.bindings.push({ref, callback, capture, keep, label, eventType: panel.eventType});
 }
-function configure(name, kind) {
+function configure(name, kind, eventType = "pointerdown") {
+  if (!["pointerdown", "pointerup"].includes(eventType)) throw Error("Unsupported document probe event type");
   reset(name); const panel = panels.get(name), doc = panel.doc, element = panel.element;
+  panel.eventType = eventType;
   const D = bootstrap.flags.nativeDispatch, I = bootstrap.flags.imperative;
   if (kind === "all") {
     if (D) add(panel, doc, "DocC", true);
@@ -139,11 +155,12 @@ function configure(name, kind) {
       add(panel, doc, "DocB", false, {signal: panel.controller.signal});
     }
   } else if (kind !== "none") throw Error("Unknown document configuration: " + kind);
-  return {name, kind, installed: panel.bindings.map(binding => binding.label), noPrototypeBorrow: true};
+  return {name, kind, installed: panel.bindings.map(binding => binding.label), noPrototypeBorrow: true,
+    ...(eventType === "pointerup" ? {eventType} : {})};
 }
 function arm(name, caseId, target = "leaf", kind = "normal") {
   const panel = panels.get(name);
-  active = {name, caseId, kind, targetTag: target === "sentinel" ? panel.sentinelTag : panel.leafTag,
+  active = {name, caseId, kind, eventType: panel.eventType, targetTag: target === "sentinel" ? panel.sentinelTag : panel.leafTag,
     manualTarget: null, baselineCount: panel.count, events: [], eventRefs: [], raw: [], payloads: new Map()};
   documentQueryControl.clearObservations();
   return {targetTag: active.targetTag, baselineCount: active.baselineCount};
@@ -152,7 +169,7 @@ function manualDocument(name) {
   const doc = panels.get(name).doc;
   if (typeof doc.dispatchEvent !== "function") return {available: false, noPrototypeBorrow: true};
   active.manualTarget = doc;
-  const event = new OriginalEvent("pointerdown", {bubbles: true}), returned = doc.dispatchEvent(event);
+  const event = new OriginalEvent(panels.get(name).eventType, {bubbles: true}), returned = doc.dispatchEvent(event);
   return {available: true, returned, trusted: event.isTrusted, targetMatches: event.target === doc,
     cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0,
     noPrototypeBorrow: true};
@@ -161,7 +178,7 @@ function manualElement(name) {
   const element = panels.get(name).element;
   if (typeof element.dispatchEvent !== "function") return {available: false, noPrototypeBorrow: true};
   active.manualTarget = element;
-  const event = new OriginalEvent("pointerdown", {bubbles: true}), returned = element.dispatchEvent(event);
+  const event = new OriginalEvent(panels.get(name).eventType, {bubbles: true}), returned = element.dispatchEvent(event);
   return {available: true, returned, trusted: event.isTrusted, targetMatches: event.target === element,
     cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0,
     noPrototypeBorrow: true};
@@ -189,6 +206,9 @@ function manualRetained(key) {
     cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0};
 }
 function snapshot() {
+  const upRefs = active?.eventType === "pointerup" ? active.eventRefs.filter((event, index) =>
+    !["TouchEnd", "TouchCancel"].includes(active.events[index].label)) : [];
+  const touchEndRefs = active?.eventRefs.filter((event, index) => active.events[index].label === "TouchEnd") ?? [];
   return {flags: documentQueryControl.currentFlags(), mode: bootstrap.mode, interestMode, caseId: active?.caseId ?? null,
     name: active?.name ?? null, kind: active?.kind ?? null, targetTag: active?.targetTag ?? null,
     baselineCount: active?.baselineCount ?? null, events: active ? [...active.events] : [], raw: active ? [...active.raw] : [],
@@ -199,7 +219,13 @@ function snapshot() {
       faultTouch: panel.faultTouch, surfaceId: panel.surfaceId, leafTag: panel.leafTag, noRef: noRefSnapshot(name)}])),
     mounts: {...mounts}, cleanups: {...cleanups}, query: documentQueryControl.snapshot(),
     currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority(), defaultPriority: nativeFabricUIManager.unstable_DefaultEventPriority,
-    globalEventRestored: globalThis.event == null};
+    globalEventRestored: globalThis.event == null,
+    ...(active?.eventType === "pointerup" ? {eventType: active.eventType,
+      discretePriority: nativeFabricUIManager.unstable_DiscreteEventPriority,
+      upEventIdentity: {callbackCount: upRefs.length,
+        sameObject: upRefs.length > 0 ? upRefs.every(event => event === upRefs[0]) : null,
+        touchEndDistinct: upRefs.length > 0 && touchEndRefs.length > 0
+          ? touchEndRefs.every(event => !upRefs.includes(event)) : null}} : {})};
 }
 globalThis.PointerDocumentProbe = {bindRoot, capability, configure, arm, manualDocument, manualElement, snapshot, noRefSnapshot,
   resetAll() { for (const name of panels.keys()) reset(name); return true; },

@@ -1076,13 +1076,44 @@ using git show, retaining that original execution base and dirty state.
 jobs; five native artifacts reproduce 62 Up checks and 3,400 preceding checks
 in 13 reports. Sixteen producer pins match the actual native checkout5250225.
 The CI host hash is runner-declared; old-host control and captures are local. [Pages publication](docs/evidence/pointer-up/publication.json)
-passed build/deploy in run 37241041419 with main renderer and branch data
-041688c; complete public/local JSON was verified. SDK ABI certification and
+passed build/deploy in run 37242930291 with main renderer and branch data
+0a2f01e; complete public/local JSON was verified. SDK ABI certification and
 public flags remain false.
 This scope is View with both flags. Document Up/other flags, listener lifecycle,
 captured/no-hit Up, public Down/Up ID pairing, both priority flag branches,
 hardware/mobile/dev/performance remain open. No GF acceptance, dependency,
 checkpoint, weight or denominator closes.
+
+### Original Document/documentElement pointerup and four flags
+
+[Document Up evidence](docs/evidence/pointer-document-up/README.md) extends the
+corrected Up host with ordinary original root listeners and actual Godot touch
+terminals. Eight SDK/flag lanes pass **1,371 headless checks**; current/enabled
+passes **243 native viewport checks**, with 20 actual pixels and two counter/save
+assertions. [The example](examples/pointer-document-up/README.md), research and
+README include both actual 760×220 frames (A0/B0→A2/B0 in one native commit).
+
+Document methods require D; View/element require I-and-D. Current SDK qualifies
+Document Up with D even without I. Original SDK and D-disabled lanes retain
+manual controls and native JSX transport but filter leaf imperative Up.
+Document/element/capture-only order, phases, same Up Event object, Raw payload/ID/
+timestamp, Discrete restoration and exact root36/37 qualification are checked.
+All component lookups belong to the native owning root; no-ref first Down
+queries preserve null, while positive Up follows downstream materialization.
+Unpersisted D-disabled JSX observes upstream legacy pooling between Up/TouchEnd.
+
+A negative Up cannot borrow B's Document interest while B remains held; B then
+receives its own Up. Final listener removal, TouchEnd fallback, real Cancel and
+balanced stop pass. Final Down regression passes **2,723 checks**, contracts
+**255 Node/13 Python** and static analysis passes. View Up again passes62/62
+with its same-current-SDK previous host54/62/eight failures. Native/SDK production sources
+are unchanged fromf7c2cf6 and retain its separate SDK proof. This slice adds its
+own eight-lane CI gate/artifact; hosted Document Up remains pending.
+
+Once/abort, retained/retired refs/remount, dispatch mutation, Up-specific faults/
+reentrancy, captured/no-hit/null-target Up, Down/Up ID pairing, got/lost capture,
+other event categories and hardware/mobile/dev/performance remain open.
+No whole GF, dependency, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

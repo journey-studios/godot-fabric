@@ -243,3 +243,15 @@ shared embedded roots, flattened capture refs, immediate density changes,
 singular cancel and connected hidden capture. Its separate
 [evidence](../docs/evidence/pointer-geometry/README.md) records 631/648 checks,
 14 pixels, three captures and 55 expected failures on the previous host.
+
+The [Document pointerup matrix](pointer-document-up/README.md) runs eight
+original/current SDK and flag lanes: 1,371 headless checks and 243 native viewport
+checks with 20 pixels. Ordinary original Document/element listeners qualify Up
+without a leaf JSX pointer helper. Event identity, root ownership, capture-only,
+negative A while B held, final removal, Cancel and stop have executed checks.
+[The receipt](../docs/evidence/pointer-document-up/README.md) distinguishes the
+captured Document-only stage from later cases and pending hosted CI.
+
+| Native initial frame | Document Up commits A2/B0 |
+| --- | --- |
+| [![Native counters before Up](../docs/evidence/pointer-document-up/initial.png)](pointer-document-up/README.md) | [![Actual Document callbacks update only A](../docs/evidence/pointer-document-up/updated.png)](pointer-document-up/README.md) |

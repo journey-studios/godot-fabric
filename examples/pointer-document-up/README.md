@@ -1,0 +1,124 @@
+# Isolated Document and documentElement pointerup
+
+This native validation registers ordinary original RN `pointerup` listeners on
+Document and documentElement while the blue target has no JSX pointer helper.
+Two roots share one Hermes application; each owns a distinct original Document.
+The fixture is outside the interactive launcher catalog and public EventTarget
+flags remain disabled.
+
+The [evidence](../../docs/evidence/pointer-document-up/README.md) records eight
+successful headless lanes: four immutable original flag configurations for each
+of `interestMode=original` and `current`, totaling 1,371 executed checks. The current/enabled macOS viewport passes 243 checks, including 20 actual
+pixels and two counter/save assertions. The screenshots below are native frames.
+
+## Run the isolated matrix
+
+After existing native setup, from the repository root:
+
+```sh
+npm run test:pointers:documents:up
+```
+
+A bounded lane can be selected explicitly:
+
+```sh
+node tests/pointer-document-up-native.test.mjs --interest=current --flag=internal-only
+node tests/pointer-document-up-native.test.mjs --interest=original --flag=enabled
+```
+
+`internal-only` enables native EventTarget dispatch and retains the original
+Document methods while View/documentElement imperative methods remain absent.
+`enabled` enables both original flags. The original-interest control installs no
+SDK query; positive manual registration controls still run where methods exist.
+Every lane uses actual Godot ScreenTouch input and its own Hermes execution.
+The public application bundle is preserved.
+
+Reproduce the verified native captures:
+
+```sh
+node tests/pointer-document-up-native.test.mjs --interest=current --flag=enabled --capture
+```
+
+## Ordinary original Document syntax inside the opt-in
+
+The example below assumes the isolated bootstrap has enabled D before RN imports
+and selected the current-interest experimental dispatcher. It does not change
+public defaults or introduce a `GodotFabric` event method:
+
+```jsx
+import {useEffect, useRef, useState} from 'react';
+import {View} from 'react-native';
+
+function DocumentUpCounter() {
+  const ref = useRef(null);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    const doc = ref.current.ownerDocument;
+    const onUp = event => {
+      if (event.isTrusted) setCount(value => value + 1);
+    };
+    doc.addEventListener('pointerup', onUp, true);
+    doc.addEventListener('pointerup', onUp);
+    return () => {
+      doc.removeEventListener('pointerup', onUp, true);
+      doc.removeEventListener('pointerup', onUp);
+    };
+  }, []);
+  return <View ref={ref} testID="document-up-target"
+    style={{width: 110 + count * 4, height: 70, backgroundColor: '#2563eb'}} />;
+}
+```
+
+A native Up on the leaf reaches Document capture and bubble at phases 1 and 3.
+Each listener increments the functional counter once; both updates batch into
+one React/native commit. An untrusted public `dispatchEvent` is only a listener
+installation control, so this snippet deliberately increments on trusted input.
+For documentElement, use `doc.documentElement` and the same add/remove methods;
+those methods additionally require I. A capture listener's third argument does
+not request pointer-capture ownership.
+
+The [executed wrapper](../../tests/pointer-document-up-fixture.jsx) reuses the
+[actual original Document scene](../../tests/pointer-document-fixture.jsx).
+B has no leaf ref; the bounded test obtains its existing original Document from
+RN's original root getter. That internal fixture control is not a new public
+Godot Fabric lookup API.
+
+## What the cases exercise
+
+- Document-only, element-only, combined and independently capture-only listeners
+  check exact method gates, native root qualification, callback order and phases.
+  Combined enabled delivery is `DocC, RootC, RootB, DocB`.
+- Root qualification reads `36=true` for bubble interest or `36=false, 37=true`
+  for capture-only. Earlier View lookups are real false observations. Typed/star
+  Raw still occur only once per native Up, with the callbacks' actual payload,
+  timestamp and pointer ID.
+- An initially cold no-ref B leaf keeps its null publicInstance slot through
+  the actual first Down root query. B's later Up runs after the original
+  dispatcher has legitimately materialized the target.
+- A has no listeners while B has Document listeners and holds a contact. A's
+  negative Up cannot borrow B's interest, alter its counter or end its contact;
+  B's own Up then works. Final listener removal, real Cancel and balanced stop
+  have independent terminal checks.
+- A separate JSX sentinel proves Up transport in every flag lane. Methods that
+  are absent remain absent; the fixture never borrows an EventTarget prototype.
+
+The blue Controls are native targets, green is the JSX sentinel, yellow width
+follows the Up callback count and purple width follows the scene's revision state.
+The actual graphical lane shows the initial scene and the first Document-only
+Up: A's two callbacks advance its count to 2 while B stays at 0 in one commit.
+The Node runner independently decodes the saved pixels.
+
+| Before real native Up | After Document capture and bubble |
+| --- | --- |
+| ![Initial native counters A0/B0](../../docs/evidence/pointer-document-up/initial.png) | ![Native Document callbacks commit A2/B0](../../docs/evidence/pointer-document-up/updated.png) |
+
+## Limits
+
+This matrix certifies the listed healthy Document/element Up cases. It does not
+certify Up-specific faults, once/abort, mutation during dispatch, retired refs,
+remount, explicit pointer capture, coalescing, full responders, development
+renderer, hardware/mobile exports or performance. Down is filtered here; no
+public Down/Up pointer-ID equality is claimed. The final Down regression passes 2,723 checks; contracts pass 255 Node/13 Python.
+Native/SDK production bytes are unchanged from the separately proven View Up
+slice. Hosted Document Up remains pending. The
+[research](../../docs/research/pointer-document-up.md) explains the boundaries.
