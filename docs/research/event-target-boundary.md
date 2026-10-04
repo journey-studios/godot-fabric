@@ -1,29 +1,37 @@
 # Imperative EventTarget at the RN 0.87.1 boundary
 
-Status: source investigation and **executed original-ref probe**. The isolated
-macOS arm64/headless fixture passes 119 checks and reproduces all three gaps.
-[Receipt](../evidence/event-target/README.md). Native integration remains
-pending; this does not enable a public capability, approve a renderer change
-or certify complete experimental RN APIs.
+Status: executed historical controls and an isolated native renderer integration
+experiment. Public capability remains off; this does not certify complete
+experimental RN APIs. The earlier macOS arm64/headless original-ref fixture
+passes 119 checks and reproduces three independent gaps.
+[Original-ref receipt](../evidence/event-target/README.md).
 
 The [current-ancestry correction](../evidence/event-target-ancestry/README.md)
 now passes 102 checks in each original/corrected variant. It fixes the third
 gap in shared bundling while preserving current-dispatch snapshots; production
-flags remain off. Native EventTarget delivery and the dispatcher proposal remain
-pending. A subsequent [executed dispatcher comparison](../evidence/event-dispatch/README.md)
+flags remain off. A subsequent
+[executed dispatcher comparison](../evidence/event-dispatch/README.md)
 runs 647 identical checks per renderer variant and corrects a separate numeric
 touch-tag lookup bug in the production legacy path.
 
-## Three independent gaps
+Those controls precede the new
+[isolated native example](../../examples/event-target/README.md). Its basic and
+adversarial runs exercise injected Godot input through the real event queue and
+the original batched renderer callback. Final counts, digests, captures and
+terminal-registry retirement acceptance require the separate integration
+receipt; the historical receipts do not certify this newer path.
+
+## Three separately validated boundaries
 
 1. `enableImperativeEvents` and `enableNativeEventTargetEventDispatching` both
    default false. ReadOnlyNode chooses its EventTarget base while the module is
    evaluated; overrides must precede ref imports. The pinned ReactFabric-prod
    `dispatchEvent` still emits RawEventEmitter and uses the legacy plugin
    extraction path, with no call to the shipped `dispatchNativeEvent` function.
-   The original private interface exports that dispatcher; the Godot private
-   interface currently does not. Exposing ref methods alone cannot establish
-   native listener delivery.
+   The Godot private interface now exposes the original dispatcher, and the
+   shared platform toolchain has a hash-guarded experimental selection inside
+   that batch. The probe opts in; the default selection remains legacy.
+   Exposing ref methods alone still cannot establish native listener delivery.
 2. Original `addEventListener` stores JS listener state without declaring native
    ViewProps interest. The pointer processor filters several event kinds by
    declarative pointer props in the ancestry. An acceptance fixture with empty
@@ -56,13 +64,16 @@ The enabled runtime executes 33 manual checks in each of two roots. Public
 listener failure reports once through TimerManager after dispatch returns;
 peer delivery and original transient-field cleanup still complete.
 
-Then connect original native dispatch and listener interest. One candidate is
-a hash-guarded generated insertion in the shipped renderer's existing batched
-callback, selecting the original `dispatchNativeEvent` function while keeping
-RawEventEmitter delivery once. The original dispatcher also performs responder
-negotiation; a lateral subscriber could duplicate callbacks or lose batching.
-This candidate still requires executed positive/negative and responder/focus
-regressions; it has not been adopted here.
+Native dispatch and listener interest remain separate steps. The isolated
+integration now uses a hash-guarded generated insertion in the shipped renderer's
+existing batched callback. It captures the original flag during renderer
+initialization, calls original `dispatchNativeEvent` after both RawEventEmitter
+channels, and returns before legacy plugins. Selection is exclusive for the
+runtime: there is no legacy fallback on null target or listener error and no
+pipeline toggle during a gesture. The public default does not emit this selection.
+The original dispatcher also performs responder negotiation; a lateral subscriber
+would duplicate callbacks or bypass the original batch. Broad responder/focus
+regressions and public enablement still require their own acceptance.
 
 For imperative-only pointer listeners, an initial per-runtime capability could
 bypass the declarative-interest optimization while preserving original pointer
@@ -81,12 +92,13 @@ in `event.nativeEvent`. It is not proof of a complete W3C PointerEvent surface.
 Public HostInstance types also need separate inspection before advertising
 imperative methods as generally supported.
 
-## Dispatcher integration boundaries still requiring runtime controls
+## Historical explicit-dispatch controls
 
 The dispatcher comparison now executes these boundaries separately from the
 ancestry fixture. The enabled runtime calls the original dispatcher explicitly;
 actual Godot touch input in the disabled runtime uses the compiled legacy path.
-The native EventTarget queue and batching contract is still pending:
+This 647-check comparison does not exercise native EventTarget queue selection
+or its React batch:
 
 - The should-set handler calls have no protected currentTarget cleanup when a
   handler throws. `processResponderEvent` is called before `dispatchNativeEvent`'s
@@ -122,12 +134,62 @@ and Fiber inputs remain intact. This fix applies to the existing production
 legacy path and does not enable experimental EventTarget dispatch.
 
 The current-ancestry correction changes only parent resolution; it does not
-select this dispatcher or resolve these responder differences. A target-null
-native case now reproduces a TypeError for a registered event, while an
-unregistered event is inert; recovery succeeds afterward. The native transport
-must define how retired/null targets are rejected before selecting a runtime-wide
-branch. Mixing two responder implementations within one runtime is not an
-accepted fallback.
+select this dispatcher or resolve these responder differences. Explicit original
+dispatcher calls with a null target reproduce a TypeError for a registered event,
+while an unregistered event is inert; recovery succeeds afterward. These are JS
+controls, not actual null-target native transport. The isolated native selection
+does not certify that boundary or introduce a fallback to a second responder.
+
+## Isolated native renderer selection
+
+The new fixture compares two separately bundled selections with the same original
+flags enabled before ref imports. Its `original` selection retains the compiled
+legacy plugin path; `integrated` opts into the shared toolchain's experimental
+branch. Both receive injected ScreenTouch/ScreenDrag through native Fabric event
+emission and the renderer callback. They do not call the dispatcher manually to
+simulate that integrated delivery. Explicit manual positives remain separate
+controls proving that the installed listeners are valid.
+
+The blue target has no JSX touch listener on its path. Its native imperative
+delivery distinguishes renderer selection without a helper masking the result.
+The orange imperative-only pointer target remains a native negative in both
+selections: the unchanged pointer filter still reads declarative ViewProps.
+Native touches are emitted without that pointer-interest filter, so a touch
+positive cannot be generalized to pointers or arbitrary native event types.
+
+The purple target combines real JSX handlers with imperative listeners on current
+logical ancestry, including a genuinely flattened ancestor. The probe compares
+the exact capture/bubble sequence, shared payload identity, one typed and one
+star Raw emission, original timestamps, trusted event fields and restored global
+event state. Two functional updates from one native touch-start commit after
+the callbacks, and the white counter's native width follows the React state.
+The observed native priority in this fixture is the original default priority;
+these controls do not certify all event categories or scheduling mappings.
+
+Adversarial native-path runs exercise cancellation and two contacts inside one
+responder, normal listener faults, combined responder/normal faults with exact
+host error delivery, and a recovery gesture. A real React commit removes the pink
+touched target, checks cancellation and retained-ref ancestry, then rejects a
+late physical up. Held-root teardown checks native responder release and React
+cleanup while a second root survives. Queued terminal delivery during reentrant
+leaf/root retirement has a separate previous-host/corrected-host acceptance
+control; writing that control or seeing clean JS callbacks does not establish
+that a native crash or registry-order bug is fixed.
+
+Native touch arrays are root-local in this host. The cross-root sequence keeps
+that transport separate from explicit original dispatcher oracles constructed
+with root-local or global contact arrays. The global oracle's retained responder
+is not proof that native Godot input aggregates contacts globally or matches
+mobile behavior. Registered null-target delivery is also not executed through
+this native integration fixture.
+
+These are isolated validation runs with injected input, not physical touchscreen
+or mobile certification. The four original responder differences remain open,
+and complete TextInput/focus/Pressability, dev renderer, reentrant lifetime,
+performance and public capability acceptance remain separate gates. The
+[example](../../examples/event-target/README.md) maps the visual cases; its final
+integration receipt must supply the execution counts, source/native digests and
+verified capture evidence before those results are promoted to roadmap status.
 
 ## Pinned primary sources
 
@@ -143,4 +205,4 @@ accepted fallback.
 These findings come from the installed pin; future pins must be inspected anew.
 The [preceding captured geometry receipt](../evidence/pointer-geometry/README.md)
 remains separate from this original-ref baseline, current-ancestry correction
-and the still-unimplemented native EventTarget proposal.
+and the isolated native EventTarget integration experiment.

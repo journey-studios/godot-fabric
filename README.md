@@ -85,6 +85,16 @@ pinned RN offset algorithm; complete differential parity remains open.
 
 ![Captured targets after React transform updates](docs/evidence/pointer-geometry/pointer-geometry-updated.png)
 
+The isolated [native EventTarget example](examples/event-target/README.md)
+connects the original dispatcher to the renderer's existing batch. A native
+touch delivers to a listener with no JSX helper; JSX and imperative listeners
+commit both React updates together. Its [evidence](docs/evidence/event-dispatch-integrated/README.md)
+also records corrected native cancellation/teardown defects. Public flags remain
+disabled; imperative pointer interest and complete event parity remain open.
+
+![One native gesture commits two React updates in the first root](docs/evidence/event-dispatch-integrated/updated.png)
+
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

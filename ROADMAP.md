@@ -629,7 +629,7 @@ and expose a contract failure without hidden no-ops or stale evidence.
 | GF-03 · P0 · Public API and typed platform resolution | In progress | Export actual public TextInput/Button contracts, use the original wrapper where viable, and provide strict RN-compatible public types. Resolve `.godot`, `.native`, JS/JSX/TS/TSX, assets and package conditions through a documented consumer bundler. An independent TSX app imports every in-scope root name; implemented APIs run, unfinished contracts still fail visibly | GF-01 |
 | GF-04 · P0 · Eliminate silently accepted behavior | In progress | Audit facade destructuring, validAttributes, values and event registration. Implement or explicitly reject each unsupported prop/value, including accessibility metadata and userSelect/collapsable semantics; verify updates/removal as well as initial mount. Before 1.0 all applicable target contracts must be implemented, not merely guarded | GF-01, GF-03 |
 | GF-05 · P0 · RN bootstrap and JS globals | In progress | Integrate upstream core initialization or an audited equivalent. Certify timers/arguments/cancellation, intervals, microtasks, immediate/idle callbacks, monotonic RAF, performance, errors and required URL/encoding/abort globals. Verify task ordering, callback exceptions, starvation and unmount cleanup against RN; network transport is GF-22 | GF-01 |
-| GF-06 · P1 · React/Fabric semantic suite | Planned | Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler | GF-01, GF-05 |
+| GF-06 · P1 · React/Fabric semantic suite | In progress | Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler | GF-01, GF-05 |
 | GF-07 · P1 · Root and surface lifecycle | In progress | Deliver AppRegistry/RootTagContext and supported mount/update/unmount APIs, multiple uniquely identified surfaces, root props, scene changes/pause/resume and error cleanup. Design overlays/portal needs against the actual public RN contract. Repeated root replacement and two concurrent surfaces preserve independent state and release tags/timers/subscriptions | GF-05, GF-06 |
 | GF-08 · P1 · Public refs and native commands | In progress | Complete applicable HostInstance/React Native node APIs, root/text instances, measure/measureInWindow/measureLayout, setNativeProps and public UIManager/findNodeHandle behavior. Compare transformed/window coordinates and commit timing; deleted refs and stale commands must not access freed nodes | GF-03, GF-07 |
 | GF-09 · P0 · Real metrics and platform identity | In progress | Supply window and screen dimensions, density/font scale, resize/orientation/insets and stable subscriptions. Define `Platform.OS = godot`, physical OS metadata and platform selection/resolution without impersonating iOS/Android. Verify high DPI, font scaling, multi-window coordinates and logical/pixel conversions with reference traces and real devices | GF-01, GF-07 |
@@ -793,7 +793,7 @@ consumer30/40 and original EventTarget/ancestry/focus/pointer gates pass. Fresh
 native SDK pack/verify and addon provisioning pass; stale native source/binary
 combinations are rejected before output creation and after copying. Thirteen
 composition guards complement 14 existing SDK tests. Static/publication scans
-pass; hosted CI for this slice is pending.
+pass. Hosted run37218513221 at897b127 now passes all five jobs; the artifact reproduces647 IDs, both original negatives and the corrected pass with17 source pins audited.
 
 Four experimental responder differences remain open: unrelated contact retention,
 should-set error currentTarget cleanup, truthy should-set acceptance and undefined
@@ -802,6 +802,41 @@ interest, batched dispatcher integration, complete responder/PanResponder,
 reentrant teardown, lookup performance, dev renderer and hardware/mobile parity
 remain pending. No new complete checkpoint, GF or architectural decision closes;
 the dashboard denominator and weights are preserved.
+
+### Native EventTarget batch and terminal lifetime (2026-10-04)
+
+GF-06 starts **In progress** with its first host-validated semantic slice;
+GF-05/GF-07/GF-08/GF-13 remain **In progress**. Shared bundling can opt into the
+original dispatcher inside the existing renderer batch. Raw typed/star emit once;
+legacy extraction is exclusive. Default generated renderer source retains the
+preceding tag correction, and public flags stay disabled.
+
+[Evidence and captures](docs/evidence/event-dispatch-integrated/README.md) record
+181 original/206 integrated headless checks and236 viewport checks/28 pixels.
+One native touch reaches an imperative-only listener; mixed JSX/imperative handlers
+commit both functional React updates once after callbacks, changing native geometry.
+Fault ordering/recovery, root-local contact scope, removal and surviving roots
+have distinct controls. Explicit global manual contacts do not certify mobile scope.
+
+The probe fixes two native defects: terminal pointer retirement preceding queued
+Cancel delivery, and reentrant ancestor detachment while Godot removes a child.
+A previous-host queue control fails its normative registry assertion in both lanes;
+an intermediate original-lane control crashes with signal11. Root-scoped removal
+deferral and revoked-origin pointer checks pass the current control in both lanes;
+ordinary resize/free remains separately verified through actual adapters.
+
+Contracts235/13 Python,18 overlay guards, fresh SDK, loader89/21 and13 actual
+adapter runs/213 checks passed. Current-host consumer30/40,22 examples/2250 and pointer/focus/tag regressions
+passed. Source/host pins are recorded in the receipt; hosted CI for this new delivery remains pending. The preceding
+897b127 hosted run does not cover this integration.
+
+Native imperative pointer interest, full experimental flag matrix, four original
+responder differences, complete PanResponder/types, registered-null-target JS,
+reentrant full-queue contracts, dev renderer, performance and hardware/mobile
+parity remain open. Next: native listener interest with an imperative-only positive
+and removal/abort/lifetime controls, then dispatcher flags and responder gaps.
+Only GF-06's first semantic slice gains a completed checkpoint; no complete GF,
+architectural decision, full parity/dependency acceptance or denominator closes.
 
 ## M1 — Complete the native UI tree
 

@@ -1,0 +1,1842 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-event-target-renderer-integration",
+  "implementation": {
+    "commit": null,
+    "executedBeforeCommit": true,
+    "sourcePinsVerifiedAgainstCommit": false
+  },
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable official",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "macOS native viewport"
+    ]
+  },
+  "commands": [
+    "cmake --build .deps/build --parallel 4",
+    "npm run test:events:integrated",
+    "node tests/event-dispatch-integrated-native.test.mjs --capture"
+  ],
+  "comparison": {
+    "sameFixtureSources": true,
+    "sameOriginalRNInputs": true,
+    "sameNativeHost": true,
+    "nativeHostSha256": "893253bfd481a08dd58bd002213633fd1bd394408559223bfcc43687bd2794b4",
+    "publicBundlePreservedWithinIsolatedRuns": true,
+    "fullCheckIdsAreIdentical": false,
+    "reason": "Integrated variant additionally verifies original EventTarget and ResponderEvent properties; callback counts differ causally"
+  },
+  "variants": {
+    "original": {
+      "godotChecks": 181,
+      "passed": 181,
+      "failed": [],
+      "checkIdsSha256": "b711545a6418bc022b676566199fe9a4cd5fe6556a52c995d5d7da9d0887b39c",
+      "rawReportSha256": "a241339b157c42192e95e4867002f8ab0960ce4dab4159516ef6f8d96dde3b25",
+      "bundle": "7495c6089eaac144781a4d174d5ea7ca9f409c73814aec5aea5679167e7fd3fe",
+      "renderer": {
+        "module": "Libraries/Renderer/implementations/ReactFabric-prod.js",
+        "originalSha256": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+        "generatedSourceSha256": "dc981c8726a5a77686f37131dc356f0f4626aee3adef425854391c3b8abb172e"
+      },
+      "nativeOnly": {
+        "A": {
+          "callbacks": 0,
+          "types": [],
+          "typedAndStarRaw": 2
+        },
+        "B": {
+          "callbacks": 0,
+          "types": [],
+          "typedAndStarRaw": 2
+        }
+      },
+      "mixed": {
+        "order": [
+          "mixedParent/jsx/capture",
+          "mixed/jsx/capture",
+          "mixed/jsx/bubble",
+          "mixedParent/jsx/bubble"
+        ],
+        "callbacks": 4,
+        "updates": 1,
+        "commits": [
+          {
+            "callbackDepth": 0,
+            "count": 1,
+            "kind": "commit",
+            "name": "A",
+            "sequence": 26
+          }
+        ],
+        "count": 1,
+        "payloads": [
+          {
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 4,
+            "normalCallbacks": 4,
+            "payloadId": 1,
+            "star": 1,
+            "typed": 1,
+            "types": [
+              "topTouchStart"
+            ]
+          }
+        ],
+        "allCallbacksSeePreCommit": true
+      },
+      "pointerInterestNegative": {
+        "A": {
+          "normalCallbacks": 0,
+          "pointerDownRaw": 0,
+          "manualPointerCallbacks": 1
+        },
+        "B": {
+          "normalCallbacks": 0,
+          "pointerDownRaw": 0,
+          "manualPointerCallbacks": 1
+        }
+      },
+      "combinedFault": {
+        "attempts": [
+          {
+            "capture": false,
+            "handler": "grant",
+            "id": "responder",
+            "message": "GF integration responder deliberate fault",
+            "sequence": 180,
+            "source": "responder"
+          }
+        ],
+        "errorDelivered": "Non-js exception: GF integration responder deliberate fault",
+        "recoveryCallbacks": 4
+      },
+      "rootLocal": {
+        "steps": [
+          {
+            "A": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 12,
+              "grants": 4,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 12,
+              "releases": 3,
+              "responder": 26,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 0,
+              "pointerCancels": 0,
+              "pointerDowns": 5,
+              "pointerLeaves": 0,
+              "pointerMoves": 0,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 5
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 0,
+              "defaultPriority": 0,
+              "identifier": 8,
+              "kind": "raw",
+              "nativeTarget": 20,
+              "nativeTargetIdentity": {
+                "id": "first",
+                "name": "A"
+              },
+              "payloadId": 1,
+              "sequence": 196,
+              "timeStamp": 96391888.231791,
+              "touches": 1,
+              "type": "topTouchStart"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 12,
+              "grants": 4,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 12,
+              "releases": 3,
+              "responder": 26,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 0,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 0,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 0,
+              "defaultPriority": 0,
+              "identifier": 9,
+              "kind": "raw",
+              "nativeTarget": 50,
+              "nativeTargetIdentity": {
+                "id": "only",
+                "name": "B"
+              },
+              "payloadId": 2,
+              "sequence": 203,
+              "timeStamp": 96391941.233291,
+              "touches": 1,
+              "type": "topTouchStart"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 13,
+              "grants": 4,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 13,
+              "releases": 4,
+              "responder": 0,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 0,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 0,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 1,
+              "defaultPriority": 0,
+              "identifier": 8,
+              "kind": "raw",
+              "nativeTarget": 20,
+              "nativeTargetIdentity": {
+                "id": "first",
+                "name": "A"
+              },
+              "payloadId": 3,
+              "sequence": 206,
+              "timeStamp": 96391996.489625,
+              "touches": 0,
+              "type": "topTouchEnd"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 13,
+              "grants": 4,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 13,
+              "releases": 4,
+              "responder": 0,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 0,
+              "defaultPriority": 0,
+              "identifier": 9,
+              "kind": "raw",
+              "nativeTarget": 50,
+              "nativeTargetIdentity": {
+                "id": "only",
+                "name": "B"
+              },
+              "payloadId": 4,
+              "sequence": 210,
+              "timeStamp": 96392051.824458,
+              "touches": 1,
+              "type": "topTouchMove"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 13,
+              "grants": 4,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 13,
+              "releases": 4,
+              "responder": 0,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 6,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 6,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 1,
+              "defaultPriority": 0,
+              "identifier": 9,
+              "kind": "raw",
+              "nativeTarget": 50,
+              "nativeTargetIdentity": {
+                "id": "only",
+                "name": "B"
+              },
+              "payloadId": 5,
+              "sequence": 212,
+              "timeStamp": 96392107.348166,
+              "touches": 0,
+              "type": "topTouchEnd"
+            }
+          }
+        ],
+        "manualOwners": [
+          26,
+          26,
+          0,
+          0,
+          0
+        ],
+        "globalManualOwners": [
+          26,
+          26,
+          26,
+          26,
+          0
+        ],
+        "nativeMobileDifferentialCertified": false
+      },
+      "retired": {
+        "down": {
+          "active": 1,
+          "activeCapture": 0,
+          "hover": 1,
+          "pendingCapture": 0
+        },
+        "afterCancel": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 2,
+          "ends": 13,
+          "grants": 6,
+          "hoverPointers": 0,
+          "moves": 1,
+          "pointerCancels": 2,
+          "pointerDowns": 15,
+          "pointerLeaves": 0,
+          "pointerMoves": 1,
+          "pointerUps": 13,
+          "releases": 6,
+          "responder": 0,
+          "starts": 15
+        },
+        "ref": {
+          "cleaned": true,
+          "connected": false,
+          "key": "A/retired",
+          "nativeLookupNull": true,
+          "parentNull": true,
+          "publicManualOnly": true,
+          "returned": true,
+          "tag": 28,
+          "trace": [
+            {
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true,
+              "trusted": false
+            }
+          ]
+        }
+      },
+      "queuedTerminalRootRetirement": {
+        "signalCalls": 1,
+        "rootCount": 1,
+        "processor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "routing": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 25,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "surfaceStopped": true,
+        "creates": 13,
+        "deletes": 13,
+        "errors": [
+          "Non-js exception: GF integration JSX deliberate fault",
+          "Non-js exception: GF integration responder deliberate fault"
+        ]
+      },
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pendingRootRetirements": 0,
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 26,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "errors": [
+          "Non-js exception: GF integration JSX deliberate fault",
+          "Non-js exception: GF integration responder deliberate fault"
+        ]
+      },
+      "nativeQueue": {
+        "previousHostControl": false,
+        "registryWarnings": [],
+        "check": {
+          "id": "native-pointer-terminal-registry-order",
+          "passed": true
+        }
+      },
+      "scope": {
+        "actualNativeInput": true,
+        "hardwareCertified": false,
+        "manualGlobalOracleIsNativeCertification": false,
+        "mobileCertified": false,
+        "nativeNullTargetExecuted": false,
+        "nativePointerInterestSolved": false,
+        "nativeTouchScope": "root-local",
+        "publicDefaultEnabled": false,
+        "queuedTerminalRootRetirementExecuted": true,
+        "responderGapsResolved": false,
+        "testOnlyOriginalFlagsEnabled": true
+      }
+    },
+    "integrated": {
+      "godotChecks": 206,
+      "passed": 206,
+      "failed": [],
+      "checkIdsSha256": "cc6424674694bc172cf476f4d95bfb88fb72a5dbed1a12261d2d7b487bf6459d",
+      "rawReportSha256": "9f8dc1f3292e377d07727e2c83323a4bc7adabe3d2086074a7e681a8659ee324",
+      "bundle": "c589497b7988cb4b87742879bb45ff775b5d69e0825b3dced6b86dc650dea9ea",
+      "renderer": {
+        "module": "Libraries/Renderer/implementations/ReactFabric-prod.js",
+        "originalSha256": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+        "generatedSourceSha256": "a521cd4d8c5aadd16b7e2d4eb5a42a7087e5ccf66fec2bd0e54468e74f751bbc"
+      },
+      "nativeOnly": {
+        "A": {
+          "callbacks": 1,
+          "types": [
+            "touchstart"
+          ],
+          "typedAndStarRaw": 2
+        },
+        "B": {
+          "callbacks": 1,
+          "types": [
+            "touchstart"
+          ],
+          "typedAndStarRaw": 2
+        }
+      },
+      "mixed": {
+        "order": [
+          "mixedParent/jsx/capture",
+          "mixedParent/imperative/capture",
+          "mixedFlat/imperative/capture",
+          "mixed/jsx/capture",
+          "mixed/imperative/capture",
+          "mixed/jsx/bubble",
+          "mixed/imperative/bubble",
+          "mixedFlat/imperative/bubble",
+          "mixedParent/jsx/bubble",
+          "mixedParent/imperative/bubble"
+        ],
+        "callbacks": 10,
+        "updates": 2,
+        "commits": [
+          {
+            "callbackDepth": 0,
+            "count": 2,
+            "kind": "commit",
+            "name": "A",
+            "sequence": 41
+          }
+        ],
+        "count": 2,
+        "payloads": [
+          {
+            "imperativeCallbacks": 6,
+            "jsxCallbacks": 4,
+            "normalCallbacks": 10,
+            "payloadId": 1,
+            "star": 1,
+            "typed": 1,
+            "types": [
+              "topTouchStart"
+            ]
+          }
+        ],
+        "allCallbacksSeePreCommit": true
+      },
+      "pointerInterestNegative": {
+        "A": {
+          "normalCallbacks": 0,
+          "pointerDownRaw": 0,
+          "manualPointerCallbacks": 1
+        },
+        "B": {
+          "normalCallbacks": 0,
+          "pointerDownRaw": 0,
+          "manualPointerCallbacks": 1
+        }
+      },
+      "combinedFault": {
+        "attempts": [
+          {
+            "capture": false,
+            "handler": "grant",
+            "id": "responder",
+            "message": "GF integration responder deliberate fault",
+            "sequence": 278,
+            "source": "responder"
+          },
+          {
+            "capture": false,
+            "handler": null,
+            "id": "first",
+            "message": "GF integration normal deliberate fault",
+            "sequence": 281,
+            "source": "jsx"
+          }
+        ],
+        "errorDelivered": "Non-js exception: GF integration responder deliberate fault",
+        "recoveryCallbacks": 10
+      },
+      "rootLocal": {
+        "steps": [
+          {
+            "A": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 12,
+              "grants": 5,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 12,
+              "releases": 4,
+              "responder": 26,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 0,
+              "pointerCancels": 0,
+              "pointerDowns": 5,
+              "pointerLeaves": 0,
+              "pointerMoves": 0,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 5
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 0,
+              "defaultPriority": 0,
+              "identifier": 8,
+              "kind": "raw",
+              "nativeTarget": 20,
+              "nativeTargetIdentity": {
+                "id": "first",
+                "name": "A"
+              },
+              "payloadId": 1,
+              "sequence": 312,
+              "timeStamp": 96396781.195666,
+              "touches": 1,
+              "type": "topTouchStart"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 12,
+              "grants": 5,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 12,
+              "releases": 4,
+              "responder": 26,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 0,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 0,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 0,
+              "defaultPriority": 0,
+              "identifier": 9,
+              "kind": "raw",
+              "nativeTarget": 50,
+              "nativeTargetIdentity": {
+                "id": "only",
+                "name": "B"
+              },
+              "payloadId": 2,
+              "sequence": 319,
+              "timeStamp": 96396835.993833,
+              "touches": 1,
+              "type": "topTouchStart"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 13,
+              "grants": 5,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 13,
+              "releases": 5,
+              "responder": 0,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 0,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 0,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 1,
+              "defaultPriority": 0,
+              "identifier": 8,
+              "kind": "raw",
+              "nativeTarget": 20,
+              "nativeTargetIdentity": {
+                "id": "first",
+                "name": "A"
+              },
+              "payloadId": 3,
+              "sequence": 324,
+              "timeStamp": 96396892.236458,
+              "touches": 0,
+              "type": "topTouchEnd"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 13,
+              "grants": 5,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 13,
+              "releases": 5,
+              "responder": 0,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 1,
+              "activeTouches": 1,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 5,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 5,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 0,
+              "defaultPriority": 0,
+              "identifier": 9,
+              "kind": "raw",
+              "nativeTarget": 50,
+              "nativeTargetIdentity": {
+                "id": "only",
+                "name": "B"
+              },
+              "payloadId": 4,
+              "sequence": 328,
+              "timeStamp": 96396945.8435,
+              "touches": 1,
+              "type": "topTouchMove"
+            }
+          },
+          {
+            "A": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 1,
+              "ends": 13,
+              "grants": 5,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 1,
+              "pointerDowns": 14,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 13,
+              "releases": 5,
+              "responder": 0,
+              "starts": 14
+            },
+            "B": {
+              "activePointers": 0,
+              "activeTouches": 0,
+              "blockNative": false,
+              "cancels": 0,
+              "ends": 6,
+              "grants": 0,
+              "hoverPointers": 0,
+              "moves": 1,
+              "pointerCancels": 0,
+              "pointerDowns": 6,
+              "pointerLeaves": 0,
+              "pointerMoves": 1,
+              "pointerUps": 6,
+              "releases": 0,
+              "responder": 0,
+              "starts": 6
+            },
+            "lastTouchPayload": {
+              "changedTouches": 1,
+              "channel": "star",
+              "currentPriority": 1,
+              "defaultPriority": 0,
+              "identifier": 9,
+              "kind": "raw",
+              "nativeTarget": 50,
+              "nativeTargetIdentity": {
+                "id": "only",
+                "name": "B"
+              },
+              "payloadId": 5,
+              "sequence": 330,
+              "timeStamp": 96397001.185,
+              "touches": 0,
+              "type": "topTouchEnd"
+            }
+          }
+        ],
+        "manualOwners": [
+          26,
+          26,
+          0,
+          0,
+          0
+        ],
+        "globalManualOwners": [
+          26,
+          26,
+          26,
+          26,
+          0
+        ],
+        "nativeMobileDifferentialCertified": false
+      },
+      "retired": {
+        "down": {
+          "active": 1,
+          "activeCapture": 0,
+          "hover": 1,
+          "pendingCapture": 0
+        },
+        "afterCancel": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 2,
+          "ends": 13,
+          "grants": 7,
+          "hoverPointers": 0,
+          "moves": 1,
+          "pointerCancels": 2,
+          "pointerDowns": 15,
+          "pointerLeaves": 0,
+          "pointerMoves": 1,
+          "pointerUps": 13,
+          "releases": 7,
+          "responder": 0,
+          "starts": 15
+        },
+        "ref": {
+          "cleaned": true,
+          "connected": false,
+          "key": "A/retired",
+          "nativeLookupNull": true,
+          "parentNull": true,
+          "publicManualOnly": true,
+          "returned": true,
+          "tag": 28,
+          "trace": [
+            {
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true,
+              "trusted": false
+            }
+          ]
+        }
+      },
+      "queuedTerminalRootRetirement": {
+        "signalCalls": 1,
+        "rootCount": 1,
+        "processor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "routing": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 25,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "surfaceStopped": true,
+        "creates": 13,
+        "deletes": 13,
+        "errors": [
+          "Non-js exception: GF integration JSX deliberate fault",
+          "Non-js exception: GF integration responder deliberate fault"
+        ]
+      },
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pendingRootRetirements": 0,
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 26,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "errors": [
+          "Non-js exception: GF integration JSX deliberate fault",
+          "Non-js exception: GF integration responder deliberate fault"
+        ]
+      },
+      "nativeQueue": {
+        "previousHostControl": false,
+        "registryWarnings": [],
+        "check": {
+          "id": "native-pointer-terminal-registry-order",
+          "passed": true
+        }
+      },
+      "scope": {
+        "actualNativeInput": true,
+        "hardwareCertified": false,
+        "manualGlobalOracleIsNativeCertification": false,
+        "mobileCertified": false,
+        "nativeNullTargetExecuted": false,
+        "nativePointerInterestSolved": false,
+        "nativeTouchScope": "root-local",
+        "publicDefaultEnabled": false,
+        "queuedTerminalRootRetirementExecuted": true,
+        "responderGapsResolved": false,
+        "testOnlyOriginalFlagsEnabled": true
+      }
+    }
+  },
+  "graphical": {
+    "mode": "integrated",
+    "godotChecks": 236,
+    "passed": 236,
+    "rawReportSha256": "2337497762012784e0cd30bd0d5fc5c322aa867134ac800ab316d6bd3f3adef6",
+    "captures": [
+      {
+        "height": 270,
+        "path": "initial.png",
+        "pixels": [
+          {
+            "actual": "38bdf8ff",
+            "expected": "38bdf8ff",
+            "id": "only",
+            "name": "A",
+            "x": 60,
+            "y": 50
+          },
+          {
+            "actual": "a78bfaff",
+            "expected": "a78bfaff",
+            "id": "mixed",
+            "name": "A",
+            "x": 185,
+            "y": 55
+          },
+          {
+            "actual": "f59e0bff",
+            "expected": "f59e0bff",
+            "id": "pointerOnly",
+            "name": "A",
+            "x": 60,
+            "y": 135
+          },
+          {
+            "actual": "34d399ff",
+            "expected": "34d399ff",
+            "id": "first",
+            "name": "A",
+            "x": 175,
+            "y": 165
+          },
+          {
+            "actual": "2dd4bfff",
+            "expected": "2dd4bfff",
+            "id": "second",
+            "name": "A",
+            "x": 255,
+            "y": 165
+          },
+          {
+            "actual": "fb7185ff",
+            "expected": "fb7185ff",
+            "id": "retired",
+            "name": "A",
+            "x": 60,
+            "y": 210
+          },
+          {
+            "actual": "f8fafcff",
+            "expected": "f8fafcff",
+            "id": "counter",
+            "name": "A",
+            "x": 150,
+            "y": 229
+          },
+          {
+            "actual": "38bdf8ff",
+            "expected": "38bdf8ff",
+            "id": "only",
+            "name": "B",
+            "x": 460,
+            "y": 50
+          },
+          {
+            "actual": "a78bfaff",
+            "expected": "a78bfaff",
+            "id": "mixed",
+            "name": "B",
+            "x": 585,
+            "y": 55
+          },
+          {
+            "actual": "f59e0bff",
+            "expected": "f59e0bff",
+            "id": "pointerOnly",
+            "name": "B",
+            "x": 460,
+            "y": 135
+          },
+          {
+            "actual": "34d399ff",
+            "expected": "34d399ff",
+            "id": "first",
+            "name": "B",
+            "x": 575,
+            "y": 165
+          },
+          {
+            "actual": "2dd4bfff",
+            "expected": "2dd4bfff",
+            "id": "second",
+            "name": "B",
+            "x": 655,
+            "y": 165
+          },
+          {
+            "actual": "fb7185ff",
+            "expected": "fb7185ff",
+            "id": "retired",
+            "name": "B",
+            "x": 460,
+            "y": 210
+          },
+          {
+            "actual": "f8fafcff",
+            "expected": "f8fafcff",
+            "id": "counter",
+            "name": "B",
+            "x": 550,
+            "y": 229
+          }
+        ],
+        "stage": "initial",
+        "width": 800,
+        "sha256": "9f29b98994f422c9a31c31a2c130e0728918e2095432d13084e532b22be2cf6b"
+      },
+      {
+        "height": 270,
+        "path": "updated.png",
+        "pixels": [
+          {
+            "actual": "38bdf8ff",
+            "expected": "38bdf8ff",
+            "id": "only",
+            "name": "A",
+            "x": 60,
+            "y": 50
+          },
+          {
+            "actual": "a78bfaff",
+            "expected": "a78bfaff",
+            "id": "mixed",
+            "name": "A",
+            "x": 185,
+            "y": 55
+          },
+          {
+            "actual": "f59e0bff",
+            "expected": "f59e0bff",
+            "id": "pointerOnly",
+            "name": "A",
+            "x": 60,
+            "y": 135
+          },
+          {
+            "actual": "34d399ff",
+            "expected": "34d399ff",
+            "id": "first",
+            "name": "A",
+            "x": 175,
+            "y": 165
+          },
+          {
+            "actual": "2dd4bfff",
+            "expected": "2dd4bfff",
+            "id": "second",
+            "name": "A",
+            "x": 255,
+            "y": 165
+          },
+          {
+            "actual": "fb7185ff",
+            "expected": "fb7185ff",
+            "id": "retired",
+            "name": "A",
+            "x": 60,
+            "y": 210
+          },
+          {
+            "actual": "f8fafcff",
+            "expected": "f8fafcff",
+            "id": "counter",
+            "name": "A",
+            "x": 150,
+            "y": 229
+          },
+          {
+            "actual": "38bdf8ff",
+            "expected": "38bdf8ff",
+            "id": "only",
+            "name": "B",
+            "x": 460,
+            "y": 50
+          },
+          {
+            "actual": "a78bfaff",
+            "expected": "a78bfaff",
+            "id": "mixed",
+            "name": "B",
+            "x": 585,
+            "y": 55
+          },
+          {
+            "actual": "f59e0bff",
+            "expected": "f59e0bff",
+            "id": "pointerOnly",
+            "name": "B",
+            "x": 460,
+            "y": 135
+          },
+          {
+            "actual": "34d399ff",
+            "expected": "34d399ff",
+            "id": "first",
+            "name": "B",
+            "x": 575,
+            "y": 165
+          },
+          {
+            "actual": "2dd4bfff",
+            "expected": "2dd4bfff",
+            "id": "second",
+            "name": "B",
+            "x": 655,
+            "y": 165
+          },
+          {
+            "actual": "fb7185ff",
+            "expected": "fb7185ff",
+            "id": "retired",
+            "name": "B",
+            "x": 460,
+            "y": 210
+          },
+          {
+            "actual": "f8fafcff",
+            "expected": "f8fafcff",
+            "id": "counter",
+            "name": "B",
+            "x": 550,
+            "y": 229
+          }
+        ],
+        "stage": "updated",
+        "width": 800,
+        "sha256": "e8f43a7eb554e7aba0a310a8fb7e97993245d59c3b77cb30dbb70f8f5841fd07"
+      }
+    ]
+  },
+  "nativeTerminalQueueControl": {
+    "command": "node tests/event-dispatch-integrated-native.test.mjs --previous-host --queue-only",
+    "fixedCommand": "node tests/event-dispatch-integrated-native.test.mjs --queue-only",
+    "reentrantRootCrashCaseExcluded": true,
+    "previousHostSha256": "caa3f4047ef3fd1fc67d408df1a765797d7b1bd8985ab4025f6ee8e5779a925b",
+    "previousHostSourceCommit": "7a05e4afdfcc018a34e0eb4b6dc6e74433def234",
+    "fixedHostSha256": "893253bfd481a08dd58bd002213633fd1bd394408559223bfcc43687bd2794b4",
+    "sameFixtureSources": true,
+    "sameOriginalRNInputs": true,
+    "sameCheckIdsWithinEachMode": true,
+    "variants": {
+      "original": {
+        "godotChecks": 165,
+        "negativeCheck": {
+          "id": "native-pointer-terminal-registry-order",
+          "passed": false
+        },
+        "previousWarnings": [
+          "PointerEventsProcessor.cpp:469] Inconsistency between local and platform pointer registries: attempting to unregister an active pointer which has never been registered."
+        ],
+        "fixedCheck": {
+          "id": "native-pointer-terminal-registry-order",
+          "passed": true
+        },
+        "fixedWarnings": [],
+        "previousReportSha256": "1e4f94fbea8aa1561cfef95214b4bc109dab910f1bebf9ea9918c2a0f2795635",
+        "fixedReportSha256": "4130381906d046e18121037f0895ca0ce64d8e71840a6cd4086c078ac12e2848"
+      },
+      "integrated": {
+        "godotChecks": 188,
+        "negativeCheck": {
+          "id": "native-pointer-terminal-registry-order",
+          "passed": false
+        },
+        "previousWarnings": [
+          "PointerEventsProcessor.cpp:469] Inconsistency between local and platform pointer registries: attempting to unregister an active pointer which has never been registered."
+        ],
+        "fixedCheck": {
+          "id": "native-pointer-terminal-registry-order",
+          "passed": true
+        },
+        "fixedWarnings": [],
+        "previousReportSha256": "33a40c0a75425d1d6c759d399f7b077f45a329d776f6c1393eaf33eeecace27c",
+        "fixedReportSha256": "71f3d28cabe37335409c8f90fefa34e04e9cf386778649f4f1d7672f2ab13fb1"
+      }
+    }
+  },
+  "reentrantCrashControl": {
+    "command": "node tests/event-dispatch-integrated-native.test.mjs",
+    "mode": "original",
+    "signal": "SIGABRT",
+    "engineCrashSignal": 11,
+    "reportProduced": false,
+    "nativeHostSha256": "a709876c20d4a54b9fb0d9a099f08f3c07edf7ffa35fd6b59d88fd7c66d1b8fd",
+    "logSha256": "1382e1693a062b1f1b376bb2fb8029bf371cc593924865a59a8af93829a8606b",
+    "bundles": {
+      "format": "godot-fabric.event-target-probe-bundles/v1",
+      "parentMode": "current",
+      "rendererTagMode": "current",
+      "nativeDispatchMode": "original",
+      "bundles": {
+        "enabled": {
+          "sha256": "7495c6089eaac144781a4d174d5ea7ca9f409c73814aec5aea5679167e7fd3fe",
+          "inputs": [
+            "node_modules/react-native/Libraries/Core/Timers/queueMicrotask.js",
+            "node_modules/react-native/Libraries/Core/Timers/immediateShim.js",
+            "src/runtime.js",
+            "node_modules/react-native/Libraries/Performance/Systrace.js",
+            "node_modules/react-native/Libraries/vendor/emitter/EventEmitter.js",
+            "node_modules/react-native/Libraries/EventEmitter/RCTDeviceEventEmitter.js",
+            "src/native-module-runtime.js",
+            "src/initialize.js",
+            "node_modules/invariant/invariant.js",
+            "node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js",
+            "node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js",
+            "node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js",
+            "node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js",
+            "node_modules/@babel/runtime/helpers/esm/nonIterableRest.js",
+            "node_modules/@babel/runtime/helpers/esm/slicedToArray.js",
+            "node_modules/react-native/Libraries/Utilities/deepFreezeAndThrowOnMutationInDev.js",
+            "node_modules/react-native/Libraries/Utilities/stringifySafe.js",
+            "node_modules/react-native/Libraries/Utilities/warnOnce.js",
+            "node_modules/react-native/Libraries/vendor/core/ErrorUtils.js",
+            "node_modules/react-native/Libraries/BatchedBridge/MessageQueue.js",
+            "node_modules/react-native/Libraries/BatchedBridge/BatchedBridge.js",
+            "node_modules/react-native/Libraries/Utilities/defineLazyObjectProperty.js",
+            "node_modules/react-native/Libraries/BatchedBridge/NativeModules.js",
+            "src/native-modules.js",
+            "node_modules/react-native/Libraries/TurboModule/TurboModuleRegistry.js",
+            "node_modules/react-native/src/private/featureflags/specs/NativeReactNativeFeatureFlags.js",
+            "node_modules/react-native/src/private/featureflags/ReactNativeFeatureFlagsBase.js",
+            "node_modules/react-native/src/private/featureflags/ReactNativeFeatureFlags.js",
+            "node_modules/react-native/Libraries/Utilities/PolyfillFunctions.js",
+            "node_modules/react-native/src/private/webapis/webidl/PlatformObjects.js",
+            "node_modules/react-native/src/private/webapis/dom/events/internals/EventInternals.js",
+            "node_modules/react-native/src/private/webapis/dom/events/Event.js",
+            "node_modules/react-native/src/private/webapis/dom/events/internals/EventTargetInternals.js",
+            "node_modules/react-native/src/private/webapis/dom/events/EventTarget.js",
+            "node_modules/react-native/src/private/webapis/dom/events/CustomEvent.js",
+            "node_modules/react-native/src/private/webapis/errors/DOMException.js",
+            "node_modules/react-native/src/private/webapis/dom/events/EventHandlerAttributes.js",
+            "node_modules/react-native/src/private/webapis/dom/abort-api/AbortSignal.js",
+            "node_modules/react-native/src/private/webapis/dom/abort-api/AbortController.js",
+            "tests/event-target-bootstrap.js",
+            "node_modules/react/cjs/react.production.js",
+            "node_modules/react/index.js",
+            "node_modules/react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js",
+            "node_modules/react-native/Libraries/StyleSheet/flattenStyle.js",
+            "node_modules/react-native/src/private/specs_DEPRECATED/modules/NativeSoundManager.js",
+            "node_modules/react-native/Libraries/Components/Sound/NativeSoundManager.js",
+            "node_modules/react-native/Libraries/Components/Sound/SoundManager.js",
+            "node_modules/react-native/Libraries/Utilities/differ/deepDiffer.js",
+            "node_modules/react-native/Libraries/ReactNative/ReactFabricPublicInstance/ReactNativeAttributePayload.js",
+            "node_modules/react-native/Libraries/Core/RawEventEmitter.js",
+            "node_modules/react-native/src/private/webapis/utils/ArrayLikeUtils.js",
+            "node_modules/react-native/src/private/webapis/dom/oldstylecollections/HTMLCollection.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js",
+            "node_modules/scheduler/cjs/scheduler.native.production.js",
+            "node_modules/scheduler/index.native.js",
+            "node_modules/react-native/Libraries/Renderer/implementations/ReactFabric-prod.js",
+            "src/renderer-proxy.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/internals/ReactNativeDocumentInstanceHandle.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/internals/NodeInternals.js",
+            "src/platform.js",
+            "node_modules/@react-native/normalize-colors/index.js",
+            "node_modules/react-native/Libraries/StyleSheet/PlatformColorValueTypes.js",
+            "node_modules/react-native/Libraries/StyleSheet/normalizeColor.js",
+            "node_modules/react-native/Libraries/StyleSheet/processColor.js",
+            "node_modules/react-native/Libraries/StyleSheet/processBoxShadow.js",
+            "node_modules/react-native/Libraries/StyleSheet/processAspectRatio.js",
+            "node_modules/react-native/Libraries/StyleSheet/processBackgroundImage.js",
+            "node_modules/react-native/Libraries/StyleSheet/processBackgroundPosition.js",
+            "node_modules/react-native/Libraries/StyleSheet/processBackgroundRepeat.js",
+            "node_modules/react-native/Libraries/StyleSheet/processBackgroundSize.js",
+            "node_modules/react-native/Libraries/StyleSheet/processFilter.js",
+            "node_modules/react-native/Libraries/StyleSheet/processFontVariant.js",
+            "node_modules/react-native/Libraries/StyleSheet/processTransform.js",
+            "node_modules/react-native/Libraries/StyleSheet/processTransformOrigin.js",
+            "node_modules/react-native/Libraries/Utilities/differ/sizesDiffer.js",
+            "node_modules/react-native/Libraries/Components/View/ReactNativeStyleAttributes.js",
+            "node_modules/react-native/src/private/specs_DEPRECATED/modules/NativeSourceCode.js",
+            "node_modules/react-native/Libraries/NativeModules/specs/NativeSourceCode.js",
+            "node_modules/react-native/src/private/assets/AssetRegistry.js",
+            "node_modules/react-native/src/private/specs_DEPRECATED/modules/NativeDeviceInfo.js",
+            "node_modules/react-native/Libraries/Utilities/NativeDeviceInfo.js",
+            "node_modules/react-native/Libraries/Utilities/Dimensions.js",
+            "node_modules/react-native/Libraries/Utilities/PixelRatio.js",
+            "node_modules/react-native/Libraries/Image/AssetUtils.js",
+            "node_modules/@react-native/asset-utils/src/AndroidPathUtils.js",
+            "node_modules/@react-native/asset-utils/src/index.js",
+            "node_modules/react-native/Libraries/Image/AssetSourceResolver.js",
+            "node_modules/react-native/Libraries/Image/resolveAssetSource.js",
+            "node_modules/react-native/Libraries/StyleSheet/processColorArray.js",
+            "node_modules/react-native/Libraries/Utilities/differ/insetsDiffer.js",
+            "node_modules/react-native/Libraries/Utilities/differ/matricesDiffer.js",
+            "node_modules/react-native/Libraries/Utilities/differ/pointsDiffer.js",
+            "node_modules/react-native/Libraries/ReactNative/FabricUIManager.js",
+            "node_modules/nullthrows/nullthrows.js",
+            "node_modules/react-native/Libraries/NativeComponent/NativeComponentRegistryUnstable.js",
+            "node_modules/react-native/Libraries/ReactNative/BridgelessUIManager.js",
+            "node_modules/react-native/src/private/specs_DEPRECATED/modules/NativeUIManager.js",
+            "node_modules/react-native/Libraries/ReactNative/NativeUIManager.js",
+            "node_modules/react-native/Libraries/ReactNative/UIManagerProperties.js",
+            "node_modules/react-native/Libraries/ReactNative/PaperUIManager.js",
+            "node_modules/react-native/Libraries/ReactNative/UIManager.js",
+            "node_modules/react-native/Libraries/ReactNative/getNativeComponentAttributes.js",
+            "node_modules/react-native/Libraries/NativeComponent/StaticViewConfigValidator.js",
+            "node_modules/react-native/Libraries/StyleSheet/Rect.js",
+            "src/base-view-config.js",
+            "node_modules/react-native/Libraries/NativeComponent/ViewConfig.js",
+            "node_modules/react-native/Libraries/NativeComponent/NativeComponentRegistry.js",
+            "node_modules/react-native/Libraries/Utilities/codegenNativeCommands.js",
+            "node_modules/react-native/Libraries/Components/TextInput/AndroidTextInputNativeComponent.js",
+            "node_modules/react-native/Libraries/NativeComponent/ViewConfigIgnore.js",
+            "node_modules/react-native/Libraries/Components/TextInput/RCTTextInputViewConfig.js",
+            "node_modules/react-native/Libraries/Components/TextInput/RCTSingelineTextInputNativeComponent.js",
+            "node_modules/react-native/Libraries/Components/TextInput/TextInputState.js",
+            "node_modules/react-native/Libraries/Components/View/ViewNativeComponent.js",
+            "node_modules/react-native/Libraries/ReactNative/ReactFabricPublicInstance/warnForStyleProps.js",
+            "node_modules/react-native/src/private/renderer/events/ReactNativeEventTypeMapping.js",
+            "node_modules/react-native/src/private/webapis/geometry/DOMRectReadOnly.js",
+            "node_modules/react-native/src/private/webapis/geometry/DOMRect.js",
+            "node_modules/react-native/src/private/webapis/dom/oldstylecollections/NodeList.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/specs/NativeDOM.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/ReadOnlyNode.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/internals/Traversal.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/ReadOnlyElement.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/ReactNativeElement.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/ReactNativeDocument.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/ReadOnlyCharacterData.js",
+            "node_modules/react-native/src/private/webapis/dom/nodes/ReadOnlyText.js",
+            "node_modules/react-native/Libraries/ReactNative/ReactFabricPublicInstance/ReactFabricPublicInstance.js",
+            "node_modules/react-native/src/private/renderer/events/LegacySyntheticEvent.js",
+            "node_modules/react-native/src/private/renderer/events/ResponderEvent.js",
+            "node_modules/react-native/src/private/renderer/events/ResponderTouchHistoryStore.js",
+            "node_modules/react-native/src/private/renderer/events/ReactNativeResponder.js",
+            "node_modules/react-native/src/private/renderer/events/dispatchNativeEvent.js",
+            "src/private-interface.js",
+            "src/ui-manager.js",
+            "node_modules/react-native/Libraries/Pressability/HoverState.js",
+            "node_modules/react-native/Libraries/Pressability/PressabilityPerformanceEventEmitter.js",
+            "node_modules/react-native/Libraries/Pressability/Pressability.js",
+            "node_modules/react-native/Libraries/Pressability/usePressability.js",
+            "src/text-input-state.js",
+            "src/components.jsx",
+            "src/scroll-view.jsx",
+            "node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js",
+            "node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js",
+            "node_modules/react-native/Libraries/Text/TextAncestorContext.js",
+            "node_modules/react/cjs/react-jsx-runtime.production.js",
+            "node_modules/react/jsx-runtime.js",
+            "node_modules/react-native/Libraries/Components/View/View.js",
+            "src/text.jsx",
+            "src/control-contracts.mjs",
+            "src/public-input.jsx",
+            "node_modules/react-native/Libraries/EventEmitter/NativeEventEmitter.js",
+            "node_modules/react-native/Libraries/Renderer/shims/createReactNativeComponentClass.js",
+            "node_modules/react-native/Libraries/ReactNative/requireNativeComponent.js",
+            "node_modules/react-native/Libraries/Utilities/codegenNativeComponent.js",
+            "node_modules/react-native/Libraries/ReactNative/DeprecatedPerformanceLoggerStub.js",
+            "node_modules/react-native/Libraries/ReactNative/DisplayMode.js",
+            "node_modules/react-native/Libraries/ReactNative/HeadlessJsTaskError.js",
+            "node_modules/react-native/Libraries/ReactNative/RootTag.js",
+            "src/render-application.jsx",
+            "node_modules/react-native/src/private/specs_DEPRECATED/modules/NativeHeadlessJsTaskSupport.js",
+            "node_modules/react-native/Libraries/ReactNative/NativeHeadlessJsTaskSupport.js",
+            "node_modules/react-native/Libraries/ReactNative/AppRegistryImpl.js",
+            "src/app-registry.js",
+            "src/window-dimensions.js",
+            "src/platform-environment.js",
+            "src/react-native-platform.jsx",
+            "tests/event-dispatch-integrated-fixture.jsx"
+          ]
+        }
+      },
+      "parentOverlay": {
+        "module": "src/private/webapis/dom/events/internals/EventTargetInternals.js",
+        "originalSha256": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+        "generatedSourceSha256": "9cf100ef91a7dca21ceb850aef0a7a33344050e6fb738f80bf96ce2d02b6d640"
+      },
+      "rendererTagOverlay": {
+        "module": "Libraries/Renderer/implementations/ReactFabric-prod.js",
+        "originalSha256": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+        "generatedSourceSha256": "dc981c8726a5a77686f37131dc356f0f4626aee3adef425854391c3b8abb172e"
+      },
+      "sources": {
+        "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "tests/event-dispatch-integrated-fixture.jsx": "5eff03daba75edc61a661aee586842d306c14a219b511d985350edf5296cfe86",
+        "tests/event-dispatch-integrated-probe.gd": "c9c10e01b26558b345a6925166d530ed1fa6380e2e1a99e4a8cf09906ff9ad2d",
+        "tests/event-dispatch-integrated-native.test.mjs": "843d63419ffaa29e6aa4ab0f13b29c41bfb261014a69d089aada9c269e1574b5",
+        "scripts/event-target-bundle.mjs": "ed3a0afc64d8a593ec6b4a0e0f1b86b15946464f3e617c989585cdd12bd1af2b",
+        "sdk/toolchain/platform-plugin.mjs": "f5ea910bbbeb18b95c3a1aadb4dfe4ecbd4936ac93cb8d0a43079ec40dc510e8",
+        "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+        "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+        "src/private-interface.js": "092f03bdc6735ea444e4bb515f3de3a4aab24601ee1909c73ace5b2fe42a405e",
+        "native/application_runtime.cpp": "3874ac7450ac727874d65b04b48ca2df6e56cb9845e23980871823ccc23a5277"
+      },
+      "originalReactNativeSources": {
+        "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+        "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+        "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+        "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+        "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+        "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+        "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+        "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+        "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+        "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+        "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+        "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+        "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91"
+      }
+    },
+    "sourceDeclaration": {
+      "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+      "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+      "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+      "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+      "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+      "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+      "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+      "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+      "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+      "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+      "native/application_runtime.cpp": "3874ac7450ac727874d65b04b48ca2df6e56cb9845e23980871823ccc23a5277",
+      "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+      "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+      "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+      "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+      "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+      "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+      "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+      "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+      "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+      "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+      "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+      "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+      "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+      "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+      "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+      "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+      "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+      "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+      "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+      "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+      "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+      "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+      "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+      "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+      "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+      "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+      "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+      "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+      "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+      "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+      "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+      "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+      "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+      "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+      "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+      "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+      "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+      "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+      "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+      "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+      "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+      "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+      "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+      "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591"
+    },
+    "scope": "Intermediate terminal-queue-fixed host without scoped child-removal deferral; integrated crash control was not executed"
+  },
+  "nativeBuild": {
+    "nativeHostBuildRecorded": true,
+    "host": {
+      "sha256": "893253bfd481a08dd58bd002213633fd1bd394408559223bfcc43687bd2794b4",
+      "source": "addons/fabric_godot.dylib"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "abiCertified": false
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/event-dispatch-integrated-fixture.jsx": "5eff03daba75edc61a661aee586842d306c14a219b511d985350edf5296cfe86",
+    "tests/event-dispatch-integrated-probe.gd": "d246f01f4f0bd4124fdb7cccbba4bbe0e8328376b78d9a5a365c9c4ee61bb0e5",
+    "tests/event-dispatch-integrated-native.test.mjs": "0ff291fd38c7adead89aabbd1f673af3096be07da67dba11f2d3d78f03662ec3",
+    "scripts/event-target-bundle.mjs": "ed3a0afc64d8a593ec6b4a0e0f1b86b15946464f3e617c989585cdd12bd1af2b",
+    "sdk/toolchain/platform-plugin.mjs": "f5ea910bbbeb18b95c3a1aadb4dfe4ecbd4936ac93cb8d0a43079ec40dc510e8",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "src/private-interface.js": "092f03bdc6735ea444e4bb515f3de3a4aab24601ee1909c73ace5b2fe42a405e",
+    "native/application_runtime.cpp": "8be042e61d9ed985d8147365650e2f3cc182ea39486931ac57b52aa72f879c18",
+    "tests/rn-renderer-tag-overlay.test.mjs": "34757cb45cff426031072177bc13f67b746963a66f2299c3ac39c0b7045538e2",
+    "package.json": "2c6d14f179b9f6f689adec7a876194af6c64e3068146100b20c2144bbbd0a203",
+    ".fallowrc.json": "543e8de1fbd6a592fde422d5d69c97c69b5230695e417c3498dfa45b6c442006",
+    ".github/workflows/contracts.yml": "17ec1970a42b8bbdbac4eb05d0f6dad5089833c1ff49b0bf8510e68d80c7ff4b",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91"
+  },
+  "regressions": {
+    "contracts": {
+      "node": 235,
+      "python": 13
+    },
+    "rendererOverlayGuards": 18,
+    "consumer": {
+      "currentNativeHost": true,
+      "buildOwnershipChecks": 30,
+      "nativeChecks": 40,
+      "sdkManifestSha256": "85eefc5b75117acbe305955bbf5924e14d163bb8d07934fe8c9675090905531a",
+      "reportSha256": "422fba39e04fbea95c14cf8501ddce662f4490796fdb64dc2eb752c8bf6c55fc",
+      "sourceCommit": "897b127d0e7d2791515daadd25ec95843f7d84bc",
+      "sourceDirty": true,
+      "exactNativeAndSharedToolchainPinsVerified": true
+    },
+    "adapterLoader": {
+      "cases": 21,
+      "checks": 89,
+      "nativeVMExecuted": false
+    },
+    "adapterRuntime": {
+      "runs": 13,
+      "checks": 213,
+      "rootFreeResizeChecks": 17,
+      "abiCertified": false,
+      "reportSha256": "a23e9a63e0edebd6e98c001158c6d0c8605d7e7390f9154b8182bbf08d89101f"
+    },
+    "examples": {
+      "count": 22,
+      "checks": 2250,
+      "currentNativeHost": true,
+      "displayServer": "headless",
+      "reports": {
+        "metrics": {
+          "checks": 64,
+          "sha256": "5ad9bb925a178276901bd31f96baad108adcfb26c52ccc4b2439c35aa33bebce"
+        },
+        "runtime": {
+          "checks": 23,
+          "sha256": "f7f86dfb969ddee5baad9e6ba11c829f15819b9b5d59e218488b328ee4bb3f1b"
+        },
+        "focus": {
+          "checks": 175,
+          "sha256": "344c68ab0051dedb320d191b5c33c1ea17d1dacf5c3e017a18974f08597e9713"
+        },
+        "scroll": {
+          "checks": 62,
+          "sha256": "b50d9cccd202214e7e2081155fca096a859e2af25d6d35f67560695a48033989"
+        },
+        "pointers": {
+          "checks": 132,
+          "sha256": "3f9a85fdc0b52a7a13a4720078d89226487dc73a72e2cc2050ef40f35bc2a04d"
+        },
+        "services": {
+          "checks": 36,
+          "sha256": "0b57bec5cd5577adf512377d11540fb1e1786f5aa457aa642d007c1b7e323131"
+        },
+        "input": {
+          "checks": 45,
+          "sha256": "b2215f1d81023ce522289bab33c42e7ca0d8dcce7635190dd6681c720f1a1ccb"
+        },
+        "refs": {
+          "checks": 23,
+          "sha256": "49ddd76008bb888f60276cfdd1123f496cd8edaad6abeb14c0fdcbf0ea926da3"
+        },
+        "view": {
+          "checks": 67,
+          "sha256": "8c6b139ba89f2616f9d709c55fd510ec27c92330b128d769ca0d6e91cce5e7be"
+        },
+        "typography": {
+          "checks": 50,
+          "sha256": "83d656162274aa7d2703600679427a52c3d4c6bdba4b7cb9ed9322f9f523fbda"
+        },
+        "coordinates": {
+          "checks": 238,
+          "sha256": "6f3242a4ce45bb4421a81ad285b0be0603880a60bb0339d2e4f808253a2fb0f9"
+        },
+        "counter": {
+          "checks": 19,
+          "sha256": "e44cf42ed04bd842d4d332cb751409d08f5a04860143708be6ed6cae7555199b"
+        },
+        "shared": {
+          "checks": 35,
+          "sha256": "70d4a93561f2c75976e93893a9666364fe668a0ac555e1812337ac1b9fdf4d35"
+        },
+        "chart": {
+          "checks": 34,
+          "sha256": "4f054185a642eb35f7753b6b2dc53d1013bf1dc27bef33439e0a213c20a9f51e"
+        },
+        "react": {
+          "checks": 36,
+          "sha256": "5e69c36caa32d93ada5f89bc5e0ad270d30e85416f666684378143cf4d4ff42e"
+        },
+        "transforms": {
+          "checks": 309,
+          "sha256": "bd8c89c2be7eba6a87ceeadd924a3df4ff7b8e0ea8fc14e6779a875edbfe9d90"
+        },
+        "pressable": {
+          "checks": 47,
+          "sha256": "31d86216b13f514d928799f8e455ec8c677d796380c1f0566ae25bb2fc987e9f"
+        },
+        "layout": {
+          "checks": 47,
+          "sha256": "ab23432bbf7819cbde2dad9dd241d9e7637def9e52c070f4fad2b8e1f84b1f09"
+        },
+        "pointer-geometry": {
+          "checks": 631,
+          "sha256": "b678bf753386edf50948bbd4dbb9c121c179ea0e9fcaa9b2015706619dd56d26"
+        },
+        "form": {
+          "checks": 39,
+          "sha256": "2a85eaaa202c0aa96fda1bfdfe8a25dc3a1a53a5fbdb97a335c21cded29c5cc8"
+        },
+        "tree": {
+          "checks": 89,
+          "sha256": "3d28861af578309be2f6f8e091502e7c91b2e3e2d25c22c138e71d8fc4e6b8f0"
+        },
+        "nativewind": {
+          "checks": 49,
+          "sha256": "0f1ce434a5506da54e947c17ae59a2916524c9f3d7d0277a076284fcdf67d527"
+        }
+      }
+    },
+    "nativeSdk": {
+      "packedAndVerified": true,
+      "manifestSha256": "90e09555a335080887cfeaeddb6c3c032b3550c86ab0eb812dc84de7ffa2c7a8",
+      "hostSha256": "893253bfd481a08dd58bd002213633fd1bd394408559223bfcc43687bd2794b4",
+      "abiCertified": false
+    },
+    "finalNativeTests": {
+      "pointerProcessorAndErrors": 2,
+      "geometryAndHermesProjection": 2,
+      "focusCommands": 1,
+      "touchTagOriginalCurrent": {
+        "checksPerVariant": 647,
+        "originalExpectedFailures": 2,
+        "currentFailures": 0
+      }
+    }
+  },
+  "hosted": {
+    "status": "pending",
+    "precedingTagFixRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221",
+    "precedingRunDoesNotCoverThisSlice": true
+  },
+  "limitations": [
+    "Public EventTarget flags remain disabled; shared selection is an internal opt-in experiment",
+    "Imperative pointer native interest remains a proved zero-delivery negative with a manual positive",
+    "Four original experimental responder differences remain open",
+    "The native injected touch payload is root-local; explicit global manual arrays are a sensitivity oracle, not mobile certification",
+    "No registered-null-target original dispatcher native JS delivery, reentrant full-queue certification, hardware, mobile, complete PanResponder, dev renderer or performance certification",
+    "Self-free during own descendant tree mutation is outside this unmount-only control; ordinary resize/free has separate executed regression",
+    "Default generated renderer source remains the delivered tag-only correction; the full default bundle is not asserted byte-identical"
+  ]
+}

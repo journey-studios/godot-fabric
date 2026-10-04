@@ -12,11 +12,13 @@ export function isSdkOwnedSpecifier(specifier) {
 
 // Shared native-host seams. Consumers and the laboratory use the same facade
 // and original RN transforms; only their application entrypoints differ.
-export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode = "current", rendererTagMode = "current"} = {}) {
+export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode = "current", rendererTagMode = "current", nativeDispatchMode = "original"} = {}) {
   if (eventTargetParentMode !== "current" && eventTargetParentMode !== "original")
     throw new Error("E_EVENT_TARGET_OVERLAY_MODE: expected current or original");
   if (rendererTagMode !== "current" && rendererTagMode !== "original")
     throw new Error("E_RENDERER_TAG_OVERLAY_MODE: expected current or original");
+  if (nativeDispatchMode !== "original" && nativeDispatchMode !== "experimental")
+    throw new Error("E_RENDERER_NATIVE_DISPATCH_MODE: expected original or experimental");
   const rnRoot = path.dirname(resolveSdk("react-native/package.json"));
   return {
     name: "godot-platform",
@@ -27,6 +29,11 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
         if (importer !== path.join(platformRoot, "private-interface.js")) return;
         return { path: path.join(path.dirname(resolveSdk("react-native/package.json")),
           "src/private/webapis/dom/nodes/specs/NativeDOM.js") };
+      });
+      builder.onResolve({ filter: /^\.\.\/node_modules\/react-native\/src\/private\/renderer\/events\/dispatchNativeEvent$/ }, ({ importer }) => {
+        // Only this platform facade may resolve the unexported original module.
+        if (importer !== path.join(platformRoot, "private-interface.js")) return;
+        return { path: path.join(rnRoot, "src/private/renderer/events/dispatchNativeEvent.js") };
       });
       builder.onResolve({ filter: /(?:^|\/)renderApplication$/ }, ({ importer }) => {
         if (importer === path.join(rnRoot, "Libraries/ReactNative/AppRegistryImpl.js"))
@@ -64,7 +71,7 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
         if (filename === path.join(rnRoot, "src/private/webapis/dom/events/internals/EventTargetInternals.js"))
           source = renderEventTargetParentOverlay(source, eventTargetParentMode);
         if (filename === path.join(rnRoot, "Libraries/Renderer/implementations/ReactFabric-prod.js"))
-          source = renderRendererTagOverlay(source, rendererTagMode);
+          source = renderRendererTagOverlay(source, rendererTagMode, {nativeDispatchMode});
         return {
         contents: (await transformAsync(source, {
           filename, configFile: false, babelrc: false,

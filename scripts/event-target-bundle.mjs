@@ -34,7 +34,7 @@ const upstreamFiles = [
 
 // Each output is a separate Hermes runtime's immutable flag configuration.
 // This helper never writes build/app.js and performs no native build or run.
-async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", sources, extraUpstreamFiles = []}) {
+async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", nativeDispatchMode = "original", defines = {}, sources, extraUpstreamFiles = []}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundles = {};
@@ -42,9 +42,9 @@ async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMo
     const bundlePath = path.join(output, prefix + "-" + mode + ".js");
     const bundled = await build({absWorkingDir: root, entryPoints: [entryPoint],
       outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
-      define: {"process.env.NODE_ENV": '"production"', __DEV__: "false", __EVENT_TARGET_PROBE_MODE__: JSON.stringify(mode)},
+      define: {"process.env.NODE_ENV": '"production"', __DEV__: "false", __EVENT_TARGET_PROBE_MODE__: JSON.stringify(mode), ...defines},
       mainFields: ["main"], resolveExtensions: godotExtensions,
-      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode})]});
+      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode, nativeDispatchMode})]});
     const inputs = Object.keys(bundled.metafile.inputs);
     for (const file of ["Libraries/Renderer/implementations/ReactFabric-prod.js", "src/private/webapis/dom/events/EventTarget.js",
       "src/private/webapis/dom/nodes/ReactNativeElement.js"])
@@ -61,11 +61,11 @@ async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMo
   const parentSource = await readFile(path.join(rnRoot, parentModule), "utf8");
   const rendererModule = "Libraries/Renderer/implementations/ReactFabric-prod.js";
   const rendererSource = await readFile(path.join(rnRoot, rendererModule), "utf8");
-  const receipt = {format: "godot-fabric.event-target-probe-bundles/v1", parentMode, rendererTagMode, bundles,
+  const receipt = {format: "godot-fabric.event-target-probe-bundles/v1", parentMode, rendererTagMode, nativeDispatchMode, bundles,
     parentOverlay: {module: parentModule, originalSha256: digest(parentSource),
       generatedSourceSha256: digest(renderEventTargetParentOverlay(parentSource, parentMode))},
     rendererTagOverlay: {module: rendererModule, originalSha256: digest(rendererSource),
-      generatedSourceSha256: digest(renderRendererTagOverlay(rendererSource, rendererTagMode))},
+      generatedSourceSha256: digest(renderRendererTagOverlay(rendererSource, rendererTagMode, {nativeDispatchMode}))},
     sources: Object.fromEntries(await Promise.all(sources.map(async file => [file, digest(await readFile(path.join(root, file)))]))),
     originalReactNativeSources: Object.fromEntries(await Promise.all([...upstreamFiles, ...extraUpstreamFiles]
       .map(async file => [file, digest(await readFile(path.join(rnRoot, file)))])))};
@@ -97,6 +97,22 @@ export async function bundleNativeEventDispatchProbe({rendererTagMode = "current
       "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/ResponderEvent.js",
       "src/private/renderer/events/LegacySyntheticEvent.js", "src/private/renderer/events/ReactNativeEventTypeMapping.js",
       "src/private/renderer/events/ResponderTouchHistoryStore.js"]});
+}
+
+
+export async function bundleIntegratedEventDispatchProbe({integrationMode = "integrated"} = {}) {
+  assert.ok(["original", "integrated"].includes(integrationMode));
+  return bundleProbe({entryPoint: "tests/event-dispatch-integrated-fixture.jsx", modes: ["enabled"],
+    prefix: "event-dispatch-integrated", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: integrationMode === "integrated" ? "experimental" : "original",
+    defines: {__NATIVE_EVENT_INTEGRATION_PROBE_MODE__: JSON.stringify(integrationMode)},
+    sources: ["tests/event-target-bootstrap.js", "tests/event-dispatch-integrated-fixture.jsx",
+      "tests/event-dispatch-integrated-probe.gd", "tests/event-dispatch-integrated-native.test.mjs",
+      "scripts/event-target-bundle.mjs", "sdk/toolchain/platform-plugin.mjs",
+      "sdk/toolchain/rn-event-target-overlay.mjs", "sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "src/private-interface.js", "native/application_runtime.cpp"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js"]});
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

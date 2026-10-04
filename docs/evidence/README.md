@@ -233,3 +233,10 @@ runs cold native Godot checks, original RN iOS/Android reference apps and
 differential comparison. Mobile reference jobs do not certify Godot mobile
 builds. [API limits](../API.md)
 describe capabilities that still need dedicated validation.
+
+The [native EventTarget integration record](event-dispatch-integrated/README.md)
+adds 181/206 original/integrated headless checks, 236 viewport checks,
+28 pixels/two captures, exclusive batched native delivery and two native lifetime
+fixes. Its preceding-host registry failure and reentrant crash controls are
+separate. Public flags and native pointer interest remain open; this starts
+GF-06 alongside continuing GF-05/GF-07/GF-08/GF-13 work.

@@ -82,7 +82,17 @@ and 40 native assertions. Contracts pass 227 Node and 13 Python tests; all 22
 examples pass 2,250 headless checks, including 47 Pressability assertions. The
 119-check original EventTarget baseline, 102-check ancestry variants, focus
 commands and pointer processor/error gates pass. Static/publication scans pass.
-Hosted CI for this new slice remains pending.
+
+Hosted [CI run 37218513221](https://github.com/journey-studios/godot-fabric/actions/runs/37218513221)
+completed all five jobs successfully at `897b127`. Its audited
+`native-event-dispatch-original` artifact reproduces the same 647 check IDs,
+exactly two original negatives and all corrected passes; all 17 project source
+pins match the delivered implementation and audited head. The receipt preserves
+the ZIP digest and separate hosted report/native hashes: the recorded native host
+is identical across hosted variants and differs from the local build. The binary
+itself is not included in this artifact. This CI covers the delivered tag
+correction; subsequent EventTarget renderer integration, native interest,
+hardware/mobile behavior, performance and ABI remain outside this evidence.
 
 ## Remaining integration gaps
 

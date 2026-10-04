@@ -594,5 +594,88 @@
     "package.json": "268dd92c38cef32c663b37224cd6d06b835498646da476beb7575520dae65b43",
     ".fallowrc.json": "b48a1ec8f4b0402a739da09d335ae85c67a2e88f6146ba8932af54e6d24e5f2d",
     ".github/workflows/contracts.yml": "ef4821c41c18e4817c1975fd16dac0f2e433dfc43d9e7a94fe70e37ed404d108"
+  },
+  "hosted": {
+    "workflow": "Contracts",
+    "runId": 37218513221,
+    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221",
+    "headSha": "897b127d0e7d2791515daadd25ec95843f7d84bc",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": {
+      "reference-android": {"id": 111483886825, "conclusion": "success"},
+      "contracts": {"id": 111483886896, "conclusion": "success"},
+      "native-cold-start": {"id": 111483886914, "conclusion": "success"},
+      "reference-ios": {"id": 111483886960, "conclusion": "success"},
+      "parity-comparison": {"id": 111486806773, "conclusion": "success"}
+    },
+    "artifact": {
+      "name": "native-event-dispatch-original",
+      "id": 11309119887,
+      "zipSha256": "90bffd0ae33f8f746c2e730a18b7ec3feecd86bc93e203dbf404193c2da07b11",
+      "zipDigestVerifiedAgainstGitHub": true,
+      "comparisonReportSha256": "69ea0b48165287d31c88559b81daf9e43f8744588d85559b4fa58c4dbb14d6c5"
+    },
+    "sourceAudit": {
+      "againstCommittedReceipt": "897b127d0e7d2791515daadd25ec95843f7d84bc",
+      "implementationCommit": "7a05e4afdfcc018a34e0eb4b6dc6e74433def234",
+      "verifiedProjectSourcePins": 17,
+      "projectPinsMatchBothCommits": true,
+      "verifiedOriginalRNPins": 16,
+      "originalRNPinsMatchCommittedReceipt": true,
+      "identicalFixtureSourcesAcrossVariants": true,
+      "identicalOriginalRNInputsAcrossVariants": true,
+      "fourBundleHashesMatchLocalReceipt": true
+    },
+    "comparison": {
+      "identicalOrderedCheckIds": true,
+      "uniqueCheckIds": 647,
+      "checkIdsSha256": "df8ceaadf92567c2dcc7ea503aed0f72c5843edffedb177fea534fc64a0779e3",
+      "checkIdsMatchCommittedReceipt": true,
+      "insideContactLifecycleAndNativeStatesMatchLocalReceipt": true,
+      "sameNativeHostAcrossHostedVariants": true,
+      "nativeHostSha256": "3cc3d461e69cc1c180652d98965470e51e25228aa11ae29a0c7e4c131a6b07ff",
+      "localNativeHostSha256": "caa3f4047ef3fd1fc67d408df1a765797d7b1bd8985ab4025f6ee8e5779a925b",
+      "nativeHostIdenticalToLocal": false,
+      "nativeHostHashSource": "Reported provenance; the native binary is not included in this artifact",
+      "rawReportHashesIdenticalToLocal": false
+    },
+    "variants": {
+      "original": {
+        "checks": 647,
+        "passed": 645,
+        "failed": [
+          "native-compiled-legacy/inside-two/Native responder owner matches lifecycle at step 2",
+          "native-compiled-legacy/inside-two/Exact responder grant start move end release terminate and transfer sequence"
+        ],
+        "rawReportSha256": "615b23966682c6a8cae7970215ee9ee47e81ab6fff5773e2f025835b1c40ffb5",
+        "logSha256": "9436b0ab6d4997d77aa24d4a5728f98af59da09f36c17c3cbdbda034b4e55495",
+        "exactExpectedNativeErrorLines": 2,
+        "unexpectedFaultMarkers": 0
+      },
+      "current": {
+        "checks": 647,
+        "passed": 647,
+        "failed": [],
+        "rawReportSha256": "2c66ca50c91b8fc043029628ab24d3d5686f6082c44310adcc67f87e13ae39cd",
+        "logSha256": "7d5d83acdeb818fa91cdbfa46f96cfced3460015aa2d0b40f9cbc74f11fa728f",
+        "nativeErrorLines": 0,
+        "unexpectedFaultMarkers": 0
+      }
+    },
+    "environment": {"node": "v22.23.2", "godot": "4.7.2-stable (official)", "mode": "headless"},
+    "scope": {
+      "bothVariantsRetireAllRootsContactsWorkAndTimers": true,
+      "fourOriginalDispatcherGapsStillObserved": true,
+      "nativeEventTargetIntegrated": false,
+      "nativeInterestSolved": false,
+      "publicDefaultEnabled": false,
+      "subsequentUncommittedIntegrationCovered": false,
+      "graphicalCertified": false,
+      "hardwareCertified": false,
+      "mobileCertified": false,
+      "performanceCertified": false,
+      "abiCertified": false
+    }
   }
 }

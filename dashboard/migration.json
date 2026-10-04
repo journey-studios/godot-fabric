@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Tags de toque e retenção do responder corrigidas; próximos interesse e dispatcher EventTarget nativos"
+    "focusTitle": "Batch EventTarget nativo validado; próximos interesse imperativo de pointer e matriz de flags"
   },
-  "updatedAt": "2026-10-04T16:54:39.696104+00:00",
+  "updatedAt": "2026-10-04T18:01:42.451528+00:00",
   "source": {
-    "commit": "7a05e4afdfcc018a34e0eb4b6dc6e74433def234",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/ROADMAP.md",
-    "scope": "Implementação 7a05e4a: 17 hashes executados conferidos no commit. Lookup corrigido passa 647 checks; original falha em dois checks normativos. Consumidor 30/40, contratos 227 Node/13 Python, 22 exemplos/2250, Pressable 47, SDK fresco e rejeição do antigo comprovados. CI desta fatia pendente; flags EventTarget públicas off; nenhum novo checkpoint ou denominador concluído.",
+    "commit": "897b127d0e7d2791515daadd25ec95843f7d84bc",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/897b127d0e7d2791515daadd25ec95843f7d84bc/ROADMAP.md",
+    "scope": "Base897b127; nova implementação executada na árvore local, pin pós-commit pendente. Dispatcher nativo opt-in181/206 e236/28pixels; duas correções de lifetime, contratos235/13, consumidor30/40,22 exemplos2250, SDK e13 adapters213. CI nova pendente; CI de tags647 auditada. Somente primeiro checkpoint GF-06 concluído; nenhum GF completo.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "TimerManager e globals Event/EventTarget/CustomEvent/AbortController originais têm provas parciais. Baseline 119 e comparação de dispatcher 647 checks por variante executam erros públicos e trusted, dispatch aninhado e recuperação de globals. Oito faults JS deliberados ficam separados de erros nativos. Bootstrap público, idle, URL/encoding, starvation e error contracts completos continuam abertos; o dispatcher novo ainda é chamado explicitamente no teste.",
+      "note": "Dispatcher original agora recebe input nativo dentro do batch experimental181/206, com Raw único, erros deliberados e recuperação. Globals/classes originais, cleanup e prioridade efetiva são registrados; publicflags off. Idle, URL/encoding, starvation, todo contrato de erros/prioridades, flags e hardware/mobile continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -286,6 +286,14 @@
             {
               "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
             }
           ]
         },
@@ -314,7 +322,7 @@
       "phase": "M0",
       "priority": "P1",
       "title": "React/Fabric semantic suite",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler",
       "dependencies": [
         "GF-01",
@@ -322,14 +330,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Primeira fatia semântica no host comprovada: dois setCount funcionais em JSX/imperativo geram um commit após callbacks, ref/NativeDOM e geometria seguem estado. Controle legacy só atualiza uma vez; payload e erro mantêm rota exclusiva.181/206 headless e236viewport/28pixels. Semântica completa de StrictMode/dev, Suspense/transitions/Activity, stores, abandoned renders e diferencial mobile seguem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -364,7 +377,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transforms rejeitados em 6 aplicações independentes liberam raízes, Controls parcialmente criados, timers/frames, módulos e tarefas: 61 checks executados. Recuperação não destaca nó nunca anexado. Contrato completo de lifecycle/pause/remount/diferencial segue aberto.",
+      "note": "Cancel de folha enfileirado aguardava beat, mas registro era retirado cedo; corrigido com controle negativo no host anterior. tree_exiting podia unmount root durante Remove e causar signal11; deferral por root e envelopes de origem revogada corrigidos no controle atual, com B sobrevivente.13 adapters213 incluem resize/free17; consumidor30/40,22 exemplos2250. Contrato completo lifecycle/pause/remount/reentrada e diferencial continua aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -395,6 +408,10 @@
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
               "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
             }
           ]
         },
@@ -431,7 +448,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs/NativeDOM, medidas, foco/comandos e captura têm recibos separados. Ancestralidade EventTarget: 102 checks por variante, CI 91e5219 auditada. Lookup de tag nativa resolve o handle fraco original na árvore comprometida do runtime: 12 refs reais, incluindo flattened, identidade exata; tags inválidas e removidas não têm autoridade. Comparação de dispatcher: 647 IDs iguais, dois checks normativos falham no lookup original e todos passam no corrigido. HostInstance/tipos/comandos completos, interesse e dispatcher nativos, teardown reentrante, desempenho e hardware/mobile continuam pendentes. Flags públicas desativadas; CI da correção de tags pendente.",
+      "note": "Refs originais e ancestralidade current têm provas anteriores; tag lookup647 agora confirmado em CI897b127,17 pins auditados. Novo opt-in nativo entrega touch imperativo sem JSX helper, mixed10callbacks/1commit, remoção/ref inválido e root lifetime181/206/236. Tipos/commands/EventTarget completos, interesse pointer, flag matrix, null target JS, desempenho e hardware/mobile continuam abertos. Flags públicas off; CI nova pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -510,6 +527,14 @@
             {
               "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
             }
           ]
         },
@@ -777,7 +802,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Ponteiros, captura e geometria têm provas separadas: 132/146, 631/648 e binding 378. A correção do lookup de tags impede release prematuro quando outro contato interno sobrevive: original falha em dois dos 647 checks; corrigido passa todos com o mesmo host. Pressability passa 47 checks incluindo render pressionado, drag do contato restante e uma ativação na soltura final; 22 exemplos/2250 checks passam. Quatro diferenças do responder experimental permanecem reproduzidas: contato externo, should-set error cleanup, truthy should-set e termination undefined. EventQueue coalescing, interesse/dispatcher EventTarget nativos, PanResponder completo, scroll/windows, hardware/keyboard e mobile seguem abertos. Flags públicas desativadas; CI desta fatia pendente.",
+      "note": "Native EventTarget opt-in181/206 mais236/28pixels: touch sem helper, mixed JSX/imperativo uma rota/batch, cancel/held teardown e duas correções native lifetime. Pointer-only ainda zero nativo com positivo manual. Root-local nativo compara original root-local; global manual é sensitivity, não paridade mobile. Quatro gaps originais, coalescing, PanResponder, flags, scroll/windows e hardware/mobile seguem abertos. CI de tags647 auditada; CI nova pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -824,6 +849,14 @@
             {
               "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
             }
           ]
         },
@@ -2624,6 +2657,30 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-integrated-native-local-20261004",
+      "at": "2026-10-04T18:01:42.451528+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "181/206headless e236viewport/28pixels comprovam input EventTarget dentro do batch original. Dois updates funcionais geram um commit. Controle anterior falha no registro e intermediário crasha em Remove; fixes passam e preservam resize/free17. Contratos235/13, consumidor30/40,22examples2250 e13adapters213 passam. GF-06 inicia; somente sua primeira fatia host-validada conclui checkpoint. Pesos/denominador preservados; nenhum GF completo, nova CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+    },
+    {
+      "id": "touch-tag-hosted-897b127-audit",
+      "at": "2026-10-04T18:01:42.451528+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Run37218513221/head897b127 passou os cinco jobs. Artefato11309119887/ZIP digest verificado:647 IDs iguais,17 pins de7a05e4a/897b127, original645/647 exatamente dois negativos, corrected647/647. Esse CI não cobre o novo dispatcher integrado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
+    },
     {
       "id": "native-touch-tag-resolution-pinned-7a05e4a",
       "at": "2026-10-04T16:54:39.696104+00:00",

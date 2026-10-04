@@ -150,6 +150,18 @@ jobs:
             build/event-dispatch-original.log
             build/event-dispatch-current.log
           if-no-files-found: error
+      - run: npm run test:events:integrated
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-event-dispatch-integrated
+          path: |
+            build/event-dispatch-integrated-original-report.json
+            build/event-dispatch-integrated-integrated-report.json
+            build/event-dispatch-integrated-comparison.json
+            build/event-dispatch-integrated-original.log
+            build/event-dispatch-integrated-integrated.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

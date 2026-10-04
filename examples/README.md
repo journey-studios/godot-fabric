@@ -57,6 +57,11 @@ and [parity baseline](../docs/compatibility/BASELINE.md).
 
 ## Gallery
 
+The [isolated EventTarget validation](event-target/README.md) uses its own
+fixture/driver and commands. It compares original versus integrated native
+delivery, batching, faults and retirement, with two actual captures. It is
+outside the ordinary launcher catalog while public EventTarget flags remain off.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

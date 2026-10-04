@@ -160,6 +160,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     Vector2 size;
     std::unique_ptr<fabric_godot::PointerAdapter> pointer;
     int commits{}, mount_reports{}, creates{}, deletes{}, updates{}, events{};
+    int child_removal_depth{};
     bool stopping{}, stopped{};
     bool started{}, start_pending{};
     folly::dynamic initial_props;
@@ -241,6 +242,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       catch (const std::exception &error) { owner.fail(error.what()); }
     }
   };
+  struct ChildRemovalScope {
+    int &depth;
+    explicit ChildRemovalScope(int &depth) : depth(depth) { ++depth; }
+    ~ChildRemovalScope() { --depth; }
+  };
   Vector2 viewport_size;
   std::shared_ptr<fabric_godot::TextLayout> text_layout;
   std::shared_ptr<fabric_godot::ParagraphLayout> paragraph_layout;
@@ -284,6 +290,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto event_pipe = [this](jsi::Runtime &rt, rn::EventTarget *target,
         const std::string &type, rn::ReactEventPriority priority,
         const rn::EventPayload &payload, rn::HighResTimeStamp timestamp) {
+      // A retired leaf can enqueue a null-target terminal pointer before its
+      // originating root stops. Revoked source authority must also cover that
+      // native envelope, while TouchCancel still performs responder cleanup.
+      if (const auto *pointer = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&payload)) {
+        auto source = roots.find(pointer->source_surface);
+        if (inactive() || source == roots.end() || source->second->stopping) return;
+      }
       if (target) {
         auto root = roots.find(target->getSurfaceId());
         if (root == roots.end() || ((root->second->stopping || inactive()) && type != "topTouchCancel")) return;
@@ -685,6 +698,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   void pump(bool frame_tick = false) {
     ExecutionScope execution(*this);
     if (stopped || stop_requested) return;
+    // A React commit below can enqueue PointerCancel after this pump's beat.
+    // Keep that pointer registered until a later beat has delivered its terminal
+    // event. Do not consume the live set up front: exceptions must retain cleanup.
+    const auto ready_pointer_removals = pending_pointer_removals;
     try {
       // One independent deferred phase per frame. Never invoke game Callables
       // while returning through FabricApplication's Godot notification stack.
@@ -741,8 +758,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         if (!stop_requested) runtime->drainMicrotasks();
       }
       if (!stop_requested) runtime->drainMicrotasks();
-      for (int id : pending_pointer_removals) pointer_processor().removePointerForGodot(id);
-      pending_pointer_removals.clear();
+      // A bounded work drain can leave the induced beat callback in the queue.
+      // In that case defer retirement rather than erase a still-queued target.
+      if (!stop_requested && work.empty())
+        for (int id : ready_pointer_removals) {
+          pointer_processor().removePointerForGodot(id);
+          pending_pointer_removals.erase(id);
+        }
       // Registry lookups must run after Fabric's commit callback has unwound;
       // the ShadowTreeRegistry holds its shared lock during that callback.
       pointer_processor().clearDisconnectedCaptureTargetsForGodot(*ui);
@@ -757,6 +779,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     retire_pointers(id);
     root.start_pending = false;
     pending_retirements.emplace(id, legacy_hook);
+    // A native child removal can emit game signals during this transaction.
+    // Detaching an ancestor from such a signal re-enters Godot's tree mutation.
+    // Revoke authority now; the independent phase disposes this live host after
+    // the outer child-removal stack has returned. Other callbacks retain the
+    // immediate detachment required when a game frees the Surface itself.
+    if (root.child_removal_depth) return;
     // The Node may be destroyed by the game before deferred React cleanup.
     // Detach only this root's top-level owned Controls, retaining the entire
     // native subtree and adapters until the independent phase can dispose it.
@@ -1454,7 +1482,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             auto *control = views.at(old.tag).control;
             // A native Create can reject props before Insert. Upstream's error
             // recovery still retires that node, but it was never attached.
-            if (control->get_parent()) parent(mutation.parentTag)->remove_child(control);
+            if (control->get_parent()) {
+              ChildRemovalScope removal(surface.child_removal_depth);
+              parent(mutation.parentTag)->remove_child(control);
+            }
           }
           break;
         case rn::ShadowViewMutation::Delete: {

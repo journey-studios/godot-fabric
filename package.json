@@ -51,7 +51,8 @@
     "test:pointers:geometry": "node --test --test-concurrency=1 tests/pointer-geometry-native.test.mjs tests/pointer-projection-native.test.mjs",
     "test:events:original": "node --test tests/event-target-native.test.mjs",
     "test:events:ancestry": "node --test tests/event-target-ancestry-native.test.mjs",
-    "test:events:dispatch": "node --test tests/event-dispatch-native.test.mjs"
+    "test:events:dispatch": "node --test tests/event-dispatch-native.test.mjs",
+    "test:events:integrated": "node --test tests/event-dispatch-integrated-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",
