@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Comandos de foco comprovados; próximos HostInstance e lifetime de ponteiros"
   },
-  "updatedAt": "2026-10-04T05:03:09.984744+00:00",
+  "updatedAt": "2026-10-04T05:05:28.189094+00:00",
   "source": {
     "commit": "877c52914fc56eefeacd367678f27124d7991ebe",
     "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/ROADMAP.md",
-    "scope": "Complemento877c529 verificado contra9 fontes:112checks/40owners,8rejeições exatas e recuperação.207Node/13Python passaram; runtime3b09b37/host6abafb9 e exemplos175/189 inalterados. CI1699e5c passou cinco lanes; CI dos novos testes e Pages seguem passos separados. Captura permanece investigação de fonte;156 checkpoints/18concluídos,sem novo aceite/decisão/peso. Pagesmanual37178662152 passou build/deploy e publicou JSONffcc027 comparado integralmente fora do main. CI dos novos testes registrada no snapshot; não inferir conclusão.",
+    "scope": "Complemento877c529 verificado contra9 fontes:112checks/40owners,8rejeições exatas e recuperação.207Node/13Python passaram; runtime3b09b37/host6abafb9 e exemplos175/189 inalterados. CI1699e5c passou cinco lanes; CI dos novos testes e Pages seguem passos separados. Captura permanece investigação de fonte;156 checkpoints/18concluídos,sem novo aceite/decisão/peso. Pagesmanual37178662152 passou build/deploy e publicou JSONffcc027 comparado integralmente fora do main. CI dos novos testes registrada no snapshot; não inferir conclusão. Links de checkpoint apontam para recibos pós-pin0d7c731/ffcc027; commits de implementação permanecem3b09b37/877c529.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -453,11 +453,11 @@
             },
             {
               "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/0d7c73106fba30b02fbc4ac34e51b2f1699d9f0d/docs/evidence/focus/README.md"
             },
             {
               "label": "Comandos nativos:112checks/40owners,8rejeições e recuperação real",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
             }
           ]
         },
@@ -670,11 +670,11 @@
             },
             {
               "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/0d7c73106fba30b02fbc4ac34e51b2f1699d9f0d/docs/evidence/focus/README.md"
             },
             {
               "label": "Comandos nativos:112checks/40owners,8rejeições e recuperação real",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
             }
           ]
         },
@@ -2961,6 +2961,16 @@
       ],
       "message": "Pagesmanual37178662152 concluiu build/deploy; JSON públicoffcc027 comparado ao commit com complemento877c529 fora do main. CI nova registrada em snapshot; sucesso de publicação não fecha paridade/runtime completo.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152"
+    },
+    {
+      "id": "focus-pinned-receipt-links-20261004",
+      "at": "2026-10-04T05:05:28.189094+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Links de checkpoint fixados nos recibos pós-pin0d7c731/ffcc027, que registram a comparação dos hashes com implementações3b09b37/877c529. Preserva provas, estados e denominador; nenhuma conclusão adicionada.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
     }
   ]
 }
