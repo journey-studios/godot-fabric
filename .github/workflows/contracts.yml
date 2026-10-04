@@ -127,6 +127,18 @@ jobs:
             build/event-target-bundles.json
             build/event-target.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:events:ancestry
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-event-target-ancestry
+          path: |
+            build/event-target-ancestry-original-report.json
+            build/event-target-ancestry-current-report.json
+            build/event-target-ancestry-comparison.json
+            build/event-target-ancestry-original.log
+            build/event-target-ancestry-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

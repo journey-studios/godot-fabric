@@ -744,6 +744,28 @@ decision. [CI receipt](docs/evidence/event-target/ci.json) audits 119 identical
 check IDs and all three gaps at 515d0d7; all five jobs passed. This hosted
 manual baseline remains separate from native EventTarget integration.
 
+### EventTarget current-ancestry correction (2026-10-04)
+
+GF-08 remains **In progress**. Shared consumer/laboratory bundling now generates
+a hash-guarded correction to the pinned permanent parent cache. The original
+parent getter resolves current NativeDOM ancestry for each new event path; the
+original dispatcher still snapshots that path before callbacks.
+[Evidence](docs/evidence/event-target-ancestry/README.md) records **102 checks
+in each original/corrected variant**, using identical fixtures/native host.
+Retired warm refs dispatch locally after item/ancestor/root removal and remount.
+Another root retains its identities, and listeners installed before a keyed
+sibling reorder continue working. A separate original-EventTarget graph proves
+synchronous capture-time mutation preserves the current path and changes the
+next path; this does not claim native React reparenting with retained identity.
+
+Five overlay guards, contracts204/13Python, consumer30/40, original119 control,
+focus/command and pointer processor/error gates pass. All22examples/2246headless
+pass with the shared correction; no native rebuild was needed. Default
+EventTarget flags remain off, native interest/dispatcher and complete responder
+acceptance remain open. New CI variant execution, performance, hardware/mobile
+and the full GF-08 contract are pending. No checkpoint, dependency,
+architectural decision, weight or denominator is closed.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

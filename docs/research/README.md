@@ -64,8 +64,8 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   counterexamples, native projection, contact history and executed Godot proof.
 
 - [Imperative EventTarget boundary](event-target-boundary.md): three pinned
-  source gaps reproduced with 119 original-ref checks; native integration and
-  parent-cache correction remain pending.
+  source gaps reproduced with 119 original-ref checks; current-parent correction
+  passes 102 checks/variant. Native integration and responder controls remain pending.
 
 ## Useful next experiments
 

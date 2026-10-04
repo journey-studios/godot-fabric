@@ -1,6 +1,7 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { transformAsync } from "@babel/core";
+import {renderEventTargetParentOverlay} from "./rn-event-target-overlay.mjs";
 
 // Only this exact runtime import is SDK-owned; arbitrary package subpaths keep
 // the consumer's dependency rules and cannot accidentally escape into the SDK.
@@ -10,7 +11,9 @@ export function isSdkOwnedSpecifier(specifier) {
 
 // Shared native-host seams. Consumers and the laboratory use the same facade
 // and original RN transforms; only their application entrypoints differ.
-export function platformPlugin(platformRoot, resolveSdk) {
+export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode = "current"} = {}) {
+  if (eventTargetParentMode !== "current" && eventTargetParentMode !== "original")
+    throw new Error("E_EVENT_TARGET_OVERLAY_MODE: expected current or original");
   const rnRoot = path.dirname(resolveSdk("react-native/package.json"));
   return {
     name: "godot-platform",
@@ -54,8 +57,11 @@ export function platformPlugin(platformRoot, resolveSdk) {
       builder.onResolve({ filter: /^react(?:\/.*)?$|^react-native\// }, ({ path: specifier }) => ({ path: resolveSdk(specifier) }));
       builder.onLoad({ filter: /\.js$/ }, async ({ path: filename }) => {
         if (!filename.startsWith(rnRoot + path.sep)) return;
+        let source = await readFile(filename, "utf8");
+        if (filename === path.join(rnRoot, "src/private/webapis/dom/events/internals/EventTargetInternals.js"))
+          source = renderEventTargetParentOverlay(source, eventTargetParentMode);
         return {
-        contents: (await transformAsync(await readFile(filename, "utf8"), {
+        contents: (await transformAsync(source, {
           filename, configFile: false, babelrc: false,
           presets: [[resolveSdk("@react-native/babel-preset"), { disableImportExportTransform: true }]],
         })).code,

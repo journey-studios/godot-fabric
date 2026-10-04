@@ -6,6 +6,11 @@ macOS arm64/headless fixture passes 119 checks and reproduces all three gaps.
 pending; this does not enable a public capability, approve a renderer change
 or certify complete experimental RN APIs.
 
+The [current-ancestry correction](../evidence/event-target-ancestry/README.md)
+now passes 102 checks in each original/corrected variant. It fixes the third
+gap in shared bundling while preserving current-dispatch snapshots; production
+flags remain off. Native delivery and the dispatcher proposal remain pending.
+
 ## Three independent gaps
 
 1. `enableImperativeEvents` and `enableNativeEventTargetEventDispatching` both
@@ -27,6 +32,9 @@ or certify complete experimental RN APIs.
    ref bubbles to the still-mounted former parent, while its never-dispatched
    detached sibling performs only self-dispatch. NativeDOM returns null parent
    and disconnected for both refs.
+   The generated correction removes that permanent cache and resolves the
+   original current-parent getter for each new path. Retired item/ancestor/root
+   controls and remount confirm the fix; the original variant retains the gap.
 
 ## Proposed sequence and acceptance
 
@@ -70,6 +78,31 @@ in `event.nativeEvent`. It is not proof of a complete W3C PointerEvent surface.
 Public HostInstance types also need separate inspection before advertising
 imperative methods as generally supported.
 
+## Dispatcher integration boundaries still requiring runtime controls
+
+Inspection of the shipped `ReactNativeResponder` adds three requirements for
+the future dispatcher experiment. These are source findings, not executed
+responder parity results in either ancestry fixture:
+
+- The should-set handler calls have no protected currentTarget cleanup when a
+  handler throws. `processResponderEvent` is called before `dispatchNativeEvent`'s
+  normal-event try/finally. Exercise retained error events and the next gesture
+  before choosing any correction.
+- Responder events are invoked directly; the normal native event is separately
+  dispatched through `dispatchTrustedEvent`. Do not transfer the latter's
+  isTrusted/phase assertions to responder events without checking their actual
+  contract.
+- The new `noResponderTouches` tests whether the touches array is empty. The
+  compiled legacy responder tests whether remaining touches descend from the
+  current responder. A two-branch/two-contact fixture must resolve this
+  difference, including release and the surviving contact.
+
+The current-ancestry correction changes only parent resolution; it does not
+select this dispatcher or resolve these responder differences. A target-null
+native case also needs an explicit contract before selecting a runtime-wide
+branch. Mixing two responder implementations within one runtime is not an
+accepted fallback.
+
 ## Pinned primary sources
 
 - [Feature flags](https://github.com/facebook/react-native/blob/v0.87.1/packages/react-native/src/private/featureflags/ReactNativeFeatureFlags.js)
@@ -83,5 +116,5 @@ imperative methods as generally supported.
 
 These findings come from the installed pin; future pins must be inspected anew.
 The [preceding captured geometry receipt](../evidence/pointer-geometry/README.md)
-remains separate from this original-ref baseline and the still-unimplemented
-native EventTarget proposal.
+remains separate from this original-ref baseline, current-ancestry correction
+and the still-unimplemented native EventTarget proposal.

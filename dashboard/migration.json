@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "EventTarget original verificado; conectar entrega nativa e corrigir ancestralidade atual"
+    "focusTitle": "Ancestralidade EventTarget corrigida; próximos transporte nativo e contratos de responder"
   },
-  "updatedAt": "2026-10-04T15:14:45.624086+00:00",
+  "updatedAt": "2026-10-04T15:37:57.119074+00:00",
   "source": {
     "commit": "2db8e391eff4de26caab0231be878f4ee807e799",
     "url": "https://github.com/journey-studios/godot-fabric/blob/2db8e391eff4de26caab0231be878f4ee807e799/ROADMAP.md",
-    "scope": "EventTarget original2db8e39:119/119 headless,33manual por raiz incluídos no total,4Hermes/5surfaces. Cinco fontes do probe e quatro fontes de produção conferidas contra implementação imutável; público inalterado. Três gaps reproduzidos e cleanupzero. Contracts199última suíteNode/13Python,static/publication e8dashboard passaram. Nenhum GF/checkpoint,decisão,peso ou denominador fechado; native integration e CI da nova fatia pendentes. CI 515d0d7 passou os cinco jobs; artefato auditado confirma 119 IDs idênticos e três gaps. Pages 37211402478 passou build/deploy e JSON público 515d0d7 foi conferido integralmente fora do main.",
+    "scope": "Correção de ancestralidade EventTarget verificada localmente: 102 checks em cada variante original/corrigida, mesmas fontes e mesmo host nativo. Warm refs retiradas fazem apenas self-dispatch; snapshot do evento atual, remount e listeners pré-reorder preservados. Shared toolchain e consumer 30/40; 204 na última suíte Node/13Python, 22examples/2246headless. Pin da nova implementação segue o commit. CI anterior 515d0d7 confirma baseline original119 e três gaps; nova correção aguarda CI. Nenhum GF/checkpoint completo, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -427,7 +427,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs/NativeDOM, medidas, foco/comandos e captura públicos têm provas separadas. Geometria capturada agora passa 631/648 checks, incluindo refs flattened e outra raiz transformada; 55 falhas no host anterior, 14 pixels e três capturas. Binding378 e original108/108 preservam campos, autoridade e lifetime; offsets locais corrigem explicitamente o algoritmo RN incompleto. HostInstance completo, imperative EventTarget, demais comandos/hidden trees e diferenciais mobile continuam pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Baseline EventTarget119headless: quatro modos de flags,33manual por raiz, refs flattened/duas raízes; cache do pai de ref removida reproduzido com controle cold. Métodos públicos não habilitados em produção; dispatcher nativo e correção de cache pendentes.",
+      "note": "Refs/NativeDOM, medidas, foco/comandos e captura têm provas separadas (captura631/648, binding378). Baseline EventTarget original119 e CI515d0d7 reproduzem três gaps. Correção atual de cache executa102checks por variante original/corrigida com mesmo host: remoção de item/ancestral/raiz, remount, raiz sobrevivente e listeners pré-reorder; grafo separado preserva snapshot atual e atualiza o próximo path. Shared toolchain/consumer30/40 e22examples/2246headless passaram. Flags públicas continuam off. HostInstance/tipos/commands completos, interesse/dispatcher nativo, trusted errors, performance e hardware/mobile continuam pendentes; CI da correção ainda não executada.",
       "blocker": "",
       "checkpoints": [
         {
@@ -761,7 +761,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Três gaps EventTarget reproduzidos: interesse imperativo sem JSX, dispatcher legacy omitindo listener e cache de ancestralidade retirada. Manual119headless não certifica transporte nativo; responder/PanResponder, hardware/mobile e regressões da futura integração seguem abertos.",
+      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Três gaps EventTarget reproduzidos: interesse imperativo sem JSX, dispatcher legacy omitindo listener e cache de ancestralidade retirada. Manual119headless não certifica transporte nativo; responder/PanResponder, hardware/mobile e regressões da futura integração seguem abertos. Correção de ancestralidade EventTarget102checks/variante já executada no bundler compartilhado, com original como controle; native-interest/native-dispatch e responder completo continuam abertos. Flags públicas off e CI da correção pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2600,6 +2600,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-current-ancestry-local-20261004",
+      "at": "2026-10-04T15:37:57.119074+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Corrigido cache permanente no bundler compartilhado:102checks em cada variante original/corrigida, fontes/host idênticos; refs retiradas locais e path atual preservado. Listeners pré-reorder e remount reais validados. Consumer30/40, contracts204/13Python,22examples/2246headless passaram. Flags off; transporte/responder e CI da correção abertos. Sem novo checkpoint/GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "event-target-original-hosted-515d0d7",
       "at": "2026-10-04T15:14:45.624086+00:00",

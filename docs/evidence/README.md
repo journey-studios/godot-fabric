@@ -146,9 +146,15 @@ passed with the log absent. Runtime source and the matrix evidence are unchanged
 ## Native captures
 
 The [original EventTarget baseline](event-target/README.md) separately executes
-117 headless checks in four runtimes/five surfaces, including 33 manual checks
+119 headless checks in four runtimes/five surfaces, including 33 manual checks
 per enabled root and three reproduced gaps. It preserves production defaults
 and does not certify native EventTarget delivery or fix retained ancestry.
+
+The [current-ancestry correction](event-target-ancestry/README.md) then executes
+102 checks in each original/corrected variant against the same native host.
+Real NativeDOM removals, root retirement/remount and preserved listeners are
+separate from a synchronous mutable-parent graph. Shared bundling fixes the
+cache; public EventTarget flags and native delivery remain pending.
 
 The later [GF-05 runtime example](runtime/README.md) adds three real Viewport
 captures with explanations of starting, pausing and completing a React clock.

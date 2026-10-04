@@ -1,0 +1,2649 @@
+{
+  "format": "godot-fabric.event-target-current-ancestry-evidence/v1",
+  "observedAt": "2026-10-04T15:31:59.018540+00:00",
+  "implementationCommit": null,
+  "baselineCommit": "289f589d29c1dd573a1017e7f310bb168137d43d",
+  "sourceState": "Executed source hashes below; immutable implementation pin follows commit. Original RN inputs and native host stay identical between variants.",
+  "versions": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3"
+  },
+  "platform": {
+    "os": "macOS",
+    "architecture": "arm64",
+    "displayServer": "headless",
+    "engineRecompiled": false,
+    "nativeRecompiled": false,
+    "hardwareCertified": false,
+    "mobileCertified": false
+  },
+  "commands": [
+    "npm run test:events:ancestry",
+    "npm run test:events:original",
+    "npm run test:contracts",
+    "npm run test:consumer",
+    "npm run test:focus:commands",
+    "npm run test:pointers:processor",
+    "npm run test:examples",
+    "npm run check:static",
+    "npm run check:publication"
+  ],
+  "sources": {
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/platform-plugin.mjs": "453a94de62d385584cc86c8d7b4895ef9914e8276edc02277416cb8a795cb7d3",
+    "scripts/event-target-bundle.mjs": "b90dc2cdcfbbcce827cce6c2323a6d5a4da871498393033016c4c5a3eb39c6e4",
+    "tests/rn-event-target-overlay.test.mjs": "8b1e834368e6b9fa3487e112dec07ac96a2237a6a7480d6afb9dca2366e2c114",
+    "tests/event-target-ancestry-fixture.jsx": "b82d2549d91e09ba6bf5c8adde347e484787174dc47a94fce2a43cd334968801",
+    "tests/event-target-ancestry-probe.gd": "31af2b9873e4b45901ddc7fa04a3d7e0740c3b72a354216640e13431e518366c",
+    "tests/event-target-ancestry-native.test.mjs": "cb526b7012216521853998381bfda7747ddb31a8080dbceda949e39d5ad88430",
+    "package.json": "fc3787a35fa197ea1b684bb924adfb459062e16ec066664f84e153623842a6bb",
+    ".fallowrc.json": "eca6fac27338b40466a6a08f429e95b0293ed589878ae4e4770fd086110886c7",
+    ".github/workflows/contracts.yml": "24592b10173548c8e2583c3aaa0567916211ed10c5077ca2217515a7b8631abe"
+  },
+  "variants": {
+    "original": {
+      "parentMode": "original",
+      "summary": {
+        "checks": 102,
+        "passed": 102
+      },
+      "checks": [
+        {
+          "name": "Explicit parent overlay mode is required",
+          "passed": true
+        },
+        {
+          "name": "Real native roots share one Hermes runtime with distinct surface identities",
+          "passed": true
+        },
+        {
+          "name": "Original native ref capability is available: A",
+          "passed": true
+        },
+        {
+          "name": "Opt-in original refs retain current logical NativeDOM ancestry: A",
+          "passed": true
+        },
+        {
+          "name": "Original document and documentElement link to the registered native root: A",
+          "passed": true
+        },
+        {
+          "name": "Ancestry includes a genuinely flattened logical View: A",
+          "passed": true
+        },
+        {
+          "name": "Original native ref capability is available: B",
+          "passed": true
+        },
+        {
+          "name": "Opt-in original refs retain current logical NativeDOM ancestry: B",
+          "passed": true
+        },
+        {
+          "name": "Original document and documentElement link to the registered native root: B",
+          "passed": true
+        },
+        {
+          "name": "Ancestry includes a genuinely flattened logical View: B",
+          "passed": true
+        },
+        {
+          "name": "React sibling removal is requested through actual component state",
+          "passed": true
+        },
+        {
+          "name": "Executed React commit removes both items while retaining native ancestor",
+          "passed": true
+        },
+        {
+          "name": "React ancestor removal is requested through actual component state",
+          "passed": true
+        },
+        {
+          "name": "Executed React commit removes the entire ancestor subtree while root parent remains",
+          "passed": true
+        },
+        {
+          "name": "React keyed sibling reorder is requested",
+          "passed": true
+        },
+        {
+          "name": "One root retirement releases its actual native tree while the shared application remains live",
+          "passed": true
+        },
+        {
+          "name": "Surviving root preserves original surface and native Control identities",
+          "passed": true
+        },
+        {
+          "name": "Retired Godot surface remounts through the existing live application",
+          "passed": true
+        },
+        {
+          "name": "Remount allocates a fresh native root generation without replacing Hermes",
+          "passed": true
+        },
+        {
+          "name": "Completed JS ancestry observations remain available in live Hermes",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Original public dispatch returns true",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Exact nested capture and bubble order",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Every callback exposes exact phase target currentTarget and this",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Original path includes logical flattened and document roots",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Path copies and original transient field cleanup",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Non-bubbling phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Original public dispatch returns true",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Exact nested capture and bubble order",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Every callback exposes exact phase target currentTarget and this",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Original path includes logical flattened and document roots",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Path copies and original transient field cleanup",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Non-bubbling phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "shared/initial/Documents isolate actual native roots",
+          "passed": true
+        },
+        {
+          "name": "shared/initial/Exact independent document deliveries",
+          "passed": true
+        },
+        {
+          "name": "graph/Mutable graph uses actual original EventTarget objects",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Public original graph dispatch succeeds",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Exact capture and bubble delivery order",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Every callback retains snapshot path exact phases and identities",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Original dispatch clears transient event fields",
+          "passed": true
+        },
+        {
+          "name": "graph/Capture listener actually changes parent before later callbacks",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Public original graph dispatch succeeds",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Exact capture and bubble delivery order",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Every callback retains snapshot path exact phases and identities",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Original dispatch clears transient event fields",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Public original graph dispatch succeeds",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Exact capture and bubble delivery order",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Every callback retains snapshot path exact phases and identities",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Original dispatch clears transient event fields",
+          "passed": true
+        },
+        {
+          "name": "graph/Parent resolution occurs per path only in current overlay",
+          "passed": true
+        },
+        {
+          "name": "graph/Null-parent original object first dispatch is self-only positive",
+          "passed": true
+        },
+        {
+          "name": "graph/Current getter also replaces original cached null parent",
+          "passed": true
+        },
+        {
+          "name": "items-A/prime/Warm listener and every real ancestor positively deliver",
+          "passed": true
+        },
+        {
+          "name": "items-A/prime/Exact warm phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "items-A/prime/Distinct connected siblings have authoritative current NativeDOM ancestry",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Original cached warm ancestry remains reproduced",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Former ancestors remain mounted while only sibling items retire",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/prime/Warm listener and every real ancestor positively deliver",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/prime/Exact warm phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/prime/Distinct connected siblings have authoritative current NativeDOM ancestry",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Original cached warm ancestry remains reproduced",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Entire logical ancestor subtree retires while its former parent remains live",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/All registered listeners positively deliver before the React reorder",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/Preexisting listeners expose exact phases and currentTarget",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/Keyed sibling reorder preserves actual public ref and native Control identities",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/NativeDOM sibling order changes while logical parent is unchanged",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/Listeners registered before reorder survive on both preserved refs and parent",
+          "passed": true
+        },
+        {
+          "name": "root-A/prime/Warm listener and every real ancestor positively deliver",
+          "passed": true
+        },
+        {
+          "name": "root-A/prime/Exact warm phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "root-A/prime/Distinct connected siblings have authoritative current NativeDOM ancestry",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Original cached warm ancestry remains reproduced",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Document and documentElement lose native connection after root retirement",
+          "passed": true
+        },
+        {
+          "name": "A/remount/Fresh React mount creates new public refs and native tags",
+          "passed": true
+        },
+        {
+          "name": "A/remount/New document and native Control generation cannot revive retained old refs",
+          "passed": true
+        },
+        {
+          "name": "A/remount/Fresh native root supports original public propagation",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Original cached warm ancestry remains reproduced",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "shared/remount/Documents isolate actual native roots",
+          "passed": true
+        },
+        {
+          "name": "shared/remount/Exact independent document deliveries",
+          "passed": true
+        },
+        {
+          "name": "Real React effects distinguish root cleanup and fresh remount from sibling reorder",
+          "passed": true
+        },
+        {
+          "name": "Public ancestry dispatch preserves original default event priority",
+          "passed": true
+        },
+        {
+          "name": "Manual ref ancestry exercises no native input routes or unexpected runtime errors",
+          "passed": true
+        },
+        {
+          "name": "Application stop releases every root work item timer and retirement without errors",
+          "passed": true
+        },
+        {
+          "name": "All native nodes retire after ancestry probe: A",
+          "passed": true
+        },
+        {
+          "name": "All native nodes retire after ancestry probe: B",
+          "passed": true
+        },
+        {
+          "name": "Ancestry report can be saved",
+          "passed": true
+        }
+      ],
+      "stages": {
+        "capabilityA": {
+          "documentConnected": true,
+          "documentHasNoParent": true,
+          "documentRootLinked": true,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": true
+          },
+          "flatTag": 8,
+          "nativeAncestry": true,
+          "original": true,
+          "parentTag": 20
+        },
+        "capabilityB": {
+          "documentConnected": true,
+          "documentHasNoParent": true,
+          "documentRootLinked": true,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": true
+          },
+          "flatTag": 30,
+          "nativeAncestry": true,
+          "original": true,
+          "parentTag": 42
+        },
+        "manualA": {
+          "checks": [
+            {
+              "name": "A/manual/Original public dispatch returns true",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Exact nested capture and bubble order",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Every callback exposes exact phase target currentTarget and this",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Original path includes logical flattened and document roots",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Path copies and original transient field cleanup",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Non-bubbling phase metadata and cleanup",
+              "passed": true
+            }
+          ],
+          "trace": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "document",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "parent",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "ancestor",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "flat",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ]
+        },
+        "manualB": {
+          "checks": [
+            {
+              "name": "B/manual/Original public dispatch returns true",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Exact nested capture and bubble order",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Every callback exposes exact phase target currentTarget and this",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Original path includes logical flattened and document roots",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Path copies and original transient field cleanup",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Non-bubbling phase metadata and cleanup",
+              "passed": true
+            }
+          ],
+          "trace": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "document",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "parent",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "ancestor",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "flat",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ]
+        },
+        "crossRootsInitial": {
+          "differentDocuments": true,
+          "trace": [
+            {
+              "phase": 3,
+              "root": "A",
+              "target": true
+            },
+            {
+              "phase": 3,
+              "root": "B",
+              "target": true
+            }
+          ]
+        },
+        "mutableGraph": {
+          "first": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "nullTrace": [
+            "self"
+          ],
+          "originalObjects": true,
+          "parentMode": "original",
+          "second": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "selfParentReads": 1,
+          "third": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ]
+        },
+        "itemsPrime": {
+          "coldTag": 4,
+          "expectedPrime": [
+            "warm/self",
+            "warm/flat",
+            "warm/ancestor",
+            "warm/parent",
+            "warm/root",
+            "warm/document"
+          ],
+          "nativeId": 27078428131,
+          "warmTag": 2
+        },
+        "itemsRemoved": {
+          "ancestorConnected": true,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": true,
+          "expected": [
+            "warm/self",
+            "warm/flat",
+            "warm/ancestor",
+            "warm/parent",
+            "warm/root",
+            "warm/document",
+            "cold/self"
+          ],
+          "flatConnected": true,
+          "parentConnected": true,
+          "parentMode": "original",
+          "rootConnected": true,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "flat",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "ancestor",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "parent",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "root",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "document",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "ancestorPrime": {
+          "coldTag": 26,
+          "expectedPrime": [
+            "warm/self",
+            "warm/flat",
+            "warm/ancestor",
+            "warm/parent",
+            "warm/root",
+            "warm/document"
+          ],
+          "nativeId": 27749516801,
+          "warmTag": 24
+        },
+        "ancestorRemoved": {
+          "ancestorConnected": false,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": true,
+          "expected": [
+            "warm/self",
+            "warm/flat",
+            "warm/ancestor",
+            "warm/parent",
+            "warm/root",
+            "warm/document",
+            "cold/self"
+          ],
+          "flatConnected": false,
+          "parentConnected": true,
+          "parentMode": "original",
+          "rootConnected": true,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "flat",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "ancestor",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "parent",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "root",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "document",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "reordered": {
+          "sameRefs": true,
+          "trace": [
+            {
+              "at": "a",
+              "exact": true,
+              "target": "a"
+            },
+            {
+              "at": "parent",
+              "exact": true,
+              "target": "a"
+            },
+            {
+              "at": "b",
+              "exact": true,
+              "target": "b"
+            },
+            {
+              "at": "parent",
+              "exact": true,
+              "target": "b"
+            }
+          ]
+        },
+        "rootRemoved": {
+          "ancestorConnected": false,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": false,
+          "expected": [
+            "warm/self",
+            "warm/parent",
+            "warm/root",
+            "warm/document",
+            "cold/self"
+          ],
+          "flatConnected": false,
+          "parentConnected": false,
+          "parentMode": "original",
+          "rootConnected": false,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "parent",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "root",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "document",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "remount": {
+          "differentDocuments": true,
+          "differentRefs": true,
+          "newTag": 60,
+          "oldTag": 16
+        },
+        "oldRootAfterRemount": {
+          "ancestorConnected": false,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": false,
+          "expected": [
+            "warm/self",
+            "warm/parent",
+            "warm/root",
+            "warm/document",
+            "cold/self"
+          ],
+          "flatConnected": false,
+          "parentConnected": false,
+          "parentMode": "original",
+          "rootConnected": false,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "parent",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "root",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "document",
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "crossRootsRemount": {
+          "differentDocuments": true,
+          "trace": [
+            {
+              "phase": 3,
+              "root": "A",
+              "target": true
+            },
+            {
+              "phase": 3,
+              "root": "B",
+              "target": true
+            }
+          ]
+        }
+      },
+      "scope": {
+        "manualDispatch": true,
+        "mutableGraphUsesOriginalEventTarget": true,
+        "nativeEventTargetIntegrated": false,
+        "nativeReactReparentPreservedIdentity": false,
+        "parentCacheFixed": false,
+        "publicDefaultEnabled": false
+      },
+      "afterStop": {
+        "rootCount": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pendingRootRetirements": 0,
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 1,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "stopped": true,
+        "errors": []
+      },
+      "provenance": {
+        "node": "v22.23.3",
+        "bundles": {
+          "format": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "original",
+          "bundles": {
+            "enabled": {
+              "sha256": "9745f941b8f3071d5c5ca33d21a1221b580f9f3d7c98829cd888f8af2bd7e556",
+              "inputCount": 163
+            }
+          },
+          "parentOverlay": {
+            "module": "src/private/webapis/dom/events/internals/EventTargetInternals.js",
+            "originalSha256": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+            "generatedSourceSha256": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171"
+          },
+          "sources": {
+            "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+            "tests/event-target-ancestry-fixture.jsx": "b82d2549d91e09ba6bf5c8adde347e484787174dc47a94fce2a43cd334968801",
+            "tests/event-target-ancestry-probe.gd": "31af2b9873e4b45901ddc7fa04a3d7e0740c3b72a354216640e13431e518366c",
+            "tests/event-target-ancestry-native.test.mjs": "cb526b7012216521853998381bfda7747ddb31a8080dbceda949e39d5ad88430",
+            "scripts/event-target-bundle.mjs": "b90dc2cdcfbbcce827cce6c2323a6d5a4da871498393033016c4c5a3eb39c6e4",
+            "sdk/toolchain/platform-plugin.mjs": "453a94de62d385584cc86c8d7b4895ef9914e8276edc02277416cb8a795cb7d3",
+            "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa"
+          },
+          "originalReactNativeSources": {
+            "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+            "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+            "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+            "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+            "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+            "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+            "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+            "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+            "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+            "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda"
+          }
+        },
+        "publicBundleSha256": "6ad517dc73a66685d72c29d2043231db191a84320194a804f3a45945cf5fe5b7",
+        "nativeHostSha256": "01b2d2ec0ec0d38cf55213520fbc612e2ebd2295d684df298aeeb9a93f27695d",
+        "rawReportSha256": "fd46af7d565c89e93e99333a4046d0274d9f6997c3eba16382b0597c72d23495"
+      }
+    },
+    "current": {
+      "parentMode": "current",
+      "summary": {
+        "checks": 102,
+        "passed": 102
+      },
+      "checks": [
+        {
+          "name": "Explicit parent overlay mode is required",
+          "passed": true
+        },
+        {
+          "name": "Real native roots share one Hermes runtime with distinct surface identities",
+          "passed": true
+        },
+        {
+          "name": "Original native ref capability is available: A",
+          "passed": true
+        },
+        {
+          "name": "Opt-in original refs retain current logical NativeDOM ancestry: A",
+          "passed": true
+        },
+        {
+          "name": "Original document and documentElement link to the registered native root: A",
+          "passed": true
+        },
+        {
+          "name": "Ancestry includes a genuinely flattened logical View: A",
+          "passed": true
+        },
+        {
+          "name": "Original native ref capability is available: B",
+          "passed": true
+        },
+        {
+          "name": "Opt-in original refs retain current logical NativeDOM ancestry: B",
+          "passed": true
+        },
+        {
+          "name": "Original document and documentElement link to the registered native root: B",
+          "passed": true
+        },
+        {
+          "name": "Ancestry includes a genuinely flattened logical View: B",
+          "passed": true
+        },
+        {
+          "name": "React sibling removal is requested through actual component state",
+          "passed": true
+        },
+        {
+          "name": "Executed React commit removes both items while retaining native ancestor",
+          "passed": true
+        },
+        {
+          "name": "React ancestor removal is requested through actual component state",
+          "passed": true
+        },
+        {
+          "name": "Executed React commit removes the entire ancestor subtree while root parent remains",
+          "passed": true
+        },
+        {
+          "name": "React keyed sibling reorder is requested",
+          "passed": true
+        },
+        {
+          "name": "One root retirement releases its actual native tree while the shared application remains live",
+          "passed": true
+        },
+        {
+          "name": "Surviving root preserves original surface and native Control identities",
+          "passed": true
+        },
+        {
+          "name": "Retired Godot surface remounts through the existing live application",
+          "passed": true
+        },
+        {
+          "name": "Remount allocates a fresh native root generation without replacing Hermes",
+          "passed": true
+        },
+        {
+          "name": "Completed JS ancestry observations remain available in live Hermes",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Original public dispatch returns true",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Exact nested capture and bubble order",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Every callback exposes exact phase target currentTarget and this",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Original path includes logical flattened and document roots",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Path copies and original transient field cleanup",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+          "passed": true
+        },
+        {
+          "name": "A/manual/Non-bubbling phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Original public dispatch returns true",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Exact nested capture and bubble order",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Every callback exposes exact phase target currentTarget and this",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Original path includes logical flattened and document roots",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Path copies and original transient field cleanup",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+          "passed": true
+        },
+        {
+          "name": "B/manual/Non-bubbling phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "shared/initial/Documents isolate actual native roots",
+          "passed": true
+        },
+        {
+          "name": "shared/initial/Exact independent document deliveries",
+          "passed": true
+        },
+        {
+          "name": "graph/Mutable graph uses actual original EventTarget objects",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Public original graph dispatch succeeds",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Exact capture and bubble delivery order",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Every callback retains snapshot path exact phases and identities",
+          "passed": true
+        },
+        {
+          "name": "graph/capture-mutation/Original dispatch clears transient event fields",
+          "passed": true
+        },
+        {
+          "name": "graph/Capture listener actually changes parent before later callbacks",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Public original graph dispatch succeeds",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Exact capture and bubble delivery order",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Every callback retains snapshot path exact phases and identities",
+          "passed": true
+        },
+        {
+          "name": "graph/next-dispatch/Original dispatch clears transient event fields",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Public original graph dispatch succeeds",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Exact capture and bubble delivery order",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Every callback retains snapshot path exact phases and identities",
+          "passed": true
+        },
+        {
+          "name": "graph/detached-dispatch/Original dispatch clears transient event fields",
+          "passed": true
+        },
+        {
+          "name": "graph/Parent resolution occurs per path only in current overlay",
+          "passed": true
+        },
+        {
+          "name": "graph/Null-parent original object first dispatch is self-only positive",
+          "passed": true
+        },
+        {
+          "name": "graph/Current getter also replaces original cached null parent",
+          "passed": true
+        },
+        {
+          "name": "items-A/prime/Warm listener and every real ancestor positively deliver",
+          "passed": true
+        },
+        {
+          "name": "items-A/prime/Exact warm phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "items-A/prime/Distinct connected siblings have authoritative current NativeDOM ancestry",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Current ancestry removes all old ancestor deliveries",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "items-A/items/Former ancestors remain mounted while only sibling items retire",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/prime/Warm listener and every real ancestor positively deliver",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/prime/Exact warm phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/prime/Distinct connected siblings have authoritative current NativeDOM ancestry",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Current ancestry removes all old ancestor deliveries",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "ancestor-B/ancestor/Entire logical ancestor subtree retires while its former parent remains live",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/All registered listeners positively deliver before the React reorder",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/Preexisting listeners expose exact phases and currentTarget",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/Keyed sibling reorder preserves actual public ref and native Control identities",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/NativeDOM sibling order changes while logical parent is unchanged",
+          "passed": true
+        },
+        {
+          "name": "B/reorder/Listeners registered before reorder survive on both preserved refs and parent",
+          "passed": true
+        },
+        {
+          "name": "root-A/prime/Warm listener and every real ancestor positively deliver",
+          "passed": true
+        },
+        {
+          "name": "root-A/prime/Exact warm phase metadata and cleanup",
+          "passed": true
+        },
+        {
+          "name": "root-A/prime/Distinct connected siblings have authoritative current NativeDOM ancestry",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Current ancestry removes all old ancestor deliveries",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "root-A/root/Document and documentElement lose native connection after root retirement",
+          "passed": true
+        },
+        {
+          "name": "A/remount/Fresh React mount creates new public refs and native tags",
+          "passed": true
+        },
+        {
+          "name": "A/remount/New document and native Control generation cannot revive retained old refs",
+          "passed": true
+        },
+        {
+          "name": "A/remount/Fresh native root supports original public propagation",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Warm detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Cold detached public dispatch remains legal",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Current ancestry removes all old ancestor deliveries",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/Detached events retain exact phases targets and cleanup",
+          "passed": true
+        },
+        {
+          "name": "root-A/root-after-remount/NativeDOM independently confirms both real refs are disconnected",
+          "passed": true
+        },
+        {
+          "name": "shared/remount/Documents isolate actual native roots",
+          "passed": true
+        },
+        {
+          "name": "shared/remount/Exact independent document deliveries",
+          "passed": true
+        },
+        {
+          "name": "Real React effects distinguish root cleanup and fresh remount from sibling reorder",
+          "passed": true
+        },
+        {
+          "name": "Public ancestry dispatch preserves original default event priority",
+          "passed": true
+        },
+        {
+          "name": "Manual ref ancestry exercises no native input routes or unexpected runtime errors",
+          "passed": true
+        },
+        {
+          "name": "Application stop releases every root work item timer and retirement without errors",
+          "passed": true
+        },
+        {
+          "name": "All native nodes retire after ancestry probe: A",
+          "passed": true
+        },
+        {
+          "name": "All native nodes retire after ancestry probe: B",
+          "passed": true
+        },
+        {
+          "name": "Ancestry report can be saved",
+          "passed": true
+        }
+      ],
+      "stages": {
+        "capabilityA": {
+          "documentConnected": true,
+          "documentHasNoParent": true,
+          "documentRootLinked": true,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": true
+          },
+          "flatTag": 8,
+          "nativeAncestry": true,
+          "original": true,
+          "parentTag": 20
+        },
+        "capabilityB": {
+          "documentConnected": true,
+          "documentHasNoParent": true,
+          "documentRootLinked": true,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": true
+          },
+          "flatTag": 30,
+          "nativeAncestry": true,
+          "original": true,
+          "parentTag": 42
+        },
+        "manualA": {
+          "checks": [
+            {
+              "name": "A/manual/Original public dispatch returns true",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Exact nested capture and bubble order",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Every callback exposes exact phase target currentTarget and this",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Original path includes logical flattened and document roots",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Path copies and original transient field cleanup",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+              "passed": true
+            },
+            {
+              "name": "A/manual/Non-bubbling phase metadata and cleanup",
+              "passed": true
+            }
+          ],
+          "trace": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "document",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "parent",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "ancestor",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "flat",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ]
+        },
+        "manualB": {
+          "checks": [
+            {
+              "name": "B/manual/Original public dispatch returns true",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Exact nested capture and bubble order",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Every callback exposes exact phase target currentTarget and this",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Original path includes logical flattened and document roots",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Path copies and original transient field cleanup",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Non-bubbling event captures and runs both AT_TARGET phases",
+              "passed": true
+            },
+            {
+              "name": "B/manual/Non-bubbling phase metadata and cleanup",
+              "passed": true
+            }
+          ],
+          "trace": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "document",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "parent",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "ancestor",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "flat",
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ]
+        },
+        "crossRootsInitial": {
+          "differentDocuments": true,
+          "trace": [
+            {
+              "phase": 3,
+              "root": "A",
+              "target": true
+            },
+            {
+              "phase": 3,
+              "root": "B",
+              "target": true
+            }
+          ]
+        },
+        "mutableGraph": {
+          "first": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "old",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "old",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "nullTrace": [
+            "self",
+            "next",
+            "root"
+          ],
+          "originalObjects": true,
+          "parentMode": "current",
+          "second": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "next",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "next",
+              "path": [
+                "self",
+                "next",
+                "root"
+              ],
+              "phase": 1,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "next",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self",
+                "next",
+                "root"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "next",
+              "path": [
+                "self",
+                "next",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "root",
+              "path": [
+                "self",
+                "next",
+                "root"
+              ],
+              "phase": 3,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "selfParentReads": 3,
+          "third": [
+            {
+              "capture": true,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "label": "self",
+              "path": [
+                "self"
+              ],
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ]
+        },
+        "itemsPrime": {
+          "coldTag": 4,
+          "expectedPrime": [
+            "warm/self",
+            "warm/flat",
+            "warm/ancestor",
+            "warm/parent",
+            "warm/root",
+            "warm/document"
+          ],
+          "nativeId": 27078428131,
+          "warmTag": 2
+        },
+        "itemsRemoved": {
+          "ancestorConnected": true,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": true,
+          "expected": [
+            "warm/self",
+            "cold/self"
+          ],
+          "flatConnected": true,
+          "parentConnected": true,
+          "parentMode": "current",
+          "rootConnected": true,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "ancestorPrime": {
+          "coldTag": 26,
+          "expectedPrime": [
+            "warm/self",
+            "warm/flat",
+            "warm/ancestor",
+            "warm/parent",
+            "warm/root",
+            "warm/document"
+          ],
+          "nativeId": 27749516801,
+          "warmTag": 24
+        },
+        "ancestorRemoved": {
+          "ancestorConnected": false,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": true,
+          "expected": [
+            "warm/self",
+            "cold/self"
+          ],
+          "flatConnected": false,
+          "parentConnected": true,
+          "parentMode": "current",
+          "rootConnected": true,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "reordered": {
+          "sameRefs": true,
+          "trace": [
+            {
+              "at": "a",
+              "exact": true,
+              "target": "a"
+            },
+            {
+              "at": "parent",
+              "exact": true,
+              "target": "a"
+            },
+            {
+              "at": "b",
+              "exact": true,
+              "target": "b"
+            },
+            {
+              "at": "parent",
+              "exact": true,
+              "target": "b"
+            }
+          ]
+        },
+        "rootRemoved": {
+          "ancestorConnected": false,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": false,
+          "expected": [
+            "warm/self",
+            "cold/self"
+          ],
+          "flatConnected": false,
+          "parentConnected": false,
+          "parentMode": "current",
+          "rootConnected": false,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "remount": {
+          "differentDocuments": true,
+          "differentRefs": true,
+          "newTag": 60,
+          "oldTag": 16
+        },
+        "oldRootAfterRemount": {
+          "ancestorConnected": false,
+          "coldConnected": false,
+          "coldParentNull": true,
+          "documentConnected": false,
+          "expected": [
+            "warm/self",
+            "cold/self"
+          ],
+          "flatConnected": false,
+          "parentConnected": false,
+          "parentMode": "current",
+          "rootConnected": false,
+          "trace": [
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "warm",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            },
+            {
+              "capture": false,
+              "currentMatches": true,
+              "id": "cold",
+              "label": "self",
+              "phase": 2,
+              "targetMatches": true,
+              "thisMatches": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        },
+        "crossRootsRemount": {
+          "differentDocuments": true,
+          "trace": [
+            {
+              "phase": 3,
+              "root": "A",
+              "target": true
+            },
+            {
+              "phase": 3,
+              "root": "B",
+              "target": true
+            }
+          ]
+        }
+      },
+      "scope": {
+        "manualDispatch": true,
+        "mutableGraphUsesOriginalEventTarget": true,
+        "nativeEventTargetIntegrated": false,
+        "nativeReactReparentPreservedIdentity": false,
+        "parentCacheFixed": true,
+        "publicDefaultEnabled": false
+      },
+      "afterStop": {
+        "rootCount": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pendingRootRetirements": 0,
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 1,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "stopped": true,
+        "errors": []
+      },
+      "provenance": {
+        "node": "v22.23.3",
+        "bundles": {
+          "format": "godot-fabric.event-target-probe-bundles/v1",
+          "parentMode": "current",
+          "bundles": {
+            "enabled": {
+              "sha256": "8bd785a4a177f46f8fd53d659c8f966529d9ec98326b9d6c7f5758fa1d172db2",
+              "inputCount": 163
+            }
+          },
+          "parentOverlay": {
+            "module": "src/private/webapis/dom/events/internals/EventTargetInternals.js",
+            "originalSha256": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+            "generatedSourceSha256": "9cf100ef91a7dca21ceb850aef0a7a33344050e6fb738f80bf96ce2d02b6d640"
+          },
+          "sources": {
+            "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+            "tests/event-target-ancestry-fixture.jsx": "b82d2549d91e09ba6bf5c8adde347e484787174dc47a94fce2a43cd334968801",
+            "tests/event-target-ancestry-probe.gd": "31af2b9873e4b45901ddc7fa04a3d7e0740c3b72a354216640e13431e518366c",
+            "tests/event-target-ancestry-native.test.mjs": "cb526b7012216521853998381bfda7747ddb31a8080dbceda949e39d5ad88430",
+            "scripts/event-target-bundle.mjs": "b90dc2cdcfbbcce827cce6c2323a6d5a4da871498393033016c4c5a3eb39c6e4",
+            "sdk/toolchain/platform-plugin.mjs": "453a94de62d385584cc86c8d7b4895ef9914e8276edc02277416cb8a795cb7d3",
+            "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa"
+          },
+          "originalReactNativeSources": {
+            "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+            "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+            "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+            "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+            "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+            "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+            "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+            "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+            "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+            "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda"
+          }
+        },
+        "publicBundleSha256": "6ad517dc73a66685d72c29d2043231db191a84320194a804f3a45945cf5fe5b7",
+        "nativeHostSha256": "01b2d2ec0ec0d38cf55213520fbc612e2ebd2295d684df298aeeb9a93f27695d",
+        "rawReportSha256": "1b8a189d49334c5216295ca99f5e2f17dc7fa0b3bd64de8872b9f11812efe3b9"
+      }
+    }
+  },
+  "regressions": {
+    "originalBaselineChecks": 119,
+    "lastContractNodeSuite": 204,
+    "pythonTests": 13,
+    "overlayGuardTests": 5,
+    "examples": 22,
+    "exampleHeadlessChecks": 2246,
+    "consumer": {
+      "schemaVersion": 1,
+      "host": "macOS arm64",
+      "checks": [
+        {
+          "name": "Consumer cannot find global Node",
+          "passed": true
+        },
+        {
+          "name": "Editor build preserves the project lockfile",
+          "passed": true
+        },
+        {
+          "name": "Native consumer executes its bundle once",
+          "passed": true
+        },
+        {
+          "name": "Bundle has no laboratory or external checkout inputs",
+          "passed": true
+        },
+        {
+          "name": "Consumer and types select the Godot platform source",
+          "passed": true
+        },
+        {
+          "name": "Provisioned build works with network denied and no global Node",
+          "passed": true
+        },
+        {
+          "name": "syntax failure preserves the previous bundle",
+          "passed": true
+        },
+        {
+          "name": "unsupported-type failure preserves the previous bundle",
+          "passed": true
+        },
+        {
+          "name": "An invalid Resource cannot replace the bundle",
+          "passed": true
+        },
+        {
+          "name": "Missing private tools reject builds without global fallback or installation",
+          "passed": true
+        },
+        {
+          "name": "An output symlink outside the project is rejected",
+          "passed": true
+        },
+        {
+          "name": "Project Babel configuration is rejected explicitly rather than ignored",
+          "passed": true
+        },
+        {
+          "name": "Incompatible renderer version cannot replace the bundle",
+          "passed": true
+        },
+        {
+          "name": "An absent project library is diagnosed without implicit installation",
+          "passed": true
+        },
+        {
+          "name": "An explicitly provided project library executes hooks with the SDK React identity",
+          "passed": true
+        },
+        {
+          "name": "Library code is project-owned; duplicated React cannot enter the graph",
+          "passed": true
+        },
+        {
+          "name": "Inherited local aliases execute through one original React application",
+          "passed": true
+        },
+        {
+          "name": "Local alias types and runtime select the same project Godot sources",
+          "passed": true
+        },
+        {
+          "name": "alias-outside failure preserves the previous alias bundle",
+          "passed": true
+        },
+        {
+          "name": "alias-symlink failure preserves the previous alias bundle",
+          "passed": true
+        },
+        {
+          "name": "Divergent type/runtime suffix settings fail without publishing a mismatched bundle",
+          "passed": true
+        },
+        {
+          "name": "A project type alias cannot replace the SDK React identity",
+          "passed": true
+        },
+        {
+          "name": "A declared transitive helper executes from its importing package without hoisting",
+          "passed": true
+        },
+        {
+          "name": "Nested dependency ownership preserves the one SDK React instance",
+          "passed": true
+        },
+        {
+          "name": "A transitive package cannot silently become an undeclared direct app dependency",
+          "passed": true
+        },
+        {
+          "name": "App alias and identically named nested dependency retain distinct literal types and native text",
+          "passed": true
+        },
+        {
+          "name": "Both alias and package enter the graph while original SDK React remains unique",
+          "passed": true
+        },
+        {
+          "name": "A wrong cross-scope literal type fails without replacing the valid coexistence bundle",
+          "passed": true
+        },
+        {
+          "name": "Failure, dependency checks and recovery preserve the project lockfile",
+          "passed": true
+        },
+        {
+          "name": "The original consumer can build again after rejected requests",
+          "passed": true
+        }
+      ],
+      "nativeChecks": 40,
+      "graphicalChecks": null
+    },
+    "packagedToolchainHashes": {
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/platform-plugin.mjs": "453a94de62d385584cc86c8d7b4895ef9914e8276edc02277416cb8a795cb7d3"
+    },
+    "focusCommandNodeTests": 1,
+    "pointerProcessorNodeTests": 2,
+    "static": "passed",
+    "publication": "passed"
+  },
+  "scope": {
+    "currentParentFixExecuted": true,
+    "originalGapReproduced": true,
+    "currentDispatchPathSnapshotPreserved": true,
+    "nativeEventTargetIntegrated": false,
+    "publicDefaultEnabled": false,
+    "nativeReactReparentPreservedIdentity": false,
+    "ciExecuted": false
+  }
+}
