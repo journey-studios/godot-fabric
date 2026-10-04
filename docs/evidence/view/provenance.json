@@ -146,5 +146,7 @@
     "view-initial.png": "c2ceedf54840d3908191b49edbb3c553d998e4332b8e22fb1576e32b0e7fd1b2",
     "view-updated.png": "d65ff6bd2520a312024d5ac8d23897ad2b08f76b3ddaa2cb6c456f7751135611",
     "view-visible.png": "2ec7d3dc340e4fa37563db793e28e155f341f530a182e994828cb697e782337c"
-  }
+  },
+  "testedImplementationCommit": "6e9f2f305e5981f49b9b2fd1be23ae723ba43363",
+  "committedSourceIdentityVerified": true
 }

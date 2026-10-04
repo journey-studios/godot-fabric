@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "View validada; próximo: alinhar coordenadas de eventos, refs e superfície"
   },
-  "updatedAt": "2026-10-04T00:52:53.079525+00:00",
+  "updatedAt": "2026-10-04T00:54:23.409333+00:00",
   "source": {
-    "commit": "b5dafc8ebd374a63edc2d9774387177ab15f2032",
-    "url": "https://github.com/journey-studios/godot-fabric/tree/codex/react-native-parity-roadmap",
-    "scope": "GF-10 parcial: View original, stacking, clipping e bordas comprovados em 67 headless/107 native checks, 36 pixels; controle anterior falhou 9/24 como esperado. 202 Node/13 Python, 10 nativos, 16 exemplos/672 checks, NativeWind58 e adapters17/318 passaram. CI precedente b5dafc8 verde nos cinco jobs; CI da nova fatia pendente. Pesos/denominador/decisões preservados; nenhum GF completo.",
+    "commit": "6e9f2f305e5981f49b9b2fd1be23ae723ba43363",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/ROADMAP.md",
+    "scope": "Implementação 6e9f2f3 conferida com todas as fontes nativas e fixtures executadas. GF-10 parcial: View67/107, pixels36 e controle negativo9/24; 202 Node/13 Python, 10 nativos, exemplos16/672, NativeWind58, adapters17/318 passaram. CI precedente b5dafc8 verde em cinco jobs; CI desta fatia pendente. Sem conclusão GF, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -433,7 +433,7 @@
             },
             {
               "label": "Medidas clipped/flattened e gap de coordenadas reproduzido",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/view/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
             }
           ]
         },
@@ -533,7 +533,7 @@
           "evidence": [
             {
               "label": "macOS arm64: View67/107, pixels36, controle negativo9/24 e regressões16/672",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/view/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
             }
           ]
         },
@@ -2464,6 +2464,17 @@
   ],
   "activity": [
     {
+      "id": "view-source-6e9f2f3",
+      "at": "2026-10-04T00:54:23.409333+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Commit 6e9f2f3 verificado contra todos os hashes nativos e fixtures executados. Evidências fixadas por SHA, source pinado e JSON incluído na mesma branch de implementação. GF-10 permanece parcial; próximo gap é alinhar coordenadas de input e refs.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+    },
+    {
       "id": "view-foundation-verified-20261004",
       "at": "2026-10-04T00:52:53.079525+00:00",
       "taskIds": [
@@ -2472,7 +2483,7 @@
         "GF-13"
       ],
       "message": "Primeira fatia GF-10 comprovada: 67 headless/107 native, 36 pixels e controle negativo9/24; 16 exemplos/672, NativeWind58, adapters17/318, 202 Node/13 Python e 10 nativos. Uma checkpoint slice concluída; nenhum GF completo, aceite/dependência/decisão/peso/denominador alterado. Próximo gap: espaço de coordenadas de eventos e refs.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/view/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
     },
     {
       "id": "root-retirement-source-47432df",
