@@ -1,9 +1,9 @@
 {
   "format": "godot-fabric.event-target-current-ancestry-evidence/v1",
   "observedAt": "2026-10-04T15:31:59.018540+00:00",
-  "implementationCommit": null,
+  "implementationCommit": "53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4",
   "baselineCommit": "289f589d29c1dd573a1017e7f310bb168137d43d",
-  "sourceState": "Executed source hashes below; immutable implementation pin follows commit. Original RN inputs and native host stay identical between variants.",
+  "sourceState": "All 10 public implementation/config/fixture hashes verified against this immutable implementation commit. Execution preceded the commit. Both variants use identical original RN inputs/native host; generated parent source and bundle identities are separate.",
   "versions": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",

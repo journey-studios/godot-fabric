@@ -10,7 +10,9 @@ The identical fixture executes **102/102 checks in each variant** on macOS
 arm64/headless: original source versus the generated correction. These are
 separate 102-check executions. [Curated receipt](report.json) records every
 check, both traces, source/bundle/host hashes and original/generated module
-hashes. The implementation pin follows the commit.
+hashes. All 10 implementation/config/fixture hashes match implementation
+[`53eae43`](https://github.com/journey-studios/godot-fabric/commit/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4);
+execution preceded the commit.
 
 ```sh
 npm run test:events:ancestry

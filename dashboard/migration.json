@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Ancestralidade EventTarget corrigida; próximos transporte nativo e contratos de responder"
   },
-  "updatedAt": "2026-10-04T15:37:57.119074+00:00",
+  "updatedAt": "2026-10-04T15:40:14.285899+00:00",
   "source": {
-    "commit": "2db8e391eff4de26caab0231be878f4ee807e799",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/2db8e391eff4de26caab0231be878f4ee807e799/ROADMAP.md",
-    "scope": "Correção de ancestralidade EventTarget verificada localmente: 102 checks em cada variante original/corrigida, mesmas fontes e mesmo host nativo. Warm refs retiradas fazem apenas self-dispatch; snapshot do evento atual, remount e listeners pré-reorder preservados. Shared toolchain e consumer 30/40; 204 na última suíte Node/13Python, 22examples/2246headless. Pin da nova implementação segue o commit. CI anterior 515d0d7 confirma baseline original119 e três gaps; nova correção aguarda CI. Nenhum GF/checkpoint completo, decisão, peso ou denominador alterado.",
+    "commit": "53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4/ROADMAP.md",
+    "scope": "Correção de ancestralidade 53eae43: 102 checks em cada variante original/corrigida, mesmas fontes/host. Dez hashes públicos conferidos contra implementação imutável. Refs retiradas fazem self-dispatch; path em curso, remount, raiz sobrevivente e listeners pré-reorder preservados. Consumer30/40, última suíte Node204/13Python e22examples/2246headless passaram. CI515d0d7 certifica apenas baseline original119; CI da nova correção pendente. Nenhum GF/checkpoint completo, decisão, peso ou denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2600,6 +2600,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-current-ancestry-pinned-53eae43",
+      "at": "2026-10-04T15:40:14.285899+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação 53eae43 fixa10fontes públicas verificados contra hashes executados.102checks em cada variante original/corrigida com host igual; guardas do overlay e consumidor confirmados. Sem habilitar EventTarget público/transporte. CI da correção ainda pendente; nenhum GF/checkpoint fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4"
+    },
     {
       "id": "event-target-current-ancestry-local-20261004",
       "at": "2026-10-04T15:37:57.119074+00:00",
