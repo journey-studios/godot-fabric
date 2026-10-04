@@ -7,6 +7,8 @@ deduplication and callback dispatch. A generated pure query reads those Maps;
 the native processor uses the answer only for View-path Down capture/bubble.
 No listener mirror, wrapped callback or `ViewProps.events` mutation is involved.
 
+Implementation `ae9d4ed77ff5eccb8825ef47283d13abf81d5910` was checked against all 21 recorded source/configuration pins. Execution used the preceding commit with these exact new bytes; the original execution/SDK identity remains recorded unchanged.
+
 [Curated receipt](report.json), [isolated example](../../../examples/pointer-interest/README.md)
 and [design boundaries](../../research/native-pointer-interest.md).
 

@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Interesse View/pointerdown validado; próximos documentos, flags e query-fault cleanup"
   },
-  "updatedAt": "2026-10-04T19:01:36.106363+00:00",
+  "updatedAt": "2026-10-04T19:05:12.898511+00:00",
   "source": {
-    "commit": "04784991eafadd4e4b3ad3be6df951b2651f0b1e",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/ROADMAP.md",
-    "scope": "Nova fatia executada sobre0478499 preservado: query pura dos Maps RN qualifica View/pointerdown;193/230headless,260viewport/28pixels. Contratos250/13,22exemplos2250,consumidor30/40 e SDK/adapters13/213. Commit desta fatia ainda em preparação; CI própria pendente. CI0478499 anterior auditada e Pages anterior confirmada. Nenhum checkpoint/GF completo adicional; pesos e denominador preservados.",
+    "commit": "ae9d4ed77ff5eccb8825ef47283d13abf81d5910",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/ROADMAP.md",
+    "scope": "Implementaçãoae9d4ed:21pins de código/configuração executados conferidos no commit. Query Map RN qualifica View/pointerdown193/230headless,260viewport/28pixels;250/13contratos,22examples2250,consumer30/40 e SDK/adapters13/213. CI própria e Pages desta fatia ainda pendentes; CI anterior0478499 auditada. Nenhum checkpoint/GF completo adicional;pesos e denominador preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -297,7 +297,7 @@
             },
             {
               "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-interest/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
             },
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
@@ -352,7 +352,7 @@
             },
             {
               "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-interest/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
             },
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
@@ -431,7 +431,7 @@
             },
             {
               "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-interest/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
             },
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
@@ -562,7 +562,7 @@
             },
             {
               "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-interest/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
             },
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
@@ -892,7 +892,7 @@
             },
             {
               "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-interest/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
             },
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
@@ -2698,6 +2698,19 @@
   ],
   "activity": [
     {
+      "id": "view-pointerdown-source-pin-ae9d4ed",
+      "at": "2026-10-04T19:05:12.898511+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Os21pins executados foram comparados via gitshow com o commit ae9d4ed. Capturas e receipts locais têm origem exata; consumidor/SDK conservam sourceCommit0478499/sourceDirtytrue da execução. Links da fatia fixados no commit. Sem novo checkpoint ou conclusão completa; CI/Pages desta fatia pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/ae9d4ed77ff5eccb8825ef47283d13abf81d5910"
+    },
+    {
       "id": "view-pointerdown-interest-native-local-20261004",
       "at": "2026-10-04T19:01:36.106363+00:00",
       "taskIds": [
@@ -2707,8 +2720,8 @@
         "GF-08",
         "GF-13"
       ],
-      "message": "Fatia View/pointerdown:193original/230currentheadless e260viewport incluem28pixels/twosaves. Query lê Map original;abort/once/removal/dedupe/flat,mixed,rerrender,replacement e Bheld durante Aunmount passam. SDK/consumer30/40,13adapters213,22examples2250 e250/13contratos passam. Document-only nativezero continua aberto;queryfaults/flags/outros tipos/mobile não certificados. Nenhum checkpoint adicional/wholeGF/decisão;denominador e pesos preservados. Commit/CI/publicação desta fatia pendentes.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-interest/README.md"
+      "message": "Fatia View/pointerdown:193original/230currentheadless e260viewport incluem28pixels/twosaves. Query lê Map original;abort/once/removal/dedupe/flat,mixed,rerrender,replacement e Bheld durante Aunmount passam. SDK/consumer30/40,13adapters213,22examples2250 e250/13contratos passam. Document-only nativezero continua aberto;queryfaults/flags/outros tipos/mobile não certificados. Nenhum checkpoint adicional/wholeGF/decisão;denominador e pesos preservados. Implementaçãoae9d4ed fixa21pins; CI/publicação desta fatia pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
     },
     {
       "id": "native-integration-hosted-0478499-audit",

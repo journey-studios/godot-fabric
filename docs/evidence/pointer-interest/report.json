@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "scenario": "original-EventTarget-pointerdown-interest",
   "implementation": {
-    "commit": null,
+    "commit": "ae9d4ed77ff5eccb8825ef47283d13abf81d5910",
     "executedBeforeCommit": true,
-    "sourcePinsVerifiedAgainstCommit": false,
-    "verifiedSourcePinCount": 0,
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourcePinCount": 21,
     "executionBaseCommit": "04784991eafadd4e4b3ad3be6df951b2651f0b1e",
     "executionSourceDirty": true
   },
