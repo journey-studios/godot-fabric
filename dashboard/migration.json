@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Ponteiros e captura públicos verificados; próximos EventTarget e geometria da captura"
   },
-  "updatedAt": "2026-10-04T10:54:48.085025+00:00",
+  "updatedAt": "2026-10-04T11:04:47.266489+00:00",
   "source": {
-    "commit": "9564076fd2037832266fffc54254f05c820b64b6",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/ROADMAP.md",
-    "scope": "Candidata de ponteiros executada sobre 5b79464, com hashes exatos no recibo:132/146 checks públicos,12 pixels/duas capturas,144 asserts nativos e 43 checks JSX de falha/stop; dois controles RN originais SIGSEGV.213 Node/13 Python,21 exemplos/1615,11 testes nativos,guards 61/25,SDK/adapter 17 runs/318 passaram. CI nova e Pages ainda não publicados. CI anterior 956 completou cinco jobs verdes; falha ffcc preservada. Nenhum novo aceite, peso, decisão ou GF fechado.",
+    "commit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/ROADMAP.md",
+    "scope": "Ponteiros788739d: 132/146 checks públicos,12 pixels/duas capturas,144 asserts nativos e43 checks JSX de listener fault/stop; dois controles RN originais SIGSEGV.213 Node/13 Python,21 exemplos/1615,11 testes nativos,guards61/25,SDK/adapter17runs/318 passaram. Props/refs TSX e negativos de tipos passaram. CI nova e Pages ainda não observados; CI anterior956 completou cinco jobs verdes, mantendo a falha ffcc histórica. Nenhum novo aceite, peso, decisão ou GF fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -465,7 +465,7 @@
             },
             {
               "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointers/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
             }
           ]
         },
@@ -743,7 +743,7 @@
             },
             {
               "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointers/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
             }
           ]
         },
@@ -1663,7 +1663,7 @@
             },
             {
               "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointers/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
             }
           ]
         },
@@ -2541,6 +2541,17 @@
   ],
   "activity": [
     {
+      "id": "pointer-source-pinned-788739d",
+      "at": "2026-10-04T11:04:47.266489+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13",
+        "GF-31"
+      ],
+      "message": "Fontes executadas verificadas contra788739d; exemplos132/146,144nativo,43JSX,tipos e SDK independente17/318. Recibo remove duplicação de checks/traces entre modos; nenhuma evidência ou aceite foi removido/fechado. CI e publicação desta entrega serão observadas separadamente.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/788739dbf7c5184839c5c92bf072c9dca16a01f7"
+    },
+    {
       "id": "pointer-lifetime-verified-20261004",
       "at": "2026-10-04T10:54:48.085025+00:00",
       "taskIds": [
@@ -2549,7 +2560,7 @@
         "GF-31"
       ],
       "message": "Captura e transporte públicos 132/146,144 assertions nativas,43 checks JSX (seis erros preservados/stop real) e 12 pixels comprovados; dois controles RN originais SIGSEGV.213 Node/13 Python,21 exemplos/1615,11 testes nativos,SDK/adapter 17/318 passaram. Pesos,39 itens obrigatórios,156 checkpoints,decisões e aceites completos preservados; publicado só após workflow/data conferidos.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointers/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
     },
     {
       "id": "coordinates-ci-green-f40831e-b1732fb",

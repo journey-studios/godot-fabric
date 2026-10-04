@@ -1,9 +1,9 @@
 {
   "format": "godot-fabric.pointer-lifetime-evidence/v1",
   "observedAt": "2026-10-04T10:54:48.085025+00:00",
-  "implementationCommit": null,
+  "implementationCommit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
   "baselineCommit": "5b7946417af7d9fbd2dc49053ae152910dc54e7d",
-  "sourceState": "Executed candidate on the stated base; source hashes identify the exact implementation. Follow-up metadata pins its commit.",
+  "sourceState": "Every recorded production/fixture/type source hash was verified against this immutable implementation commit. SDK build metadata separately records the precommit source state.",
   "versions": {
     "godot": "4.7.2-stable (official)",
     "react": "19.2.3",
@@ -652,13 +652,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -668,13 +662,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -682,9 +670,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 38.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 38.0
               }
             }
           ],
@@ -772,13 +758,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -788,13 +768,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -804,13 +778,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -818,9 +786,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 276.0,
-                "screenX": 75.0,
-                "screenY": 210.0
+                "target": 276.0
               }
             },
             {
@@ -830,13 +796,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -846,13 +806,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -860,9 +814,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 276.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 276.0
               }
             },
             {
@@ -872,13 +824,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -888,13 +834,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -904,13 +844,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -920,13 +854,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -936,13 +864,7 @@
               "native": {
                 "pointerId": 10.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             }
           ],
@@ -1028,9 +950,7 @@
               "box": "press",
               "type": "PressIn",
               "native": {
-                "target": 70.0,
-                "screenX": 80.0,
-                "screenY": 375.0
+                "target": 70.0
               }
             },
             {
@@ -1038,9 +958,7 @@
               "box": "press",
               "type": "TouchStart",
               "native": {
-                "target": 70.0,
-                "screenX": 80.0,
-                "screenY": 375.0
+                "target": 70.0
               }
             },
             {
@@ -1048,9 +966,7 @@
               "box": "press",
               "type": "TouchCancel",
               "native": {
-                "target": 70.0,
-                "screenX": 80.0,
-                "screenY": 375.0
+                "target": 70.0
               }
             },
             {
@@ -1058,9 +974,7 @@
               "box": "press",
               "type": "PressOut",
               "native": {
-                "target": 70.0,
-                "screenX": 80.0,
-                "screenY": 375.0
+                "target": 70.0
               }
             }
           ],
@@ -1225,13 +1139,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1241,13 +1149,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1257,13 +1159,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             }
           ],
@@ -1351,13 +1247,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -1367,13 +1257,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -1383,13 +1267,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -1397,9 +1275,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 254.0,
-                "screenX": 75.0,
-                "screenY": 210.0
+                "target": 254.0
               }
             },
             {
@@ -1409,13 +1285,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -1425,13 +1295,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -1439,9 +1303,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 254.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 254.0
               }
             },
             {
@@ -1451,13 +1313,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1467,13 +1323,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1483,13 +1333,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1499,13 +1343,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1515,13 +1353,7 @@
               "native": {
                 "pointerId": 9.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             }
           ],
@@ -1609,13 +1441,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1625,13 +1451,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1639,9 +1459,7 @@
               "box": "left",
               "type": "TouchEnd",
               "native": {
-                "target": 38.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 38.0
               }
             }
           ],
@@ -1729,13 +1547,7 @@
               "native": {
                 "pointerId": 2.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1745,13 +1557,7 @@
               "native": {
                 "pointerId": 2.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1761,13 +1567,7 @@
               "native": {
                 "pointerId": 2.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1777,13 +1577,7 @@
               "native": {
                 "pointerId": 2.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             }
           ],
@@ -1871,13 +1665,7 @@
               "native": {
                 "pointerId": 1.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -1885,9 +1673,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 38.0,
-                "screenX": 75.0,
-                "screenY": 210.0
+                "target": 38.0
               }
             }
           ],
@@ -1975,13 +1761,7 @@
               "native": {
                 "pointerId": 8.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -1991,13 +1771,7 @@
               "native": {
                 "pointerId": 8.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2007,13 +1781,7 @@
               "native": {
                 "pointerId": 8.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2023,13 +1791,7 @@
               "native": {
                 "pointerId": 8.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2039,13 +1801,7 @@
               "native": {
                 "pointerId": 8.0,
                 "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             }
           ],
@@ -2210,13 +1966,7 @@
               "native": {
                 "pointerId": 11.0,
                 "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2226,13 +1976,7 @@
               "native": {
                 "pointerId": 11.0,
                 "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2242,13 +1986,7 @@
               "native": {
                 "pointerId": 11.0,
                 "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2256,9 +1994,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 308.0,
-                "screenX": 75.0,
-                "screenY": 210.0
+                "target": 308.0
               }
             },
             {
@@ -2268,13 +2004,7 @@
               "native": {
                 "pointerId": 11.0,
                 "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2284,13 +2014,7 @@
               "native": {
                 "pointerId": 11.0,
                 "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2298,9 +2022,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 308.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 308.0
               }
             },
             {
@@ -2310,13 +2032,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 475.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2326,13 +2042,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 475.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2342,13 +2052,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 475.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2356,9 +2060,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 116.0,
-                "screenX": 475.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             },
             {
@@ -2368,13 +2070,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2384,13 +2080,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2398,9 +2088,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 116.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             },
             {
@@ -2410,13 +2098,7 @@
               "native": {
                 "pointerId": 11.0,
                 "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2424,9 +2106,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 308.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 308.0
               }
             },
             {
@@ -2434,9 +2114,7 @@
               "box": "left",
               "type": "TouchCancel",
               "native": {
-                "target": 308.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 308.0
               }
             }
           ],
@@ -2524,13 +2202,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2540,13 +2212,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2556,13 +2222,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2572,13 +2232,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2586,9 +2240,7 @@
               "box": "left",
               "type": "TouchCancel",
               "native": {
-                "target": 38.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 38.0
               }
             }
           ],
@@ -2676,13 +2328,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2690,9 +2336,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 116.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             },
             {
@@ -2702,13 +2346,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2718,13 +2356,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2734,13 +2366,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2750,13 +2376,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2764,9 +2384,7 @@
               "box": "left",
               "type": "TouchEnd",
               "native": {
-                "target": 116.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             }
           ],
@@ -2854,13 +2472,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -2868,9 +2480,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 116.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             },
             {
@@ -2880,13 +2490,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2896,13 +2500,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2912,13 +2510,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2928,13 +2520,7 @@
               "native": {
                 "pointerId": 12.0,
                 "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 0.0
               }
             },
             {
@@ -2942,9 +2528,7 @@
               "box": "left",
               "type": "TouchEnd",
               "native": {
-                "target": 116.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             }
           ],
@@ -3032,13 +2616,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3048,13 +2626,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3064,13 +2636,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 75.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3078,9 +2644,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 38.0,
-                "screenX": 75.0,
-                "screenY": 210.0
+                "target": 38.0
               }
             },
             {
@@ -3090,13 +2654,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3106,13 +2664,7 @@
               "native": {
                 "pointerId": 4.0,
                 "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 255.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3120,9 +2672,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 38.0,
-                "screenX": 255.0,
-                "screenY": 210.0
+                "target": 38.0
               }
             },
             {
@@ -3132,13 +2682,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 475.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3148,13 +2692,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 475.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3164,13 +2702,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 475.0,
-                "screenY": 210.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3178,9 +2710,7 @@
               "box": "left",
               "type": "TouchStart",
               "native": {
-                "target": 116.0,
-                "screenX": 475.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             },
             {
@@ -3190,13 +2720,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3206,13 +2730,7 @@
               "native": {
                 "pointerId": 5.0,
                 "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 655.0,
-                "screenY": 210.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
+                "buttons": 1.0
               }
             },
             {
@@ -3220,9 +2738,7 @@
               "box": "left",
               "type": "TouchMove",
               "native": {
-                "target": 116.0,
-                "screenX": 655.0,
-                "screenY": 210.0
+                "target": 116.0
               }
             }
           ],
@@ -4220,592 +3736,6 @@
       "scenario": "pointers",
       "mode": "macOS",
       "count": 146,
-      "checks": [
-        {
-          "name": "Original AppRegistry mounts two shared pointer roots and one independent runtime",
-          "passed": true
-        },
-        {
-          "name": "Pointer roots retain shared-versus-independent Hermes runtime identity",
-          "passed": true
-        },
-        {
-          "name": "Pointer lifecycle requests use registered typed Godot service methods",
-          "passed": true
-        },
-        {
-          "name": "Public View ref exposes original connected capture methods A-left",
-          "passed": true
-        },
-        {
-          "name": "Public View ref exposes original connected capture methods A-right",
-          "passed": true
-        },
-        {
-          "name": "Public View ref exposes original connected capture methods B-left",
-          "passed": true
-        },
-        {
-          "name": "Public View ref exposes original connected capture methods B-right",
-          "passed": true
-        },
-        {
-          "name": "Public View ref exposes original connected capture methods C-left",
-          "passed": true
-        },
-        {
-          "name": "Public View ref exposes original connected capture methods C-right",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame A-left",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame A-right",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame A-press",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame B-left",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame B-right",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame B-press",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame C-left",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame C-right",
-          "passed": true
-        },
-        {
-          "name": "Independent declared View/Pressable native frame C-press",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: initial A-left",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: initial A-right",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: initial B-left",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: initial B-right",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: initial C-left",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: initial C-right",
-          "passed": true
-        },
-        {
-          "name": "Native pointer screenshot saved: initial",
-          "passed": true
-        },
-        {
-          "name": "hover: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "hover: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "hover: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "hover: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "hover: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "One genuine mouse hover delivers original over/enter/move once",
-          "passed": true
-        },
-        {
-          "name": "Buttons-free mouse hover cannot acquire pointer capture",
-          "passed": true
-        },
-        {
-          "name": "Pinned RN inactive pointer IDs silently ignore capture and release",
-          "passed": true
-        },
-        {
-          "name": "hover-no-capture: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "mouse-down: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "mouse-down: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "mouse-down: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "mouse-down: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "mouse-down: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "Down callback sets pending capture immediately without premature got notification",
-          "passed": true
-        },
-        {
-          "name": "pending-before-next-event: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Next sibling move emits got before move on the captured original View",
-          "passed": true
-        },
-        {
-          "name": "captured-sibling: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "captured-sibling: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "captured-sibling: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "captured-sibling: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "captured-sibling: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "active-sibling-capture: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Repeated capture and wrong-owner release leave pending ownership and callbacks intact",
-          "passed": true
-        },
-        {
-          "name": "Captured owner receives movement beyond its surface across a shared sibling root once",
-          "passed": true
-        },
-        {
-          "name": "cross-root-drag: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "cross-root-drag: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "cross-root-drag: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "cross-root-drag: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "cross-root-drag: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "Active capture receives real movement outside every mounted root",
-          "passed": true
-        },
-        {
-          "name": "outside-all-drag: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "outside-all-drag: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "outside-all-drag: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "outside-all-drag: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "outside-all-drag: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "Transfer updates pending queries before callbacks",
-          "passed": true
-        },
-        {
-          "name": "Capture transfer emits lost old then got new before retargeted move",
-          "passed": true
-        },
-        {
-          "name": "Explicit release clears the pending query before delayed lost notification",
-          "passed": true
-        },
-        {
-          "name": "Next event delivers lost and resumes the original physical hit target",
-          "passed": true
-        },
-        {
-          "name": "Captured mouse up precedes implicit lost capture and cannot retain ownership",
-          "passed": true
-        },
-        {
-          "name": "mouse-up-releases: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "An ended mouse contact cannot reacquire capture through a retained ID",
-          "passed": true
-        },
-        {
-          "name": "Canceled native mouse contact terminates Touch/Pressability without activation",
-          "passed": true
-        },
-        {
-          "name": "canceled-mouse-does-not-press: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Authoritative multi-button native down keeps the original W3C buttons bitmask",
-          "passed": true
-        },
-        {
-          "name": "Releasing one of two held buttons preserves the original active contact and capture",
-          "passed": true
-        },
-        {
-          "name": "Remaining native button retains one root owner while moving across sibling root",
-          "passed": true
-        },
-        {
-          "name": "Last physical button delivers one Up/lost and no duplicate sibling release sample",
-          "passed": true
-        },
-        {
-          "name": "multi-button-last-release: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Real touch retains original Pressability negotiation and one completed activation",
-          "passed": true
-        },
-        {
-          "name": "Concurrent contacts across shared roots retain distinct live IDs and captures",
-          "passed": true
-        },
-        {
-          "name": "two-shared-captures: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "root-B-touch: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "root-B-touch: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "root-B-touch: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "root-B-touch: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "root-B-touch: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "Cancel releases only its changed contact and preserves another root's capture",
-          "passed": true
-        },
-        {
-          "name": "selective-contact-cancel: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Surviving root continues receiving its original captured pointer after another contact cancels",
-          "passed": true
-        },
-        {
-          "name": "shared-touch-release: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "An independent application owns its own pointer processor without acquiring contacts in the shared application",
-          "passed": true
-        },
-        {
-          "name": "independent-touch: Original PointerEvent serializes every numeric field finitely",
-          "passed": true
-        },
-        {
-          "name": "independent-touch: Native pointer type, primary and modifier fields retain their public types",
-          "passed": true
-        },
-        {
-          "name": "independent-touch: Declared owner-root client coordinates and original x/page aliases agree",
-          "passed": true
-        },
-        {
-          "name": "independent-touch: Declared target-local and current window screen coordinates agree",
-          "passed": true
-        },
-        {
-          "name": "independent-touch: Public event target, button state and timestamp describe the actual contact",
-          "passed": true
-        },
-        {
-          "name": "Independent capture also releases on real up",
-          "passed": true
-        },
-        {
-          "name": "active target removal: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "capture-target-removed-origin-survives: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Removed capture target cannot receive lost/move while the surviving physical origin remains usable",
-          "passed": true
-        },
-        {
-          "name": "Restored sibling receives a new native identity rather than the disconnected capture ref",
-          "passed": true
-        },
-        {
-          "name": "removed-pending-origin: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "removed-pending-origin: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "removed-pending-origin: Late native movement/up cannot resurrect a removed-origin contact",
-          "passed": true
-        },
-        {
-          "name": "removed-active-origin: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "removed-active-origin: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "removed-active-origin: Late native movement/up cannot resurrect a removed-origin contact",
-          "passed": true
-        },
-        {
-          "name": "keyed capture origin replacement: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "Key replacement disconnects the captured old ref and commits a distinct live View",
-          "passed": true
-        },
-        {
-          "name": "keyed-origin-replaced: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "React pointer callback deletion: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "A genuine captured move callback removes its own React View through setState",
-          "passed": true
-        },
-        {
-          "name": "callback-origin-removed: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: updated A-left",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: updated A-right",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: updated B-left",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: updated B-right",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: updated C-left",
-          "passed": true
-        },
-        {
-          "name": "Declared native View paints pointer sample: updated C-right",
-          "passed": true
-        },
-        {
-          "name": "Native pointer screenshot saved: updated",
-          "passed": true
-        },
-        {
-          "name": "Genuine pointer callback calls a typed queued Godot service to retire its own root once",
-          "passed": true
-        },
-        {
-          "name": "retired capture root: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "Retiring one root preserves another root's existing active capture",
-          "passed": true
-        },
-        {
-          "name": "root-retirement-preserves-survivor: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Surviving root still handles the same captured contact after root retirement",
-          "passed": true
-        },
-        {
-          "name": "Retired root's late up cannot release the surviving root's capture",
-          "passed": true
-        },
-        {
-          "name": "surviving-root-released: Original RN active, pending-capture and active-capture registries match",
-          "passed": true
-        },
-        {
-          "name": "Two independent applications hold live captured contacts before one application stops",
-          "passed": true
-        },
-        {
-          "name": "Genuine pointer callback queues typed Godot application stop",
-          "passed": true
-        },
-        {
-          "name": "stopped pointer application: Retained disconnected public ref cannot query, set or restore capture",
-          "passed": true
-        },
-        {
-          "name": "Application stop preserves another application's already-active capture and original registry",
-          "passed": true
-        },
-        {
-          "name": "Independent application continues its original captured contact after another application stops",
-          "passed": true
-        },
-        {
-          "name": "Independent survivor releases through its own real up after another application stops",
-          "passed": true
-        },
-        {
-          "name": "Independent application's original Pressability survives another application stop",
-          "passed": true
-        },
-        {
-          "name": "Final pointer stop releases every native tag and Control in root A",
-          "passed": true
-        },
-        {
-          "name": "Final pointer stop clears contacts, responder and pointer ownership in root A",
-          "passed": true
-        },
-        {
-          "name": "Final pointer stop releases every native tag and Control in root B",
-          "passed": true
-        },
-        {
-          "name": "Final pointer stop clears contacts, responder and pointer ownership in root B",
-          "passed": true
-        },
-        {
-          "name": "Final pointer stop releases every native tag and Control in root C",
-          "passed": true
-        },
-        {
-          "name": "Final pointer stop clears contacts, responder and pointer ownership in root C",
-          "passed": true
-        },
-        {
-          "name": "Pointer application stops without hidden host errors: shared",
-          "passed": true
-        },
-        {
-          "name": "Pointer stop releases queued work, timers and retirement scopes: shared",
-          "passed": true
-        },
-        {
-          "name": "Final stop clears original active/capture/hover registries: shared",
-          "passed": true
-        },
-        {
-          "name": "Final stop clears application-wide physical contact routing: shared",
-          "passed": true
-        },
-        {
-          "name": "Pointer application stops without hidden host errors: independent",
-          "passed": true
-        },
-        {
-          "name": "Pointer stop releases queued work, timers and retirement scopes: independent",
-          "passed": true
-        },
-        {
-          "name": "Final stop clears original active/capture/hover registries: independent",
-          "passed": true
-        },
-        {
-          "name": "Final stop clears application-wide physical contact routing: independent",
-          "passed": true
-        },
-        {
-          "name": "Typed pointer lifecycle callbacks leave no service rejection",
-          "passed": true
-        }
-      ],
       "pixels": [
         {
           "actual": [
@@ -5038,50 +3968,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 38.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 1.0,
@@ -5131,7 +4017,8 @@
                 "starts": 0.0
               }
             }
-          }
+          },
+          "eventTraceCount": 3
         },
         {
           "name": "callback-origin-removed",
@@ -5158,188 +4045,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 10.0,
-                "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 10.0,
-                "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 10.0,
-                "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 276.0,
-                "screenX": 1137.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 10.0,
-                "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 10.0,
-                "target": 276.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 276.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Over",
-              "native": {
-                "pointerId": 10.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Enter",
-              "native": {
-                "pointerId": 10.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Cancel",
-              "native": {
-                "pointerId": 10.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Out",
-              "native": {
-                "pointerId": 10.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Leave",
-              "native": {
-                "pointerId": 10.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 10.0,
@@ -5389,7 +4094,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 12
         },
         {
           "name": "canceled-mouse-does-not-press",
@@ -5416,48 +4122,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "press",
-              "type": "PressIn",
-              "native": {
-                "target": 70.0,
-                "screenX": 1142.0,
-                "screenY": 967.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "press",
-              "type": "TouchStart",
-              "native": {
-                "target": 70.0,
-                "screenX": 1142.0,
-                "screenY": 967.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "press",
-              "type": "TouchCancel",
-              "native": {
-                "target": 70.0,
-                "screenX": 1142.0,
-                "screenY": 967.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "press",
-              "type": "PressOut",
-              "native": {
-                "target": 70.0,
-                "screenX": 1142.0,
-                "screenY": 967.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 1.0,
@@ -5507,7 +4171,8 @@
                 "starts": 0.0
               }
             }
-          }
+          },
+          "eventTraceCount": 4
         },
         {
           "name": "capture-target-removed-origin-survives",
@@ -5534,7 +4199,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [],
           "roots": {
             "A": {
               "commits": 3.0,
@@ -5584,7 +4248,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 0
         },
         {
           "name": "hover-no-capture",
@@ -5611,56 +4276,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 1.0,
@@ -5710,7 +4325,8 @@
                 "starts": 0.0
               }
             }
-          }
+          },
+          "eventTraceCount": 3
         },
         {
           "name": "keyed-origin-replaced",
@@ -5737,188 +4353,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 9.0,
-                "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 9.0,
-                "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 9.0,
-                "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 254.0,
-                "screenX": 1137.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 9.0,
-                "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 9.0,
-                "target": 254.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 254.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Over",
-              "native": {
-                "pointerId": 9.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Enter",
-              "native": {
-                "pointerId": 9.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Cancel",
-              "native": {
-                "pointerId": 9.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Out",
-              "native": {
-                "pointerId": 9.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Leave",
-              "native": {
-                "pointerId": 9.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 9.0,
@@ -5968,7 +4402,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 12
         },
         {
           "name": "mouse-up-releases",
@@ -5995,50 +4430,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Up",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "LostPointerCapture",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchEnd",
-              "native": {
-                "target": 38.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 1.0,
@@ -6088,7 +4479,8 @@
                 "starts": 0.0
               }
             }
-          }
+          },
+          "eventTraceCount": 3
         },
         {
           "name": "multi-button-last-release",
@@ -6115,72 +4507,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Up",
-              "native": {
-                "pointerId": 2.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Out",
-              "native": {
-                "pointerId": 2.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Leave",
-              "native": {
-                "pointerId": 2.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "LostPointerCapture",
-              "native": {
-                "pointerId": 2.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 635.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 615.0,
-                "offsetY": 55.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 1.0,
@@ -6230,7 +4556,8 @@
                 "starts": 0.0
               }
             }
-          }
+          },
+          "eventTraceCount": 4
         },
         {
           "name": "pending-before-next-event",
@@ -6257,34 +4584,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 1.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 38.0,
-                "screenX": 1137.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 1.0,
@@ -6334,7 +4633,8 @@
                 "starts": 0.0
               }
             }
-          }
+          },
+          "eventTraceCount": 2
         },
         {
           "name": "removed-active-origin",
@@ -6361,88 +4661,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Over",
-              "native": {
-                "pointerId": 8.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Enter",
-              "native": {
-                "pointerId": 8.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Cancel",
-              "native": {
-                "pointerId": 8.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Out",
-              "native": {
-                "pointerId": 8.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "right",
-              "type": "Leave",
-              "native": {
-                "pointerId": 8.0,
-                "target": 190.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 7.0,
@@ -6492,7 +4710,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 5
         },
         {
           "name": "removed-pending-origin",
@@ -6519,7 +4738,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [],
           "roots": {
             "A": {
               "commits": 5.0,
@@ -6569,7 +4787,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 0
         },
         {
           "name": "root-retirement-preserves-survivor",
@@ -6596,244 +4815,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 11.0,
-                "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 11.0,
-                "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 11.0,
-                "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 308.0,
-                "screenX": 1137.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 11.0,
-                "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 11.0,
-                "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 308.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1537.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1537.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1537.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 116.0,
-                "screenX": 1537.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 116.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 11.0,
-                "target": 308.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 308.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchCancel",
-              "native": {
-                "target": 308.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 12.0,
@@ -6883,7 +4864,8 @@
                 "starts": 2.0
               }
             }
-          }
+          },
+          "eventTraceCount": 17
         },
         {
           "name": "selective-contact-cancel",
@@ -6910,82 +4892,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Cancel",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Out",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Leave",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "LostPointerCapture",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchCancel",
-              "native": {
-                "target": 38.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 2.0,
@@ -7035,7 +4941,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 5
         },
         {
           "name": "shared-touch-release",
@@ -7062,108 +4969,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 116.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Up",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Out",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Leave",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "LostPointerCapture",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchEnd",
-              "native": {
-                "target": 116.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 2.0,
@@ -7213,7 +5018,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 7
         },
         {
           "name": "surviving-root-released",
@@ -7240,108 +5046,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 116.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Up",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Out",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Leave",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "LostPointerCapture",
-              "native": {
-                "pointerId": 12.0,
-                "target": 116.0,
-                "buttons": 0.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchEnd",
-              "native": {
-                "target": 116.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 12.0,
@@ -7391,7 +5095,8 @@
                 "starts": 2.0
               }
             }
-          }
+          },
+          "eventTraceCount": 7
         },
         {
           "name": "two-shared-captures",
@@ -7418,208 +5123,6 @@
             },
             "errorCount": 0
           },
-          "eventTrace": [
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1137.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 38.0,
-                "screenX": 1137.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 4.0,
-                "target": 38.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1317.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "A",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 38.0,
-                "screenX": 1317.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Over",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1537.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Enter",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1537.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Down",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 55.0,
-                "clientY": 180.0,
-                "screenX": 1537.0,
-                "screenY": 802.0,
-                "offsetX": 35.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchStart",
-              "native": {
-                "target": 116.0,
-                "screenX": 1537.0,
-                "screenY": 802.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "GotPointerCapture",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "Move",
-              "native": {
-                "pointerId": 5.0,
-                "target": 116.0,
-                "buttons": 1.0,
-                "clientX": 235.0,
-                "clientY": 180.0,
-                "screenX": 1717.0,
-                "screenY": 802.0,
-                "offsetX": 215.0,
-                "offsetY": 55.0
-              }
-            },
-            {
-              "root": "B",
-              "box": "left",
-              "type": "TouchMove",
-              "native": {
-                "target": 116.0,
-                "screenX": 1717.0,
-                "screenY": 802.0
-              }
-            }
-          ],
           "roots": {
             "A": {
               "commits": 2.0,
@@ -7669,7 +5172,8 @@
                 "starts": 1.0
               }
             }
-          }
+          },
+          "eventTraceCount": 14
         }
       ],
       "injections": [
@@ -8608,6 +6112,65 @@
       ],
       "stopRequests": [
         "B"
+      ],
+      "coreChecksMatchHeadless": true,
+      "additionalChecks": [
+        {
+          "name": "Declared native View paints pointer sample: initial A-left",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: initial A-right",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: initial B-left",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: initial B-right",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: initial C-left",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: initial C-right",
+          "passed": true
+        },
+        {
+          "name": "Native pointer screenshot saved: initial",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: updated A-left",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: updated A-right",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: updated B-left",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: updated B-right",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: updated C-left",
+          "passed": true
+        },
+        {
+          "name": "Declared native View paints pointer sample: updated C-right",
+          "passed": true
+        },
+        {
+          "name": "Native pointer screenshot saved: updated",
+          "passed": true
+        }
       ]
     }
   },
