@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Ancestralidade EventTarget corrigida; próximos transporte nativo e contratos de responder"
   },
-  "updatedAt": "2026-10-04T15:41:13.041942+00:00",
+  "updatedAt": "2026-10-04T15:57:32.757855+00:00",
   "source": {
     "commit": "53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4",
     "url": "https://github.com/journey-studios/godot-fabric/blob/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4/ROADMAP.md",
-    "scope": "Correção de ancestralidade 53eae43: 102 checks em cada variante original/corrigida, mesmas fontes/host. Dez hashes públicos conferidos contra implementação imutável. Refs retiradas fazem self-dispatch; path em curso, remount, raiz sobrevivente e listeners pré-reorder preservados. Consumer30/40, última suíte Node204/13Python e22examples/2246headless passaram. CI515d0d7 certifica apenas baseline original119; CI da nova correção pendente. Nenhum GF/checkpoint completo, decisão, peso ou denominador fechado.",
+    "scope": "Correção53eae43:102checks/variante local e artefato CI91e5219 auditados; IDs/fontes/RN originais iguais, mesmohostentrevariantes. CincojobsCI passaram. Consumer30/40, Node204/13Python e22examples/2246headless locais. Flags públicas off; nenhum novo GF/checkpoint ou denominador concluído.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -427,7 +427,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs/NativeDOM, medidas, foco/comandos e captura têm provas separadas (captura631/648, binding378). Baseline EventTarget original119 e CI515d0d7 reproduzem três gaps. Correção atual de cache executa102checks por variante original/corrigida com mesmo host: remoção de item/ancestral/raiz, remount, raiz sobrevivente e listeners pré-reorder; grafo separado preserva snapshot atual e atualiza o próximo path. Shared toolchain/consumer30/40 e22examples/2246headless passaram. Flags públicas continuam off. HostInstance/tipos/commands completos, interesse/dispatcher nativo, trusted errors, performance e hardware/mobile continuam pendentes; CI da correção ainda não executada.",
+      "note": "Refs/NativeDOM, medidas, foco/comandos e captura têm provas separadas (captura631/648, binding378). Baseline EventTarget original119 e CI515d0d7 reproduzem três gaps. Correção atual de cache executa102checks por variante original/corrigida com mesmo host: remoção de item/ancestral/raiz, remount, raiz sobrevivente e listeners pré-reorder; grafo separado preserva snapshot atual e atualiza o próximo path. Shared toolchain/consumer30/40 e22examples/2246headless passaram. Flags públicas continuam off. HostInstance/tipos/commands completos, interesse/dispatcher nativo, trusted errors, performance e hardware/mobile continuam pendentes; Artefato hospedado91e5219 confirma102checks/variante, IDs/fontes exatas e mesmohostentrevariantes; cincojobsCI passaram.",
       "blocker": "",
       "checkpoints": [
         {
@@ -498,6 +498,10 @@
             {
               "label": "Ancestralidade: 102checks/variante, NativeDOM removals/root/remount e listeners pré-reorder; source pin conferido",
               "url": "https://github.com/journey-studios/godot-fabric/blob/dfdaee72a8c9b2aff64d43b52ba051bff5a659bf/docs/evidence/event-target-ancestry/README.md"
+            },
+            {
+              "label": "CI91e5219:artefato102/variante com IDs/fontes/RN/host auditados; estado do workflow separado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
             }
           ]
         },
@@ -765,7 +769,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Três gaps EventTarget reproduzidos: interesse imperativo sem JSX, dispatcher legacy omitindo listener e cache de ancestralidade retirada. Manual119headless não certifica transporte nativo; responder/PanResponder, hardware/mobile e regressões da futura integração seguem abertos. Correção de ancestralidade EventTarget102checks/variante já executada no bundler compartilhado, com original como controle; native-interest/native-dispatch e responder completo continuam abertos. Flags públicas off e CI da correção pendente.",
+      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Três gaps EventTarget reproduzidos: interesse imperativo sem JSX, dispatcher legacy omitindo listener e cache de ancestralidade retirada. Manual119headless não certifica transporte nativo; responder/PanResponder, hardware/mobile e regressões da futura integração seguem abertos. Correção de ancestralidade EventTarget102checks/variante já executada no bundler compartilhado, com original como controle; native-interest/native-dispatch e responder completo continuam abertos. Flags públicas off e Artefato hospedado91e5219 confirma102/variante; cincojobsCI passaram.",
       "blocker": "",
       "checkpoints": [
         {
@@ -804,6 +808,10 @@
             {
               "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+            },
+            {
+              "label": "CI91e5219:artefato102/variante com IDs/fontes/RN/host auditados; estado do workflow separado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
             }
           ]
         },
@@ -2604,6 +2612,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-ancestry-hosted-artifact-91e5219",
+      "at": "2026-10-04T15:57:32.757855+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Artefato11307389088 confirma102checks em cada variante original/corrigida, mesmosIDs locais,10pinscontra91e5219 e RN inputs preservados. Mesmohostentrevariantes; NodeCI22.23.2/local22.23.3. Cincojobs passaram. Não certifica integração/interesse nativo, responder/hardware/mobile/performance; nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
+    },
     {
       "id": "event-target-current-ancestry-receipt-links-dfdaee7",
       "at": "2026-10-04T15:41:13.041942+00:00",

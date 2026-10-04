@@ -738,8 +738,8 @@ native pointer interest, the compiled legacy dispatcher omitting imperative
 delivery despite working JSX, and permanent parent cache on a warmed detached
 ref versus a cold detached sibling. [Executed receipt](docs/evidence/event-target/README.md)
 and [source investigation](docs/research/event-target-boundary.md). Production
-flags/bundle are unchanged; native EventTarget delivery and ancestry correction
-remain pending. This does not close any full checkpoint, GF or architectural
+flags/bundle were unchanged in that baseline; native delivery remains pending.
+The subsequent current-ancestry correction is recorded below. This does not close any full checkpoint, GF or architectural
 decision. [CI receipt](docs/evidence/event-target/ci.json) audits 119 identical
 check IDs and all three gaps at 515d0d7; all five jobs passed. This hosted
 manual baseline remains separate from native EventTarget integration.
@@ -762,7 +762,9 @@ Five overlay guards, contracts204/13Python, consumer30/40, original119 control,
 focus/command and pointer processor/error gates pass. All22examples/2246headless
 pass with the shared correction; no native rebuild was needed. Default
 EventTarget flags remain off, native interest/dispatcher and complete responder
-acceptance remain open. New CI variant execution, performance, hardware/mobile
+acceptance remain open. [Hosted artifact](docs/evidence/event-target-ancestry/ci.json)
+now confirms both102 variants at91e5219 with exact local check IDs and source
+pins. All five jobs passed. Performance, hardware/mobile
 and the full GF-08 contract are pending. No checkpoint, dependency,
 architectural decision, weight or denominator is closed.
 

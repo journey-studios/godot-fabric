@@ -51,9 +51,10 @@ passes **30 build/ownership checks and 40 native**.
 The full contract command passes (last Node suite: 204; Python: 13). The original
 119-check baseline still reproduces all three gaps under its explicit original
 control. Focus/command and pointer processor/error gates pass; all 22 examples
-pass 2,246 headless checks. Static/publication checks pass. CI is configured to
-retain both variants and their comparison; hosted execution of the correction
-remains pending.
+pass 2,246 headless checks. Static/publication checks pass. [Hosted receipt](ci.json) audits both 102-check variants at
+[91e5219](https://github.com/journey-studios/godot-fabric/actions/runs/37213942166):
+exact local check IDs, all implementation/source hashes, unchanged RN inputs
+and the same native host between variants. Hosted Node is 22.23.2. All five workflow jobs passed.
 
 GF-08 remains in progress. Public EventTarget flags are off; imperative native
 interest and dispatcher integration remain open. This correction intentionally

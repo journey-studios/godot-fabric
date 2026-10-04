@@ -1,0 +1,104 @@
+{
+  "format": "godot-fabric.event-target-current-ancestry-hosted-evidence/v1",
+  "auditedAt": "2026-10-04T15:57:32.757855+00:00",
+  "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166",
+  "runHead": "91e5219f3b480c0aab347e9735a88313886a6ab0",
+  "implementationCommit": "53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4",
+  "workflow": {
+    "status": "completed",
+    "conclusion": "success",
+    "allFiveJobsSuccess": true,
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "artifact": {
+    "id": 11307389088,
+    "name": "native-event-target-ancestry"
+  },
+  "report": {
+    "checksPerVariant": 102,
+    "allPassed": true,
+    "exactLocalCheckIds": true,
+    "comparisonEmbedsExactReports": true,
+    "sourcePinsMatchRunHead": true,
+    "originalReactNativeSourcesMatchLocal": true,
+    "nativeHostIdenticalBetweenVariants": true,
+    "node": "v22.23.2",
+    "localNode": "v22.23.3",
+    "godot": "4.7.2-stable (official)",
+    "displayServer": "headless",
+    "scope": {
+      "manualDispatch": true,
+      "mutableGraphUsesOriginalEventTarget": true,
+      "nativeEventTargetIntegrated": false,
+      "nativeReactReparentPreservedIdentity": false,
+      "parentCacheFixed": true,
+      "publicDefaultEnabled": false
+    }
+  },
+  "provenance": {
+    "sources": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/event-target-ancestry-fixture.jsx": "b82d2549d91e09ba6bf5c8adde347e484787174dc47a94fce2a43cd334968801",
+      "tests/event-target-ancestry-probe.gd": "31af2b9873e4b45901ddc7fa04a3d7e0740c3b72a354216640e13431e518366c",
+      "tests/event-target-ancestry-native.test.mjs": "cb526b7012216521853998381bfda7747ddb31a8080dbceda949e39d5ad88430",
+      "scripts/event-target-bundle.mjs": "b90dc2cdcfbbcce827cce6c2323a6d5a4da871498393033016c4c5a3eb39c6e4",
+      "sdk/toolchain/platform-plugin.mjs": "453a94de62d385584cc86c8d7b4895ef9914e8276edc02277416cb8a795cb7d3",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa"
+    },
+    "implementationSources": {
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/platform-plugin.mjs": "453a94de62d385584cc86c8d7b4895ef9914e8276edc02277416cb8a795cb7d3",
+      "scripts/event-target-bundle.mjs": "b90dc2cdcfbbcce827cce6c2323a6d5a4da871498393033016c4c5a3eb39c6e4",
+      "tests/rn-event-target-overlay.test.mjs": "8b1e834368e6b9fa3487e112dec07ac96a2237a6a7480d6afb9dca2366e2c114",
+      "tests/event-target-ancestry-fixture.jsx": "b82d2549d91e09ba6bf5c8adde347e484787174dc47a94fce2a43cd334968801",
+      "tests/event-target-ancestry-probe.gd": "31af2b9873e4b45901ddc7fa04a3d7e0740c3b72a354216640e13431e518366c",
+      "tests/event-target-ancestry-native.test.mjs": "cb526b7012216521853998381bfda7747ddb31a8080dbceda949e39d5ad88430",
+      "package.json": "fc3787a35fa197ea1b684bb924adfb459062e16ec066664f84e153623842a6bb",
+      ".fallowrc.json": "eca6fac27338b40466a6a08f429e95b0293ed589878ae4e4770fd086110886c7",
+      ".github/workflows/contracts.yml": "24592b10173548c8e2583c3aaa0567916211ed10c5077ca2217515a7b8631abe"
+    },
+    "parentOverlay": {
+      "module": "src/private/webapis/dom/events/internals/EventTargetInternals.js",
+      "originalSha256": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "generatedSourceSha256": "9cf100ef91a7dca21ceb850aef0a7a33344050e6fb738f80bf96ce2d02b6d640"
+    },
+    "nativeHostSha256": "4699fe15acf68abf3883589f65f41d1b19f7ff4025e6be9c4478d1760c6ae898",
+    "publicBundleSha256": "6ad517dc73a66685d72c29d2043231db191a84320194a804f3a45945cf5fe5b7",
+    "bundleSha256": {
+      "original": "9745f941b8f3071d5c5ca33d21a1221b580f9f3d7c98829cd888f8af2bd7e556",
+      "current": "8bd785a4a177f46f8fd53d659c8f966529d9ec98326b9d6c7f5758fa1d172db2"
+    },
+    "artifactDigests": {
+      "event-target-ancestry-original-report.json": "593bc5509f7da9e0cebe391c4d689922a7b719b78872d878f408954cfc07eae0",
+      "event-target-ancestry-comparison.json": "e651b6f221ce34422eac47924e21bca73110ebff544434a84a614b9552b2ec62",
+      "event-target-ancestry-current-report.json": "97698771965b765cb3db1b97bc1cd42f98f0100877a91a8cb7ce2a542e1f1134"
+    }
+  },
+  "limits": "Both variants execute manual original-ref dispatch on macOS arm64/headless. This does not certify native EventTarget transport/interest, responder/PanResponder, performance, hardware or Godot mobile ports. Mobile jobs remain separate core reference oracles; workflow status is recorded independently from the audited artifact."
+}
