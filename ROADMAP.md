@@ -395,6 +395,18 @@ separate from the completed preceding tree CI. Later focus snapshot
 at `1699e5c` passed all five jobs; limited reference coverage remains distinct
 from a full focus/mobile differential.
 
+The isolated native-command complement passes **112 checks / 40 actual focus
+owner observations**, eight exact malformed-argument rejections and recovery,
+with all nine input registrations released. The downloaded hosted artifact
+confirms those results and source identities. The complement CI completed with
+contracts/native/Android passing; iOS discovery failed and comparison skipped.
+The [dated hosted receipt](docs/evidence/focus/commands-ci.json) retains the
+iOS simulator-discovery timeout before app build, followed by a successful
+13-check core reference on identical inputs. This does not close GF-08/GF-12 or
+certify full focus/mobile parity. [Pointer capture research](docs/research/pointer-capture-boundary.md)
+identifies selective lifetime cleanup as a prerequisite; it remains source
+investigation rather than implemented capture or an approved cleanup design.
+
 ## Release contract and scope
 
 1. Ordinary public RN imports and TypeScript/TSX work, including stable

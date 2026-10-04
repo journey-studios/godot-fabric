@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Comandos de foco comprovados; próximos HostInstance e lifetime de ponteiros"
+    "focusTitle": "Comandos de foco comprovados na CI; próximos HostInstance e lifetime de ponteiros"
   },
-  "updatedAt": "2026-10-04T05:05:28.189094+00:00",
+  "updatedAt": "2026-10-04T05:17:34.490023+00:00",
   "source": {
-    "commit": "877c52914fc56eefeacd367678f27124d7991ebe",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/ROADMAP.md",
-    "scope": "Complemento877c529 verificado contra9 fontes:112checks/40owners,8rejeições exatas e recuperação.207Node/13Python passaram; runtime3b09b37/host6abafb9 e exemplos175/189 inalterados. CI1699e5c passou cinco lanes; CI dos novos testes e Pages seguem passos separados. Captura permanece investigação de fonte;156 checkpoints/18concluídos,sem novo aceite/decisão/peso. Pagesmanual37178662152 passou build/deploy e publicou JSONffcc027 comparado integralmente fora do main. CI dos novos testes registrada no snapshot; não inferir conclusão. Links de checkpoint apontam para recibos pós-pin0d7c731/ffcc027; commits de implementação permanecem3b09b37/877c529.",
+    "commit": "9564076fd2037832266fffc54254f05c820b64b6",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/9564076fd2037832266fffc54254f05c820b64b6/ROADMAP.md",
+    "scope": "Complemento 877c529: 112 checks, 40 owners e 8 rejeições comprovados localmente e no artefato CI ffcc027; nove registros liberados. Runtime 3b09b37 e foco 175/189 preservados. CI ffcc: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes da app; comparação pulada. Referência iOS 956 passou 13 checks com oito inputs idênticos; toda essa execução tem status separado. Pages 37178882183 publicou JSON 9564076 comparado integralmente fora do main. Sem novo aceite, decisão, peso ou checkpoint concluído.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Foco público usa prototype/State/Codegen originais RN e LineEdit real; duas raízes, ref churn, readonly/off-tree, comandos reentrantes e retirement passaram175/189,12pixels/duas capturas. Controles anterior23/160 e elegibilidade removida11/175 falham como esperado. Árvore/IDs e medidas/transforms mantêm provas separadas. HostInstance completo, EventTarget/pointer capture, hidden trees, hardware/IME e diferenciais mobile permanecem pendentes. Complemento de argumentos/recuperação:112 checks/40owners,8diagnósticos exatos; duas raízes+app independente e nove registros liberados. CI configurada, resultado hospedado separado.",
+      "note": "Foco público usa prototype/State/Codegen originais RN e LineEdit real; duas raízes, ref churn, readonly/off-tree, comandos reentrantes e retirement passaram175/189,12pixels/duas capturas. Controles anterior23/160 e elegibilidade removida11/175 falham como esperado. Árvore/IDs e medidas/transforms mantêm provas separadas. HostInstance completo, EventTarget/pointer capture, hidden trees, hardware/IME e diferenciais mobile permanecem pendentes. Complemento de comandos comprovado localmente e no artefato CI: 112 checks, 40 owners, oito rejeições com recuperação, duas raízes e app independente; nove registros liberados. CI ffcc: contracts/native/Android passaram; iOS falhou antes da app e comparação pulou. Referência iOS posterior passou 13 checks em inputs idênticos; não certifica full parity mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -458,6 +458,10 @@
             {
               "label": "Comandos nativos:112checks/40owners,8rejeições e recuperação real",
               "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+            },
+            {
+              "label": "CI nativa concluída: comandos 112 checks/40 owners e oito rejeições exatas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
             }
           ]
         },
@@ -656,7 +660,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Singleton TextInputState original e quatro statics públicos conectados ao foco nativo: callback ref, autoFocus, transferências, readonly real, reparenting e cleanup/reentrância comprovados175/189. Controles negativos23/160 e11/175. Multiline, IME, seleção completa, teclado móvel/insets, autofill, comandos restantes e diferenciais RN permanecem abertos. Complemento de argumentos/recuperação:112 checks/40owners,8diagnósticos exatos; duas raízes+app independente e nove registros liberados. CI configurada, resultado hospedado separado.",
+      "note": "Singleton TextInputState original e quatro statics públicos conectados ao foco nativo: callback ref, autoFocus, transferências, readonly real, reparenting e cleanup/reentrância comprovados175/189. Controles negativos23/160 e11/175. Multiline, IME, seleção completa, teclado móvel/insets, autofill, comandos restantes e diferenciais RN permanecem abertos. Complemento de comandos comprovado localmente e no artefato CI: 112 checks, 40 owners, oito rejeições com recuperação, duas raízes e app independente; nove registros liberados. CI ffcc: contracts/native/Android passaram; iOS falhou antes da app e comparação pulou. Referência iOS posterior passou 13 checks em inputs idênticos; não certifica full parity mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -675,6 +679,10 @@
             {
               "label": "Comandos nativos:112checks/40owners,8rejeições e recuperação real",
               "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+            },
+            {
+              "label": "CI nativa concluída: comandos 112 checks/40 owners e oito rejeições exatas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
             }
           ]
         },
@@ -2971,6 +2979,16 @@
       ],
       "message": "Links de checkpoint fixados nos recibos pós-pin0d7c731/ffcc027, que registram a comparação dos hashes com implementações3b09b37/877c529. Preserva provas, estados e denominador; nenhuma conclusão adicionada.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-hosted-artifact-and-ios-recovery-9564076",
+      "at": "2026-10-04T05:17:34.490023+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
     }
   ]
 }

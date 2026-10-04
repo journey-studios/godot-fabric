@@ -95,8 +95,368 @@
     "servedDataMatchesCommittedJson": true
   },
   "limits": [
-    "Hosted command-guard jobs remain at the recorded snapshot until their actual conclusion is observed.",
-    "Prior hosted focus1699e5c passed all five jobs; it predates this new isolated command fixture.",
-    "Pages success and exact JSON comparison are publication proof, not native/mobile contract certification."
-  ]
+    "Historical snapshots remain dated observations; latestObservation records only actually observed results.",
+    "Focus command artifact passed112 checks/40owners; whole-job/whole-run completion is separately named.",
+    "Original RN reference recovery passed13 core-ui-v2 checks, not full focus/mobile parity.",
+    "Pages success is publication proof, distinct from native/mobile acceptance."
+  ],
+  "latestObservation": {
+    "observedAt": "2026-10-04T05:15:25.333482+00:00",
+    "nativeCommandArtifact": {
+      "run": {
+        "conclusion": "failure",
+        "headSha": "ffcc0276760177cfa865dc32a9b0c19c63d527d7",
+        "jobs": [
+          {
+            "completedAt": "2026-10-04T05:02:04Z",
+            "conclusion": "success",
+            "databaseId": 111366530852,
+            "name": "contracts",
+            "startedAt": "2026-10-04T05:01:10Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530852"
+          },
+          {
+            "completedAt": "2026-10-04T05:04:22Z",
+            "conclusion": "failure",
+            "databaseId": 111366530873,
+            "name": "reference-ios",
+            "startedAt": "2026-10-04T05:01:14Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530873"
+          },
+          {
+            "completedAt": "2026-10-04T05:06:35Z",
+            "conclusion": "success",
+            "databaseId": 111366530902,
+            "name": "reference-android",
+            "startedAt": "2026-10-04T05:01:10Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530902"
+          },
+          {
+            "completedAt": "2026-10-04T05:14:11Z",
+            "conclusion": "success",
+            "databaseId": 111366530925,
+            "name": "native-cold-start",
+            "startedAt": "2026-10-04T05:01:17Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
+          },
+          {
+            "completedAt": "2026-10-04T05:14:12Z",
+            "conclusion": "skipped",
+            "databaseId": 111368397516,
+            "name": "parity-comparison",
+            "startedAt": "2026-10-04T05:14:12Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111368397516"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886"
+      },
+      "jobId": 111366530925,
+      "artifactId": 11294656272,
+      "artifactName": "native-modules",
+      "reportSha256": "285a737e177e38d7f1341efcc3fd8d2d3658abb273707ace2fc38b0c3967514a",
+      "checksPassed": 112,
+      "nativeOwnerObservationsPassed": 40,
+      "expectedRejections": 8,
+      "inputRegistrationsReleased": 9,
+      "provenance": {
+        "bundleSha256": "604e3d4ad1ac3d34b39dcd611c3620db0c17161ce9fedd7a2b5a68f9518069d2",
+        "nativeHostSha256": "fdc0b0323515b9b67a0cff60f4bc7af3fd210b41545ba8639919d4ad0ce79764",
+        "node": "v22.23.2",
+        "sources": {
+          "tests/focus-command-fixture.jsx": "54af2c346208269adf7cd36347ce597a9b0222807a531602b6d3b75c6b429e6f",
+          "tests/focus_commands.gd": "926c2b444d09e4810a03116bbf2c1f2bc7c740671b837ac59eddbe1149c8882a",
+          "tests/focus-commands-native.test.mjs": "dccad54740fb75fa5e61681fb3fbe897230799db28ab612de7098e1ebd81683e"
+        }
+      },
+      "sourcesCheckedAgainstComplementCommit": true,
+      "logCheckedForUnexpectedErrors": true,
+      "limits": [
+        "The focus-command step and artifact passed; the whole native job retains its separately observed status.",
+        "A fresh hosted native build has its own binary hash; it is not the local host binary."
+      ],
+      "platform": "macOS arm64 (macos-15 hosted runner)",
+      "mode": "headless; Compatibility; Release GDExtension",
+      "command": "npm run test:focus:commands",
+      "godot": "4.7.2-stable (official)",
+      "reactNative": "0.87.1",
+      "react": "19.2.3",
+      "renderer": "fabric",
+      "engine": "hermes"
+    },
+    "iosFailure": {
+      "runId": 37178664886,
+      "headSha": "ffcc0276760177cfa865dc32a9b0c19c63d527d7",
+      "jobId": 111366530873,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530873",
+      "phase": "CoreSimulator discovery after successful pod install, before xcodebuild/boot/install/launch/reference assertions",
+      "command": "xcrun simctl list devices available --json",
+      "timeoutMs": 60000,
+      "error": "spawnSync xcrun ETIMEDOUT",
+      "referenceAssertionsExecuted": false,
+      "artifactUpload": "skipped by the default successful-step condition",
+      "classification": "Hosted simulator-discovery timeout, not an executed parity failure or proven inherited source failure"
+    },
+    "referenceRecovery": {
+      "run": {
+        "conclusion": "",
+        "headSha": "9564076fd2037832266fffc54254f05c820b64b6",
+        "jobs": [
+          {
+            "completedAt": "2026-10-04T05:06:31Z",
+            "conclusion": "success",
+            "databaseId": 111367183671,
+            "name": "contracts",
+            "startedAt": "2026-10-04T05:05:38Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183671"
+          },
+          {
+            "completedAt": "2026-10-04T05:12:03Z",
+            "conclusion": "success",
+            "databaseId": 111367183790,
+            "name": "reference-ios",
+            "startedAt": "2026-10-04T05:05:43Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183790"
+          },
+          {
+            "completedAt": "2026-10-04T05:11:42Z",
+            "conclusion": "success",
+            "databaseId": 111367183829,
+            "name": "reference-android",
+            "startedAt": "2026-10-04T05:05:38Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183829"
+          },
+          {
+            "completedAt": "0001-01-01T00:00:00Z",
+            "conclusion": "",
+            "databaseId": 111367183871,
+            "name": "native-cold-start",
+            "startedAt": "2026-10-04T05:07:12Z",
+            "status": "in_progress",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183871"
+          }
+        ],
+        "status": "in_progress",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
+      },
+      "artifactId": 11294436825,
+      "artifactName": "parity-ios",
+      "reportSha256": "740141632e7a20361f39afd55d9ea10b915475b2ccbea3003a7c9c52eda75215",
+      "report": {
+        "schemaVersion": 1,
+        "fixture": "core-ui-v2",
+        "react": "19.2.3",
+        "reactNative": "0.87.1",
+        "renderer": "fabric",
+        "engine": "hermes",
+        "observations": {
+          "box": {
+            "x": 8,
+            "y": 8,
+            "width": 120,
+            "height": 40
+          },
+          "rows": {
+            "A": 64,
+            "B": 0
+          },
+          "counts": [
+            0,
+            2,
+            3
+          ],
+          "renders": {
+            "A": 1,
+            "B": 1
+          },
+          "mounts": [
+            "A",
+            "B"
+          ],
+          "cleanups": [
+            "B",
+            "A"
+          ],
+          "context": "updated",
+          "store": 7,
+          "subscribers": 0,
+          "runtime": {
+            "timeoutArgs": [
+              "token",
+              42
+            ],
+            "objectIdentity": true,
+            "coercions": 1,
+            "cancelled": false,
+            "intervalTicks": 3,
+            "intervalArgs": [
+              [
+                "tick",
+                2
+              ],
+              [
+                "tick",
+                2
+              ],
+              [
+                "tick",
+                2
+              ]
+            ],
+            "trace": [
+              "sync",
+              "promise",
+              "microtask",
+              "immediate",
+              "nested",
+              "timer"
+            ],
+            "frameCount": 2,
+            "monotonic": true,
+            "cancelledFrame": false
+          }
+        },
+        "status": "passed",
+        "checks": [
+          {
+            "id": "native-layout",
+            "passed": true
+          },
+          {
+            "id": "native-measure",
+            "passed": true
+          },
+          {
+            "id": "automatic-batching",
+            "passed": true
+          },
+          {
+            "id": "keyed-reorder",
+            "passed": true
+          },
+          {
+            "id": "memo",
+            "passed": true
+          },
+          {
+            "id": "context-update",
+            "passed": true
+          },
+          {
+            "id": "external-store",
+            "passed": true
+          },
+          {
+            "id": "transition-commit",
+            "passed": true
+          },
+          {
+            "id": "timer-arguments-cancellation",
+            "passed": true
+          },
+          {
+            "id": "interval-arguments-cancellation",
+            "passed": true
+          },
+          {
+            "id": "microtask-immediate-order",
+            "passed": true
+          },
+          {
+            "id": "animation-frame-clock",
+            "passed": true
+          },
+          {
+            "id": "unmount-cleanup",
+            "passed": true
+          }
+        ],
+        "platform": "ios",
+        "fixtureSha256": "494c0d77e6f7a062d11fc83fd454675158c6a675bf1bc078707a806656cc314b",
+        "runtimeSha256": "4789b9a6e5ee2669dda9a83168119bc884194c9fbb7788585c2e186ec89cd67a",
+        "casesSha256": "59042db76c90659482ded32a01269b85ffa27440c8348cce2c87feb48cf700e4",
+        "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3"
+      },
+      "referenceInputSha256": {
+        "scripts/parity-reference.mjs": "7fe570624b3dc887b6b5aa982e2610a930334deef718f7cd38346c47d0d92f2d",
+        "scripts/parity-protocol.mjs": "1959978d99a9f7a2a697a3a3be89b35824f9bc2d285abcad32f26d92aadf7be6",
+        "scripts/reference-cleanup.mjs": "a2a2c380cc0990101d087dda821c54d2d0ad59aa87ee5f11cb2f04900ff87ba6",
+        "tests/parity/fixture.jsx": "494c0d77e6f7a062d11fc83fd454675158c6a675bf1bc078707a806656cc314b",
+        "tests/parity/runtime.js": "4789b9a6e5ee2669dda9a83168119bc884194c9fbb7788585c2e186ec89cd67a",
+        "tests/parity/reference/package.json": "d84f2fb45a6171466ea98d88c86b70e98c151b56f1010517bafb2a85a382123b",
+        "tests/parity/reference/package-lock.json": "17af0b53a102cc9010e150f335e42105835355ca02419be31df92533ec12998b",
+        "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87"
+      },
+      "inputsIdenticalBetween": "1699e5c2a2ba365ef218d41d3b69c0b130a6fbd1 and 9564076fd2037832266fffc54254f05c820b64b6",
+      "limits": [
+        "13 core-ui-v2 reference checks; no full focus differential or Godot mobile port certification.",
+        "This later push execution passed; the earlier failure is retained and was not rewritten."
+      ]
+    },
+    "completedComplementRun": {
+      "observedAt": "2026-10-04T05:16:47.824062+00:00",
+      "run": {
+        "conclusion": "failure",
+        "headSha": "ffcc0276760177cfa865dc32a9b0c19c63d527d7",
+        "jobs": [
+          {
+            "completedAt": "2026-10-04T05:02:04Z",
+            "conclusion": "success",
+            "databaseId": 111366530852,
+            "name": "contracts",
+            "startedAt": "2026-10-04T05:01:10Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530852"
+          },
+          {
+            "completedAt": "2026-10-04T05:04:22Z",
+            "conclusion": "failure",
+            "databaseId": 111366530873,
+            "name": "reference-ios",
+            "startedAt": "2026-10-04T05:01:14Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530873"
+          },
+          {
+            "completedAt": "2026-10-04T05:06:35Z",
+            "conclusion": "success",
+            "databaseId": 111366530902,
+            "name": "reference-android",
+            "startedAt": "2026-10-04T05:01:10Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530902"
+          },
+          {
+            "completedAt": "2026-10-04T05:14:11Z",
+            "conclusion": "success",
+            "databaseId": 111366530925,
+            "name": "native-cold-start",
+            "startedAt": "2026-10-04T05:01:17Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
+          },
+          {
+            "completedAt": "2026-10-04T05:14:12Z",
+            "conclusion": "skipped",
+            "databaseId": 111368397516,
+            "name": "parity-comparison",
+            "startedAt": "2026-10-04T05:14:12Z",
+            "status": "completed",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111368397516"
+          }
+        ],
+        "status": "completed",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886"
+      },
+      "summary": "contracts/native-cold-start/reference-android succeeded; reference-ios simulator discovery timed out before app build; comparison skipped. Later reference success is separately recorded."
+    }
+  }
 }

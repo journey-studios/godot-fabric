@@ -138,3 +138,25 @@ The [complement hosted observation](commands-ci.json) records manual Pages
 build/deploy succeeded and public JSON exactly matched `ffcc027`, with
 test source `877c529` outside main. The new native command CI retains its
 actual snapshot status; completed preceding focus CI remains separate.
+
+The later [hosted observation](commands-ci.json) verifies the actual native
+`focus-commands-report.json` artifact: **112 distinct checks / 40 native owner
+observations**, eight exact rejections, all nine registrations released and
+no unexpected errors. Its fixture/bundle hashes match the tested complement;
+the hosted native binary has its own recorded hash. Whole-job/run status remains
+separate from the successful command step.
+
+[iOS run37178664886](https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530873)
+failed when `xcrun simctl list devices available --json` exceeded 60 seconds
+after successful pod installation. No app build or reference assertions ran,
+and the default artifact-upload condition skipped the iOS artifact. The later
+[run37178884084](https://github.com/journey-studios/godot-fabric/actions/runs/37178884084)
+passed the iOS lane; its downloaded report verifies 13 `core-ui-v2` checks.
+Eight reference inputs are byte-identical to the earlier successful focus
+snapshot. Keep the failed run and later success separate; this reference suite
+does not certify full focus parity or the Godot iOS port.
+
+That complement run subsequently completed: contracts, native-cold-start and
+Android passed; iOS failed at simulator discovery and parity-comparison was
+skipped. The successful later iOS reference does not rewrite this failed run.
+The receipt records both dated observations and the later run's actual status.
