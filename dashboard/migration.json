@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Foco/TextInputState comprovados; próximos contratos HostInstance/EventTarget e pointer capture"
   },
-  "updatedAt": "2026-10-04T04:40:00.173589+00:00",
+  "updatedAt": "2026-10-04T04:41:23.855941+00:00",
   "source": {
-    "commit": "a608d0737d05e8e050471fc372ea5f2cdda9ff01",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/ROADMAP.md",
-    "scope": "Fatia local de foco comprovada no working tree após baselinea608d07; pin de fontes segue o commit da implementação.175headless/189native,12pixels/duas capturas; controles23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. CI anteriora608d07 passou cinco lanes; CI da nova fatia e publicação Pages seguem verificações separadas. GF-08/GF-12 em andamento; nenhum aceite, decisão, peso ou denominador alterado.",
+    "commit": "3b09b37acf735664301d3ddaf9ab275519893267",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/ROADMAP.md",
+    "scope": "Implementação3b09b37 verificada contra13 fontes JS/fixture,47 entradas nativas e duas capturas: foco175/189,12pixels; controles negativos23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. CI da fatia e Pages aguardam execução separada; CI anteriora608d07 passou cinco lanes. GF-08/GF-12 seguem em andamento; pesos,156 checkpoints e18 concluídos preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -453,7 +453,7 @@
             },
             {
               "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/focus/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
             }
           ]
         },
@@ -666,7 +666,7 @@
             },
             {
               "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/focus/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
             }
           ]
         },
@@ -2892,7 +2892,17 @@
         "GF-12"
       ],
       "message": "Foco original RN + LineEdit real passou175/189,12pixels/duas capturas, com lifetimes e reentrância. Mesmo fixture falha23/160 no host anterior e11/175 sem elegibilidade nativa. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Não adiciona checkpoints: denominador156 e18 checkpoints concluídos preservados; GF-08/GF-12 seguem abertos. Pin e publicação seguem passos separados.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/focus/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+    },
+    {
+      "id": "focus-source-pin-20261004",
+      "at": "2026-10-04T04:41:23.855941+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Commit3b09b37 corresponde às13 fontes JS/fixture executadas,47 entradas nativas e duas capturas. Host6abafb9, comandos originais e foco real comprovados; publicação e CI são passos separados. Nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
     }
   ]
 }

@@ -1,5 +1,8 @@
 # Original TextInputState and Godot focus
 
+Implementation [3b09b37](https://github.com/journey-studios/godot-fabric/commit/3b09b37acf735664301d3ddaf9ab275519893267)
+matches all recorded source, native input and capture hashes.
+
 The [public focus fixture](../../../examples/focus/README.md) runs on macOS
 arm64, official Godot 4.7.2 Compatibility, React Native 0.87.1, React 19.2.3,
 Hermes and a Release GDExtension. Source/native identities are recorded in

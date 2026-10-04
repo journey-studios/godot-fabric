@@ -362,7 +362,8 @@ acceptance. Full mobile tree differentials and all-target evidence remain open.
 
 ### Public input focus checkpoint (2026-10-04)
 
-The [focus slice](docs/evidence/focus/README.md) extends GF-08/GF-12 through
+The [focus slice](docs/evidence/focus/README.md), verified against implementation
+`3b09b37acf735664301d3ddaf9ab275519893267`, extends GF-08/GF-12 through
 the original TextInputState singleton, original public element prototype and
 Fabric/Codegen focus commands. Callback-time focus, autoFocus, native transfers,
 readonly updates, callback ref replacement, keyed replacement/removal and stale

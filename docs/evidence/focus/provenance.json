@@ -1,6 +1,6 @@
 {
   "format": "godot-fabric.focus-provenance/v1",
-  "implementationCommit": null,
+  "implementationCommit": "3b09b37acf735664301d3ddaf9ab275519893267",
   "baselineCommit": "a608d0737d05e8e050471fc372ea5f2cdda9ff01",
   "at": "2026-10-04T04:31:20.719328+00:00",
   "platform": "macOS arm64",
@@ -81,9 +81,8 @@
     "docs/evidence/focus/focus-updated.png": "b671bbd5fb63ea3c4a79187fbc0d5367eec49744d0b3894e2ae3c3bddcd76e79"
   },
   "nativeSdkReceiptSha256": "6df10fe58e21affaa0c86a5eaa62f773a73a721869b7f003495350a69dc212cd",
-  "sourceHashesCheckedAgainstImplementationCommit": false,
+  "sourceHashesCheckedAgainstImplementationCommit": true,
   "limits": [
-    "Source pin follows the implementation commit; the executed source/native input hashes are recorded here.",
     "Native SDK packaging alone is not runtime or ABI certification.",
     "Original iOS/Android focus differentials and physical keyboard/IME acceptance remain open."
   ]
