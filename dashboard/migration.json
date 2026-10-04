@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "View validada; próximo: alinhar coordenadas de eventos, refs e superfície"
   },
-  "updatedAt": "2026-10-04T00:54:23.409333+00:00",
+  "updatedAt": "2026-10-04T01:07:26.708452+00:00",
   "source": {
     "commit": "6e9f2f305e5981f49b9b2fd1be23ae723ba43363",
     "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/ROADMAP.md",
-    "scope": "Implementação 6e9f2f3 conferida com todas as fontes nativas e fixtures executadas. GF-10 parcial: View67/107, pixels36 e controle negativo9/24; 202 Node/13 Python, 10 nativos, exemplos16/672, NativeWind58, adapters17/318 passaram. CI precedente b5dafc8 verde em cinco jobs; CI desta fatia pendente. Sem conclusão GF, decisão, peso ou denominador alterado.",
+    "scope": "Implementação 6e9f2f3 conferida com todas as fontes nativas e fixtures executadas. GF-10 parcial: View67/107, pixels36 e controle negativo9/24; 202 Node/13 Python, 10 nativos, exemplos16/672, NativeWind58, adapters17/318 passaram. CI desta fatia b5df4d6 verde nos cinco jobs; comparação RN limitada ao oráculo atual. Sem conclusão GF, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -534,6 +534,10 @@
             {
               "label": "macOS arm64: View67/107, pixels36, controle negativo9/24 e regressões16/672",
               "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+            },
+            {
+              "label": "CI b5df4d6: cinco jobs passaram, escopo limitado aos contratos atuais",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395"
             }
           ]
         },
@@ -2463,6 +2467,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "view-ci-b5df4d6",
+      "at": "2026-10-04T01:07:26.708452+00:00",
+      "taskIds": [
+        "GF-10"
+      ],
+      "message": "CI da fatia View b5df4d6 passou nos cinco jobs: contracts, native-cold-start, reference-ios, reference-android e parity-comparison. Isso certifica os contratos atuais do workflow, sem fechar View completo ou ports mobile. Nenhum checkpoint/status/denominador adicional mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395"
+    },
     {
       "id": "view-source-6e9f2f3",
       "at": "2026-10-04T00:54:23.409333+00:00",

@@ -29,7 +29,9 @@ claim of hosted CI, exported targets or a complete mobile comparison.
 
 The [preceding CI record](preceding-ci.json) confirms all five jobs at `b5dafc8`
 passed. That run predates this View implementation; its success does not certify
-the new slice. New hosted CI is tracked separately in the implementation PR.
+the new slice. The [new hosted CI](ci.json) at `b5df4d6` subsequently passed all
+five jobs. Its bounded reference comparison does not certify complete View
+rendering parity or Godot mobile ports.
 
 ## Observed behavior
 

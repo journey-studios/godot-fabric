@@ -255,6 +255,8 @@ checks**. NativeWind now verifies public logical-parent measures independently
 against real window-space Controls, preserving padding, gap and responsive
 assertions when original Fabric mounting flattens/reparents nodes. Only GF-10
 first-slice checkpoint becomes done; the full item and dependencies remain open.
+[Hosted CI at `b5df4d6`](docs/evidence/view/ci.json) passed all five jobs; its
+reference fixtures do not certify full View rendering or Godot mobile ports.
 RTL/logical edges, transforms/origin, rounded descendant masks, fractional/DPI
 geometry, full StyleSheet/shadows/filters and original mobile View differential
 certification still need execution.
