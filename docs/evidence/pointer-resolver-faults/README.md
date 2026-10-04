@@ -111,12 +111,22 @@ Other pointer categories, full responders, hardware, exported mobile runtime,
 development renderer, performance and full ABI acceptance remain open. Public
 imperative/native-dispatch flags stay off.
 
-CI for this getter fixture is pending. The preceding
-[Document/root CI](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202)
-passed five jobs with its own 2,723 Document checks; that run does not cover this
-later correction. Local evidence and public dashboard publication are separate.
+[Getter CI](https://github.com/journey-studios/godot-fabric/actions/runs/37236875765)
+passed all five jobs at head `534d455`. The [hosted receipt](hosted-ci.json)
+verifies the actual native checkout `8ce9a862`, all 23 curated source pins against
+implementation/head/checkout and the same 65 getter IDs/full bundle provenance
+as the final local lane. Four audited artifacts contain 12 native reports and
+3,400 passing checks: getter 65, interest 193/233, Document 2,723 and query faults
+186. The one actual getter fault preserves TouchStart/Raw/state and a single
+native commit; its diagnostic and terminal cleanup pass in CI too.
 
-[Pages publication](publication.json) at data `534d455` passed build/deploy;
+The shared CI native digest is runner-declared: the artifacts omit its compiled
+binary. The 85 viewport checks, two PNGs and three previous-host failures remain
+local proof. Mobile reference jobs passed, but their outputs were not audited
+by this receipt and do not certify Godot mobile exports. Later metadata/Pages
+commits preserve the production sources; they are not additional native runs.
+
+[Pages publication](publication.json) at data `11dfb3c` passed build/deploy;
 its full public JSON equals the committed data after removing only generated
 `publication`, and the local live API equals that data commit. The source remains
 outside main. [Getter CI](https://github.com/journey-studios/godot-fabric/actions/runs/37236875765)

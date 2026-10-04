@@ -742,14 +742,28 @@
     "thisSliceCI": {
       "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765",
       "headCommit": "534d455851bdca0f03e5ad53b9090242d04e2855",
-      "status": "in_progress",
+      "status": "completed",
+      "conclusion": "success",
       "verifiedJobStatus": {
+        "reference-android": "success",
         "contracts": "success",
-        "native-cold-start": "in_progress",
-        "reference-ios": "in_progress",
-        "reference-android": "in_progress"
+        "native-cold-start": "success",
+        "reference-ios": "success",
+        "parity-comparison": "success"
       },
-      "getterArtifactAudited": false
+      "getterArtifactAudited": true,
+      "receipt": "hosted-ci.json",
+      "receiptSha256": "f372a4960bc14fe1fd92056bfd45163e9a7a648f0c2b27f77fb21a067d7d233a",
+      "actualNativeCheckout": "8ce9a8622aef2ab462d753efb409d1423571f415",
+      "sourcePinsVerifiedAgainstImplementationHeadAndActualCheckout": 23,
+      "getterChecks": 65,
+      "sameGetterCheckIdsAndFullBundleProvenanceAsLocal": true,
+      "auditedNativeReportChecks": 3400,
+      "auditedNativeReports": 12,
+      "nativeHostDigestRunnerDeclared": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+      "compiledNativeBinaryIncluded": false,
+      "CIContainsCapturesOrOldHostControl": false,
+      "mobileReferenceArtifactsAudited": false
     },
     "precedingDocumentCI": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202",
     "precedingDocumentCIScope": "Five jobs;2723 Document,193/233 interest,186 query faults. Does not certify this getter fixture.",
@@ -757,9 +771,9 @@
     "previousPagesDataCommit": "b2e46551ed1456419ba9c2423f0f5affe8062dd9",
     "previousFullPublicAndLocalJSONVerified": true,
     "newPublication": {
-      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37236872732",
+      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37237426598",
       "receipt": "publication.json",
-      "dataCommit": "534d455851bdca0f03e5ad53b9090242d04e2855",
+      "dataCommit": "11dfb3cd26b096b9be934adb546363665e962a06",
       "buildAndDeploy": "success",
       "fullPublicAndLocalJSONVerified": true,
       "onlyRemovedGeneratedField": "publication",

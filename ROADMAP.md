@@ -1016,10 +1016,17 @@ denominator closes. Regression gates pass 250 Node/13 Python, 2,723 Document,
 consumer30/40, fresh SDK pack/verify, loader89/21, 13 adapters/213 and two
 portable processor/geometry tests each. The refreshed query-fault baseline
 retains twelve negatives; no assertion is relaxed. Details are in the receipt.
-[Pages37236872732](docs/evidence/pointer-resolver-faults/publication.json)
-passed build/deploy with data534d455; the full public JSON and local API match
-that commit. Source remains outside main. Getter CI37236875765 is in progress
-with contracts passed; native/mobile jobs and artifact audit remain pending.
+[Getter CI37236875765](docs/evidence/pointer-resolver-faults/hosted-ci.json)
+passed five jobs at head534d455. Its actual native checkout8ce9a862 and23pins
+match implementation/head/checkout. Twelve reports in four audited native
+artifacts pass3,400checks, including the same65getterIDs/fullbundle provenance,
+193/233interest,2,723Document and186queryfaults. The native digest is declared
+by the runner; binaries, captures and old-host control are absent from CI.
+Mobile core-reference outputs remain a separate, unaudited scope here.
+[Pages37237426598](docs/evidence/pointer-resolver-faults/publication.json)
+passed build/deploy with data11dfb3c; the full public JSON and local API match
+that commit. Source remains outside main. This hosted audit adds evidence to
+the existing slice checkpoints; full GF acceptance remains open.
 
 ## M1 — Complete the native UI tree
 
