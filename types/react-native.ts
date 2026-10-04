@@ -23,7 +23,8 @@ export type ViewStyle = Pick<RN.ViewStyle,
   "padding" | "paddingHorizontal" | "paddingVertical" | "paddingLeft" | "paddingRight" | "paddingTop" | "paddingBottom" |
   "margin" | "marginHorizontal" | "marginVertical" | "marginLeft" | "marginRight" | "marginTop" | "marginBottom" |
   "position" | "top" | "left" | "bottom" | "right" | "display" | "opacity" | "zIndex" | "overflow" |
-  "backgroundColor" | "borderColor" | "borderWidth" | "borderTopWidth" | "borderRightWidth" | "borderBottomWidth" |
+  "backgroundColor" | "borderColor" | "borderLeftColor" | "borderTopColor" | "borderRightColor" | "borderBottomColor" |
+  "borderWidth" | "borderTopWidth" | "borderRightWidth" | "borderBottomWidth" |
   "borderLeftWidth" | "borderRadius" | "borderTopLeftRadius" | "borderTopRightRadius" | "borderBottomLeftRadius" | "borderBottomRightRadius">;
 export type TextStyle = ViewStyle & Pick<RN.TextStyle, "fontSize" | "color" | "fontFamily" | "fontWeight" | "lineHeight" | "letterSpacing" | "textAlign">;
 export type InputStyle = ViewStyle & Pick<RN.TextStyle, "fontSize"> & { color?: string };
@@ -42,7 +43,7 @@ export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureIn
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }
-export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents"> & { style?: StyleProp<ViewStyle> };
+export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren"> & { style?: StyleProp<ViewStyle> };
 export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };

@@ -30,6 +30,11 @@ React Native Chart Kit. The [TSX form](examples/form/README.md) uses the narrowe
 public types and native editing/activation. Mobile keyboard/IME contracts and
 complete React Native props remain open.
 
+The [View geometry example](examples/view/README.md) exercises original public
+View/Fabric ordering, rectangular overflow and four solid border colors through
+real input targets and renderer pixels. Its [evidence](docs/evidence/view/README.md)
+also records the remaining offset-root input/measurement coordinate gap.
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -106,6 +111,7 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 
 ```sh
 npm run example -- form     # public typed Button/TextInput form
+npm run example -- view     # public View stacking, overflow and four border colors
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
 npm run example -- services # typed Godot calls, signals and shared Zustand data
@@ -137,6 +143,10 @@ clock example separately.
 | Scrolling | Typography | Updated form |
 | --- | --- | --- |
 | [![Scrolling and editing](docs/evidence/public-controls/scroll-initial.png)](examples/scroll/README.md) | [![Rich text](docs/evidence/public-controls/typography-initial.png)](examples/typography/README.md) | [![Native form rerender](docs/evidence/public-controls/form-changed.png)](examples/form/README.md) |
+
+| View layers | Updated View | Visible overflow |
+| --- | --- | --- |
+| [![Initial View geometry](docs/evidence/view/view-initial.png)](examples/view/README.md) | [![High z values preserve the sibling order](docs/evidence/view/view-updated.png)](examples/view/README.md) | [![Outside child remains visible and selectable](docs/evidence/view/view-visible.png)](examples/view/README.md) |
 
 ## Write React
 

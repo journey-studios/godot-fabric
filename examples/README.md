@@ -25,6 +25,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | --- | --- | --- | --- |
 | [shared](shared/README.md) | Two AppRegistry roots, props and independent lifetimes | Public | [App](shared/App.jsx) · [scene](shared/scene.tscn) |
 | [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
+| [view](view/README.md) | Fabric stacking, rectangular overflow, public geometry and four solid border colors | Public | [App](view/App.jsx) · [scene](view/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
 | [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
 | [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
@@ -55,6 +56,13 @@ and [parity baseline](../docs/compatibility/BASELINE.md).
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
 
 Every interactive example's README has its own renderer capture.
+
+![Public View ordering, clipping and border colors](../docs/evidence/view/view-initial.png)
+
+The [View example](view/README.md) compares injected input targets, public/native
+geometry and actual renderer RGBA samples, including keyed reorder and border
+removal. Its [checkpoint](../docs/evidence/view/README.md) preserves the previous
+host's expected failures and the remaining offset-root input/measurement gap.
 
 ![Two registered roots share one application](../docs/evidence/shared-roots/updated.png)
 

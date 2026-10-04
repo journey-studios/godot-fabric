@@ -26,6 +26,13 @@ export function platformPlugin(platformRoot, resolveSdk) {
         if (importer === path.join(rnRoot, "Libraries/ReactNative/AppRegistryImpl.js"))
           return { path: path.join(platformRoot, "render-application.jsx") };
       });
+      builder.onResolve({ filter: /(?:^|\/)PlatformBaseViewConfig$/ }, args => {
+        // Only upstream ViewConfig and the exact RN deep import own this seam.
+        // A project's similarly named relative module remains project-owned.
+        if (args.importer === path.join(rnRoot, "Libraries/NativeComponent/ViewConfig.js") ||
+            args.path === "react-native/Libraries/NativeComponent/PlatformBaseViewConfig")
+          return { path: path.join(platformRoot, "base-view-config.js") };
+      });
       for (const [pattern, file] of [
         [/^@godot-fabric\/runtime$/, "godot-fabric.js"],
         [/^react-native$/, "react-native-platform.jsx"],

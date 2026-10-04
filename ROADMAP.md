@@ -235,9 +235,36 @@ check rendered pixels and retain captures. Regressions passed **199 Node/13
 Python**, **10 native tests** and **15 headless examples/605 checks** on the
 rebuilt host. Full GF-07/GF-26/GF-28 acceptance,
 original RN differential lifecycle, other targets/exports and ABI remain open.
-No item, decision or checkpoint denominator closes with this slice. The next
-functional foundation is GF-10 View geometry/stacking/clipping, coordinated
-with GF-08 measures and GF-13 input; its implementation/evidence remain pending.
+No item, decision or checkpoint denominator closes with this slice. Its
+[preceding hosted CI](docs/evidence/view/preceding-ci.json) subsequently passed
+all five jobs at `b5dafc8`; the View implementation below has separate evidence.
+
+The [public View foundation](docs/evidence/view/README.md) starts GF-10 with
+original RCTView/ViewComponentDescriptor, authoritative Fabric mount order and
+rectangular hidden/scroll clipping in both painting and hit testing. Four
+physical border colors, source-over alpha, asymmetric rounded joins and style
+removal use resolved upstream ViewProps without adding overlay Controls.
+Public clipped-child measurements retain the full logical rectangle; keyed and
+flattening updates preserve the selected child identity and stale refs retire.
+The final fixture passed **67 headless / 107 native checks**, including **36 RGBA
+samples** and three captured stages. The previous host failed **9/67** headless
+and **24/107** native checks against the same final oracle, as expected.
+Regression gates passed **202 Node/13 Python**, **10 native tests**, **16 headless
+examples/672 checks**, **58 NativeWind native checks** and **17 adapter runs/318
+checks**. NativeWind now verifies public logical-parent measures independently
+against real window-space Controls, preserving padding, gap and responsive
+assertions when original Fabric mounting flattens/reparents nodes. Only GF-10
+first-slice checkpoint becomes done; the full item and dependencies remain open.
+RTL/logical edges, transforms/origin, rounded descendant masks, fractional/DPI
+geometry, full StyleSheet/shadows/filters and original mobile View differential
+certification still need execution.
+
+Next in sequence 3: GF-08/GF-13 coordinate agreement. In the offset-surface
+fixture, input page points currently use Viewport space while NativeDOM measure
+uses root space; stationary interior taps do not certify movement gestures or
+scaled roots. Add an original RN coordinate oracle and fix this concrete gap
+before extending transformed/scroll gesture behavior. No new architectural
+decision, complete GF item or checkpoint denominator changes here.
 
 ## Release contract and scope
 
@@ -482,7 +509,7 @@ work through public RN imports with applicable upstream behavior.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-10 · P1 · View, styles and RTL | Planned | Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema | GF-04, GF-08, GF-09, GF-25 |
+| GF-10 · P1 · View, styles and RTL | In progress | Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema | GF-04, GF-08, GF-09, GF-25 |
 | GF-11 · P1 · Text and fonts | Planned | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
 | GF-13 · P1 · Input, Pressability and touchables | Planned | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |

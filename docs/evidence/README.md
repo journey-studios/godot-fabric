@@ -44,6 +44,14 @@ control. Three graphical root cases retain readbacks and pixel assertions.
 Its source, native/SDK fingerprints and preceding hosted CI are kept separate
 from full lifecycle, RN differential and all-target acceptance.
 
+The [public View record](view/README.md) adds original RCTView descriptors,
+Fabric stacking/hit order, rectangular overflow clipping and solid physical-edge
+borders. It retains 67 headless / 107 native assertions, 36 RGBA samples, three
+actual captures and the expected-failing previous-host control. The rebuilt host
+also passed 16 headless scenes / 672 checks, NativeWind 58 native checks and
+17 adapter runs / 318 checks. GF-10 remains in progress; RTL, transforms, rounded
+descendant masks, fractional geometry and mobile View differential work remain.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

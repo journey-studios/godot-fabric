@@ -28,6 +28,13 @@
     "scene": "examples/refs/scene.tscn"
   },
   {
+    "id": "view",
+    "title": "View layers, clipping, public measurements and four-color borders",
+    "api": "public",
+    "source": "examples/view/App.jsx",
+    "scene": "examples/view/scene.tscn"
+  },
+  {
     "id": "metrics",
     "title": "Original RN dimensions, content density and subscription lifetime",
     "api": "public",

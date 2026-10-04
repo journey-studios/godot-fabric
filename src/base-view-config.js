@@ -53,7 +53,7 @@ const style = Object.fromEntries(
     "overflow",
   ].map((name) => [name, true]),
 );
-for (const name of ["backgroundColor", "borderColor", "color"])
+for (const name of ["backgroundColor", "borderColor", "borderLeftColor", "borderTopColor", "borderRightColor", "borderBottomColor", "color"])
   style[name] = { process: processGodotColor };
 for (const name of [
   "borderWidth",
@@ -98,6 +98,8 @@ export const controlViewConfig = {
       ].map((name) => [name, true]),
     ),
     pointerEvents: true,
+    collapsable: true,
+    collapsableChildren: true,
     hitSlop: { process: normalizeGodotRect },
     kind: true,
     svg: true,
@@ -164,7 +166,7 @@ export const coreEventConfigs = {
 export default {
   validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
     /^(onTouch|onResponder|onStartShould|onMoveShould)/.test(name) ||
-    ["style", "testID", "pointerEvents", "hitSlop", "onLayout"].includes(name))),
+    ["style", "testID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren"].includes(name))),
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
     .filter(([name]) => name.startsWith("topTouch"))),
   directEventTypes: { topLayout: { registrationName: "onLayout" } },

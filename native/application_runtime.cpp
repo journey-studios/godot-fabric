@@ -16,6 +16,7 @@
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
 #include <react/runtime/TimerManager.h>
+#include <react/renderer/components/view/ViewComponentDescriptor.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
@@ -56,6 +57,7 @@ using fabric_godot::ControlProps;
 using fabric_godot::ControlEventEmitter;
 
 static std::string component_kind(const rn::ShadowView &shadow) {
+  if (shadow.componentName == std::string("View")) return "view";
   if (shadow.componentName == std::string("ScrollView")) return "scroll";
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
   if (shadow.componentName == std::string(fabric_godot::ControlName))
@@ -276,6 +278,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         std::move(event_beat), state_pipe, std::weak_ptr<rn::EventLogger>());
     owner->owner = dispatcher;
     providers.add(rn::concreteComponentDescriptorProvider<fabric_godot::ControlDescriptor>());
+    providers.add(rn::concreteComponentDescriptorProvider<rn::ViewComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::ScrollViewComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::ParagraphComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::TextComponentDescriptor>());
@@ -786,9 +789,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
 
     control->set_visible(shadow.layoutMetrics.displayType != rn::DisplayType::None);
     control->set_modulate({1, 1, 1, props->opacity});
-    control->set_z_index(std::clamp(props->zIndex.value_or(0), -4096, 4096));
+    // Fabric has already flattened stacking contexts and sorted mount indices.
+    // A second CanvasItem z-order would let descendants escape those contexts.
+    control->set_z_index(0);
     if (kind == "view" || mounted.external)
-      control->set_clip_contents(props->yogaStyle.overflow() == facebook::yoga::Overflow::Hidden);
+      control->set_clip_contents(props->yogaStyle.overflow() != facebook::yoga::Overflow::Visible);
     if (!control->is_visible()) cancel_subtree(control);
     if (mounted.external) {
       mounted.external->update(previous, shadow);
@@ -804,6 +809,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (auto *paragraph = Object::cast_to<GodotParagraph>(control)) {
       try { paragraph->apply(shadow, paragraph_layout); }
       catch (const std::exception &error) { fail(error.what()); }
+      fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
+      apply_frame(mounted);
+      return;
+    }
+    if (shadow.componentName == std::string("View")) {
       fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
       apply_frame(mounted);
       return;
@@ -927,7 +937,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       std::vector<Control *> children;
       for (int i = 0; i < control->get_child_count(); ++i)
         if (auto *child = Object::cast_to<Control>(control->get_child(i))) children.push_back(child);
-      std::stable_sort(children.begin(), children.end(), [](Control *a, Control *b) { return a->get_z_index() < b->get_z_index(); });
+      // Hit testing follows the same Fabric mount order as painting.
       for (auto child = children.rbegin(); child != children.rend(); ++child)
         if (int hit = hit_test(*child, point)) return hit;
     }
@@ -1254,7 +1264,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       auto *control = mounted.control;
       auto props = std::static_pointer_cast<const rn::ViewProps>(mounted.shadow.props);
       const auto kind = component_kind(mounted.shadow);
-      const auto native_props = mounted.external || kind == "scroll" || kind == "paragraph" ? nullptr : std::static_pointer_cast<const ControlProps>(mounted.shadow.props);
+      const auto native_props = mounted.shadow.componentName == std::string(fabric_godot::ControlName)
+          ? std::static_pointer_cast<const ControlProps>(mounted.shadow.props) : nullptr;
       folly::dynamic node = folly::dynamic::object("tag", tag)("id", static_cast<int64_t>(control->get_instance_id()))
           ("testID", props->testId)("kind", kind)("text", native_props ? native_props->text : "")
           ("width", control->get_size().x)("height", control->get_size().y)

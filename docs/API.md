@@ -36,7 +36,7 @@ RN compatibility.
 | Area | Implemented subset | Important limits |
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
-| View / Yoga | Layout, constraint-based sizes, supported appearance and native Controls | No promise of all React Native styles or intrinsic native widget behaviors |
+| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, four physical solid border colors and public geometry | RTL, transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open; input page points and offset-root NativeDOM measure currently disagree |
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
@@ -87,6 +87,30 @@ nonnegative UTF-16 offsets; the native adapter clamps to valid character
 boundaries. Submission is `submit` or `blurAndSubmit`. Unsupported defined props
 throw; no unsupported mobile prop is silently forwarded by these two wrappers.
 This prop audit is still incomplete for the other public facade components.
+
+## Public View geometry
+
+The [View example](../examples/view/README.md) uses original
+`ViewNativeComponent` (`RCTView`) and `ViewComponentDescriptor`. Fabric's mount
+order determines drawing and hit selection with Godot z indices at zero,
+including static-position and nested-context behavior in the executed fixture.
+Rectangular hidden/scroll overflow clips drawing and targeting while public refs
+retain the child's full geometry. `collapsable` and `collapsableChildren` reach
+the original View traits. Internal View, Pressable and ScrollView content remain
+GodotControl wrappers.
+
+Supported physical `borderLeftColor`, `borderTopColor`, `borderRightColor` and
+`borderBottomColor` use original color processing and resolved border metrics.
+Uniform borders retain StyleBoxFlat; multiple colors paint through a StyleBox
+Resource on the same CanvasItem without adding nodes. The
+[executed evidence](evidence/view/README.md) records opaque/translucent colors,
+removal and an asymmetric rounded self-border. It does not establish rounded
+descendant clipping or full mobile/fractional antialiasing parity.
+
+A known GF-08/GF-13 gap remains between Viewport input page points and root-space
+NativeDOM `measure` for an offset Surface. Interior injected taps passed; genuine
+movement gestures and moved/scaled roots still require the coordinate correction
+and separate acceptance.
 
 ## Shared application and root authoring
 

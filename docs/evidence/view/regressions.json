@@ -1,0 +1,1175 @@
+{
+  "format": "godot-fabric.view-regressions/v1",
+  "at": "2026-10-04T00:52:53.079525+00:00",
+  "scope": "Local macOS arm64; no full GF closure or all-target claim",
+  "node": {
+    "tests": 202,
+    "passed": 202,
+    "parity": 6,
+    "dashboard": 8,
+    "explicitContracts": 188,
+    "command": "npm run test:contracts",
+    "logSha256": "2294efebb5faf32a80300e9cb86a3156fb041f4f4f0bdf2df47f4a42cd6b9110"
+  },
+  "python": {
+    "tests": 13,
+    "passed": 13,
+    "command": "python3 -m unittest discover -s tests -p \"*_test.py\""
+  },
+  "native": {
+    "tests": 10,
+    "passed": 10,
+    "command": "node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+    "logSha256": "4a92479f4ad1be5ae3a0e1cc97e72b088855976bf71cb9e1a6a4c82cf96b3421"
+  },
+  "examples": {
+    "runs": 16,
+    "checks": 672,
+    "passed": true,
+    "command": "npm run test:examples",
+    "reports": [
+      {
+        "scenario": "chart",
+        "checks": 34,
+        "passed": true,
+        "reportSha256": "d4943035f1e285bc532acb1a7327ad414121d34728b2ba80b7c9bd454df60b69"
+      },
+      {
+        "scenario": "counter",
+        "checks": 19,
+        "passed": true,
+        "reportSha256": "2c7822f6016cff6d55b6bb67eb3f35d17f22e48a18b534f4549d3c7385b50a0d"
+      },
+      {
+        "scenario": "form",
+        "checks": 39,
+        "passed": true,
+        "reportSha256": "4d2e033e6d03506789c28ed2ab41e1263991f227f00904f2465f7d1fcadd1a23"
+      },
+      {
+        "scenario": "input",
+        "checks": 45,
+        "passed": true,
+        "reportSha256": "2075d8808881ae6b2b35e77840e71d62a230496d6a9a0c4278283ee7aae4b59a"
+      },
+      {
+        "scenario": "layout",
+        "checks": 47,
+        "passed": true,
+        "reportSha256": "e71610378143f1131d1dfd0cc8089757a52461379817209a0a1774bd0bdd485d"
+      },
+      {
+        "scenario": "metrics",
+        "checks": 64,
+        "passed": true,
+        "reportSha256": "7ad40265ba701e7023d8c22fe31d574869023e23ef2d8c756bb01e3dd3e09ff8"
+      },
+      {
+        "scenario": "nativewind",
+        "checks": 49,
+        "passed": true,
+        "reportSha256": "32e69ef777c28d531a0864371e1e621ba865e07c63c985cde82d02a793be2236"
+      },
+      {
+        "scenario": "pressable",
+        "checks": 43,
+        "passed": true,
+        "reportSha256": "f61159f6f20d40a1b86223504d9a8021e9cad4267f3b05c933814509b9433015"
+      },
+      {
+        "scenario": "react",
+        "checks": 36,
+        "passed": true,
+        "reportSha256": "ad15c0b7d096b23f34f85f5b8daf889eb52dd56f7f4b6f9d76388433892aef71"
+      },
+      {
+        "scenario": "refs",
+        "checks": 23,
+        "passed": true,
+        "reportSha256": "bdc7bfd898b654bacf8a00317e20aeb469f1ca653def2d97b706288d473df7ef"
+      },
+      {
+        "scenario": "runtime",
+        "checks": 23,
+        "passed": true,
+        "reportSha256": "d80bfe25f1092971ef51e5dcc3386271969119c375c71574be391315fc0a0029"
+      },
+      {
+        "scenario": "scroll",
+        "checks": 62,
+        "passed": true,
+        "reportSha256": "4067518aae7ad5ab974558e71848fca6e6dfe37044e736e36b1e902b06f6005f"
+      },
+      {
+        "scenario": "services",
+        "checks": 36,
+        "passed": true,
+        "reportSha256": "52df49fcfb52c2bc8b640bfa07b34c0989f205e58928bfb0afd1f50d7c2d7004"
+      },
+      {
+        "scenario": "shared",
+        "checks": 35,
+        "passed": true,
+        "reportSha256": "09b74dba9427c12fc9cb15125bf063291d99d72cb60546aee90983450472c804"
+      },
+      {
+        "scenario": "typography",
+        "checks": 50,
+        "passed": true,
+        "reportSha256": "9527f1435981a46b7d0829d8fe4b6a8ca7cc6093db07d05ceccac3a143154d70"
+      },
+      {
+        "scenario": "view",
+        "checks": 67,
+        "passed": true,
+        "reportSha256": "536aa3857e9ed9a43397f1b3ff0d757f750201653d1bf60722d646ad83facb44"
+      }
+    ]
+  },
+  "nativewind": {
+    "headless": {
+      "checks": 49,
+      "passed": true,
+      "reportSha256": "32e69ef777c28d531a0864371e1e621ba865e07c63c985cde82d02a793be2236",
+      "displayServer": "headless",
+      "logicalMeasurements": {
+        "initial-column": {
+          "horizontal": false,
+          "nativeWindowRects": {
+            "nw-card": [
+              21.0,
+              145.0,
+              858.0,
+              145.0
+            ],
+            "nw-root": [
+              0.0,
+              0.0,
+              900.0,
+              680.0
+            ],
+            "nw-theme": [
+              21.0,
+              304.0,
+              858.0,
+              141.0
+            ],
+            "nw-title": [
+              21.0,
+              55.0,
+              858.0,
+              39.0
+            ]
+          },
+          "publicLayout": {
+            "nw-card": {
+              "connected": true,
+              "rect": {
+                "bottom": 290.0,
+                "height": 145.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 145.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 145.0
+              },
+              "relative": [
+                0.0,
+                0.0,
+                858.0,
+                145.0
+              ],
+              "tag": 24.0,
+              "window": [
+                21.0,
+                145.0,
+                858.0,
+                145.0
+              ]
+            },
+            "nw-root": {
+              "connected": true,
+              "rect": {
+                "bottom": 680.0,
+                "height": 680.0,
+                "left": 0.0,
+                "right": 900.0,
+                "top": 0.0,
+                "width": 900.0,
+                "x": 0.0,
+                "y": 0.0
+              },
+              "tag": 76.0,
+              "window": [
+                0.0,
+                0.0,
+                900.0,
+                680.0
+              ]
+            },
+            "nw-row": {
+              "connected": true,
+              "rect": {
+                "bottom": 445.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 145.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 145.0
+              },
+              "relative": [
+                21.0,
+                145.0,
+                858.0,
+                300.0
+              ],
+              "tag": 36.0,
+              "window": [
+                21.0,
+                145.0,
+                858.0,
+                300.0
+              ]
+            },
+            "nw-theme": {
+              "connected": true,
+              "rect": {
+                "bottom": 445.0,
+                "height": 141.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 304.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 304.0
+              },
+              "relative": [
+                0.0,
+                159.0,
+                858.0,
+                141.0
+              ],
+              "tag": 34.0,
+              "window": [
+                21.0,
+                304.0,
+                858.0,
+                141.0
+              ]
+            },
+            "nw-title": {
+              "connected": true,
+              "rect": {
+                "bottom": 94.0,
+                "height": 39.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 55.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 55.0
+              },
+              "relative": [
+                21.0,
+                55.0,
+                858.0,
+                39.0
+              ],
+              "tag": 8.0,
+              "window": [
+                21.0,
+                55.0,
+                858.0,
+                39.0
+              ]
+            }
+          }
+        },
+        "wide-row": {
+          "horizontal": true,
+          "nativeWindowRects": {
+            "nw-card": [
+              21.0,
+              151.0,
+              574.0,
+              300.0
+            ],
+            "nw-root": [
+              0.0,
+              0.0,
+              1200.0,
+              800.0
+            ],
+            "nw-theme": [
+              609.0,
+              151.0,
+              570.0,
+              300.0
+            ],
+            "nw-title": [
+              21.0,
+              55.0,
+              1158.0,
+              45.0
+            ]
+          },
+          "publicLayout": {
+            "nw-card": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 595.0,
+                "top": 151.0,
+                "width": 574.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                0.0,
+                0.0,
+                574.0,
+                300.0
+              ],
+              "tag": 24.0,
+              "window": [
+                21.0,
+                151.0,
+                574.0,
+                300.0
+              ]
+            },
+            "nw-root": {
+              "connected": true,
+              "rect": {
+                "bottom": 800.0,
+                "height": 800.0,
+                "left": 0.0,
+                "right": 1200.0,
+                "top": 0.0,
+                "width": 1200.0,
+                "x": 0.0,
+                "y": 0.0
+              },
+              "tag": 76.0,
+              "window": [
+                0.0,
+                0.0,
+                1200.0,
+                800.0
+              ]
+            },
+            "nw-row": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 1179.0,
+                "top": 151.0,
+                "width": 1158.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                21.0,
+                151.0,
+                1158.0,
+                300.0
+              ],
+              "tag": 36.0,
+              "window": [
+                21.0,
+                151.0,
+                1158.0,
+                300.0
+              ]
+            },
+            "nw-theme": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 609.0,
+                "right": 1179.0,
+                "top": 151.0,
+                "width": 570.0,
+                "x": 609.0,
+                "y": 151.0
+              },
+              "relative": [
+                588.0,
+                0.0,
+                570.0,
+                300.0
+              ],
+              "tag": 34.0,
+              "window": [
+                609.0,
+                151.0,
+                570.0,
+                300.0
+              ]
+            },
+            "nw-title": {
+              "connected": true,
+              "rect": {
+                "bottom": 100.0,
+                "height": 45.0,
+                "left": 21.0,
+                "right": 1179.0,
+                "top": 55.0,
+                "width": 1158.0,
+                "x": 21.0,
+                "y": 55.0
+              },
+              "relative": [
+                21.0,
+                55.0,
+                1158.0,
+                45.0
+              ],
+              "tag": 8.0,
+              "window": [
+                21.0,
+                55.0,
+                1158.0,
+                45.0
+              ]
+            }
+          }
+        },
+        "narrow-column": {
+          "horizontal": false,
+          "nativeWindowRects": {
+            "nw-card": [
+              21.0,
+              151.0,
+              658.0,
+              145.0
+            ],
+            "nw-root": [
+              0.0,
+              0.0,
+              700.0,
+              760.0
+            ],
+            "nw-theme": [
+              21.0,
+              310.0,
+              658.0,
+              141.0
+            ],
+            "nw-title": [
+              21.0,
+              55.0,
+              658.0,
+              45.0
+            ]
+          },
+          "publicLayout": {
+            "nw-card": {
+              "connected": true,
+              "rect": {
+                "bottom": 296.0,
+                "height": 145.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 151.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                0.0,
+                0.0,
+                658.0,
+                145.0
+              ],
+              "tag": 24.0,
+              "window": [
+                21.0,
+                151.0,
+                658.0,
+                145.0
+              ]
+            },
+            "nw-root": {
+              "connected": true,
+              "rect": {
+                "bottom": 760.0,
+                "height": 760.0,
+                "left": 0.0,
+                "right": 700.0,
+                "top": 0.0,
+                "width": 700.0,
+                "x": 0.0,
+                "y": 0.0
+              },
+              "tag": 76.0,
+              "window": [
+                0.0,
+                0.0,
+                700.0,
+                760.0
+              ]
+            },
+            "nw-row": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 151.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                21.0,
+                151.0,
+                658.0,
+                300.0
+              ],
+              "tag": 36.0,
+              "window": [
+                21.0,
+                151.0,
+                658.0,
+                300.0
+              ]
+            },
+            "nw-theme": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 141.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 310.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 310.0
+              },
+              "relative": [
+                0.0,
+                159.0,
+                658.0,
+                141.0
+              ],
+              "tag": 34.0,
+              "window": [
+                21.0,
+                310.0,
+                658.0,
+                141.0
+              ]
+            },
+            "nw-title": {
+              "connected": true,
+              "rect": {
+                "bottom": 100.0,
+                "height": 45.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 55.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 55.0
+              },
+              "relative": [
+                21.0,
+                55.0,
+                658.0,
+                45.0
+              ],
+              "tag": 8.0,
+              "window": [
+                21.0,
+                55.0,
+                658.0,
+                45.0
+              ]
+            }
+          }
+        }
+      }
+    },
+    "native": {
+      "checks": 58,
+      "passed": true,
+      "reportSha256": "eeb8446a10e130fbd8a7375536279d6b1561ff169e075ee9e809372f8e1672c2",
+      "displayServer": "macOS",
+      "logicalMeasurements": {
+        "initial-column": {
+          "horizontal": false,
+          "nativeWindowRects": {
+            "nw-card": [
+              21.0,
+              145.0,
+              858.0,
+              145.0
+            ],
+            "nw-root": [
+              0.0,
+              0.0,
+              900.0,
+              680.0
+            ],
+            "nw-theme": [
+              21.0,
+              304.0,
+              858.0,
+              141.0
+            ],
+            "nw-title": [
+              21.0,
+              55.0,
+              858.0,
+              39.0
+            ]
+          },
+          "publicLayout": {
+            "nw-card": {
+              "connected": true,
+              "rect": {
+                "bottom": 290.0,
+                "height": 145.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 145.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 145.0
+              },
+              "relative": [
+                0.0,
+                0.0,
+                858.0,
+                145.0
+              ],
+              "tag": 24.0,
+              "window": [
+                21.0,
+                145.0,
+                858.0,
+                145.0
+              ]
+            },
+            "nw-root": {
+              "connected": true,
+              "rect": {
+                "bottom": 680.0,
+                "height": 680.0,
+                "left": 0.0,
+                "right": 900.0,
+                "top": 0.0,
+                "width": 900.0,
+                "x": 0.0,
+                "y": 0.0
+              },
+              "tag": 76.0,
+              "window": [
+                0.0,
+                0.0,
+                900.0,
+                680.0
+              ]
+            },
+            "nw-row": {
+              "connected": true,
+              "rect": {
+                "bottom": 445.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 145.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 145.0
+              },
+              "relative": [
+                21.0,
+                145.0,
+                858.0,
+                300.0
+              ],
+              "tag": 36.0,
+              "window": [
+                21.0,
+                145.0,
+                858.0,
+                300.0
+              ]
+            },
+            "nw-theme": {
+              "connected": true,
+              "rect": {
+                "bottom": 445.0,
+                "height": 141.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 304.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 304.0
+              },
+              "relative": [
+                0.0,
+                159.0,
+                858.0,
+                141.0
+              ],
+              "tag": 34.0,
+              "window": [
+                21.0,
+                304.0,
+                858.0,
+                141.0
+              ]
+            },
+            "nw-title": {
+              "connected": true,
+              "rect": {
+                "bottom": 94.0,
+                "height": 39.0,
+                "left": 21.0,
+                "right": 879.0,
+                "top": 55.0,
+                "width": 858.0,
+                "x": 21.0,
+                "y": 55.0
+              },
+              "relative": [
+                21.0,
+                55.0,
+                858.0,
+                39.0
+              ],
+              "tag": 8.0,
+              "window": [
+                21.0,
+                55.0,
+                858.0,
+                39.0
+              ]
+            }
+          }
+        },
+        "wide-row": {
+          "horizontal": true,
+          "nativeWindowRects": {
+            "nw-card": [
+              21.0,
+              151.0,
+              574.0,
+              300.0
+            ],
+            "nw-root": [
+              0.0,
+              0.0,
+              1200.0,
+              800.0
+            ],
+            "nw-theme": [
+              609.0,
+              151.0,
+              570.0,
+              300.0
+            ],
+            "nw-title": [
+              21.0,
+              55.0,
+              1158.0,
+              45.0
+            ]
+          },
+          "publicLayout": {
+            "nw-card": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 595.0,
+                "top": 151.0,
+                "width": 574.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                0.0,
+                0.0,
+                574.0,
+                300.0
+              ],
+              "tag": 24.0,
+              "window": [
+                21.0,
+                151.0,
+                574.0,
+                300.0
+              ]
+            },
+            "nw-root": {
+              "connected": true,
+              "rect": {
+                "bottom": 800.0,
+                "height": 800.0,
+                "left": 0.0,
+                "right": 1200.0,
+                "top": 0.0,
+                "width": 1200.0,
+                "x": 0.0,
+                "y": 0.0
+              },
+              "tag": 76.0,
+              "window": [
+                0.0,
+                0.0,
+                1200.0,
+                800.0
+              ]
+            },
+            "nw-row": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 1179.0,
+                "top": 151.0,
+                "width": 1158.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                21.0,
+                151.0,
+                1158.0,
+                300.0
+              ],
+              "tag": 36.0,
+              "window": [
+                21.0,
+                151.0,
+                1158.0,
+                300.0
+              ]
+            },
+            "nw-theme": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 609.0,
+                "right": 1179.0,
+                "top": 151.0,
+                "width": 570.0,
+                "x": 609.0,
+                "y": 151.0
+              },
+              "relative": [
+                588.0,
+                0.0,
+                570.0,
+                300.0
+              ],
+              "tag": 34.0,
+              "window": [
+                609.0,
+                151.0,
+                570.0,
+                300.0
+              ]
+            },
+            "nw-title": {
+              "connected": true,
+              "rect": {
+                "bottom": 100.0,
+                "height": 45.0,
+                "left": 21.0,
+                "right": 1179.0,
+                "top": 55.0,
+                "width": 1158.0,
+                "x": 21.0,
+                "y": 55.0
+              },
+              "relative": [
+                21.0,
+                55.0,
+                1158.0,
+                45.0
+              ],
+              "tag": 8.0,
+              "window": [
+                21.0,
+                55.0,
+                1158.0,
+                45.0
+              ]
+            }
+          }
+        },
+        "narrow-column": {
+          "horizontal": false,
+          "nativeWindowRects": {
+            "nw-card": [
+              21.0,
+              151.0,
+              658.0,
+              145.0
+            ],
+            "nw-root": [
+              0.0,
+              0.0,
+              700.0,
+              760.0
+            ],
+            "nw-theme": [
+              21.0,
+              310.0,
+              658.0,
+              141.0
+            ],
+            "nw-title": [
+              21.0,
+              55.0,
+              658.0,
+              45.0
+            ]
+          },
+          "publicLayout": {
+            "nw-card": {
+              "connected": true,
+              "rect": {
+                "bottom": 296.0,
+                "height": 145.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 151.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                0.0,
+                0.0,
+                658.0,
+                145.0
+              ],
+              "tag": 24.0,
+              "window": [
+                21.0,
+                151.0,
+                658.0,
+                145.0
+              ]
+            },
+            "nw-root": {
+              "connected": true,
+              "rect": {
+                "bottom": 760.0,
+                "height": 760.0,
+                "left": 0.0,
+                "right": 700.0,
+                "top": 0.0,
+                "width": 700.0,
+                "x": 0.0,
+                "y": 0.0
+              },
+              "tag": 76.0,
+              "window": [
+                0.0,
+                0.0,
+                700.0,
+                760.0
+              ]
+            },
+            "nw-row": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 300.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 151.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 151.0
+              },
+              "relative": [
+                21.0,
+                151.0,
+                658.0,
+                300.0
+              ],
+              "tag": 36.0,
+              "window": [
+                21.0,
+                151.0,
+                658.0,
+                300.0
+              ]
+            },
+            "nw-theme": {
+              "connected": true,
+              "rect": {
+                "bottom": 451.0,
+                "height": 141.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 310.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 310.0
+              },
+              "relative": [
+                0.0,
+                159.0,
+                658.0,
+                141.0
+              ],
+              "tag": 34.0,
+              "window": [
+                21.0,
+                310.0,
+                658.0,
+                141.0
+              ]
+            },
+            "nw-title": {
+              "connected": true,
+              "rect": {
+                "bottom": 100.0,
+                "height": 45.0,
+                "left": 21.0,
+                "right": 679.0,
+                "top": 55.0,
+                "width": 658.0,
+                "x": 21.0,
+                "y": 55.0
+              },
+              "relative": [
+                21.0,
+                55.0,
+                658.0,
+                45.0
+              ],
+              "tag": 8.0,
+              "window": [
+                21.0,
+                55.0,
+                658.0,
+                45.0
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "adapters": {
+    "runs": 17,
+    "checks": 318,
+    "nativeHostSha256": "f933426b0774f9445f89bfceeb38752e7edc4cfee78127f4e97f5da5b393186b",
+    "matrix": {
+      "passed": true,
+      "nativeAdapterLinked": true,
+      "componentMounted": true,
+      "headless": {
+        "checks": 35,
+        "sha256": "a6bc956d113994f58ab6ff5f4717b0d1cbf4026ee643a945d42bc93240562959",
+        "displayServer": "headless"
+      },
+      "reentrantStop": {
+        "checks": 8,
+        "sha256": "b39d7d0628c3eb6598b908f78ba07ac611e6aa1d18723fc20844260a4b2fc655",
+        "displayServer": "headless"
+      },
+      "reentrantRaf": {
+        "checks": 9,
+        "sha256": "86b746556905c5d09d1a80265c1674e1f3ec7904fc647c319d64ea2e3a47bf18",
+        "displayServer": "headless"
+      },
+      "reentrantTimer": {
+        "checks": 9,
+        "sha256": "5c6b866c9763b5c2e1de8258b9c983803c46cc4f53e2896055e082534ebdb56b",
+        "displayServer": "headless"
+      },
+      "rootRetirement": {
+        "root-unmount-resize": {
+          "checks": 17,
+          "sha256": "39dd865084b66e6d5398731e936710884eae2ee7faf97ebe392878388c347266",
+          "displayServer": "headless"
+        },
+        "root-unmount-pressed": {
+          "checks": 17,
+          "sha256": "4ad506a4068b6d1c980bfd252fe4b926e8cc7130676394f6c0336f4ea26a756f",
+          "displayServer": "headless"
+        },
+        "root-unmount-raf": {
+          "checks": 18,
+          "sha256": "55c8e996516c2e5f05572d431afecbfc078596ff432cba59aeae2abdfaf71f42",
+          "displayServer": "headless"
+        },
+        "root-unmount-timer": {
+          "checks": 18,
+          "sha256": "156234a5282761008f8ea0075992b6c79fa09eace43fddb91a9d3ea1b1367788",
+          "displayServer": "headless"
+        },
+        "root-remount-resize": {
+          "checks": 21,
+          "sha256": "159af15806bfbbe602df36d232731a94c77a3d3639ceec872ba904290dac031b",
+          "displayServer": "headless"
+        },
+        "root-free-resize": {
+          "checks": 17,
+          "sha256": "d639f464343651cfc39dddc261b7853c9a3988d6442120e41483937ef44eba12",
+          "displayServer": "headless"
+        },
+        "root-owner-switch-resize": {
+          "checks": 18,
+          "sha256": "3efc701a32d92677a1659b085253e0eb592b943a5f434a55840113f1d4d54ba0",
+          "displayServer": "headless"
+        },
+        "root-stale-core-owner-switch-resize": {
+          "checks": 21,
+          "sha256": "a94bb8c49d5405be59fced5b0f9888c41cac46a15e851f31cd5a12045a6dd667",
+          "displayServer": "headless"
+        },
+        "root-unmount-graphical": {
+          "checks": 21,
+          "sha256": "a3febd2e36cbc1d64ed658d3799c6b522ea17484f4c4f7d70adf97d36e2a98cc",
+          "displayServer": "macOS"
+        },
+        "root-remount-graphical": {
+          "checks": 25,
+          "sha256": "a8512915be2430025722a89920a2378c7c0ec1c5e6a05309ebaf550b39b8252c",
+          "displayServer": "macOS"
+        },
+        "root-owner-switch-graphical": {
+          "checks": 22,
+          "sha256": "8f26319ff83855ef1701e1ff671bb0533e807c5b8771228dfba955e61092bb7d",
+          "displayServer": "macOS"
+        }
+      },
+      "externalAppearance": {
+        "checks": 5,
+        "sha256": "be7cd8945bb373f7f19148abfb5996d95af3b06c0d6183adc25c6d5eed29b547",
+        "displayServer": "headless"
+      },
+      "graphical": {
+        "checks": 37,
+        "sha256": "873525f4308dc5b678875b3d1a395dc817525bd9b4ca14c9443f7d2b52e4aadc",
+        "displayServer": "macOS"
+      },
+      "abiCertified": false
+    }
+  }
+}

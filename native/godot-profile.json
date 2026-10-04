@@ -27,6 +27,7 @@
     "TextParagraph",
     "StyleBoxEmpty",
     "StyleBoxFlat",
+    "RenderingServer",
     "InputEventKey",
     "InputEventMouseButton",
     "InputEventMouseMotion",

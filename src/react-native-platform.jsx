@@ -2,8 +2,8 @@
 // native features fail where invoked, instead of becoming inert no-op shims.
 import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
+import NativeView from "react-native/Libraries/Components/View/ViewNativeComponent";
 import {
-  View as GodotView,
   Pressable as GodotPressable,
   Button as GodotButton,
   controlViewConfig,
@@ -109,7 +109,7 @@ export function View({
   // Browser text selection is irrelevant to native Controls. Accessibility
   // metadata remains explicitly unsupported, documented in the laboratory.
   const { userSelect, ...layout } = flat;
-  return <GodotView {...props} style={nativeStyle(layout, "View")} />;
+  return <NativeView {...props} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
 }
 export function Text({ style, ...props }) {
   const flat = nativeStyle(style, "Text");

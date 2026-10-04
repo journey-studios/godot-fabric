@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Roots reentrantes comprovadas; próximo: geometria, stacking e clipping de View"
+    "focusTitle": "View validada; próximo: alinhar coordenadas de eventos, refs e superfície"
   },
-  "updatedAt": "2026-10-03T23:48:44.654828+00:00",
+  "updatedAt": "2026-10-04T00:52:53.079525+00:00",
   "source": {
-    "commit": "47432df8b76816a44cf72af2184ab4794c6c5338",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/ROADMAP.md",
-    "scope": "Implementação 47432df conferida pelos hashes executados: GF-07/GF-26/GF-28 retirement independente, remount/host free/owner switch/stale core/font ownership, 17 Godot/318 checks e pixels. 199 Node/13 Python, 10 nativos, 15 exemplos/605 checks. CI precedente 80729da verde nos cinco jobs; CI desta fatia pendente. Nenhum aceite completo ou denominador alterado.",
+    "commit": "b5dafc8ebd374a63edc2d9774387177ab15f2032",
+    "url": "https://github.com/journey-studios/godot-fabric/tree/codex/react-native-parity-roadmap",
+    "scope": "GF-10 parcial: View original, stacking, clipping e bordas comprovados em 67 headless/107 native checks, 36 pixels; controle anterior falhou 9/24 como esperado. 202 Node/13 Python, 10 nativos, 16 exemplos/672 checks, NativeWind58 e adapters17/318 passaram. CI precedente b5dafc8 verde nos cinco jobs; CI da nova fatia pendente. Pesos/denominador/decisões preservados; nenhum GF completo.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -415,7 +415,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Consumidor: measureInWindow e refs permanecem válidos ao redimensionar só o inventário. Refs/comandos completos, geometria de input sob todos os transforms e certificação permanecem abertos.",
+      "note": "Medidas públicas preservam o retângulo integral de filhos clipped e a geometria lógica após flattening/reparent; NativeWind compara public refs com Controls no espaço da janela. Gap concreto: pagePoint do input usa Viewport, measure usa root numa surface deslocada. Coordenadas sob movimento/transforms/DPI e HostInstance completo ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -430,6 +430,10 @@
             {
               "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
               "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Medidas clipped/flattened e gap de coordenadas reproduzido",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/view/README.md"
             }
           ]
         },
@@ -509,7 +513,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "View, styles and RTL",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema",
       "dependencies": [
         "GF-04",
@@ -519,14 +523,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "View pública usa RCTView/descriptor original. Ordem Fabric unifica pintura/target, clipping retangular hidden/scroll, quatro cores físicas, alpha e cantos assimétricos: 67/107 checks e 36 pixels. Controle anterior falhou 9/24. RTL, transforms, máscaras de descendentes, fracionamento/DPI, StyleSheet/shadows/filters e diferencial mobile permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "macOS arm64: View67/107, pixels36, controle negativo9/24 e regressões16/672",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/view/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -656,7 +665,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "GF-10 comprovou targets de taps injetados mouse/touch e isolamento do device; isso não fecha input. Prioridade: alinhar pagePoint Viewport com measure root em surface deslocada e provar gestos com movimento; transforms/scroll, multitouch, hover, teclado, interrupções e hardware permanecem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2454,6 +2463,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "view-foundation-verified-20261004",
+      "at": "2026-10-04T00:52:53.079525+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Primeira fatia GF-10 comprovada: 67 headless/107 native, 36 pixels e controle negativo9/24; 16 exemplos/672, NativeWind58, adapters17/318, 202 Node/13 Python e 10 nativos. Uma checkpoint slice concluída; nenhum GF completo, aceite/dependência/decisão/peso/denominador alterado. Próximo gap: espaço de coordenadas de eventos e refs.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/view/README.md"
+    },
     {
       "id": "root-retirement-source-47432df",
       "at": "2026-10-03T23:48:44.654828+00:00",

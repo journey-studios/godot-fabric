@@ -63,3 +63,46 @@ test("an exact public RN Platform deep import still selects the Godot seam", asy
   assert.equal(execute(result).default, "godot");
   assert.ok(Object.keys(result.metafile.inputs).some(input => input.endsWith("src/platform.js")));
 });
+
+test("a project ViewConfig and PlatformBaseViewConfig keep their own implementation", async t => {
+  const directory = fixture(t, {
+    "NativeComponent/ViewConfig.js": 'import base from "./PlatformBaseViewConfig"; export default base;',
+    "NativeComponent/PlatformBaseViewConfig.js": 'export default "project base view config";',
+  });
+  const result = await compile(directory, "NativeComponent/ViewConfig.js");
+  assert.equal(execute(result).default, "project base view config");
+  assert.deepEqual(Object.keys(result.metafile.inputs).sort(), [
+    "NativeComponent/PlatformBaseViewConfig.js", "NativeComponent/ViewConfig.js",
+  ]);
+});
+
+test("an exact public RN PlatformBaseViewConfig import selects the Godot base config", async t => {
+  const directory = fixture(t, {
+    "App.js": 'import base from "react-native/Libraries/NativeComponent/PlatformBaseViewConfig"; export default base;',
+  });
+  const result = await compile(directory, "App.js");
+  const base = execute(result).default;
+  assert.equal(base.validAttributes.pointerEvents, true);
+  assert.equal(base.validAttributes.style.zIndex, true);
+  assert.equal(base.validAttributes.kind, undefined);
+  assert.ok(Object.keys(result.metafile.inputs).some(input => input.endsWith("src/base-view-config.js")));
+});
+
+test("original RN ViewConfig composes the Godot base config without the adapter plugin", async t => {
+  const directory = fixture(t, {
+    "App.js": 'import {createViewConfig} from "react-native/Libraries/NativeComponent/ViewConfig"; '
+      + 'export default createViewConfig({uiViewClassName: "RCTView", validAttributes: {fixtureProp: true}});',
+  });
+  const result = await compile(directory, "App.js");
+  const config = execute(result).default;
+  assert.equal(config.uiViewClassName, "RCTView");
+  assert.equal(config.validAttributes.fixtureProp, true);
+  assert.equal(config.validAttributes.pointerEvents, true);
+  assert.equal(config.validAttributes.style.zIndex, true);
+  assert.equal(config.bubblingEventTypes.topTouchStart.phasedRegistrationNames.bubbled, "onTouchStart");
+  assert.equal(config.validAttributes.kind, undefined);
+  const inputs = Object.keys(result.metafile.inputs);
+  assert.ok(inputs.some(input => input.endsWith("react-native/Libraries/NativeComponent/ViewConfig.js")));
+  assert.ok(inputs.some(input => input.endsWith("src/base-view-config.js")));
+  assert.ok(!inputs.some(input => input.endsWith("react-native/Libraries/NativeComponent/PlatformBaseViewConfig.js")));
+});
