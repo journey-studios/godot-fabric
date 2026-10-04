@@ -136,5 +136,7 @@
     "npm run test:contracts",
     "npm run test:examples",
     "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-coordinates-20261004 --out build/adapter-runtime-coordinates-20261004 --capture"
-  ]
+  ],
+  "testedImplementationCommit": "48e425345b0ecb7665a7a447c9c14453c8e4ece0",
+  "committedSourceIdentityVerified": true
 }

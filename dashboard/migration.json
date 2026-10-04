@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Gestos e coordenadas de roots comprovados; próximo: transforms e HostInstance"
   },
-  "updatedAt": "2026-10-04T01:26:35.138797+00:00",
+  "updatedAt": "2026-10-04T01:32:45.633609+00:00",
   "source": {
-    "commit": "6e9f2f305e5981f49b9b2fd1be23ae723ba43363",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/ROADMAP.md",
-    "scope": "Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI precedente View b5df4d6 verde; CI desta fatia pendente. Só a slice GF-13 fica done; nenhum GF completo, decisão, peso ou denominador alterado.",
+    "commit": "48e425345b0ecb7665a7a447c9c14453c8e4ece0",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/ROADMAP.md",
+    "scope": "Implementação 48e4253 conferida com as fontes nativas e fixtures executadas. Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI precedente View b5df4d6 verde; CI desta fatia pendente. Só a slice GF-13 fica done; nenhum GF completo, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -437,7 +437,7 @@
             },
             {
               "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
             }
           ]
         },
@@ -492,7 +492,7 @@
             },
             {
               "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
             }
           ]
         },
@@ -687,7 +687,7 @@
           "evidence": [
             {
               "label": "macOS arm64: coords238/247, pixels6, controles121/121 e timing1/238",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
             }
           ]
         },
@@ -2481,6 +2481,17 @@
   ],
   "activity": [
     {
+      "id": "coordinates-source-48e4253",
+      "at": "2026-10-04T01:32:45.633609+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Fontes e fixtures do commit 48e4253 conferidas por SHA-256 contra o SDK e os relatórios executados. Links da fatia agora usam o commit imutável; CI desta fatia permanece pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+    },
+    {
       "id": "coordinates-verified-20261004",
       "at": "2026-10-04T01:26:35.138797+00:00",
       "taskIds": [
@@ -2489,7 +2500,7 @@
         "GF-13"
       ],
       "message": "Coordenadas e gestos comprovados: 238 headless / 247 native, 6 pixels e 3 capturas. Controle anterior: 121 falhas por lane; cache intermediário: 1/238; final: zero. Regressões: 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 e adapters 17/318. Primeira slice GF-13 done; nenhum GF completo, decisão, peso ou denominador muda. Próximo: transforms e HostInstance.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
     },
     {
       "id": "view-ci-b5df4d6",

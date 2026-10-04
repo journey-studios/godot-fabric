@@ -261,7 +261,7 @@ RTL/logical edges, transforms/origin, rounded descendant masks, fractional/DPI
 geometry, full StyleSheet/shadows/filters and original mobile View differential
 certification still need execution.
 
-The [coordinate and gesture slice](docs/evidence/coordinates/README.md) now
+The [coordinate and gesture slice](https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md) at verified implementation `48e425345b0ecb7665a7a447c9c14453c8e4ece0` now
 addresses that reproduced GF-08/GF-09/GF-13 gap. Public page points and original
 measure use root space; location remains relative to the original target, and
 screen points include native Window origin and current content density. The
