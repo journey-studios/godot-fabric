@@ -90,9 +90,18 @@ connects the original dispatcher to the renderer's existing batch. A native
 touch delivers to a listener with no JSX helper; JSX and imperative listeners
 commit both React updates together. Its [evidence](docs/evidence/event-dispatch-integrated/README.md)
 also records corrected native cancellation/teardown defects. Public flags remain
-disabled; imperative pointer interest and complete event parity remain open.
+disabled; complete event parity remains open.
 
 ![One native gesture commits two React updates in the first root](docs/evidence/event-dispatch-integrated/updated.png)
+
+The separate [pointer-interest example](examples/pointer-interest/README.md)
+reads original RN listener maps so imperative-only View `pointerdown` listeners
+qualify native emission in an internal opt-in. Capture/bubble, once, abort,
+removal and flattened ancestry retain original listener behavior. Its
+[evidence](docs/evidence/pointer-interest/README.md) records 193 original / 230
+current headless checks and 260 current viewport checks with two real captures.
+Document-only interest, other pointer categories, hardware/mobile and public
+flag enablement remain open; the default helper still installs no query.
 
 
 This does not promise compatibility with every React Native library.
@@ -225,6 +234,15 @@ clock example separately.
 | --- | --- |
 | [![Independent documents, repeated IDs and logical tree refs](docs/evidence/tree/tree-initial.png)](examples/tree/README.md) | [![Current order follows React while retained collections keep their snapshot](docs/evidence/tree/tree-updated.png)](examples/tree/README.md) |
 
+| Pointerdown interest: initial | Pointerdown interest: after React updates |
+| --- | --- |
+| [![Original refs in the native pointerdown interest fixture](docs/evidence/pointer-interest/initial.png)](examples/pointer-interest/README.md) | [![Native pointerdown fixture after listener-driven React updates](docs/evidence/pointer-interest/updated.png)](examples/pointer-interest/README.md) |
+
+This isolated probe uses its own test command outside the launcher catalog.
+Its two 820×280 Viewport frames have 28 executed pixel assertions; the
+[receipt](docs/evidence/pointer-interest/README.md) keeps injected ScreenTouch
+input separate from hardware/mobile certification.
+
 ## Write React
 
 ### Shared application
@@ -315,6 +333,7 @@ npm run test:codegen                     # original spec/schema/C++ generation a
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run test:pointers:geometry          # pinned RN counterexamples and real Hermes binding
+npm run test:pointers:interest          # original Map query and native View pointerdown interest
 npm run test:transforms:guards           # rejected styles, invalid embedding input and cleanup
 npm run check:static
 npm run check:publication

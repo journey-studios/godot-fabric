@@ -827,8 +827,7 @@ ordinary resize/free remains separately verified through actual adapters.
 
 Contracts235/13 Python,18 overlay guards, fresh SDK, loader89/21 and13 actual
 adapter runs/213 checks passed. Current-host consumer30/40,22 examples/2250 and pointer/focus/tag regressions
-passed. Source/host pins are recorded in the receipt; hosted CI for this new delivery remains pending. The preceding
-897b127 hosted run does not cover this integration.
+passed. Source/host pins are recorded in the receipt. [Hosted integration CI](https://github.com/journey-studios/godot-fabric/actions/runs/37223152112) passed all five jobs at0478499; the audited artifact matches 181/206 IDs, 16 committed pins, 13 RN inputs and bundle identities. Hosted lanes are headless; mobile jobs are the existing core references. The subsequent pointer-interest query requires its own proof.
 
 Native imperative pointer interest, full experimental flag matrix, four original
 responder differences, complete PanResponder/types, registered-null-target JS,
@@ -837,6 +836,46 @@ parity remain open. Next: native listener interest with an imperative-only posit
 and removal/abort/lifetime controls, then dispatcher flags and responder gaps.
 Only GF-06's first semantic slice gains a completed checkpoint; no complete GF,
 architectural decision, full parity/dependency acceptance or denominator closes.
+
+### Original listener Maps qualify native pointerdown (2026-10-04)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 remain **In progress**. The shared SDK can
+opt into a pure query appended to hash-pinned original RN EventTarget source.
+It reads actual capture/bubble listener Maps, including immediate removal,
+`once`, abort and duplicate identity, without a second registry, wrapped handlers
+or mutated View event props. Only View-path `pointerdown` interest changes;
+original dispatch and renderer batching still own callback delivery. Public
+imperative/native EventTarget flags remain off.
+
+The [executed receipt and actual captures](docs/evidence/pointer-interest/README.md)
+record **193 original / 230 current headless checks** and **260 native macOS
+viewport checks**, including 28 asserted pixels and two saved captures. Both
+lanes share 13 producer pins, 13 original RN inputs and the same new native host.
+An imperative-only View gets no native Raw in the original filter and one
+delivery in the query lane; separate manual positives establish listener identity.
+Flattened ancestry has a live original ref/Fiber and no native Control. The
+14-case matrix covers capture/bubble, listener mutation and mixed JSX delivery.
+Document-only listeners still have a manual positive and native zero-Raw negative.
+
+Actual re-render retains the original ref/tag/listener. Replacement and remount
+cannot revive old listener authority. B keeps an actual held contact while A
+unmounts, releases it and receives another gesture. Stop removes/releases the
+query and clears native contacts/roots/pending tasks. This certifies teardown,
+not a post-stop query invocation. Injected ScreenTouch input is distinct from
+hardware input.
+
+Shared guards15 plus native guards6, contracts250Node/13Python, static scan,
+22examples2250, consumer30/40, fresh native SDK pack/verify, loader89/21 and
+13actual adapters213 pass. Previous native dispatch181/206 and pointer
+processor/geometry regressions pass on the new host. This slice's CI is pending;
+the preceding integration CI at0478499 is independently audited above.
+
+Next: document/documentElement interest, complete experimental flag combinations
+and visible query-fault cleanup, then other pointer categories and responder gaps.
+Performance, dev renderer, full refs/commands, complete PanResponder,
+hardware/mobile and full release acceptance stay open. Adapter ABI remains
+experimental. No additional checkpoint, complete GF, decision, weight or
+denominator changes. [Scope and platform-specific filters](docs/research/native-pointer-interest.md).
 
 ## M1 — Complete the native UI tree
 

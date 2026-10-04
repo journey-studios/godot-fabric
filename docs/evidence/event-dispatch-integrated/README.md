@@ -69,7 +69,7 @@ The runtime includes resize-driven Surface destruction, unmount/remount and owne
 changes; metadata does not substitute execution. The final independent consumer passes30 build/ownership and40 native checks;
 all22 examples/2250 headless checks pass on the current host. Pointer processor,
 error/projection, focus-command and647-per-variant tag regressions also pass. The [preceding hosted tag correction](../event-dispatch/report.json)
-is confirmed at897b127; hosted CI for this new integration remains pending.
+is confirmed at897b127. [Hosted integration CI](https://github.com/journey-studios/godot-fabric/actions/runs/37223152112) passed all five jobs at0478499. Its audited artifact confirms the same 181/206 check IDs, 16 committed pins, 13 original RN inputs and bundle identities; both hosted lanes use one independently built native host. Registry warnings are zero; glog initialization/destructor warnings remain. Hosted lanes are headless and do not cover the subsequent pointer-interest query.
 
 Imperative pointer native interest remains zero with a manual positive. Public
 flags stay disabled. Four original experimental responder differences, the new

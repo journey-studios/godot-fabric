@@ -30,8 +30,13 @@ export function renderPointerOverlay(header, source, bindingHeader, bindingSourc
   void clearCaptureTargetsForSurfaceForGodot(SurfaceId surfaceId);
   // Active pointers, pending capture, active capture, hover trackers.
   std::array<std::size_t, 4> pointerStateCountsForGodot() const;
+  using GodotListenerInterest = std::function<bool(const ShadowNode &, std::size_t)>;
+  void setListenerInterestForGodot(GodotListenerInterest interest) {
+    godotListenerInterest_ = std::move(interest);
+  }
 
  private:
+  GodotListenerInterest godotListenerInterest_;
   // A callback can retire one pointer while its original intercept is running.
   std::unordered_map<PointerIdentifier, std::shared_ptr<bool>> godotPointerLifetimes_;
 `);
@@ -39,6 +44,29 @@ export function renderPointerOverlay(header, source, bindingHeader, bindingSourc
 
 namespace {
 struct GodotPointerRetired final {};
+}
+
+// The default callback is empty. The opt-in SDK query reads existing original
+// EventTarget Maps without creating refs, dispatching events or cloning props.
+static bool hasPointerDownInterestForGodot(
+    const ShadowNode &target, const UIManager &uiManager,
+    const PointerEventsProcessor::GodotListenerInterest &query) {
+  if (!query) return false;
+  auto interested = [&query](const ShadowNode &node) {
+    return query(node, static_cast<std::size_t>(ViewEvents::Offset::PointerDown)) ||
+        query(node, static_cast<std::size_t>(ViewEvents::Offset::PointerDownCapture));
+  };
+  if (interested(target)) return true;
+  std::shared_ptr<const ShadowNode> root;
+  uiManager.getShadowTreeRegistry().visit(target.getSurfaceId(), [&root](const ShadowTree &tree) {
+    root = tree.getCurrentRevision().rootShadowNode;
+  });
+  // All JS queries run after the registry's visit lock has been released.
+  if (!root) return false;
+  const auto ancestors = target.getFamily().getAncestors(*root);
+  for (auto it = ancestors.rbegin(); it != ancestors.rend(); ++it)
+    if (interested(it->first.get())) return true;
+  return false;
 }
 
 void PointerEventsProcessor::removePointerForGodot(PointerIdentifier pointerId) {
@@ -138,7 +166,9 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
     '  // Capture notifications may commit removal of the native hit target.\n  if (targetNode) targetNode = uiManager.getNewestCloneOfShadowNode(*targetNode);\n  if (!targetNode && type == "topPointerDown") return;\n\n  if (type == "topClick") {\n    if (!targetNode) return;');
   source = replaceOnce(source,
     '    if (shouldEmitPointerEvent(*targetNode, type, uiManager)) {',
-    '    if (targetNode && shouldEmitPointerEvent(*targetNode, type, uiManager)) {');
+    `    if (targetNode && (shouldEmitPointerEvent(*targetNode, type, uiManager) ||
+        (type == "topPointerDown" && hasPointerDownInterestForGodot(
+            *targetNode, uiManager, godotListenerInterest_)))) {`);
   source = replaceOnce(source,
     '    unregisterActivePointer(pointerEvent);\n  }\n}',
     `    unregisterActivePointer(pointerEvent);

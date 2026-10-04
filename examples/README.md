@@ -62,6 +62,17 @@ fixture/driver and commands. It compares original versus integrated native
 delivery, batching, faults and retirement, with two actual captures. It is
 outside the ordinary launcher catalog while public EventTarget flags remain off.
 
+The separate [pointer-interest validation](pointer-interest/README.md) compares
+original/current native View `pointerdown` interest using original listener maps.
+It has its own fixture and `npm run test:pointers:interest` command, outside the
+launcher catalog. Its [receipt](../docs/evidence/pointer-interest/README.md)
+records 193/230 headless and 260 current viewport checks; public flags stay off
+and document-only/other pointer categories remain open.
+
+| Pointerdown interest: initial | After listener-driven React updates |
+| --- | --- |
+| [![Original refs in the native pointerdown interest fixture](../docs/evidence/pointer-interest/initial.png)](pointer-interest/README.md) | [![Native pointerdown fixture after listener-driven React updates](../docs/evidence/pointer-interest/updated.png)](pointer-interest/README.md) |
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

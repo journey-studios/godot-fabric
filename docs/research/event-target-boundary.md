@@ -1,8 +1,8 @@
 # Imperative EventTarget at the RN 0.87.1 boundary
 
-Status: executed historical controls and an isolated native renderer integration
-experiment. Public capability remains off; this does not certify complete
-experimental RN APIs. The earlier macOS arm64/headless original-ref fixture
+Status: executed historical controls, isolated native renderer integration and
+View-pointerdown interest validation. Public capability remains off; this does
+not certify complete experimental RN APIs. The earlier macOS arm64/headless original-ref fixture
 passes 119 checks and reproduces three independent gaps.
 [Original-ref receipt](../evidence/event-target/README.md).
 
@@ -17,9 +17,13 @@ touch-tag lookup bug in the production legacy path.
 Those controls precede the new
 [isolated native example](../../examples/event-target/README.md). Its basic and
 adversarial runs exercise injected Godot input through the real event queue and
-the original batched renderer callback. Final counts, digests, captures and
-terminal-registry retirement acceptance require the separate integration
-receipt; the historical receipts do not certify this newer path.
+the original batched renderer callback. Its separate
+[integration receipt](../evidence/event-dispatch-integrated/README.md) records
+181/206 original/integrated headless checks, 236 viewport checks, captures and
+terminal-registry retirement controls. The historical receipts do not certify
+that newer path. The subsequent [View-pointerdown interest experiment](native-pointer-interest.md)
+has its own 193/230 headless and 260 current viewport checks; neither isolated
+selection enables the public flags.
 
 ## Three separately validated boundaries
 
@@ -35,7 +39,9 @@ receipt; the historical receipts do not certify this newer path.
 2. Original `addEventListener` stores JS listener state without declaring native
    ViewProps interest. The pointer processor filters several event kinds by
    declarative pointer props in the ancestry. An acceptance fixture with empty
-   JSX handlers would hide the imperative-only emission gap.
+   JSX handlers would hide the imperative-only emission gap. The later isolated
+   query reads original maps to qualify View-path pointerdown capture/bubble;
+   document-only interest and other event categories remain separate gaps.
 3. `getEventTargetParent` caches the first parent, including null, on the target.
    No invalidation was found in this pinned implementation. NativeDOM ancestry
    changes after commit/unmount, but retained refs may continue using the cached
@@ -75,10 +81,14 @@ The original dispatcher also performs responder negotiation; a lateral subscribe
 would duplicate callbacks or bypass the original batch. Broad responder/focus
 regressions and public enablement still require their own acceptance.
 
-For imperative-only pointer listeners, an initial per-runtime capability could
-bypass the declarative-interest optimization while preserving original pointer
-negotiation/capture. Its delivery cost must be explicit. A later subscription
-bridge may restore efficient native filtering; do not claim that bridge exists.
+The implemented [pointer-interest slice](native-pointer-interest.md) appends a
+hash-guarded pure query to original EventTarget source. A private shared-toolchain
+opt-in asks the original phase/type maps for live View-path `pointerdown`
+registrations while preserving the processor's negotiation, capture and path
+checks. It does not bypass all filtering, wrap listener methods, create another
+registry or synthesize ViewProps handlers. Once/abort/removal stay in the original
+maps. Both interest variants use the same experimental dispatcher and original
+flags; the only selection change is `pointerInterestMode`.
 
 The native acceptance must use real refs in nested/flattened trees, two roots,
 listeners with **no JSX helper**, JSX plus imperative delivery exactly once,
@@ -153,7 +163,8 @@ controls proving that the installed listeners are valid.
 The blue target has no JSX touch listener on its path. Its native imperative
 delivery distinguishes renderer selection without a helper masking the result.
 The orange imperative-only pointer target remains a native negative in both
-selections: the unchanged pointer filter still reads declarative ViewProps.
+selections of this earlier fixture, which does not opt into the later interest
+query: its pointer filter still reads declarative ViewProps.
 Native touches are emitted without that pointer-interest filter, so a touch
 positive cannot be generalized to pointers or arbitrary native event types.
 
@@ -170,11 +181,13 @@ Adversarial native-path runs exercise cancellation and two contacts inside one
 responder, normal listener faults, combined responder/normal faults with exact
 host error delivery, and a recovery gesture. A real React commit removes the pink
 touched target, checks cancellation and retained-ref ancestry, then rejects a
-late physical up. Held-root teardown checks native responder release and React
+late injected up. Held-root teardown checks native responder release and React
 cleanup while a second root survives. Queued terminal delivery during reentrant
-leaf/root retirement has a separate previous-host/corrected-host acceptance
-control; writing that control or seeing clean JS callbacks does not establish
-that a native crash or registry-order bug is fixed.
+leaf/root retirement has separately executed previous-host/corrected-host
+controls. The [integration receipt](../evidence/event-dispatch-integrated/README.md)
+records the preceding-host registry failure, an intermediate crashing host and
+the corrected queue/child-removal behavior. Those bounded controls do not
+certify arbitrary reentrant lifetime behavior.
 
 Native touch arrays are root-local in this host. The cross-root sequence keeps
 that transport separate from explicit original dispatcher oracles constructed
@@ -187,9 +200,34 @@ These are isolated validation runs with injected input, not physical touchscreen
 or mobile certification. The four original responder differences remain open,
 and complete TextInput/focus/Pressability, dev renderer, reentrant lifetime,
 performance and public capability acceptance remain separate gates. The
-[example](../../examples/event-target/README.md) maps the visual cases; its final
-integration receipt must supply the execution counts, source/native digests and
-verified capture evidence before those results are promoted to roadmap status.
+[example](../../examples/event-target/README.md) maps the visual cases; the
+[integration receipt](../evidence/event-dispatch-integrated/README.md) supplies
+execution counts, source/native digests and verified captures.
+
+## Subsequent View-pointerdown interest validation
+
+The [pointer-interest example](../../examples/pointer-interest/README.md) isolates
+native interest from that dispatcher selection. Both runs enable original flags
+before ref imports and use the same original batched dispatcher, native host,
+authored fixture and pinned RN inputs. Only current interest installs the Map
+query. Its [receipt](../evidence/pointer-interest/README.md) records 193 original /
+230 current headless checks and 260 current viewport checks, including 28 pixels
+and two 820×280 frames. Current-only membership assertions mean the complete
+check-ID lists differ; the original lane passes explicit absence controls.
+
+ScreenTouch down/up/cancel enters through real Godot native input; this fixture
+injects no ScreenDrag. Capture/bubble listeners without JSX helpers qualify
+pointerdown only in current mode, including a flattened logical View ancestor.
+Mixed JSX/imperative delivery retains exact Raw/callback identities. Once,
+duplicate options, abort, peer/final removal, rerender and retirement use original
+listener storage. Stop proves the installed query is removed and recorded state
+is empty; it does not call a stopped query and assert false.
+
+The document-only listener is a real original manual positive with zero native
+callbacks/Raw down in both variants. DocumentElement-only interest, other pointer
+categories, arbitrary query-fault cleanup, the full flag matrix, performance, public enablement
+and hardware/mobile remain open. This host/pin finding does not establish a
+universal Android/iOS emission defect or complete W3C PointerEvent support.
 
 ## Pinned primary sources
 

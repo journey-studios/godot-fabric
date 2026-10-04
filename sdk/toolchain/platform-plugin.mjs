@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { transformAsync } from "@babel/core";
 import {renderEventTargetParentOverlay} from "./rn-event-target-overlay.mjs";
 import {renderRendererTagOverlay} from "./rn-renderer-tag-overlay.mjs";
+import {renderPointerInterestOverlay} from "./rn-pointer-interest-overlay.mjs";
 
 // Only this exact runtime import is SDK-owned; arbitrary package subpaths keep
 // the consumer's dependency rules and cannot accidentally escape into the SDK.
@@ -12,13 +13,17 @@ export function isSdkOwnedSpecifier(specifier) {
 
 // Shared native-host seams. Consumers and the laboratory use the same facade
 // and original RN transforms; only their application entrypoints differ.
-export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode = "current", rendererTagMode = "current", nativeDispatchMode = "original"} = {}) {
+export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode = "current", rendererTagMode = "current", nativeDispatchMode = "original", pointerInterestMode = "original"} = {}) {
   if (eventTargetParentMode !== "current" && eventTargetParentMode !== "original")
     throw new Error("E_EVENT_TARGET_OVERLAY_MODE: expected current or original");
   if (rendererTagMode !== "current" && rendererTagMode !== "original")
     throw new Error("E_RENDERER_TAG_OVERLAY_MODE: expected current or original");
   if (nativeDispatchMode !== "original" && nativeDispatchMode !== "experimental")
     throw new Error("E_RENDERER_NATIVE_DISPATCH_MODE: expected original or experimental");
+  if (pointerInterestMode !== "original" && pointerInterestMode !== "current")
+    throw new Error("E_POINTER_INTEREST_OVERLAY_MODE: expected original or current");
+  if (pointerInterestMode === "current" && nativeDispatchMode !== "experimental")
+    throw new Error("E_POINTER_INTEREST_DISPATCH: current interest requires experimental native dispatch");
   const rnRoot = path.dirname(resolveSdk("react-native/package.json"));
   return {
     name: "godot-platform",
@@ -66,8 +71,19 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
       });
       builder.onResolve({ filter: /^react(?:\/.*)?$|^react-native\// }, ({ path: specifier }) => ({ path: resolveSdk(specifier) }));
       builder.onLoad({ filter: /\.js$/ }, async ({ path: filename }) => {
+        if (filename === path.join(platformRoot, "pointer-listener-query.js") && pointerInterestMode === "current")
+          return {loader: "js", contents: `
+import {hasPointerDownListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
+import * as Flags from ${JSON.stringify(path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js"))};
+export function installPointerListenerQuery() {
+  if (Flags.enableImperativeEvents() && Flags.enableNativeEventTargetEventDispatching())
+    godotInstallPointerListenerQuery((target, offset) =>
+      (offset === 34 || offset === 35) && hasPointerDownListenerForGodot(target, offset === 35));
+}`};
         if (!filename.startsWith(rnRoot + path.sep)) return;
         let source = await readFile(filename, "utf8");
+        if (filename === path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))
+          source = renderPointerInterestOverlay(source, pointerInterestMode);
         if (filename === path.join(rnRoot, "src/private/webapis/dom/events/internals/EventTargetInternals.js"))
           source = renderEventTargetParentOverlay(source, eventTargetParentMode);
         if (filename === path.join(rnRoot, "Libraries/Renderer/implementations/ReactFabric-prod.js"))

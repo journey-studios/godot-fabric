@@ -7,6 +7,9 @@ import RawEventEmitter from "react-native/Libraries/Core/RawEventEmitter";
 import * as PublicInstances from "react-native/Libraries/ReactNative/ReactFabricPublicInstance/ReactFabricPublicInstance";
 import NativeDOM from "../node_modules/react-native/src/private/webapis/dom/nodes/specs/NativeDOM";
 import dispatchNativeEvent from "../node_modules/react-native/src/private/renderer/events/dispatchNativeEvent";
+import {installPointerListenerQuery} from "./pointer-listener-query";
+
+installPointerListenerQuery();
 
 // This is the host-platform seam, not a replacement reconciler. Attribute
 // diffing, event registry and the renderer itself remain upstream React Native.

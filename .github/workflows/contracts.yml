@@ -163,6 +163,18 @@ jobs:
             build/event-dispatch-integrated-integrated.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:services
+      - run: npm run test:pointers:interest
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-interest
+          path: |
+            build/pointer-interest-original-report.json
+            build/pointer-interest-current-report.json
+            build/pointer-interest-comparison.json
+            build/pointer-interest-original.log
+            build/pointer-interest-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

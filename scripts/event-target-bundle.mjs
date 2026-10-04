@@ -10,6 +10,7 @@ import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {renderEventTargetParentOverlay} from "../sdk/toolchain/rn-event-target-overlay.mjs";
 import {renderRendererTagOverlay} from "../sdk/toolchain/rn-renderer-tag-overlay.mjs";
+import {renderPointerInterestOverlay} from "../sdk/toolchain/rn-pointer-interest-overlay.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(import.meta.url);
@@ -34,7 +35,7 @@ const upstreamFiles = [
 
 // Each output is a separate Hermes runtime's immutable flag configuration.
 // This helper never writes build/app.js and performs no native build or run.
-async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", nativeDispatchMode = "original", defines = {}, sources, extraUpstreamFiles = []}) {
+async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", nativeDispatchMode = "original", pointerInterestMode = "original", defines = {}, sources, extraUpstreamFiles = []}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundles = {};
@@ -44,7 +45,7 @@ async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMo
       outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
       define: {"process.env.NODE_ENV": '"production"', __DEV__: "false", __EVENT_TARGET_PROBE_MODE__: JSON.stringify(mode), ...defines},
       mainFields: ["main"], resolveExtensions: godotExtensions,
-      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode, nativeDispatchMode})]});
+      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode, nativeDispatchMode, pointerInterestMode})]});
     const inputs = Object.keys(bundled.metafile.inputs);
     for (const file of ["Libraries/Renderer/implementations/ReactFabric-prod.js", "src/private/webapis/dom/events/EventTarget.js",
       "src/private/webapis/dom/nodes/ReactNativeElement.js"])
@@ -61,7 +62,11 @@ async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMo
   const parentSource = await readFile(path.join(rnRoot, parentModule), "utf8");
   const rendererModule = "Libraries/Renderer/implementations/ReactFabric-prod.js";
   const rendererSource = await readFile(path.join(rnRoot, rendererModule), "utf8");
-  const receipt = {format: "godot-fabric.event-target-probe-bundles/v1", parentMode, rendererTagMode, nativeDispatchMode, bundles,
+  const interestModule = "src/private/webapis/dom/events/EventTarget.js";
+  const interestSource = await readFile(path.join(rnRoot, interestModule), "utf8");
+  const receipt = {format: "godot-fabric.event-target-probe-bundles/v1", parentMode, rendererTagMode, nativeDispatchMode, pointerInterestMode, bundles,
+    pointerInterestOverlay: {module: interestModule, originalSha256: digest(interestSource),
+      generatedSourceSha256: digest(renderPointerInterestOverlay(interestSource, pointerInterestMode))},
     parentOverlay: {module: parentModule, originalSha256: digest(parentSource),
       generatedSourceSha256: digest(renderEventTargetParentOverlay(parentSource, parentMode))},
     rendererTagOverlay: {module: rendererModule, originalSha256: digest(rendererSource),
@@ -111,6 +116,22 @@ export async function bundleIntegratedEventDispatchProbe({integrationMode = "int
       "scripts/event-target-bundle.mjs", "sdk/toolchain/platform-plugin.mjs",
       "sdk/toolchain/rn-event-target-overlay.mjs", "sdk/toolchain/rn-renderer-tag-overlay.mjs",
       "src/private-interface.js", "native/application_runtime.cpp"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js"]});
+}
+
+export async function bundlePointerInterestProbe({interestMode = "current"} = {}) {
+  assert.ok(["original", "current"].includes(interestMode));
+  return bundleProbe({entryPoint: "tests/pointer-interest-fixture.jsx", modes: ["enabled"],
+    prefix: "pointer-interest", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: "experimental", pointerInterestMode: interestMode,
+    defines: {__POINTER_INTEREST_PROBE_MODE__: JSON.stringify(interestMode)},
+    sources: ["tests/event-target-bootstrap.js", "tests/pointer-interest-fixture.jsx",
+      "tests/pointer-interest-probe.gd", "tests/pointer-interest-native.test.mjs",
+      "scripts/event-target-bundle.mjs", "sdk/toolchain/platform-plugin.mjs",
+      "sdk/toolchain/rn-event-target-overlay.mjs", "sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs", "src/private-interface.js",
+      "src/pointer-listener-query.js", "native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"],
     extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
       "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js"]});
 }

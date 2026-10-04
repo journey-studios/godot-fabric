@@ -1827,9 +1827,72 @@
     }
   },
   "hosted": {
-    "status": "pending",
-    "precedingTagFixRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221",
-    "precedingRunDoesNotCoverThisSlice": true
+    "status": "passed-and-artifact-audited",
+    "run": 37223152112,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112",
+    "headSha": "04784991eafadd4e4b3ad3be6df951b2651f0b1e",
+    "jobs": [
+      {
+        "name": "contracts",
+        "conclusion": "success"
+      },
+      {
+        "name": "native-cold-start",
+        "conclusion": "success"
+      },
+      {
+        "name": "reference-ios",
+        "conclusion": "success"
+      },
+      {
+        "name": "reference-android",
+        "conclusion": "success"
+      },
+      {
+        "name": "parity-comparison",
+        "conclusion": "success"
+      }
+    ],
+    "artifact": {
+      "name": "native-event-dispatch-integrated",
+      "id": 11310948529,
+      "bytes": 300719,
+      "sha256": "74b01d80f16cf855ce6c9cf9042a864656ef11898635640d31447438352962b3"
+    },
+    "checks": {
+      "original": 181,
+      "integrated": 206
+    },
+    "checkIdSha256": {
+      "original": "b711545a6418bc022b676566199fe9a4cd5fe6556a52c995d5d7da9d0887b39c",
+      "integrated": "cc6424674694bc172cf476f4d95bfb88fb72a5dbed1a12261d2d7b487bf6459d"
+    },
+    "rawReportSha256": {
+      "original": "599b719716053c5cb5343a99c45fd19c66c4d4eee30e0450f261ae5c7bbcba78",
+      "integrated": "f997c5468d117111bdf4bec9cf71cf83890d0a06822f1b8d3348af28c74fb6bf"
+    },
+    "nativeHostSha256": "0c4d871366076b5988ad695693e097790fce9ed7d02bf0465420ea792ea69701",
+    "verifiedAgainstImplementation": "22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e",
+    "curatedSourcePinCount": 16,
+    "producerSourcePinCount": 10,
+    "originalReactNativeSourceCount": 13,
+    "producerAndCuratedPinsMatchCommits": true,
+    "bundleHashesAndGeneratedRendererMatchCurated": true,
+    "checkIdsMatchLocalAndCurated": true,
+    "comparisonContainsBothPublishedReports": true,
+    "sameNativeHostWithinCi": true,
+    "registryWarningCount": 0,
+    "expectedNativeErrorsPerVariant": 2,
+    "errorsInConfiguredOrder": true,
+    "crashAndLeakMarkersAbsent": true,
+    "finalRootsWorkTimersRoutingProcessorZero": true,
+    "limitations": [
+      "Headless lanes only; no hosted graphical or pixel proof.",
+      "Native binary is independently built and differs from local native bytes; identity comes from the hosted producer receipt.",
+      "Mobile jobs execute existing core reference fixtures, not Godot mobile or native EventTarget mobile parity.",
+      "Initialization/destructor glog warnings remain; only registry warnings are asserted zero.",
+      "This run covers 0478499/22770b4, not the subsequent native pointer-listener query."
+    ]
   },
   "limitations": [
     "Public EventTarget flags remain disabled; shared selection is an internal opt-in experiment",

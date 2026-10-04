@@ -154,7 +154,8 @@ The [current-ancestry correction](event-target-ancestry/README.md) then executes
 102 checks in each original/corrected variant against the same native host.
 Real NativeDOM removals, root retirement/remount and preserved listeners are
 separate from a synchronous mutable-parent graph. Shared bundling fixes the
-cache; public EventTarget flags and native delivery remain pending.
+cache. At that checkpoint native delivery was still pending; public EventTarget
+flags remain off. Later native integration has its own receipt below.
 
 The [native touch-tag correction](event-dispatch/README.md) executes 647 identical
 checks per renderer variant. The original lookup fails two inside-contact
@@ -238,5 +239,18 @@ The [native EventTarget integration record](event-dispatch-integrated/README.md)
 adds 181/206 original/integrated headless checks, 236 viewport checks,
 28 pixels/two captures, exclusive batched native delivery and two native lifetime
 fixes. Its preceding-host registry failure and reentrant crash controls are
-separate. Public flags and native pointer interest remain open; this starts
+separate. Public flags remain off; this starts
 GF-06 alongside continuing GF-05/GF-07/GF-08/GF-13 work.
+
+The subsequent [native pointer-interest record](pointer-interest/README.md)
+adds 193 original / 230 current headless checks and 260 current macOS viewport
+checks, with 28 pixel assertions and two 820×280 captures. A query reads the
+original EventTarget phase/type maps to qualify View-path `pointerdown` in an
+internal opt-in; listener methods, once/abort/removal and ViewProps are preserved.
+Manual document-only dispatch is positive while native callbacks/Raw down remain
+zero. ScreenTouch down/up/cancel, current flattened View ancestry, removal,
+rerender, separate roots and query removal at stop have executed controls.
+The default installs no query. DocumentElement/other pointer categories,
+arbitrary query-fault cleanup, the full flag matrix, performance, public enablement and hardware/mobile
+remain open. This later local record does not change the initial snapshot's
+hashes or establish hosted validation for the new slice.

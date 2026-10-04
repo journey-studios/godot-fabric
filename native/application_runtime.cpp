@@ -205,6 +205,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::unique_ptr<rn::TimerManager> timer_manager;
   fabric_godot::TimerRegistry *timer_registry{}; // Owned by TimerManager.
   std::optional<jsi::Function> clear_timer;
+  std::optional<jsi::Function> pointer_listener_query;
   uint32_t dispatching_timer{};
   std::map<int, jsi::Function> frame_callbacks;
   int frame_callbacks_run{};
@@ -654,6 +655,35 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (handle.isUndefined()) return jsi::Value::null();
       return handle;
     });
+    bind("godotInstallPointerListenerQuery", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
+      // Internal opt-in toolchain seam. The pinned SDK query reads the original
+      // EventTarget Maps; it never dispatches an event or maintains another map.
+      if (inactive() || count != 1 || !args[0].isObject() || !args[0].asObject(rt).isFunction(rt))
+        throw jsi::JSError(rt, "Pointer listener query requires one function in a live application");
+      if (pointer_listener_query) throw jsi::JSError(rt, "Pointer listener query is already installed");
+      pointer_listener_query.emplace(args[0].asObject(rt).asFunction(rt));
+      pointer_processor().setListenerInterestForGodot([this](const rn::ShadowNode &node, std::size_t offset) {
+        // Only pointerdown is opted in by this slice. Other native filter
+        // categories retain their preceding behavior until separately verified.
+        if (inactive() || !pointer_listener_query || (offset != 34 && offset != 35)) return false;
+        auto root = roots.find(node.getSurfaceId());
+        if (root == roots.end() || root->second->stopping) return false;
+        auto current = ui->getNewestCloneOfShadowNode(node);
+        if (!current) return false;
+        auto handle = current->getFamily().getInstanceHandle(*runtime);
+        if (!handle.isObject()) return false;
+        auto state = handle.asObject(*runtime).getProperty(*runtime, "stateNode");
+        if (!state.isObject()) return false;
+        auto canonical = state.asObject(*runtime).getProperty(*runtime, "canonical");
+        if (!canonical.isObject()) return false;
+        auto instance = canonical.asObject(*runtime).getProperty(*runtime, "publicInstance");
+        if (!instance.isObject()) return false;
+        auto result = pointer_listener_query->call(*runtime, instance, static_cast<double>(offset));
+        if (!result.isBool()) throw jsi::JSError(*runtime, "Pointer listener query must return a boolean");
+        return result.getBool();
+      });
+      return jsi::Value::undefined();
+    });
     bind("godotMetrics", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (inactive() || count != 1) return jsi::Value::null();
       auto tag = native_tag(args[0]);
@@ -847,6 +877,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     stop_requested = false;
     stopping = true;
+    pointer_processor().setListenerInterestForGodot({});
+    pointer_listener_query.reset();
     host_phase_pending = false;
     surface_phase_pending = false;
     game_services->stop();
@@ -1607,6 +1639,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     folly::dynamic result = folly::dynamic::object("runtimeId", static_cast<int64_t>(runtime_id))
         ("rootCount", roots.size())("bundleEvaluations", bundle_evaluations)("stopped", stopped)
         ("pendingTimers", timer_registry->size())("pendingWork", work.size())
+        ("pointerListenerQueryInstalled", pointer_listener_query.has_value())
         ("timerEngine", "react-native/TimerManager")("windowListener", window_listener.has_value())
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())
