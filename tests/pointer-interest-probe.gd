@@ -124,7 +124,9 @@ func run_case(kind: String, target: String, expected_current: Array, expected_ma
   var terminal_before := native(surfaces.A)
   await inject("A", target, "end")
   verify_release("A", terminal_before, "end", prefix)
-  check(state().events.size() == down.events.size(), prefix + "/Real up does not duplicate the pointerdown callback")
+  var terminal := state()
+  check(terminal.events.filter(func(row: Dictionary) -> bool: return row.type == "pointerdown").size() == down.events.size(), prefix + "/Real up does not duplicate the pointerdown callback")
+  stages[prefix + "/terminal"] = {"react": terminal, "before": terminal_before, "after": native(surfaces.A)}
   if kind in ["once", "remove-peer"]:
     js("arm('A',%s,%s)" % [JSON.stringify(prefix + "/next"), JSON.stringify(target)])
     await inject("A", target)

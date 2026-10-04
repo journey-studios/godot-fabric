@@ -12,15 +12,21 @@ const listenerStorageSpan = `function getListenersForPhase(
     : // $FlowExpectedError[prop-missing]
       eventTarget[BUBBLING_LISTENERS_KEY];
 }`;
-const pointerDownQuery = `// Godot: inspect original pointerdown registrations without invoking listeners.
-export function hasPointerDownListenerForGodot(target, capture) {
+const pointerQueries = `// Godot: inspect original Down/Up registrations without invoking listeners.
+function hasPointerListenerForGodot(target, capture, type) {
   if (target == null) return false;
-  const listeners = getListenersForPhase(target, capture)?.get('pointerdown');
+  const listeners = getListenersForPhase(target, capture)?.get(type);
   if (listeners == null) return false;
   for (const listener of listeners.values()) {
     if (!listener.removed) return true;
   }
   return false;
+}
+export function hasPointerDownListenerForGodot(target, capture) {
+  return hasPointerListenerForGodot(target, capture, 'pointerdown');
+}
+export function hasPointerUpListenerForGodot(target, capture) {
+  return hasPointerListenerForGodot(target, capture, 'pointerup');
 }
 `;
 
@@ -34,5 +40,5 @@ export function renderPointerInterestOverlay(source, mode = "original") {
     throw new Error("E_POINTER_INTEREST_OVERLAY_SPAN: expected one pinned listener-storage span");
   if (createHash("sha256").update(source).digest("hex") !== originalHash)
     throw new Error("E_POINTER_INTEREST_OVERLAY_INPUT: RN 0.87.1 EventTarget hash mismatch");
-  return mode === "original" ? source : source + "\n" + pointerDownQuery;
+  return mode === "original" ? source : source + "\n" + pointerQueries;
 }

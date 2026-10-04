@@ -127,9 +127,20 @@ previous host loses three same-batch TouchStart/Raw/React outcomes; the correcte
 host passes 65 headless and 85 viewport checks, including actual counter updates.
 [Its evidence](docs/evidence/pointer-resolver-faults/README.md) separates the
 executed one-shot getter from broader resolver/reentrancy and mobile gaps.
-Public flags remain off; hosted CI for this correction is pending.
+Public flags remain off; [its hosted CI](docs/evidence/pointer-resolver-faults/hosted-ci.json)
+passed five jobs, including the independently audited 65-check getter artifact.
 
 ![A's React TouchStart update survives a ref getter failure](docs/evidence/pointer-resolver-faults/updated.png)
+
+The isolated [pointerup example](examples/pointer-up/README.md) extends native
+interest to original View Up listener Maps. Bubble and capture-only listeners
+receive one trusted event without a JSX pointer helper, while original
+TouchEnd/Raw and terminal cleanup remain intact. Its
+[evidence](docs/evidence/pointer-up/README.md) records 62 headless / 90 viewport
+checks, 24 actual pixels and the preceding host's eight failures with the same
+current SDK bundle. Public flags remain off; Document Up, other flag branches
+and broader event/lifecycle acceptance are open. All 16 proportional regression
+commands and fresh SDK pack/verify passed; this Up slice’s hosted CI is pending.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -286,6 +297,16 @@ The 760×220 frames have 20 exact pixel assertions. A changes from 0 to 2 after
 its original Document capture/bubble callbacks, while B remains 0. The
 [receipt](docs/evidence/pointer-documents/README.md) keeps later capture-only,
 isolation, retirement and root-fault controls separate from that captured frame.
+
+| Pointerup interest: initial | A receives Up after B's independent touch gesture |
+| --- | --- |
+| [![Two native roots with zero TouchStart and Up counters](docs/evidence/pointer-up/initial.png)](examples/pointer-up/README.md) | [![Both yellow TouchStart counters are one; only A's green Up counter is one](docs/evidence/pointer-up/updated.png)](examples/pointer-up/README.md) |
+
+These 680×160 native frames have 24 fixed pixel assertions and independently
+decoded PNG checks. Yellow follows TouchStart; green follows trusted Up. The
+updated stage has starts A1/B1 and ups A1/B0, before capture-only and Cancel.
+The [receipt](docs/evidence/pointer-up/README.md) separates manual installation
+control from real native delivery and keeps wider acceptance open.
 
 ## Write React
 

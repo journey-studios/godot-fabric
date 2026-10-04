@@ -5,6 +5,7 @@ import {readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
+import {assertTerminalInterestQueries} from "./pointer-terminal-query-assertions.mjs";
 import {bundlePointerResolverFaultProbe} from "../scripts/event-target-bundle.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 
@@ -100,8 +101,8 @@ test("one native canonical.publicInstance resolver fault cannot discard the foll
   assert.deepEqual(report.expectedErrors, [cause]); assert.equal(report.afterStop.errors.length, 1);
   assert.ok(report.afterStop.errors[0].includes(cause));
   assert.equal(bundles.nativeDispatchMode, "experimental"); assert.equal(bundles.pointerInterestMode, "current");
-  assert.equal(Object.keys(bundles.sources).length, 17); assert.equal(Object.keys(bundles.originalReactNativeSources).length, 18);
-  for (const file of ["tests/pointer-resolver-fault-bootstrap.js", "tests/pointer-resolver-fault-fixture.jsx",
+  assert.equal(Object.keys(bundles.sources).length, 18); assert.equal(Object.keys(bundles.originalReactNativeSources).length, 18);
+  for (const file of ["tests/pointer-terminal-query-assertions.mjs", "tests/pointer-resolver-fault-bootstrap.js", "tests/pointer-resolver-fault-fixture.jsx",
     "tests/pointer-resolver-fault-probe.gd", "tests/pointer-resolver-fault-native.test.mjs", "tests/pointer-query-fault-bootstrap.js",
     "tests/pointer-query-fault-fixture.jsx", "tests/pointer-query-fault-probe.gd"])
     assert.match(bundles.sources[file], /^[0-9a-f]{64}$/, "Every actual producer, including reused helpers, is pinned: " + file);
@@ -144,7 +145,7 @@ test("one native canonical.publicInstance resolver fault cannot discard the foll
     event(down, "pointerdown-bubble", "topPointerDown"); event(down, "touchstart", "topTouchStart"); clean(down);
     assert.equal(down.panels[owner].starts, down.baselineStarts + 1);
     assert.deepEqual(labels(terminal), ["touchend"]); event(terminal, "touchend", "topTouchEnd"); clean(terminal);
-    assert.deepEqual(terminal.query.rows, []);
+    assertTerminalInterestQueries(terminal.query.rows);
   }
   for (const id of ["positive-before-getter", prefix]) {
     const manual = report.stages[id + "/manual"];
@@ -179,7 +180,7 @@ test("one native canonical.publicInstance resolver fault cannot discard the foll
         "Both native hosts consume identical executed JS bundle bytes");
       assert.deepEqual(original.provenance.bundles.originalReactNativeSources, bundles.originalReactNativeSources);
       for (const [file, sha256] of Object.entries(bundles.sources))
-        if (file !== "native/application_runtime.cpp") assert.equal(original.provenance.bundles.sources[file], sha256,
+        if (!["native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"].includes(file)) assert.equal(original.provenance.bundles.sources[file], sha256,
           "Executed old/new native hosts share unchanged reproducer inputs: " + file);
       assert.notEqual(original.provenance.nativeHostSha256, report.provenance.nativeHostSha256);
     }

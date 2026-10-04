@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Pointerup: gap nativo reproduzido, correção View/36–37 em execução"
+    "focusTitle": "Pointerup View validado; próximos: Document Up e matriz de flags"
   },
-  "updatedAt": "2026-10-04T22:07:17.914519+00:00",
+  "updatedAt": "2026-10-04T22:39:06.634151+00:00",
   "source": {
-    "commit": "b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
-    "scope": "Getter CI auditada: cinco jobs, checkout 8ce9a862 e 23 pins; 12 reports/3.400 checks. Pages 37238403321 publicou cfca02b, JSON público/local completos conferidos. Novo gap nativo Up reproduzido: 54/62 com oito falhas normativas View/both flags; TouchEnd/Raw e cleanup continuam verdes. Correção Up pendente, controle negativo preservado; nenhum GF/checkpoint/peso/denominador alterado.",
+    "commit": "3ca4174667367c66a914a31c677df4ff221e1ceb",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/3ca4174667367c66a914a31c677df4ff221e1ceb",
+    "scope": "Up View/both flags: 62/62 headless e 90/90 viewport, 24 pixels e dois PNGs reais; host anterior 54/62 com oito falhas, mesmo SDK atual e 18 fontes RN. Só C++/overlay nativo diferem entre 16 produtores. Os 16 comandos de regressão passaram, incluindo SDK novo, consumer e 13 adapters/213 checks. Controles query/getter antigos preservam 12/3 falhas. Execução após 3ca4174; pin da implementação, hosted Up CI e publicação positiva pendentes. SDK ABI/public flags false; nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -362,7 +362,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Uma falha em publicInstance preserva callback TouchStart/Raw/update funcional e exatamente um commit nativo de React (2→3).65checks/85viewport, mesmo bundle/IDs no controle anterior3falhas. Prioridades completas, StrictMode/dev/transitions/Suspense/Activity/stores/paridade ampla abertos. CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados.",
+      "note": "Uma falha em publicInstance preserva callback TouchStart/Raw/update funcional e exatamente um commit nativo de React (2→3).65checks/85viewport, mesmo bundle/IDs no controle anterior3falhas. Prioridades completas, StrictMode/dev/transitions/Suspense/Activity/stores/paridade ampla abertos. CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up original View agora incrementa React em exatamente um commit por terminal (62/90 local); sua CI e o aceite amplo seguem abertos. Regressões de Up e SDK novo passaram em 16 comandos; CI de Up pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -441,7 +441,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Duas raízes compartilham Hermes/query; B completa gesto enquanto A permanece pressionada depois do getterfault. CancelA/nextDownUp/stop balanceados, diagnóstico único mantido.65checks/85viewport. Retire/remount reentrante e demais lifetimes do getter pendentes; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados.",
+      "note": "Duas raízes compartilham Hermes/query; B completa gesto enquanto A permanece pressionada depois do getterfault. CancelA/nextDownUp/stop balanceados, diagnóstico único mantido.65checks/85viewport. Retire/remount reentrante e demais lifetimes do getter pendentes; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up negativo de B realmente consulta seus Maps enquanto A held, termina B e preserva A; stop balanceado passa local (62/90). Regressões de Up e SDK novo passaram em 16 comandos; CI de Up pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -544,7 +544,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Query engloba leiturasstateNode/canonical/publicInstance; executado apenas getterpublicInstance real, descriptor completo restaurado antesthrow e SDK0nesseinstante.7queriesfalse posteriores legítimas.65/85,23pins locais. Types/commands completos, demais slots/proxies/getters/reentrância/hardware/mobile/performance abertos; flags públicas off; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados.",
+      "note": "Query engloba leiturasstateNode/canonical/publicInstance; executado apenas getterpublicInstance real, descriptor completo restaurado antesthrow e SDK0nesseinstante.7queriesfalse posteriores legítimas.65/85,23pins locais. Types/commands completos, demais slots/proxies/getters/reentrância/hardware/mobile/performance abertos; flags públicas off; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up opt-in usa tabela estrita36/37 sobre Maps originais; View/capture-only passa local62/90. Document/flags e demais categorias continuam abertos. Regressões de Up e SDK novo passaram em 16 comandos; CI de Up pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -930,7 +930,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Falha real do resolver não descarta mesmo batch TouchStart/Raw/React; nenhuma entrega pointerdown fabricada. ContatoHeld válido atéCancel; Bhealthy/nextgesture/stop balanceados.65checks/85viewport,16pixels,3negativos anteriores. Up/hover/move/responders/coalescing/flags/reentrância/hardware/mobile abertos; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up reproduzido em View/both flags: 54/62 com oito negativos de callback/Raw/React/query; métodos originais e TouchEnd/cleanup passam. Correção e Document/flags/captured-Up pendentes.",
+      "note": "Up View com ambas as flags passa 62/62 e 90 checks viewport/24 pixels. Host anterior mantém 54/62 com oito negativos no mesmo SDK atual. Bubble 36=true/capture 36=false→37=true, B consultado false sem Up, Raw/React/um commit e cleanup passam. Os 16 comandos de regressão e SDK novo passaram; CI de Up e publicação positiva pendentes. Document/flags/once/remove/abort/captured-Up/DownUpID, move/hover/responders/coalescing/reentrância/mobile/dev/performance continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2817,6 +2817,30 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-up-view-regressions-and-sdk-20261004",
+      "at": "2026-10-04T22:39:06.634151+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Up View 62/62 e viewport 90/90 com 24 pixels; 16 comandos de regressão passaram: contracts 255 Node/13 Python, Document 2723, interest 193/233, query/getter 186/65, integrated 181/206, examples 22/2250, consumer 30/40, SDK pack/verify, loader 89/21 e 13 adapters/213. Controles anteriores query/getter seguem com 12/3 negativos no SDK atual, sem retry Down ou query Cancel. CI de Up e publicação positiva pendentes; sem novo fechamento GF/checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "pointer-up-view-native-current-and-capture-20261004",
+      "at": "2026-10-04T22:19:29.515529+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Local Up View/both flags:62/62 headless e90/90 macOS,24pixels+2counter+2save; A/BtouchStarts0→1/1,Up0→1/0 apósbubble/Bterminal. Controleoldnativea6 comCURRENTSDKbundleigual mantém54/62 e8falhas;18RN e16producers sóCPP+nativeoverlay diferem. Hostcorrigidod855;capture36false→37true;B8queriesfalse;Up/Raw/oneReactcommit/priorityobservada/Cancel/stop passam. Regressões/SDK/CI/publicação positiva ainda pendentes; não há checkpoint/GF novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "pointer-up-view-gap-native-reproduced-20261004",
       "at": "2026-10-04T22:07:17.914519+00:00",

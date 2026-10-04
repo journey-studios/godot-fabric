@@ -84,13 +84,21 @@ func verify_healthy_down(name: String, prefix: String, capture: bool, active_bef
   check(value.query.installations == 1 and value.query.restoredInstaller, prefix + "/One real SDK installation remains active without replacing its installer")
   return value
 
+func negative_up_queries(rows: Array) -> bool:
+  if rows.size() % 2 != 0:
+    return false
+  for index in range(0, rows.size(), 2):
+    if rows[index].offset != 36 or rows[index + 1].offset != 37:
+      return false
+  return rows.all(func(row: Dictionary) -> bool: return row.action == "delegate" and not row.matched and row.resultKind == "boolean" and not row.result)
+
 func verify_terminal(name: String, before: Dictionary, phase: String, prefix: String, active_after: int = 0) -> Dictionary:
   var value := state()
   var label := "touchcancel" if phase == "cancel" else "touchend"
   var type := "topTouchCancel" if phase == "cancel" else "topTouchEnd"
   check(value.events.map(func(row: Dictionary) -> String: return row.label) == [label] and trusted_rows(value) and context_clean(value), prefix + "/Terminal native touch uses the exact original callback and cleans transient fields")
   check(value.raw.size() == 2 and exact_raw(value, type, label), prefix + "/Terminal Raw topic retains its actual native payload identity and timestamp")
-  check(value.query.rows.is_empty(), prefix + "/Up or Cancel never retries pointerdown interest or its consumed fault")
+  check(value.query.rows.is_empty() if phase == "cancel" else negative_up_queries(value.query.rows), prefix + "/Up or Cancel never retries pointerdown interest or its consumed fault")
   var after := native(surfaces[name])
   var app := native(application)
   check(after.pointer.activePointers == 0 and after.pointer.activeTouches == 0 and app.pointerProcessor.active == active_after and app.pointerProcessor.pendingCapture == 0 and app.pointerProcessor.activeCapture == 0 and app.pointerProcessor.hover == active_after and app.pointerRouting.contacts == active_after and app.pointerRouting.active == active_after and app.pointerRouting.stored == active_after,

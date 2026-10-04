@@ -122,17 +122,26 @@ func verify_down(name: String, prefix: String, expected: Array, phases: Array, b
   stages[prefix + "/down"] = {"react": value, "before": before, "after": after, "application": app}
   return value
 
+func negative_up_queries(rows: Array) -> bool:
+  if rows.size() % 2 != 0:
+    return false
+  for index in range(0, rows.size(), 2):
+    if rows[index].offset != 36 or rows[index + 1].offset != 37:
+      return false
+  return rows.all(func(row: Dictionary) -> bool: return row.action == "delegate" and not row.matched and row.resultKind == "boolean" and not row.result)
+
 func verify_terminal(name: String, prefix: String, before: Dictionary, phase: String) -> void:
   var after := native(surfaces[name])
   var app := native(application)
   var value := state()
-  check(value.events.is_empty() and value.raw.is_empty() and value.query.rows.is_empty() and cleanup_valid(value),
+  var queries_valid: bool = value.query.rows.is_empty() if phase == "cancel" or not app.pointerListenerQueryInstalled else negative_up_queries(value.query.rows)
+  check(value.events.is_empty() and value.raw.is_empty() and queries_valid and cleanup_valid(value),
     prefix + "/Terminal does not fabricate a down callback Raw down or interest query")
   check(after.pointer.activePointers == 0 and after.pointer.activeTouches == 0 and app.pointerProcessor.active == 0 and app.pointerProcessor.pendingCapture == 0 and app.pointerProcessor.activeCapture == 0 and app.pointerProcessor.hover == 0 and app.pointerRouting.contacts == 0 and app.pointerRouting.active == 0 and app.pointerRouting.stored == 0,
     prefix + "/Up or Cancel clears all adapter processor and route contact ownership")
   check((after.pointer.pointerCancels == before.pointer.pointerCancels + 1 and after.pointer.cancels == before.pointer.cancels + 1) if phase == "cancel" else (after.pointer.pointerUps == before.pointer.pointerUps + 1 and after.pointer.ends == before.pointer.ends + 1),
     prefix + "/Exactly one native terminal sample is counted on pointer and touch paths")
-  stages[prefix + "/terminal"] = {"react": value, "root": after, "application": app}
+  stages[prefix + "/terminal"] = {"react": value, "root": after, "application": app, "phase": phase}
 
 func gesture(name: String, index: int, prefix: String, expected: Array, phases: Array, phase: String = "end", target: String = "leaf", legacy: bool = false) -> Dictionary:
   js("arm(%s,%s,%s)" % [JSON.stringify(name), JSON.stringify(prefix + "/down"), JSON.stringify(target)])

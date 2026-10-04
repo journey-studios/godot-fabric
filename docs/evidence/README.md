@@ -111,7 +111,21 @@ previous host and passes all 65 on the corrected host. Two actual 680×160 frame
 add 16 pixel assertions, two React-counter assertions and two saves for 85/85
 viewport checks. The descriptor is restored before throwing; broader getter,
 root/reentrant, hardware/mobile and priority acceptance remain open. Public
-flags stay off and this correction's hosted CI remains pending.
+flags stay off; its [hosted CI](pointer-resolver-faults/hosted-ci.json) passed
+five jobs, with the getter artifact independently audited.
+
+The later [original View pointerup record](pointer-up/README.md) extends the
+existing native interest query to original bubble/capture Up Maps. It retains
+62/62 corrected headless and 90/90 viewport checks, with 24 actual pixels/two
+captures. The final current SDK bundle passes on the corrected host and retains
+eight visible normative failures on the preceding host; original TouchEnd/Raw
+and terminal cleanup pass in both. Only two native producer pins differ in that
+paired comparison. The initial earlier-SDK negative receipt remains historical.
+Bubble `36=true` and capture-only `36=false` then `37=true` have independent
+controls. B actually queries false while A remains held; Cancel and stop clean
+up separately. View/both-flags acceptance does not certify Document Up,
+captured/null-target Up, full lifecycle/events, mobile or hardware. Regression,
+SDK and hosted CI acceptance for this slice are pending; public flags stay off.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

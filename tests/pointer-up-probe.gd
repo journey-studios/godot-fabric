@@ -127,8 +127,37 @@ func cancel_control() -> void:
   clean_contact("A", prefix)
   stages[prefix + "/cancel"] = {"react": value, "before": before, "after": after, "application": native(application)}
 
+func capture_frame(filename: String, updated: bool) -> void:
+  if not capture or DisplayServer.get_name() == "headless":
+    return
+  await RenderingServer.frame_post_draw
+  var image := root.get_texture().get_image()
+  var saved := image.save_png("res://build/" + filename)
+  var pixels: Array = []
+  for origin: Vector2i in [Vector2i.ZERO, Vector2i(340, 0)]:
+    var points := [Vector2i(5, 5), Vector2i(75, 55), Vector2i(25, 127), Vector2i(43, 127), Vector2i(25, 145), Vector2i(43, 145)]
+    var colors := ["0f172aff", "2563ebff", "fde047ff", "fde047ff" if updated else "0f172aff", "22c55eff",
+      "22c55eff" if updated and origin == Vector2i.ZERO else "0f172aff"]
+    for index in range(points.size()):
+      var point: Vector2i = origin + points[index]
+      var actual := image.get_pixelv(point).to_html()
+      var expected_color: String = colors[index]
+      check(actual == expected_color, "up-capture/" + filename + "/Actual native pixel " + str(point) + " matches the committed touch and Up counters")
+      pixels.append({"point": [point.x, point.y], "color": actual, "expected": expected_color})
+  var counters: Dictionary = state().panels
+  var expected_start := 1 if updated else 0
+  var expected_up := 1 if updated else 0
+  var expected_counters := {"A": {"starts": expected_start, "ups": expected_up}, "B": {"starts": expected_start, "ups": 0}}
+  check(counters.A.starts == expected_start and counters.B.starts == expected_start and counters.A.ups == expected_up and counters.B.ups == 0,
+    "up-capture/" + filename + "/Actual React starts and ups match the exact native captured stage")
+  check(saved == OK and image.get_width() == 680 and image.get_height() == 160,
+    "up-capture/" + filename + "/Actual native viewport is saved at the scenario dimensions")
+  captures.append({"file": "build/" + filename, "width": image.get_width(), "height": image.get_height(), "pixels": pixels,
+    "reactCounters": counters, "expectedReactCounters": expected_counters})
+
 func _initialize() -> void:
   allow_original_negative = OS.get_cmdline_user_args().has("--allow-original-negative")
+  capture = OS.get_cmdline_user_args().has("--capture")
   call_deferred("run_probe")
 
 func run_probe() -> void:
@@ -147,7 +176,10 @@ func run_probe() -> void:
     stages["capability" + name] = capability
     check(capability.original and capability.connected and capability.flags.imperative and capability.flags.nativeDispatch and capability.methods == ["function", "function", "function"] and capability.query.installations == 1 and capability.query.restoredInstaller,
       "capability/" + name + "/Actual original refs and immutable enabled flags use the single real SDK installation")
+  await capture_frame("pointer-up-initial.png", false)
   await up_case("bubble", false, true)
+  # A and B each completed a real TouchStart/End; only A had an Up listener.
+  await capture_frame("pointer-up-updated.png", true)
   await up_case("capture-only", true, false)
   await cancel_control()
   stages.beforeStop = {"application": native(application), "react": state()}
@@ -173,7 +205,8 @@ func run_probe() -> void:
   expected.sort()
   var original_negative_observed := allow_original_negative and observed == expected and failures.size() == 8
   var report := {"scenario": "native-pointer-up-view-interest", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
-    "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages, "afterStop": stopped,
+    "displayServer": DisplayServer.get_name(), "captureRequested": capture, "captures": captures,
+    "checks": checks, "stages": stages, "afterStop": stopped,
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
     "originalNegativeObserved": original_negative_observed, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"actualNativeInput": true, "originalFlagsEnabled": true, "experimentalNativeDispatch": true,

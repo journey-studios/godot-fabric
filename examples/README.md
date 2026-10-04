@@ -109,6 +109,24 @@ show A=0/B=0 → A=2/B=0 before B's later gesture and A's Cancel. Only the
 self-restoring `publicInstance` getter was faulted; wider resolver and mobile
 acceptance remain open and public flags stay off.
 
+The [pointerup probe](pointer-up/README.md) uses ordinary original View ref
+listeners in its isolated opt-in configuration. `npm run test:pointers:up`
+is outside the launcher catalog. It verifies bubble/capture-only qualification,
+one trusted Up/Raw/React commit, original TouchEnd, B's false interest while A
+is held, Cancel and balanced stop. Its
+[receipt](../docs/evidence/pointer-up/README.md) records 62/62 headless, 90/90
+viewport checks and eight visible old-host failures with the same current SDK
+bundle. Document Up, other flags and full event/lifecycle acceptance remain
+open; regression, SDK and hosted CI acceptance for this slice are pending.
+
+| Before native Up input | After the first bubble case |
+| --- | --- |
+| [![Native targets with zero TouchStart and Up counters](../docs/evidence/pointer-up/initial.png)](pointer-up/README.md) | [![Both yellow TouchStart bars advance; only A's green Up bar advances](../docs/evidence/pointer-up/updated.png)](pointer-up/README.md) |
+
+Both actual 680×160 frames have 12 fixed pixel assertions and matching React
+counters, with saved PNG pixels decoded independently. The updated stage is
+starts A1/B1 and ups A1/B0, before later capture-only and Cancel controls.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

@@ -21,6 +21,7 @@
 #include "godot_dom.h"
 #include <react/runtime/TimerManager.h>
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
+#include <react/renderer/components/view/primitives.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
@@ -663,9 +664,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (pointer_listener_query) throw jsi::JSError(rt, "Pointer listener query is already installed");
       pointer_listener_query.emplace(args[0].asObject(rt).asFunction(rt));
       pointer_processor().setListenerInterestForGodot([this](const rn::ShadowNode &node, std::size_t offset) {
-        // Only pointerdown is opted in by this slice. Other native filter
-        // categories retain their preceding behavior until separately verified.
-        if (inactive() || !pointer_listener_query || (offset != 34 && offset != 35)) return false;
+        // Only Down/Up are opted in. Other native filter categories retain
+        // their preceding behavior until separately verified.
+        if (inactive() || !pointer_listener_query) return false;
+        using Offset = rn::ViewEvents::Offset;
+        if (offset != static_cast<std::size_t>(Offset::PointerDown) &&
+            offset != static_cast<std::size_t>(Offset::PointerDownCapture) &&
+            offset != static_cast<std::size_t>(Offset::PointerUp) &&
+            offset != static_cast<std::size_t>(Offset::PointerUpCapture)) return false;
         auto root = roots.find(node.getSurfaceId());
         if (root == roots.end() || root->second->stopping) return false;
         auto current = ui->getNewestCloneOfShadowNode(node);

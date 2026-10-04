@@ -94,6 +94,20 @@ test("actual native pointerdown consults original View EventTarget Maps without 
       assert.ok(manual.react.cleanup.every(row => row.originalEvent && row.currentTargetNull && row.phase === 0 && row.pathEmpty));
       const expected = interestMode === "current" || kind === "mixed" ? currentExpected : [];
       verifyNativeDelivery(stage.react, expected, interestMode + "/" + prefix);
+      const terminal = report.stages[prefix + "/terminal"];
+      assert.deepEqual(terminal.react.events.filter(row => row.type === "pointerdown"), stage.react.events,
+        "Real Up cannot duplicate any original Down callback");
+      if (kind === "wrong-type") {
+        const up = terminal.react.events.filter(row => row.type === "pointerup");
+        assert.equal(up.length, interestMode === "current" ? 1 : 0);
+        if (interestMode === "current") {
+          assert.ok(up[0].trusted && up[0].originalSynthetic && up[0].phase === 2 && up[0].currentMatches &&
+            up[0].thisMatches && up[0].targetMatches && up[0].globalEventMatches);
+          assert.equal(up[0].label, "wrong-type");
+          assert.equal(terminal.react.panels.A.count, stage.react.panels.A.count + 1);
+          assert.equal(terminal.after.commits, terminal.before.commits + 1);
+        }
+      }
       assert.equal(stage.after.pointer.pointerDowns, stage.before.pointer.pointerDowns + 1, prefix + " receives a real Godot pointer sample");
       assert.equal(stage.after.pointer.activePointers, 1, prefix + " is not a vacuous no-input negative");
       if (interestMode === "current" && expected.length > 0)

@@ -1036,9 +1036,46 @@ manual Up dispatch proves registration, while native Up produces no SDK entry.
 The preserved Down-only host retains **54/62 with eight normative failures**
 (callback, Raw, React/native commit and qualification in bubble/capture-only).
 TouchEnd, typed/star Raw touch, held A while B ends, Cancel and balanced stop
-pass independently. Correction is pending at this checkpoint; no complete GF
-or new checkpoint is claimed. View/TT proof does not cover Document/other flags,
+pass independently. This is the preserved negative checkpoint; the correction
+and its final paired control are recorded below. No complete GF or new
+checkpoint is claimed. View/TT proof does not cover Document/other flags,
 listener lifecycle, captured-Up, Down/Up ID identity or full priority mappings.
+
+### Original View pointerup delivery and regressions (2026-10-04)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. Exact Up offsets 36/37 now
+qualify original imperative View listeners through the same native processor.
+The final current SDK bundle on the preserved native host retains **54/62**
+and eight normative failures; the corrected host passes **62/62**. Eighteen
+original RN inputs and 16 producers are identical except native C++ and the
+native overlay. Capture-only lookup observes 36=false before 37=true. B has
+eight real false Up queries while A remains held, no Up delivery/commit and a
+healthy TouchEnd. A's trusted Up/Raw produces exactly one React/native commit.
+Actual macOS capture passes **90/90**, including 24 pixels, two React-counter
+assertions and two saves/dimension checks. Green Up becomes A1/B0; yellow
+TouchStart becomes A1/B1. [Evidence](docs/evidence/pointer-up/README.md),
+[research](docs/research/pointer-up.md) and [example](examples/pointer-up/README.md)
+include actual native frames and distinguish initial history from the final
+same-current-SDK control.
+
+All 16 proportional regression commands pass: 255 Node/13 Python contracts,
+2,723 Document checks, interest 193/233, query faults 186, ref getter 65,
+integrated 181/206, 22 examples/2,250 checks, consumer 30/40, fresh SDK
+pack/verify, loader 89/21, 13 actual adapter runs/213 checks and two portable
+processor/geometry tests each. The earlier query/getter hosts still reproduce
+exactly 12/3 normative failures with the same current SDK, preserving historical
+raw controls separately. Their current End traces permit only healthy false Up
+phase pairs; Cancel remains empty, Down is never retried and the original
+callback/Raw/state/cleanup assertions remain enforced. The dedicated Up probe
+owns the no-RawUp negative; Document/interest observers track Down topics.
+
+Execution used the working tree after 3ca4174. The implementation receipt will
+pin the delivered sources separately; its hosted Up CI and positive Pages
+publication are pending. SDK ABI certification and public flags remain false.
+This scope is View with both flags. Document Up/other flags, listener lifecycle,
+captured/no-hit Up, public Down/Up ID pairing, both priority flag branches,
+hardware/mobile/dev/performance remain open. No GF acceptance, dependency,
+checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

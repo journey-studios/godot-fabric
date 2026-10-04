@@ -5,6 +5,7 @@ import {readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
+import {assertTerminalInterestQueries} from "./pointer-terminal-query-assertions.mjs";
 import {bundlePointerDocumentProbe} from "../scripts/event-target-bundle.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 
@@ -76,9 +77,9 @@ function verifyReport({report, result, log, headed, interestMode, flagMode, bund
   assert.match(log, /POINTER_DOCUMENT_PASSED: \d+/);
   assert.equal(bundles.nativeDispatchMode, "experimental");
   assert.equal(bundles.pointerInterestMode, interestMode);
-  assert.equal(Object.keys(bundles.sources).length, 14);
+  assert.equal(Object.keys(bundles.sources).length, 15);
   assert.equal(Object.keys(bundles.originalReactNativeSources).length, 18);
-  for (const filename of ["tests/pointer-document-bootstrap.js", "tests/pointer-document-fixture.jsx", "tests/pointer-document-probe.gd", "tests/pointer-document-native.test.mjs"])
+  for (const filename of ["tests/pointer-terminal-query-assertions.mjs","tests/pointer-document-bootstrap.js", "tests/pointer-document-fixture.jsx", "tests/pointer-document-probe.gd", "tests/pointer-document-native.test.mjs"])
     assert.match(bundles.sources[filename], /^[0-9a-f]{64}$/, filename + " is an actual hash-pinned producer");
   assert.match(bundles.bundles[flagMode].sha256, /^[0-9a-f]{64}$/);
   const {imperative: I, nativeDispatch: D} = flags(flagMode), installed = interestMode === "current" && D;
@@ -221,7 +222,8 @@ function verifyReport({report, result, log, headed, interestMode, flagMode, bund
     if (!key.endsWith("/terminal")) continue;
     assert.equal(stage.root.pointer.activePointers, 0); assert.equal(stage.root.pointer.activeTouches, 0);
     assert.equal(stage.application.pointerProcessor.active, 0); assert.equal(stage.application.pointerRouting.contacts, 0);
-    assert.deepEqual(stage.react.events, []); assert.deepEqual(stage.react.raw, []); assert.deepEqual(stage.react.query.rows, []);
+    assert.deepEqual(stage.react.events, []); assert.deepEqual(stage.react.raw, []);
+    assertTerminalInterestQueries(stage.react.query.rows, {cancel: stage.phase === "cancel", installed: stage.application.pointerListenerQueryInstalled});
   }
   assert.ok(report.afterStop.stopped && !report.afterStop.pointerListenerQueryInstalled && report.afterStop.rootCount === 0);
   assert.equal(typeof report.stages.lateOverride, "string");

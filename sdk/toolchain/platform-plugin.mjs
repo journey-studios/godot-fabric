@@ -73,7 +73,7 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
       builder.onLoad({ filter: /\.js$/ }, async ({ path: filename }) => {
         if (filename === path.join(platformRoot, "pointer-listener-query.js") && pointerInterestMode === "current")
           return {loader: "js", contents: `
-import {hasPointerDownListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
+import {hasPointerDownListenerForGodot, hasPointerUpListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
 import * as Flags from ${JSON.stringify(path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js"))};
 import {getOwnerDocument} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/NodeInternals.js"))};
 import {isReactNativeDocumentElementInstanceHandle, getPublicInstanceFromReactNativeDocumentElementInstanceHandle} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js"))};
@@ -82,15 +82,23 @@ export function installPointerListenerQuery() {
   // and documentElement keep their upstream imperative-events method gate.
   if (Flags.enableNativeEventTargetEventDispatching())
     godotInstallPointerListenerQuery((candidate, offset, isRootHandle = false) => {
-      if (offset !== 34 && offset !== 35) return false;
-      const capture = offset === 35;
-      if (!isRootHandle) return hasPointerDownListenerForGodot(candidate, capture);
+      // Exact pinned ViewEvents offsets; neither parity nor adjacency defines
+      // capture for the remaining native pointer categories.
+      let query, capture;
+      switch (offset) {
+        case 34: query = hasPointerDownListenerForGodot; capture = false; break;
+        case 35: query = hasPointerDownListenerForGodot; capture = true; break;
+        case 36: query = hasPointerUpListenerForGodot; capture = false; break;
+        case 37: query = hasPointerUpListenerForGodot; capture = true; break;
+        default: return false;
+      }
+      if (!isRootHandle) return query(candidate, capture);
       if (!isReactNativeDocumentElementInstanceHandle(candidate)) return false;
       const element = getPublicInstanceFromReactNativeDocumentElementInstanceHandle(candidate);
       // These instances were created and linked by RN when the root started.
       // Only read their original slots/Maps; generic renderer ref lookup is lazy.
-      return hasPointerDownListenerForGodot(element, capture) ||
-        (element != null && hasPointerDownListenerForGodot(getOwnerDocument(element), capture));
+      return query(element, capture) ||
+        (element != null && query(getOwnerDocument(element), capture));
     });
 }`};
         if (!filename.startsWith(rnRoot + path.sep)) return;

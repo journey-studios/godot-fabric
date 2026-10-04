@@ -5,6 +5,7 @@ import {readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
+import {assertTerminalInterestQueries} from "./pointer-terminal-query-assertions.mjs";
 import {bundlePointerQueryFaultProbe} from "../scripts/event-target-bundle.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 
@@ -171,13 +172,13 @@ test("one failing SDK pointer query preserves the same native batch and every co
     assertNativeEvent(end, "touchend", "topTouchEnd");
     assertContextClean(down); assertContextClean(end);
     assert.ok(down.query.rows.every(row => row.action === "delegate" && row.resultKind === "boolean"));
-    assert.deepEqual(end.query.rows, []);
+    assertTerminalInterestQueries(end.query.rows);
   }
   for (const [id, label, rawType] of [["throw34", "touchend", "topTouchEnd"], ["nonboolean34", "touchcancel", "topTouchCancel"]]) {
     const terminal = report.stages["case/" + id + "/terminal"];
     assert.deepEqual(labels(terminal), [label]);
     assertNativeEvent(terminal, label, rawType);
-    assert.deepEqual(terminal.query.rows, []);
+    assertTerminalInterestQueries(terminal.query.rows, {cancel: id === "nonboolean34"});
     assertContextClean(terminal);
   }
   const retired = report.stages["case/throw35/retired"];
@@ -206,8 +207,9 @@ test("one failing SDK pointer query preserves the same native batch and every co
     if (original != null) {
       assert.equal(original.originalNegativeObserved, true);
       assert.deepEqual(original.provenance.bundles.originalReactNativeSources, bundles.originalReactNativeSources);
+      assert.equal(original.provenance.bundles.bundles.enabled.sha256, bundles.bundles.enabled.sha256, "Old/new hosts execute identical current SDK bundle bytes");
       for (const [file, sha256] of Object.entries(bundles.sources))
-        if (file !== "native/application_runtime.cpp") assert.equal(original.provenance.bundles.sources[file], sha256,
+        if (!["native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"].includes(file)) assert.equal(original.provenance.bundles.sources[file], sha256,
           "Old and corrected native hosts run the unchanged causal fixture: " + file);
       assert.notEqual(original.provenance.nativeHostSha256, report.provenance.nativeHostSha256,
         "The executed old-host failure and corrected-host success use different compiled native hosts");

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
 import {createHash} from "node:crypto";
+import {inflateSync} from "node:zlib";
 import {readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
@@ -10,7 +11,9 @@ import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
-const lane = allowOriginalNegative ? "original" : "current";
+const capture = process.argv.includes("--capture");
+assert.ok(!capture || !allowOriginalNegative, "Native graphical captures run only against the corrected host");
+const lane = capture ? "capture" : allowOriginalNegative ? "original" : "current";
 const digest = value => createHash("sha256").update(value).digest("hex");
 const normativeSuffixes = ["Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
   "Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
@@ -44,12 +47,54 @@ function terminalClean(stage, remaining = 0) {
   for (const key of ["active", "contacts", "stored"]) assert.equal(stage.application.pointerRouting[key], remaining);
 }
 
+// Decode the actual saved Godot PNG, independently of its JSON pixel report.
+// This bounded reader accepts only lossless 8-bit noninterlaced RGB/RGBA images.
+function nativePng(bytes) {
+  assert.deepEqual(bytes.subarray(0, 8), Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]));
+  let header = null, ended = false, offset = 8;
+  const blocks = [];
+  while (offset < bytes.length) {
+    assert.ok(offset + 12 <= bytes.length, "Saved PNG chunk header is complete");
+    const length = bytes.readUInt32BE(offset), type = bytes.toString("ascii", offset + 4, offset + 8);
+    assert.ok(offset + 12 + length <= bytes.length, "Saved PNG chunk data is complete");
+    const data = bytes.subarray(offset + 8, offset + 8 + length);
+    if (type === "IHDR") { assert.equal(header, null); assert.equal(length, 13); header = data; }
+    if (type === "IDAT") blocks.push(data);
+    offset += length + 12;
+    if (type === "IEND") { assert.equal(length, 0); ended = true; break; }
+  }
+  assert.ok(header != null && blocks.length > 0 && ended); assert.equal(offset, bytes.length);
+  const width = header.readUInt32BE(0), height = header.readUInt32BE(4), colorType = header[9];
+  assert.equal(width, 680); assert.equal(height, 160); assert.equal(header[8], 8);
+  assert.ok(colorType === 2 || colorType === 6); assert.deepEqual([...header.subarray(10)], [0, 0, 0]);
+  const channels = colorType === 6 ? 4 : 3, stride = width * channels;
+  const filtered = inflateSync(Buffer.concat(blocks)), decoded = Buffer.alloc(stride * height);
+  assert.equal(filtered.length, height * (stride + 1));
+  const paeth = (a, b, c) => { const p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c); return pa <= pb && pa <= pc ? a : pb <= pc ? b : c; };
+  for (let y = 0; y < height; ++y) {
+    const input = y * (stride + 1), output = y * stride, filter = filtered[input];
+    assert.ok(filter <= 4, "Saved PNG uses an original lossless filter");
+    for (let x = 0; x < stride; ++x) {
+      const a = x >= channels ? decoded[output + x - channels] : 0;
+      const b = y > 0 ? decoded[output + x - stride] : 0;
+      const c = y > 0 && x >= channels ? decoded[output + x - stride - channels] : 0;
+      const predictor = [0, a, b, Math.floor((a + b) / 2), paeth(a, b, c)][filter];
+      decoded[output + x] = (filtered[input + 1 + x] + predictor) & 255;
+    }
+  }
+  return {width, height, color(x, y) {
+    assert.ok(Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < width && y < height);
+    const start = y * stride + x * channels;
+    return decoded.subarray(start, start + channels).toString("hex") + (channels === 3 ? "ff" : "");
+  }};
+}
+
 test("original imperative View pointerup qualifies native interest while original touch and terminal cleanup survive", async () => {
   const before = await publicHash(), bundles = await bundlePointerUpProbe();
   await rm(path.join(root, "build/pointer-up-report.json"), {force: true});
   const binary = await ensureGodotBinary();
-  const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/pointer-up-probe.gd", "--",
-    ...(allowOriginalNegative ? ["--allow-original-negative"] : [])], {encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024});
+  const result = spawnSync(binary, ["--path", root, ...(capture ? [] : ["--headless"]), "--script", "res://tests/pointer-up-probe.gd", "--",
+    ...(allowOriginalNegative ? ["--allow-original-negative"] : []), ...(capture ? ["--capture"] : [])], {encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024});
   const log = (result.stdout ?? "") + (result.stderr ?? "");
   await writeFile(path.join(root, "build/pointer-up-" + lane + ".log"), log);
   const bytes = await optionalFile("build/pointer-up-report.json"), report = bytes == null ? null : JSON.parse(bytes);
@@ -64,9 +109,31 @@ test("original imperative View pointerup qualifies native interest while origina
   assert.ok(report != null, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use|Inconsistency between local and platform pointer registries/);
   assert.equal(report.scenario, "native-pointer-up-view-interest"); assert.equal(report.reactNative, "0.87.1");
-  assert.equal(report.displayServer, "headless"); assert.equal(report.allowOriginalNegative, allowOriginalNegative);
+  assert.equal(report.displayServer, capture ? "macOS" : "headless"); assert.equal(report.allowOriginalNegative, allowOriginalNegative);
+  assert.equal(report.captureRequested, capture); assert.equal(report.captures.length, capture ? 2 : 0);
   assert.equal(report.originalNegativeObserved, allowOriginalNegative); assert.equal(report.allCurrentAssertionsPassed, !allowOriginalNegative);
-  assert.ok(report.checks.length >= 45); assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
+  for (const [index, frame] of report.captures.entries()) {
+    const updated = index === 1, starts = updated ? 1 : 0, ups = updated ? 1 : 0;
+    assert.equal(frame.file, "build/pointer-up-" + (updated ? "updated" : "initial") + ".png");
+    assert.equal(frame.width, 680); assert.equal(frame.height, 160);
+    assert.deepEqual(frame.expectedReactCounters, {A: {starts, ups}, B: {starts, ups: 0}});
+    assert.equal(frame.reactCounters.A.starts, starts); assert.equal(frame.reactCounters.B.starts, starts);
+    assert.equal(frame.reactCounters.A.ups, ups); assert.equal(frame.reactCounters.B.ups, 0);
+    assert.deepEqual(frame.pixels.map(row => row.point), [[5, 5], [75, 55], [25, 127], [43, 127], [25, 145], [43, 145],
+      [345, 5], [415, 55], [365, 127], [383, 127], [365, 145], [383, 145]]);
+    assert.deepEqual(frame.pixels.map(row => row.expected), ["0f172aff", "2563ebff", "fde047ff", updated ? "fde047ff" : "0f172aff", "22c55eff", updated ? "22c55eff" : "0f172aff",
+      "0f172aff", "2563ebff", "fde047ff", updated ? "fde047ff" : "0f172aff", "22c55eff", "0f172aff"]);
+    const image = nativePng(await readFile(path.join(root, frame.file)));
+    assert.equal(image.width, frame.width); assert.equal(image.height, frame.height);
+    for (const row of frame.pixels) {
+      assert.equal(row.color, row.expected, "Actual native viewport readback agrees with the fixed declared React stage");
+      assert.equal(image.color(...row.point), row.expected, "Independently decoded saved PNG agrees with the actual pixel report");
+    }
+  }
+
+  assert.equal(report.checks.filter(row => !row.name.startsWith("up-capture/")).length, 62, "All executed base check IDs remain present");
+  assert.equal(report.checks.filter(row => row.name.startsWith("up-capture/")).length, capture ? 28 : 0, "Twelve actual pixels plus counters and save/dimensions per native frame");
+  assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   assert.deepEqual([...report.expectedOriginalFailures].sort(), [...expectedFailures].sort());
   const failures = report.checks.filter(row => !row.passed).map(row => row.name);
   assert.deepEqual([...failures].sort(), allowOriginalNegative ? [...expectedFailures].sort() : [], "Only eight visible Up normative failures qualify as the old-host control");
@@ -135,6 +202,10 @@ test("original imperative View pointerup qualifies native interest while origina
   assert.equal(bUp.react.panels.B.ups, 0); assert.equal(bUp.after.commits, bUp.before.commits);
   assert.ok(bUp.react.query.rows.every(row => row.action === "delegate" && row.resultKind === "boolean" && row.result === false && [36, 37].includes(row.offset)));
   if (allowOriginalNegative) assert.deepEqual(bUp.react.query.rows, []);
+  else {
+    assert.ok(bUp.react.query.rows.length > 0, "Negative B is actually queried rather than only proving absence of delivery");
+    assert.deepEqual(bUp.react.query.rows.filter(row => row.targetTag === bUp.react.targetTag).map(row => [row.offset, row.result]), [[36, false], [37, false]], "The actual B phase Maps are consulted before the same-root ancestors");
+  }
   const cancel = report.stages["cancel-is-not-up/cancel"];
   assert.deepEqual(labels(cancel.react), ["touchcancel"]); nativeEvent(cancel.react, "touchcancel", "topTouchCancel"); clean(cancel.react); terminalClean(cancel);
   assert.deepEqual(cancel.react.query.rows, []); assert.equal(cancel.react.panels.A.ups, cancel.react.baselineUps);
@@ -154,16 +225,18 @@ test("original imperative View pointerup qualifies native interest while origina
   if (!allowOriginalNegative) {
     const originalBytes = await optionalFile("build/pointer-up-original-report.json"), original = originalBytes == null ? null : JSON.parse(originalBytes);
     if (original != null) {
-      assert.ok(original.originalNegativeObserved); assert.deepEqual(original.checks.map(row => row.name), report.checks.map(row => row.name));
+      assert.ok(original.originalNegativeObserved); assert.deepEqual(original.checks.filter(row => !row.name.startsWith("up-capture/")).map(row => row.name),
+        report.checks.filter(row => !row.name.startsWith("up-capture/")).map(row => row.name), "Native capture only adds separate optional checks");
       assert.deepEqual(original.provenance.bundles.originalReactNativeSources, bundles.originalReactNativeSources);
-      // Native + SDK Up implementation can change generated bundle bytes. Pin
-      // every causal test producer and the untouched upstream RN independently.
-      const implementationInputs = new Set(["native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs", "sdk/toolchain/platform-plugin.mjs", "src/pointer-listener-query.js"]);
-      for (const [file, sha] of Object.entries(bundles.sources)) if (!implementationInputs.has(file))
-        assert.equal(original.provenance.bundles.sources[file], sha, "Old/new hosts share actual reproducer producer: " + file);
+      // The final causal control executes the current SDK bundle on both hosts.
+      // Only the two verified native producer sources differ.
+      assert.equal(original.provenance.bundles.bundles.enabled.sha256, bundles.bundles.enabled.sha256);
+      for (const [file, sha] of Object.entries(bundles.sources))
+        if (!["native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"].includes(file))
+          assert.equal(original.provenance.bundles.sources[file], sha, "Old/new hosts share actual current reproducer and SDK producer: " + file);
       assert.notEqual(original.provenance.nativeHostSha256, report.provenance.nativeHostSha256);
     }
-    await writeFile(path.join(root, "build/pointer-up-comparison.json"), JSON.stringify({scenario: report.scenario, originalControlPresent: original != null,
-      generatedBundleBytesMayDifferWithSDKUpImplementation: true, original, current: report}, null, 2) + "\n");
+    await writeFile(path.join(root, capture ? "build/pointer-up-capture-comparison.json" : "build/pointer-up-comparison.json"), JSON.stringify({scenario: report.scenario, originalControlPresent: original != null,
+      sameCurrentSDKBundleRequired: true, intentionalNativeProducerDifferences: ["native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"], original, current: report}, null, 2) + "\n");
   }
 });

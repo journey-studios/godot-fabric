@@ -48,13 +48,14 @@ struct GodotPointerRetired final {};
 
 // The default callback is empty. The opt-in SDK query reads existing original
 // EventTarget Maps without creating refs, dispatching events or cloning props.
-static bool hasPointerDownInterestForGodot(
+static bool hasPointerInterestForGodot(
     const ShadowNode &target, const UIManager &uiManager,
-    const PointerEventsProcessor::GodotListenerInterest &query) {
+    const PointerEventsProcessor::GodotListenerInterest &query,
+    const std::array<ViewEvents::Offset, 2> &offsets) {
   if (!query) return false;
-  auto interested = [&query](const ShadowNode &node) {
-    return query(node, static_cast<std::size_t>(ViewEvents::Offset::PointerDown)) ||
-        query(node, static_cast<std::size_t>(ViewEvents::Offset::PointerDownCapture));
+  auto interested = [&query, &offsets](const ShadowNode &node) {
+    return query(node, static_cast<std::size_t>(offsets[0])) ||
+        query(node, static_cast<std::size_t>(offsets[1]));
   };
   if (interested(target)) return true;
   std::shared_ptr<const ShadowNode> root;
@@ -167,8 +168,12 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
   source = replaceOnce(source,
     '    if (shouldEmitPointerEvent(*targetNode, type, uiManager)) {',
     `    if (targetNode && (shouldEmitPointerEvent(*targetNode, type, uiManager) ||
-        (type == "topPointerDown" && hasPointerDownInterestForGodot(
-            *targetNode, uiManager, godotListenerInterest_)))) {`);
+        (type == "topPointerDown" && hasPointerInterestForGodot(
+            *targetNode, uiManager, godotListenerInterest_,
+            {ViewEvents::Offset::PointerDown, ViewEvents::Offset::PointerDownCapture})) ||
+        (type == "topPointerUp" && hasPointerInterestForGodot(
+            *targetNode, uiManager, godotListenerInterest_,
+            {ViewEvents::Offset::PointerUp, ViewEvents::Offset::PointerUpCapture})))) {`);
   source = replaceOnce(source,
     '    unregisterActivePointer(pointerEvent);\n  }\n}',
     `    unregisterActivePointer(pointerEvent);
