@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "EventTarget original verificado; conectar entrega nativa e corrigir ancestralidade atual"
   },
-  "updatedAt": "2026-10-04T14:56:23.869563+00:00",
+  "updatedAt": "2026-10-04T14:59:20.007308+00:00",
   "source": {
-    "commit": "d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/ROADMAP.md",
-    "scope": "Baseline EventTarget original executada localmente: 119/119 headless, 33 manual em cada raiz incluídos no total, quatro Hermes/cinco surfaces; três gaps reproduzidos com controles. Flags/fontes de produção e bundle público inalterados; native delivery e parent cache continuam pendentes. Recibo com hashes executados; pin da nova implementação e CI seguem separados. Nenhum GF/checkpoint, decisão, peso ou denominador alterado.",
+    "commit": "2db8e391eff4de26caab0231be878f4ee807e799",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/2db8e391eff4de26caab0231be878f4ee807e799/ROADMAP.md",
+    "scope": "EventTarget original2db8e39:119/119 headless,33manual por raiz incluídos no total,4Hermes/5surfaces. Cinco fontes do probe e quatro fontes de produção conferidas contra implementação imutável; público inalterado. Três gaps reproduzidos e cleanupzero. Contracts199última suíteNode/13Python,static/publication e8dashboard passaram. Nenhum GF/checkpoint,decisão,peso ou denominador fechado; native integration e CI da nova fatia pendentes.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2576,6 +2576,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-original-pinned-2db8e39",
+      "at": "2026-10-04T14:59:20.007308+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação2db8e39 fixa5fontes do probe/4deprodução verificadas com os hashes executados.119checks incluem33manual por raiz; controles exatos dos três gaps. Contracts199Node/13Python,static/publication/dashboard passaram. Native delivery e correção de ancestralidade continuam pendentes; nenhum item fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/2db8e391eff4de26caab0231be878f4ee807e799"
+    },
     {
       "id": "event-target-original-baseline-20261004",
       "at": "2026-10-04T14:56:23.869563+00:00",

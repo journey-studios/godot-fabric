@@ -1,9 +1,9 @@
 {
   "format": "godot-fabric.event-target-original-evidence/v1",
   "observedAt": "2026-10-04T14:58:04.762304+00:00",
-  "implementationCommit": null,
+  "implementationCommit": "2db8e391eff4de26caab0231be878f4ee807e799",
   "baselineCommit": "7f53ab68763169e0ea19e963ca99838165efc21b",
-  "sourceState": "Executed local source hashes below; immutable implementation pin will follow the implementation commit. Native host and production sources match the preceding geometry implementation; no rebuild in this slice.",
+  "sourceState": "All five probe source hashes and four unchanged production sources verified against this immutable implementation commit. Execution preceded the commit. Bundles and native host identify separately hashed local artifacts; native host was not rebuilt for this slice.",
   "versions": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -814,5 +814,15 @@
     "publicBundleSha256": "1a97c72edd3ce27a5da84aea15f4d3c7e9de9034735d2875db9228580a0295c0",
     "nativeHostSha256": "01b2d2ec0ec0d38cf55213520fbc612e2ebd2295d684df298aeeb9a93f27695d",
     "rawReportSha256": "abb34ec7f73440350465eee25a91e0d1b3f197f11d1139f353806a53b5595397"
+  },
+  "regressions": {
+    "contractsCommand": "npm run test:contracts",
+    "lastNodeSuite": 199,
+    "pythonTests": 13,
+    "staticCheck": "passed",
+    "publicationCheck": "passed",
+    "dashboardCheck": "passed",
+    "dashboardTests": 8,
+    "dashboardBuild": "passed"
   }
 }

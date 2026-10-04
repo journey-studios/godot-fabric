@@ -5,7 +5,9 @@ The isolated macOS arm64/headless probe executes **119/119 checks**, including
 This is an executed baseline for GF-05/GF-08/GF-13; it does not enable production
 EventTarget or complete these items. [Curated receipt](report.json) retains
 every check, source/bundle/host hashes, flag matrix, gap controls and cleanup.
-An immutable source pin follows the implementation commit.
+All five executed probe source hashes and four unchanged production sources
+match implementation [`2db8e39`](https://github.com/journey-studios/godot-fabric/commit/2db8e391eff4de26caab0231be878f4ee807e799).
+Execution preceded that commit; native artifact identity remains separate.
 
 ```sh
 npm run test:events:original
@@ -54,6 +56,8 @@ All four applications stop with zero roots/work/timers/animation frames; all
 five surfaces balance native creates/deletes and retain zero native tags. Only
 the enabled application's deliberate error remains in its diagnostic history.
 
+The full contract command passed (last Node suite: 199 tests; Python: 13),
+with static/publication checks and all three dashboard gates passing.
 The CI workflow now runs the probe and uploads its raw report, bundle receipt
 and log. Hosted execution is pending for this new slice. Previous green CI does
 not certify the new probe. No graphical capture, physical input, responder/
