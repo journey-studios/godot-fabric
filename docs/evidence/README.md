@@ -77,6 +77,15 @@ This does not establish singular JSX rendering.
 GF-08/GF-10/GF-13 remain in progress; broader ref/View/input acceptance,
 transformed clipping, singular/3D support and mobile differential work remain.
 
+The later [read-only tree record](tree/README.md) adds original RN View IDs,
+root-scoped lookup, logical node traversal, snapshot collections, RawText updates
+and retained refs during keyed changes and retirement. It passes **89 headless /
+99 native checks**, eight RGBA samples and two captures on the unchanged host.
+The same fixture fails **25/89 checks** with the preceding JS configuration.
+Original source links explain RawText replacement/null ownerDocument and
+imperative native IDs reverting on a children-only commit. GF-08 remains open
+for complete refs/commands and original mobile differentials.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

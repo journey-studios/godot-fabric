@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Transforms 2D comprovados; próximos HostInstance e comandos nativos públicos"
+    "focusTitle": "Árvore e IDs comprovados; próximos foco e comandos públicos de HostInstance"
   },
-  "updatedAt": "2026-10-04T02:59:46.504092+00:00",
+  "updatedAt": "2026-10-04T03:42:35.828149+00:00",
   "source": {
     "commit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f",
     "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/ROADMAP.md",
-    "scope": "Implementação6e5db7b e host SDK42ee5c7 verificados: transforms309/345+33pixels/3capturas, math40932, guards61/input25;205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. CI5885331 completou os cinco jobs com sucesso (37171931529); oráculo RN limitado não certifica todos os transforms/alvos/paridade. Pagesmanual37172123003 publicou JSON2022e727 pelo mainadad606, comparado integralmente. Novos dados locais aguardam push e publicação manual. Nenhum GF/aceite completo/peso/denominador/decisão fechado.",
+    "scope": "Fatia de árvore/IDs comprovada localmente no host nativo inalterado SHA42ee5c7: 89 headless/99 native, oito amostras de pixels e duas capturas. A configuração JS anterior falha 25/89; fontes e bundle corrigidos restaurados. Regressões: 206 Node/13 Python, dez testes nativos, 19 exemplos/1308 e 17 adapters/318. As novas fontes JS serão fixadas no commit da implementação antes da publicação; CI e Pages desta fatia ainda pendentes. O Pages anterior publicou JSON9089686 no run37172746943. Nenhum item GF, aceite integral, decisão, peso ou denominador foi fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transforms RN 2D afins no Control real concordam com refs/NativeDOM, medidas transformadas por AABB de ancestral, Yoga/measureLayout e identidade após flattening/resize/reset: 309 headless /345 native. HostInstance completo, todos componentes/alvos e diferencial mobile seguem pendentes.",
+      "note": "Árvore/IDs nativos com classes originais RN: duas raízes, travessia lógica, snapshots, Unicode/RawText, reorder/replacement/retirement. 89 headless/99 native, oito pixels e duas capturas; configuração anterior falha 25/89. RawText substituído e nativeID imperativo restaurado no commit de filhos seguem o RN fixado. HostInstance completo, foco/comandos, EventTarget/pointer capture, todos os alvos e diferencial mobile permanecem pendentes. Medidas/transforms anteriores mantêm suas provas separadas.",
       "blocker": "",
       "checkpoints": [
         {
@@ -446,6 +446,10 @@
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
               "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/tree/README.md"
             }
           ]
         },
@@ -539,7 +543,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos.",
+      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda.",
       "blocker": "",
       "checkpoints": [
         {
@@ -558,6 +562,10 @@
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
               "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/tree/README.md"
             }
           ]
         },
@@ -2837,6 +2845,16 @@
       ],
       "message": "CI5885331: contracts, native-cold-start, reference-ios, reference-android e parity-comparison passaram no run37171931529. Esta é evidência hospedada da fatia; o oráculo limitado não fecha a paridade completa ou os ports Godot mobile. Próximo avanço: métodos de HostInstance e comandos nativos públicos.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529"
+    },
+    {
+      "id": "tree-local-proof-20261004",
+      "at": "2026-10-04T03:42:35.828149+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Árvore/IDs com RN original passou 89/99; quatro frames independentes e oito pixels fixos comprovam a ordem visual. Controle anterior falha 25/89 com o mesmo host. Regressões 206Node/13Python,10nativos,19exemplos/1308,17adapters/318; timeout gráfico inicial preservado e fixture de captura preparado antes do novo sucesso. Próximos: foco/TextInputState e comandos. Sem novo checkpoint concluído ou aceite fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/tree/README.md"
     }
   ]
 }

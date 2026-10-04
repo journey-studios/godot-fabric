@@ -120,6 +120,7 @@ export const controlViewConfig = {
     placeholder: true,
     submitBehavior: true,
     testID: true,
+    nativeID: true,
     onActivate: true,
     onActivateCapture: true,
     onChange: true,
@@ -176,7 +177,7 @@ export const coreEventConfigs = {
 export default {
   validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
     /^(onTouch|onResponder|onStartShould|onMoveShould)/.test(name) ||
-    ["style", "testID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren"].includes(name))),
+    ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren"].includes(name))),
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
     .filter(([name]) => name.startsWith("topTouch"))),
   directEventTypes: { topLayout: { registrationName: "onLayout" } },

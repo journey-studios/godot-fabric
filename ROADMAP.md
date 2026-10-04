@@ -319,15 +319,39 @@ The final rebuilt binary passes **205 Node/13 Python**, **10 native tests**,
 The native SDK source and loaded consumer host hashes match the executed final
 implementation. [Pages run37171971971](https://github.com/journey-studios/godot-fabric/actions/runs/37171971971)
 succeeded with branch JSON5885331, checked against the served public file.
-The [hosted observation](docs/evidence/transforms/ci.json) records the new
-contracts job passing while native/iOS/Android and comparison remain pending;
-this snapshot does not replace their acceptance. GF items, full contract/differential/target
+The [hosted receipt](docs/evidence/transforms/ci.json) preserves the earlier
+pending observation and the subsequent successful five-job run separately;
+its limited RN reference cases do not certify full transform or target parity. GF items, full contract/differential/target
 checkpoints, decisions, weights and the dashboard denominator remain unchanged.
 Valid transform animation during contact, transformed masks, complete
 HostInstance commands, RTL and mobile differential acceptance remain open.
 Next in sequence 3: continue the public HostInstance/native-command branch.
 
 The [completed hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) at `5885331` passed contracts, native cold start, original iOS/Android references and parity comparison. The dated earlier pending observation remains in [ci.json](docs/evidence/transforms/ci.json). These limited reference fixtures do not close full transform parity, the Godot mobile ports or GF-08.
+
+The [public tree and ID slice](docs/evidence/tree/README.md) extends GF-08 and
+GF-10 through original RN `View.js`, base ViewConfig and narrowed read-only types.
+Public View `id` takes precedence over `nativeID`; Text `nativeID` and document
+lookup use the committed Fabric tree for each root. Logical parent/sibling
+traversal, snapshot collections, duplicate IDs, text replacement, native
+materialization and stale refs are tested across two roots and their retirement.
+The pinned production RawText replacement/null ownerDocument and children-only
+native-ID reversion are documented with original source links rather than
+silently replaced with browser semantics.
+
+The unchanged native host passes **89 headless / 99 native assertions**, **8
+RGBA samples** at independently declared slots and two actual captures. Four
+frame assertions prove the native reorder separately from logical traversal.
+The same final fixture fails **25/89** with the preceding JS configuration;
+restoring it regenerates exact positive bundle bytes. Regressions pass **206
+Node / 13 Python**, **10 native tests**, **19 examples / 1,308 final checks** and
+**17 adapter runs / 318 checks**. A first consumer graphical timeout is retained;
+explicit test-window focus preparation precedes a fresh successful full run.
+The new hosted CI and Pages publication are separate steps. GF-08/GF-10 remain
+In progress; checkpoints, dependencies, weights, decisions and denominator do
+not change. Next in sequence 3: original TextInputState, public focus and native
+commands, followed by remaining HostInstance/EventTarget and pointer capture
+acceptance. Full mobile tree differentials and all-target evidence remain open.
 
 ## Release contract and scope
 

@@ -30,6 +30,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [transforms](transforms/README.md) | Original RN affine styles, percentage origins, flattening, public measures and transformed input | Public | [App](transforms/App.jsx) · [scene](transforms/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
 | [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
+| [tree](tree/README.md) | Native IDs, original documents, logical traversal, RawText and retained collection snapshots | Public | [App](tree/App.jsx) · [scene](tree/scene.tscn) |
 | [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
 | [services](services/README.md) | Typed GDScript calls/signals, consistent state and shared Zustand data | Public | [App](services/App.jsx) · [scene](services/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
@@ -83,6 +84,14 @@ while an anonymous wrapper materializes and flattens again. Its
 [evidence](../docs/evidence/transforms/README.md) keeps the previous host's
 expected failures, explicit unsupported-transform cases and invalid-embedding
 input cancellation separate.
+
+![Original RN documents and keyed traversal](../docs/evidence/tree/tree-updated.png)
+
+The [read-only tree example](tree/README.md) uses original RN documents and
+collections to check IDs, root isolation, keyed reorder/replacement, text updates
+and retirement. It records pinned collection snapshots and RawText quirks;
+its [evidence](../docs/evidence/tree/README.md) includes the same fixture failing
+against the previous JS configuration with the unchanged native host.
 
 ![Two registered roots share one application](../docs/evidence/shared-roots/updated.png)
 

@@ -88,10 +88,33 @@ boundaries. Submission is `submit` or `blurAndSubmit`. Unsupported defined props
 throw; no unsupported mobile prop is silently forwarded by these two wrappers.
 This prop audit is still incomplete for the other public facade components.
 
+## Read-only refs and native IDs
+
+Public `View` now delegates to original RN `View.js` before `RCTView`. It maps
+`id` to `nativeID`, with `id` precedence when both are supplied. ViewConfig
+forwards `nativeID`; narrowed types admit View IDs and Text `nativeID`.
+`ref.ownerDocument.getElementById` searches the current Fabric revision of that
+root, including flattened logical Views. Declaring an ID can materialize a View.
+
+The [tree example](../examples/tree/README.md) checks original parent/child and
+sibling APIs, containment, document position, node properties, root isolation,
+key replacement and retirement. Pinned NodeList/HTMLCollection getters return
+membership snapshots; read them again for the current tree. Their member refs
+retain their own current-prop/connection semantics. `namedItem` returns null in
+the pinned upstream implementation.
+
+Changing a string creates a new RawText public instance; unchanged span text
+retains identity. This production renderer leaves RawText `ownerDocument` null.
+An imperative native ID changes lookup without changing canonical `.id`; the
+fixture’s next children-only React commit restores the declared native ID. See
+[executed evidence and source links](evidence/tree/README.md) for these exact
+limits. Full HostInstance, event-target/pointer capture, focus/native commands
+and all-platform differential acceptance remain open under GF-08.
+
 ## Public View geometry
 
 The [View example](../examples/view/README.md) uses original
-`ViewNativeComponent` (`RCTView`) and `ViewComponentDescriptor`. Fabric's mount
+`View.js`, `ViewNativeComponent` (`RCTView`) and `ViewComponentDescriptor`. Fabric's mount
 order determines drawing and hit selection with Godot z indices at zero,
 including static-position and nested-context behavior in the executed fixture.
 Rectangular hidden/scroll overflow clips drawing and targeting while public refs

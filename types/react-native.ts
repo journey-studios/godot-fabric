@@ -31,7 +31,10 @@ export type TextStyle = ViewStyle & Pick<RN.TextStyle, "fontSize" | "color" | "f
 export type InputStyle = ViewStyle & Pick<RN.TextStyle, "fontSize"> & { color?: string };
 export type StyleProp<T> = RN.StyleProp<T>;
 export type NativeInstance = Pick<RN.TextInputInstance, "focus" | "blur" | "isFocused" | "measure" | "measureInWindow" | "setNativeProps" |
-  "getBoundingClientRect" | "isConnected" | "parentNode" | "childNodes" | "children" |
+  "getBoundingClientRect" | "id" | "nodeName" | "nodeType" | "nodeValue" | "tagName" |
+  "firstChild" | "lastChild" | "nextSibling" | "previousSibling" | "parentElement" | "hasChildNodes" |
+  "childElementCount" | "firstElementChild" | "lastElementChild" | "nextElementSibling" | "previousElementSibling" |
+  "clientLeft" | "clientTop" | "isConnected" | "parentNode" | "childNodes" | "children" |
   "ownerDocument" | "getRootNode" | "contains" | "compareDocumentPosition" | "textContent" |
   "offsetWidth" | "offsetHeight" | "offsetLeft" | "offsetTop" | "offsetParent" |
   "clientWidth" | "clientHeight" | "scrollWidth" | "scrollHeight" | "scrollLeft" | "scrollTop"> & {
@@ -44,8 +47,8 @@ export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureIn
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }
-export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren"> & { style?: StyleProp<ViewStyle> };
-export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines"> & {
+export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID"> & { style?: StyleProp<ViewStyle> };
+export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };
 export interface TextInputProps extends Pick<RN.TextInputProps, "onChange" | "onChangeText" | "onSelectionChange" |

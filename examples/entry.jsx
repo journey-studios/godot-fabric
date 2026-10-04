@@ -28,9 +28,10 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
-if (["shared", "refs", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms"].includes(globalThis.godotScenario)) {
+if (["shared", "refs", "tree", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms"].includes(globalThis.godotScenario)) {
   if (globalThis.godotScenario === "shared") require("./shared/App");
   else if (globalThis.godotScenario === "refs") require("./refs/App");
+  else if (globalThis.godotScenario === "tree") require("./tree/App");
   else if (globalThis.godotScenario === "view") require("./view/App");
   else if (globalThis.godotScenario === "coordinates") require("./coordinates/App");
   else if (globalThis.godotScenario === "transforms") require("./transforms/App");

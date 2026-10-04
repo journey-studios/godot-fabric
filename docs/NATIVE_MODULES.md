@@ -46,6 +46,17 @@ eager loading starts a public-instance initialization cycle, while named
 export copying loses methods populated later. Both laboratory and external
 consumer entry orders must reach the same completed renderer exports.
 
+## Original logical tree and IDs
+
+The later [tree checkpoint](evidence/tree/README.md) adds View `id`/`nativeID`,
+Text `nativeID`, root-scoped document lookup, original read-only traversal and
+snapshot collections. It reuses this native host and original DOM implementation.
+It also records pinned RawText replacement/null document behavior and the
+children-only commit that restores an imperatively changed native ID.
+Public refs expose the Fabric logical hierarchy, which can differ from Godot
+Control parenting. Full HostInstance/focus/commands and mobile differentials
+remain separate acceptance work.
+
 ## Geometry and environment boundary
 
 Fabric/Yoga points correspond to Godot Window content coordinates. Scalar

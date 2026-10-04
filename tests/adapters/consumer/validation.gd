@@ -36,11 +36,15 @@ func root_pixels(image: Image, surface: Control) -> bool:
   return white > 100
 func capture(stage: String) -> void:
   if not OS.get_cmdline_user_args().has("--capture"): return
+  print("ADAPTER_CAPTURE_BEGIN: " + stage)
+  get_window().grab_focus()
+  for index in range(2): await get_tree().process_frame
   await RenderingServer.frame_post_draw
   var image := get_viewport().get_texture().get_image()
   check(image.save_png("res://adapter-" + stage + ".png") == OK, "Rendered capture: " + stage)
   if stage.begins_with("root-"):
     check(root_pixels(image, second) and (not is_instance_valid(first) or first.call("get_surface_id") == 0 or root_pixels(image, first)), "Surviving roots paint their panel, title and core Button: " + stage)
+  print("ADAPTER_CAPTURE_END: " + stage)
 func _ready() -> void:
   app = $Application/Runtime
   first = $First

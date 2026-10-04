@@ -138,6 +138,7 @@ test("static config uses the Godot base through the original ViewConfig composer
   assert.equal(config.uiViewClassName, "Probe");
   assert.equal(config.validAttributes.caption, true);
   assert.equal(config.validAttributes.testID, true);
+  assert.equal(config.validAttributes.nativeID, true);
   assert.equal(config.validAttributes.pointerEvents, true);
   assert.equal(typeof config.validAttributes.style.backgroundColor.process, "function");
   assert.equal(config.directEventTypes.topBadgeActivate.registrationName, "onBadgeActivate");

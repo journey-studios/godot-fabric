@@ -1,0 +1,386 @@
+{
+  "format": "godot-fabric.tree-negative-control/v1",
+  "at": "2026-10-04T03:39:26.097417+00:00",
+  "baselineCommit": "90896861eb35fcbc55be157e455f74481c8ca2eb",
+  "changedFiles": [
+    "src/base-view-config.js",
+    "src/react-native-platform.jsx"
+  ],
+  "sameFixture": true,
+  "sameNativeHost": true,
+  "nativeHostSha256": "42ee5c75a70e8fc7fdee9d6144c810248abe6aa1a2f0100abd2f3383e18eac79",
+  "fixtureSha256": {
+    "examples/tree/App.jsx": "0cf51b86324b97e534573a70683062f15dcc0fd04f2d03387c96b2724673bd77",
+    "examples/tree/validation.gd": "57e0e3aa3dfcaf6e85debdaa2dccc2aef4ce503fee88a1b49f755d5222085ecf",
+    "examples/tree/scene.tscn": "66ccd1d117af558400d30b03815919971594007432e301bfcf01e91c0e1a0ff1"
+  },
+  "positiveBundleSha256": "45650ab1acd545bc19eec143a6523eb173f97eadf915dbfeca13368a67e8ccdd",
+  "priorConfigurationSha256": {
+    "src/base-view-config.js": "5b657527e7240c643c0cb39b00e9bc01fa7889725737c89410dc6e8b9e3ba60d",
+    "src/react-native-platform.jsx": "eb31a3159989faca8ba8173d8fd2730efc8dd5772c68c5e5938f7f160360e50a"
+  },
+  "negativeBundleSha256": "03c9017963d88fd6c71448276fce3613496703df4b1284c3fbd37a154a445a37",
+  "exitCode": 1,
+  "displayServer": "headless",
+  "checks": [
+    {
+      "name": "AppRegistry mounts two original public TreePanel roots",
+      "passed": true
+    },
+    {
+      "name": "Two logical documents share one Hermes application and one bundle evaluation",
+      "passed": true
+    },
+    {
+      "name": "A initial: Original pinned element, document, documentElement and RawText classes",
+      "passed": true
+    },
+    {
+      "name": "A initial: Document node properties and root identity",
+      "passed": true
+    },
+    {
+      "name": "A initial: One connected documentElement and original document traversal",
+      "passed": true
+    },
+    {
+      "name": "A initial: Root traversal and nativeID lookup share the correct document",
+      "passed": false
+    },
+    {
+      "name": "A initial: Original View resolves JSX id before nativeID",
+      "passed": false
+    },
+    {
+      "name": "A initial: Native IDs, paragraph lookup and null for absent IDs",
+      "passed": false
+    },
+    {
+      "name": "A initial: Logical tree preserves the anonymous flattened wrapper",
+      "passed": true
+    },
+    {
+      "name": "A initial: Declared child order, sibling directions and boundary nulls",
+      "passed": true
+    },
+    {
+      "name": "A initial: Sibling comparison is bidirectional and self position is zero",
+      "passed": true
+    },
+    {
+      "name": "A initial: Ancestor masks and contains follow original RN direction semantics",
+      "passed": true
+    },
+    {
+      "name": "A initial: Document comparisons work in both directions",
+      "passed": true
+    },
+    {
+      "name": "A initial: Composed Text exposes RawText nodes and element-filtered traversal",
+      "passed": true
+    },
+    {
+      "name": "A initial: ReadOnlyText Unicode data, UTF-16 length and original substringData",
+      "passed": true
+    },
+    {
+      "name": "A initial: Original collection classes, item bounds and namedItem null",
+      "passed": true
+    },
+    {
+      "name": "A initial: Collection iterators and forEach retain values, indices and thisArg",
+      "passed": true
+    },
+    {
+      "name": "A initial: Collection getters return new snapshots with read-only index descriptors",
+      "passed": true
+    },
+    {
+      "name": "A initial: Retained nodes, child boundaries and nativeID-only logical view",
+      "passed": false
+    },
+    {
+      "name": "A initial: Native item order and frames match independent declared layout",
+      "passed": true
+    },
+    {
+      "name": "A: Logical wrapper has an original public tag and no concrete native Control",
+      "passed": true
+    },
+    {
+      "name": "A: Declared nativeID makes its otherwise invisible View concrete",
+      "passed": false
+    },
+    {
+      "name": "B initial: Original pinned element, document, documentElement and RawText classes",
+      "passed": true
+    },
+    {
+      "name": "B initial: Document node properties and root identity",
+      "passed": true
+    },
+    {
+      "name": "B initial: One connected documentElement and original document traversal",
+      "passed": true
+    },
+    {
+      "name": "B initial: Root traversal and nativeID lookup share the correct document",
+      "passed": false
+    },
+    {
+      "name": "B initial: Original View resolves JSX id before nativeID",
+      "passed": false
+    },
+    {
+      "name": "B initial: Native IDs, paragraph lookup and null for absent IDs",
+      "passed": false
+    },
+    {
+      "name": "B initial: Logical tree preserves the anonymous flattened wrapper",
+      "passed": true
+    },
+    {
+      "name": "B initial: Declared child order, sibling directions and boundary nulls",
+      "passed": true
+    },
+    {
+      "name": "B initial: Sibling comparison is bidirectional and self position is zero",
+      "passed": true
+    },
+    {
+      "name": "B initial: Ancestor masks and contains follow original RN direction semantics",
+      "passed": true
+    },
+    {
+      "name": "B initial: Document comparisons work in both directions",
+      "passed": true
+    },
+    {
+      "name": "B initial: Composed Text exposes RawText nodes and element-filtered traversal",
+      "passed": true
+    },
+    {
+      "name": "B initial: ReadOnlyText Unicode data, UTF-16 length and original substringData",
+      "passed": true
+    },
+    {
+      "name": "B initial: Original collection classes, item bounds and namedItem null",
+      "passed": true
+    },
+    {
+      "name": "B initial: Collection iterators and forEach retain values, indices and thisArg",
+      "passed": true
+    },
+    {
+      "name": "B initial: Collection getters return new snapshots with read-only index descriptors",
+      "passed": true
+    },
+    {
+      "name": "B initial: Retained nodes, child boundaries and nativeID-only logical view",
+      "passed": false
+    },
+    {
+      "name": "B initial: Native item order and frames match independent declared layout",
+      "passed": true
+    },
+    {
+      "name": "B: Logical wrapper has an original public tag and no concrete native Control",
+      "passed": true
+    },
+    {
+      "name": "B: Declared nativeID makes its otherwise invisible View concrete",
+      "passed": false
+    },
+    {
+      "name": "Duplicate IDs are independently scoped to two original RN documents",
+      "passed": false
+    },
+    {
+      "name": "Cross-root element and document comparisons are disconnected both ways",
+      "passed": true
+    },
+    {
+      "name": "A duplicate-initial: Same-root duplicate IDs use current pre-order while public props stay declarative",
+      "passed": false
+    },
+    {
+      "name": "A updated: Keyed reorder changes both position directions and preserves refs",
+      "passed": true
+    },
+    {
+      "name": "A updated: Declarative ID update changes lookup and canonical public getter",
+      "passed": false
+    },
+    {
+      "name": "A updated: Changed strings replace RawText while unchanged spans retain their original public node",
+      "passed": true
+    },
+    {
+      "name": "A updated: Retained snapshots keep original order while fresh getters see updates",
+      "passed": true
+    },
+    {
+      "name": "A updated: Removing nativeID preserves the logical view and mounted React state",
+      "passed": true
+    },
+    {
+      "name": "A updated: Native item order and frames match independent declared layout",
+      "passed": true
+    },
+    {
+      "name": "A: Removing nativeID flattens its View and preserves the real child Control",
+      "passed": true
+    },
+    {
+      "name": "Updating root A leaves root B React state and host authority intact",
+      "passed": true
+    },
+    {
+      "name": "B updated: Keyed reorder changes both position directions and preserves refs",
+      "passed": true
+    },
+    {
+      "name": "B updated: Declarative ID update changes lookup and canonical public getter",
+      "passed": false
+    },
+    {
+      "name": "B updated: Changed strings replace RawText while unchanged spans retain their original public node",
+      "passed": true
+    },
+    {
+      "name": "B updated: Retained snapshots keep original order while fresh getters see updates",
+      "passed": true
+    },
+    {
+      "name": "B updated: Removing nativeID preserves the logical view and mounted React state",
+      "passed": true
+    },
+    {
+      "name": "B updated: Native item order and frames match independent declared layout",
+      "passed": true
+    },
+    {
+      "name": "B: Removing nativeID flattens its View and preserves the real child Control",
+      "passed": true
+    },
+    {
+      "name": "A duplicate-updated: Same-root duplicate IDs use current pre-order while public props stay declarative",
+      "passed": false
+    },
+    {
+      "name": "A replaced: Key replacement creates a new original public ref and lookup authority",
+      "passed": false
+    },
+    {
+      "name": "A replaced: Replaced retained element disconnects in both comparison directions",
+      "passed": true
+    },
+    {
+      "name": "A removed: Removed item disconnects while old collection snapshots stay intact",
+      "passed": true
+    },
+    {
+      "name": "A removed: Fresh traversal reflects removal and updated sibling boundaries",
+      "passed": true
+    },
+    {
+      "name": "A fallback: Removing JSX id restores the nativeID fallback",
+      "passed": false
+    },
+    {
+      "name": "A imperative: Imperative native ID lookup differs from canonical props",
+      "passed": false
+    },
+    {
+      "name": "A rerender: Pinned upstream children-only commit restores declarative native ID",
+      "passed": false
+    },
+    {
+      "name": "A declared: Changed React props overwrite the imperative native ID",
+      "passed": false
+    },
+    {
+      "name": "B replaced: Key replacement creates a new original public ref and lookup authority",
+      "passed": false
+    },
+    {
+      "name": "B replaced: Replaced retained element disconnects in both comparison directions",
+      "passed": true
+    },
+    {
+      "name": "B removed: Removed item disconnects while old collection snapshots stay intact",
+      "passed": true
+    },
+    {
+      "name": "B removed: Fresh traversal reflects removal and updated sibling boundaries",
+      "passed": true
+    },
+    {
+      "name": "B fallback: Removing JSX id restores the nativeID fallback",
+      "passed": false
+    },
+    {
+      "name": "B imperative: Imperative native ID lookup differs from canonical props",
+      "passed": false
+    },
+    {
+      "name": "B rerender: Pinned upstream children-only commit restores declarative native ID",
+      "passed": false
+    },
+    {
+      "name": "B declared: Changed React props overwrite the imperative native ID",
+      "passed": false
+    },
+    {
+      "name": "A retired: Retired document disconnects while original documentElement getters remain cached",
+      "passed": true
+    },
+    {
+      "name": "A retired: Initial, updated and unchanged RawText objects all obey disconnected RN semantics",
+      "passed": true
+    },
+    {
+      "name": "A retired: Surviving root compares safely against the retired document in both directions",
+      "passed": true
+    },
+    {
+      "name": "Retiring one document cleans only its React root and preserves the second mounted tree",
+      "passed": true
+    },
+    {
+      "name": "Partial root retirement releases native Controls, tags and responders",
+      "passed": true
+    },
+    {
+      "name": "B retired: Retired document disconnects while original documentElement getters remain cached",
+      "passed": true
+    },
+    {
+      "name": "B retired: Initial, updated and unchanged RawText objects all obey disconnected RN semantics",
+      "passed": true
+    },
+    {
+      "name": "Tree mutations retain one mounted React panel and one cleanup per root",
+      "passed": true
+    },
+    {
+      "name": "Key replacement and removal preserve exactly one mount and cleanup per real item component",
+      "passed": true
+    },
+    {
+      "name": "Final stop retires every native Control, node and input authority in root A",
+      "passed": true
+    },
+    {
+      "name": "Final stop retires every native Control, node and input authority in root B",
+      "passed": true
+    },
+    {
+      "name": "Original tree navigation and mutation leave no host error or scheduler resources",
+      "passed": true
+    }
+  ],
+  "failedChecks": 25,
+  "onlyExpectedAssertionFailures": true,
+  "restoredSourceAndBundleVerified": true
+}

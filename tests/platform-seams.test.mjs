@@ -190,3 +190,24 @@ test("the public style validator forwards transforms and still rejects unrelated
       new RegExp("Godot View does not implement style " + name));
   assert.throws(() => nativeStyle({borderStyle: "dashed"}, "View"), /solid borders only/);
 });
+
+
+test("native IDs reach original attribute payloads and public View keeps the original ID mapping", async t => {
+  const directory = fixture(t, {
+    "App.js": 'import {createViewConfig} from "react-native/Libraries/NativeComponent/ViewConfig"; '
+      + 'export {create, diff} from "react-native/Libraries/ReactNative/ReactFabricPublicInstance/ReactNativeAttributePayload"; '
+      + 'export default createViewConfig({uiViewClassName: "RCTView"});',
+  });
+  const result = await compile(directory, "App.js");
+  const {default: config, create, diff} = execute(result, {__DEV__: false});
+  const plain = value => JSON.parse(JSON.stringify(value));
+  assert.deepEqual(plain(create({nativeID: "panel", unknownAttribute: "ignored"}, config.validAttributes)), {nativeID: "panel"});
+  assert.deepEqual(plain(diff({nativeID: "panel"}, {nativeID: "updated"}, config.validAttributes)), {nativeID: "updated"});
+  assert.deepEqual(plain(diff({nativeID: "updated"}, {}, config.validAttributes)), {nativeID: null});
+  assert.equal(create({nativeID: "same"}, {}), null);
+  // Inspect the actual compiled public entrypoint dependency graph; the runtime
+  // fixture independently verifies ID precedence, lookup and mount behavior.
+  const publicEntry = fixture(t, {"Public.js": 'export {View} from "react-native";'});
+  const publicResult = await compile(publicEntry, "Public.js");
+  assert.ok(Object.keys(publicResult.metafile.inputs).some(input => input.endsWith("react-native/Libraries/Components/View/View.js")));
+});

@@ -67,3 +67,21 @@ const nativeEmitter = new NativeEventEmitter(NativeModules.GodotFabricNativeFixt
 const nativeSubscription = nativeEmitter.addListener("GodotFabricFixtureValue", () => {});
 nativeSubscription.remove();
 void nativeSum;
+
+// DOM traversal comes from the original pinned public instance types.
+function readTree(element: ViewInstance) {
+  const identifier: string = element.id;
+  const name: string = element.nodeName;
+  const type: number = element.nodeType;
+  const child = element.firstChild;
+  const following = child?.nextSibling;
+  const parent = child?.parentElement;
+  const found = element.ownerDocument?.getElementById(identifier);
+  const hasChildren: boolean = element.hasChildNodes();
+  const elementCount: number = element.childElementCount;
+  return {name, type, following, parent, found, hasChildren, elementCount};
+}
+const identified = <View id="jsx-id" nativeID="native-id" />;
+// @ts-expect-error Native IDs use the original string contract
+const invalidIdentifier = <View id={42} />;
+void readTree; void identified; void invalidIdentifier;

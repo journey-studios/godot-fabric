@@ -48,6 +48,13 @@ explicit rejection cases. A separate input guard cancels held contacts when an
 external Godot embedding becomes non-invertible, preserving the last valid
 coordinates. Singular, 3D and out-of-range JSX transforms remain unsupported.
 
+The [read-only tree example](examples/tree/README.md) exercises original RN
+documents, ID lookup, logical traversal and collection snapshots across two
+roots. It preserves element refs during keyed reorder and records the pinned
+RawText replacement and imperative-ID behavior. Its
+[evidence](docs/evidence/tree/README.md) retains 89 headless / 99 native checks,
+eight pixel samples and the failing previous-configuration control.
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -129,6 +136,7 @@ npm run example -- coordinates # root/local/screen points and real movement gest
 npm run example -- transforms # original RN affine styles, refs and transformed input
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
+npm run example -- tree     # native IDs, original documents and logical traversal
 npm run example -- services # typed Godot calls, signals and shared Zustand data
 npm start -- --nativewind   # reactive utility classes and manual theme
 npm start -- --chart        # original React Native Chart Kit
@@ -170,6 +178,10 @@ clock example separately.
 | RN affine styles | Resize and materialize | Remove transforms |
 | --- | --- | --- |
 | [![Original RN transform order, origins and mirrored/sheared Views](docs/evidence/transforms/transform-initial.png)](examples/transforms/README.md) | [![Percentage transforms follow size changes while the anonymous wrapper becomes concrete](docs/evidence/transforms/transform-updated.png)](examples/transforms/README.md) | [![Removing transforms restores Yoga placement and flattens the wrapper](docs/evidence/transforms/transform-reset.png)](examples/transforms/README.md) |
+
+| Original RN tree | Keyed reorder and text update |
+| --- | --- |
+| [![Independent documents, repeated IDs and logical tree refs](docs/evidence/tree/tree-initial.png)](examples/tree/README.md) | [![Current order follows React while retained collections keep their snapshot](docs/evidence/tree/tree-updated.png)](examples/tree/README.md) |
 
 ## Write React
 
