@@ -14,6 +14,7 @@ import {
   useTextAncestor,
 } from "./text";
 import { PublicInput } from "./public-input";
+import TextInputState from "./text-input-state";
 import { validateButton, validateInput } from "./control-contracts.mjs";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
 export { default as NativeModules } from "./native-modules";
@@ -171,6 +172,12 @@ export function TextInput(props) {
     throw new Error("Godot TextInput color requires a valid static color string");
   return <PublicInput {...props} style={{ minHeight: 44, ...style }} />;
 }
+TextInput.State = {
+  currentlyFocusedInput: TextInputState.currentlyFocusedInput,
+  currentlyFocusedField: TextInputState.currentlyFocusedField,
+  focusTextInput: TextInputState.focusTextInput,
+  blurTextInput: TextInputState.blurTextInput,
+};
 export function ScrollView(props) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");

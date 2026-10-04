@@ -60,12 +60,6 @@ function createPublicInstance(tag, viewConfig, handle, ownerDocument) {
     isFocused() {
       return godotMetrics(tag)?.focused ?? false;
     },
-    focus() {
-      godotFocus(tag, true);
-    },
-    blur() {
-      godotFocus(tag, false);
-    },
   });
 }
 export {

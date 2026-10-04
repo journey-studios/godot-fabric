@@ -1,0 +1,10 @@
+{
+  "format": "godot-fabric.focus-fixture-preflight/v1",
+  "checks": 175,
+  "failed": [
+    "off-tree: A: Ordinary View retains original prototype focus and blur methods"
+  ],
+  "logSha256": "9a5ba173bfa144ee1be86fdf25c2f711afa3209c36452bc99d5818857e91e72c",
+  "cause": "An inline ordinary View callback ref was detached during mutation, before its layout reattachment. The focus-window probe required that unrelated ref.",
+  "correction": "Stabilize ordinary View/panel callback refs. Preserve every assertion and the dedicated input ref-churn case. Strengthen focus_owner to require any named target to exist. Final fixtures pass and both negative controls use that same final fixture."
+}

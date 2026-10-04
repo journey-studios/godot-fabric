@@ -351,11 +351,41 @@ explicit test-window focus preparation precedes a fresh successful full run.
 [Pages run37175019378](https://github.com/journey-studios/godot-fabric/actions/runs/37175019378) passed build/deploy; served JSON matches `a012f9e`, source `31d08ac`, outside main.
 The [hosted receipt](docs/evidence/tree/ci.json) records contracts passed with
 other jobs still running in that snapshot. These are separate from local proof.
+The later [hosted run37175169255](https://github.com/journey-studios/godot-fabric/actions/runs/37175169255)
+at `a608d07` passed all five jobs. It validates the preceding tree snapshot,
+including the limited mobile reference suite; it is not a focus differential.
 GF-08/GF-10 remain
 In progress; checkpoints, dependencies, weights, decisions and denominator do
 not change. Next in sequence 3: original TextInputState, public focus and native
 commands, followed by remaining HostInstance/EventTarget and pointer capture
 acceptance. Full mobile tree differentials and all-target evidence remain open.
+
+### Public input focus checkpoint (2026-10-04)
+
+The [focus slice](docs/evidence/focus/README.md) extends GF-08/GF-12 through
+the original TextInputState singleton, original public element prototype and
+Fabric/Codegen focus commands. Callback-time focus, autoFocus, native transfers,
+readonly updates, callback ref replacement, keyed replacement/removal and stale
+commands are tested against the actual Viewport owner and LineEdit focus.
+Native eligibility guards cover deleted/stopping inputs and off-tree reparenting.
+Canonical props are not used as an authority for committed native editability.
+
+The final fixture passes **175 headless / 189 native checks**, **12 pixels** and
+two captures. It executes off-tree, root-retirement and application-stop
+callbacks inside native operations. Controls fail **23/160** against the
+preceding native host and **11/175** without JS native eligibility. Restoring
+the final implementation restores exact bundle/native bytes. Regressions pass
+**207 Node / 13 Python**, **10 native tests**, **20 examples / 1,483 checks** and
+**17 adapter runs / 318 checks**. Exact identities and the initial fixture
+callback-ref correction are retained in the linked receipts.
+
+GF-08/GF-12 remain In progress. Existing slice checkpoints gain evidence;
+full contract, reference parity, dependencies and targets remain open. Weights,
+decisions and the 156-checkpoint denominator do not change. Next in sequence 3:
+remaining HostInstance/EventTarget and pointer-capture acceptance. Hidden trees,
+hardware keyboard/IME, multiline and mobile focus differentials retain their
+separate acceptance requirements. Publication/hosted results are recorded after
+verification; local runtime proof is distinct from both.
 
 ## Release contract and scope
 

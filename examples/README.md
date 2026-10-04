@@ -31,6 +31,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
 | [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
 | [tree](tree/README.md) | Native IDs, original documents, logical traversal, RawText and retained collection snapshots | Public | [App](tree/App.jsx) · [scene](tree/scene.tscn) |
+| [focus](focus/README.md) | Original TextInput.State, real LineEdit focus, ref replacement and reentrant retirement | Public | [App](focus/App.jsx) · [scene](focus/scene.tscn) |
 | [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
 | [services](services/README.md) | Typed GDScript calls/signals, consistent state and shared Zustand data | Public | [App](services/App.jsx) · [scene](services/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
@@ -59,6 +60,13 @@ and [parity baseline](../docs/compatibility/BASELINE.md).
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
 
 Every interactive example's README has its own renderer capture.
+
+![Original RN focused input after callback ref replacement](../docs/evidence/focus/focus-updated.png)
+
+The [focus example](focus/README.md) compares the original input singleton with
+the actual Viewport owner and LineEdit signals. It exercises two roots,
+editability, retained refs, reparenting and reentrant retirement. Hardware
+keyboard/IME and mobile differentials remain separate acceptance requirements.
 
 ![Public View ordering, clipping and border colors](../docs/evidence/view/view-initial.png)
 

@@ -33,6 +33,11 @@ function Consumer() {
   if (nativeTag != null) UIManager.measureInWindow(nativeTag, (x, y) => { void x; void y; });
   const input = useRef<TextInputInstance>(null);
   input.current?.clear(); input.current?.setSelection(1, 3);
+  TextInput.State.focusTextInput(input.current);
+  TextInput.State.blurTextInput(input.current);
+  const focused: ViewInstance | null = TextInput.State.currentlyFocusedInput();
+  const focusedTag: number | null = TextInput.State.currentlyFocusedField();
+  void focused; void focusedTag;
   return <View ref={view}><TextInput {...inputProps} ref={input} /><Button {...buttonProps} /></View>;
 }
 // Unsupported contracts must fail type checking; these directives fail if that changes.
@@ -49,6 +54,12 @@ const weight = <TextInput style={{ fontWeight: "bold" }} />;
 // @ts-expect-error input color currently accepts static strings only
 const dynamicColor = <TextInput style={{ color: {} }} />;
 void dynamicColor; void multiline; void keyboard; void legacyButton; void invalidTitle; void weight;
+// @ts-expect-error focus accepts a public input instance, not a legacy tag
+TextInput.State.focusTextInput(42);
+// @ts-expect-error internal registry management is not the public State API
+TextInput.State.registerInput(null);
+// @ts-expect-error the singleton may hold an internal input without public clear
+TextInput.State.currentlyFocusedInput()?.clear();
 
 void Consumer;
 AppRegistry.registerComponent("Consumer", () => Consumer);

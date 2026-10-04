@@ -39,7 +39,7 @@ RN compatibility.
 | View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and invertible 2D affine styles | RTL, singular/3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
-| TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
+| TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, original TextInput.State and native focus/blur coordination, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events and responder-mediated drag | All children mount; no virtualization, inertia, bounce, paging, zoom or complete nested/multitouch scrolling |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
@@ -73,9 +73,28 @@ preserves native edit counts before forwarding user callbacks; imperative
 `clear` and `setSelection` acknowledge the latest count. Ref cleanup releases
 the host, so retained wrapper commands become harmless after unmount.
 `focus`, `blur`, `isFocused`, `measure`, `measureInWindow`, `clear`,
-`setSelection` and `getNativeRef` are the exposed input ref subset. Static
-`TextInput.State`, richer host/DOM-node methods and platform keyboard services
-are not implemented.
+`setSelection` and `getNativeRef` are the exposed input ref subset.
+
+`TextInput.State` exposes `currentlyFocusedInput`, `currentlyFocusedField`,
+`focusTextInput` and `blurTextInput`. It uses the original RN focused-instance
+singleton and registration set. The Godot bridge supplies focus/blur commands
+through original Codegen and Fabric dispatch. The getters return
+`NativeInstance | null` and `number | null`; focus/blur accept public host
+instances or null/undefined. Deprecated numeric arguments remain upstream no-ops
+at runtime and are rejected by the public types.
+
+Inputs register before external ref callbacks. Native focus/blur events update
+the original singleton before user callbacks. Eligibility follows mounted
+native editability and lifetime: canonical RN props can change during a
+speculative render and are not an authority for native focus. Input retirement
+clears registration and focused authority. Ref callback replacement preserves
+the registration of an input that remains mounted. The original element
+prototype owns `focus()`/`blur()`; ordinary View refs retain upstream no-op
+behavior while `enableImperativeFocus` is disabled.
+
+The [focus example](../examples/focus/README.md) records the bounded desktop
+contract. Full HostInstance, hidden-tree behavior, multiline, IME composition,
+virtual keyboards/insets and mobile reference differentials remain open.
 
 Button supports `title`, `onPress`, `disabled`, static string `color`, `testID`
 and ref. TextInput supports `value`, `defaultValue`, `selection`, `editable`,
@@ -108,7 +127,7 @@ retains identity. This production renderer leaves RawText `ownerDocument` null.
 An imperative native ID changes lookup without changing canonical `.id`; the
 fixture’s next children-only React commit restores the declared native ID. See
 [executed evidence and source links](evidence/tree/README.md) for these exact
-limits. Full HostInstance, event-target/pointer capture, focus/native commands
+limits. Full HostInstance, event-target/pointer capture, remaining native commands
 and all-platform differential acceptance remain open under GF-08.
 
 ## Public View geometry

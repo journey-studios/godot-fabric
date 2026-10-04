@@ -211,3 +211,56 @@ test("native IDs reach original attribute payloads and public View keeps the ori
   const publicResult = await compile(publicEntry, "Public.js");
   assert.ok(Object.keys(publicResult.metafile.inputs).some(input => input.endsWith("react-native/Libraries/Components/View/View.js")));
 });
+
+test("the Godot focus bridge retains original TextInputState guards and singleton", async t => {
+  const directory = fixture(t, {"App.js":
+    `export {default as state} from ${JSON.stringify(path.join(root, "src/text-input-state.js"))};\n`
+    + 'export {default as original} from "react-native/Libraries/Components/TextInput/TextInputState";'});
+  // Spy only at the renderer command boundary. The registry, focus guard and
+  // codegen command functions themselves are the pinned upstream modules.
+  const result = await build({absWorkingDir: directory, entryPoints: ["App.js"], bundle: true,
+    write: false, format: "cjs", platform: "neutral", mainFields: ["main"],
+    define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"}, metafile: true,
+    plugins: [{name: "command-boundary-spy", setup(builder) {
+      builder.onLoad({filter: /\/src\/renderer-proxy\.js$/}, () => ({contents:
+        'export function dispatchCommand(ref, name, args) { globalThis.commandCalls.push({ref, name, args}); } '
+        + 'export function findNodeHandle(ref) { return ref?.tag ?? null; }', loader: "js"}));
+    }}, ...plugins()]});
+  const commandCalls = [];
+  const host = {RN$Bridgeless: true,
+    nativeModuleProxy: {
+      SourceCode: {getConstants: () => ({scriptURL: "file:///unit-fixture.js"})},
+      DeviceInfo: {getConstants: () => ({Dimensions: {
+        window: {width: 800, height: 600, scale: 1, fontScale: 1},
+        screen: {width: 800, height: 600, scale: 1, fontScale: 1},
+      }})},
+    },
+    RN$registerCallableModule() {}};
+  const {state, original} = execute(result, {commandCalls, global: host, ...host});
+  assert.equal(state, original);
+  const first = {tag: 101, currentProps: {editable: true}};
+  const second = {tag: 103, currentProps: {editable: true}};
+  const readonly = {tag: 105, currentProps: {editable: false}};
+  state.registerInput(first);
+  assert.equal(original.isTextInput(first), true);
+  state.focusTextInput(first);
+  assert.equal(original.currentlyFocusedInput(), first);
+  assert.equal(state.currentlyFocusedField(), 101);
+  for (const field of [first, readonly, null, undefined, 101]) state.focusTextInput(field);
+  state.blurTextInput(second);
+  assert.equal(commandCalls.length, 1);
+  state.focusTextInput(second);
+  state.blurTextInput(first);
+  assert.equal(commandCalls.length, 2);
+  state.blurTextInput(second);
+  state.blurTextInput(second);
+  assert.equal(state.currentlyFocusedInput(), null);
+  assert.equal(state.currentlyFocusedField(), null);
+  assert.deepEqual(commandCalls.map(call => [call.ref.tag, call.name, Array.from(call.args)]),
+    [[101, "focus", []], [103, "focus", []], [103, "blur", []]]);
+  state.unregisterInput(first);
+  assert.equal(original.isTextInput(first), false);
+  for (const suffix of ["react-native/Libraries/Components/TextInput/TextInputState.js",
+    "react-native/Libraries/Utilities/codegenNativeCommands.js", "src/text-input-state.js"])
+    assert.ok(Object.keys(result.metafile.inputs).some(input => input.endsWith(suffix)), suffix);
+});

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Árvore e IDs comprovados; próximos foco e comandos públicos de HostInstance"
+    "focusTitle": "Foco/TextInputState comprovados; próximos contratos HostInstance/EventTarget e pointer capture"
   },
-  "updatedAt": "2026-10-04T03:49:27.081644+00:00",
+  "updatedAt": "2026-10-04T04:40:00.173589+00:00",
   "source": {
-    "commit": "31d08ac37d1fb61a80c233aada6a3cfc3549bfcc",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/ROADMAP.md",
-    "scope": "Implementação31d08ac verificada: árvore/IDs89/99, oito pixels/duas capturas, controle JS anterior25/89; fontes nativas inalteradas e hostSHA42ee5c7. Regressões206Node/13Python,10nativos,19exemplos/1308,17adapters/318. Pagesmanual37175019378 passou build/deploy e publicou JSONa012f9e pelo mainadad606, comparado integralmente. CIa012f9e: contracts passou; demais lanes em andamento no snapshot. Registro de publicação separado de runtime e aceite integral; nenhum GF, decisão, peso ou denominador fechado.",
+    "commit": "a608d0737d05e8e050471fc372ea5f2cdda9ff01",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/ROADMAP.md",
+    "scope": "Fatia local de foco comprovada no working tree após baselinea608d07; pin de fontes segue o commit da implementação.175headless/189native,12pixels/duas capturas; controles23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. CI anteriora608d07 passou cinco lanes; CI da nova fatia e publicação Pages seguem verificações separadas. GF-08/GF-12 em andamento; nenhum aceite, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Árvore/IDs nativos com classes originais RN: duas raízes, travessia lógica, snapshots, Unicode/RawText, reorder/replacement/retirement. 89 headless/99 native, oito pixels e duas capturas; configuração anterior falha 25/89. RawText substituído e nativeID imperativo restaurado no commit de filhos seguem o RN fixado. HostInstance completo, foco/comandos, EventTarget/pointer capture, todos os alvos e diferencial mobile permanecem pendentes. Medidas/transforms anteriores mantêm suas provas separadas.",
+      "note": "Foco público usa prototype/State/Codegen originais RN e LineEdit real; duas raízes, ref churn, readonly/off-tree, comandos reentrantes e retirement passaram175/189,12pixels/duas capturas. Controles anterior23/160 e elegibilidade removida11/175 falham como esperado. Árvore/IDs e medidas/transforms mantêm provas separadas. HostInstance completo, EventTarget/pointer capture, hidden trees, hardware/IME e diferenciais mobile permanecem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -450,6 +450,10 @@
             {
               "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
               "url": "https://github.com/journey-studios/godot-fabric/blob/a012f9ed0943f4996553ff78ab543317d8ed46f0/docs/evidence/tree/README.md"
+            },
+            {
+              "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/focus/README.md"
             }
           ]
         },
@@ -648,7 +652,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Multiline, IME, seleção completa, teclado móvel e autofill seguem abertos.",
+      "note": "Singleton TextInputState original e quatro statics públicos conectados ao foco nativo: callback ref, autoFocus, transferências, readonly real, reparenting e cleanup/reentrância comprovados175/189. Controles negativos23/160 e11/175. Multiline, IME, seleção completa, teclado móvel/insets, autofill, comandos restantes e diferenciais RN permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -659,6 +663,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/focus/README.md"
             }
           ]
         },
@@ -2875,6 +2883,16 @@
       ],
       "message": "Pagesmanual37175019378 concluiu build/deploy; JSON públicoa012f9e foi comparado ao commit, fonte31d08ac fora do main. CI37175002603: contracts passou, outras lanes em andamento no snapshot. Prova local e publicação não fecham a paridade completa ou alvos.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378"
+    },
+    {
+      "id": "focus-local-proof-20261004",
+      "at": "2026-10-04T04:40:00.173589+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Foco original RN + LineEdit real passou175/189,12pixels/duas capturas, com lifetimes e reentrância. Mesmo fixture falha23/160 no host anterior e11/175 sem elegibilidade nativa. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Não adiciona checkpoints: denominador156 e18 checkpoints concluídos preservados; GF-08/GF-12 seguem abertos. Pin e publicação seguem passos separados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/focus/README.md"
     }
   ]
 }

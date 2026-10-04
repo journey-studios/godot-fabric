@@ -605,7 +605,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       auto tag = native_tag(args[0]);
       if (!tag) return jsi::Value::null();
       auto found = views.find(*tag);
-      if (found == views.end() || roots.at(found->second.surface_id)->stopping) return jsi::Value::null();
+      if (found == views.end() || retiring.contains(*tag) || roots.at(found->second.surface_id)->stopping) return jsi::Value::null();
       auto *control = found->second.control;
       jsi::Object result(rt);
       result.setProperty(rt, "width", control->get_size().x);
@@ -616,6 +616,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       result.setProperty(rt, "pageY", control->get_global_position().y);
       result.setProperty(rt, "id", static_cast<double>(control->get_instance_id()));
       result.setProperty(rt, "focused", control->has_focus());
+      result.setProperty(rt, "insideTree", control->is_inside_tree());
+      if (auto *input = Object::cast_to<LineEdit>(control))
+        result.setProperty(rt, "editable", input->is_editable());
       return jsi::Value(std::move(result));
     });
     bind("godotFocus", 2, [this](auto &, auto &, const jsi::Value *args, size_t count) {
@@ -1210,6 +1213,22 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         found->second.shadow.eventEmitter != node->getEventEmitter()) return;
     if (found->second.external) {
       if (!found->second.external->command(name, args)) fail("Unsupported adapter command: " + name);
+      return;
+    }
+    if ((name == "focus" || name == "blur") && found->second.input) {
+      if (!args.isArray() || !args.empty()) {
+        fail(name + " requires an empty argument array");
+        return;
+      }
+      auto *input = Object::cast_to<LineEdit>(found->second.control);
+      if (!input || !input->is_inside_tree()) return;
+      if (name == "focus") {
+        if (input->is_editable()) input->grab_focus();
+      } else {
+        input->release_focus();
+      }
+      // Godot signals can request unmount/stop. ExecutionScope defers retiring
+      // objects; do not reuse the views iterator after invoking the Control.
       return;
     }
     if ((name == "scrollDragStart" || name == "scrollDragTo") && !roots.at(found->second.surface_id)->pointer->owns(node->getTag())) return;

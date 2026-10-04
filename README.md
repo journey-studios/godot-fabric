@@ -55,6 +55,15 @@ RawText replacement and imperative-ID behavior. Its
 [evidence](docs/evidence/tree/README.md) retains 89 headless / 99 native checks,
 eight pixel samples and the failing previous-configuration control.
 
+Public TextInput focus uses original RN TextInput.State and native Fabric
+commands. The [focus example](examples/focus/README.md) compares that singleton
+with real Godot Controls across callbacks, editability changes and root
+retirement. Its [evidence](docs/evidence/focus/README.md) records 175 headless /
+189 native checks, two captures and controls that fail with the preceding host
+or missing eligibility guards. Keyboard/IME and multiline remain open.
+
+![Original RN focus preserved after callback ref replacement](docs/evidence/focus/focus-updated.png)
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

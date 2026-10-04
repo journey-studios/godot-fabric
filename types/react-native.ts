@@ -62,7 +62,14 @@ export interface ButtonProps extends Pick<RN.ButtonProps, "onPress"> {
 }
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
-export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>>;
+export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {
+  State: {
+    currentlyFocusedInput(): NativeInstance | null;
+    currentlyFocusedField(): number | null;
+    focusTextInput(input: NativeInstance | null | undefined): void;
+    blurTextInput(input: NativeInstance | null | undefined): void;
+  };
+};
 export declare const Button: React.ComponentType<ButtonProps & React.RefAttributes<NativeInstance>>;
 export declare const StyleSheet: {
   hairlineWidth: number;

@@ -1,0 +1,2977 @@
+{
+  "format": "godot-fabric.focus-checks/v1",
+  "hostSha256": "6abafb9f751b1b75f477b76d0db76dc9d3c4a897a91d76f158cbffc564845f2e",
+  "modes": {
+    "headless": {
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "AppRegistry mounts public FocusPanel root A",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: initial-A",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A callback ref can focus its input because registration precedes the user callback",
+          "passed": true
+        },
+        {
+          "name": "callback-ref: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Callback ref focus emits one genuine native focus event",
+          "passed": true
+        },
+        {
+          "name": "AppRegistry mounts public FocusPanel root B",
+          "passed": true
+        },
+        {
+          "name": "Two focus roots share one Hermes application and original RN singleton",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: initial-B",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "initial-B: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "initial-B: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "initial-B: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "initial-B: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "initial-B: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "initial-B: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "autoFocus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "AutoFocus in a second root transfers actual focus and emits native blur/endEditing",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame A-primary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame A-secondary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame A-readonly",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame B-primary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame B-secondary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame B-readonly",
+          "passed": true
+        },
+        {
+          "name": "public-ref-focus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Repeated focus and blur of an unfocused input produce no extra native editing events",
+          "passed": true
+        },
+        {
+          "name": "repeat-and-unfocused-blur: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Native transfer target exists: B-primary",
+          "passed": true
+        },
+        {
+          "name": "native-cross-root-transfer: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: native-transfer",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "public-State-focus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "public-State-blur: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "original-codegen-focus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "readonly-and-original-View-noop: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Declared editable false reaches the actual native LineEdit",
+          "passed": true
+        },
+        {
+          "name": "A committed editable update reaches the existing native input",
+          "passed": true
+        },
+        {
+          "name": "committed-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Committed editing is restored before testing a native-only update",
+          "passed": true
+        },
+        {
+          "name": "native-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Public input focus capability reflects the actual committed native editability",
+          "passed": true
+        },
+        {
+          "name": "committed-editable-restored: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Callback ref changes preserve the same actual native LineEdit",
+          "passed": true
+        },
+        {
+          "name": "Callback ref changes do not emit an artificial blur or focus",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: churned",
+          "passed": true
+        },
+        {
+          "name": "churned: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "churned: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "churned: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "churned: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "churned: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "churned: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "churned: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "churned: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "churned: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "churned: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "churned: Changing a callback ref preserves the public input and reattaches with registration intact",
+          "passed": true
+        },
+        {
+          "name": "churned: Callback ref cleanup does not clear the live input's focused State",
+          "passed": true
+        },
+        {
+          "name": "callback-ref-churn: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame A-primary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame A-secondary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame A-readonly",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame B-primary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame B-secondary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame B-readonly",
+          "passed": true
+        },
+        {
+          "name": "Native transfer target exists: B-secondary",
+          "passed": true
+        },
+        {
+          "name": "A nativeID wrapper physically hosts the original input before flattening",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: off-tree",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "off-tree: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "off-tree: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "off-tree: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "off-tree: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "off-tree: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "off-tree: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Reparenting rejects focus while the same original registered input is temporarily off-tree",
+          "passed": true
+        },
+        {
+          "name": "off-tree: An off-tree retained ref cannot steal the surviving native input's singleton focus",
+          "passed": true
+        },
+        {
+          "name": "inside-off-tree-reparenting: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Removing nativeID flattens the wrapper, reparents the same LineEdit and exercises one real off-tree callback",
+          "passed": true
+        },
+        {
+          "name": "off-tree-reparenting: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "A changed React key creates an independent native replacement",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: replaced",
+          "passed": true
+        },
+        {
+          "name": "replaced: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "replaced: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "replaced: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "replaced: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "replaced: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "replaced: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "replaced: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "replaced: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "replaced: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "replaced: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "replaced: Key replacement disconnects and unregisters the retained original ref without aliasing the replacement",
+          "passed": true
+        },
+        {
+          "name": "replaced: A key replacement performs one component cleanup and one fresh mount",
+          "passed": true
+        },
+        {
+          "name": "Retained replaced refs and original codegen commands are harmless",
+          "passed": true
+        },
+        {
+          "name": "replacement-stale-commands: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Native transfer target exists: A-secondary",
+          "passed": true
+        },
+        {
+          "name": "before-focused-removal: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: removed",
+          "passed": true
+        },
+        {
+          "name": "removed: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "removed: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "removed: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "removed: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "removed: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "removed: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "removed: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "removed: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "removed: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "removed: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "removed: Removing the focused input releases its ref, registration and singleton focus",
+          "passed": true
+        },
+        {
+          "name": "Focused removal deletes the actual native LineEdit",
+          "passed": true
+        },
+        {
+          "name": "focused-removal: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "removed-stale-commands: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Reentrant retirement starts with an unfocused mounted A input",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: retiring",
+          "passed": true
+        },
+        {
+          "name": "retiring: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "retiring: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "retiring: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "retiring: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "retiring: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "retiring: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "retiring: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "retiring: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "retiring: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "retiring: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "retiring: Stopping root rejects focus while its original ref is still connected and registered",
+          "passed": true
+        },
+        {
+          "name": "retiring: A retained stopping-root ref cannot steal the surviving root's singleton focus",
+          "passed": true
+        },
+        {
+          "name": "inside-reentrant-retirement: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Stopping root is guarded before deferred retirement completes",
+          "passed": true
+        },
+        {
+          "name": "A real native focus_entered callback retires its own root once",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: partial",
+          "passed": true
+        },
+        {
+          "name": "partial: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "partial: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "partial: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "partial: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "partial: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "partial: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "partial: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "partial: Root retirement unregisters only its own public inputs and preserves the surviving registry",
+          "passed": true
+        },
+        {
+          "name": "partial: Retiring root A preserves root B's focused singleton entry",
+          "passed": true
+        },
+        {
+          "name": "partial-root-retirement: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Retiring root A releases its native Controls and pending retirement while preserving root B",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown target is a live, unfocused native input",
+          "passed": true
+        },
+        {
+          "name": "Native focus_entered can stop the application reentrantly through the original command",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: stopped",
+          "passed": true
+        },
+        {
+          "name": "stopped: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "stopped: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "stopped: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "stopped: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "stopped: Application shutdown clears every original input registration and focused ref",
+          "passed": true
+        },
+        {
+          "name": "stopped: All components and callback refs clean up exactly once per mount or attachment",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native input, tag and responder in root A",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native input, tag and responder in root B",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases the actual Viewport focus owner",
+          "passed": true
+        },
+        {
+          "name": "Original focus contracts leave no host error or scheduling resources",
+          "passed": true
+        }
+      ],
+      "pixels": [],
+      "focusOwners": {
+        "autoFocus-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "before-focused-removal-owner": {
+          "expected": "A-secondary",
+          "actual": "A-secondary",
+          "expectedTag": 32
+        },
+        "callback-ref-churn-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "callback-ref-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "committed-editable-restored-owner": {
+          "expected": "A-secondary",
+          "actual": "A-secondary",
+          "expectedTag": 32
+        },
+        "committed-readonly-noop-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "focused-removal-owner": {
+          "expected": null,
+          "actual": null,
+          "expectedTag": -1
+        },
+        "inside-off-tree-reparenting-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "inside-reentrant-retirement-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "native-cross-root-transfer-owner": {
+          "expected": "B-primary",
+          "actual": "B-primary",
+          "expectedTag": 96
+        },
+        "native-readonly-noop-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "off-tree-reparenting-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "original-codegen-focus-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "partial-root-retirement-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "public-State-blur-owner": {
+          "expected": null,
+          "actual": null,
+          "expectedTag": -1
+        },
+        "public-State-focus-owner": {
+          "expected": "A-secondary",
+          "actual": "A-secondary",
+          "expectedTag": 32
+        },
+        "public-ref-focus-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "readonly-and-original-View-noop-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "removed-stale-commands-owner": {
+          "expected": null,
+          "actual": null,
+          "expectedTag": -1
+        },
+        "repeat-and-unfocused-blur-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "replacement-stale-commands-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        }
+      },
+      "offTreeCallbacks": 1,
+      "reentrantRetirements": 1,
+      "reentrantStops": 1,
+      "events": [
+        {
+          "currentTag": 22.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 96.0,
+          "id": "primary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 96.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "primary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 96.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "primary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 96.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        }
+      ],
+      "registration": [
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/primary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 22.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/secondary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 32.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/readonly/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 40.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "B/primary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 96.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "B/secondary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 106.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "B/readonly/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 114.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/primary/1",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 184.0
+        }
+      ],
+      "fieldLifetimes": {
+        "A/primary/0": {
+          "attaches": 2.0,
+          "callbacksRegistered": [
+            true,
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 2.0
+        },
+        "A/primary/1": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "A/readonly/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "A/secondary/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "B/primary/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "B/readonly/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "B/secondary/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        }
+      },
+      "afterStop": {
+        "A": {
+          "nativeTags": 0.0,
+          "creates": 21.0,
+          "deletes": 21.0
+        },
+        "B": {
+          "nativeTags": 0.0,
+          "creates": 17.0,
+          "deletes": 17.0
+        }
+      },
+      "applicationStopped": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "errors": []
+      },
+      "reportSha256": "fd5f273ccd15339caf2e1b2921333fa0a5f6741f42364cc57caaaa9c8c2a722e"
+    },
+    "native": {
+      "displayServer": "macOS",
+      "checks": [
+        {
+          "name": "AppRegistry mounts public FocusPanel root A",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: initial-A",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "initial-A: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "initial-A: A callback ref can focus its input because registration precedes the user callback",
+          "passed": true
+        },
+        {
+          "name": "callback-ref: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Callback ref focus emits one genuine native focus event",
+          "passed": true
+        },
+        {
+          "name": "AppRegistry mounts public FocusPanel root B",
+          "passed": true
+        },
+        {
+          "name": "Two focus roots share one Hermes application and original RN singleton",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: initial-B",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "initial-B: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "initial-B: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "initial-B: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "initial-B: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "initial-B: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "initial-B: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "initial-B: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "autoFocus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "AutoFocus in a second root transfers actual focus and emits native blur/endEditing",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame A-primary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame A-secondary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame A-readonly",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame B-primary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame B-secondary",
+          "passed": true
+        },
+        {
+          "name": "initial: Independent declared LineEdit frame B-readonly",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: initial A 0",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: initial A 1",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: initial A 2",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: initial B 0",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: initial B 1",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: initial B 2",
+          "passed": true
+        },
+        {
+          "name": "Native focus capture saved: initial",
+          "passed": true
+        },
+        {
+          "name": "public-ref-focus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Repeated focus and blur of an unfocused input produce no extra native editing events",
+          "passed": true
+        },
+        {
+          "name": "repeat-and-unfocused-blur: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Native transfer target exists: B-primary",
+          "passed": true
+        },
+        {
+          "name": "native-cross-root-transfer: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: native-transfer",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "native-transfer: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "public-State-focus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "public-State-blur: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "original-codegen-focus: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "readonly-and-original-View-noop: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Declared editable false reaches the actual native LineEdit",
+          "passed": true
+        },
+        {
+          "name": "A committed editable update reaches the existing native input",
+          "passed": true
+        },
+        {
+          "name": "committed-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Committed editing is restored before testing a native-only update",
+          "passed": true
+        },
+        {
+          "name": "native-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Public input focus capability reflects the actual committed native editability",
+          "passed": true
+        },
+        {
+          "name": "committed-editable-restored: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Callback ref changes preserve the same actual native LineEdit",
+          "passed": true
+        },
+        {
+          "name": "Callback ref changes do not emit an artificial blur or focus",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: churned",
+          "passed": true
+        },
+        {
+          "name": "churned: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "churned: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "churned: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "churned: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "churned: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "churned: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "churned: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "churned: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "churned: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "churned: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "churned: Changing a callback ref preserves the public input and reattaches with registration intact",
+          "passed": true
+        },
+        {
+          "name": "churned: Callback ref cleanup does not clear the live input's focused State",
+          "passed": true
+        },
+        {
+          "name": "callback-ref-churn: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame A-primary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame A-secondary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame A-readonly",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame B-primary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame B-secondary",
+          "passed": true
+        },
+        {
+          "name": "updated: Independent declared LineEdit frame B-readonly",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: updated A 0",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: updated A 1",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: updated A 2",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: updated B 0",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: updated B 1",
+          "passed": true
+        },
+        {
+          "name": "Native LineEdit paints its declared background: updated B 2",
+          "passed": true
+        },
+        {
+          "name": "Native focus capture saved: updated",
+          "passed": true
+        },
+        {
+          "name": "Native transfer target exists: B-secondary",
+          "passed": true
+        },
+        {
+          "name": "A nativeID wrapper physically hosts the original input before flattening",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: off-tree",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "off-tree: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "off-tree: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "off-tree: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "off-tree: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "off-tree: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "off-tree: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "off-tree: Reparenting rejects focus while the same original registered input is temporarily off-tree",
+          "passed": true
+        },
+        {
+          "name": "off-tree: An off-tree retained ref cannot steal the surviving native input's singleton focus",
+          "passed": true
+        },
+        {
+          "name": "inside-off-tree-reparenting: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Removing nativeID flattens the wrapper, reparents the same LineEdit and exercises one real off-tree callback",
+          "passed": true
+        },
+        {
+          "name": "off-tree-reparenting: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "A changed React key creates an independent native replacement",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: replaced",
+          "passed": true
+        },
+        {
+          "name": "replaced: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "replaced: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "replaced: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "replaced: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "replaced: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "replaced: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "replaced: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "replaced: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "replaced: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "replaced: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "replaced: Key replacement disconnects and unregisters the retained original ref without aliasing the replacement",
+          "passed": true
+        },
+        {
+          "name": "replaced: A key replacement performs one component cleanup and one fresh mount",
+          "passed": true
+        },
+        {
+          "name": "Retained replaced refs and original codegen commands are harmless",
+          "passed": true
+        },
+        {
+          "name": "replacement-stale-commands: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Native transfer target exists: A-secondary",
+          "passed": true
+        },
+        {
+          "name": "before-focused-removal: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: removed",
+          "passed": true
+        },
+        {
+          "name": "removed: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "removed: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "removed: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "removed: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "removed: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "removed: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "removed: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "removed: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "removed: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "removed: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "removed: Removing the focused input releases its ref, registration and singleton focus",
+          "passed": true
+        },
+        {
+          "name": "Focused removal deletes the actual native LineEdit",
+          "passed": true
+        },
+        {
+          "name": "focused-removal: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "removed-stale-commands: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Reentrant retirement starts with an unfocused mounted A input",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: retiring",
+          "passed": true
+        },
+        {
+          "name": "retiring: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "retiring: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "retiring: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "retiring: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "retiring: A: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "retiring: A: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "retiring: A: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "retiring: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "retiring: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "retiring: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "retiring: Stopping root rejects focus while its original ref is still connected and registered",
+          "passed": true
+        },
+        {
+          "name": "retiring: A retained stopping-root ref cannot steal the surviving root's singleton focus",
+          "passed": true
+        },
+        {
+          "name": "inside-reentrant-retirement: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Stopping root is guarded before deferred retirement completes",
+          "passed": true
+        },
+        {
+          "name": "A real native focus_entered callback retires its own root once",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: partial",
+          "passed": true
+        },
+        {
+          "name": "partial: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "partial: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "partial: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "partial: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "partial: B: Mounted public TextInputs are original elements registered with the original State",
+          "passed": true
+        },
+        {
+          "name": "partial: B: Public isFocused follows the singleton for every mounted input",
+          "passed": true
+        },
+        {
+          "name": "partial: B: Ordinary View retains original prototype focus and blur methods",
+          "passed": true
+        },
+        {
+          "name": "partial: Root retirement unregisters only its own public inputs and preserves the surviving registry",
+          "passed": true
+        },
+        {
+          "name": "partial: Retiring root A preserves root B's focused singleton entry",
+          "passed": true
+        },
+        {
+          "name": "partial-root-retirement: Viewport owner, every actual LineEdit and original/public State agree",
+          "passed": true
+        },
+        {
+          "name": "Retiring root A releases its native Controls and pending retirement while preserving root B",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown target is a live, unfocused native input",
+          "passed": true
+        },
+        {
+          "name": "Native focus_entered can stop the application reentrantly through the original command",
+          "passed": true
+        },
+        {
+          "name": "Original public focus probe completes: stopped",
+          "passed": true
+        },
+        {
+          "name": "stopped: Public TextInput.State exposes exactly the four upstream static methods",
+          "passed": true
+        },
+        {
+          "name": "stopped: Public statics share the original singleton and its Godot command seam",
+          "passed": true
+        },
+        {
+          "name": "stopped: Original State is synchronized before every user focus and blur callback",
+          "passed": true
+        },
+        {
+          "name": "stopped: Deprecated focused-field query retains upstream native-tag semantics",
+          "passed": true
+        },
+        {
+          "name": "stopped: Application shutdown clears every original input registration and focused ref",
+          "passed": true
+        },
+        {
+          "name": "stopped: All components and callback refs clean up exactly once per mount or attachment",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native input, tag and responder in root A",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native input, tag and responder in root B",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases the actual Viewport focus owner",
+          "passed": true
+        },
+        {
+          "name": "Original focus contracts leave no host error or scheduling resources",
+          "passed": true
+        }
+      ],
+      "pixels": [
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 0,
+          "passed": true,
+          "point": [
+            395,
+            203
+          ],
+          "root": "A",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 1,
+          "passed": true,
+          "point": [
+            395,
+            291
+          ],
+          "root": "A",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.274509817361832,
+            0.18823529779911,
+            0.24705882370472,
+            1.0
+          ],
+          "expected": "#46303f",
+          "field": 2,
+          "passed": true,
+          "point": [
+            395,
+            379
+          ],
+          "root": "A",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 0,
+          "passed": true,
+          "point": [
+            825,
+            203
+          ],
+          "root": "B",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 1,
+          "passed": true,
+          "point": [
+            825,
+            291
+          ],
+          "root": "B",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.274509817361832,
+            0.18823529779911,
+            0.24705882370472,
+            1.0
+          ],
+          "expected": "#46303f",
+          "field": 2,
+          "passed": true,
+          "point": [
+            825,
+            379
+          ],
+          "root": "B",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 0,
+          "passed": true,
+          "point": [
+            395,
+            203
+          ],
+          "root": "A",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 1,
+          "passed": true,
+          "point": [
+            395,
+            291
+          ],
+          "root": "A",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.274509817361832,
+            0.18823529779911,
+            0.24705882370472,
+            1.0
+          ],
+          "expected": "#46303f",
+          "field": 2,
+          "passed": true,
+          "point": [
+            395,
+            379
+          ],
+          "root": "A",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 0,
+          "passed": true,
+          "point": [
+            825,
+            203
+          ],
+          "root": "B",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.125490203499794,
+            0.196078434586525,
+            0.317647069692612,
+            1.0
+          ],
+          "expected": "#203251",
+          "field": 1,
+          "passed": true,
+          "point": [
+            825,
+            291
+          ],
+          "root": "B",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.274509817361832,
+            0.18823529779911,
+            0.24705882370472,
+            1.0
+          ],
+          "expected": "#46303f",
+          "field": 2,
+          "passed": true,
+          "point": [
+            825,
+            379
+          ],
+          "root": "B",
+          "stage": "updated"
+        }
+      ],
+      "focusOwners": {
+        "autoFocus-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "before-focused-removal-owner": {
+          "expected": "A-secondary",
+          "actual": "A-secondary",
+          "expectedTag": 32
+        },
+        "callback-ref-churn-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "callback-ref-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "committed-editable-restored-owner": {
+          "expected": "A-secondary",
+          "actual": "A-secondary",
+          "expectedTag": 32
+        },
+        "committed-readonly-noop-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "focused-removal-owner": {
+          "expected": null,
+          "actual": null,
+          "expectedTag": -1
+        },
+        "inside-off-tree-reparenting-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "inside-reentrant-retirement-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "native-cross-root-transfer-owner": {
+          "expected": "B-primary",
+          "actual": "B-primary",
+          "expectedTag": 96
+        },
+        "native-readonly-noop-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "off-tree-reparenting-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "original-codegen-focus-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "partial-root-retirement-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "public-State-blur-owner": {
+          "expected": null,
+          "actual": null,
+          "expectedTag": -1
+        },
+        "public-State-focus-owner": {
+          "expected": "A-secondary",
+          "actual": "A-secondary",
+          "expectedTag": 32
+        },
+        "public-ref-focus-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "readonly-and-original-View-noop-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        },
+        "removed-stale-commands-owner": {
+          "expected": null,
+          "actual": null,
+          "expectedTag": -1
+        },
+        "repeat-and-unfocused-blur-owner": {
+          "expected": "A-primary",
+          "actual": "A-primary",
+          "expectedTag": 22
+        },
+        "replacement-stale-commands-owner": {
+          "expected": "B-secondary",
+          "actual": "B-secondary",
+          "expectedTag": 106
+        }
+      },
+      "offTreeCallbacks": 1,
+      "reentrantRetirements": 1,
+      "reentrantStops": 1,
+      "events": [
+        {
+          "currentTag": 22.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 96.0,
+          "id": "primary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 96.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "primary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 96.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "primary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 96.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 22.0,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "primary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A primary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 22.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 32.0,
+          "id": "secondary",
+          "name": "A",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "A secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 32.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "blur"
+        },
+        {
+          "currentTag": null,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "end"
+        },
+        {
+          "currentTag": 106.0,
+          "id": "secondary",
+          "name": "B",
+          "nativeEvent": {
+            "eventCount": 0.0,
+            "text": "B secondary · v0"
+          },
+          "stateAgrees": true,
+          "tag": 106.0,
+          "type": "focus"
+        }
+      ],
+      "registration": [
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/primary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 22.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/secondary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 32.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/readonly/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 40.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "B/primary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 96.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "B/secondary/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 106.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "B/readonly/0",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 114.0
+        },
+        {
+          "connected": false,
+          "effectiveEditable": false,
+          "focused": false,
+          "key": "A/primary/1",
+          "nativeRefSame": false,
+          "registered": false,
+          "tag": 184.0
+        }
+      ],
+      "fieldLifetimes": {
+        "A/primary/0": {
+          "attaches": 2.0,
+          "callbacksRegistered": [
+            true,
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 2.0
+        },
+        "A/primary/1": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "A/readonly/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "A/secondary/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "B/primary/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "B/readonly/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        },
+        "B/secondary/0": {
+          "attaches": 1.0,
+          "callbacksRegistered": [
+            true
+          ],
+          "cleanups": 1.0,
+          "mounts": 1.0,
+          "refCleanups": 1.0
+        }
+      },
+      "afterStop": {
+        "A": {
+          "nativeTags": 0.0,
+          "creates": 21.0,
+          "deletes": 21.0
+        },
+        "B": {
+          "nativeTags": 0.0,
+          "creates": 17.0,
+          "deletes": 17.0
+        }
+      },
+      "applicationStopped": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "errors": []
+      },
+      "reportSha256": "aec38a5a42b0afd9afaa006d7d092691dfada4284c6609bd408999a7d8a58b70"
+    }
+  }
+}

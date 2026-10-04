@@ -35,6 +35,13 @@
     "scene": "examples/tree/scene.tscn"
   },
   {
+    "id": "focus",
+    "title": "Original TextInputState and real native focus across roots",
+    "api": "public",
+    "source": "examples/focus/App.jsx",
+    "scene": "examples/focus/scene.tscn"
+  },
+  {
     "id": "view",
     "title": "View layers, clipping, public measurements and four-color borders",
     "api": "public",
