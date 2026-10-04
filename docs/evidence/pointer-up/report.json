@@ -4,7 +4,7 @@
   "status": "verified-local-runtime-and-regressions-hosted-ci-pending",
   "executionBaseCommit": "3ca4174667367c66a914a31c677df4ff221e1ceb",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": null,
+  "implementationCommit": "f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
   "environment": {
     "reactNative": "0.87.1",
     "godot": "4.7.2-stable (official)",
@@ -787,5 +787,15 @@
       "pointer-query-fault": "e51dea365bf08b242d9dc35a3c5401bc6673c5c34d63d26f506c8bac9481a74a",
       "pointer-resolver-fault": "9e12faf024838f38561e51c6b2c33b64a9ded5e5d1a542e7118f7e5e45be99a3"
     }
-  }
+  },
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 81,
+    "caseProducers": 16,
+    "nativeInputs": 55,
+    "verificationInputs": 12,
+    "command": "git show <implementationCommit>:<repo-relative source>",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b"
 }

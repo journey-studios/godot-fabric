@@ -22,6 +22,12 @@ The final headless old/new pair consumes identical current SDK bundle bytes,
 The initial `negative.json` remains historical: its earlier SDK/bundle hashes
 are not the final paired comparison.
 
+The receipt verifies 81 unique executed code/configuration inputs against
+implementation `f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b` using `git show`. This
+includes the 16 case producers, 55 native inputs and 12 verification inputs
+(two native inputs overlap the case list). Execution base `3ca4174` and the
+working-tree state during execution remain recorded separately.
+
 ## What was observed
 
 - Independent original public dispatch invokes the installed listener once,
