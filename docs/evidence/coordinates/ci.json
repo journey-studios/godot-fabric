@@ -1,8 +1,8 @@
 {
   "format": "godot-fabric.coordinate-hosted-ci/v1",
-  "observedAt": "2026-10-04T01:39:37.824546+00:00",
+  "observedAt": "2026-10-04T02:01:53.222939+00:00",
   "coordinateRun": {
-    "conclusion": "",
+    "conclusion": "success",
     "headSha": "f40831efd8ca86c00c785397e510dc0b9c346a15",
     "jobs": [
       {
@@ -13,8 +13,8 @@
       },
       {
         "name": "reference-ios",
-        "status": "in_progress",
-        "conclusion": "",
+        "status": "completed",
+        "conclusion": "success",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168351703/job/111335964654"
       },
       {
@@ -25,12 +25,18 @@
       },
       {
         "name": "native-cold-start",
-        "status": "in_progress",
-        "conclusion": "",
+        "status": "completed",
+        "conclusion": "success",
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168351703/job/111335964702"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168351703/job/111338014314"
       }
     ],
-    "status": "in_progress",
+    "status": "completed",
     "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168351703"
   },
   "precedingDocsRun": {
@@ -98,5 +104,43 @@
   "limits": [
     "Hosted CI at the coordinate snapshot is recorded separately from local graphical and negative-control results",
     "Original iOS/Android reference apps do not establish Godot mobile ports or complete differential parity"
-  ]
+  ],
+  "metadataRun": {
+    "conclusion": "success",
+    "headSha": "b1732fbf464f8d81819b6f623fd0eedb20bd90de",
+    "jobs": [
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168715816/job/111337055960"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168715816/job/111337056039"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168715816/job/111337056041"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168715816/job/111337056149"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168715816/job/111338949627"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168715816"
+  }
 }

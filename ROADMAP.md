@@ -286,6 +286,9 @@ No new architectural decision, complete GF item or denominator changes here.
 The [hosted CI receipt](docs/evidence/coordinates/ci.json) keeps local proof,
 current CI, preceding simulator-discovery failure and verified Pages deployment
 separate; none supplies the still-open full differential/target acceptance.
+Coordinate CI snapshots `f40831e` and `b1732fb` each passed all five jobs,
+including cold start and the current limited RN oracle. Affine 2D transforms
+are being validated separately; no transform acceptance is closed yet.
 
 ## Release contract and scope
 

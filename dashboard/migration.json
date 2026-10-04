@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Gestos e coordenadas de roots comprovados; próximo: transforms e HostInstance"
+    "focusTitle": "Transforms 2D em validação; coordenadas com CI executada nos cinco jobs"
   },
-  "updatedAt": "2026-10-04T01:39:37.824546+00:00",
+  "updatedAt": "2026-10-04T02:01:53.222939+00:00",
   "source": {
     "commit": "48e425345b0ecb7665a7a447c9c14453c8e4ece0",
     "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/ROADMAP.md",
-    "scope": "Implementação 48e4253 conferida com as fontes nativas e fixtures executadas. Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI precedente View b5df4d6 verde; CI desta fatia pendente. Só a slice GF-13 fica done; nenhum GF completo, decisão, peso ou denominador alterado. CI 0e05abe: iOS ETIMEDOUT na descoberta do simulador; comparação skipped. Snapshot de coordenadas f40831e: in_progress; deploy Pages deste snapshot verificado.",
+    "scope": "Implementação 48e4253 conferida com as fontes nativas e fixtures executadas. Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI da fatia f40831e e metadata b1732fb: cinco jobs passaram, incluindo cold start e comparação limitada ao oráculo RN atual. Timeout simctl anterior 0e05abe preservado como falha de descoberta, não certificado. Só slice GF-13 done; nenhum GF completo, decisão, peso ou denominador alterado. Transforms estão em validação local separada.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2480,6 +2480,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "coordinates-ci-green-f40831e-b1732fb",
+      "at": "2026-10-04T02:01:53.222939+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "CI de coordenadas f40831e e metadata b1732fb passou contracts, native cold start, referência iOS, referência Android e comparação do oráculo atual. Falha simctl precedente permanece no recibo. Isto não certifica mobile Godot, full parity ou transforms em implementação.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168351703"
+    },
     {
       "id": "coordinates-ci-observed-20261004",
       "at": "2026-10-04T01:39:37.824546+00:00",

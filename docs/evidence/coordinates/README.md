@@ -28,8 +28,8 @@ new hosted CI, exported targets or complete RN parity.
 [Hosted CI and publication](ci.json) record the coordinate snapshot separately.
 The preceding documentation snapshot `0e05abe` passed contracts, native cold
 start and Android; iOS simulator discovery timed out before app execution,
-so its comparison was skipped. The current coordinate run retains its observed
-job states in that receipt. Pages build/deploy succeeded for data `f40831e`,
+so its comparison was skipped. The coordinate snapshot `f40831e` and metadata snapshot `b1732fb` each passed
+all five hosted jobs; the receipt retains that executed outcome. Pages build/deploy succeeded for data `f40831e`,
 and the public JSON exactly matched that committed snapshot.
 
 ## Coordinate contract and correction
