@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Ponteiros e captura públicos verificados; próximos EventTarget e geometria da captura"
   },
-  "updatedAt": "2026-10-04T11:04:47.266489+00:00",
+  "updatedAt": "2026-10-04T11:19:04.112687+00:00",
   "source": {
     "commit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
     "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/ROADMAP.md",
-    "scope": "Ponteiros788739d: 132/146 checks públicos,12 pixels/duas capturas,144 asserts nativos e43 checks JSX de listener fault/stop; dois controles RN originais SIGSEGV.213 Node/13 Python,21 exemplos/1615,11 testes nativos,guards61/25,SDK/adapter17runs/318 passaram. Props/refs TSX e negativos de tipos passaram. CI nova e Pages ainda não observados; CI anterior956 completou cinco jobs verdes, mantendo a falha ffcc histórica. Nenhum novo aceite, peso, decisão ou GF fechado.",
+    "scope": "Ponteiros 788739d: 132/146 checks públicos, 12 pixels/duas capturas, 144 assertions nativas e 43 checks JSX; dois controles RN originais SIGSEGV. Regressões e SDK independente passaram. Artefato CI a15fde4 auditado: 144/43, seis erros esperados, hashes das fontes e cleanup verificados; CI a15fde4 concluiu com sucesso os cinco jobs: contracts, native-cold-start, reference-ios, reference-android e parity-comparison. Pages 37197499767 passou build/deploy, JSON a15fde4 conferido fora do main. Nenhum novo aceite, peso, decisão ou GF fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Foco público usa prototype/State/Codegen originais RN e LineEdit real; duas raízes, ref churn, readonly/off-tree, comandos reentrantes e retirement passaram 175/189,12 pixels/duas capturas. Controles anterior 23/160 e elegibilidade removida 11/175 falham como esperado. Árvore/IDs e medidas/transforms mantêm provas separadas. HostInstance completo, EventTarget/pointer capture, hidden trees, hardware/IME e diferenciais mobile permanecem pendentes. Complemento de comandos comprovado localmente e no artefato CI: 112 checks, 40 owners, oito rejeições com recuperação, duas raízes e app independente; nove registros liberados. CI ffcc: contracts/native/Android passaram; iOS falhou antes da app e comparação pulou. Referência iOS posterior passou 13 checks em inputs idênticos; não certifica full parity mobile. Captura pública agora verificada:132/146 checks e 12 pixels; refs originais consultam pending imediatamente e perdem autoridade ao remover/retirar.144 asserts nativos,43 checks JSX com seis erros preservados e stop síncrono; dois controles originais crasham. HostInstance completo/imperative EventTarget, captured transforms e mobile seguem abertos. Props/eventos/capture refs TSX derivam dos types originais; casos negativos de ID/coord passaram. Coordenadas de capture-target em outra raiz não certificadas.",
+      "note": "Foco público usa prototype/State/Codegen originais RN e LineEdit real; duas raízes, ref churn, readonly/off-tree, comandos reentrantes e retirement passaram 175/189,12 pixels/duas capturas. Controles anterior 23/160 e elegibilidade removida 11/175 falham como esperado. Árvore/IDs e medidas/transforms mantêm provas separadas. HostInstance completo, EventTarget/pointer capture, hidden trees, hardware/IME e diferenciais mobile permanecem pendentes. Complemento de comandos comprovado localmente e no artefato CI: 112 checks, 40 owners, oito rejeições com recuperação, duas raízes e app independente; nove registros liberados. CI ffcc: contracts/native/Android passaram; iOS falhou antes da app e comparação pulou. Referência iOS posterior passou 13 checks em inputs idênticos; não certifica full parity mobile. Captura pública agora verificada:132/146 checks e 12 pixels; refs originais consultam pending imediatamente e perdem autoridade ao remover/retirar.144 asserts nativos,43 checks JSX com seis erros preservados e stop síncrono; dois controles originais crasham. HostInstance completo/imperative EventTarget, captured transforms e mobile seguem abertos. Props/eventos/capture refs TSX derivam dos types originais; casos negativos de ID/coord passaram. Coordenadas de capture-target em outra raiz não certificadas. Artefato hospedado a15fde4 auditado: 144 assertions C++, 43 checks JSX, dois controles originais SIGSEGV e seis erros deliberados visíveis. Conclusão da execução completa está separada no recibo CI; referências RN não certificam ports Godot.",
       "blocker": "",
       "checkpoints": [
         {
@@ -466,6 +466,10 @@
             {
               "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
               "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+            },
+            {
+              "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
             }
           ]
         },
@@ -725,7 +729,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transporte original PointerEvent, identidade por aplicação, hover, captura/transferência/soltura/cancel seletivos, mouse canceled/múltiplos botões e release sem duplicação verificados em 132/146 checks,12 pixels/duas capturas.144 asserts nativos e 43 checks JSX cobrem remoção, listener faults e stop síncrono preservando outro contato; dois controles originais SIGSEGV. Pressability e 21 exemplos/1615 passaram. Transforms/scroll capturados, negociação completa PanResponder/responder, hardware/keyboard, multi-window e mobile permanecem pendentes.",
+      "note": "Transporte original PointerEvent, identidade por aplicação, hover, captura/transferência/soltura/cancel seletivos, mouse canceled/múltiplos botões e release sem duplicação verificados em 132/146 checks,12 pixels/duas capturas.144 asserts nativos e 43 checks JSX cobrem remoção, listener faults e stop síncrono preservando outro contato; dois controles originais SIGSEGV. Pressability e 21 exemplos/1615 passaram. Transforms/scroll capturados, negociação completa PanResponder/responder, hardware/keyboard, multi-window e mobile permanecem pendentes. Artefato hospedado a15fde4 auditado: 144 assertions C++, 43 checks JSX, dois controles originais SIGSEGV e seis erros deliberados visíveis. Conclusão da execução completa está separada no recibo CI; referências RN não certificam ports Godot.",
       "blocker": "",
       "checkpoints": [
         {
@@ -744,6 +748,10 @@
             {
               "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
               "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+            },
+            {
+              "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
             }
           ]
         },
@@ -1637,7 +1645,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Três builds iOS Release, dois XCFrameworks, device arm 64 export/link e execução x 86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm 64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a 67f 96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada. Nova fatia macOS identifica UUIDs carregados e hashes de receipts separadamente, com binding witness observado; isso não recertifica iOS histórico, outros modos/alvos ou ABI estável. SDK fresco inclui header overlay antes do RN original e registra fonte/manifesto gerados. Pack/verify,registro 207/11,loader 89/21 e adapter independente 17 runs/318 incluindo quatro janelas passaram; combinação experimental não certifica ABI universal.",
+      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada. Nova fatia macOS identifica UUIDs carregados e hashes de receipts separadamente, com binding witness observado; isso não recertifica iOS histórico, outros modos/alvos ou ABI estável. SDK fresco inclui header overlay antes do RN original e registra fonte/manifesto gerados. Pack/verify,registro 207/11,loader 89/21 e adapter independente 17 runs/318 incluindo quatro janelas passaram; combinação experimental não certifica ABI universal. Artefato hospedado a15fde4 auditado: 144 assertions C++, 43 checks JSX, dois controles originais SIGSEGV e seis erros deliberados visíveis. Conclusão da execução completa está separada no recibo CI; referências RN não certificam ports Godot.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1664,6 +1672,10 @@
             {
               "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
               "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+            },
+            {
+              "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
             }
           ]
         },
@@ -2540,6 +2552,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-hosted-artifact-and-pages-a15fde4",
+      "at": "2026-10-04T11:19:04.112687+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13",
+        "GF-31"
+      ],
+      "message": "Artefato CI a15fde4 comprovou 144 assertions C++, 43 checks JSX, seis erros esperados/stop síncrono, dois SIGSEGV originais e fontes conferidas. CI a15fde4 concluiu com sucesso os cinco jobs: contracts, native-cold-start, reference-ios, reference-android e parity-comparison. Pages 37197499767 passou build/deploy e JSON público a15fde4 foi comparado integralmente ao commit da branch fora do main. Sem alterar estados de checkpoint, pesos, denominador ou concluir GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
+    },
     {
       "id": "pointer-source-pinned-788739d",
       "at": "2026-10-04T11:04:47.266489+00:00",

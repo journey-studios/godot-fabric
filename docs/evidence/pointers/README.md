@@ -14,8 +14,15 @@ native binary combination; adapters must use its freshly packaged SDK.
 
 Godot 4.7.2, RN 0.87.1, React 19.2.3, Hermes 250829098.0.17 and Node 22.23.3.
 See [the receipt](report.json) for exact source/native/bundle hashes, commands,
-checks, modes and remaining acceptance. These are local proofs; hosted CI and
-Pages publication are recorded separately after their actual completion.
+checks, modes and remaining acceptance. Local proof, the
+[audited hosted artifacts and CI snapshot](ci.json), and verified Pages
+publication are recorded separately.
+
+CI run `37197503396` at `a15fde4` passed all five jobs. The pointer artifact was
+audited independently: 144 native assertions, 43 JSX checks, six expected errors
+and both original-source crash controls. Hosted Node is 22.23.2; reported
+binary hashes identify that separate build. Android/iOS reference success
+covers the existing oracle fixtures and does not certify Godot mobile ports.
 
 | Fixture | Executed result | What it proves |
 | --- | --- | --- |

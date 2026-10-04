@@ -1,0 +1,303 @@
+{
+  "format": "godot-fabric.pointer-hosted-observation/v1",
+  "observedAt": "2026-10-04T11:19:04.112687+00:00",
+  "implementationCommit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
+  "localEvidence": "report.json",
+  "ci": {
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "a15fde46c12333284129d9e71f7d790cc7bae263",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396",
+    "observedAt": "2026-10-04T11:19:04.112687+00:00",
+    "jobs": [
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396/job/111422291267"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396/job/111422291361"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396/job/111422291423"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396/job/111422291505"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396/job/111424422482"
+      }
+    ]
+  },
+  "pointerArtifactAudit": {
+    "schemaVersion": 1,
+    "auditedAt": "2026-10-04T11:16:21.424987Z",
+    "repository": "journey-studios/godot-fabric",
+    "implementationCommit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
+    "ciHead": "a15fde46c12333284129d9e71f7d790cc7bae263",
+    "run": {
+      "id": 37197503396,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396",
+      "statusAtAudit": "in_progress",
+      "job": "native-cold-start",
+      "step": "Run npm run test:pointers:processor",
+      "stepConclusion": "success",
+      "stepCompletedAt": "2026-10-04T11:12:56Z"
+    },
+    "artifact": {
+      "id": 11301244951,
+      "name": "native-pointer-processor",
+      "digest": "sha256:5d5cf731447c0803a0382d1963661543c5379e9368611b168a809847cb2aec71",
+      "digestSource": "GitHub artifact API metadata",
+      "createdAt": "2026-10-04T11:12:58Z",
+      "head": "a15fde46c12333284129d9e71f7d790cc7bae263",
+      "reportedSizeBytes": 10704
+    },
+    "artifactFiles": {
+      "pointer-errors-report.json": {
+        "sha256": "0e42c15e1bd239374c4189832f1b91ed9b767ca8f8767e1414d1c6c1a8f233b0",
+        "sizeBytes": 108411
+      },
+      "pointer-errors.log": {
+        "sha256": "a4268c314d282b27ca8dbb7cbd8dc031c5c3dc23367e51f46bfadc2bc2d3cc87",
+        "sizeBytes": 9572
+      },
+      "pointer-processor-negative-build.log": {
+        "sha256": "25378fa12f03de7a4f3a605003dd8abf19a04f553831153d3641ea285db23300",
+        "sizeBytes": 1060
+      },
+      "pointer-processor-original-listener-negative.log": {
+        "sha256": "f947a08a00aefe90d05c4b72cf521be3cdb184cdd0e13d4430a21bbf37e9c078",
+        "sizeBytes": 49
+      },
+      "pointer-processor-original-negative.log": {
+        "sha256": "616d4632c6210fb387b8ed38c6ed1e5cd855ab80510adef03a8f91b5b609dd83",
+        "sizeBytes": 45
+      },
+      "pointer-processor-report.json": {
+        "sha256": "a6b91796516944429ec449aaee9be12c835ddc578e0c3c07e6cc3910ba087e31",
+        "sizeBytes": 13764
+      },
+      "pointer-processor.log": {
+        "sha256": "8322e3f641fa69383a57ff3978828173c110eee18ee619640d3ebd14d1784fe3",
+        "sizeBytes": 12381
+      }
+    },
+    "processor": {
+      "reactNative": "0.87.1",
+      "node": "v22.23.2",
+      "platform": "darwin",
+      "architecture": "arm64",
+      "mode": "portable native fixture",
+      "count": 144,
+      "uniqueChecks": 144,
+      "status": 0,
+      "passedMarkerFound": true,
+      "unexpectedErrorLines": [],
+      "originalNegative": {
+        "status": null,
+        "signal": "SIGSEGV",
+        "reachedRemovedTarget": true,
+        "processorAndBinding": "unchanged downloaded sources, original include precedence"
+      },
+      "originalListenerNegative": {
+        "status": null,
+        "signal": "SIGSEGV",
+        "reachedMovedHoverTracker": true,
+        "processorAndBinding": "unchanged downloaded sources, original include precedence"
+      },
+      "boundaryMarkersVerified": [
+        "RETAINED_CAPTURE_TARGET_WITHOUT_NEWEST_CLONE",
+        "ORIGINAL_LISTENER_FAULT_WITH_MOVED_HOVER_TRACKER"
+      ],
+      "reportedPositiveBinarySha256": "671a3cc612ef100cc6c0de03eb997837d77398d03d1977807a18af32440d9c6b",
+      "reportedNegativeBinarySha256": "bc1f992df799937306c2c5185b3c3c2714d9872d720847668309bbc5c221dc1c"
+    },
+    "jsx": {
+      "reactNative": "0.87.1",
+      "node": "v22.23.2",
+      "godot": "4.7.2-stable (official)",
+      "mode": "headless",
+      "count": 43,
+      "uniqueChecks": 43,
+      "passedChecks": 43,
+      "cases": [
+        "Out",
+        "Over",
+        "Enter",
+        "Leave",
+        "GotPointerCapture",
+        "Up"
+      ],
+      "focusStops": 1,
+      "expectedErrorPhases": [
+        "Out",
+        "Over",
+        "Enter",
+        "Leave",
+        "GotPointerCapture",
+        "Up"
+      ],
+      "unexpectedDiagnostics": [],
+      "reportedNativeHostSha256": "ae9777f4516697eaac8c97be5db4e0f93844fea86dad9f4a211c1f50712b30f0",
+      "reportedBundleSha256": "f0092b9ac0df4aebea793ad7cc9749cf365abe3972d7a880d599114258943f1d",
+      "cleanup": {
+        "independent": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "stored": 0,
+            "suppressed": 0,
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0
+          }
+        },
+        "shared": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "stored": 0,
+            "suppressed": 0,
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0
+          }
+        }
+      }
+    },
+    "trackedSources": {
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "matchesImplementation": true,
+        "matchesRunHead": true
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b3b99310112d7f5b6ea8ad050ee2551570f8279bd072fbf819a578464d96f03b",
+        "matchesImplementation": true,
+        "matchesRunHead": true
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "0c770773f604d7be9e651c991789d10c7c09d9491554e19fa38ad58ab6ddbd97",
+        "matchesImplementation": true,
+        "matchesRunHead": true
+      },
+      "tests/pointer-errors-fixture.jsx": {
+        "sha256": "9f0bf4cadb702c0836944cd4fd49e5b1e1f64322e901b70f154e78fe2722a8e3",
+        "matchesImplementation": true,
+        "matchesRunHead": true
+      },
+      "tests/pointer_errors.gd": {
+        "sha256": "eafe510c3a1da947ec5b87a9abd7ac52ce384721c7902108598609d063090874",
+        "matchesImplementation": true,
+        "matchesRunHead": true
+      },
+      "tests/pointer-errors-native.test.mjs": {
+        "sha256": "b201002069ef4d2c0fe73f0af0b5652e49b443ac18985712d1584932dc3446d2",
+        "matchesImplementation": true,
+        "matchesRunHead": true
+      }
+    },
+    "pinnedSources": {
+      ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": {
+        "sha256": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": {
+        "sha256": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": {
+        "sha256": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": {
+        "sha256": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": {
+        "sha256": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": {
+        "sha256": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": {
+        "sha256": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+        "matchesLocalPinnedSource": true
+      },
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": {
+        "sha256": "c6eaaac9b2fb368f5f06f1e40fc947b1ada41d8bf95e46eed197eb9d617b1593",
+        "matchesLocalPinnedSource": true
+      }
+    },
+    "limitations": [
+      "Audit reads hosted reports and logs; native binaries and generated bundle were not in this artifact, so their hashes remain report metadata.",
+      "Artifact archive digest is GitHub API metadata; extracted report hashes were computed independently.",
+      "Portable processor and headless Godot evidence does not establish pointer hardware or mobile parity.",
+      "Overall CI was still running at this bounded audit; no run-wide success claim."
+    ]
+  },
+  "pages": {
+    "observedAt": "2026-10-04T11:08:01.804764+00:00",
+    "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37197499767",
+    "status": "completed",
+    "conclusion": "success",
+    "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "jobs": [
+      {
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197499767/job/111422284785"
+      },
+      {
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197499767/job/111422317691"
+      }
+    ],
+    "publication": {
+      "ref": "codex/react-native-parity-roadmap",
+      "commit": "a15fde46c12333284129d9e71f7d790cc7bae263",
+      "inMain": false,
+      "at": "2026-10-04T11:05:02.631Z"
+    },
+    "sourceCommit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
+    "servedJsonSha256": "10dfcf921c0d361b46188c36c23867270c4bbc2be5db33ed26b3a78aa77772ea",
+    "servedDataMatchesCommittedJson": true
+  },
+  "limits": [
+    "Dated observations identify the tested and published commits; a later metadata commit has separate CI and publication.",
+    "The pointer step and audited artifact are distinct from whole-job and whole-run completion.",
+    "Original Android/iOS reference lanes certify their current fixtures, not Godot mobile ports or complete pointer parity.",
+    "No architecture decision, complete acceptance, checkpoint status, weight or denominator changes."
+  ]
+}

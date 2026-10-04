@@ -7403,8 +7403,10 @@
     }
   },
   "hosted": {
-    "newImplementationCi": "not yet published; record separately after observing the actual run",
-    "pages": "not yet published; workflow and served data must be verified"
+    "observation": "ci.json",
+    "pointerArtifact": "CI a15fde4: 144 processor assertions, 43 JSX checks and both original-source crash controls independently audited; actual hosted Node 22.23.2 is distinct from local 22.23.3.",
+    "ciStatus": "Run 37197503396 at a15fde4 completed successfully in all five jobs; dated evidence is in ci.json. Reference fixtures do not certify full pointer parity or Godot mobile ports.",
+    "pages": "Run 37197499767 passed build/deploy; full served data matched a15fde4 outside main. Later publications are separate observations."
   },
   "limits": [
     "GF-08/GF-13/GF-31 remain in progress; no complete contract or platform acceptance",

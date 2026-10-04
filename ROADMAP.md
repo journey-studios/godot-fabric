@@ -671,6 +671,14 @@ signal inside got capture. Another app's already-captured pointer survives.
 Native SDK overlay headers/identity are repackaged and validated separately.
 Original Pressability regressions still test fresh Down after focus cancellation.
 
+The [hosted receipt](docs/evidence/pointers/ci.json) independently verifies the
+144 processor assertions, 43 JSX checks and both original-source crash controls
+from CI artifacts at `a15fde4`. That run completed successfully in all five jobs;
+its original RN reference comparison covers the current oracle fixtures.
+Pages run `37197499767` passed build/deploy; the served
+JSON exactly matched that branch commit outside main. Neither publication nor
+the original Android/iOS reference lanes certify Godot mobile ports.
+
 This slice does not enable imperative EventTarget flags or close transformed
 capture, nested responder/PanResponder, hardware/keyboard, multi-window/scroll,
 cross-app stacking or mobile differentials. No architecture decision or full
