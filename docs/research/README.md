@@ -63,6 +63,9 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
 - [Captured pointer geometry](pointer-geometry.md): original RN numerical
   counterexamples, native projection, contact history and executed Godot proof.
 
+- [Imperative EventTarget boundary](event-target-boundary.md): three pinned
+  source gaps and proposed manual/native acceptance; runtime proof pending.
+
 ## Useful next experiments
 
 - Text baseline and onTextLayout, then span interaction and explicit font invalidation.

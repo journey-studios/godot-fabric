@@ -13,7 +13,11 @@ engine is unchanged. Downloaded RN sources are unchanged.
 Godot 4.7.2 official, RN 0.87.1, React 19.2.3, Hermes 250829098.0.17,
 Node 22.23.3. [The receipt](report.json) binds fixture/production sources,
 original/generated RN headers, binaries, bundles, captures and SDK identity.
-New hosted CI and publication are separate from this local proof.
+The [hosted receipt](ci.json) separates CI from local renderer proof. CI
+`37202859447` at `f90206f` passed all five jobs. Audited artifacts confirm both
+108-check processor witnesses, 378 binding checks and the headless631 fixture;
+hosted Node is 22.23.2. The Pages main workflow `37202857849` passed build/deploy,
+and the full served JSON matched branch f90206f outside main.
 
 | Witness | Executed result | Scope |
 | --- | --- | --- |

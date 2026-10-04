@@ -5324,9 +5324,12 @@
     }
   },
   "hosted": {
-    "implementationCI": "not yet executed for this new implementation",
-    "pages": "not yet published for this new implementation",
-    "priorReferenceScope": "Existing original RN mobile core fixtures contain no captured-pointer oracle."
+    "implementationCI": "all five jobs successful at f90206f09fae01a10ec29428092ac7ff3a73426e",
+    "workflowRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447",
+    "auditedReceipt": "ci.json",
+    "pages": "build/deploy successful; full served JSON matched branch f90206f09fae01a10ec29428092ac7ff3a73426e",
+    "pagesRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37202857849",
+    "priorReferenceScope": "Original RN mobile core fixtures contain no captured-pointer oracle."
   },
   "limits": [
     "GF-08/GF-09/GF-13 remain in progress; no complete contract, release gate, architecture decision or denominator changes.",

@@ -718,8 +718,16 @@ Original queued coalescing, complete EventTarget/responder/PanResponder,
 scroll/multi-window/hardware/keyboard and mobile capture differentials remain
 open. Typed JSI exception RTTI across framework boundaries is uncertified.
 No architecture approval, weight, denominator, complete checkpoint or GF item
-changes. New hosted CI and Pages publication are recorded separately after
-execution; prior reference lanes are not evidence for this capture fixture.
+changes. The [hosted receipt](docs/evidence/pointer-geometry/ci.json) confirms all five
+jobs passed at f90206f and audits original108/108, binding378 and headless631
+artifacts. Pages37202857849 passed build/deploy; served JSON matched f90206f
+outside main. Reference mobile jobs contain no captured-pointer oracle.
+
+The next bounded EventTarget work starts with the
+[pinned source investigation](docs/research/event-target-boundary.md): manual
+ref contracts, native dispatcher integration, imperative-only pointer interest
+and retained ancestry. These are proposals awaiting runtime proof, not completed
+checkpoints or enabled production capabilities.
 
 ## M1 — Complete the native UI tree
 

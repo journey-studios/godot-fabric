@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Geometria capturada verificada; próximos EventTarget e contratos restantes de input"
   },
-  "updatedAt": "2026-10-04T12:39:25.477414+00:00",
+  "updatedAt": "2026-10-04T14:22:21.043675+00:00",
   "source": {
     "commit": "d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e",
     "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/ROADMAP.md",
-    "scope": "Implementaçãod0ef5ac: captura631/648,14pixels/3PNGs; controle idêntico55/631, original108/108 compilado com binding correspondente e binding real378. Fontes públicas verificadas contra este commit; SDK novo13headless/213, registry207/11 e loader89/21. Regressões199Node/13Python e22examples/2246headless passaram. CI e Pages desta fatia ainda pendentes. Nenhum GF, aceite completo, decisão, peso ou denominador alterado.",
+    "scope": "Implementaçãod0ef5ac: captura631/648,14pixels/3PNGs; controle idêntico55/631, original108/108 compilado com binding correspondente e binding real378. Fontes públicas verificadas contra este commit; SDK novo13headless/213, registry207/11 e loader89/21. Regressões199Node/13Python e22examples/2246headless passaram. Nenhum GF, aceite completo, decisão, peso ou denominador alterado. Artefatos CI f90206f auditados: original108/108, binding378 e headless631; cinco jobs passaram. Pages37202857849 passou build/deploy; JSON f90206f conferido fora do main.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs/NativeDOM, medidas, foco/comandos e captura públicos têm provas separadas. Geometria capturada agora passa 631/648 checks, incluindo refs flattened e outra raiz transformada; 55 falhas no host anterior, 14 pixels e três capturas. Binding378 e original108/108 preservam campos, autoridade e lifetime; offsets locais corrigem explicitamente o algoritmo RN incompleto. HostInstance completo, imperative EventTarget, demais comandos/hidden trees e diferenciais mobile continuam pendentes.",
+      "note": "Refs/NativeDOM, medidas, foco/comandos e captura públicos têm provas separadas. Geometria capturada agora passa 631/648 checks, incluindo refs flattened e outra raiz transformada; 55 falhas no host anterior, 14 pixels e três capturas. Binding378 e original108/108 preservam campos, autoridade e lifetime; offsets locais corrigem explicitamente o algoritmo RN incompleto. HostInstance completo, imperative EventTarget, demais comandos/hidden trees e diferenciais mobile continuam pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -474,6 +474,10 @@
             {
               "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
               "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+            },
+            {
+              "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
             }
           ]
         },
@@ -510,7 +514,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Densidade e root/client/screen incluem a escala/origem atuais. A nova captura em duas raízes mantém client/page no root físico e projeta offsets no alvo; o primeiro raw-window move em density2 passa sem frame/refresh JS. Prova631/648, pixels14 e controle anterior55/631. Hardware/DPI, insets, font scale, múltiplas janelas/viewport e o contrato completo continuam abertos.",
+      "note": "Densidade e root/client/screen incluem a escala/origem atuais. A nova captura em duas raízes mantém client/page no root físico e projeta offsets no alvo; o primeiro raw-window move em density2 passa sem frame/refresh JS. Prova631/648, pixels14 e controle anterior55/631. Hardware/DPI, insets, font scale, múltiplas janelas/viewport e o contrato completo continuam abertos. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -533,6 +537,10 @@
             {
               "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
               "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+            },
+            {
+              "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
             }
           ]
         },
@@ -737,7 +745,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes.",
+      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -764,6 +772,10 @@
             {
               "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
               "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+            },
+            {
+              "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
             }
           ]
         },
@@ -2564,6 +2576,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "captured-pointer-geometry-hosted-f90206f",
+      "at": "2026-10-04T14:22:21.043675+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "CI f90206f passou contracts/native/iOS/Android/comparison; artefato confirma original108/108, binding378 e headless631/34inputs/99samples, hashes conferidos. Pages37202857849 passou build/deploy, JSON integral f90206f e servidor local iguais. Referências mobile são core UI; coalescing/captura mobile e aceite completo seguem abertos. Nenhum GF/checkpoint fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
+    },
     {
       "id": "captured-pointer-geometry-receipt-links-94fd628",
       "at": "2026-10-04T12:39:25.477414+00:00",
