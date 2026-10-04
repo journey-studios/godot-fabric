@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Árvore e IDs comprovados; próximos foco e comandos públicos de HostInstance"
   },
-  "updatedAt": "2026-10-04T03:45:51.675526+00:00",
+  "updatedAt": "2026-10-04T03:49:27.081644+00:00",
   "source": {
     "commit": "31d08ac37d1fb61a80c233aada6a3cfc3549bfcc",
     "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/ROADMAP.md",
-    "scope": "Implementação31d08ac verificada contra 12 fontes JS/fixtures e 47 fontes nativas inalteradas; host SHA42ee5c7. Árvore/IDs89/99, oito pixels e duas capturas; configuração JS anterior falha25/89 com o mesmo fixture/host. Regressões206Node/13Python,10nativos,19exemplos/1308 e17adapters/318. Timeout gráfico inicial e preparação de foco do fixture registrados. CI e nova publicação Pages ainda pendentes; Pages37172746943 publicou o JSON9089686. Nenhum GF, aceite integral, decisão, peso ou denominador fechado.",
+    "scope": "Implementação31d08ac verificada: árvore/IDs89/99, oito pixels/duas capturas, controle JS anterior25/89; fontes nativas inalteradas e hostSHA42ee5c7. Regressões206Node/13Python,10nativos,19exemplos/1308,17adapters/318. Pagesmanual37175019378 passou build/deploy e publicou JSONa012f9e pelo mainadad606, comparado integralmente. CIa012f9e: contracts passou; demais lanes em andamento no snapshot. Registro de publicação separado de runtime e aceite integral; nenhum GF, decisão, peso ou denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -449,7 +449,7 @@
             },
             {
               "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a012f9ed0943f4996553ff78ab543317d8ed46f0/docs/evidence/tree/README.md"
             }
           ]
         },
@@ -565,7 +565,7 @@
             },
             {
               "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a012f9ed0943f4996553ff78ab543317d8ed46f0/docs/evidence/tree/README.md"
             }
           ]
         },
@@ -2865,6 +2865,16 @@
       ],
       "message": "Commit31d08ac corresponde às 12 fontes executadas e às 47 fontes do host nativo inalterado. Provas, limites e duas capturas fixados em URL imutável. Publicação do JSON e CI seguem passos separados; nenhum novo checkpoint concluído.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+    },
+    {
+      "id": "tree-pages-observed-20261004",
+      "at": "2026-10-04T03:49:27.081644+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Pagesmanual37175019378 concluiu build/deploy; JSON públicoa012f9e foi comparado ao commit, fonte31d08ac fora do main. CI37175002603: contracts passou, outras lanes em andamento no snapshot. Prova local e publicação não fecham a paridade completa ou alvos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378"
     }
   ]
 }

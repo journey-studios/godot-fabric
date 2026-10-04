@@ -166,3 +166,15 @@ progress; this receipt does not certify complete ref parity or mobile behavior.
 The original
 [native-foundation record](../native-foundation/README.md) retains its earlier
 geometry/module proof; this record will not relabel that historical evidence.
+
+## Hosted and publication observation
+
+[ci.json](ci.json) records the separate hosted snapshot and successful
+[manual Pages run37175019378](https://github.com/journey-studios/godot-fabric/actions/runs/37175019378).
+Its build/deploy passed using the main renderer; the served JSON exactly matched
+`a012f9ed0943f4996553ff78ab543317d8ed46f0` after removing injected publication
+metadata, with tested source `31d08ac` and `inMain: false`.
+The [new implementation CI](https://github.com/journey-studios/godot-fabric/actions/runs/37175002603)
+passed its contracts job at the recorded snapshot. Other jobs were still in
+progress; neither this publication nor preceding affine CI supplies their
+completion or the missing mobile tree differential.

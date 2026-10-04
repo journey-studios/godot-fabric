@@ -348,7 +348,10 @@ restoring it regenerates exact positive bundle bytes. Regressions pass **206
 Node / 13 Python**, **10 native tests**, **19 examples / 1,308 final checks** and
 **17 adapter runs / 318 checks**. A first consumer graphical timeout is retained;
 explicit test-window focus preparation precedes a fresh successful full run.
-The new hosted CI and Pages publication are separate steps. GF-08/GF-10 remain
+[Pages run37175019378](https://github.com/journey-studios/godot-fabric/actions/runs/37175019378) passed build/deploy; served JSON matches `a012f9e`, source `31d08ac`, outside main.
+The [hosted receipt](docs/evidence/tree/ci.json) records contracts passed with
+other jobs still running in that snapshot. These are separate from local proof.
+GF-08/GF-10 remain
 In progress; checkpoints, dependencies, weights, decisions and denominator do
 not change. Next in sequence 3: original TextInputState, public focus and native
 commands, followed by remaining HostInstance/EventTarget and pointer capture

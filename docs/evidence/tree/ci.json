@@ -1,0 +1,95 @@
+{
+  "format": "godot-fabric.tree-hosted-observation/v1",
+  "observedAt": "2026-10-04T03:49:27.081644+00:00",
+  "testedImplementationCommit": "31d08ac37d1fb61a80c233aada6a3cfc3549bfcc",
+  "localEvidence": "README.md",
+  "ci": {
+    "databaseId": 37175002603,
+    "headSha": "a012f9ed0943f4996553ff78ab543317d8ed46f0",
+    "status": "in_progress",
+    "conclusion": "",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603",
+    "createdAt": "2026-10-04T03:46:00Z",
+    "updatedAt": "2026-10-04T03:46:09Z",
+    "jobs": [
+      {
+        "name": "native-cold-start",
+        "status": "in_progress",
+        "conclusion": "",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603/job/111355685084",
+        "startedAt": "2026-10-04T03:46:08Z",
+        "completedAt": "0001-01-01T00:00:00Z"
+      },
+      {
+        "name": "reference-ios",
+        "status": "in_progress",
+        "conclusion": "",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603/job/111355685185",
+        "startedAt": "2026-10-04T03:46:08Z",
+        "completedAt": "0001-01-01T00:00:00Z"
+      },
+      {
+        "name": "reference-android",
+        "status": "in_progress",
+        "conclusion": "",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603/job/111355685197",
+        "startedAt": "2026-10-04T03:46:04Z",
+        "completedAt": "0001-01-01T00:00:00Z"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603/job/111355685215",
+        "startedAt": "2026-10-04T03:46:03Z",
+        "completedAt": "2026-10-04T03:46:59Z"
+      }
+    ]
+  },
+  "pages": {
+    "databaseId": 37175019378,
+    "headSha": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378",
+    "createdAt": "2026-10-04T03:46:21Z",
+    "updatedAt": "2026-10-04T03:46:50Z",
+    "jobs": [
+      {
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378/job/111355737690",
+        "startedAt": "2026-10-04T03:46:25Z",
+        "completedAt": "2026-10-04T03:46:35Z"
+      },
+      {
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378/job/111355768807",
+        "startedAt": "2026-10-04T03:46:39Z",
+        "completedAt": "2026-10-04T03:46:49Z"
+      }
+    ]
+  },
+  "servedData": {
+    "observedAt": "2026-10-04T03:48:05.190345+00:00",
+    "dataCommit": "a012f9ed0943f4996553ff78ab543317d8ed46f0",
+    "testedImplementationCommit": "31d08ac37d1fb61a80c233aada6a3cfc3549bfcc",
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "publication": {
+      "ref": "codex/react-native-parity-roadmap",
+      "commit": "a012f9ed0943f4996553ff78ab543317d8ed46f0",
+      "inMain": false,
+      "at": "2026-10-04T03:46:32.327Z"
+    },
+    "servedJsonSha256": "542a2be916c8dd2ae214bf31360669b208947ab904e5bbb7d3b1256ad13cbe45",
+    "servedDataMatchesCommittedJson": true
+  },
+  "limits": [
+    "The current hosted contracts passed; other jobs remain at their recorded snapshot state. No full hosted tree result is inferred.",
+    "The limited original iOS/Android reference suite is not a tree differential or a Godot mobile port certification.",
+    "Dashboard deployment is publication evidence, not runtime/parity certification."
+  ]
+}

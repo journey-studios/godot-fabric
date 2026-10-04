@@ -281,7 +281,9 @@
     }
   },
   "hostedCI": {
-    "status": "not-yet-dispatched",
-    "scope": "New tree source is local. Previous affine CI is separate; no mobile tree differential is certified."
+    "status": "in_progress",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603",
+    "headCommit": "a012f9ed0943f4996553ff78ab543317d8ed46f0",
+    "scope": "Snapshot is retained in ci.json. Contracts passed; other jobs were in progress. No mobile tree differential is certified."
   }
 }
