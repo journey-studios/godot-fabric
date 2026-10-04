@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Geometria capturada verificada; próximos EventTarget e contratos restantes de input"
   },
-  "updatedAt": "2026-10-04T12:38:21.541454+00:00",
+  "updatedAt": "2026-10-04T12:39:25.477414+00:00",
   "source": {
     "commit": "d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e",
     "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/ROADMAP.md",
@@ -473,7 +473,7 @@
             },
             {
               "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/docs/evidence/pointer-geometry/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
             }
           ]
         },
@@ -532,7 +532,7 @@
             },
             {
               "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/docs/evidence/pointer-geometry/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
             }
           ]
         },
@@ -763,7 +763,7 @@
             },
             {
               "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/docs/evidence/pointer-geometry/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
             }
           ]
         },
@@ -2565,6 +2565,17 @@
   ],
   "activity": [
     {
+      "id": "captured-pointer-geometry-receipt-links-94fd628",
+      "at": "2026-10-04T12:39:25.477414+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Links de evidência fixados no recibo pós-pin94fd628, que identifica implementação d0ef5ac e22fontes públicas verificadas. Mantém status, pesos, checkpoints e aceite completos pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+    },
+    {
       "id": "captured-pointer-geometry-source-pin-d0ef5ac",
       "at": "2026-10-04T12:38:21.541454+00:00",
       "taskIds": [
@@ -2573,7 +2584,7 @@
         "GF-13"
       ],
       "message": "22 hashes públicos conferidos contra implementaçãod0ef5ac. Receipt fixa commit, versões, modos, baseline, SDK e limites. Preserva18checkpoints concluídos e156obrigatórios, sem GF fechado; publicação/CI desta fatia ainda pendentes.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/docs/evidence/pointer-geometry/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
     },
     {
       "id": "captured-pointer-geometry-local-20261004",
@@ -2584,7 +2595,7 @@
         "GF-13"
       ],
       "message": "Fatia local comprovada: captura631/648,14pixels/3capturas,55falhas na fixture idêntica sobre host anterior, original108/108 e binding378. Transform/root/local/density/flattened/singular/hidden têm contratos separados; corrige limitação numérica RN explícita. Regressões e SDK novo passaram; CI e Pages desta implementação pendentes. Preserva18checkpoints concluídos/156 obrigatórios; nenhum GF fechado.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/docs/evidence/pointer-geometry/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
     },
     {
       "id": "pointer-hosted-artifact-and-pages-a15fde4",
