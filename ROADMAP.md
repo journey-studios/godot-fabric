@@ -933,7 +933,8 @@ Eight fresh Hermes flag/SDK lanes pass **2,723 checks**: original 336/336/338/33
 current 336/336/340/363. The identical current bundles on the previous native host
 retain **142 normative failures** (279/340 and 282/363 in the dispatch-on lanes).
 All 18 original RN inputs and bundle bytes match; only C++ differs among 14
-producers. The curated receipt adds 25 source/configuration pins. Native capture
+producers. The curated receipt verifies 25 source/configuration pins against implementation
+`00bd80454384cbfbffc1b703df0864674bf11f99`. Native capture
 passes **385/385**, including 20 exact pixels/two 760×220 saves: original Document
 capture+bubble commits A=2/B=0 from A=0/B=0 in one renderer batch.
 

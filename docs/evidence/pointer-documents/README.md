@@ -14,7 +14,9 @@ All execution below is local macOS arm64 Release, official Godot 4.7.2,
 RN 0.87.1, React 19.2.3 and Node 22.23.3. The receipt pins 25 executed
 sources/configuration inputs, 18 original RN inputs, native build identity,
 per-lane report/check-ID/bundle hashes and the captures. Execution preceded the
-implementation commit; committed source verification is a separate receipt step.
+implementation commit. All 25 executed code/configuration pins match
+`00bd80454384cbfbffc1b703df0864674bf11f99` via `git show`; the original execution base
+73d33da/source-dirty identity remains unchanged.
 
 Each lane starts a fresh Hermes runtime before original ref classes initialize.
 All eight SDK controls share the same corrected native host. The previous-host

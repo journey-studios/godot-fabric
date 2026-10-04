@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document validado; próximos eventos de ponteiro e fault contracts"
   },
-  "updatedAt": "2026-10-04T20:39:52.284914+00:00",
+  "updatedAt": "2026-10-04T20:45:49.122099+00:00",
   "source": {
-    "commit": "73d33daa1c18783d948253d0c8e89618efc91795",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/73d33daa1c18783d948253d0c8e89618efc91795",
-    "scope": "Document/root executado após 73d33da com fonte local dirty: 2.723 checks de matriz, 385 viewport/20 pixels e 142 falhas normativas no host anterior; 25 pins/18 RN. Regressões SDK/consumer/adapters passaram; pin no commit e nova CI pendentes. Pages anterior 73d33da integral verificado. Nenhum checkpoint/GF/peso/denominador adicional.",
+    "commit": "00bd80454384cbfbffc1b703df0864674bf11f99",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/00bd80454384cbfbffc1b703df0864674bf11f99",
+    "scope": "Document/root local comprovado: 2.723 checks em oito flag lanes, 385 viewport/20 pixels, 142 falhas normativas no controle anterior. 25 pins verificados via git show em00bd804; execução original73d33da/dirty preservada. SDK/consumer/adapters passaram. Nova CI e Pages pendentes; anteriores faultCIb887 e Pages73d confirmadas. Sem GF/checkpoint/peso/denominador adicional.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -313,7 +313,7 @@
             },
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-documents/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
             }
           ]
         },
@@ -380,7 +380,7 @@
             },
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-documents/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
             }
           ]
         },
@@ -471,7 +471,7 @@
             },
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-documents/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
             }
           ]
         },
@@ -614,7 +614,7 @@
             },
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-documents/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
             }
           ]
         },
@@ -956,7 +956,7 @@
             },
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-documents/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
             }
           ]
         },
@@ -2758,6 +2758,19 @@
   ],
   "activity": [
     {
+      "id": "document-source-pin-00bd804",
+      "at": "2026-10-04T20:45:49.122099+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "25 fontes executadas conferidas byte a byte via git show no commit00bd804. Receipts/SDK preservam base original73d33da/sourceDirty true da execução. Oito lanes2.723, viewport385/20pixels e142negativos permanecem locais; fontes/RN/bundles/host e capturas auditados. Nenhum novo GF/checkpoint:19/156 preservados. Nova CI e Pages pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/00bd80454384cbfbffc1b703df0864674bf11f99"
+    },
+    {
       "id": "document-root-flags-local-20261004",
       "at": "2026-10-04T20:39:52.284914+00:00",
       "taskIds": [
@@ -2768,7 +2781,7 @@
         "GF-13"
       ],
       "message": "Document/root por família atual com gates RN originais passou 2.723 checks em oito lanes e 385 no viewport/20 pixels; A=0/B=0→A=2/B=0 em um commit. Capture-only: 34 false antes de 35 true; A-none/B-doc isolado. Antigo: 142 falhas normativas; só C++ difere entre 14 produtores, RN18/bundles iguais. Root throw34 preserva TouchStart/Raw/React; slot no-ref null na query, sem contador lazy instrumentado. Regressões 250/13, 22 exemplos/2.250, consumer30/40, SDK fresh/13 adapters213, interest193/233, fault186 e integration181/206 passaram. 19/156 checkpoints; nenhum GF completo. Pin, nova CI e publicação pendentes.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-documents/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
     },
     {
       "id": "fault-ci-pages-73d33da-verified",

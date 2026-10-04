@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "scenario": "native-pointer-document-interest-four-flags",
   "implementation": {
-    "commit": null,
+    "commit": "00bd80454384cbfbffc1b703df0864674bf11f99",
     "executionBaseCommit": "73d33daa1c18783d948253d0c8e89618efc91795",
     "executionSourceDirty": true,
     "executedBeforeCommit": true,
-    "sourcePinsVerifiedAgainstCommit": false,
-    "verifiedSourcePinCount": 0
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourcePinCount": 25
   },
   "environment": {
     "platform": "macOS arm64",
