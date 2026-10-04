@@ -1,9 +1,9 @@
 {
   "format": "godot-fabric.pointer-geometry-evidence/v1",
   "observedAt": "2026-10-04T12:34:03.611454+00:00",
-  "implementationCommit": null,
+  "implementationCommit": "d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e",
   "baselineCommit": "0b5e7f446570266bde5eeb5b6dad638f8edecb23",
-  "sourceState": "Local verified slice, immutable source hashes below; implementation SHA is pinned in the following metadata commit before publication.",
+  "sourceState": "All 22 public production/fixture/build/test source hashes verified against this immutable implementation commit. Pinned original/generated dependencies and SDK identity are separately hashed; local compilation preceded the commit.",
   "versions": {
     "godot": "4.7.2-stable (official)",
     "react": "19.2.3",
@@ -103,7 +103,31 @@
       "pointer-geometry-native-tests.log": "7233f85060982ec31625ea7a36768e33419688626e69acf15d8bb337a854a420",
       "pointer-geometry-sdk-registry.log": "839e0800af1ca2385c4c024083f3602895cc037e4e6c60e43bd00b4c27c20475",
       "pointer-geometry-services.log": "4cda163505ee50cb35b3f93baab6a2c6676495264127523131fce4b94a0b7405"
-    }
+    },
+    "trackedSourcesVerifiedAgainstCommit": [
+      "native/application_runtime.cpp",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "native/pointer_geometry.cpp",
+      "native/pointer_geometry.h",
+      "native/pointer_geometry_history.h",
+      "native/CMakeLists.txt",
+      "scripts/rn-pointer-overlay.mjs",
+      "tests/rn-pointer-overlay.test.mjs",
+      "tests/pointer-geometry-native.test.mjs",
+      "tests/pointer-projection-native.test.mjs",
+      "native/pointer_geometry_test.cpp",
+      "native/pointer_projection_test.cpp",
+      "examples/pointer-geometry/App.jsx",
+      "examples/pointer-geometry/scene.tscn",
+      "examples/pointer-geometry/validation.gd",
+      "examples/catalog.json",
+      "examples/entry.jsx",
+      "tests/examples.test.mjs",
+      "package.json",
+      ".github/workflows/contracts.yml"
+    ]
   },
   "publicRuns": {
     "headless": {
@@ -5286,6 +5310,16 @@
         },
         "reportSha256": "0039d5cf476b67028d8a69bfc5208646ed4e3b9c203dd49f217a6da010b8515f",
         "graphicalExecutedThisSlice": false
+      }
+    },
+    "dashboard": {
+      "check": true,
+      "tests": true,
+      "build": true,
+      "logSha256": {
+        "pointer-geometry-dashboard-check.log": "3b43d7da7be3abbf2f0db8aa45c05acdbe7a6ceade1bc924355a5dcec6c4d2b7",
+        "pointer-geometry-dashboard-tests.log": "2d989e56f1ca443ff581c054573e8f5fa10cfacd1a0ae339a7f80ba94cd54fe2",
+        "pointer-geometry-dashboard-build.log": "b08d576a4a4d4fa5d5f03f096cdf0d71c70affd99785855f378e6a4fb6c0b6b2"
       }
     }
   },
