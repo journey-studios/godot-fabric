@@ -1,0 +1,102 @@
+{
+  "format": "godot-fabric.focus-command-hosted-observation/v1",
+  "observedAt": "2026-10-04T05:03:09.984744+00:00",
+  "testedComplementCommit": "877c52914fc56eefeacd367678f27124d7991ebe",
+  "runtimeImplementationCommit": "3b09b37acf735664301d3ddaf9ab275519893267",
+  "localEvidence": "commands.json",
+  "ci": {
+    "conclusion": "",
+    "createdAt": "2026-10-04T05:01:07Z",
+    "databaseId": 37178664886,
+    "headSha": "ffcc0276760177cfa865dc32a9b0c19c63d527d7",
+    "jobs": [
+      {
+        "completedAt": "2026-10-04T05:02:04Z",
+        "conclusion": "success",
+        "databaseId": 111366530852,
+        "name": "contracts",
+        "startedAt": "2026-10-04T05:01:10Z",
+        "status": "completed",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530852"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 111366530873,
+        "name": "reference-ios",
+        "startedAt": "2026-10-04T05:01:14Z",
+        "status": "in_progress",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530873"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 111366530902,
+        "name": "reference-android",
+        "startedAt": "2026-10-04T05:01:10Z",
+        "status": "in_progress",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530902"
+      },
+      {
+        "completedAt": "0001-01-01T00:00:00Z",
+        "conclusion": "",
+        "databaseId": 111366530925,
+        "name": "native-cold-start",
+        "startedAt": "2026-10-04T05:01:17Z",
+        "status": "in_progress",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
+      }
+    ],
+    "status": "in_progress",
+    "updatedAt": "2026-10-04T05:01:17Z",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886"
+  },
+  "pages": {
+    "conclusion": "success",
+    "createdAt": "2026-10-04T05:01:04Z",
+    "databaseId": 37178662152,
+    "headSha": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "jobs": [
+      {
+        "completedAt": "2026-10-04T05:01:17Z",
+        "conclusion": "success",
+        "databaseId": 111366526163,
+        "name": "build",
+        "startedAt": "2026-10-04T05:01:08Z",
+        "status": "completed",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152/job/111366526163"
+      },
+      {
+        "completedAt": "2026-10-04T05:01:31Z",
+        "conclusion": "success",
+        "databaseId": 111366556901,
+        "name": "deploy",
+        "startedAt": "2026-10-04T05:01:21Z",
+        "status": "completed",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152/job/111366556901"
+      }
+    ],
+    "status": "completed",
+    "updatedAt": "2026-10-04T05:01:32Z",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152"
+  },
+  "servedData": {
+    "observedAt": "2026-10-04T05:03:09.984744+00:00",
+    "dataCommit": "ffcc0276760177cfa865dc32a9b0c19c63d527d7",
+    "sourceCommit": "877c52914fc56eefeacd367678f27124d7991ebe",
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "publication": {
+      "ref": "codex/react-native-parity-roadmap",
+      "commit": "ffcc0276760177cfa865dc32a9b0c19c63d527d7",
+      "inMain": false,
+      "at": "2026-10-04T05:01:13.863Z"
+    },
+    "servedJsonSha256": "7437a3a30092861bbea34edf0851eccb412237cf3829d62aa915086bf89d7a55",
+    "servedDataMatchesCommittedJson": true
+  },
+  "limits": [
+    "Hosted command-guard jobs remain at the recorded snapshot until their actual conclusion is observed.",
+    "Prior hosted focus1699e5c passed all five jobs; it predates this new isolated command fixture.",
+    "Pages success and exact JSON comparison are publication proof, not native/mobile contract certification."
+  ]
+}

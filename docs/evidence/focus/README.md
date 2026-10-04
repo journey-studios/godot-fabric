@@ -132,3 +132,9 @@ hardware/mobile claims of the graphical focus example.
 records the next lifetime prerequisite and the pinned EventTarget baseline.
 It does not claim capture support, a reproduced crash or an approved cleanup
 solution.
+
+The [complement hosted observation](commands-ci.json) records manual Pages
+[run37178662152](https://github.com/journey-studios/godot-fabric/actions/runs/37178662152):
+build/deploy succeeded and public JSON exactly matched `ffcc027`, with
+test source `877c529` outside main. The new native command CI retains its
+actual snapshot status; completed preceding focus CI remains separate.
