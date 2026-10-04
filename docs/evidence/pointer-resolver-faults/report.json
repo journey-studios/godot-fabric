@@ -2,10 +2,12 @@
   "schemaVersion": 1,
   "scenario": "native-pointer-public-instance-resolver-fault",
   "implementation": {
-    "commit": null,
+    "commit": "b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
     "executionBaseCommit": "b2e46551ed1456419ba9c2423f0f5affe8062dd9",
     "sourceDirtyDuringExecution": true,
-    "sourcePinsMatchExecuted": true
+    "sourcePinsMatchExecuted": true,
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
+    "sourcePinsVerifiedAgainstCommit": 23
   },
   "environment": {
     "platform": "macOS",

@@ -991,6 +991,7 @@ channels and React commit even though that descriptor is already usable.
 Identical JS bundle bytes, 65 check IDs and 18 original RN inputs retain
 **62/65 with three visible normative failures** on the preserved host. The
 corrected host passes **65/65**, with only C++ differing among 17 producers.
+All 23 curated code/configuration pins match implementation `b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8`.
 Component property reads now share the query's exception boundary. A failed
 lookup records E_POINTER_LISTENER_QUERY and its cause, rejects that interest
 lookup, and preserves the following original TouchStart/Raw/update in one

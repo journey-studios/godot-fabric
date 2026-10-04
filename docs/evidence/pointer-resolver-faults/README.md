@@ -12,6 +12,9 @@ and [failure analysis](../../research/pointer-resolver-faults.md).
 Execution used official Godot 4.7.2, RN 0.87.1, React 19.2.3 and Node 22.23.3
 on macOS arm64 Release. The receipt owns executed source, bundle, native host,
 report and image hashes; execution preceded the implementation commit.
+All 23 executed code/configuration pins, plus the fresh SDK source hashes, match
+implementation `b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8`. The original execution base/source-dirty
+identity and local build record are retained.
 
 | Executed lane | Result |
 | --- | --- |

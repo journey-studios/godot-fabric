@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Getter de ref preserva batch nativo; pointerup e reentrância pendentes"
   },
-  "updatedAt": "2026-10-04T21:36:02.438586+00:00",
+  "updatedAt": "2026-10-04T21:37:48.868082+00:00",
   "source": {
-    "commit": "b2e46551ed1456419ba9c2423f0f5affe8062dd9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/b2e46551ed1456419ba9c2423f0f5affe8062dd9",
-    "scope": "Fatia getter local comprovada: anterior62/65 com3falhas normativas; corrigido65/65,viewport85/16pixels.65IDs/bundle/18RN iguais,17produtores C++only. Umafalha real emcanonical.publicInstance restaura descriptorantesthrow; SDK0noinstantefault e7queriesfalse depois,TouchStart/Raw/React/umcommit/diagnóstico+cleanup passam. 15gatesregressãopassaram,SDKfrescoa6ae;CI/publicação desta fatia pendentes. DocumentCIe65fivejobs separado. Nenhumcheckpoint/GF/peso/denominador fechado.",
+    "commit": "b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
+    "scope": "Fatia getter local comprovada: anterior62/65 com3falhas normativas; corrigido65/65,viewport85/16pixels.65IDs/bundle/18RN iguais,17produtores C++only. Umafalha real emcanonical.publicInstance restaura descriptorantesthrow; SDK0noinstantefault e7queriesfalse depois,TouchStart/Raw/React/umcommit/diagnóstico+cleanup passam. 15gatesregressãopassaram,SDKfrescoa6ae;CI/publicação desta fatia pendentes. DocumentCIe65fivejobs separado. 23pins conferidos contrab3920e1. Nenhumcheckpoint/GF/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -321,7 +321,7 @@
             },
             {
               "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -396,7 +396,7 @@
             },
             {
               "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -495,7 +495,7 @@
             },
             {
               "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -646,7 +646,7 @@
             },
             {
               "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -996,7 +996,7 @@
             },
             {
               "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -2798,6 +2798,19 @@
   ],
   "activity": [
     {
+      "id": "resolver-getter-source-pin-b3920e1",
+      "at": "2026-10-04T21:37:48.868082+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "23pins executados e fontesdoSDKfresco conferidos via gitshow emb3920e1. Local65/85,3negativos anteriores e15gates completos;executionBaseb2e4655/sourceDirtytrue preservados. Links imutáveis,CI/publicação próprios pendentes. Nenhum novo checkpoint/GF completo/peso/denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8"
+    },
+    {
       "id": "resolver-getter-batch-local-20261004",
       "at": "2026-10-04T21:28:02.009203+00:00",
       "taskIds": [
@@ -2808,7 +2821,7 @@
         "GF-13"
       ],
       "message": "Um getter realcanonical.publicInstance restaura descriptorantesthrow. Controle anterior62/65 com3falhas visíveis TouchStart/Raw/React; corrigido65/65,85viewport/16pixels+2counter+2save.A0B0→A2B0incluihealthybaseline+faultTouchStartumcommit.65IDs/bundle/18RNiguais,17producersonlyC++.SDK0noinstantefault/7falseafter,diagnóstico único/CancelA/BhealthywhileAheld/nextgesture/stopzero passam.23pins locais. 15gatesregressãopassaram250/13,2723Doc,193/233,186,181/206,22examples2250,consumer30/40,loader89/21,13adapters213,portables2+2. SDKnewigualhosta6ae; CI/publicaçãopendentes;semaceiteGF/checkpoint/peso/denominador novo.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
     },
     {
       "id": "document-ci-pages-b2e4655-confirmed",
