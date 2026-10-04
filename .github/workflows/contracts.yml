@@ -117,6 +117,16 @@ jobs:
             build/pointer-projection-report.json
             build/pointer-projection.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:events:original
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-event-target-original
+          path: |
+            build/event-target-report.json
+            build/event-target-bundles.json
+            build/event-target.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

@@ -723,11 +723,24 @@ jobs passed at f90206f and audits original108/108, binding378 and headless631
 artifacts. Pages37202857849 passed build/deploy; served JSON matched f90206f
 outside main. Reference mobile jobs contain no captured-pointer oracle.
 
-The next bounded EventTarget work starts with the
-[pinned source investigation](docs/research/event-target-boundary.md): manual
-ref contracts, native dispatcher integration, imperative-only pointer interest
-and retained ancestry. These are proposals awaiting runtime proof, not completed
-checkpoints or enabled production capabilities.
+### Original EventTarget baseline (2026-10-04)
+
+GF-05/GF-08/GF-13 remain **In progress**. The isolated original-ref probe passes
+119 headless checks in four Hermes runtimes/five surfaces. Each enabled root
+executes 33 manual checks: original listener identity/removal, capture/bubble,
+flattened ancestry, once/reentrancy, mutation, AbortSignal, cancellation,
+passive and public error cleanup. The two-flag matrix retains original defaults
+and rejects late/repeated overrides. One deliberate listener fault arrives once
+through TimerManager; all runtime work/timers and native nodes retire.
+
+Three gaps are reproduced separately with positive controls: imperative-only
+native pointer interest, the compiled legacy dispatcher omitting imperative
+delivery despite working JSX, and permanent parent cache on a warmed detached
+ref versus a cold detached sibling. [Executed receipt](docs/evidence/event-target/README.md)
+and [source investigation](docs/research/event-target-boundary.md). Production
+flags/bundle are unchanged; native EventTarget delivery and ancestry correction
+remain pending. This does not close any full checkpoint, GF or architectural
+decision. CI execution of this new probe remains separate from local evidence.
 
 ## M1 — Complete the native UI tree
 

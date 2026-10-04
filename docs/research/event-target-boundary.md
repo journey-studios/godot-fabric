@@ -1,8 +1,10 @@
 # Imperative EventTarget at the RN 0.87.1 boundary
 
-Status: source investigation, **runtime proof pending**. This note proposes
-acceptance for the next GF-08/GF-13 slice. It does not enable a capability,
-approve a renderer change or certify experimental RN APIs.
+Status: source investigation and **executed original-ref probe**. The isolated
+macOS arm64/headless fixture passes 119 checks and reproduces all three gaps.
+[Receipt](../evidence/event-target/README.md). Native integration remains
+pending; this does not enable a public capability, approve a renderer change
+or certify complete experimental RN APIs.
 
 ## Three independent gaps
 
@@ -21,13 +23,15 @@ approve a renderer change or certify experimental RN APIs.
 3. `getEventTargetParent` caches the first parent, including null, on the target.
    No invalidation was found in this pinned implementation. NativeDOM ancestry
    changes after commit/unmount, but retained refs may continue using the cached
-   chain. This is an actionable hypothesis requiring an unchanged-source
-   reproducer, not an executed bug claim.
+   chain. The unchanged-source probe now reproduces this: the warmed detached
+   ref bubbles to the still-mounted former parent, while its never-dispatched
+   detached sibling performs only self-dispatch. NativeDOM returns null parent
+   and disconnected for both refs.
 
 ## Proposed sequence and acceptance
 
-First execute original ref/manual-dispatch contracts in an isolated opt-in
-fixture and keep default flags off elsewhere. Compare listener identity by
+The first step is executed in an isolated opt-in fixture; default flags stay
+off elsewhere. It compares listener identity by
 (type, callback, capture), deduplication, removal, object handleEvent, once
 before nested dispatch, mutation during dispatch, abort/re-add, passive and
 cancelable behavior. Check target/currentTarget, capture/bubble order,
@@ -35,6 +39,11 @@ stopPropagation/stopImmediatePropagation, dispatch return values, same-event
 reentrancy and error cleanup. Retained refs may dispatch locally after unmount,
 but must not propagate through retired native ancestry. Preserve the original
 parent-cache behavior as a separate control before choosing a correction.
+Four separate runtimes exercise the complete two-flag matrix, including
+original defaults, rejected late/repeated overrides and five mounted surfaces.
+The enabled runtime executes 33 manual checks in each of two roots. Public
+listener failure reports once through TimerManager after dispatch returns;
+peer delivery and original transient-field cleanup still complete.
 
 Then connect original native dispatch and listener interest. One candidate is
 a hash-guarded generated insertion in the shipped renderer's existing batched
@@ -74,4 +83,5 @@ imperative methods as generally supported.
 
 These findings come from the installed pin; future pins must be inspected anew.
 The [preceding captured geometry receipt](../evidence/pointer-geometry/README.md)
-remains separate from this unexecuted EventTarget proposal.
+remains separate from this original-ref baseline and the still-unimplemented
+native EventTarget proposal.

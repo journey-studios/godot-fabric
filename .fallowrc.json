@@ -23,7 +23,8 @@
     "tests/types/godot-fabric.tsx",
     "tests/adapters/consumer/ui/index.tsx",
     "tests/focus-command-fixture.jsx",
-    "tests/pointer-errors-fixture.jsx"
+    "tests/pointer-errors-fixture.jsx",
+    "tests/event-target-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",

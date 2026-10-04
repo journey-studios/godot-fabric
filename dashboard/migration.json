@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Geometria capturada verificada; próximos EventTarget e contratos restantes de input"
+    "focusTitle": "EventTarget original verificado; conectar entrega nativa e corrigir ancestralidade atual"
   },
-  "updatedAt": "2026-10-04T14:22:21.043675+00:00",
+  "updatedAt": "2026-10-04T14:56:23.869563+00:00",
   "source": {
     "commit": "d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e",
     "url": "https://github.com/journey-studios/godot-fabric/blob/d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e/ROADMAP.md",
-    "scope": "Implementaçãod0ef5ac: captura631/648,14pixels/3PNGs; controle idêntico55/631, original108/108 compilado com binding correspondente e binding real378. Fontes públicas verificadas contra este commit; SDK novo13headless/213, registry207/11 e loader89/21. Regressões199Node/13Python e22examples/2246headless passaram. Nenhum GF, aceite completo, decisão, peso ou denominador alterado. Artefatos CI f90206f auditados: original108/108, binding378 e headless631; cinco jobs passaram. Pages37202857849 passou build/deploy; JSON f90206f conferido fora do main.",
+    "scope": "Baseline EventTarget original executada localmente: 119/119 headless, 33 manual em cada raiz incluídos no total, quatro Hermes/cinco surfaces; três gaps reproduzidos com controles. Flags/fontes de produção e bundle público inalterados; native delivery e parent cache continuam pendentes. Recibo com hashes executados; pin da nova implementação e CI seguem separados. Nenhum GF/checkpoint, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Bootstrap completo, idle, erros, globals e starvation seguem pendentes.",
+      "note": "Bootstrap completo, idle, erros, globals e starvation seguem pendentes. Probe isolado usa globals Event/EventTarget/CustomEvent/AbortController/AbortSignal originais; once/abort e erro público assíncrono TimerManager executados dentro dos119checks. Bootstrap público/idle/URL/encoding/starvation completos seguem abertos; opt-in somente no teste.",
       "blocker": "",
       "checkpoints": [
         {
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs/NativeDOM, medidas, foco/comandos e captura públicos têm provas separadas. Geometria capturada agora passa 631/648 checks, incluindo refs flattened e outra raiz transformada; 55 falhas no host anterior, 14 pixels e três capturas. Binding378 e original108/108 preservam campos, autoridade e lifetime; offsets locais corrigem explicitamente o algoritmo RN incompleto. HostInstance completo, imperative EventTarget, demais comandos/hidden trees e diferenciais mobile continuam pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile.",
+      "note": "Refs/NativeDOM, medidas, foco/comandos e captura públicos têm provas separadas. Geometria capturada agora passa 631/648 checks, incluindo refs flattened e outra raiz transformada; 55 falhas no host anterior, 14 pixels e três capturas. Binding378 e original108/108 preservam campos, autoridade e lifetime; offsets locais corrigem explicitamente o algoritmo RN incompleto. HostInstance completo, imperative EventTarget, demais comandos/hidden trees e diferenciais mobile continuam pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Baseline EventTarget119headless: quatro modos de flags,33manual por raiz, refs flattened/duas raízes; cache do pai de ref removida reproduzido com controle cold. Métodos públicos não habilitados em produção; dispatcher nativo e correção de cache pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -745,7 +745,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile.",
+      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Três gaps EventTarget reproduzidos: interesse imperativo sem JSX, dispatcher legacy omitindo listener e cache de ancestralidade retirada. Manual119headless não certifica transporte nativo; responder/PanResponder, hardware/mobile e regressões da futura integração seguem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2576,6 +2576,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-original-baseline-20261004",
+      "at": "2026-10-04T14:56:23.869563+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Probe original executado119/119 headless, incluindo33manual por raiz;4runtimes/5surfaces,3gaps reproduzidos e1erro público deliberado com cleanupzero. Registro manual funcional separado da entrega nativa ausente. Nenhum GF/checkpoint completo nem defaults públicos alterados; CI desta fatia ainda pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "captured-pointer-geometry-hosted-f90206f",
       "at": "2026-10-04T14:22:21.043675+00:00",
