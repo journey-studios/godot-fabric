@@ -1,17 +1,51 @@
 #include "godot_dom.h"
 #include <react/renderer/bridging/bridging.h>
 #include <react/renderer/uimanager/UIManagerBinding.h>
+#include <cmath>
+#include <limits>
 
 namespace fabric_godot {
 namespace rn = facebook::react;
 namespace jsi = facebook::jsi;
 
-GodotDOM::GodotDOM(std::shared_ptr<rn::CallInvoker> invoker, Project project)
-    : rn::NativeDOM(std::move(invoker)), project_(std::move(project)) {
+GodotDOM::GodotDOM(std::shared_ptr<rn::CallInvoker> invoker, Project project, Authority authority)
+    : rn::NativeDOM(std::move(invoker)), project_(std::move(project)), authority_(std::move(authority)) {
   methodMap_["compareDocumentPosition"] = {2, compare_position};
   methodMap_["getBoundingClientRect"] = {2, bounding_rect};
   methodMap_["measureInWindow"] = {2, measure_window};
+  methodMap_["hasPointerCapture"] = {2, has_capture};
+  methodMap_["setPointerCapture"] = {2, set_capture};
+  methodMap_["releasePointerCapture"] = {2, release_capture};
 }
+
+jsi::Value GodotDOM::capture(jsi::Runtime &rt, rn::TurboModule &module,
+    const jsi::Value *args, size_t count, int operation) {
+  if (count != 2 || !args[1].isNumber())
+    throw jsi::JSError(rt, "Pointer capture requires a node and signed 32-bit pointer ID");
+  const auto pointer = args[1].getNumber();
+  if (!std::isfinite(pointer) || pointer != std::floor(pointer) ||
+      pointer < std::numeric_limits<int32_t>::min() || pointer > std::numeric_limits<int32_t>::max())
+    throw jsi::JSError(rt, "Pointer capture requires a signed 32-bit pointer ID");
+  auto &self = static_cast<GodotDOM &>(module);
+  auto node = rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::fromJs(rt, args[0]);
+  auto &binding = *rn::UIManagerBinding::getBinding(rt);
+  binding.getPointerEventsProcessor().clearDisconnectedCaptureTargetsForGodot(binding.getUIManager());
+  // A retained logical ref may still be connected while its native root is
+  // stopping. Neither that interval nor a removed family may regain capture.
+  if (!node || !self.authority_(*node) || !self.isConnected(rt, jsi::Value(rt, args[0])))
+    return operation == 0 ? jsi::Value(false) : jsi::Value::undefined();
+  if (operation == 0) return jsi::Value(self.hasPointerCapture(rt, node, pointer));
+  if (operation == 1) self.setPointerCapture(rt, node, pointer);
+  else self.releasePointerCapture(rt, node, pointer);
+  return jsi::Value::undefined();
+}
+
+jsi::Value GodotDOM::has_capture(jsi::Runtime &rt, rn::TurboModule &module,
+    const jsi::Value *args, size_t count) { return capture(rt, module, args, count, 0); }
+jsi::Value GodotDOM::set_capture(jsi::Runtime &rt, rn::TurboModule &module,
+    const jsi::Value *args, size_t count) { return capture(rt, module, args, count, 1); }
+jsi::Value GodotDOM::release_capture(jsi::Runtime &rt, rn::TurboModule &module,
+    const jsi::Value *args, size_t count) { return capture(rt, module, args, count, 2); }
 
 jsi::Value GodotDOM::compare_position(jsi::Runtime &rt, rn::TurboModule &module,
     const jsi::Value *args, size_t count) {

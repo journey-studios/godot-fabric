@@ -457,6 +457,60 @@
         "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886"
       },
       "summary": "contracts/native-cold-start/reference-android succeeded; reference-ios simulator discovery timed out before app build; comparison skipped. Later reference success is separately recorded."
+    },
+    "completedRecoveryRun": {
+      "observedAt": "2026-10-04T10:54:48.085025+00:00",
+      "run": {
+        "conclusion": "success",
+        "createdAt": "2026-10-04T05:05:35Z",
+        "headSha": "9564076fd2037832266fffc54254f05c820b64b6",
+        "jobs": [
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183671",
+            "startedAt": "2026-10-04T05:05:38Z",
+            "completedAt": "2026-10-04T05:06:31Z"
+          },
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183790",
+            "startedAt": "2026-10-04T05:05:43Z",
+            "completedAt": "2026-10-04T05:12:03Z"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183829",
+            "startedAt": "2026-10-04T05:05:38Z",
+            "completedAt": "2026-10-04T05:11:42Z"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111367183871",
+            "startedAt": "2026-10-04T05:07:12Z",
+            "completedAt": "2026-10-04T05:20:22Z"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084/job/111369286491",
+            "startedAt": "2026-10-04T05:20:25Z",
+            "completedAt": "2026-10-04T05:20:44Z"
+          }
+        ],
+        "status": "completed",
+        "updatedAt": "2026-10-04T05:20:44Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
+      },
+      "meaning": "All five jobs passed for9564076; original ffcc iOS discovery failure remains historical. This does not certify full focus/mobile parity."
     }
   }
 }

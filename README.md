@@ -64,6 +64,16 @@ or missing eligibility guards. Keyboard/IME and multiline remain open.
 
 ![Original RN focus preserved after callback ref replacement](docs/evidence/focus/focus-updated.png)
 
+The [pointer example](examples/pointers/README.md) brings real Godot input to
+original RN pointer events and public View capture refs. Its
+[evidence](docs/evidence/pointers/README.md) records 132 headless /146 native
+checks, 12 pixels, selective multi-root lifetime, 144 native assertions and
+43 original JSX exception/stop checks. Two original-source controls reproduce
+crashes fixed by the generated native lifetime overlay. Full transformed
+capture, hardware, EventTarget and mobile acceptance remain open.
+
+![Original React View capture roots after a key replacement](docs/evidence/pointers/pointers-updated.png)
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -145,6 +155,7 @@ npm run example -- coordinates # root/local/screen points and real movement gest
 npm run example -- transforms # original RN affine styles, refs and transformed input
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
+npm run example -- pointers # original pointer input and public View capture
 npm run example -- tree     # native IDs, original documents and logical traversal
 npm run example -- services # typed Godot calls, signals and shared Zustand data
 npm start -- --nativewind   # reactive utility classes and manual theme

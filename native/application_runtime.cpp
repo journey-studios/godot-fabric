@@ -23,6 +23,9 @@
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <godot_cpp/classes/input_event_mouse_button.hpp>
+#include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/classes/input_event_screen_touch.hpp>
+#include <godot_cpp/classes/input_event_screen_drag.hpp>
 #include <react/renderer/components/scrollview/ScrollViewComponentDescriptor.h>
 #include <algorithm>
 #include <godot_cpp/classes/button.hpp>
@@ -51,6 +54,7 @@
 #include <map>
 #include <set>
 #include <unordered_map>
+#include <tuple>
 
 namespace rn = facebook::react;
 namespace jsi = facebook::jsi;
@@ -158,6 +162,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     folly::dynamic initial_props;
   };
   std::map<int, std::unique_ptr<Root>> roots;
+  // Physical contacts belong to one surface within a viewport. Pointer IDs
+  // belong to the application, including the hover lifetime of a mouse.
+  using PointerKey = std::tuple<uint64_t, uint64_t, int, bool, int>;
+  struct RoutedPointer { int id{}, surface{}, buttons{}; bool primary{}, active{}, mouse{}, suppressed{}; };
+  std::map<PointerKey, RoutedPointer> pointer_routes;
+  std::set<int> pending_pointer_removals;
+  int next_pointer_id{1};
+  uint64_t last_pointer_event{};
+  std::set<int> pointer_event_callers;
+  bool pointer_event_delivered{};
   std::function<fabric_godot::WindowMetrics()> read_window;
   fabric_godot::WindowMetrics host_metrics;
   uint64_t runtime_id;
@@ -269,7 +283,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         const rn::EventPayload &payload, rn::HighResTimeStamp timestamp) {
       if (target) {
         auto root = roots.find(target->getSurfaceId());
-        if (root == roots.end() || ((root->second->stopping || inactive()) && type != "touchCancel")) return;
+        if (root == roots.end() || ((root->second->stopping || inactive()) && type != "topTouchCancel")) return;
       } else if (inactive()) return;
       rn::UIManagerBinding::getBinding(rt)->dispatchEvent(rt, target, type, priority, payload, timestamp);
     };
@@ -324,6 +338,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             Rect2 bounds(transform.xform(corners[0]), Vector2());
             for (int index = 1; index < 4; ++index) bounds.expand_to(transform.xform(corners[index]));
             return rn::dom::DOMRect{bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y};
+          }, [this](const rn::ShadowNode &node) {
+            auto root = roots.find(node.getSurfaceId());
+            return !inactive() && root != roots.end() && !root->second->stopping &&
+                !root->second->stopped && !retiring.contains(node.getTag());
           });
     });
     if (adapters) adapters->install_modules(*native_modules);
@@ -466,7 +484,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           }
           return fabric_godot::PointerAdapter::Coordinates{page, screen};
         },
-        [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); });
+        [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); },
+        [this, id](int tag, const std::string &phase, rn::PointerEvent event) { pointer_event(id, tag, phase, std::move(event)); });
     if (defer_start) surface.start_pending = true;
     else start_root(id);
     return id;
@@ -700,6 +719,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         if (!stop_requested) runtime->drainMicrotasks();
       }
       if (!stop_requested) runtime->drainMicrotasks();
+      for (int id : pending_pointer_removals) pointer_processor().removePointerForGodot(id);
+      pending_pointer_removals.clear();
+      // Registry lookups must run after Fabric's commit callback has unwound;
+      // the ShadowTreeRegistry holds its shared lock during that callback.
+      pointer_processor().clearDisconnectedCaptureTargetsForGodot(*ui);
     } catch (const std::exception &error) { fail(error.what()); }
   }
   void unmount(int id, bool legacy_hook = false) {
@@ -708,6 +732,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (found == roots.end() || found->second->stopping) return;
     auto &root = *found->second;
     root.stopping = true;
+    retire_pointers(id);
     root.start_pending = false;
     pending_retirements.emplace(id, legacy_hook);
     // The Node may be destroyed by the game before deferred React cleanup.
@@ -726,6 +751,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (found == roots.end()) return;
     auto &root = *found->second;
     root.stopping = true;
+    retire_pointers(id);
     root.pointer->cancel();
     // React cleanup must run while this ShadowTree is still registered.
     try {
@@ -762,7 +788,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   void stop() {
     if (stopped || stopping) return;
-    if (execution_depth) { stop_requested = true; return; }
+    if (execution_depth) {
+      stop_requested = true;
+      // Revoke pointer continuations immediately; destruction and React cleanup
+      // still wait for the outer native/JS execution scope to unwind.
+      for (const auto &[id, root] : roots) retire_pointers(id);
+      return;
+    }
     stop_requested = false;
     stopping = true;
     host_phase_pending = false;
@@ -792,6 +824,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     timer_registry->quit();
     frame_callbacks.clear();
     work.clear();
+    pointer_routes.clear();
+    pending_pointer_removals.clear();
+    pointer_event_callers.clear();
+    last_pointer_event = 0;
+    pointer_event_delivered = false;
     stopped = true;
     // Cache the finalized application state for surfaces whose owner may be
     // destroyed before them. Object IDs avoid retaining the scene objects.
@@ -1027,6 +1064,185 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     else if (phase == "end") emitter->onTouchEnd(std::move(event));
     else emitter->onTouchCancel(std::move(event));
   }
+  rn::PointerEventsProcessor &pointer_processor() const {
+    return rn::UIManagerBinding::getBinding(*runtime)->getPointerEventsProcessor();
+  }
+  void retire_pointers(int id) {
+    auto &processor = pointer_processor();
+    processor.clearCaptureTargetsForSurfaceForGodot(id);
+    for (auto it = pointer_routes.begin(); it != pointer_routes.end();) {
+      if (it->second.surface != id) { ++it; continue; }
+      processor.removePointerForGodot(it->second.id);
+      if (it->second.mouse && it->second.active) {
+        it->second.suppressed = true;
+        it->second.surface = 0;
+        ++it;
+      } else it = pointer_routes.erase(it);
+    }
+  }
+  void synchronize_pointer_routes() {
+    for (auto it = pointer_routes.begin(); it != pointer_routes.end();) {
+      auto root = roots.find(it->second.surface);
+      if (it->second.suppressed || root == roots.end()) { ++it; continue; }
+      const auto ids = root->second->pointer->pointer_ids();
+      if (std::find(ids.begin(), ids.end(), it->second.id) != ids.end()) { ++it; continue; }
+      pending_pointer_removals.insert(it->second.id);
+      if (it->second.mouse && it->second.active) {
+        it->second.suppressed = true;
+        ++it;
+      } else it = pointer_routes.erase(it);
+    }
+  }
+  void pointer_event(int id, int tag, const std::string &phase, rn::PointerEvent event) {
+    auto root = roots.find(id);
+    if (inactive() || root == roots.end() || root->second->stopping) return;
+    ++root->second->events;
+    auto found = views.find(tag);
+    if (!tag || found == views.end() || retiring.contains(tag) || !found->second.shadow.eventEmitter) {
+      // A physical hit can be absent while the contact is captured. A typed
+      // null-target event lets RN resolve capture and hover using its registry.
+      std::string type = phase == "down" ? "topPointerDown" : phase == "up" ? "topPointerUp" :
+          phase == "cancel" ? "topPointerCancel" : phase == "leave" ? "topPointerLeave" : "topPointerMove";
+      const auto category = phase == "down" ? rn::RawEvent::Category::ContinuousStart :
+          phase == "up" || phase == "cancel" || phase == "leave" ? rn::RawEvent::Category::ContinuousEnd :
+          rn::RawEvent::Category::Unspecified;
+      const auto timestamp = event.timeStamp;
+      dispatcher->dispatchEvent(rn::RawEvent(type, std::make_shared<rn::PointerEvent>(std::move(event)),
+          nullptr, {}, category, false, timestamp));
+      return;
+    }
+    auto emitter = std::static_pointer_cast<const rn::ViewEventEmitter>(found->second.shadow.eventEmitter);
+    if (phase == "down") emitter->onPointerDown(std::move(event));
+    else if (phase == "up") emitter->onPointerUp(std::move(event));
+    else if (phase == "cancel") emitter->onPointerCancel(std::move(event));
+    else if (phase == "leave") emitter->onPointerLeave(std::move(event));
+    else emitter->onPointerMove(std::move(event));
+  }
+  std::optional<PointerKey> pointer_key(Root &source, const Ref<InputEvent> &event, Vector2 &position) {
+    if (event.is_null() || event->get_device() == -1) return std::nullopt;
+    auto *host = source.host();
+    if (!host || !host->is_inside_tree()) return std::nullopt;
+    const auto viewport = host->get_viewport()->get_instance_id();
+    const auto window = host->get_window() ? host->get_window()->get_instance_id() : viewport;
+    if (auto *mouse = Object::cast_to<InputEventMouse>(event.ptr())) {
+      if (auto *button = Object::cast_to<InputEventMouseButton>(event.ptr())) {
+        const auto index = button->get_button_index();
+        if (index != MOUSE_BUTTON_LEFT && index != MOUSE_BUTTON_RIGHT && index != MOUSE_BUTTON_MIDDLE &&
+            index != MOUSE_BUTTON_XBUTTON1 && index != MOUSE_BUTTON_XBUTTON2) return std::nullopt;
+      }
+      position = mouse->get_position();
+      return PointerKey{window, viewport, event->get_device(), true, 0};
+    }
+    int index;
+    if (auto *touch = Object::cast_to<InputEventScreenTouch>(event.ptr())) {
+      position = touch->get_position(); index = touch->get_index();
+    } else if (auto *drag = Object::cast_to<InputEventScreenDrag>(event.ptr())) {
+      position = drag->get_position(); index = drag->get_index();
+    } else return std::nullopt;
+    if (index < 0 || index == std::numeric_limits<int>::max()) return std::nullopt;
+    return PointerKey{window, viewport, event->get_device(), false, index};
+  }
+  int pointer_hit_surface(uint64_t viewport, Vector2 position) const {
+    Control *front = nullptr;
+    int result = 0;
+    for (const auto &[id, surface] : roots) {
+      auto *host = surface->host();
+      if (surface->stopping || !host || !host->is_inside_tree() ||
+          host->get_viewport()->get_instance_id() != viewport || !hit_test(host, position)) continue;
+      if (!front || host->is_greater_than(front)) { front = host; result = id; }
+    }
+    return result;
+  }
+  bool routed_input(int caller, Root &source, const Ref<InputEvent> &event, bool &blocked) {
+    Vector2 position;
+    auto key = pointer_key(source, event, position);
+    if (!key) return false;
+    // Godot forwards one InputEvent to several Surface _input callbacks. Keep
+    // its one physical sample owned by the first selected root even after Up.
+    // A repeated caller starts a new dispatch when a game reuses an event Ref.
+    const uint64_t event_id = event->get_instance_id();
+    if (last_pointer_event != event_id || pointer_event_callers.contains(caller)) {
+      last_pointer_event = event_id;
+      pointer_event_callers.clear();
+      pointer_event_delivered = false;
+    }
+    pointer_event_callers.insert(caller);
+    if (pointer_event_delivered) return false;
+    auto found = pointer_routes.find(*key);
+    const bool mouse = std::get<3>(*key);
+    if (found != pointer_routes.end() && found->second.suppressed) {
+      auto *button = Object::cast_to<InputEventMouseButton>(event.ptr());
+      auto *motion = Object::cast_to<InputEventMouseMotion>(event.ptr());
+      const int changed_button = button ? 1 << (static_cast<int>(button->get_button_index()) - 1) : 0;
+      const int native_buttons = button ? static_cast<uint64_t>(button->get_button_mask()) : 0;
+      const bool fresh_down = button && button->is_pressed() && !button->is_canceled() &&
+          (!found->second.buttons || (found->second.buttons & changed_button) ||
+              (native_buttons && !(native_buttons & found->second.buttons)));
+      if (fresh_down ||
+          (motion && !static_cast<uint64_t>(motion->get_button_mask()) && !found->second.buttons)) {
+        pointer_routes.erase(found);
+        found = pointer_routes.end();
+      } else {
+        if (button) {
+          const int mask = 1 << (static_cast<int>(button->get_button_index()) - 1);
+          if (button->is_pressed()) found->second.buttons |= mask;
+          else found->second.buttons &= ~mask;
+          if (button->is_canceled()) found->second.buttons = 0;
+        }
+        // An ended native contact cannot be recreated by a later drag/release.
+        blocked = true;
+        pointer_event_delivered = true;
+        return true;
+      }
+    }
+    int selected = found != pointer_routes.end() && found->second.active ? found->second.surface :
+        pointer_hit_surface(std::get<1>(*key), position);
+    if (!selected && found != pointer_routes.end() && mouse) selected = found->second.surface;
+    if (!selected || selected != caller) return false;
+    auto target = roots.find(selected);
+    if (target == roots.end() || target->second->stopping) return false;
+    if (found == pointer_routes.end()) {
+      if (!mouse) {
+        auto *touch = Object::cast_to<InputEventScreenTouch>(event.ptr());
+        if (!touch || !touch->is_pressed() || touch->is_canceled()) return false;
+      }
+      if (next_pointer_id == std::numeric_limits<int>::max()) {
+        fail("Application pointer identity space exhausted"); return false;
+      }
+      const bool primary = mouse || std::none_of(pointer_routes.begin(), pointer_routes.end(),
+          [](const auto &entry) { return !entry.second.mouse && entry.second.active; });
+      found = pointer_routes.emplace(*key, RoutedPointer{next_pointer_id++, selected, 0, primary, false, mouse}).first;
+    }
+    auto &route = found->second;
+    pointer_event_delivered = true;
+    if (route.surface != selected) {
+      auto previous = roots.find(route.surface);
+      if (previous != roots.end()) previous->second->pointer->leave_mouse(route.id, &position);
+      route.surface = selected;
+    }
+    const int pointer_id = route.id;
+    if (auto *button = Object::cast_to<InputEventMouseButton>(event.ptr())) {
+      const int mask = 1 << (static_cast<int>(button->get_button_index()) - 1);
+      const int native_buttons = static_cast<uint64_t>(button->get_button_mask());
+      if (native_buttons) route.buttons = native_buttons;
+      if (button->is_pressed()) route.buttons |= mask;
+      else route.buttons &= ~mask;
+      if (button->is_canceled()) route.buttons = 0;
+      route.active = route.buttons != 0;
+    } else if (auto *motion = Object::cast_to<InputEventMouseMotion>(event.ptr())) {
+      const int native_buttons = static_cast<uint64_t>(motion->get_button_mask());
+      if (native_buttons || !route.active) route.buttons = native_buttons;
+    } else if (auto *touch = Object::cast_to<InputEventScreenTouch>(event.ptr()))
+      route.active = touch->is_pressed() && !touch->is_canceled();
+    const bool terminal = !mouse && !route.active;
+    blocked = target->second->pointer->blocks_native();
+    const bool accepted = target->second->pointer->input(event, route.id, route.primary);
+    const bool invalid = target->second->pointer->invalid_coordinates();
+    blocked = blocked || invalid;
+    if (terminal) { pointer_routes.erase(*key); pending_pointer_removals.insert(pointer_id); }
+    synchronize_pointer_routes();
+    return accepted;
+  }
   void uiManagerDidFinishTransaction(std::shared_ptr<const rn::MountingCoordinator> coordinator, bool) override {
     ExecutionScope execution(*this);
     auto transaction = coordinator->pullTransaction();
@@ -1054,6 +1270,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (mutation.type == rn::ShadowViewMutation::Delete) retiring.insert(mutation.oldChildShadowView.tag);
     }
     for (int tag : retiring) surface.pointer->removed(tag);
+    synchronize_pointer_routes();
     for (const auto &mutation : transaction->getMutations()) {
       const auto &old = mutation.oldChildShadowView;
       const auto &next = mutation.newChildShadowView;
@@ -1276,6 +1493,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())
         ("viewportUpdates", viewport_updates)("errors", folly::dynamic::array());
+    const auto counts = pointer_processor().pointerStateCountsForGodot();
+    result["pointerProcessor"] = folly::dynamic::object("active", counts[0])
+        ("pendingCapture", counts[1])("activeCapture", counts[2])("hover", counts[3]);
+    int active_pointers = 0, hover_pointers = 0, suppressed_pointers = 0;
+    for (const auto &[key, route] : pointer_routes) {
+      if (route.suppressed) { ++suppressed_pointers; continue; }
+      if (route.active) ++active_pointers;
+      else if (route.mouse) ++hover_pointers;
+    }
+    result["pointerRouting"] = folly::dynamic::object("contacts", active_pointers + hover_pointers)
+        ("active", active_pointers)("hoverPointers", hover_pointers)("nextId", next_pointer_id)
+        ("stored", pointer_routes.size())("suppressed", suppressed_pointers);
     result["nativeModules"] = native_modules->snapshot();
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
@@ -1410,11 +1639,8 @@ bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   if (found == guard->roots.end() || found->second->stopping || guard->inactive()) return false;
   auto &root = *found->second;
   if (guard->wheel(root, event)) { guard->pump(); return true; }
-  bool blocked = root.pointer->blocks_native();
-  if (!root.pointer->input(event)) return false;
-  // A contact canceled for invalid geometry must not reach Godot GUI's own
-  // inverse calculation, even when the RN responder did not block native UI.
-  blocked = blocked || root.pointer->invalid_coordinates();
+  bool blocked = false;
+  if (!guard->routed_input(id, root, event, blocked)) return false;
   guard->pump();
   found = guard->roots.find(id);
   return blocked || (found != guard->roots.end() && found->second->pointer->blocks_native());
@@ -1423,7 +1649,11 @@ void ApplicationRuntime::cancel(int id) {
   auto guard = impl;
   Impl::ExecutionScope execution(*guard);
   auto found = guard->roots.find(id);
-  if (found != guard->roots.end() && !found->second->stopping && !guard->inactive()) found->second->pointer->cancel();
+  if (found != guard->roots.end() && !found->second->stopping && !guard->inactive()) {
+    found->second->pointer->cancel();
+    guard->synchronize_pointer_routes();
+    guard->pump();
+  }
 }
 void ApplicationRuntime::activate(int id, int tag) {
   auto guard = impl;

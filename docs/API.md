@@ -127,8 +127,33 @@ retains identity. This production renderer leaves RawText `ownerDocument` null.
 An imperative native ID changes lookup without changing canonical `.id`; the
 fixture’s next children-only React commit restores the declared native ID. See
 [executed evidence and source links](evidence/tree/README.md) for these exact
-limits. Full HostInstance, event-target/pointer capture, remaining native commands
+limits. Full HostInstance, imperative EventTarget, remaining native commands
 and all-platform differential acceptance remain open under GF-08.
+
+## Public pointer events and capture
+
+Original public `View` accepts `onPointerDown/Move/Up/Cancel/Over/Out/Enter/Leave`,
+`onGotPointerCapture` and `onLostPointerCapture`, including capture-phase props.
+Original refs expose `setPointerCapture(id)`, `hasPointerCapture(id)` and
+`releasePointerCapture(id)`. Pending ownership is queried immediately; the next
+native sample delivers got/lost. Release by the wrong ref and inactive IDs are
+original silent no-ops. Disconnected/stopping refs have no capture authority.
+
+Godot mouse/touch samples route once per shared application with stable live
+IDs, physical-origin ownership and independently resolved hit/capture targets.
+Capture can receive drag outside all roots. Mouse button masks and selective
+cancel preserve unrelated contacts. Retiring an application revokes its
+continuations immediately, with final teardown deferred when inside a callback.
+A listener exception remains visible and retires only its pointer authority;
+a fresh Down can capture again. The binding restores event priority after a
+throw. Original TouchEvent/Pressability runs alongside this pointer transport.
+
+This bounded desktop path uses a generated, SHA-pinned native RN lifetime
+overlay; the downloaded sources and reconciler remain unchanged. SDK headers
+and binary combination identify that overlay. It does not enable the original
+imperative EventTarget feature flags. Captured offsets under transforms,
+complete responder/PanResponder, hardware, scroll/windows, cross-application
+stacking and mobile capture await certification. See [executed tests and images](evidence/pointers/README.md).
 
 ## Public View geometry
 

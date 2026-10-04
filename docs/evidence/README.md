@@ -92,8 +92,11 @@ controls fail 23/160 and 11/175. Its [native command complement](focus/commands.
 passes 112 checks / 40 owner observations with eight exact argument rejections,
 recovery and nine input registrations cleared across two applications. GF-08/
 GF-12 remain open; physical keyboard/IME, multiline and mobile focus acceptance
-are separate. [Capture lifetime research](../research/pointer-capture-boundary.md)
-is source investigation rather than an executed pointer capability.
+are separate. The subsequent [pointer lifetime record](pointers/README.md)
+adds 132/146 public checks,12 pixels,144 native assertions, two original-source
+crash controls and 43 original JSX listener/real-focus stop checks. The
+[capture analysis](../research/pointer-capture-boundary.md) retains source
+boundaries and incomplete transformed/hardware/mobile acceptance.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

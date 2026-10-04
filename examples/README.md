@@ -32,6 +32,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
 | [tree](tree/README.md) | Native IDs, original documents, logical traversal, RawText and retained collection snapshots | Public | [App](tree/App.jsx) · [scene](tree/scene.tscn) |
 | [focus](focus/README.md) | Original TextInput.State, real LineEdit focus, ref replacement and reentrant retirement | Public | [App](focus/App.jsx) · [scene](focus/scene.tscn) |
+| [pointers](pointers/README.md) | Original pointer transport, public View capture and selective multi-root lifetime | Public | [App](pointers/App.jsx) · [scene](pointers/scene.tscn) |
 | [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
 | [services](services/README.md) | Typed GDScript calls/signals, consistent state and shared Zustand data | Public | [App](services/App.jsx) · [scene](services/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
@@ -152,3 +153,14 @@ the Godot, iOS and Android oracles use the same source.
 The root `main.tscn`, `layout.tscn` and other original scene paths delegate to
 these scenes for compatibility. Godot's main scene remains the React lifecycle
 demo. Each example scene also opens directly in the root Godot editor after setup.
+
+## Public pointer capture
+
+![Original RN pointer roots after React key replacement](../docs/evidence/pointers/pointers-updated.png)
+
+The [pointer laboratory](pointers/README.md) tests pending queries, next-event
+got/lost, shared-root contact IDs, selective cancellation, removal and app
+retirement. It passes 132/146 headless/native checks with 12 pixels; the isolated
+exception/real-focus stop fixture passes 43. See [curated evidence](../docs/evidence/pointers/README.md)
+for 144 native assertions, two unchanged-source crash controls and remaining
+hardware/transformed/mobile boundaries.

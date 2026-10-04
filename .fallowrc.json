@@ -22,7 +22,8 @@
     "types/godot-fabric.ts",
     "tests/types/godot-fabric.tsx",
     "tests/adapters/consumer/ui/index.tsx",
-    "tests/focus-command-fixture.jsx"
+    "tests/focus-command-fixture.jsx",
+    "tests/pointer-errors-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -195,6 +196,8 @@
             "TurboModuleRegistry",
             "TurboModule",
             "ViewInstance",
+            "PointerEvent",
+            "NativePointerEvent",
             "findNodeHandle",
             "UIManager",
             "EmitterSubscription",

@@ -138,6 +138,7 @@ function headerTrees(root, buildDir, lock) {
   return [
     {name: 'sdk', source: path.join(root, 'native'), destination: 'include/sdk',
       publicFiles: ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h']},
+    {name: 'react-native-pointer-overlay', source: path.join(buildDir, 'rn-pointer-overlay'), destination: 'include/rn-pointer-overlay'},
     {name: 'react-native', source: path.join(rn, 'ReactCommon'), destination: 'include/react-native/ReactCommon'},
     {name: 'react-native-specs', source: path.join(rn, 'React/FBReactNativeSpec'), destination: 'include/react-native/React/FBReactNativeSpec'},
     {name: 'hermes', source: path.join(root, '.deps', lock.hermes.directory, 'destroot/include'), destination: 'include/hermes'},
@@ -173,12 +174,15 @@ function snapshot(options) {
       : treeRecords(tree.source, true)}));
   const sourceFiles = fs.readdirSync(path.join(root, 'native')).filter(name => /\.(?:cpp|h)$/.test(name)
     || ['CMakeLists.txt', 'godot-profile.json'].includes(name)).map(name => 'native/' + name);
-  sourceFiles.push('dependencies.json', 'scripts/native-sdk.mjs', 'scripts/codegen-contract.mjs');
+  sourceFiles.push('dependencies.json', 'scripts/native-sdk.mjs', 'scripts/codegen-contract.mjs', 'scripts/rn-pointer-overlay.mjs');
   const sourceSha256 = Object.fromEntries(sourceFiles.sort().map(name => [name, fileHash(path.join(root, name))]));
   const sourceTrees = [['react-native', path.join(root, '.deps', lock['react-native'].directory, 'ReactCommon')],
     ['godot-cpp', path.join(root, '.deps', lock['godot-cpp'].directory, 'src')],
-    ['godot-cpp-generated', path.join(buildDir, 'godot-cpp/gen/src')]]
+    ['godot-cpp-generated', path.join(buildDir, 'godot-cpp/gen/src')],
+    ['react-native-pointer-overlay', path.join(buildDir, 'rn-pointer-overlay')]]
     .map(([name, directory]) => ({name, files: treeRecords(directory, 'sources')}));
+  sourceTrees.find(tree => tree.name === 'react-native-pointer-overlay').manifestSha256 =
+    fileHash(path.join(buildDir, 'rn-pointer-overlay/overlay-manifest.json'));
   const targetFlagsSha256 = Object.fromEntries(['CMakeFiles/fabric_core.dir/flags.make',
     'godot-cpp/CMakeFiles/godot-cpp.dir/flags.make'].map(name => [name, fileHash(path.join(buildDir, name))]));
   const dependencies = sharedLibraries(root, lock).map(library => ({name: library.name,

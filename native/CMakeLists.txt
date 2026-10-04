@@ -8,6 +8,21 @@ endif()
 set(RN "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/package/ReactCommon")
 set(DEPS "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/rndeps/packages/react-native/third-party")
 set(HERMES "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/hermes/destroot")
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../dependencies.json" FABRIC_DEPENDENCIES_JSON)
+string(JSON FABRIC_NODE_VERSION GET "${FABRIC_DEPENDENCIES_JSON}" node version)
+find_program(FABRIC_OVERLAY_NODE NAMES node
+  HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/node-v${FABRIC_NODE_VERSION}-darwin-arm64/bin"
+  REQUIRED)
+set(FABRIC_POINTER_OVERLAY "${CMAKE_BINARY_DIR}/rn-pointer-overlay")
+set(FABRIC_POINTER_OVERLAY_SCRIPT "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/rn-pointer-overlay.mjs")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+  "${FABRIC_POINTER_OVERLAY_SCRIPT}"
+  "${RN}/react/renderer/uimanager/PointerEventsProcessor.h"
+  "${RN}/react/renderer/uimanager/PointerEventsProcessor.cpp"
+  "${RN}/react/renderer/uimanager/UIManagerBinding.h"
+  "${RN}/react/renderer/uimanager/UIManagerBinding.cpp")
+execute_process(COMMAND "${FABRIC_OVERLAY_NODE}" "${FABRIC_POINTER_OVERLAY_SCRIPT}"
+  "${RN}" "${FABRIC_POINTER_OVERLAY}" COMMAND_ERROR_IS_FATAL ANY)
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # CMake's Apple SDK detection may leave SYSTEM_PROCESSOR empty even though
   # the compiler receives -arch. godot-cpp uses it for its archive/ABI identity.
@@ -33,8 +48,9 @@ foreach(DEPENDENCY IN ITEMS "${RN_DEPENDENCY_HEADERS}" "${RN_DEPENDENCY_LIBRARY}
   endif()
 endforeach()
 
-# Only upstream portable sources. No mobile renderer, modified reconciler, or
-# replacement implementation of Fabric is compiled here.
+# Portable upstream Fabric with a hash-verified pointer lifetime overlay.
+# No mobile renderer or modified reconciler is compiled here. Downloaded RN
+# sources remain immutable; generated native changes have separate SDK inputs.
 set(MODULES
   react/debug react/featureflags react/utils react/timing
   react/renderer/core react/renderer/components/view react/renderer/components/root
@@ -59,6 +75,10 @@ foreach(MODULE IN LISTS MODULES)
   file(GLOB MODULE_SOURCES CONFIGURE_DEPENDS "${RN}/${MODULE}/*.cpp")
   list(APPEND SOURCES ${MODULE_SOURCES})
 endforeach()
+foreach(OVERLAY_COMPONENT IN ITEMS PointerEventsProcessor UIManagerBinding)
+  list(REMOVE_ITEM SOURCES "${RN}/react/renderer/uimanager/${OVERLAY_COMPONENT}.cpp")
+  list(APPEND SOURCES "${FABRIC_POINTER_OVERLAY}/react/renderer/uimanager/${OVERLAY_COMPONENT}.cpp")
+endforeach()
 file(GLOB MOUNT_INTERNAL CONFIGURE_DEPENDS "${RN}/react/renderer/mounting/internal/*.cpp")
 file(GLOB_RECURSE YOGA CONFIGURE_DEPENDS "${RN}/yoga/yoga/*.cpp")
 list(FILTER YOGA EXCLUDE REGEX "/tests/")
@@ -78,6 +98,7 @@ target_compile_definitions(fabric_core PUBLIC
   FOLLY_HAVE_CLOCK_GETTIME=1)
 target_compile_options(fabric_core PRIVATE -Wno-deprecated-declarations)
 target_include_directories(fabric_core PUBLIC
+  "${FABRIC_POINTER_OVERLAY}"
   "${RN}" "${RN}/jsi" "${RN}/yoga" "${RN}/callinvoker" "${RN}/runtimeexecutor"
   "${RN}/reactperflogger"
   "${RN}/react/nativemodule/core"
@@ -96,6 +117,17 @@ target_link_libraries(fabric_core PUBLIC
   "${RN_DEPENDENCY_LIBRARY}" "${HERMES_LIBRARY}")
 add_executable(fabric_smoke smoke.cpp)
 target_link_libraries(fabric_smoke PRIVATE fabric_core)
+add_executable(pointer_processor_test pointer_processor_test.cpp)
+target_link_libraries(pointer_processor_test PRIVATE fabric_core)
+# Isolated expected-failure control: compile the unchanged downloaded processor
+# against its original header. It is never shipped or part of an ordinary build.
+add_executable(pointer_processor_original_negative_test EXCLUDE_FROM_ALL
+  pointer_processor_test.cpp
+  "${RN}/react/renderer/uimanager/PointerEventsProcessor.cpp"
+  "${RN}/react/renderer/uimanager/UIManagerBinding.cpp")
+target_include_directories(pointer_processor_original_negative_test BEFORE PRIVATE "${RN}")
+target_compile_definitions(pointer_processor_original_negative_test PRIVATE GODOT_FABRIC_POINTER_ORIGINAL_NEGATIVE=1)
+target_link_libraries(pointer_processor_original_negative_test PRIVATE fabric_core)
 add_executable(timer_registry_test timer_registry_test.cpp)
 add_executable(affine_transform_test affine_transform_test.cpp)
 target_include_directories(timer_registry_test PRIVATE "${RN}")
@@ -130,7 +162,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test affine_transform_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test affine_transform_test pointer_processor_test pointer_processor_original_negative_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

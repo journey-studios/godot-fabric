@@ -22,6 +22,7 @@ function fixture(t) {
   write(root, 'dependencies.json', JSON.stringify(lock));
   write(root, 'scripts/native-sdk.mjs', fs.readFileSync(path.join(repository, 'scripts/native-sdk.mjs')));
   write(root, 'scripts/codegen-contract.mjs', fs.readFileSync(path.join(repository, 'scripts/codegen-contract.mjs')));
+  write(root, 'scripts/rn-pointer-overlay.mjs', fs.readFileSync(path.join(repository, 'scripts/rn-pointer-overlay.mjs')));
   write(root, 'native/CMakeLists.txt', 'fixture-not-a-build');
   write(root, 'native/adapter_registry.h', '#pragma once\n#include "turbo_module_registry.h"\n');
   write(root, 'native/adapter_loader.h', '#pragma once\n#include "adapter_registry.h"\n');
@@ -45,12 +46,16 @@ function fixture(t) {
     '.deps/' + lock['rn-dependencies'].directory + '/packages/react-native/third-party/ReactNativeDependenciesHeaders.xcframework/macos-arm64_x86_64/Headers',
     '.deps/' + lock['godot-cpp'].directory + '/include',
     '.deps/build/godot-cpp/gen/include', '.deps/' + lock['godot-cpp'].directory + '/gdextension',
+    '.deps/build/rn-pointer-overlay',
   ];
   for (const tree of trees) write(root, tree + '/fixture.h', '#pragma once\n');
   write(root, trees[1] + '/ignore.cpp', '// do not publish native source\n');
+  write(root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h', '#pragma once\n// fixture overlay\n');
+  write(root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp', '// fixture overlay source\n');
+  write(root, '.deps/build/rn-pointer-overlay/overlay-manifest.json', '{"fixture":true}');
   const flagsFile = write(root, '.deps/build/CMakeFiles/fabric_godot.dir/flags.make', [
     'CXX_DEFINES = -DGDEXTENSION -DMACOS_ENABLED -DFOLLY_MOBILE=1 -Dfabric_godot_EXPORTS',
-    'CXX_INCLUDES = ' + trees.map(tree => '-I"' + path.join(root, tree) + '"').join(' ')
+    'CXX_INCLUDES = ' + [trees.at(-1), ...trees.slice(0, -1)].map(tree => '-I"' + path.join(root, tree) + '"').join(' ')
       + ' -I"' + path.join(root, '.deps/' + lock['react-native'].directory + '/ReactCommon/unused') + '"',
     'CXX_FLAGS = -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot "' + sysroot + '" -mmacosx-version-min=13.0 -fPIC', '',
   ].join('\n'));
@@ -96,6 +101,7 @@ test('dry package has original combination shape, SPI headers and shared importe
   assert.equal(combination.nativeDependencies.length, 3);
   assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/adapter_registry.h')));
   assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/turbo_module_registry.h')));
+  assert.ok(fs.existsSync(path.join(value.out, 'include/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h')));
   assert.ok(fs.existsSync(path.join(value.out, 'lib/frameworks/hermesvm.framework/hermesvm')));
   assert.equal(fs.readlinkSync(path.join(value.out, 'lib/frameworks/hermesvm.framework/Versions/Current')), 'A');
   assert.ok(manifest.files.every(entry => !/\.(?:a|o|cpp)$/.test(entry.path)));
@@ -105,6 +111,8 @@ test('dry package has original combination shape, SPI headers and shared importe
   assert.match(config, /LINKER:-undefined,error/);
   assert.match(config, /BUILD_WITH_INSTALL_RPATH TRUE INSTALL_RPATH_USE_LINK_PATH FALSE/);
   assert.match(config, /HOST_RUNTIME_DIR/);
+  assert.ok(config.indexOf('/include/rn-pointer-overlay') < config.indexOf('/include/react-native/ReactCommon'),
+    'consumer declarations must resolve the same processor layout as the native host');
   assert.ok(!config.includes(value.root), 'CMake package must be relocatable');
   assert.ok(!config.includes('fabric_godot_EXPORTS'), 'adapter must not compile as host');
   assert.deepEqual([manifest.adapterLinked, manifest.runtimeExecuted, manifest.runtimeIdentityVerified,
@@ -132,13 +140,17 @@ test('changed native source during compilation refuses the completed host receip
 });
 
 test('changed consumed headers or build flags reject stale SDK publication', t => {
-  for (const input of ['header', 'flags', 'rn-source', 'godot-source']) {
+  for (const input of ['header', 'flags', 'rn-source', 'godot-source', 'overlay-header', 'overlay-source', 'overlay-receipt', 'overlay-generator']) {
     const value = fixture(t);
     record(value);
     if (input === 'header') write(value.root, value.trees[1] + '/fixture.h', '#pragma once\n// changed');
     else if (input === 'flags') fs.appendFileSync(path.join(value.options.buildDir, 'CMakeFiles/fabric_core.dir/flags.make'), '\nchanged');
     else if (input === 'rn-source') write(value.root, value.trees[1] + '/original.cpp', '// changed original RN source');
-    else write(value.root, '.deps/' + value.lock['godot-cpp'].directory + '/src/godot.cpp', '// changed global binding source');
+    else if (input === 'godot-source') write(value.root, '.deps/' + value.lock['godot-cpp'].directory + '/src/godot.cpp', '// changed global binding source');
+    else if (input === 'overlay-header') write(value.root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h', '// changed overlay header');
+    else if (input === 'overlay-source') write(value.root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp', '// changed overlay source');
+    else if (input === 'overlay-receipt') write(value.root, '.deps/build/rn-pointer-overlay/overlay-manifest.json', '{"changed":true}');
+    else write(value.root, 'scripts/rn-pointer-overlay.mjs', '// changed overlay generator');
     rejects('SDK_STALE_BUILD', () => packageNativeSdk({...value.options, out: value.out}));
     assert.ok(!fs.existsSync(value.out));
   }

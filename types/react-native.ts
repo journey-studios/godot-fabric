@@ -30,6 +30,8 @@ export type ViewStyle = Pick<RN.ViewStyle,
 export type TextStyle = ViewStyle & Pick<RN.TextStyle, "fontSize" | "color" | "fontFamily" | "fontWeight" | "lineHeight" | "letterSpacing" | "textAlign">;
 export type InputStyle = ViewStyle & Pick<RN.TextStyle, "fontSize"> & { color?: string };
 export type StyleProp<T> = RN.StyleProp<T>;
+export type PointerEvent = RN.PointerEvent;
+export type NativePointerEvent = RN.NativePointerEvent;
 export type NativeInstance = Pick<RN.TextInputInstance, "focus" | "blur" | "isFocused" | "measure" | "measureInWindow" | "setNativeProps" |
   "getBoundingClientRect" | "id" | "nodeName" | "nodeType" | "nodeValue" | "tagName" |
   "firstChild" | "lastChild" | "nextSibling" | "previousSibling" | "parentElement" | "hasChildNodes" |
@@ -37,7 +39,8 @@ export type NativeInstance = Pick<RN.TextInputInstance, "focus" | "blur" | "isFo
   "clientLeft" | "clientTop" | "isConnected" | "parentNode" | "childNodes" | "children" |
   "ownerDocument" | "getRootNode" | "contains" | "compareDocumentPosition" | "textContent" |
   "offsetWidth" | "offsetHeight" | "offsetLeft" | "offsetTop" | "offsetParent" |
-  "clientWidth" | "clientHeight" | "scrollWidth" | "scrollHeight" | "scrollLeft" | "scrollTop"> & {
+  "clientWidth" | "clientHeight" | "scrollWidth" | "scrollHeight" | "scrollLeft" | "scrollTop" |
+  "hasPointerCapture" | "setPointerCapture" | "releasePointerCapture"> & {
   measureLayout(relative: number | NativeInstance,
     onSuccess: Parameters<RN.ViewInstance["measureLayout"]>[1], onFail?: () => void): void;
 };
@@ -47,7 +50,12 @@ export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureIn
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }
-export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID"> & { style?: StyleProp<ViewStyle> };
+export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID" |
+  "onPointerDown" | "onPointerDownCapture" | "onPointerMove" | "onPointerMoveCapture" |
+  "onPointerUp" | "onPointerUpCapture" | "onPointerCancel" | "onPointerCancelCapture" |
+  "onPointerOver" | "onPointerOverCapture" | "onPointerOut" | "onPointerOutCapture" |
+  "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
+  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> & { style?: StyleProp<ViewStyle> };
 export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };

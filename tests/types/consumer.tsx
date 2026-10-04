@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { AppRegistry, RootTagContext, Button, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, ViewStyle } from "react-native";
+import type { TextInputProps, ButtonProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -96,3 +96,27 @@ const identified = <View id="jsx-id" nativeID="native-id" />;
 // @ts-expect-error Native IDs use the original string contract
 const invalidIdentifier = <View id={42} />;
 void readTree; void identified; void invalidIdentifier;
+
+function capturePointer(instance: ViewInstance, event: PointerEvent) {
+  const native: NativePointerEvent = event.nativeEvent;
+  const id: number = event.nativeEvent.pointerId;
+  const pointerType: string = event.nativeEvent.pointerType;
+  instance.setPointerCapture(id);
+  const captured: boolean = instance.hasPointerCapture(id);
+  instance.releasePointerCapture(id);
+  return {captured, pointerType, native};
+}
+const pointerProps: import("react-native").ViewProps = {
+  onPointerDown: event => { const id: number = event.nativeEvent.pointerId; void id; },
+  onPointerMoveCapture: event => { const x: number = event.nativeEvent.clientX; void x; },
+  onPointerUp: () => {}, onPointerCancel: () => {}, onPointerOver: () => {},
+  onPointerOutCapture: () => {}, onPointerEnter: () => {}, onPointerLeaveCapture: () => {},
+  onGotPointerCapture: () => {}, onLostPointerCaptureCapture: () => {},
+};
+const originalPointerProps: import("../../node_modules/react-native/types_generated/index").ViewProps = pointerProps;
+const pointerView = <View {...pointerProps} ref={instance => { if (instance) instance.hasPointerCapture(1); }} />;
+// @ts-expect-error original capture methods require a numeric pointer ID
+const invalidPointerId = (instance: ViewInstance) => instance.setPointerCapture("mouse");
+// @ts-expect-error original PointerEvent keeps coordinates numeric
+const invalidPointerPosition = (event: import("react-native").PointerEvent): string => event.nativeEvent.clientX;
+void capturePointer; void originalPointerProps; void pointerView; void invalidPointerId; void invalidPointerPosition;

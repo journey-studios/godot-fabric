@@ -42,6 +42,13 @@
     "scene": "examples/focus/scene.tscn"
   },
   {
+    "id": "pointers",
+    "title": "Original RN pointer capture, native contacts and selective retirement",
+    "api": "public",
+    "source": "examples/pointers/App.jsx",
+    "scene": "examples/pointers/scene.tscn"
+  },
+  {
     "id": "view",
     "title": "View layers, clipping, public measurements and four-color borders",
     "api": "public",

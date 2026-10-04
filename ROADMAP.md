@@ -403,9 +403,11 @@ contracts/native/Android passing; iOS discovery failed and comparison skipped.
 The [dated hosted receipt](docs/evidence/focus/commands-ci.json) retains the
 iOS simulator-discovery timeout before app build, followed by a successful
 13-check core reference on identical inputs. This does not close GF-08/GF-12 or
-certify full focus/mobile parity. [Pointer capture research](docs/research/pointer-capture-boundary.md)
-identifies selective lifetime cleanup as a prerequisite; it remains source
-investigation rather than implemented capture or an approved cleanup design.
+certify full focus/mobile parity. The later [pointer lifetime slice](docs/evidence/pointers/README.md)
+passes 132/146 public checks,144 native assertions and 43 JSX fault/real-focus
+stop checks, with 12 pixels/two captures and two original-source crash controls.
+Generated native lifetime guards preserve the upstream capture negotiation;
+complete EventTarget, transformed/hardware/mobile acceptance remains open.
 
 ## Release contract and scope
 
@@ -653,12 +655,26 @@ nine input registrations and native lifetimes clear at shutdown. This is a
 headless native complement on the unchanged focus host; CI now runs it, with
 hosted results recorded separately. No new checkpoint or full GF closes.
 
-Before pointer capture, prove selective lifetime cleanup at the commit boundary.
-The [source investigation](docs/research/pointer-capture-boundary.md) separates
-upstream default EventTarget flags from missing pointer transport and pending/
-active capture retirement. It is not a runtime/crash proof or a new approved
-architecture decision. Remaining HostInstance/input acceptance continues in
-sequence 3; hardware/IME, hidden trees and mobile differentials remain open.
+### Pointer transport, capture and exception lifetime (2026-10-04)
+
+GF-08/GF-13 remain **In progress**. Real Godot input now reaches original pointer
+serialization/negotiation and public View capture refs, with app-owned contact
+IDs, no-hit drag routing and selective retirement. The [executed receipt](docs/evidence/pointers/README.md)
+records 132 headless/146 native checks,12 pixels/two images and 144 native
+assertions. Two original processor/binding controls reproduce retained-target
+and moved-hover-tracker SIGSEGV; the generated hash-pinned overlay fixes those
+boundaries while preserving downloaded sources and original JS negotiation.
+
+An isolated original JSX bundle passes 43 checks with six deliberate listener
+errors, priority recovery and synchronous stop from a genuine LineEdit focus
+signal inside got capture. Another app's already-captured pointer survives.
+Native SDK overlay headers/identity are repackaged and validated separately.
+Original Pressability regressions still test fresh Down after focus cancellation.
+
+This slice does not enable imperative EventTarget flags or close transformed
+capture, nested responder/PanResponder, hardware/keyboard, multi-window/scroll,
+cross-app stacking or mobile differentials. No architecture decision or full
+checkpoint/GF is newly closed. [Source analysis](docs/research/pointer-capture-boundary.md).
 
 ## M1 — Complete the native UI tree
 

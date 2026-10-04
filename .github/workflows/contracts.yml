@@ -90,6 +90,20 @@ jobs:
       - run: npm run test:application
       - run: npm run test:modules
       - run: npm run test:focus:commands
+      - run: npm run test:pointers:processor
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-pointer-processor
+          path: |
+            build/pointer-processor-report.json
+            build/pointer-processor.log
+            build/pointer-processor-original-negative.log
+            build/pointer-processor-original-listener-negative.log
+            build/pointer-processor-negative-build.log
+            build/pointer-errors-report.json
+            build/pointer-errors.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

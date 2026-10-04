@@ -105,6 +105,12 @@ export const controlViewConfig = {
         "onTouchEndCapture",
         "onTouchCancel",
         "onTouchCancelCapture",
+        ...["Down", "Move", "Up", "Cancel", "Over", "Out", "Enter", "Leave"].flatMap(phase =>
+          [`onPointer${phase}`, `onPointer${phase}Capture`]),
+        "onGotPointerCapture",
+        "onGotPointerCaptureCapture",
+        "onLostPointerCapture",
+        "onLostPointerCaptureCapture",
       ].map((name) => [name, true]),
     ),
     pointerEvents: true,
@@ -134,6 +140,12 @@ export const controlViewConfig = {
     style,
   },
   bubblingEventTypes: {
+    ...Object.fromEntries(["Down", "Move", "Up", "Cancel", "Over", "Out", "Enter", "Leave", "GotPointerCapture", "LostPointerCapture"]
+      .map(phase => {
+        const name = phase.endsWith("PointerCapture") ? phase : "Pointer" + phase;
+        return [`top${name}`, {phasedRegistrationNames: {bubbled: `on${name}`, captured: `on${name}Capture`,
+          ...(["Enter", "Leave"].includes(phase) ? {skipBubbling: true} : {})}}];
+      })),
     ...Object.fromEntries(
       ["Start", "Move", "End", "Cancel"].map((phase) => [
         `topTouch${phase}`,
@@ -176,9 +188,9 @@ export const coreEventConfigs = {
 // Generated components extend ViewProps, not the GodotControl-specific props.
 export default {
   validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
-    /^(onTouch|onResponder|onStartShould|onMoveShould)/.test(name) ||
+    /^(onTouch|onPointer|onGotPointer|onLostPointer|onResponder|onStartShould|onMoveShould)/.test(name) ||
     ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren"].includes(name))),
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
-    .filter(([name]) => name.startsWith("topTouch"))),
+    .filter(([name]) => /^(topTouch|topPointer|topGotPointer|topLostPointer)/.test(name))),
   directEventTypes: { topLayout: { registrationName: "onLayout" } },
 };
