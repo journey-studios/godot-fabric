@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document validado; próximos eventos de ponteiro e fault contracts"
   },
-  "updatedAt": "2026-10-04T20:45:49.122099+00:00",
+  "updatedAt": "2026-10-04T20:54:43.596173+00:00",
   "source": {
     "commit": "00bd80454384cbfbffc1b703df0864674bf11f99",
     "url": "https://github.com/journey-studios/godot-fabric/commit/00bd80454384cbfbffc1b703df0864674bf11f99",
-    "scope": "Document/root local comprovado: 2.723 checks em oito flag lanes, 385 viewport/20 pixels, 142 falhas normativas no controle anterior. 25 pins verificados via git show em00bd804; execução original73d33da/dirty preservada. SDK/consumer/adapters passaram. Nova CI e Pages pendentes; anteriores faultCIb887 e Pages73d confirmadas. Sem GF/checkpoint/peso/denominador adicional.",
+    "scope": "Document/root local comprovado: 2.723 checks em oito flags, 385 viewport/20 pixels, controle anterior142 falhas;25 pins conferidos em00bd804. Pages37233421454 publicou e65b7ba com JSON público/local integral verificado. CI e65b7ba em progresso: contracts/Android passaram, native/iOS e novos artifacts pendentes.19/156 checkpoints; nenhum GF/peso/denominador adicional.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2757,6 +2757,19 @@
     }
   ],
   "activity": [
+    {
+      "id": "document-pages-e65b7ba-confirmed",
+      "at": "2026-10-04T20:54:43.596173+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37233421454 passou build/deploy no renderer main adad606, dados e65b7ba fora do main. JSON público completo igual ao git show e65b7ba removendo só publication; API local4318 igual. Inclui matriz Document2.723,385viewport/20pixels, controle antigo142falhas e25pins. CI e65b7ba em progresso: contracts e Android passaram; nova prova native/iOS e artifact audit pendentes. Nenhum novo GF/checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233421454"
+    },
     {
       "id": "document-source-pin-00bd804",
       "at": "2026-10-04T20:45:49.122099+00:00",

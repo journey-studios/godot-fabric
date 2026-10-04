@@ -112,14 +112,19 @@ runs/213 checks. Updated View interest passes 193/233; query faults pass 186;
 integrated dispatch remains 181/206. Portable processor and geometry gates each
 pass two tests. ABI certification remains false.
 
-New native CI matrix steps and artifacts are configured, but hosted CI for this
-slice is **pending**. [Preceding fault CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
+New native CI matrix steps and artifacts are configured.
+[Latest CI](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202)
+is in progress at e65b7ba: contracts and Android reference jobs passed, while
+native/iOS execution and new artifact audit remain pending. [Preceding fault CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
 passed five jobs at b88708c and audited 186 fault checks/22 pins/15 RN inputs plus
 193/230 earlier interest checks; it does not certify this Document extension.
 [Preceding Pages publication](https://github.com/journey-studios/godot-fabric/actions/runs/37231095632)
 passed build/deploy with data 73d33da; its full public JSON and local API matched
-that commit after removing only generated `publication`. The new source/dash
-publication will be confirmed separately. Core iOS/Android reference jobs do not
+that commit after removing only generated `publication`. The [new Pages publication](publication.json) at
+[e65b7ba](https://github.com/journey-studios/godot-fabric/actions/runs/37233421454)
+passed build and deploy with the main renderer. Its full public JSON and local
+API equal that committed data after removing only generated `publication`.
+The implementation is still outside main. Core iOS/Android reference jobs do not
 certify Godot mobile exports or this matrix.
 
 Other pointer categories, complete responder/PanResponder/type contracts,

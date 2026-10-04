@@ -2142,12 +2142,32 @@
     }
   },
   "hosted": {
-    "thisSliceCI": "pending",
+    "thisSliceCI": {
+      "status": "in_progress",
+      "headCommit": "e65b7ba73124edb49084502ff4645523734b290b",
+      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202",
+      "verifiedJobStatus": {
+        "contracts": "success",
+        "reference-android": "success",
+        "native-cold-start": "in_progress",
+        "reference-ios": "in_progress"
+      },
+      "newDocumentArtifactAudited": false
+    },
     "previousFaultCI": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491",
     "previousFaultCIScope": "b88708c: five jobs;186faultchecks/22pins/15RNinputs and193/230priorinterest. Does not certify this Document extension.",
     "previousPages": "https://github.com/journey-studios/godot-fabric/actions/runs/37231095632",
     "previousPagesDataCommit": "73d33daa1c18783d948253d0c8e89618efc91795",
-    "previousFullPublicAndLocalJSONVerified": true
+    "previousFullPublicAndLocalJSONVerified": true,
+    "pages": {
+      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37233421454",
+      "dataCommit": "e65b7ba73124edb49084502ff4645523734b290b",
+      "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "buildAndDeploy": "success",
+      "fullPublicAndLocalJSONVerified": true,
+      "onlyRemovedGeneratedField": "publication",
+      "mainIntegration": false
+    }
   },
   "limitations": [
     "Public flags remain disabled. All eight flag controls are fresh experimental Hermes configurations in Godot, not mobile export parity.",

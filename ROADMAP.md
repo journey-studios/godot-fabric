@@ -958,9 +958,11 @@ Host regressions pass 250 Node/13 Python contracts, static analysis,
 22 examples/2,250 checks, consumer 30/40, fresh SDK pack/verify, loader 89/21,
 13 adapters/213, updated interest 193/233, query faults 186, integration181/206,
 and portable processor/geometry gates. New CI matrix/artifacts are configured;
-hosted execution of this slice remains pending. Previous b88708c fault CI passed
-five jobs; Pages 37231095632 published 73d33da and its full public/local JSON was
-verified. Those runs do not certify this extension. New publication is separate.
+latest CI e65b7ba is in progress: contracts/Android jobs passed, native/iOS and
+new artifact audit remain pending. Previous b88708c fault CI passed five jobs.
+[Pages 37233421454](docs/evidence/pointer-documents/publication.json) published
+e65b7ba successfully; full public JSON and the local API match that data
+commit, removing only generated publication. Source remains outside main.
 
 No new checkpoint, GF acceptance, dependency, decision, weight or denominator
 closes. Other pointer categories and responder/PanResponder contracts are next,
