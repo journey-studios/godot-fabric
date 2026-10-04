@@ -386,7 +386,11 @@ decisions and the 156-checkpoint denominator do not change. Next in sequence 3:
 remaining HostInstance/EventTarget and pointer-capture acceptance. Hidden trees,
 hardware keyboard/IME, multiline and mobile focus differentials retain their
 separate acceptance requirements. Publication/hosted results are recorded after
-verification; local runtime proof is distinct from both.
+verification; local runtime proof is distinct from both. Manual Pages run
+[37177743564](https://github.com/journey-studios/godot-fabric/actions/runs/37177743564)
+passed build/deploy and served branch JSON `0d7c731` exactly;
+[the hosted snapshot](docs/evidence/focus/ci.json) keeps new focus CI status
+separate from the completed preceding tree CI.
 
 ## Release contract and scope
 

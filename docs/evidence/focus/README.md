@@ -96,3 +96,10 @@ virtual keyboards/insets, mobile reference differentials or all HostInstance
 commands. GF-08/GF-12 remain In progress; full acceptance and dependencies remain
 open. Native SDK/adapter packaging is experimental and does not certify the
 complete ABI. Hosted CI and Pages publication are separate dated receipts.
+
+The [hosted observation](ci.json) records successful manual Pages run
+[37177743564](https://github.com/journey-studios/godot-fabric/actions/runs/37177743564):
+build/deploy passed, and the served JSON exactly matched branch data `0d7c731`
+with source `3b09b37`, outside main. The new focus CI remains at the recorded
+snapshot status. The preceding tree CI passed five jobs at `a608d07`; that
+limited reference suite is not a focus differential.

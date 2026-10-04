@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Foco/TextInputState comprovados; próximos contratos HostInstance/EventTarget e pointer capture"
   },
-  "updatedAt": "2026-10-04T04:41:23.855941+00:00",
+  "updatedAt": "2026-10-04T04:43:02.613088+00:00",
   "source": {
     "commit": "3b09b37acf735664301d3ddaf9ab275519893267",
     "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/ROADMAP.md",
-    "scope": "Implementação3b09b37 verificada contra13 fontes JS/fixture,47 entradas nativas e duas capturas: foco175/189,12pixels; controles negativos23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. CI da fatia e Pages aguardam execução separada; CI anteriora608d07 passou cinco lanes. GF-08/GF-12 seguem em andamento; pesos,156 checkpoints e18 concluídos preservados.",
+    "scope": "Implementação3b09b37 verificada: foco175/189,12pixels/duas capturas; controles23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Pagesmanual37177743564 passou build/deploy e publicou JSON0d7c731 pelo mainadad606, comparado integralmente. CI0d7c731 permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Publicação, runtime e aceite integral separados; nenhum GF, decisão, peso ou denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2903,6 +2903,16 @@
       ],
       "message": "Commit3b09b37 corresponde às13 fontes JS/fixture executadas,47 entradas nativas e duas capturas. Host6abafb9, comandos originais e foco real comprovados; publicação e CI são passos separados. Nenhum novo checkpoint concluído.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+    },
+    {
+      "id": "focus-pages-observed-20261004",
+      "at": "2026-10-04T04:43:02.613088+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Pagesmanual37177743564 concluiu build/deploy; JSON público0d7c731 comparado ao commit com fonte3b09b37 fora do main. CI da nova fatia permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Foco local e publicação não fecham o aceite integral, mobile ou hardware/IME.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177743564"
     }
   ]
 }
