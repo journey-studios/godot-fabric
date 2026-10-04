@@ -5,6 +5,10 @@ on macOS arm64 with official Godot 4.7.2, React 19.2.3, React Native 0.87.1,
 Hermes and the Compatibility renderer. Two Fabric roots share one application
 and bundle evaluation while retaining separate original RN documents.
 
+The executed implementation is [`31d08ac`](https://github.com/journey-studios/godot-fabric/commit/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc). Its
+12 JS/fixture hashes and 47 unchanged native-source hashes match the recorded
+working-tree inputs; native implementation remains `6e5db7b`.
+
 ## Executed evidence
 
 | Lane | Result | What it establishes |

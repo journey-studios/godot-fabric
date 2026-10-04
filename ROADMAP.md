@@ -329,7 +329,8 @@ Next in sequence 3: continue the public HostInstance/native-command branch.
 
 The [completed hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) at `5885331` passed contracts, native cold start, original iOS/Android references and parity comparison. The dated earlier pending observation remains in [ci.json](docs/evidence/transforms/ci.json). These limited reference fixtures do not close full transform parity, the Godot mobile ports or GF-08.
 
-The [public tree and ID slice](docs/evidence/tree/README.md) extends GF-08 and
+The [public tree and ID slice](https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md) at verified implementation
+`31d08ac37d1fb61a80c233aada6a3cfc3549bfcc` extends GF-08 and
 GF-10 through original RN `View.js`, base ViewConfig and narrowed read-only types.
 Public View `id` takes precedence over `nativeID`; Text `nativeID` and document
 lookup use the committed Fabric tree for each root. Logical parent/sibling

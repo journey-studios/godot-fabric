@@ -2,7 +2,6 @@
   "format": "godot-fabric.tree-provenance/v1",
   "at": "2026-10-04T03:41:16.636073+00:00",
   "parentCommit": "90896861eb35fcbc55be157e455f74481c8ca2eb",
-  "sourceDirty": true,
   "fixtureSourceSha256": {
     "examples/tree/App.jsx": "0cf51b86324b97e534573a70683062f15dcc0fd04f2d03387c96b2724673bd77",
     "examples/tree/validation.gd": "57e0e3aa3dfcaf6e85debdaa2dccc2aef4ce503fee88a1b49f755d5222085ecf",
@@ -154,6 +153,7 @@
     "Full HostInstance, EventTarget/pointer capture, focus/native commands, all-component/all-platform and original mobile tree differentials remain open",
     "Initial external-adapter graphical timeout is retained separately; full final consumer execution passed after capture focus preparation"
   ],
-  "testedImplementationCommit": null,
-  "committedSourceIdentityVerified": false
+  "testedImplementationCommit": "31d08ac37d1fb61a80c233aada6a3cfc3549bfcc",
+  "committedSourceIdentityVerified": true,
+  "sourceDirtyAtMeasurement": true
 }

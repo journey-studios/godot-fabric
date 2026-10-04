@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Árvore e IDs comprovados; próximos foco e comandos públicos de HostInstance"
   },
-  "updatedAt": "2026-10-04T03:42:35.828149+00:00",
+  "updatedAt": "2026-10-04T03:45:51.675526+00:00",
   "source": {
-    "commit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/ROADMAP.md",
-    "scope": "Fatia de árvore/IDs comprovada localmente no host nativo inalterado SHA42ee5c7: 89 headless/99 native, oito amostras de pixels e duas capturas. A configuração JS anterior falha 25/89; fontes e bundle corrigidos restaurados. Regressões: 206 Node/13 Python, dez testes nativos, 19 exemplos/1308 e 17 adapters/318. As novas fontes JS serão fixadas no commit da implementação antes da publicação; CI e Pages desta fatia ainda pendentes. O Pages anterior publicou JSON9089686 no run37172746943. Nenhum item GF, aceite integral, decisão, peso ou denominador foi fechado.",
+    "commit": "31d08ac37d1fb61a80c233aada6a3cfc3549bfcc",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/ROADMAP.md",
+    "scope": "Implementação31d08ac verificada contra 12 fontes JS/fixtures e 47 fontes nativas inalteradas; host SHA42ee5c7. Árvore/IDs89/99, oito pixels e duas capturas; configuração JS anterior falha25/89 com o mesmo fixture/host. Regressões206Node/13Python,10nativos,19exemplos/1308 e17adapters/318. Timeout gráfico inicial e preparação de foco do fixture registrados. CI e nova publicação Pages ainda pendentes; Pages37172746943 publicou o JSON9089686. Nenhum GF, aceite integral, decisão, peso ou denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -449,7 +449,7 @@
             },
             {
               "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/tree/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
             }
           ]
         },
@@ -565,7 +565,7 @@
             },
             {
               "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/tree/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
             }
           ]
         },
@@ -2854,7 +2854,17 @@
         "GF-10"
       ],
       "message": "Árvore/IDs com RN original passou 89/99; quatro frames independentes e oito pixels fixos comprovam a ordem visual. Controle anterior falha 25/89 com o mesmo host. Regressões 206Node/13Python,10nativos,19exemplos/1308,17adapters/318; timeout gráfico inicial preservado e fixture de captura preparado antes do novo sucesso. Próximos: foco/TextInputState e comandos. Sem novo checkpoint concluído ou aceite fechado.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/tree/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+    },
+    {
+      "id": "tree-source-pin-20261004",
+      "at": "2026-10-04T03:45:51.675526+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Commit31d08ac corresponde às 12 fontes executadas e às 47 fontes do host nativo inalterado. Provas, limites e duas capturas fixados em URL imutável. Publicação do JSON e CI seguem passos separados; nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
     }
   ]
 }
