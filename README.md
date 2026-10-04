@@ -39,6 +39,15 @@ Godot surface scaling and raw window input at content density two. Its
 [evidence](docs/evidence/coordinates/README.md) keeps the failing prior-host and
 first-event density controls separate from the verified implementation.
 
+The [transform gallery](examples/transforms/README.md) adds original RN 2D
+transform order, percentage translation/origins, reflection, shear and nested
+bounds. Painting and input use the same Godot Control. Its
+[evidence](docs/evidence/transforms/README.md) records 309 headless and 345 native
+assertions, 33 pixel samples, stable refs/state across flattening and six
+explicit rejection cases. A separate input guard cancels held contacts when an
+external Godot embedding becomes non-invertible, preserving the last valid
+coordinates. Singular, 3D and out-of-range JSX transforms remain unsupported.
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -117,6 +126,7 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 npm run example -- form     # public typed Button/TextInput form
 npm run example -- view     # public View stacking, overflow and four border colors
 npm run example -- coordinates # root/local/screen points and real movement gestures
+npm run example -- transforms # original RN affine styles, refs and transformed input
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
 npm run example -- services # typed Godot calls, signals and shared Zustand data
@@ -156,6 +166,10 @@ clock example separately.
 | Offset roots | Scaled root held | Content density two |
 | --- | --- | --- |
 | [![Two independent roots start at different window positions](docs/evidence/coordinates/coordinate-initial.png)](examples/coordinates/README.md) | [![Scaled root A stays held while root B remains ready](docs/evidence/coordinates/coordinate-scaled.png)](examples/coordinates/README.md) | [![Raw window pixels preserve logical root and local points](docs/evidence/coordinates/coordinate-density.png)](examples/coordinates/README.md) |
+
+| RN affine styles | Resize and materialize | Remove transforms |
+| --- | --- | --- |
+| [![Original RN transform order, origins and mirrored/sheared Views](docs/evidence/transforms/transform-initial.png)](examples/transforms/README.md) | [![Percentage transforms follow size changes while the anonymous wrapper becomes concrete](docs/evidence/transforms/transform-updated.png)](examples/transforms/README.md) | [![Removing transforms restores Yoga placement and flattens the wrapper](docs/evidence/transforms/transform-reset.png)](examples/transforms/README.md) |
 
 ## Write React
 
@@ -246,6 +260,7 @@ npm run test:services                    # real Hermes DTO, revocation and destr
 npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
+npm run test:transforms:guards           # rejected styles, invalid embedding input and cleanup
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

@@ -1,0 +1,395 @@
+{
+  "format": "godot-fabric.transform-guards/v1",
+  "at": "2026-10-04T02:38:02.297867+00:00",
+  "command": "node scripts/transform-guards-check.mjs",
+  "passed": true,
+  "applications": 6,
+  "checks": 61,
+  "assertions": [
+    {
+      "name": "Fresh Hermes application evaluates the real public RN guard bundle once: singular",
+      "passed": true
+    },
+    {
+      "name": "The actual public transform reaches its one precise native rejection: singular",
+      "passed": true
+    },
+    {
+      "name": "Repeated pumps do not flood transform diagnostics: singular",
+      "passed": true
+    },
+    {
+      "name": "Rejected mounting retains real timer and frame registrations for teardown: singular",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application retires every root: singular",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application drains scheduling and host authority: singular",
+      "passed": true
+    },
+    {
+      "name": "Partially mounted native Controls and tags are all released with balanced counters: singular",
+      "passed": true
+    },
+    {
+      "name": "Rejected transform teardown disposes native modules and game service work: singular",
+      "passed": true
+    },
+    {
+      "name": "Shutdown adds no error beyond the original expected transform rejection: singular",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized transform guard lifetime: singular",
+      "passed": true
+    },
+    {
+      "name": "Fresh Hermes application evaluates the real public RN guard bundle once: rank-one",
+      "passed": true
+    },
+    {
+      "name": "The actual public transform reaches its one precise native rejection: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Repeated pumps do not flood transform diagnostics: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Rejected mounting retains real timer and frame registrations for teardown: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application retires every root: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application drains scheduling and host authority: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Partially mounted native Controls and tags are all released with balanced counters: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Rejected transform teardown disposes native modules and game service work: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Shutdown adds no error beyond the original expected transform rejection: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized transform guard lifetime: rank-one",
+      "passed": true
+    },
+    {
+      "name": "Fresh Hermes application evaluates the real public RN guard bundle once: 3d",
+      "passed": true
+    },
+    {
+      "name": "The actual public transform reaches its one precise native rejection: 3d",
+      "passed": true
+    },
+    {
+      "name": "Repeated pumps do not flood transform diagnostics: 3d",
+      "passed": true
+    },
+    {
+      "name": "Rejected mounting retains real timer and frame registrations for teardown: 3d",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application retires every root: 3d",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application drains scheduling and host authority: 3d",
+      "passed": true
+    },
+    {
+      "name": "Partially mounted native Controls and tags are all released with balanced counters: 3d",
+      "passed": true
+    },
+    {
+      "name": "Rejected transform teardown disposes native modules and game service work: 3d",
+      "passed": true
+    },
+    {
+      "name": "Shutdown adds no error beyond the original expected transform rejection: 3d",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized transform guard lifetime: 3d",
+      "passed": true
+    },
+    {
+      "name": "Fresh Hermes application evaluates the real public RN guard bundle once: range-large",
+      "passed": true
+    },
+    {
+      "name": "The actual public transform reaches its one precise native rejection: range-large",
+      "passed": true
+    },
+    {
+      "name": "Repeated pumps do not flood transform diagnostics: range-large",
+      "passed": true
+    },
+    {
+      "name": "Rejected mounting retains real timer and frame registrations for teardown: range-large",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application retires every root: range-large",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application drains scheduling and host authority: range-large",
+      "passed": true
+    },
+    {
+      "name": "Partially mounted native Controls and tags are all released with balanced counters: range-large",
+      "passed": true
+    },
+    {
+      "name": "Rejected transform teardown disposes native modules and game service work: range-large",
+      "passed": true
+    },
+    {
+      "name": "Shutdown adds no error beyond the original expected transform rejection: range-large",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized transform guard lifetime: range-large",
+      "passed": true
+    },
+    {
+      "name": "Fresh Hermes application evaluates the real public RN guard bundle once: range-small",
+      "passed": true
+    },
+    {
+      "name": "The actual public transform reaches its one precise native rejection: range-small",
+      "passed": true
+    },
+    {
+      "name": "Repeated pumps do not flood transform diagnostics: range-small",
+      "passed": true
+    },
+    {
+      "name": "Rejected mounting retains real timer and frame registrations for teardown: range-small",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application retires every root: range-small",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application drains scheduling and host authority: range-small",
+      "passed": true
+    },
+    {
+      "name": "Partially mounted native Controls and tags are all released with balanced counters: range-small",
+      "passed": true
+    },
+    {
+      "name": "Rejected transform teardown disposes native modules and game service work: range-small",
+      "passed": true
+    },
+    {
+      "name": "Shutdown adds no error beyond the original expected transform rejection: range-small",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized transform guard lifetime: range-small",
+      "passed": true
+    },
+    {
+      "name": "Fresh Hermes application evaluates the real public RN guard bundle once: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "The actual public transform reaches its one precise native rejection: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Repeated pumps do not flood transform diagnostics: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Rejected mounting retains real timer and frame registrations for teardown: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application retires every root: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Stopping the rejected application drains scheduling and host authority: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Partially mounted native Controls and tags are all released with balanced counters: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Rejected transform teardown disposes native modules and game service work: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Shutdown adds no error beyond the original expected transform rejection: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "Repeated stop preserves finalized transform guard lifetime: range-pivot",
+      "passed": true
+    },
+    {
+      "name": "All six rejected public transforms run in independent Hermes application lifetimes",
+      "passed": true
+    }
+  ],
+  "cases": [
+    {
+      "mode": "singular",
+      "expectedCode": "E_TRANSFORM_SINGULAR",
+      "expectedNativeError": "E_TRANSFORM_SINGULAR: singular transforms are not implemented",
+      "observedHermesHeader": "Exception in HostFunction: E_TRANSFORM_SINGULAR: singular transforms are not implemented",
+      "diagnosticSha256": "99e1c88d94dabd62cde6f68fd0932d9e5e6ab4241bf6d2db92fdddaf33f6facb",
+      "runtimeId": 26776438227.0,
+      "bundleEvaluations": 1.0,
+      "createdNativeControls": 2.0,
+      "deletedNativeControls": 2.0,
+      "beforeStopTimers": 1.0,
+      "beforeStopFrames": 1.0,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "hostPhasePending": false
+      },
+      "nativeTagsAfterStop": 0.0
+    },
+    {
+      "mode": "rank-one",
+      "expectedCode": "E_TRANSFORM_SINGULAR",
+      "expectedNativeError": "E_TRANSFORM_SINGULAR: singular transforms are not implemented",
+      "observedHermesHeader": "Exception in HostFunction: E_TRANSFORM_SINGULAR: singular transforms are not implemented",
+      "diagnosticSha256": "99e1c88d94dabd62cde6f68fd0932d9e5e6ab4241bf6d2db92fdddaf33f6facb",
+      "runtimeId": 27816625620.0,
+      "bundleEvaluations": 1.0,
+      "createdNativeControls": 2.0,
+      "deletedNativeControls": 2.0,
+      "beforeStopTimers": 1.0,
+      "beforeStopFrames": 1.0,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "hostPhasePending": false
+      },
+      "nativeTagsAfterStop": 0.0
+    },
+    {
+      "mode": "3d",
+      "expectedCode": "E_TRANSFORM_3D",
+      "expectedNativeError": "E_TRANSFORM_3D: perspective and 3D transforms are not implemented",
+      "observedHermesHeader": "Exception in HostFunction: E_TRANSFORM_3D: perspective and 3D transforms are not implemented",
+      "diagnosticSha256": "afd824f4ab50cdadc2ebbafe299ac105e88da4b1daf23800e7404f78543bb33c",
+      "runtimeId": 28806481365.0,
+      "bundleEvaluations": 1.0,
+      "createdNativeControls": 2.0,
+      "deletedNativeControls": 2.0,
+      "beforeStopTimers": 1.0,
+      "beforeStopFrames": 1.0,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "hostPhasePending": false
+      },
+      "nativeTagsAfterStop": 0.0
+    },
+    {
+      "mode": "range-large",
+      "expectedCode": "E_TRANSFORM_RANGE",
+      "expectedNativeError": "E_TRANSFORM_RANGE: transform or inverse exceeds native coordinate precision",
+      "observedHermesHeader": "Exception in HostFunction: E_TRANSFORM_RANGE: transform or inverse exceeds native coordinate precision",
+      "diagnosticSha256": "62d921be3ed6a14604249271c66da070ca1462901d525a671272b0db1aef4b58",
+      "runtimeId": 29796337110.0,
+      "bundleEvaluations": 1.0,
+      "createdNativeControls": 2.0,
+      "deletedNativeControls": 2.0,
+      "beforeStopTimers": 1.0,
+      "beforeStopFrames": 1.0,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "hostPhasePending": false
+      },
+      "nativeTagsAfterStop": 0.0
+    },
+    {
+      "mode": "range-small",
+      "expectedCode": "E_TRANSFORM_RANGE",
+      "expectedNativeError": "E_TRANSFORM_RANGE: transform or inverse exceeds native coordinate precision",
+      "observedHermesHeader": "Exception in HostFunction: E_TRANSFORM_RANGE: transform or inverse exceeds native coordinate precision",
+      "diagnosticSha256": "62d921be3ed6a14604249271c66da070ca1462901d525a671272b0db1aef4b58",
+      "runtimeId": 30786192849.0,
+      "bundleEvaluations": 1.0,
+      "createdNativeControls": 2.0,
+      "deletedNativeControls": 2.0,
+      "beforeStopTimers": 1.0,
+      "beforeStopFrames": 1.0,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "hostPhasePending": false
+      },
+      "nativeTagsAfterStop": 0.0
+    },
+    {
+      "mode": "range-pivot",
+      "expectedCode": "E_TRANSFORM_RANGE",
+      "expectedNativeError": "E_TRANSFORM_RANGE: transform or inverse exceeds native coordinate precision",
+      "observedHermesHeader": "Exception in HostFunction: E_TRANSFORM_RANGE: transform or inverse exceeds native coordinate precision",
+      "diagnosticSha256": "62d921be3ed6a14604249271c66da070ca1462901d525a671272b0db1aef4b58",
+      "runtimeId": 31776048595.0,
+      "bundleEvaluations": 1.0,
+      "createdNativeControls": 2.0,
+      "deletedNativeControls": 2.0,
+      "beforeStopTimers": 1.0,
+      "beforeStopFrames": 1.0,
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "hostPhasePending": false
+      },
+      "nativeTagsAfterStop": 0.0
+    }
+  ],
+  "rawReportSha256": "cfcfb206140051dec795c8f027b0c79aff43d34e104fdae7194479475892ac91"
+}

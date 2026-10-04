@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Transforms 2D em validação; coordenadas com CI executada nos cinco jobs"
+    "focusTitle": "Transforms 2D comprovados; próximos HostInstance e comandos nativos públicos"
   },
-  "updatedAt": "2026-10-04T02:01:53.222939+00:00",
+  "updatedAt": "2026-10-04T02:39:50.421120+00:00",
   "source": {
     "commit": "48e425345b0ecb7665a7a447c9c14453c8e4ece0",
     "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/ROADMAP.md",
-    "scope": "Implementação 48e4253 conferida com as fontes nativas e fixtures executadas. Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI da fatia f40831e e metadata b1732fb: cinco jobs passaram, incluindo cold start e comparação limitada ao oráculo RN atual. Timeout simctl anterior 0e05abe preservado como falha de descoberta, não certificado. Só slice GF-13 done; nenhum GF completo, decisão, peso ou denominador alterado. Transforms estão em validação local separada.",
+    "scope": "Fatia transforms no mesmo Control real: 309 headless/345 native, 33pixels, 3capturas; math40932; rejeições61 e input25; controles65/68 e9/25. Binário SDK final e fontes verificadas: 205Node/13Python, 10nativos, 18exemplos/1219checks e17adapters/318. Implementação local em preparação para commit/PR14 e deploy manual da branch. CI de coordenadas cinco jobs verde; CI de transforms ainda não executada. GF-07/GF-08/GF-10/GF-13 seguem in_progress, sem novo checkpoint done/peso/denominador/decisão.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -352,7 +352,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Unmount independente reentrante em resize/pressed/RAF/timer, remount imediato, host livre e troca de aplicação comprovados. Autoridade cessa imediatamente; cleanup/Controls aguardam fase diferida fora do registry visit. Root sobrevivente preserva VM, estado, módulo e scheduling. Sinal core antigo entre runtimes com root/tag repetidos rejeitado; novo botão entrega. Matriz total 17 Godot/318 checks, com três casos gráficos e pixels. Restart/ativação completos, pause/resume, overlays/portals, cancelamento touch/responder e diferencial RN/alvos continuam abertos.",
+      "note": "Transforms rejeitados em 6 aplicações independentes liberam raízes, Controls parcialmente criados, timers/frames, módulos e tarefas: 61 checks executados. Recuperação não destaca nó nunca anexado. Contrato completo de lifecycle/pause/remount/diferencial segue aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -379,6 +379,10 @@
             {
               "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
               "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -415,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs mantêm medidas root/window e geometria lógica após flattening. Page/location/screen agora concordam com medidas públicas em roots deslocadas/escaladas, movimento e densidade2: 238/247 checks. HostInstance completo, transforms internos, janela/viewport embutidos e certificação continuam abertos.",
+      "note": "Transforms RN 2D afins no Control real concordam com refs/NativeDOM, medidas transformadas por AABB de ancestral, Yoga/measureLayout e identidade após flattening/resize/reset: 309 headless /345 native. HostInstance completo, todos componentes/alvos e diferencial mobile seguem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -438,6 +442,10 @@
             {
               "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
               "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -531,7 +539,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "View pública usa RCTView/descriptor original. Ordem Fabric unifica pintura/target, clipping retangular hidden/scroll, quatro cores físicas, alpha e cantos assimétricos: 67/107 checks e 36 pixels. Controle anterior falhou 9/24. RTL, transforms, máscaras de descendentes, fracionamento/DPI, StyleSheet/shadows/filters e diferencial mobile permanecem abertos.",
+      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -546,6 +554,10 @@
             {
               "label": "CI b5df4d6: cinco jobs passaram, escopo limitado aos contratos atuais",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -677,7 +689,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Primeira fatia: MOVE real mouse/touch fora/retorno, release fora, surface movida durante gesto, escala 0.8 × 1.2, duas roots e raw-window density 2 preservam Pressability original/target. Passaram 238/247 checks e 6 pixels; controles tiveram 121/121 falhas e timing 1. Multitouch, hover, teclado, transform/scroll, interrupções completas e hardware permanecem pendentes.",
+      "note": "Mouse/touch genuínos sob parent transformado preservam coordenadas/ref/Pressability; hitSlop respeita quad do pai e remoção durante contato não ativa alvo antigo. 25 checks: START inválido ignorado, restauração positiva, overflow/singularidade externa cancelam última amostra válida sem NaN/release ressuscitado; controle intermediário9/25. Multitouch/hardware/hover/teclado, transforms válidos em gesto/scroll e paridade completa pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -688,6 +700,10 @@
             {
               "label": "macOS arm64: coords238/247, pixels6, controles121/121 e timing1/238",
               "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -2761,6 +2777,30 @@
       ],
       "message": "HUD/Inventory compartilham aplicação com props, estado e cleanup. Fatia 2A documentada; registro pela data da evidência.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ca9e557/docs/evidence/shared-roots/README.md"
+    },
+    {
+      "id": "transforms-local-proof-20261004",
+      "at": "2026-10-04T02:35:27.787597+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Comprovados transforms2D309/345+33pixels, math40932, rejeições61 e input25; controles anteriores65/68 e intermediário9/25. Último binário compilado com guards de inversa/consumo e teardown de Create rejeitado. Regressão final e commit/publicação em preparação, sem novos checkpoints done.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "transforms-final-validation-20261004",
+      "at": "2026-10-04T02:39:50.421120+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Fonte/host final42ee5c7 conferidos: transforms309/345+33pixels, math40932, rejeições61/input25, controles65/68/9. Regressões205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. Evidências/fotos e roadmap registrados; commit/push/deploy seguem na mesma PR14. Todos os aceites completos/diferenciais/alvos continuam pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
     }
   ]
 }

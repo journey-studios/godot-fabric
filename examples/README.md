@@ -27,6 +27,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
 | [view](view/README.md) | Fabric stacking, rectangular overflow, public geometry and four solid border colors | Public | [App](view/App.jsx) · [scene](view/scene.tscn) |
 | [coordinates](coordinates/README.md) | Root/local/screen points, genuine move-out/return and content density | Public | [App](coordinates/App.jsx) · [scene](coordinates/scene.tscn) |
+| [transforms](transforms/README.md) | Original RN affine styles, percentage origins, flattening, public measures and transformed input | Public | [App](transforms/App.jsx) · [scene](transforms/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
 | [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
 | [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
@@ -72,6 +73,16 @@ addresses it through genuine movement gestures and independent public measures.
 Its [evidence](../docs/evidence/coordinates/README.md) records root/target/screen
 coordinates, surface movement and scaling, raw window pixels at density two,
 and the first contact before cached metrics refresh.
+
+![Original RN percentage origins, ordered transforms and mirrored/sheared Views](../docs/evidence/transforms/transform-initial.png)
+
+The [transform gallery](transforms/README.md) compares independent analytical
+matrices/corners with actual Controls, original public measurements, mouse/touch
+events and renderer pixels. Resize and removal preserve refs and React state
+while an anonymous wrapper materializes and flattens again. Its
+[evidence](../docs/evidence/transforms/README.md) keeps the previous host's
+expected failures, explicit unsupported-transform cases and invalid-embedding
+input cancellation separate.
 
 ![Two registered roots share one application](../docs/evidence/shared-roots/updated.png)
 

@@ -9,6 +9,7 @@ using namespace godot;
 PointerAdapter::PointerAdapter(HitTest hit, LocalPoint local, Project project, Emit emit)
     : hit_(std::move(hit)), local_(std::move(local)), project_(std::move(project)), emit_(std::move(emit)) {}
 bool PointerAdapter::input(const Ref<InputEvent> &event) {
+  invalid_coordinates_ = false;
   // Godot marks mouse-from-touch and touch-from-mouse with device -1. Do not
   // duplicate a physical gesture when project input emulation is enabled.
   if (event->get_device() == -1) return false;
@@ -31,6 +32,12 @@ void PointerAdapter::start(int id, Vector2 position) {
   if (touches_.contains(id)) return;
   const int target = hit_(position);
   if (!target) return;
+  const auto local = local_(target, position);
+  const auto projected = project_(position);
+  if (!local.is_finite() || !projected.page.is_finite() || !projected.screen.is_finite()) {
+    invalid_coordinates_ = true;
+    return;
+  }
   rn::Touch touch;
   touch.identifier = id;
   touch.target = target;
@@ -45,6 +52,13 @@ void PointerAdapter::update(int id, Vector2 position, const std::string &phase) 
   auto &touch = found->second;
   auto local = local_(touch.target, position);
   auto projected = project_(position);
+  // An embedding can become non-invertible during an active gesture. Cancel
+  // using the last valid sample, never publish fabricated or non-finite points.
+  if (!local.is_finite() || !projected.page.is_finite() || !projected.screen.is_finite()) {
+    invalid_coordinates_ = true;
+    cancel();
+    return;
+  }
   touch.pagePoint = {projected.page.x, projected.page.y};
   touch.screenPoint = {projected.screen.x, projected.screen.y};
   touch.offsetPoint = {local.x, local.y};

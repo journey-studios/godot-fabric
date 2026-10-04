@@ -287,8 +287,41 @@ The [hosted CI receipt](docs/evidence/coordinates/ci.json) keeps local proof,
 current CI, preceding simulator-discovery failure and verified Pages deployment
 separate; none supplies the still-open full differential/target acceptance.
 Coordinate CI snapshots `f40831e` and `b1732fb` each passed all five jobs,
-including cold start and the current limited RN oracle. Affine 2D transforms
-are being validated separately; no transform acceptance is closed yet.
+including cold start and the current limited RN oracle. The later affine
+transform slice below keeps its new local proof separate from that hosted CI.
+
+The [affine transform slice](docs/evidence/transforms/README.md) extends
+GF-07/GF-08/GF-10/GF-13 using original RN transform processors and resolved
+ViewProps. Ordered transforms, percentage translation/origins, shear and
+reflection affect the same Godot Control through public base/offset APIs.
+No engine rebuild or extra host node is needed. Independent coefficients,
+exact corners and renderer pixels are checked separately from original RN
+ancestor-AABB measures and Yoga layout. Resize-only updates, removal and
+flatten/materialize/flatten preserve the child Control, tag, ref and React state.
+The final gallery passes **309 headless /345 native checks**, **33 RGBA samples**
+and three captured phases. The previous coordinate host fails **65/309 and
+68/345** against the identical fixture and bundle.
+
+The standalone factor test passes **40,932 checks**, including proportional
+rank-one rounding cases. Six fresh Hermes applications pass **61 rejection and
+teardown checks** for singular, 3D/perspective and native-precision limits.
+Native error recovery no longer detaches a Control rejected before insertion.
+Another **25 actual input checks** reject a false START caused by composed
+determinant overflow, accept a restored positive press and cancel held contacts
+using their last valid coordinates under overflow or a singular external
+Surface. The canceled event is consumed before Godot GUI tries another inverse.
+The intermediate transform host fails **9/25** on the same input fixture.
+These external-embedding safety checks do not implement singular JSX rendering.
+
+The final rebuilt binary passes **205 Node/13 Python**, **10 native tests**,
+**18 headless examples/1,219 checks** and **17 adapter runs/318 checks**.
+The native SDK source and loaded consumer host hashes match the executed final
+implementation. Its new hosted CI and Pages publication remain separate and
+are pending delivery. GF items, full contract/differential/target
+checkpoints, decisions, weights and the dashboard denominator remain unchanged.
+Valid transform animation during contact, transformed masks, complete
+HostInstance commands, RTL and mobile differential acceptance remain open.
+Next in sequence 3: continue the public HostInstance/native-command branch.
 
 ## Release contract and scope
 

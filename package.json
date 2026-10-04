@@ -44,7 +44,8 @@
     "test:adapters": "node --test tests/adapter-plugin.test.mjs tests/adapter-manifest.test.mjs tests/native-sdk.test.mjs",
     "test:adapters:native": "node scripts/adapter-registry-check.mjs",
     "test:adapters:loader": "node scripts/adapter-loader-check.mjs",
-    "test:adapters:runtime": "node scripts/adapter-runtime-check.mjs"
+    "test:adapters:runtime": "node scripts/adapter-runtime-check.mjs",
+    "test:transforms:guards": "node scripts/transform-guards-check.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

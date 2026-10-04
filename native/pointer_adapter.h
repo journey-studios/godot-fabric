@@ -23,6 +23,7 @@ class PointerAdapter {
   void removed(int tag);
   bool owns(int tag) const { return responder_tag_ == tag; }
   bool blocks_native() const { return responder_tag_ && block_native_; }
+  bool invalid_coordinates() const { return invalid_coordinates_; }
   folly::dynamic snapshot() const;
  private:
   HitTest hit_;
@@ -32,6 +33,7 @@ class PointerAdapter {
   std::map<int, rn::Touch> touches_;
   int responder_tag_{};
   bool block_native_{};
+  bool invalid_coordinates_{};
   int starts_{}, moves_{}, ends_{}, cancels_{}, grants_{}, releases_{};
   void start(int id, godot::Vector2 position);
   void update(int id, godot::Vector2 position, const std::string &phase);

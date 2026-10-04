@@ -6,6 +6,12 @@ function processGodotColor(value) {
 function normalizeGodotRect(value) {
   return require("react-native/Libraries/StyleSheet/Rect").normalizeRect(value);
 }
+function processGodotTransform(value) {
+  return require("react-native/Libraries/StyleSheet/processTransform").default(value);
+}
+function processGodotTransformOrigin(value) {
+  return require("react-native/Libraries/StyleSheet/processTransformOrigin").default(value);
+}
 
 const style = Object.fromEntries(
   [
@@ -55,6 +61,10 @@ const style = Object.fromEntries(
 );
 for (const name of ["backgroundColor", "borderColor", "borderLeftColor", "borderTopColor", "borderRightColor", "borderBottomColor", "color"])
   style[name] = { process: processGodotColor };
+// Upstream processors preserve RN operation order and origin syntax. The
+// native host owns affine support and rejects unsupported 3D matrices.
+style.transform = { process: processGodotTransform };
+style.transformOrigin = { process: processGodotTransformOrigin };
 for (const name of [
   "borderWidth",
   "borderTopWidth",

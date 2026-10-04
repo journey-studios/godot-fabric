@@ -49,8 +49,10 @@ Fabric stacking/hit order, rectangular overflow clipping and solid physical-edge
 borders. It retains 67 headless / 107 native assertions, 36 RGBA samples, three
 actual captures and the expected-failing previous-host control. The rebuilt host
 also passed 16 headless scenes / 672 checks, NativeWind 58 native checks and
-17 adapter runs / 318 checks. GF-10 remains in progress; RTL, transforms, rounded
-descendant masks, fractional geometry and mobile View differential work remain.
+17 adapter runs / 318 checks. At that checkpoint, RTL, transforms, rounded
+descendant masks, fractional geometry and mobile View differential work remained
+open. Subsequent transform execution is recorded separately below; GF-10 remains
+in progress.
 
 The later [coordinate record](coordinates/README.md) addresses the offset-root
 input/measurement gap found by the View checkpoint. It retains 238 headless /
@@ -61,6 +63,19 @@ fails 121 assertions in each lane; an intermediate cached-density host fails
 the first contact before a metrics refresh. GF-08/GF-13 remain in progress
 with their wider ref/input acceptance still open. Historical View hashes and
 reports remain separate.
+
+The later [transform record](transforms/README.md) adds original RN 2D affine
+styles and origins on the same Godot Control, with 309 headless / 345 native
+assertions, 33 RGBA samples and three captures. Independent matrices/corners,
+public measures, stable refs/state, flattening and genuine transformed-parent
+input are checked together. The same final fixture fails 65 headless / 68
+native assertions against the preceding coordinate host. Six isolated public
+rejection cases pass 61 checks; the affine factor test passes 40,932 checks.
+The separate input guard passes 25 checks for invalid composed embeddings,
+ignored START, restoration and cancellation preserving the last valid sample.
+This does not establish singular JSX rendering.
+GF-08/GF-10/GF-13 remain in progress; broader ref/View/input acceptance,
+transformed clipping, singular/3D support and mobile differential work remain.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

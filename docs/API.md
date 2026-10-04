@@ -36,11 +36,11 @@ RN compatibility.
 | Area | Implemented subset | Important limits |
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
-| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, four physical solid border colors and public geometry | RTL, RN style transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
+| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and invertible 2D affine styles | RTL, singular/3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
-| Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
+| Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events and responder-mediated drag | All children mount; no virtualization, inertia, bounce, paging, zoom or complete nested/multitouch scrolling |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
 | SVG / charts | SVG/G/Defs/ClipPath/Path/Rect/Circle/Line/LinearGradient/Stop and simple SVG text, tested with unmodified Chart Kit | Budget 2048×2048, unscaled viewBox, no arbitrary transforms, nested SVG certification or full SVG typography |
@@ -111,6 +111,52 @@ The offset-surface input/measurement gap discovered here is addressed by the
 later [coordinate checkpoint](evidence/coordinates/README.md). It exercises
 genuine movement with its own reports and source identities.
 
+## RN affine transforms
+
+`View` styles accept `transform` and `transformOrigin` through the original RN
+processors. The [public gallery](../examples/transforms/README.md) executes
+ordered scale/rotation, percentage translation, absolute/percentage origins,
+skew, a reflected/sheared matrix and nested transforms. For example:
+
+```jsx
+<View style={{
+  width: 100,
+  height: 60,
+  transformOrigin: ["25%", "75%", 0],
+  transform: [{ scaleX: 1.25 }, { rotate: "20deg" }],
+}} />
+```
+
+Original `ViewProps.resolveTransform` owns operation order and resolves
+percentages/origins from the current layout size. The native adapter applies its
+invertible 2D affine result to the same Control's base and public offset
+transforms, with `offset_transform_visual_only=false`. Shear and reflections
+therefore affect drawing, the actual GUI transform and target-local input
+together. Size-only updates re-resolve percentages; removing the style resets
+the Control. No extra wrapper nodes or Godot engine rebuild are required.
+
+`measure` and `measureInWindow` include original RN transformed bounds. Nested
+public bounds accumulate an axis-aligned box at each ancestor, so they can be
+larger than the exact quadrilateral painted by Godot. `measureLayout` excludes
+visual transforms and `onLayout` reports Yoga geometry. Flattening an anonymous
+wrapper, materializing it through a transform and removing the transform
+preserve the retained child's native identity, ref and React state in the
+executed fixture. See the [assertions and captures](evidence/transforms/README.md).
+
+The native host rejects singular matrices (`E_TRANSFORM_SINGULAR`), 3D or
+perspective (`E_TRANSFORM_3D`), nonfinite matrices (`E_TRANSFORM_NONFINITE`) and
+results or inverses outside native coordinate precision (`E_TRANSFORM_RANGE`).
+The six public rejection cases also verify cleanup after a partially mounted
+tree; unsupported transforms do not silently fall back to identity.
+
+The pinned upstream JS processor accepts CSS transform strings, but its
+`translateX/translateY` string branch discards percentage units. Use array
+syntax such as `{ translateX: "25%" }` for percentages. Array percentages have
+native execution proof; CSS pixel strings have processor-contract proof only.
+The adapter does not substitute a new CSS parser. This checkpoint does not
+certify transformed clipping, every host component, transform animation,
+singular/3D support or mobile reference parity.
+
 ## Input coordinate contract
 
 For the supported native Window, `pageX/pageY` are logical React-root points,
@@ -129,10 +175,22 @@ are not divided by density again.
 
 The [public example](../examples/coordinates/README.md) verifies translated and
 positively scaled Godot surfaces, genuine Pressability move-out/return/release,
-independent nonoverlapping roots and raw window pixels at density two. This
-subset does not certify RN style transforms, rotation during a gesture,
-overlapping-root routing, simultaneous multitouch, hardware/DPI policy,
-SubViewport, embedded Windows or singular transforms.
+independent nonoverlapping roots and raw window pixels at density two. The
+separate [affine checkpoint](evidence/transforms/README.md) adds RN styles and
+genuine mouse/touch movement under transformed parents, including parent-local
+hitSlop rejection outside a rotated quad.
+
+If an external Godot embedding becomes non-invertible or its composed inverse
+exceeds native precision, an existing contact cancels using its last valid
+coordinates. That invalid event is consumed before Godot GUI attempts its own
+inverse. The separate [input-guard proof](evidence/transforms/input-guards.json)
+executes determinant overflow despite finite local matrices, an ignored START,
+restoration and a genuine press, and cancellation after overflow or a singular
+Surface offset transform. It verifies no fabricated points, completed press or
+stale responder. This input safety behavior does not implement singular JSX
+rendering. Valid rotation/style changes during a held gesture, overlapping-root
+routing, simultaneous multitouch, hardware/DPI policy, SubViewport and embedded
+Windows require separate acceptance.
 
 ## Shared application and root authoring
 

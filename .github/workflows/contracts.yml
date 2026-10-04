@@ -42,6 +42,8 @@ jobs:
           ditto -x -k .deps/godot.zip .deps/godot
           echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
       - run: npm run setup
+      - name: Reconstruct affine matrices and reject unsupported transforms
+        run: .deps/build/affine_transform_test
       - run: npm run test:codegen:native -- --node "$(command -v node)"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -73,6 +75,17 @@ jobs:
             build/adapter-loader/logs/*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:examples
+      - run: npm run test:transforms:guards
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-transform-guards
+          path: |
+            build/transforms-guards.json
+            build/transforms-guards.log
+            build/transforms-input-guards.json
+            build/transforms-input-guards.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:runtime
       - run: npm run test:application
       - run: npm run test:modules

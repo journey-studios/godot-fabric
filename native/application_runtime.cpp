@@ -11,6 +11,8 @@
 #include "svg_node.h"
 #include "scroll_adapter.h"
 #include "appearance_adapter.h"
+#include "transform_adapter.h"
+#include "coordinate_transform.h"
 #include "paragraph_view.h"
 #include "timer_registry.h"
 #include "turbo_module_registry.h"
@@ -438,21 +440,28 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         },
         [this](int tag, Vector2 point) {
           auto found = views.find(tag);
-          return found == views.end() ? point : found->second.control->get_global_transform_with_canvas().affine_inverse().xform(point);
+          return found == views.end() ? fabric_godot::invalid_coordinate() :
+              fabric_godot::local_coordinate(found->second.control->get_global_transform_with_canvas(), point);
         },
         [this, id](Vector2 point) {
           auto root = roots.find(id);
           auto *host = root == roots.end() ? nullptr : root->second->host();
-          if (!host) return fabric_godot::PointerAdapter::Coordinates{};
+          const auto invalid = fabric_godot::invalid_coordinate();
+          if (!host) return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
           // RN page points and measure() share the logical React root space.
           // Godot has already localized native window input before _input.
-          auto page = host->get_global_transform_with_canvas().affine_inverse().xform(point);
+          auto page = fabric_godot::local_coordinate(host->get_global_transform_with_canvas(), point);
           auto screen = point;
           if (auto *window = host->get_window()) {
             const auto transform = window->get_final_transform();
             // Sample transform and density together: the first input after a
             // content-scale change can precede the frame's metrics refresh.
-            const auto density = (transform * window->get_global_canvas_transform().affine_inverse()).get_scale().x;
+            Transform2D canvas_inverse;
+            if (!fabric_godot::coordinate_inverse(window->get_global_canvas_transform(), canvas_inverse))
+              return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
+            const auto density = (transform * canvas_inverse).get_scale().x;
+            if (!std::isfinite(density) || density <= 0)
+              return fabric_godot::PointerAdapter::Coordinates{invalid, invalid};
             screen = (Vector2(window->get_position()) + transform.xform(point)) / density;
           }
           return fabric_godot::PointerAdapter::Coordinates{page, screen};
@@ -876,6 +885,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (!mounted.external && component_kind(mounted.shadow) != "view")
       mounted.control->set_clip_contents(true);
     mounted.control->set_size(size);
+    fabric_godot::apply_transform(*mounted.control,
+        *std::static_pointer_cast<const rn::ViewProps>(mounted.shadow.props), mounted.shadow.layoutMetrics);
   }
   void emit(int tag, const std::string &name, folly::dynamic payload) {
     if (inactive() || retiring.contains(tag)) return;
@@ -947,7 +958,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::shared_ptr<const rn::ViewProps> props;
     if (tag) props = std::static_pointer_cast<const rn::ViewProps>(views.at(tag).shadow.props);
     if (props && props->pointerEvents == rn::PointerEventsMode::None) return 0;
-    const auto local = control->get_global_transform_with_canvas().affine_inverse().xform(point);
+    const auto local = fabric_godot::local_coordinate(control->get_global_transform_with_canvas(), point);
+    if (!local.is_finite()) return 0;
     const bool inside = Rect2(Vector2(), control->get_size()).has_point(local);
     if (!inside && control->is_clipping_contents()) return 0;
     if (!props || props->pointerEvents != rn::PointerEventsMode::BoxOnly) {
@@ -964,7 +976,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (!hit_rect.has_point(local)) return 0;
     // Expanded touch targets cannot escape their parent's bounds (RN contract).
     auto *parent = Object::cast_to<Control>(control->get_parent());
-    if (!inside && parent && !parent->get_global_rect().has_point(point)) return 0;
+    if (!inside && parent) {
+      const auto parent_local = fabric_godot::local_coordinate(parent->get_global_transform_with_canvas(), point);
+      if (!parent_local.is_finite() || !Rect2(Vector2(), parent->get_size()).has_point(parent_local)) return 0;
+    }
     return tag;
   }
   bool wheel(Root &surface, const Ref<InputEvent> &event) {
@@ -1128,8 +1143,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         case rn::ShadowViewMutation::Remove:
           // A same-parent keyed move is a reorder, not a native detachment.
           // Detaching a focused LineEdit cancels its editing/IME session.
-          if (!inserted_parents.contains(old.tag) || inserted_parents.at(old.tag) != mutation.parentTag)
-            parent(mutation.parentTag)->remove_child(views.at(old.tag).control);
+          if (!inserted_parents.contains(old.tag) || inserted_parents.at(old.tag) != mutation.parentTag) {
+            auto *control = views.at(old.tag).control;
+            // A native Create can reject props before Insert. Upstream's error
+            // recovery still retires that node, but it was never attached.
+            if (control->get_parent()) parent(mutation.parentTag)->remove_child(control);
+          }
           break;
         case rn::ShadowViewMutation::Delete: {
           auto entry = views.extract(old.tag);
@@ -1289,6 +1308,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           ("fabricWidth", mounted.shadow.layoutMetrics.frame.size.width)
           ("fabricHeight", mounted.shadow.layoutMetrics.frame.size.height)
           ("x", control->get_position().x)("y", control->get_position().y)
+          ("fabricX", mounted.shadow.layoutMetrics.frame.origin.x)
+          ("fabricY", mounted.shadow.layoutMetrics.frame.origin.y)
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
       if (mounted.external) { node["adapter"] = mounted.external->snapshot(); node["mountId"] = static_cast<int64_t>(mounted.mount_id); }
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
@@ -1372,6 +1393,9 @@ bool ApplicationRuntime::input(int id, const Ref<InputEvent> &event) {
   if (guard->wheel(root, event)) { guard->pump(); return true; }
   bool blocked = root.pointer->blocks_native();
   if (!root.pointer->input(event)) return false;
+  // A contact canceled for invalid geometry must not reach Godot GUI's own
+  // inverse calculation, even when the RN responder did not block native UI.
+  blocked = blocked || root.pointer->invalid_coordinates();
   guard->pump();
   found = guard->roots.find(id);
   return blocked || (found != guard->roots.end() && found->second->pointer->blocks_native());

@@ -7,6 +7,8 @@ import {createRequire} from "node:module";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {build} from "esbuild";
+import {parseSync, transformFromAstSync} from "@babel/core";
+import {controlViewConfig} from "../src/base-view-config.js";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -24,11 +26,12 @@ function fixture(t, files) {
 }
 async function compile(directory, entry) {
   return build({absWorkingDir: directory, entryPoints: [entry], bundle: true,
-    write: false, format: "cjs", platform: "neutral", metafile: true, plugins: plugins()});
+    write: false, format: "cjs", platform: "neutral", mainFields: ["main"],
+    define: {"process.env.NODE_ENV": '"production"'}, metafile: true, plugins: plugins()});
 }
-function execute(result) {
+function execute(result, globals = {}) {
   const module = {exports: {}};
-  vm.runInNewContext(result.outputFiles[0].text, {module, exports: module.exports});
+  vm.runInNewContext(result.outputFiles[0].text, {module, exports: module.exports, ...globals});
   return module.exports;
 }
 
@@ -105,4 +108,85 @@ test("original RN ViewConfig composes the Godot base config without the adapter 
   assert.ok(inputs.some(input => input.endsWith("react-native/Libraries/NativeComponent/ViewConfig.js")));
   assert.ok(inputs.some(input => input.endsWith("src/base-view-config.js")));
   assert.ok(!inputs.some(input => input.endsWith("react-native/Libraries/NativeComponent/PlatformBaseViewConfig.js")));
+});
+
+test("original RN transform processors reach the composed ViewConfig without losing ordered array or origin syntax", async t => {
+  const directory = fixture(t, {
+    "App.js": 'import {createViewConfig} from "react-native/Libraries/NativeComponent/ViewConfig"; '
+      + 'export {default as originalTransform} from "react-native/Libraries/StyleSheet/processTransform"; '
+      + 'export {default as originalOrigin} from "react-native/Libraries/StyleSheet/processTransformOrigin"; '
+      + 'export default createViewConfig({uiViewClassName: "RCTView"});',
+  });
+  const result = await compile(directory, "App.js");
+  const {default: config, originalTransform, originalOrigin} = execute(result, {__DEV__: false});
+  const processTransform = config.validAttributes.style.transform.process;
+  const processOrigin = config.validAttributes.style.transformOrigin.process;
+  const plain = value => JSON.parse(JSON.stringify(value));
+  const ordered = [{translateX: "25%"}, {scaleX: 2}, {rotate: "45deg"}, {skewY: "10deg"}];
+  assert.equal(processTransform(ordered), ordered);
+  assert.equal(processTransform(ordered), originalTransform(ordered));
+  const css = "translateX(24px) rotate(90deg) scale(1.5)";
+  assert.deepEqual(plain(processTransform(css)), [
+    {translateX: 24}, {rotate: "90deg"}, {scale: 1.5},
+  ]);
+  assert.deepEqual(plain(processTransform(css)), plain(originalTransform(css)));
+  const origin = [20, "75%", 0];
+  assert.equal(processOrigin(origin), origin);
+  assert.equal(processOrigin(origin), originalOrigin(origin));
+  assert.deepEqual(plain(processOrigin("left top")), [0, 0, 0]);
+  assert.deepEqual(plain(processOrigin("25% 75% 0px")), ["25%", "75%", 0]);
+  assert.deepEqual(plain(processOrigin("25% 75% 0px")), plain(originalOrigin("25% 75% 0px")));
+  // Recognition here is not native 3D support: the unchanged payload reaches
+  // native validation instead of being silently filtered by this config.
+  const unsupportedNative3D = [{rotateX: "45deg"}, {perspective: 800}];
+  assert.equal(processTransform(unsupportedNative3D), unsupportedNative3D);
+  const debugStyle = execute(result, {__DEV__: true}).default.validAttributes.style;
+  assert.throws(() => debugStyle.transform.process([{rotate: "45"}]), /degrees|radians/);
+  assert.throws(() => debugStyle.transformOrigin.process([20, "75%"]), /exactly 3 values/);
+  const inputs = Object.keys(result.metafile.inputs);
+  for (const suffix of ["react-native/Libraries/NativeComponent/ViewConfig.js",
+    "react-native/Libraries/StyleSheet/processTransform.js",
+    "react-native/Libraries/StyleSheet/processTransformOrigin.js", "src/base-view-config.js"])
+    assert.ok(inputs.some(input => input.endsWith(suffix)), suffix);
+});
+
+test("project-owned ViewConfig and similarly named transform processors keep their own behavior", async t => {
+  const directory = fixture(t, {
+    "NativeComponent/ViewConfig.js": 'import base from "./PlatformBaseViewConfig"; export default base;',
+    "NativeComponent/PlatformBaseViewConfig.js": 'import transform from "../StyleSheet/processTransform"; '
+      + 'import origin from "../StyleSheet/processTransformOrigin"; '
+      + 'export default {validAttributes: {style: {transform: {process: transform}, transformOrigin: {process: origin}}}};',
+    "StyleSheet/processTransform.js": 'export default value => "project-transform:" + value;',
+    "StyleSheet/processTransformOrigin.js": 'export default value => "project-origin:" + value;',
+  });
+  const result = await compile(directory, "NativeComponent/ViewConfig.js");
+  const style = execute(result).default.validAttributes.style;
+  assert.equal(style.transform.process("rotate(45deg)"), "project-transform:rotate(45deg)");
+  assert.equal(style.transformOrigin.process("left top"), "project-origin:left top");
+  assert.deepEqual(Object.keys(result.metafile.inputs).sort(), [
+    "NativeComponent/PlatformBaseViewConfig.js", "NativeComponent/ViewConfig.js",
+    "StyleSheet/processTransform.js", "StyleSheet/processTransformOrigin.js",
+  ]);
+});
+
+test("the public style validator forwards transforms and still rejects unrelated unsupported styles", () => {
+  // Execute the actual validator and its actual StyleSheet dependency without
+  // mounting React or substituting a renderer merely to test style validation.
+  const filename = path.join(root, "src/react-native-platform.jsx");
+  const ast = parseSync(fs.readFileSync(filename, "utf8"), {
+    filename, configFile: false, babelrc: false, parserOpts: {plugins: ["jsx"]},
+  });
+  const stylesheet = ast.program.body.find(node => node.type === "ExportNamedDeclaration"
+    && node.declaration?.declarations?.some(declaration => declaration.id.name === "StyleSheet"));
+  const validator = ast.program.body.find(node => node.type === "FunctionDeclaration" && node.id.name === "nativeStyle");
+  assert.ok(stylesheet && validator);
+  const selected = {...ast, program: {...ast.program, body: [stylesheet.declaration, validator]}};
+  const {code} = transformFromAstSync(selected, undefined, {configFile: false, babelrc: false});
+  const nativeStyle = vm.runInNewContext(code + "\nnativeStyle;", {controlViewConfig, textStyleAttributes: []});
+  const style = {transform: [{translateX: "25%"}, {rotate: "45deg"}], transformOrigin: "left top"};
+  assert.equal(nativeStyle(style, "View"), style);
+  for (const name of ["filter", "elevation", "perspective"])
+    assert.throws(() => nativeStyle([style, {[name]: 2}], "View"),
+      new RegExp("Godot View does not implement style " + name));
+  assert.throws(() => nativeStyle({borderStyle: "dashed"}, "View"), /solid borders only/);
 });

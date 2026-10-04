@@ -15,14 +15,15 @@ export type HostComponent<Props extends {}> = RN.HostComponent<Props>;
 export declare const codegenNativeComponent: typeof RN.codegenNativeComponent;
 export declare const codegenNativeCommands: typeof RN.codegenNativeCommands;
 
-/** The implemented Godot subset, derived from the pinned RN declarations. */
+/** The Godot subset, derived from pinned RN declarations. Transform syntax is
+ * upstream; native support is validated separately for affine 2D matrices. */
 export type ViewStyle = Pick<RN.ViewStyle,
   "width" | "height" | "minWidth" | "minHeight" | "maxWidth" | "maxHeight" |
   "flex" | "flexGrow" | "flexShrink" | "flexBasis" | "flexDirection" | "flexWrap" |
   "justifyContent" | "alignItems" | "alignSelf" | "alignContent" | "gap" | "rowGap" | "columnGap" |
   "padding" | "paddingHorizontal" | "paddingVertical" | "paddingLeft" | "paddingRight" | "paddingTop" | "paddingBottom" |
   "margin" | "marginHorizontal" | "marginVertical" | "marginLeft" | "marginRight" | "marginTop" | "marginBottom" |
-  "position" | "top" | "left" | "bottom" | "right" | "display" | "opacity" | "zIndex" | "overflow" |
+  "position" | "top" | "left" | "bottom" | "right" | "display" | "opacity" | "zIndex" | "overflow" | "transform" | "transformOrigin" |
   "backgroundColor" | "borderColor" | "borderLeftColor" | "borderTopColor" | "borderRightColor" | "borderBottomColor" |
   "borderWidth" | "borderTopWidth" | "borderRightWidth" | "borderBottomWidth" |
   "borderLeftWidth" | "borderRadius" | "borderTopLeftRadius" | "borderTopRightRadius" | "borderBottomLeftRadius" | "borderBottomRightRadius">;

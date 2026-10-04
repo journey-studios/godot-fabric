@@ -42,6 +42,13 @@
     "scene": "examples/coordinates/scene.tscn"
   },
   {
+    "id": "transforms",
+    "title": "Original RN affine transforms, flattening and transformed gestures",
+    "api": "public",
+    "source": "examples/transforms/App.jsx",
+    "scene": "examples/transforms/scene.tscn"
+  },
+  {
     "id": "metrics",
     "title": "Original RN dimensions, content density and subscription lifetime",
     "api": "public",
