@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "EventTarget original verificado; conectar entrega nativa e corrigir ancestralidade atual"
   },
-  "updatedAt": "2026-10-04T14:59:20.007308+00:00",
+  "updatedAt": "2026-10-04T15:00:45.199189+00:00",
   "source": {
     "commit": "2db8e391eff4de26caab0231be878f4ee807e799",
     "url": "https://github.com/journey-studios/godot-fabric/blob/2db8e391eff4de26caab0231be878f4ee807e799/ROADMAP.md",
@@ -274,6 +274,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/runtime/README.md"
+            },
+            {
+              "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
             }
           ]
         },
@@ -478,6 +482,10 @@
             {
               "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
+            },
+            {
+              "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
             }
           ]
         },
@@ -776,6 +784,10 @@
             {
               "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
+            },
+            {
+              "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
             }
           ]
         },
@@ -2576,6 +2588,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-original-receipt-links-e2e14ea",
+      "at": "2026-10-04T15:00:45.199189+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Links fixados no recibo pós-pin e2e14ea, que identifica implementação2db8e39 e hashes executados. Sem novo checkpoint fechado;119original-ref não certifica entrega nativa nem corrige cache.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+    },
     {
       "id": "event-target-original-pinned-2db8e39",
       "at": "2026-10-04T14:59:20.007308+00:00",
