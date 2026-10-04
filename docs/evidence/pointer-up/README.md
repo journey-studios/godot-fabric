@@ -107,3 +107,9 @@ checks. SDK ABI certification remains false. Hosted CI for this Up slice is
 pending. Local execution does not close a full GF item or enable public flags. See the
 [research](../../research/pointer-up.md) and
 [example](../../../examples/pointer-up/README.md).
+
+[Pages publication](publication.json) passed build/deploy in
+[run 37241041419](https://github.com/journey-studios/godot-fabric/actions/runs/37241041419),
+using the main renderer and branch data `041688c`. The complete public JSON,
+excluding only generated publication metadata, and the local live API both
+match that committed data. The implementation remains outside main.

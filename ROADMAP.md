@@ -1072,7 +1072,10 @@ owns the no-RawUp negative; Document/interest observers track Down topics.
 Execution used the working tree after 3ca4174. The receipt pins 81 unique
 executed code/configuration inputs against implementation f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b
 using git show, retaining that original execution base and dirty state. Hosted
-Up CI and positive Pages publication are pending. SDK ABI certification and public flags remain false.
+Up CI is pending. [Pages publication](docs/evidence/pointer-up/publication.json)
+passed build/deploy in run 37241041419 with main renderer and branch data
+041688c; complete public/local JSON was verified. SDK ABI certification and
+public flags remain false.
 This scope is View with both flags. Document Up/other flags, listener lifecycle,
 captured/no-hit Up, public Down/Up ID pairing, both priority flag branches,
 hardware/mobile/dev/performance remain open. No GF acceptance, dependency,

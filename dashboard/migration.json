@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Pointerup View validado; próximos: Document Up e matriz de flags"
   },
-  "updatedAt": "2026-10-04T22:41:58.173596+00:00",
+  "updatedAt": "2026-10-04T22:45:13.934314+00:00",
   "source": {
     "commit": "f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
-    "scope": "Up View/both flags: 62/62 headless e 90/90 viewport/24 pixels; anterior 54/62 com oito falhas, mesmo SDK atual e 18 RN. Implementação f7c2cf6 verificada contra 81 pins de código/configuração; execução base 3ca4174/árvore dirty preservada. Os 16 comandos de regressão, SDK novo, consumer e 13 adapters/213 checks passaram; query/getter antigos preservam 12/3 falhas. Hosted Up CI e publicação positiva pendentes. ABI/flags false, sem GF/checkpoint/peso/denominador fechado.",
+    "scope": "Up View/both flags: 62/62 headless e 90/90 viewport/24 pixels; anterior 54/62 com oito falhas, mesmo SDK atual e 18 RN. Implementação f7c2cf6 verificada contra 81 pins de código/configuração; execução base 3ca4174/árvore dirty preservada. Os 16 comandos de regressão, SDK novo, consumer e 13 adapters/213 checks passaram; query/getter antigos preservam 12/3 falhas. Hosted Up CI pendente. Pages 37241041419 publicou data041688c, build/deploy e JSON público/local completos conferidos. ABI/flags false, sem GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -942,7 +942,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Up View com ambas as flags passa 62/62 e 90 checks viewport/24 pixels. Host anterior mantém 54/62 com oito negativos no mesmo SDK atual. Bubble 36=true/capture 36=false→37=true, B consultado false sem Up, Raw/React/um commit e cleanup passam. Os 16 comandos de regressão e SDK novo passaram; CI de Up e publicação positiva pendentes. Document/flags/once/remove/abort/captured-Up/DownUpID, move/hover/responders/coalescing/reentrância/mobile/dev/performance continuam abertos.",
+      "note": "Up View com ambas as flags passa 62/62 e 90 checks viewport/24 pixels. Host anterior mantém 54/62 com oito negativos no mesmo SDK atual. Bubble 36=true/capture 36=false→37=true, B consultado false sem Up, Raw/React/um commit e cleanup passam. Os 16 comandos de regressão e SDK novo passaram; CI de Up pendente; Pages 37241041419/data041688c e JSON público/local confirmados. Document/flags/once/remove/abort/captured-Up/DownUpID, move/hover/responders/coalescing/reentrância/mobile/dev/performance continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2833,6 +2833,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-up-positive-pages-verified-37241041419",
+      "at": "2026-10-04T22:45:13.934314+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages 37241041419 passou build/deploy no main renderer usando data041688c da branch. JSON público completo (somente publication gerado removido) e API local iguais ao arquivo commitado. Up62/90,SDK/regressões e81pins publicados sem merge. Hosted Up CI ainda em execução; nenhum GF/checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37241041419"
+    },
     {
       "id": "pointer-up-source-pins-verified-f7c2cf6",
       "at": "2026-10-04T22:41:58.173596+00:00",
