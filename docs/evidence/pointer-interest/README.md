@@ -75,7 +75,15 @@ certification remains false.
 
 The preceding [integration CI](https://github.com/journey-studios/godot-fabric/actions/runs/37223152112)
 passed five jobs at `0478499`, with its 181/206 headless artifact audited.
-It does not cover this new query source; this slice's hosted run is pending.
+The [query CI](https://github.com/journey-studios/godot-fabric/actions/runs/37226934414)
+passed five jobs at `ab0dc44` on attempt 2; its [audited artifact](hosted-ci.json)
+confirms 193/230 headless checks, 21 committed pins, 13 producers and 13 RN inputs.
+The native host digest matches within both CI variants; the artifact has no native
+binary to rehash independently. Attempt 1 timed out listing iOS simulators before
+build; the same head passed iOS and parity on rerun, with contracts/native/Android
+reused from attempt 1. All three core reference hosts match 13 subset cases.
+These references do not certify Godot pointer-query mobile exports, the later
+query-fault correction or full parity. No new hosted captures were produced.
 
 Document-only interest still has a manual positive and zero native Raw.
 Other pointer categories, the full flag matrix, arbitrary query fault cleanup,

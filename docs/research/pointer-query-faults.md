@@ -78,7 +78,8 @@ The [isolated example](../../examples/pointer-query-fault/README.md) explains
 the commands and images. The receipt owns source/native digests and captures.
 Hosted CI for this new fault boundary is pending. The preceding query-only
 artifact verified 193 original / 230 current checks at `ab0dc44`; its full
-workflow encountered an iOS `simctl` discovery timeout. That artifact does not
+workflow encountered an iOS `simctl` discovery timeout on attempt 1 and passed
+all five jobs after a same-head rerun (attempt 2). That artifact does not
 cover this correction or certify mobile execution.
 
 ## Remaining boundaries

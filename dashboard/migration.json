@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Falhas da query isoladas; próximos documentos e matriz de flags"
   },
-  "updatedAt": "2026-10-04T19:41:55.418495+00:00",
+  "updatedAt": "2026-10-04T19:43:08.555823+00:00",
   "source": {
-    "commit": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
-    "scope": "Nova correção local da chamada/retorno da query: controle antigo174/186 com12 falhas; corrigido186headless/204viewport/16pixels. Fontes executadas ainda aguardam commit/pin. CI anteriorab0dc44 passou5jobs no rerun, artefato193/230 auditado; Pagesab0dc44 confirmado. Nenhum novo checkpoint/GF fechado; pesos/denominador preservados.",
+    "commit": "1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/ROADMAP.md",
+    "scope": "Implementação1286b1b:22pins executados comparados ao commit. Lookup throw/nonboolean isolados; controle174/186 com12falhas,186headless/204viewport/16pixels corrigidos.250/13contratos,22examples2250,consumer30/40,13adapters213 passam. CI anteriorab0dc44 verde no rerun; nova CI/Pages pendentes. Sem GF/checkpoint completo adicional; pesos/denominador preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -304,8 +304,8 @@
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
             },
             {
-              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -363,8 +363,8 @@
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
             },
             {
-              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -446,8 +446,8 @@
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
             },
             {
-              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -581,8 +581,8 @@
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
             },
             {
-              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -915,8 +915,8 @@
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
             },
             {
-              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -2718,6 +2718,19 @@
   ],
   "activity": [
     {
+      "id": "query-fault-source-pin-1286b1b",
+      "at": "2026-10-04T19:43:08.555823+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "22fontes executadas conferidas via gitshow no commit1286b1b; captures/receipts preservam origem. SDK mantém sourceCommitab0dc44/sourceDirtytrue da execução.19/156 checkpoints; nenhum GF completo. CI e nova publicação pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13"
+    },
+    {
       "id": "query-fault-local-20261004",
       "at": "2026-10-04T19:41:55.418495+00:00",
       "taskIds": [
@@ -2727,8 +2740,8 @@
         "GF-08",
         "GF-13"
       ],
-      "message": "Antigo174/186 com12 falhas normativas; mesmo fixture/bundle corrigido186/186headless e204/204viewport/16pixels/two saves. Quatro throw/nonboolean34/35 preservam TouchStart/Raw/React e diagnóstico; Up/Cancel/retirement/remount/stop separados. Getters/reentrância,documents/flags/outros tipos/mobile abertos.250/13contratos,22examples2250,consumer30/40,13adapters213 passam. Sem checkpoint/GF completo/peso/denominador novo. Commit/pin e CI próprios pendentes.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+      "message": "Antigo174/186 com12 falhas normativas; mesmo fixture/bundle corrigido186/186headless e204/204viewport/16pixels/two saves. Quatro throw/nonboolean34/35 preservam TouchStart/Raw/React e diagnóstico; Up/Cancel/retirement/remount/stop separados. Getters/reentrância,documents/flags/outros tipos/mobile abertos.250/13contratos,22examples2250,consumer30/40,13adapters213 passam. Sem checkpoint/GF completo/peso/denominador novo. Implementação1286b1b confere22pins; CI própria pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
     },
     {
       "id": "pointer-interest-ci-rerun-ab0dc44",

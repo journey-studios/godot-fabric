@@ -252,8 +252,11 @@ zero. ScreenTouch down/up/cancel, current flattened View ancestry, removal,
 rerender, separate roots and query removal at stop have executed controls.
 The default installs no query. DocumentElement/other pointer categories,
 arbitrary query-fault cleanup, the full flag matrix, performance, public enablement and hardware/mobile
-remain open. This later local record does not change the initial snapshot's
-hashes or establish hosted validation for the new slice.
+remain open. The [audited query CI](pointer-interest/hosted-ci.json) confirms
+193/230 headless checks at ab0dc44 and five successful jobs after an iOS
+discovery timeout on attempt 1. Core references match 13 subset cases; no hosted
+captures or Godot mobile pointer certification are implied. The initial
+snapshot's hashes remain unchanged.
 
 The [query-fault containment record](pointer-query-faults/README.md) retains
 12 normative failures in the identical previous-host fixture and 186 corrected

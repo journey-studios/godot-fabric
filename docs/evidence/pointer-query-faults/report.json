@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "scenario": "native-pointer-query-fault-batch-isolation",
   "implementation": {
-    "commit": null,
+    "commit": "1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13",
     "executionBaseCommit": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
     "executionSourceDirty": true,
     "executedBeforeCommit": true,
-    "sourcePinsVerifiedAgainstCommit": false,
-    "verifiedSourcePinCount": 0
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourcePinCount": 22
   },
   "environment": {
     "platform": "macOS arm64",

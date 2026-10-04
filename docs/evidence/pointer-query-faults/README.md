@@ -11,7 +11,8 @@ and [implementation boundaries](../../research/pointer-query-faults.md).
 Execution used official Godot 4.7.2, RN 0.87.1, React 19.2.3 and Node 22.23.3
 on macOS arm64 Release. The receipt pins the exact executed sources, original RN
 inputs, two native hosts, bundle, raw reports and captures. Execution preceded
-the implementation commit; its source hashes are checked and pinned separately.
+the implementation commit. All 22 executed code/configuration pins match
+`1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13`; the original execution identity remains unchanged.
 
 | Executed lane | Result |
 | --- | --- |

@@ -2216,8 +2216,34 @@
     "coversCurrentPointerQuery": false
   },
   "hosted": {
-    "status": "pending",
-    "reason": "The current pointer-interest native source requires its own committed CI execution/artifact audit"
+    "status": "audited",
+    "run": {
+      "id": 37226934414,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226934414",
+      "headSha": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+      "attempt": 2,
+      "status": "completed",
+      "conclusion": "success",
+      "checkoutCommit": "bd10f9a4f8a69a9fd57aac23c094534e351c5035",
+      "checkoutParents": [
+        "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+        "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+      ]
+    },
+    "record": "hosted-ci.json",
+    "checks": {
+      "original": 193,
+      "current": 230
+    },
+    "sourcePinsVerified": 21,
+    "producerPins": 13,
+    "reactNativeInputPins": 13,
+    "coreParityChecks": 13,
+    "completeParity": false,
+    "nativeArtifactId": 11312810473,
+    "binaryRehashedFromArtifact": false,
+    "newCaptures": 0,
+    "notes": "Attempt1 iOS simulator discovery timed out before build; same-head attempt2 passed iOS and core parity. Contracts/native/Android were reused. No later fault fix or Godot mobile export certified."
   },
   "limitations": [
     "Internal opt-in only: public imperative/native EventTarget flags remain disabled",
