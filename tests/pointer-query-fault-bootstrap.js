@@ -7,7 +7,7 @@ if (typeof installer !== "function") throw Error("Query-fault probe requires the
 let installations = 0, fault = null, rows = [], sequence = 0;
 const interceptedInstaller = function(query) {
   if (installations !== 0 || typeof query !== "function") throw Error("Query-fault probe expects exactly one SDK installation");
-  const result = installer(function(target, offset) {
+  const result = installer(function(target, offset, isRootHandle) {
     const matched = fault != null && target === fault.targetref && offset === fault.offset && fault.remaining > 0;
     const row = {sequence: ++sequence, targetTag: target?.tag ?? null, offset, matched,
       action: matched ? fault.mode : "delegate", label: matched ? fault.label : null, resultKind: null, result: null};
@@ -21,7 +21,7 @@ const interceptedInstaller = function(query) {
       row.resultKind = "number"; row.result = 1;
       return 1;
     }
-    const value = query(target, offset);
+    const value = query(target, offset, isRootHandle);
     row.resultKind = typeof value; row.result = value;
     return value;
   });

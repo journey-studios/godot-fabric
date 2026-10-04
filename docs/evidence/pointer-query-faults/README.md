@@ -87,3 +87,7 @@ alongside document/documentElement interest, the full flag matrix, other pointer
 categories, responders, performance and hardware/mobile parity. Public flags stay
 off. GF-05/06/07/08/13 remain In progress with no new completed checkpoint or
 complete GF. glog initialization/destruction warnings may still appear.
+
+The later [Document/root receipt](../pointer-documents/README.md) extends
+root interest and the four original flag combinations. This historical
+receipt keeps its own executed source pins, counters and CI scope unchanged.

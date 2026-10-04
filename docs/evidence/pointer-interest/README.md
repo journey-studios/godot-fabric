@@ -91,3 +91,7 @@ complete responders/PanResponder, performance, dev renderer, hardware and Godot
 mobile exports remain open. Pinned Android filtering differs from the compiled
 C++ lane, so the original negative is specific to this host. GF-05/06/07/08/13
 stay In progress; no complete contract or additional checkpoint is closed.
+
+The later [Document/root receipt](../pointer-documents/README.md) extends
+root interest and the four original flag combinations. This historical
+receipt keeps its own executed source pins, counters and CI scope unchanged.

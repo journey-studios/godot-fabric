@@ -271,3 +271,14 @@ is closed. Its [audited CI](pointer-query-faults/hosted-ci.json) confirms
 186 headless checks/22 pins at b88708c with five successful jobs. The old-host
 negative and graphical captures stay local; later Document/root work is outside
 that committed head.
+
+The later [Document/root interest record](pointer-documents/README.md) adds
+2,723 checks across eight original/current flag configurations and 385 actual
+viewport checks with 20 pixels/two 760×220 captures. Current root-family handles
+resolve original Document/documentElement Maps without lazy ref creation.
+Capture-only offset35 and A-none/B-doc isolation have independent controls;
+the previous host retains142 normative failures with identical JS bundles.
+Original gates, Raw/state/batching, membership, retirement/remount, stop and
+one root throw34 are observed separately. All public flags remain off;
+broader faults/events/responders/mobile and full GF acceptances stay open.
+Hosted CI and this slice's Pages publication remain distinct from local proof.

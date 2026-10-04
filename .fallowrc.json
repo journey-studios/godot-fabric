@@ -29,7 +29,8 @@
     "tests/event-dispatch-fixture.jsx",
     "tests/event-dispatch-integrated-fixture.jsx",
     "tests/pointer-interest-fixture.jsx",
-    "tests/pointer-query-fault-fixture.jsx"
+    "tests/pointer-query-fault-fixture.jsx",
+    "tests/pointer-document-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",

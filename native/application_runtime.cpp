@@ -672,14 +672,30 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         if (!current) return false;
         auto handle = current->getFamily().getInstanceHandle(*runtime);
         if (!handle.isObject()) return false;
-        auto state = handle.asObject(*runtime).getProperty(*runtime, "stateNode");
-        if (!state.isObject()) return false;
-        auto canonical = state.asObject(*runtime).getProperty(*runtime, "canonical");
-        if (!canonical.isObject()) return false;
-        auto instance = canonical.asObject(*runtime).getProperty(*runtime, "publicInstance");
-        if (!instance.isObject()) return false;
+        bool is_root_handle = false;
+        if (current->getTraits().check(rn::ShadowNodeTraits::Trait::RootNodeKind)) {
+          ui->getShadowTreeRegistry().visit(node.getSurfaceId(), [&](const rn::ShadowTree &tree) {
+            const auto revision = tree.getCurrentRevision();
+            is_root_handle = revision.rootShadowNode &&
+                rn::ShadowNode::sameFamily(*current, *revision.rootShadowNode);
+          });
+        }
+        // RootNodeKind can also occur on nested nodes. Only the actual current
+        // root family receives RN's specialized handle, after releasing the
+        // registry lock. Component queries still use existing public refs.
+        jsi::Value candidate = jsi::Value::undefined();
+        if (is_root_handle) {
+          candidate = jsi::Value(*runtime, handle);
+        } else {
+          auto state = handle.asObject(*runtime).getProperty(*runtime, "stateNode");
+          if (!state.isObject()) return false;
+          auto canonical = state.asObject(*runtime).getProperty(*runtime, "canonical");
+          if (!canonical.isObject()) return false;
+          candidate = canonical.asObject(*runtime).getProperty(*runtime, "publicInstance");
+          if (!candidate.isObject()) return false;
+        }
         try {
-          auto result = pointer_listener_query->call(*runtime, instance, static_cast<double>(offset));
+          auto result = pointer_listener_query->call(*runtime, candidate, static_cast<double>(offset), is_root_handle);
           if (!result.isBool()) throw jsi::JSError(*runtime, "Pointer listener query must return a boolean");
           return result.getBool();
         } catch (const std::exception &error) {

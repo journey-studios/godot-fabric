@@ -75,10 +75,23 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
           return {loader: "js", contents: `
 import {hasPointerDownListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
 import * as Flags from ${JSON.stringify(path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js"))};
+import {getOwnerDocument} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/NodeInternals.js"))};
+import {isReactNativeDocumentElementInstanceHandle, getPublicInstanceFromReactNativeDocumentElementInstanceHandle} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js"))};
 export function installPointerListenerQuery() {
-  if (Flags.enableImperativeEvents() && Flags.enableNativeEventTargetEventDispatching())
-    godotInstallPointerListenerQuery((target, offset) =>
-      (offset === 34 || offset === 35) && hasPointerDownListenerForGodot(target, offset === 35));
+  // Document retains original listener APIs with native dispatch alone. View
+  // and documentElement keep their upstream imperative-events method gate.
+  if (Flags.enableNativeEventTargetEventDispatching())
+    godotInstallPointerListenerQuery((candidate, offset, isRootHandle = false) => {
+      if (offset !== 34 && offset !== 35) return false;
+      const capture = offset === 35;
+      if (!isRootHandle) return hasPointerDownListenerForGodot(candidate, capture);
+      if (!isReactNativeDocumentElementInstanceHandle(candidate)) return false;
+      const element = getPublicInstanceFromReactNativeDocumentElementInstanceHandle(candidate);
+      // These instances were created and linked by RN when the root started.
+      // Only read their original slots/Maps; generic renderer ref lookup is lazy.
+      return hasPointerDownListenerForGodot(element, capture) ||
+        (element != null && hasPointerDownListenerForGodot(getOwnerDocument(element), capture));
+    });
 }`};
         if (!filename.startsWith(rnRoot + path.sep)) return;
         let source = await readFile(filename, "utf8");

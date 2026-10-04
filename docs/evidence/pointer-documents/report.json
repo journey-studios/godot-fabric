@@ -1,0 +1,2164 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-document-interest-four-flags",
+  "implementation": {
+    "commit": null,
+    "executionBaseCommit": "73d33daa1c18783d948253d0c8e89618efc91795",
+    "executionSourceDirty": true,
+    "executedBeforeCommit": true,
+    "sourcePinsVerifiedAgainstCommit": false,
+    "verifiedSourcePinCount": 0
+  },
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable official",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "nativeConfiguration": "Release",
+    "modes": [
+      "headless",
+      "macOS native viewport"
+    ]
+  },
+  "commands": [
+    "cmake --build .deps/build --parallel 4",
+    "npm run test:pointers:documents",
+    "node tests/pointer-document-native.test.mjs --interest=current",
+    "node tests/pointer-document-native.test.mjs --interest=current --flag=enabled --capture"
+  ],
+  "scope": {
+    "actualNativeInput": true,
+    "experimentalNativeDispatch": true,
+    "fourIndependentHermesFlagConfigurations": true,
+    "originalListenerMapsAuthoritative": true,
+    "listenerRegistryMirrored": false,
+    "originalRootHandleVerifiedAgainstCurrentRootFamily": true,
+    "publicDefaultEnabled": false,
+    "publicAPIAdded": false,
+    "hardwareCertified": false,
+    "nativeCaptureOnlyInterestIndependentlyTested": true,
+    "noRefPurityMeasuredInsideActualQuery": true,
+    "postDispatcherLazyMaterializationAllowed": true,
+    "rootFaultOnlyThrowOffset34BothFlagsEnabled": true,
+    "completeEventParityCertified": false
+  },
+  "comparison": {
+    "producerPinCount": 14,
+    "originalRNInputCount": 18,
+    "sameNativeHostAcrossOriginalAndCurrentSDK": true,
+    "previousHostDiffers": true,
+    "perFlagPreviousHostControls": {
+      "disabled": {
+        "sameCheckIds": true,
+        "sameBundleBytes": true,
+        "sameOriginalRNInputs": true,
+        "onlyProducerDifference": "native/application_runtime.cpp",
+        "oldCPPSourceSha256": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+        "currentCPPSourceSha256": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf"
+      },
+      "imperative-only": {
+        "sameCheckIds": true,
+        "sameBundleBytes": true,
+        "sameOriginalRNInputs": true,
+        "onlyProducerDifference": "native/application_runtime.cpp",
+        "oldCPPSourceSha256": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+        "currentCPPSourceSha256": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf"
+      },
+      "internal-only": {
+        "sameCheckIds": true,
+        "sameBundleBytes": true,
+        "sameOriginalRNInputs": true,
+        "onlyProducerDifference": "native/application_runtime.cpp",
+        "oldCPPSourceSha256": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+        "currentCPPSourceSha256": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf"
+      },
+      "enabled": {
+        "sameCheckIds": true,
+        "sameBundleBytes": true,
+        "sameOriginalRNInputs": true,
+        "onlyProducerDifference": "native/application_runtime.cpp",
+        "oldCPPSourceSha256": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+        "currentCPPSourceSha256": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf"
+      }
+    }
+  },
+  "variants": {
+    "originalSDK": {
+      "disabled": {
+        "checks": 336,
+        "passed": 336,
+        "failedNames": [],
+        "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "b17eaeb41f16fd1f6bc893cfec21aa9fb96bba376956dba89dc0a20841fce14f",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "f5803d3d5beca8780296e7f33c0ee3a122d87d9c199a237b92156785c7b7ddd0",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "originalMethods": {
+          "doc": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "imperative-only": {
+        "checks": 336,
+        "passed": 336,
+        "failedNames": [],
+        "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "667915075c80278cc8a6b74b856dd35b406c5e3cd785f19411636783fa0f452f",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "26cb212c8b97945ed2449450d967665f67260e71e209f6ff3af7b4dea7c474cc",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "originalMethods": {
+          "doc": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "internal-only": {
+        "checks": 338,
+        "passed": 338,
+        "failedNames": [],
+        "checkIdsSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "990d194170152e65a338d404364d343196b0ca586944f54de7a16bf6cbd23a9b",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "55208b97ef6ce08d7a77b96535387d411ea4bca3e6bd6a218a051d069adfdea0",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "originalMethods": {
+          "doc": [
+            "function",
+            "function",
+            "function"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "enabled": {
+        "checks": 338,
+        "passed": 338,
+        "failedNames": [],
+        "checkIdsSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "768bc89b3807b57b09538cc50fcee4ce38bc7e99432bcc3c897e8197bd296ba8",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "831c41ec352ff2daaa9a4064923bb94de26eb3c7d67ef13175e03ee64f9ed088",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "originalMethods": {
+          "doc": [
+            "function",
+            "function",
+            "function"
+          ],
+          "element": [
+            "function",
+            "function",
+            "function"
+          ],
+          "view": [
+            "function",
+            "function",
+            "function"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    "currentSDK": {
+      "disabled": {
+        "checks": 336,
+        "passed": 336,
+        "failedNames": [],
+        "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "16a76238054a71407a5266510dc8111a7f6b3a20e4f993b7a29dd434a1a468f9",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "e96d9cfb1ca185c03fbedec69a3e6dbd26e3bb920b01fddb32fe16687d6b89bb",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "originalMethods": {
+          "doc": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "imperative-only": {
+        "checks": 336,
+        "passed": 336,
+        "failedNames": [],
+        "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "801a440ba9cac78562af76414ca06401ac400d34c73de9507038e4cefeb30c81",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "edb0a30e0bc808226b2fdfbee7ca9fc913c99d3eb3ef90b0da813f530d473fd7",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "originalMethods": {
+          "doc": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "internal-only": {
+        "checks": 340,
+        "passed": 340,
+        "failedNames": [],
+        "checkIdsSha256": "37ae174c47393d062de25ecbe8b5d066782830e638931ec31cabf1bf16469aae",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "6514d60637221ceca1294a2b6dc4344ea203b1f83a6c0cff8fc1f3d0429b8df0",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "d775c88bce4f3a3e431b1ad2777204ca5ce928f6d393f3687a22345689e6c949",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "originalMethods": {
+          "doc": [
+            "function",
+            "function",
+            "function"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 1,
+        "rootCases": {
+          "no-ref/no-interest/down": {
+            "order": [],
+            "phases": [],
+            "rawOrder": [],
+            "baselineCount": 0,
+            "counterAfter": 0,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "B",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              },
+              {
+                "offset": 35,
+                "name": "B",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "document/B-no-ref/down": {
+            "order": [
+              "DocC",
+              "DocB"
+            ],
+            "phases": [
+              1,
+              3
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 0,
+            "counterAfter": 2,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "B",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": true,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "doc-capture-only/down": {
+            "order": [
+              "DocC"
+            ],
+            "phases": [
+              1
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 2,
+            "counterAfter": 3,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              },
+              {
+                "offset": 35,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": true,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "element-capture-only/down": {
+            "order": [],
+            "phases": [],
+            "rawOrder": [],
+            "baselineCount": 3,
+            "counterAfter": 3,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              },
+              {
+                "offset": 35,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "isolation/A-none-B-doc/down": {
+            "order": [],
+            "phases": [],
+            "rawOrder": [],
+            "baselineCount": 3,
+            "counterAfter": 3,
+            "contextRestored": true
+          },
+          "isolation/B-only-positive/down": {
+            "order": [
+              "DocC",
+              "DocB"
+            ],
+            "phases": [
+              1,
+              3
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 2,
+            "counterAfter": 4,
+            "contextRestored": true
+          }
+        },
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "enabled": {
+        "checks": 363,
+        "passed": 363,
+        "failedNames": [],
+        "checkIdsSha256": "9850e15e8878f1b8bd25bb7a5c5c3cc5c263e980a4c31a684246ac95fa411179",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "78f82bb9f7cbde052d5fbc061aacfd44a54e564100bd25cb3b8a4cf8048d4966",
+        "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+        "bundleSha256": "8661900ab128c686828599484fa20f23fe5a531d7dad3679da2ea772a50b1595",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "originalMethods": {
+          "doc": [
+            "function",
+            "function",
+            "function"
+          ],
+          "element": [
+            "function",
+            "function",
+            "function"
+          ],
+          "view": [
+            "function",
+            "function",
+            "function"
+          ]
+        },
+        "queryInstallations": 1,
+        "rootCases": {
+          "no-ref/no-interest/down": {
+            "order": [],
+            "phases": [],
+            "rawOrder": [],
+            "baselineCount": 0,
+            "counterAfter": 0,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "B",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              },
+              {
+                "offset": 35,
+                "name": "B",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "document/B-no-ref/down": {
+            "order": [
+              "DocC",
+              "DocB"
+            ],
+            "phases": [
+              1,
+              3
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 0,
+            "counterAfter": 2,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "B",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": true,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "doc-capture-only/down": {
+            "order": [
+              "DocC"
+            ],
+            "phases": [
+              1
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 4,
+            "counterAfter": 5,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              },
+              {
+                "offset": 35,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": true,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "element-capture-only/down": {
+            "order": [
+              "RootC"
+            ],
+            "phases": [
+              1
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 5,
+            "counterAfter": 6,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              },
+              {
+                "offset": 35,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": true,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          },
+          "isolation/A-none-B-doc/down": {
+            "order": [],
+            "phases": [],
+            "rawOrder": [],
+            "baselineCount": 6,
+            "counterAfter": 6,
+            "contextRestored": true
+          },
+          "isolation/B-only-positive/down": {
+            "order": [
+              "DocC",
+              "DocB"
+            ],
+            "phases": [
+              1,
+              3
+            ],
+            "rawOrder": [
+              [
+                "topPointerDown",
+                "typed"
+              ],
+              [
+                "topPointerDown",
+                "star"
+              ]
+            ],
+            "baselineCount": 2,
+            "counterAfter": 4,
+            "contextRestored": true
+          },
+          "rootfault/throw34/down": {
+            "order": [
+              "TouchStart"
+            ],
+            "phases": [
+              2
+            ],
+            "rawOrder": [
+              [
+                "topTouchStart",
+                "typed"
+              ],
+              [
+                "topTouchStart",
+                "star"
+              ]
+            ],
+            "baselineCount": 17,
+            "counterAfter": 18,
+            "rootQueries": [
+              {
+                "offset": 34,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "throw",
+                "result": null,
+                "matched": true
+              },
+              {
+                "offset": 35,
+                "name": "A",
+                "expectedHandle": true,
+                "resultKind": "boolean",
+                "result": false,
+                "matched": false
+              }
+            ],
+            "contextRestored": true
+          }
+        },
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [
+          "E_POINTER_LISTENER_QUERY: GF document query deliberate fault: root34\n\nError: GF document query deliberate fault: root34\n    at anonymous (res://build/pointer-document-enabled.js:2:547525)"
+        ],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 25,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    "previousHostWithCurrentSDK": {
+      "disabled": {
+        "checks": 336,
+        "passed": 336,
+        "failedNames": [],
+        "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "253635c86e30750ed51de9d0ce094a6e61acade000c8d0b87d46b295e9af24fb",
+        "nativeHostSha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+        "bundleSha256": "e96d9cfb1ca185c03fbedec69a3e6dbd26e3bb920b01fddb32fe16687d6b89bb",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "originalMethods": {
+          "doc": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "imperative-only": {
+        "checks": 336,
+        "passed": 336,
+        "failedNames": [],
+        "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "866e8cf2f1e550119761efd9e7cb4bf49df3dd03443eb3a3811fcd34295046d8",
+        "nativeHostSha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+        "bundleSha256": "edb0a30e0bc808226b2fdfbee7ca9fc913c99d3eb3ef90b0da813f530d473fd7",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "originalMethods": {
+          "doc": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 0,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "internal-only": {
+        "checks": 340,
+        "passed": 279,
+        "failedNames": [
+          "no-ref/Actual false root queries preserve null canonical publicInstance during the query itself",
+          "document/A/Exact callback order is observed rather than inferred from listeners",
+          "document/A/Every observed event has the declared propagation phase",
+          "document/A/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "document/A/Functional React counter commits every real delivered callback once",
+          "document/A/Original renderer batches all functional callback updates into exactly one commit",
+          "document/B-no-ref/Exact callback order is observed rather than inferred from listeners",
+          "document/B-no-ref/Every observed event has the declared propagation phase",
+          "document/B-no-ref/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "document/B-no-ref/Functional React counter commits every real delivered callback once",
+          "document/B-no-ref/Original renderer batches all functional callback updates into exactly one commit",
+          "no-ref/Positive real root query observes the original handle without creating the leaf before dispatcher delivery",
+          "doc-capture-only/Exact callback order is observed rather than inferred from listeners",
+          "doc-capture-only/Every observed event has the declared propagation phase",
+          "doc-capture-only/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "doc-capture-only/Functional React counter commits every real delivered callback once",
+          "doc-capture-only/Original renderer batches all functional callback updates into exactly one commit",
+          "doc-capture-only/Actual isolated root query rejects bubble offset34 before evaluating capture offset35",
+          "doc-capture-only/Real root handle queries preserve the observed canonical and ref state",
+          "element-capture-only/Actual isolated root query rejects bubble offset34 before evaluating capture offset35",
+          "element-capture-only/Real root handle queries preserve the observed canonical and ref state",
+          "isolation/B-only-positive/Exact callback order is observed rather than inferred from listeners",
+          "isolation/B-only-positive/Every observed event has the declared propagation phase",
+          "isolation/B-only-positive/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "isolation/B-only-positive/Functional React counter commits every real delivered callback once",
+          "isolation/B-only-positive/Original renderer batches all functional callback updates into exactly one commit",
+          "ancestry/A/Exact callback order is observed rather than inferred from listeners",
+          "ancestry/A/Every observed event has the declared propagation phase",
+          "ancestry/A/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "ancestry/A/Functional React counter commits every real delivered callback once",
+          "ancestry/A/Original renderer batches all functional callback updates into exactly one commit",
+          "ancestry/B/Exact callback order is observed rather than inferred from listeners",
+          "ancestry/B/Every observed event has the declared propagation phase",
+          "ancestry/B/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "ancestry/B/Functional React counter commits every real delivered callback once",
+          "ancestry/B/Original renderer batches all functional callback updates into exactly one commit",
+          "rerender/listener-persists/Exact callback order is observed rather than inferred from listeners",
+          "rerender/listener-persists/Every observed event has the declared propagation phase",
+          "rerender/listener-persists/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "rerender/listener-persists/Functional React counter commits every real delivered callback once",
+          "rerender/listener-persists/Original renderer batches all functional callback updates into exactly one commit",
+          "membership/doc-once/Exact callback order is observed rather than inferred from listeners",
+          "membership/doc-once/Every observed event has the declared propagation phase",
+          "membership/doc-once/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "membership/doc-once/Functional React counter commits every real delivered callback once",
+          "membership/doc-once/Original renderer batches all functional callback updates into exactly one commit",
+          "retirement/held/Exact callback order is observed rather than inferred from listeners",
+          "retirement/held/Every observed event has the declared propagation phase",
+          "retirement/held/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "retirement/held/Functional React counter commits every real delivered callback once",
+          "retirement/held/Original renderer batches all functional callback updates into exactly one commit",
+          "retirement/sibling-survives/Exact callback order is observed rather than inferred from listeners",
+          "retirement/sibling-survives/Every observed event has the declared propagation phase",
+          "retirement/sibling-survives/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "retirement/sibling-survives/Functional React counter commits every real delivered callback once",
+          "retirement/sibling-survives/Original renderer batches all functional callback updates into exactly one commit",
+          "remount/fresh-document/Exact callback order is observed rather than inferred from listeners",
+          "remount/fresh-document/Every observed event has the declared propagation phase",
+          "remount/fresh-document/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "remount/fresh-document/Functional React counter commits every real delivered callback once",
+          "remount/fresh-document/Original renderer batches all functional callback updates into exactly one commit"
+        ],
+        "checkIdsSha256": "37ae174c47393d062de25ecbe8b5d066782830e638931ec31cabf1bf16469aae",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "124421d2a1b2da86139bb6338c1d6c539164b1a7554442bba4cab1ee38b2bc3d",
+        "nativeHostSha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+        "bundleSha256": "d775c88bce4f3a3e431b1ad2777204ca5ce928f6d393f3687a22345689e6c949",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "originalMethods": {
+          "doc": [
+            "function",
+            "function",
+            "function"
+          ],
+          "element": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ],
+          "view": [
+            "undefined",
+            "undefined",
+            "undefined"
+          ]
+        },
+        "queryInstallations": 1,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 23,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      },
+      "enabled": {
+        "checks": 363,
+        "passed": 282,
+        "failedNames": [
+          "no-ref/Actual false root queries preserve null canonical publicInstance during the query itself",
+          "document/A/Exact callback order is observed rather than inferred from listeners",
+          "document/A/Every observed event has the declared propagation phase",
+          "document/A/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "document/A/Functional React counter commits every real delivered callback once",
+          "document/A/Original renderer batches all functional callback updates into exactly one commit",
+          "document/B-no-ref/Exact callback order is observed rather than inferred from listeners",
+          "document/B-no-ref/Every observed event has the declared propagation phase",
+          "document/B-no-ref/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "document/B-no-ref/Functional React counter commits every real delivered callback once",
+          "document/B-no-ref/Original renderer batches all functional callback updates into exactly one commit",
+          "no-ref/Positive real root query observes the original handle without creating the leaf before dispatcher delivery",
+          "element-only/Exact callback order is observed rather than inferred from listeners",
+          "element-only/Every observed event has the declared propagation phase",
+          "element-only/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "element-only/Functional React counter commits every real delivered callback once",
+          "element-only/Original renderer batches all functional callback updates into exactly one commit",
+          "doc-capture-only/Exact callback order is observed rather than inferred from listeners",
+          "doc-capture-only/Every observed event has the declared propagation phase",
+          "doc-capture-only/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "doc-capture-only/Functional React counter commits every real delivered callback once",
+          "doc-capture-only/Original renderer batches all functional callback updates into exactly one commit",
+          "doc-capture-only/Actual isolated root query rejects bubble offset34 before evaluating capture offset35",
+          "doc-capture-only/Real root handle queries preserve the observed canonical and ref state",
+          "element-capture-only/Exact callback order is observed rather than inferred from listeners",
+          "element-capture-only/Every observed event has the declared propagation phase",
+          "element-capture-only/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "element-capture-only/Functional React counter commits every real delivered callback once",
+          "element-capture-only/Original renderer batches all functional callback updates into exactly one commit",
+          "element-capture-only/Actual isolated root query rejects bubble offset34 before evaluating capture offset35",
+          "element-capture-only/Real root handle queries preserve the observed canonical and ref state",
+          "isolation/B-only-positive/Exact callback order is observed rather than inferred from listeners",
+          "isolation/B-only-positive/Every observed event has the declared propagation phase",
+          "isolation/B-only-positive/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "isolation/B-only-positive/Functional React counter commits every real delivered callback once",
+          "isolation/B-only-positive/Original renderer batches all functional callback updates into exactly one commit",
+          "ancestry/A/Exact callback order is observed rather than inferred from listeners",
+          "ancestry/A/Every observed event has the declared propagation phase",
+          "ancestry/A/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "ancestry/A/Functional React counter commits every real delivered callback once",
+          "ancestry/A/Original renderer batches all functional callback updates into exactly one commit",
+          "ancestry/B/Exact callback order is observed rather than inferred from listeners",
+          "ancestry/B/Every observed event has the declared propagation phase",
+          "ancestry/B/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "ancestry/B/Functional React counter commits every real delivered callback once",
+          "ancestry/B/Original renderer batches all functional callback updates into exactly one commit",
+          "rerender/listener-persists/Exact callback order is observed rather than inferred from listeners",
+          "rerender/listener-persists/Every observed event has the declared propagation phase",
+          "rerender/listener-persists/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "rerender/listener-persists/Functional React counter commits every real delivered callback once",
+          "rerender/listener-persists/Original renderer batches all functional callback updates into exactly one commit",
+          "membership/doc-once/Exact callback order is observed rather than inferred from listeners",
+          "membership/doc-once/Every observed event has the declared propagation phase",
+          "membership/doc-once/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "membership/doc-once/Functional React counter commits every real delivered callback once",
+          "membership/doc-once/Original renderer batches all functional callback updates into exactly one commit",
+          "rootfault/throw34/Actual documentElement handle consumes exactly one configured root query fault",
+          "rootfault/throw34/Exactly one explicit diagnostic retains the root query fault cause",
+          "rootfault/throw34/recovery/Exact callback order is observed rather than inferred from listeners",
+          "rootfault/throw34/recovery/Every observed event has the declared propagation phase",
+          "rootfault/throw34/recovery/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "rootfault/throw34/recovery/Functional React counter commits every real delivered callback once",
+          "rootfault/throw34/recovery/Original renderer batches all functional callback updates into exactly one commit",
+          "rootfault/throw34/Cancel and next healthy gesture neither hide nor duplicate the diagnostic",
+          "retirement/held/Exact callback order is observed rather than inferred from listeners",
+          "retirement/held/Every observed event has the declared propagation phase",
+          "retirement/held/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "retirement/held/Functional React counter commits every real delivered callback once",
+          "retirement/held/Original renderer batches all functional callback updates into exactly one commit",
+          "retirement/sibling-survives/Exact callback order is observed rather than inferred from listeners",
+          "retirement/sibling-survives/Every observed event has the declared propagation phase",
+          "retirement/sibling-survives/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "retirement/sibling-survives/Functional React counter commits every real delivered callback once",
+          "retirement/sibling-survives/Original renderer batches all functional callback updates into exactly one commit",
+          "remount/fresh-document/Exact callback order is observed rather than inferred from listeners",
+          "remount/fresh-document/Every observed event has the declared propagation phase",
+          "remount/fresh-document/Native pointerdown Raw typed and star have exact membership payload identity and timestamps",
+          "remount/fresh-document/Functional React counter commits every real delivered callback once",
+          "remount/fresh-document/Original renderer batches all functional callback updates into exactly one commit",
+          "errors/Only the explicitly configured root query fault remains visible",
+          "stop/Application clears roots SDK query timers processor queue and routes while retaining real diagnostics"
+        ],
+        "checkIdsSha256": "9850e15e8878f1b8bd25bb7a5c5c3cc5c263e980a4c31a684246ac95fa411179",
+        "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+        "rawReportSha256": "8bc7d4a51bd752dbeef1d0db66b7d645452b7a96331fdfe187dadf8d84545121",
+        "nativeHostSha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+        "bundleSha256": "8661900ab128c686828599484fa20f23fe5a531d7dad3679da2ea772a50b1595",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "originalMethods": {
+          "doc": [
+            "function",
+            "function",
+            "function"
+          ],
+          "element": [
+            "function",
+            "function",
+            "function"
+          ],
+          "view": [
+            "function",
+            "function",
+            "function"
+          ]
+        },
+        "queryInstallations": 1,
+        "identityAcrossCommit": {
+          "docSame": true,
+          "elementSame": true,
+          "getterSame": true,
+          "refSame": true,
+          "revision": 1
+        },
+        "retiredIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "replacementIdentities": {
+          "currentDocFresh": true,
+          "currentElementFresh": true,
+          "docConnected": false,
+          "elementConnected": false,
+          "methods": [
+            "function",
+            "function",
+            "function"
+          ],
+          "oldRootGetterNull": true,
+          "originalDoc": true
+        },
+        "diagnosticsAfterStop": [],
+        "stopped": {
+          "stopped": true,
+          "rootCount": 0,
+          "pointerListenerQueryInstalled": false,
+          "pendingWork": 0,
+          "pendingTimers": 0,
+          "pendingAnimationFrames": 0,
+          "pendingRootRetirements": 0,
+          "pointerProcessor": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "pointerRouting": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 25,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    }
+  },
+  "graphical": {
+    "checks": 385,
+    "passed": 385,
+    "failedNames": [],
+    "checkIdsSha256": "36d1a76c0063d7b123787f230457b689f56dfafcd05ffafa97cb400bf402bcad",
+    "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+    "rawReportSha256": "48d3132d5abc490aae73f20b83f6ef3c121c01a934cdfe3771d68b50812bde5c",
+    "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+    "bundleSha256": "8661900ab128c686828599484fa20f23fe5a531d7dad3679da2ea772a50b1595",
+    "flags": {
+      "imperative": true,
+      "nativeDispatch": true
+    },
+    "originalMethods": {
+      "doc": [
+        "function",
+        "function",
+        "function"
+      ],
+      "element": [
+        "function",
+        "function",
+        "function"
+      ],
+      "view": [
+        "function",
+        "function",
+        "function"
+      ]
+    },
+    "queryInstallations": 1,
+    "identityAcrossCommit": {
+      "docSame": true,
+      "elementSame": true,
+      "getterSame": true,
+      "refSame": true,
+      "revision": 1
+    },
+    "retiredIdentities": {
+      "currentDocFresh": true,
+      "currentElementFresh": true,
+      "docConnected": false,
+      "elementConnected": false,
+      "methods": [
+        "function",
+        "function",
+        "function"
+      ],
+      "oldRootGetterNull": true,
+      "originalDoc": true
+    },
+    "replacementIdentities": {
+      "currentDocFresh": true,
+      "currentElementFresh": true,
+      "docConnected": false,
+      "elementConnected": false,
+      "methods": [
+        "function",
+        "function",
+        "function"
+      ],
+      "oldRootGetterNull": true,
+      "originalDoc": true
+    },
+    "diagnosticsAfterStop": [
+      "E_POINTER_LISTENER_QUERY: GF document query deliberate fault: root34\n\nError: GF document query deliberate fault: root34\n    at anonymous (res://build/pointer-document-enabled.js:2:547525)"
+    ],
+    "stopped": {
+      "stopped": true,
+      "rootCount": 0,
+      "pointerListenerQueryInstalled": false,
+      "pendingWork": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "pendingRootRetirements": 0,
+      "pointerProcessor": {
+        "active": 0,
+        "activeCapture": 0,
+        "hover": 0,
+        "pendingCapture": 0
+      },
+      "pointerRouting": {
+        "active": 0,
+        "contacts": 0,
+        "hoverPointers": 0,
+        "nextId": 25,
+        "stored": 0,
+        "suppressed": 0
+      }
+    },
+    "captures": [
+      {
+        "file": "initial.png",
+        "sha256": "77debf03541c201f97667106a380b58b326f7e6eafad408a799682bbd8718ce4",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              445,
+              175
+            ]
+          }
+        ],
+        "reactCounts": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      {
+        "file": "updated.png",
+        "sha256": "7cd2069ed1c57082c2c2c1b22f90758d0bcbaa6e06786f9dfbdae25e91ef23bb",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              445,
+              175
+            ]
+          }
+        ],
+        "reactCounts": {
+          "A": 2,
+          "B": 0
+        }
+      }
+    ]
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-document-bootstrap.js": "0b390630f7b7a37e581cc9949c38964b6a8692e2606fe83e1ed3d7e9a1a9f07c",
+    "tests/pointer-document-fixture.jsx": "e26dadb31c45e5b7ad1eadcae3d1113a81d3a72a3a37f69bd3fd9ca977b64818",
+    "tests/pointer-document-probe.gd": "bcd4c24d9062b4f7a560336780fb01080707e2a65556f796b3e1a698cf2397f4",
+    "tests/pointer-document-native.test.mjs": "6a251f041b6496d054d9b038a452b1da5593767cb20485db388f378e44b31da8",
+    "scripts/event-target-bundle.mjs": "e24978757e48609f4ef5182b4a7ffd3bf64ddebe9171b3bd97f23a50276556a9",
+    "sdk/toolchain/platform-plugin.mjs": "34129e1a2ece65fa5a48a31c637476ded97fe5718e681c1c6a58287eb6c8018d",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f420bb0627b60a9af2df6dfb940bf43652f7eb762aabeec2af70297d1cf0c69c",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf",
+    "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4",
+    "tests/rn-pointer-interest-overlay.test.mjs": "9a0c0576e99255879dd3d087b714ec384a90d85b795c323d4094346dab8b35da",
+    "tests/pointer-interest-native.test.mjs": "c20dd9ae6ad1f3ba911691102cf03ec185b6a76200fca1075741c277e5203f26",
+    "tests/pointer-interest-probe.gd": "e4da2a89a149a7b991ebdb3b73b30ae769bf36477aef6a85c0f4075cd84018a4",
+    "tests/pointer-query-fault-bootstrap.js": "fbcdee479ce1d4d2d7486dc51acdb96da96158987b62cf5cab839e47119465a9",
+    "tests/rn-pointer-overlay.test.mjs": "56faa9426889d8adf53c35a1e1a96abccf183a44f5b27be5cb4e69070c8f4381",
+    "package.json": "6bc40fc01537f9bd1d23db5b79e1fc013430c8c94c1af7eacb71666f7683df11",
+    ".fallowrc.json": "8b0a3e1c9023be987a736b0d7d63464eb0e178a6c11c2f0a268d715e310ff1a7",
+    ".github/workflows/contracts.yml": "2e540e1aedf3eed34aa11629322af63bdb276ac8b6cb795c73ebea573a8570e0",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+    "src/private/webapis/dom/nodes/internals/NodeInternals.js": "2e8d491275a6c818e9acc3b7d4d49a76d90b1fb96b9c82a75ae18033f9a908ac",
+    "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js": "2420fa1425c70cd7d4c707f655dd8562024c0a3956a7cbebd760ab9ac01ccbda",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+  },
+  "nativeBuild": {
+    "host": {
+      "sha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "source": "addons/fabric_godot.dylib"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "buildRecordSha256": "778a05b044d8693998b274a323bf470756d5cb800e56918b5697c51ee9e55a55",
+    "sourcePin": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf",
+    "abiCertified": false
+  },
+  "regressions": {
+    "executedCommands": {
+      "matrix": {
+        "command": "npm run test:pointers:documents",
+        "exitCode": 0,
+        "logSha256": "fc1dbc9850fb4189d40c023f76749e8d2dbc8fe09a6141483de5e2a7d635b291"
+      },
+      "contracts": {
+        "command": "npm run test:contracts",
+        "exitCode": 0,
+        "logSha256": "57932d79936d9d48df78314de6cb9b5fab97e5b93b2873c5a9d30d2b965fd60f"
+      },
+      "static": {
+        "command": "npm run check:static",
+        "exitCode": 0,
+        "logSha256": "fec7897b34e234fe2d26b4e150999648b3b0067f90bce602cfff2bc51eb088cd"
+      },
+      "publication": {
+        "command": "npm run check:publication",
+        "exitCode": 0,
+        "logSha256": "b55c8cc8cf655582c02f15e0498cf95ee4344282cd8c6c76b638f9581550994b"
+      },
+      "sdk-pack": {
+        "command": "npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk-pointer-document",
+        "exitCode": 0,
+        "logSha256": "74ff3f00b624c30f5509aa5c943dc468be16400d8e02b0770d295d927542dc8f"
+      },
+      "sdk-verify": {
+        "command": "npm run sdk:native:verify -- --sdk build/native-sdk-pointer-document",
+        "exitCode": 0,
+        "logSha256": "d546d44b4114d0d4591fb027667786bfbe30333e99455d32050ef9c5fe6f1c1a"
+      },
+      "examples": {
+        "command": "npm run test:examples",
+        "exitCode": 0,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "consumer": {
+        "command": "npm run test:consumer",
+        "exitCode": 0,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapter-loader": {
+        "command": "npm run test:adapters:loader -- --sdk build/native-sdk-pointer-document --out build/pointer-document-adapter-loader",
+        "exitCode": 0,
+        "logSha256": "262b6dd0eb3c19fcf34f5fb9f00cc3976ec4570b51c21e61e272ef7242e578d5"
+      },
+      "adapter-runtime": {
+        "command": "npm run test:adapters:runtime -- --sdk build/native-sdk-pointer-document --out build/pointer-document-adapter-runtime",
+        "exitCode": 0,
+        "logSha256": "3897042de8e88059e88eeb589eabe0b121581eab5dc1f9241277cd690901d82a"
+      },
+      "pointer-interest": {
+        "command": "npm run test:pointers:interest",
+        "exitCode": 0,
+        "logSha256": "13489f73f4b5314dea35e0793bba07b224ff995de4873ef83912efa2f131a1cc"
+      },
+      "query-faults": {
+        "command": "npm run test:pointers:query-faults",
+        "exitCode": 0,
+        "logSha256": "90baddcfcd9257fd742e4898e4a7fbb5cb2ff9e0f41aa55473f18b0b811c5fbd"
+      },
+      "integrated": {
+        "command": "npm run test:events:integrated",
+        "exitCode": 0,
+        "logSha256": "2026a40327b08cd649aec8eee057573c6c6ff34e9f572a4968882e95b62d181e"
+      },
+      "processor": {
+        "command": "npm run test:pointers:processor",
+        "exitCode": 0,
+        "logSha256": "54c5bee8dd96dcd8c1e0bf5d2fed58580823dd4bdb2242375a3f7c89b4667045"
+      },
+      "geometry": {
+        "command": "npm run test:pointers:geometry",
+        "exitCode": 0,
+        "logSha256": "3e7a15a01ed14a519ba552fa79162618dea525eb246a35baa0279727796ec5e5"
+      },
+      "capture": {
+        "command": "node tests/pointer-document-native.test.mjs --interest=current --flag=enabled --capture",
+        "exitCode": 0,
+        "logSha256": "39d892f49b6f94ca716a486066176b32143df430a8a38f596b7d99f45c80c0fc"
+      }
+    },
+    "contracts": {
+      "node": 250,
+      "python": 13
+    },
+    "examples": {
+      "count": 22,
+      "checks": 2250
+    },
+    "consumer": {
+      "buildOwnershipChecks": 30,
+      "nativeChecks": 40
+    },
+    "nativeSDK": {
+      "packAndVerifyPassed": true,
+      "manifestSha256": "a973c34f3730f83f473848621190fec5b8897680997c6ade6a454093b3b2220e",
+      "receiptSha256": "0534730a6d782e0d7da120d82c12b3af81313bb7bb5d75d22bb45fa39730dd4e",
+      "abiCertified": false
+    },
+    "adapterLoader": {
+      "checks": 89,
+      "cases": 21,
+      "nativeVMExecuted": false
+    },
+    "adapterRuntime": {
+      "runs": 13,
+      "checks": 213
+    },
+    "pointerInterest": {
+      "originalChecks": 193,
+      "currentChecks": 233
+    },
+    "queryFaults": {
+      "headlessChecks": 186,
+      "sameSourceEarlierOldControlFailedChecks": 12
+    },
+    "nativeDispatch": {
+      "originalChecks": 181,
+      "integratedChecks": 206
+    },
+    "pointerProcessor": {
+      "tests": 2,
+      "passed": true
+    },
+    "pointerGeometry": {
+      "tests": 2,
+      "passed": true
+    }
+  },
+  "hosted": {
+    "thisSliceCI": "pending",
+    "previousFaultCI": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491",
+    "previousFaultCIScope": "b88708c: five jobs;186faultchecks/22pins/15RNinputs and193/230priorinterest. Does not certify this Document extension.",
+    "previousPages": "https://github.com/journey-studios/godot-fabric/actions/runs/37231095632",
+    "previousPagesDataCommit": "73d33daa1c18783d948253d0c8e89618efc91795",
+    "previousFullPublicAndLocalJSONVerified": true
+  },
+  "limitations": [
+    "Public flags remain disabled. All eight flag controls are fresh experimental Hermes configurations in Godot, not mobile export parity.",
+    "Only pointerdown native interest is extended; other pointer categories, full responder/PanResponder, coalescing and registered-null target contracts remain open.",
+    "Original enabled Document APIs need native dispatch alone; View/documentElement methods require both flags. Hidden methods are never borrowed.",
+    "Root query has one throw34 control with both flags. Root nonboolean/capture faults, internal-only root faults, arbitrary component getter errors, reentrancy and stop during query are not certified.",
+    "Component family/handle/stateNode/canonical/publicInstance resolution remains outside the query call catch.",
+    "No-ref purity is measured before and after the actual installed query. Original downstream dispatch may legitimately create the leaf public instance.",
+    "The current root-family guard is source-reviewed, but a nested RootNodeKind adversarial fixture is still absent.",
+    "Priority context restoration is proved; complete event priority mapping remains open.",
+    "Injected InputEventScreenTouch and local viewport captures do not certify hardware, mobile input, exported targets, performance, development renderer or full ABI compatibility.",
+    "glog initialization/destruction warnings can still appear."
+  ]
+}

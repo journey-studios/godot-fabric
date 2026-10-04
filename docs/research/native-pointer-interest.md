@@ -137,3 +137,9 @@ CI or a public capability release.
   matrix, public enablement, performance and broad responder/focus/Pressability regression
   acceptance remain separate work. A desktop injected-input proof must not be
   promoted to those claims.
+
+The later [Document/root evidence](../evidence/pointer-documents/README.md)
+extends native root interest and all four original flag configurations. Its
+current View-interest regression command produces 193/233 checks, including
+the new Document positive. The preceding 193/230 receipt and its source/CI
+hashes remain historical evidence for their original executed snapshot.

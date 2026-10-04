@@ -175,6 +175,18 @@ jobs:
             build/pointer-interest-original.log
             build/pointer-interest-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:documents
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-documents
+          path: |
+            build/pointer-document-original-*-report.json
+            build/pointer-document-current-*-report.json
+            build/pointer-document-comparison.json
+            build/pointer-document-original-*.log
+            build/pointer-document-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:pointers:query-faults
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

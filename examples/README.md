@@ -67,7 +67,8 @@ original/current native View `pointerdown` interest using original listener maps
 It has its own fixture and `npm run test:pointers:interest` command, outside the
 launcher catalog. Its [receipt](../docs/evidence/pointer-interest/README.md)
 records 193/230 headless and 260 current viewport checks; public flags stay off
-and document-only/other pointer categories remain open.
+and that snapshot leaves document-only/other pointer categories open. The later
+Document probe below extends root interest with its own receipt.
 
 | Pointerdown interest: initial | After listener-driven React updates |
 | --- | --- |
@@ -83,6 +84,20 @@ with visible diagnostics and explicit getter/reentrancy limits.
 | Before query faults | TouchStart updates React after lookup failure |
 | --- | --- |
 | [![Native query fault fixture before input](../docs/evidence/pointer-query-faults/initial.png)](pointer-query-fault/README.md) | [![Native query fault fixture after recovered React updates](../docs/evidence/pointer-query-faults/updated.png)](pointer-query-fault/README.md) |
+
+The [Document/root probe](pointer-document/README.md) is also outside the
+launcher catalog. `npm run test:pointers:documents` exercises eight independent
+original/current flag configurations. Original Document and documentElement
+Maps qualify native input through their current root family, with separate
+manual, Raw, React, membership, retirement and fault observations.
+
+| Before Document input | After one Document gesture |
+| --- | --- |
+| [![Native roots before Document-only interest](../docs/evidence/pointer-documents/initial.png)](pointer-document/README.md) | [![Document capture and bubble commit A=2 while B=0](../docs/evidence/pointer-documents/updated.png)](pointer-document/README.md) |
+
+These are actual 760×220 Godot readbacks with 20 pixel assertions. The
+[receipt](../docs/evidence/pointer-documents/README.md) distinguishes the captured
+A=0/B=0 → A=2/B=0 gesture from later controls and remaining event gaps.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

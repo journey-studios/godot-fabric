@@ -100,8 +100,9 @@ qualify native emission in an internal opt-in. Capture/bubble, once, abort,
 removal and flattened ancestry retain original listener behavior. Its
 [evidence](docs/evidence/pointer-interest/README.md) records 193 original / 230
 current headless checks and 260 current viewport checks with two real captures.
-Document-only interest, other pointer categories, hardware/mobile and public
-flag enablement remain open; the default helper still installs no query.
+That pinned snapshot leaves Document-only interest open. The later root probe
+below extends it; other pointer categories, hardware/mobile and public flag
+enablement remain open. The default helper still installs no query.
 
 
 The [query-fault example](examples/pointer-query-fault/README.md) exercises a
@@ -110,6 +111,15 @@ React update. The identical previous-host fixture has 12 normative failures;
 the corrected host passes 186 headless and 204 viewport checks while retaining
 four deliberate diagnostics. [Evidence and boundaries](docs/evidence/pointer-query-faults/README.md)
 separate lookup recovery, contact cleanup and remaining getter/reentrancy gaps.
+
+The [Document/root example](examples/pointer-document/README.md) lets original
+Document and documentElement listeners qualify descendant native `pointerdown`.
+The SDK reads their existing RN listener Maps through the actual current root
+handle, preserving original flags, callbacks and React batching. Each flag
+combination has an independent Hermes runtime. [Its evidence](docs/evidence/pointer-documents/README.md)
+separates the original SDK, the previous native host and the corrected host.
+Public flags remain disabled; arbitrary getter/reentrant faults and complete
+pointer/responder contracts remain open.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -258,6 +268,15 @@ The 680×160 frames have 16 exact pixel assertions. Yellow counters change from
 A=0/B=0 to A=3/B=1; the [receipt](docs/evidence/pointer-query-faults/README.md)
 records the four faults and later retirement/stop separately.
 
+| Document interest: initial | One descendant gesture updates its Document's state |
+| --- | --- |
+| [![Two native roots before Document listeners receive input](docs/evidence/pointer-documents/initial.png)](examples/pointer-document/README.md) | [![Document capture and bubble update A in one React commit while B remains unchanged](docs/evidence/pointer-documents/updated.png)](examples/pointer-document/README.md) |
+
+The 760×220 frames have 20 exact pixel assertions. A changes from 0 to 2 after
+its original Document capture/bubble callbacks, while B remains 0. The
+[receipt](docs/evidence/pointer-documents/README.md) keeps later capture-only,
+isolation, retirement and root-fault controls separate from that captured frame.
+
 ## Write React
 
 ### Shared application
@@ -349,6 +368,7 @@ npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
 npm run test:pointers:geometry          # pinned RN counterexamples and real Hermes binding
 npm run test:pointers:interest          # original Map query and native View pointerdown interest
+npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
 npm run test:transforms:guards           # rejected styles, invalid embedding input and cleanup
 npm run check:static
 npm run check:publication

@@ -15,7 +15,7 @@ const labels = react => react.events.map(row => row.label);
 const cases = {
   bubble: ["bubble"], capture: ["capture"], both: ["capture", "bubble"], duplicate: ["duplicate"], once: ["once"],
   none: [], "wrong-type": [], "abort-pre": [], "abort-after": [], "remove-final": [], "remove-peer": ["remove-peer"],
-  flat: ["flat-capture", "flat-bubble"], mixed: ["jsx", "mixed-imperative"], document: [],
+  flat: ["flat-capture", "flat-bubble"], mixed: ["jsx", "mixed-imperative"], document: ["document-only"],
 };
 const manualCases = {...cases, "wrong-type": ["wrong-type"], "abort-after": ["abort-after"],
   "remove-final": ["remove-final"], document: ["document-only"]};
@@ -34,7 +34,7 @@ function verifyNativeDelivery(react, expected, label) {
   }
   assert.ok(react.events.every(row => row.trusted && row.originalSynthetic && row.currentMatches && row.thisMatches &&
     row.targetMatches && row.globalEventMatches && row.type === "pointerdown"), label + " exact trusted original identities");
-  assert.deepEqual(react.events.map(row => row.phase), expected.map(value => value === "flat-capture" ? 1 : value === "flat-bubble" ? 3 : 2), label + " exact event phases");
+  assert.deepEqual(react.events.map(row => row.phase), expected.map(value => value === "flat-capture" ? 1 : ["flat-bubble", "document-only"].includes(value) ? 3 : 2), label + " exact event phases");
   assert.deepEqual(react.raw.map(row => row.channel), ["typed", "star"], label + " one Raw delivery per channel");
   assert.equal(react.raw[0].payloadId, react.raw[1].payloadId, label + " same Raw payload");
   assert.ok(react.raw[1].sequence < react.events[0].sequence, label + " Raw precedes both listener paths");
@@ -72,7 +72,7 @@ test("actual native pointerdown consults original View EventTarget Maps without 
     assert.ok(report.checks.length >= 100, "Probe must execute the full native membership and retirement matrix");
     assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length, "Every executed check has a unique evidence name");
     assert.deepEqual(report.scope, {actualNativeInput: true, experimentalNativeDispatch: true, originalFlagsEnabled: true,
-      interestType: "View-pointerdown", documentInterestResolved: false, otherPointerTypesResolved: false,
+      interestType: "View-pointerdown", documentInterestResolved: interestMode === "current", otherPointerTypesResolved: false,
       listenerRegistryMirrored: false, publicDefaultEnabled: false, hardwareCertified: false});
     assert.equal(report.stages.initialApplication.pointerListenerQueryInstalled, interestMode === "current");
     for (const name of ["A", "B"]) {
@@ -118,9 +118,9 @@ test("actual native pointerdown consults original View EventTarget Maps without 
       assert.equal(captureOnly.capture, true);
       assert.equal(captureOnly.bubble, false);
       const documentOnly = report.stages["case/document/configuration"];
-      assert.equal(documentOnly.documentQueries.bubble, true, "The doc-only negative has an actual installed original listener");
+      assert.equal(documentOnly.documentQueries.bubble, true, "The document-only case has an actual installed original listener");
       assert.ok(!documentOnly.queries.bubble && !documentOnly.queries.capture && !documentOnly.flatQueries.bubble && !documentOnly.flatQueries.capture,
-        "No View helper listener hides the document-only native gap");
+        "No View helper listener supplies the document-only native interest");
     }
     verifyNativeDelivery(report.stages.mixedAfterRemoval, ["jsx"], interestMode + "/JSX-after-imperative-removal");
     assert.ok(report.stages.rerender.sameRef && report.stages.rerender.sameTag);

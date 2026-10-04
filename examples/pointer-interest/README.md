@@ -98,3 +98,9 @@ has the same filter behavior. The full flag matrix, performance, public capabili
 enablement and complete event parity remain separate gates. See the
 [query design and acceptance boundaries](../../docs/research/native-pointer-interest.md)
 for the full scope.
+
+The later [Document/root evidence](../../docs/evidence/pointer-documents/README.md)
+extends native root interest and all four original flag configurations. Its
+current View-interest regression command produces 193/233 checks, including
+the new Document positive. The preceding 193/230 receipt and its source/CI
+hashes remain historical evidence for their original executed snapshot.

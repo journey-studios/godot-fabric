@@ -913,10 +913,58 @@ captures remain local; the run does not cover the subsequent Document extension.
 
 The catch excludes family/handle/public-instance resolution. Getter exceptions,
 reentrancy, stop during query and complete queue-fault behavior remain open.
-Document/documentElement and all flag combinations are next, followed by other
-pointer events/responders. Public flags stay off. Hardware/mobile/performance,
+Document/documentElement and the four flag combinations have a later receipt
+below; other pointer events/responders remain next. Public flags stay off.
+Hardware/mobile/performance,
 full contracts/dependencies and ABI certification remain pending. No new complete
 checkpoint, GF, decision, weight or denominator changes.
+
+### Document/root native interest and all four flags (2026-10-04)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[Document/root receipt](docs/evidence/pointer-documents/README.md) extends the
+opt-in query to the actual current root family and its original specialized
+handle. Existing RN documentElement/owner Document accessors read original Maps;
+no generic lazy ref lookup, mirror, ViewProps mutation or public API is added.
+Document methods and the installer follow native dispatch alone; View and
+documentElement retain the original both-flags gate. Public flags remain off.
+
+Eight fresh Hermes flag/SDK lanes pass **2,723 checks**: original 336/336/338/338,
+current 336/336/340/363. The identical current bundles on the previous native host
+retain **142 normative failures** (279/340 and 282/363 in the dispatch-on lanes).
+All 18 original RN inputs and bundle bytes match; only C++ differs among 14
+producers. The curated receipt adds 25 source/configuration pins. Native capture
+passes **385/385**, including 20 exact pixels/two 760×220 saves: original Document
+capture+bubble commits A=2/B=0 from A=0/B=0 in one renderer batch.
+
+Capture-only registrations independently prove actual root offset34=false
+before offset35=true, with original manual positives and gated-method negatives.
+A-none/B-doc proves no Raw/callbacks or B state/contact mutation on A input,
+followed by a live B positive. Original identities, phases, Raw membership,
+functional updates/one commit, once/abort/removal, rerender, held-root retirement,
+retained old objects, remount and balanced stop have executed observations.
+No-ref purity is the real canonical slot before/after query; lazyHelperCalled
+is an annotation, not an independent call counter. A downstream original
+dispatcher may create the public ref legitimately.
+
+One root throw34 with both flags preserves same-batch TouchStart/Raw/React and
+one retained diagnostic through Cancel/recovery/stop. Root nonboolean/capture
+faults, dispatch-only faults, resolver getters and reentrancy remain open;
+component getters stay outside the native call catch. A nested-RootNodeKind
+adversarial fixture and simultaneously held sibling retirement remain pending.
+
+Host regressions pass 250 Node/13 Python contracts, static analysis,
+22 examples/2,250 checks, consumer 30/40, fresh SDK pack/verify, loader 89/21,
+13 adapters/213, updated interest 193/233, query faults 186, integration181/206,
+and portable processor/geometry gates. New CI matrix/artifacts are configured;
+hosted execution of this slice remains pending. Previous b88708c fault CI passed
+five jobs; Pages 37231095632 published 73d33da and its full public/local JSON was
+verified. Those runs do not certify this extension. New publication is separate.
+
+No new checkpoint, GF acceptance, dependency, decision, weight or denominator
+closes. Other pointer categories and responder/PanResponder contracts are next,
+with complete priorities, dev renderer, performance, hardware/mobile/export
+acceptance still open. Scope remains a verified root-interest slice.
 
 ## M1 — Complete the native UI tree
 

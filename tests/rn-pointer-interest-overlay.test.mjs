@@ -208,15 +208,22 @@ test("the relocated opt-in helper uses exact SDK EventTarget and flags while pre
   const helper = path.join(platformRoot, "pointer-listener-query.js");
   const eventTargetRelative = "src/private/webapis/dom/events/EventTarget.js";
   const flagsRelative = "src/private/featureflags/ReactNativeFeatureFlags.js";
+  const ownerRelative = "src/private/webapis/dom/nodes/internals/NodeInternals.js";
+  const rootHandleRelative = "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js";
   const eventTarget = await realpath(path.join(rnRoot, eventTargetRelative));
   const flags = await realpath(path.join(rnRoot, flagsRelative));
+  const owner = await realpath(path.join(rnRoot, ownerRelative));
+  const rootHandle = await realpath(path.join(rnRoot, rootHandleRelative));
   const sourceBefore = await readFile(eventTarget, "utf8");
   const helperBefore = await readFile(helper, "utf8");
   const neighborRoot = path.join(directory, "addon", "node_modules", "react-native");
   for (const [relative, contents] of [[eventTargetRelative,
     'export function hasPointerDownListenerForGodot() { return "neighbor-stole-pointer-query"; }'],
     [flagsRelative, 'export function enableImperativeEvents() { return "neighbor-stole-flags"; }\n' +
-      'export function enableNativeEventTargetEventDispatching() { return true; }']]) {
+      'export function enableNativeEventTargetEventDispatching() { return true; }'],
+    [ownerRelative, 'export function getOwnerDocument() { throw Error("neighbor-stole-owner"); }'],
+    [rootHandleRelative, 'export function isReactNativeDocumentElementInstanceHandle() { throw Error("neighbor-stole-root-handle"); }\n' +
+      'export function getPublicInstanceFromReactNativeDocumentElementInstanceHandle() { return null; }']]) {
     await mkdir(path.dirname(path.join(neighborRoot, relative)), {recursive: true});
     await writeFile(path.join(neighborRoot, relative), contents);
   }
@@ -248,14 +255,16 @@ test("the relocated opt-in helper uses exact SDK EventTarget and flags while pre
       {pointerInterestMode: "current", nativeDispatchMode: "experimental"})]});
   const entries = absoluteInputs(result, directory), inputs = entries.map(([filename]) => filename);
   assert.ok(inputs.includes(helper), "the actual relocated SDK helper must enter the bundle");
-  for (const required of [eventTarget, flags])
+  for (const required of [eventTarget, flags, owner, rootHandle])
     assert.equal(inputs.filter(filename => filename === required).length, 1,
       "each exact SDK RN module must enter once");
   const helperImports = entries.find(([filename]) => filename === helper)[1].imports
     .map(entry => path.resolve(directory, entry.path));
   assert.ok(helperImports.includes(eventTarget), "the helper must directly import exact SDK EventTarget");
   assert.ok(helperImports.includes(flags), "the helper must directly import exact SDK flags");
-  for (const relative of [eventTargetRelative, flagsRelative])
+  assert.ok(helperImports.includes(owner), "the root query must directly import the original owner slot reader");
+  assert.ok(helperImports.includes(rootHandle), "the root query must directly import the specialized original handle reader");
+  for (const relative of [eventTargetRelative, flagsRelative, ownerRelative, rootHandleRelative])
     assert.ok(!inputs.includes(path.join(neighborRoot, relative)), "physically resolvable RN neighbors cannot steal SDK imports");
   assert.ok(inputs.includes(consumer), "the project's ordinary dependency must remain project-owned");
   assert.ok(!inputs.includes(sdkConsumer));

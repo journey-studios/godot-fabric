@@ -64,11 +64,11 @@ func verify_down(name: String, label: String, expected: Array) -> Dictionary:
   if not expected.is_empty():
     check(value.events.all(func(row: Dictionary) -> bool: return row.name == name and row.trusted and row.originalSynthetic and row.currentMatches and row.thisMatches and row.targetMatches and row.globalEventMatches and row.type == "pointerdown"),
       label + "/Every native callback uses trusted original events and exact public identities")
-    check(value.events.all(func(row: Dictionary) -> bool: return row.phase == (1 if row.label == "flat-capture" else 3 if row.label == "flat-bubble" else 2)),
+    check(value.events.all(func(row: Dictionary) -> bool: return row.phase == (1 if row.label == "flat-capture" else 3 if row.label in ["flat-bubble", "document-only"] else 2)),
       label + "/Capture and bubble preserve exact ancestor or target event phases")
     check(value.raw.size() == 2 and value.raw[0].channel == "typed" and value.raw[1].channel == "star" and value.raw[0].payloadId == value.raw[1].payloadId and value.events.all(func(row: Dictionary) -> bool: return row.payloadId == value.raw[0].payloadId and row.nativeTarget == value.raw[0].target and row.pointerId == value.raw[0].pointerId and row.timeStamp == row.nativeTimeStamp and row.timeStamp == value.raw[0].timeStamp),
       label + "/Raw typed and star channels deliver once before callbacks with the identical native payload and timestamp")
-    check(value.raw[1].sequence < value.events[0].sequence and value.cleanup.size() == expected.size() and value.cleanup.all(func(row: Dictionary) -> bool: return row.currentTargetNull and row.phase == 0 and row.pathEmpty and row.originalEvent),
+    check(value.raw.size() == 2 and value.events.size() == expected.size() and value.raw[1].sequence < value.events[0].sequence and value.cleanup.size() == expected.size() and value.cleanup.all(func(row: Dictionary) -> bool: return row.currentTargetNull and row.phase == 0 and row.pathEmpty and row.originalEvent),
       label + "/Native dispatch completes original cleanup after one Raw delivery")
   else:
     check(value.raw.is_empty() and value.cleanup.is_empty(), label + "/Filtered pointerdown produces neither Raw down nor synthetic callbacks")
@@ -192,7 +192,7 @@ func run_probe() -> void:
     ["once", "only", ["once"], ["once"]], ["none", "only", [], []], ["wrong-type", "only", [], ["wrong-type"]],
     ["abort-pre", "only", [], []], ["abort-after", "only", [], ["abort-after"]], ["remove-final", "only", [], ["remove-final"]],
     ["remove-peer", "only", ["remove-peer"], ["remove-peer"]], ["flat", "child", ["flat-capture", "flat-bubble"], ["flat-capture", "flat-bubble"]],
-    ["mixed", "mixed", ["jsx", "mixed-imperative"], ["jsx", "mixed-imperative"]], ["document", "only", [], ["document-only"]]]
+    ["mixed", "mixed", ["jsx", "mixed-imperative"], ["jsx", "mixed-imperative"]], ["document", "only", ["document-only"], ["document-only"]]]
   for entry: Array in cases:
     await run_case(entry[0], entry[1], entry[2], entry[3])
   await capture_frame("pointer-interest-" + interest_mode + "-after.png")
@@ -303,7 +303,7 @@ func run_probe() -> void:
   var report := {"scenario": "original-EventTarget-pointerdown-interest", "interestMode": interest_mode, "reactNative": "0.87.1",
     "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages, "afterStop": stopped, "captures": captures,
     "scope": {"actualNativeInput": true, "experimentalNativeDispatch": true, "originalFlagsEnabled": true, "interestType": "View-pointerdown",
-      "documentInterestResolved": false, "otherPointerTypesResolved": false, "listenerRegistryMirrored": false, "publicDefaultEnabled": false, "hardwareCertified": false}}
+      "documentInterestResolved": interest_mode == "current", "otherPointerTypesResolved": false, "listenerRegistryMirrored": false, "publicDefaultEnabled": false, "hardwareCertified": false}}
   var file := FileAccess.open("res://build/pointer-interest-report.json", FileAccess.WRITE)
   if not check(file != null, "Pointer-interest report can be saved"):
     quit(1)

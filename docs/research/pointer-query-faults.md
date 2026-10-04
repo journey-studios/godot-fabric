@@ -98,3 +98,9 @@ cover this correction or certify mobile execution.
   renderer behavior and public capability enablement remain unverified here.
   This is a Godot host correction, not evidence that every RN platform shares
   the reproduced batch behavior.
+
+The later [Document/root evidence](../evidence/pointer-documents/README.md)
+extends native root interest and all four original flag configurations. Its
+current View-interest regression command produces 193/233 checks, including
+the new Document positive. The preceding 193/230 receipt and its source/CI
+hashes remain historical evidence for their original executed snapshot.
