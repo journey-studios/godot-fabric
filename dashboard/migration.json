@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Batch EventTarget nativo validado; próximos interesse imperativo de pointer e matriz de flags"
   },
-  "updatedAt": "2026-10-04T18:01:42.451528+00:00",
+  "updatedAt": "2026-10-04T18:06:55.312Z",
   "source": {
-    "commit": "897b127d0e7d2791515daadd25ec95843f7d84bc",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/897b127d0e7d2791515daadd25ec95843f7d84bc/ROADMAP.md",
-    "scope": "Base897b127; nova implementação executada na árvore local, pin pós-commit pendente. Dispatcher nativo opt-in181/206 e236/28pixels; duas correções de lifetime, contratos235/13, consumidor30/40,22 exemplos2250, SDK e13 adapters213. CI nova pendente; CI de tags647 auditada. Somente primeiro checkpoint GF-06 concluído; nenhum GF completo.",
+    "commit": "22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/ROADMAP.md",
+    "scope": "Implementação 22770b4: dispatcher nativo opt-in com 181/206 checks headless e 236/28 pixels; 16 pins executados verificados no commit. Duas correções de lifetime; contratos 235/13, consumidor 30/40, 22 exemplos/2250, SDK e 13 adapters/213. CI nova pendente; CI anterior de tags 647 auditada. Somente a primeira fatia GF-06 conclui checkpoint; nenhum GF completo.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -289,7 +289,7 @@
             },
             {
               "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
             },
             {
               "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
@@ -340,7 +340,7 @@
           "evidence": [
             {
               "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
             }
           ]
         },
@@ -411,7 +411,7 @@
             },
             {
               "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
             }
           ]
         },
@@ -530,7 +530,7 @@
             },
             {
               "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
             },
             {
               "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
@@ -852,7 +852,7 @@
             },
             {
               "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
             },
             {
               "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
@@ -2658,6 +2658,19 @@
   ],
   "activity": [
     {
+      "id": "event-target-integrated-source-pin-22770b4",
+      "at": "2026-10-04T18:06:55.312Z",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Os 16 pins de código/configuração executados foram confrontados com o commit 22770b4. Evidências locais e capturas estão fixadas em links imutáveis; consumidor e SDK conservam a identidade da árvore executada antes do commit. A nova CI e a publicação Pages ainda aguardam execução.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e"
+    },
+    {
       "id": "event-target-integrated-native-local-20261004",
       "at": "2026-10-04T18:01:42.451528+00:00",
       "taskIds": [
@@ -2668,7 +2681,7 @@
         "GF-13"
       ],
       "message": "181/206headless e236viewport/28pixels comprovam input EventTarget dentro do batch original. Dois updates funcionais geram um commit. Controle anterior falha no registro e intermediário crasha em Remove; fixes passam e preservam resize/free17. Contratos235/13, consumidor30/40,22examples2250 e13adapters213 passam. GF-06 inicia; somente sua primeira fatia host-validada conclui checkpoint. Pesos/denominador preservados; nenhum GF completo, nova CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/event-dispatch-integrated/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
     },
     {
       "id": "touch-tag-hosted-897b127-audit",

@@ -2,9 +2,10 @@
   "schemaVersion": 1,
   "scenario": "native-event-target-renderer-integration",
   "implementation": {
-    "commit": null,
+    "commit": "22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e",
     "executedBeforeCommit": true,
-    "sourcePinsVerifiedAgainstCommit": false
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourcePinCount": 16
   },
   "environment": {
     "platform": "macOS arm64",
