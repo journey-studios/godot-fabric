@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Ancestralidade EventTarget corrigida; próximos transporte nativo e contratos de responder"
   },
-  "updatedAt": "2026-10-04T15:40:14.285899+00:00",
+  "updatedAt": "2026-10-04T15:41:13.041942+00:00",
   "source": {
     "commit": "53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4",
     "url": "https://github.com/journey-studios/godot-fabric/blob/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4/ROADMAP.md",
@@ -494,6 +494,10 @@
             {
               "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+            },
+            {
+              "label": "Ancestralidade: 102checks/variante, NativeDOM removals/root/remount e listeners pré-reorder; source pin conferido",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dfdaee72a8c9b2aff64d43b52ba051bff5a659bf/docs/evidence/event-target-ancestry/README.md"
             }
           ]
         },
@@ -2600,6 +2604,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-current-ancestry-receipt-links-dfdaee7",
+      "at": "2026-10-04T15:41:13.041942+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Link fixado no recibo pós-pin dfdaee7, que identifica implementação53eae43 e10hashes executados. Mantém18checkpoints/156 e todos os GF completos pendentes; transporte nativo e CI desta correção continuam abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dfdaee72a8c9b2aff64d43b52ba051bff5a659bf/docs/evidence/event-target-ancestry/README.md"
+    },
     {
       "id": "event-target-current-ancestry-pinned-53eae43",
       "at": "2026-10-04T15:40:14.285899+00:00",
