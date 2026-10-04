@@ -156,6 +156,12 @@ Real NativeDOM removals, root retirement/remount and preserved listeners are
 separate from a synchronous mutable-parent graph. Shared bundling fixes the
 cache; public EventTarget flags and native delivery remain pending.
 
+The [native touch-tag correction](event-dispatch/README.md) executes 647 identical
+checks per renderer variant. The original lookup fails two inside-contact
+retention assertions; the corrected lookup passes all. Actual Godot input in
+the legacy renderer is separate from explicit calls to the original experimental
+dispatcher, whose four responder differences remain open. Public flags stay off.
+
 The later [GF-05 runtime example](runtime/README.md) adds three real Viewport
 captures with explanations of starting, pausing and completing a React clock.
 Its local validation and remaining gaps are recorded separately from this

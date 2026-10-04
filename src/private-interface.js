@@ -79,6 +79,9 @@ export const createPublicTextInstance = PublicInstances.createPublicTextInstance
 export const getNativeTagFromPublicInstance = PublicInstances.getNativeTagFromPublicInstance;
 export const getNodeFromPublicInstance = PublicInstances.getNodeFromPublicInstance;
 export const getInternalInstanceHandleFromPublicInstance = PublicInstances.getInternalInstanceHandleFromPublicInstance;
+export function getInternalInstanceHandleFromNativeTag(tag) {
+  return godotInstanceHandle(tag);
+}
 export function legacySendAccessibilityEvent() {
   throw new Error("Accessibility is not implemented in this validation");
 }

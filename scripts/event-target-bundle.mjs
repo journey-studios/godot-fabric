@@ -9,6 +9,7 @@ import {build} from "esbuild";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 import {godotExtensions} from "../sdk/toolchain/platform-resolution.mjs";
 import {renderEventTargetParentOverlay} from "../sdk/toolchain/rn-event-target-overlay.mjs";
+import {renderRendererTagOverlay} from "../sdk/toolchain/rn-renderer-tag-overlay.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(import.meta.url);
@@ -33,7 +34,7 @@ const upstreamFiles = [
 
 // Each output is a separate Hermes runtime's immutable flag configuration.
 // This helper never writes build/app.js and performs no native build or run.
-async function bundleProbe({entryPoint, modes, prefix, parentMode, sources}) {
+async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", sources, extraUpstreamFiles = []}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundles = {};
@@ -43,7 +44,7 @@ async function bundleProbe({entryPoint, modes, prefix, parentMode, sources}) {
       outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
       define: {"process.env.NODE_ENV": '"production"', __DEV__: "false", __EVENT_TARGET_PROBE_MODE__: JSON.stringify(mode)},
       mainFields: ["main"], resolveExtensions: godotExtensions,
-      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode})]});
+      plugins: [platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id), {eventTargetParentMode: parentMode, rendererTagMode})]});
     const inputs = Object.keys(bundled.metafile.inputs);
     for (const file of ["Libraries/Renderer/implementations/ReactFabric-prod.js", "src/private/webapis/dom/events/EventTarget.js",
       "src/private/webapis/dom/nodes/ReactNativeElement.js"])
@@ -58,11 +59,16 @@ async function bundleProbe({entryPoint, modes, prefix, parentMode, sources}) {
   const rnRoot = path.dirname(requireSdk.resolve("react-native/package.json"));
   const parentModule = "src/private/webapis/dom/events/internals/EventTargetInternals.js";
   const parentSource = await readFile(path.join(rnRoot, parentModule), "utf8");
-  const receipt = {format: "godot-fabric.event-target-probe-bundles/v1", parentMode, bundles,
+  const rendererModule = "Libraries/Renderer/implementations/ReactFabric-prod.js";
+  const rendererSource = await readFile(path.join(rnRoot, rendererModule), "utf8");
+  const receipt = {format: "godot-fabric.event-target-probe-bundles/v1", parentMode, rendererTagMode, bundles,
     parentOverlay: {module: parentModule, originalSha256: digest(parentSource),
       generatedSourceSha256: digest(renderEventTargetParentOverlay(parentSource, parentMode))},
+    rendererTagOverlay: {module: rendererModule, originalSha256: digest(rendererSource),
+      generatedSourceSha256: digest(renderRendererTagOverlay(rendererSource, rendererTagMode))},
     sources: Object.fromEntries(await Promise.all(sources.map(async file => [file, digest(await readFile(path.join(root, file)))]))),
-    originalReactNativeSources: Object.fromEntries(await Promise.all(upstreamFiles.map(async file => [file, digest(await readFile(path.join(rnRoot, file)))])))};
+    originalReactNativeSources: Object.fromEntries(await Promise.all([...upstreamFiles, ...extraUpstreamFiles]
+      .map(async file => [file, digest(await readFile(path.join(rnRoot, file)))])))};
   await writeFile(path.join(output, prefix + "-bundles.json"), JSON.stringify(receipt, null, 2) + "\n");
   return receipt;
 }
@@ -78,6 +84,19 @@ export async function bundleEventTargetAncestryProbe({parentMode = "current"} = 
       "tests/event-target-ancestry-fixture.jsx", "tests/event-target-ancestry-probe.gd",
       "tests/event-target-ancestry-native.test.mjs", "scripts/event-target-bundle.mjs",
       "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-event-target-overlay.mjs"]});
+}
+
+export async function bundleNativeEventDispatchProbe({rendererTagMode = "current"} = {}) {
+  return bundleProbe({entryPoint: "tests/event-dispatch-fixture.jsx", modes: ["enabled", "disabled"],
+    prefix: "event-dispatch", parentMode: "current", rendererTagMode, sources: ["tests/event-target-bootstrap.js",
+      "tests/event-dispatch-fixture.jsx", "tests/event-dispatch-probe.gd",
+      "tests/event-dispatch-native.test.mjs", "scripts/event-target-bundle.mjs",
+      "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-event-target-overlay.mjs",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs", "src/private-interface.js", "native/application_runtime.cpp"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/ResponderEvent.js",
+      "src/private/renderer/events/LegacySyntheticEvent.js", "src/private/renderer/events/ReactNativeEventTypeMapping.js",
+      "src/private/renderer/events/ResponderTouchHistoryStore.js"]});
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

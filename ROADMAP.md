@@ -768,6 +768,41 @@ pins. All five jobs passed. Performance, hardware/mobile
 and the full GF-08 contract are pending. No checkpoint, dependency,
 architectural decision, weight or denominator is closed.
 
+### Native touch-tag resolution and dispatcher comparison (2026-10-04)
+
+GF-05/GF-08/GF-13 remain **In progress**. Ending one of two contacts inside a
+responder exposed a production integration bug: the pinned compiled renderer
+treated Godot's numeric touch target as a Fiber, so its descendant check released
+the owner prematurely. Shared bundling now inserts a hash-guarded numeric-only
+lookup through the runtime UIManager/current committed tree and original weak
+instance handle. Invalid/removed tags return null; canonical/Fiber inputs retain
+their original path. The official Godot engine is unchanged; the addon is rebuilt.
+
+The [executed comparison](docs/evidence/event-dispatch/README.md) runs **647
+identical checks per variant**. Original lookup fails exactly two normative
+inside-contact retention checks; corrected lookup passes all 647 on the same
+native host. Explicit calls to the original experimental dispatcher in one
+two-root runtime are compared with actual Godot touch input through the compiled
+legacy path in a separate two-root runtime. Normal trusted JSX/imperative
+capture/bubble, nested globals, deliberate faults and recovery are exercised
+separately from original responder-event semantics. Pressability now verifies
+retained pressed state, a moving surviving contact and one final activation.
+
+Contracts227/13 Python, 22 examples/2250 headless, Pressability47, independent
+consumer30/40 and original EventTarget/ancestry/focus/pointer gates pass. Fresh
+native SDK pack/verify and addon provisioning pass; stale native source/binary
+combinations are rejected before output creation and after copying. Thirteen
+composition guards complement 14 existing SDK tests. Static/publication scans
+pass; hosted CI for this slice is pending.
+
+Four experimental responder differences remain open: unrelated contact retention,
+should-set error currentTarget cleanup, truthy should-set acceptance and undefined
+termination transfer. Public EventTarget flags remain off. Native imperative
+interest, batched dispatcher integration, complete responder/PanResponder,
+reentrant teardown, lookup performance, dev renderer and hardware/mobile parity
+remain pending. No new complete checkpoint, GF or architectural decision closes;
+the dashboard denominator and weights are preserved.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

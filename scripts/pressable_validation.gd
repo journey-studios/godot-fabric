@@ -73,8 +73,6 @@ func _ready() -> void:
   await get_tree().create_timer(0.15).timeout
   verify(count_events("basic", "Press") == 0 and count_events("basic", "PressOut") == 1 and data().pointer.activeTouches == 0 and data().pointer.responder == 0, "Canceled touch terminates upstream Pressability without press")
   clear_events()
-  # Contact transport is verified here. RN 0.87.1 releases Pressability on the
-  # first contact end; this does not certify a last-finger or multi-gesture policy.
   await mouse("start", at("basic"))
   surface.remove_meta("validation_input_device")
   surface.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
@@ -87,13 +85,22 @@ func _ready() -> void:
   clear_events()
   await touch("start", at("basic"), 2)
   await touch("start", at("basic") + Vector2(4, 0), 3)
+  verify(count_events("basic", "PressIn") == 1 and count_events("basic", "Press") == 0 and data().pointer.activeTouches == 2 and data().pointer.responder == node("basic").tag, "Two descendant contacts share one active Pressability responder")
   await touch("move", at("basic") + Vector2(5, 0), 3)
   verify(last_event("basic", "PressMove").identifier == 4 and last_event("basic", "PressMove").touches == 2, "Touch drag keeps identifier and both active contacts")
   await touch("end", at("basic"), 2)
-  verify(data().pointer.activeTouches == 1 and last_event("basic", "Press").touches == 1, "Ending one contact preserves the other contact in Fabric touch payload")
+  # Pressability reacts to responder release. Ending one of its descendant
+  # contacts must not release the responder while another descendant remains.
+  verify(count_events("basic", "Press") == 0 and count_events("basic", "PressOut") == 0 and data().pointer.activeTouches == 1 and data().pointer.responder == node("basic").tag, "First descendant contact end retains the responder without press or deactivation")
+  verify(node("basic-state").nativeText.contains("pressionado") and node("basic").opacity == 0.5, "Pressed React render state remains active while its second descendant contact survives")
+  await touch("move", at("basic") + Vector2(6, 0), 3)
+  var remaining_move := last_event("basic", "PressMove")
+  verify(count_events("basic", "PressMove") == 2 and remaining_move.identifier == 4 and remaining_move.touches == 1 and remaining_move.changedTouches == 1 and remaining_move.currentTarget == node("basic").tag and remaining_move.timestamp > 0, "Remaining descendant still moves the responder with its original identifier and one-contact Fabric payload")
   await touch("end", at("basic"), 3)
   await get_tree().create_timer(0.15).timeout
-  verify(count_events("basic", "Press") == 1 and data().pointer.activeTouches == 0, "Upstream Pressability produces a single press across multiple contacts")
+  verify(count_events("basic", "PressIn") == 1 and count_events("basic", "Press") == 1 and count_events("basic", "PressOut") == 1 and data().pointer.activeTouches == 0 and data().pointer.responder == 0, "Last descendant contact releases one responder with exactly one activation press and deactivation")
+  var final_press := last_event("basic", "Press")
+  verify(final_press.identifier == 4 and final_press.touches == 0 and final_press.changedTouches == 1 and final_press.currentTarget == node("basic").tag and final_press.timestamp > 0, "Final press carries the last released descendant and an empty remaining-contact array")
 
   clear_events()
   await click_pressable("inner")

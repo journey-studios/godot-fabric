@@ -9,7 +9,10 @@ or certify complete experimental RN APIs.
 The [current-ancestry correction](../evidence/event-target-ancestry/README.md)
 now passes 102 checks in each original/corrected variant. It fixes the third
 gap in shared bundling while preserving current-dispatch snapshots; production
-flags remain off. Native delivery and the dispatcher proposal remain pending.
+flags remain off. Native EventTarget delivery and the dispatcher proposal remain
+pending. A subsequent [executed dispatcher comparison](../evidence/event-dispatch/README.md)
+runs 647 identical checks per renderer variant and corrects a separate numeric
+touch-tag lookup bug in the production legacy path.
 
 ## Three independent gaps
 
@@ -80,26 +83,49 @@ imperative methods as generally supported.
 
 ## Dispatcher integration boundaries still requiring runtime controls
 
-Inspection of the shipped `ReactNativeResponder` adds three requirements for
-the future dispatcher experiment. These are source findings, not executed
-responder parity results in either ancestry fixture:
+The dispatcher comparison now executes these boundaries separately from the
+ancestry fixture. The enabled runtime calls the original dispatcher explicitly;
+actual Godot touch input in the disabled runtime uses the compiled legacy path.
+The native EventTarget queue and batching contract is still pending:
 
 - The should-set handler calls have no protected currentTarget cleanup when a
   handler throws. `processResponderEvent` is called before `dispatchNativeEvent`'s
-  normal-event try/finally. Exercise retained error events and the next gesture
-  before choosing any correction.
+  normal-event try/finally. A retained original should-set error event confirms
+  currentTarget is not cleared; normal touch-start delivery is aborted. Balancing
+  the contact and starting a new gesture recovers. The cleanup gap remains open.
 - Responder events are invoked directly; the normal native event is separately
   dispatched through `dispatchTrustedEvent`. Do not transfer the latter's
-  isTrusted/phase assertions to responder events without checking their actual
-  contract.
+  isTrusted/phase assertions to responder events. The fixture positively checks
+  original responder events as untrusted, NONE-phase and empty-path, separately
+  from trusted normal capture/bubble. Nested dispatch and eight deliberate JS
+  faults exercise original cleanup/recovery boundaries without native errors.
 - The new `noResponderTouches` tests whether the touches array is empty. The
   compiled legacy responder tests whether remaining touches descend from the
-  current responder. A two-branch/two-contact fixture must resolve this
-  difference, including release and the surviving contact.
+  current responder. The executed two-branch case confirms that the experimental
+  responder retains its owner after the last descendant ends while an unrelated
+  contact remains. The legacy path releases the owner at that boundary.
+
+Two further comparisons remain open: installed should-set callbacks use strict
+true in the experimental responder versus truthy values in the compiled legacy
+path; an installed termination callback returning undefined permits transfer in
+the former and rejects it in the latter. These observations do not authorize
+silently changing the pinned experimental contract.
+
+The inside-two-contact control exposed a separate Godot integration bug: numeric
+touch targets passed through the compiled renderer's instance lookup unchanged,
+so its descendant walk released even an owner with a surviving inside contact.
+The generated numeric-only lookup now asks the current runtime UIManager for
+the original weak instance handle. Invalid, retired and removed tags return
+null. The original lookup fails exactly two normative assertions; the corrected
+lookup passes all 647 with identical fixtures/RN inputs/native host. Canonical
+and Fiber inputs remain intact. This fix applies to the existing production
+legacy path and does not enable experimental EventTarget dispatch.
 
 The current-ancestry correction changes only parent resolution; it does not
 select this dispatcher or resolve these responder differences. A target-null
-native case also needs an explicit contract before selecting a runtime-wide
+native case now reproduces a TypeError for a registered event, while an
+unregistered event is inert; recovery succeeds afterward. The native transport
+must define how retired/null targets are rejected before selecting a runtime-wide
 branch. Mixing two responder implementations within one runtime is not an
 accepted fallback.
 

@@ -25,7 +25,8 @@
     "tests/focus-command-fixture.jsx",
     "tests/pointer-errors-fixture.jsx",
     "tests/event-target-fixture.jsx",
-    "tests/event-target-ancestry-fixture.jsx"
+    "tests/event-target-ancestry-fixture.jsx",
+    "tests/event-dispatch-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -61,7 +62,8 @@
         "getNodeFromPublicInstance",
         "legacySendAccessibilityEvent",
         "UIManager",
-        "getInternalInstanceHandleFromPublicInstance"
+        "getInternalInstanceHandleFromPublicInstance",
+        "getInternalInstanceHandleFromNativeTag"
       ]
     },
     {

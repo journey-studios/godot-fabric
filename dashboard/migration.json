@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Ancestralidade EventTarget corrigida; próximos transporte nativo e contratos de responder"
+    "focusTitle": "Tags de toque e retenção do responder corrigidas; próximos interesse e dispatcher EventTarget nativos"
   },
-  "updatedAt": "2026-10-04T15:57:32.757855+00:00",
+  "updatedAt": "2026-10-04T16:47:03.564080+00:00",
   "source": {
-    "commit": "53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4/ROADMAP.md",
-    "scope": "Correção53eae43:102checks/variante local e artefato CI91e5219 auditados; IDs/fontes/RN originais iguais, mesmohostentrevariantes. CincojobsCI passaram. Consumer30/40, Node204/13Python e22examples/2246headless locais. Flags públicas off; nenhum novo GF/checkpoint ou denominador concluído.",
+    "commit": "08fb54d6224fe7afa50464feab8a11ec3e6eebcc",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/08fb54d6224fe7afa50464feab8a11ec3e6eebcc/ROADMAP.md",
+    "scope": "Execução local antes do commit, base 08fb54d: lookup corrigido passa 647 checks; original falha em dois checks normativos. Consumidor 30/40, contratos 227 Node/13 Python, 22 exemplos/2250, Pressable 47, SDK fresco e rejeição do antigo comprovados. Hashes executados no recibo; pin da implementação e CI desta fatia pendentes. Flags EventTarget públicas desativadas; nenhum novo checkpoint completo.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Bootstrap completo, idle, erros, globals e starvation seguem pendentes. Probe isolado usa globals Event/EventTarget/CustomEvent/AbortController/AbortSignal originais; once/abort e erro público assíncrono TimerManager executados dentro dos119checks. Bootstrap público/idle/URL/encoding/starvation completos seguem abertos; opt-in somente no teste.",
+      "note": "TimerManager e globals Event/EventTarget/CustomEvent/AbortController originais têm provas parciais. Baseline 119 e comparação de dispatcher 647 checks por variante executam erros públicos e trusted, dispatch aninhado e recuperação de globals. Oito faults JS deliberados ficam separados de erros nativos. Bootstrap público, idle, URL/encoding, starvation e error contracts completos continuam abertos; o dispatcher novo ainda é chamado explicitamente no teste.",
       "blocker": "",
       "checkpoints": [
         {
@@ -427,7 +427,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Refs/NativeDOM, medidas, foco/comandos e captura têm provas separadas (captura631/648, binding378). Baseline EventTarget original119 e CI515d0d7 reproduzem três gaps. Correção atual de cache executa102checks por variante original/corrigida com mesmo host: remoção de item/ancestral/raiz, remount, raiz sobrevivente e listeners pré-reorder; grafo separado preserva snapshot atual e atualiza o próximo path. Shared toolchain/consumer30/40 e22examples/2246headless passaram. Flags públicas continuam off. HostInstance/tipos/commands completos, interesse/dispatcher nativo, trusted errors, performance e hardware/mobile continuam pendentes; Artefato hospedado91e5219 confirma102checks/variante, IDs/fontes exatas e mesmohostentrevariantes; cincojobsCI passaram.",
+      "note": "Refs/NativeDOM, medidas, foco/comandos e captura têm recibos separados. Ancestralidade EventTarget: 102 checks por variante, CI 91e5219 auditada. Lookup de tag nativa resolve o handle fraco original na árvore comprometida do runtime: 12 refs reais, incluindo flattened, identidade exata; tags inválidas e removidas não têm autoridade. Comparação de dispatcher: 647 IDs iguais, dois checks normativos falham no lookup original e todos passam no corrigido. HostInstance/tipos/comandos completos, interesse e dispatcher nativos, teardown reentrante, desempenho e hardware/mobile continuam pendentes. Flags públicas desativadas; CI da correção de tags pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -769,7 +769,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile. Três gaps EventTarget reproduzidos: interesse imperativo sem JSX, dispatcher legacy omitindo listener e cache de ancestralidade retirada. Manual119headless não certifica transporte nativo; responder/PanResponder, hardware/mobile e regressões da futura integração seguem abertos. Correção de ancestralidade EventTarget102checks/variante já executada no bundler compartilhado, com original como controle; native-interest/native-dispatch e responder completo continuam abertos. Flags públicas off e Artefato hospedado91e5219 confirma102/variante; cincojobsCI passaram.",
+      "note": "Ponteiros, captura e geometria têm provas separadas: 132/146, 631/648 e binding 378. A correção do lookup de tags impede release prematuro quando outro contato interno sobrevive: original falha em dois dos 647 checks; corrigido passa todos com o mesmo host. Pressability passa 47 checks incluindo render pressionado, drag do contato restante e uma ativação na soltura final; 22 exemplos/2250 checks passam. Quatro diferenças do responder experimental permanecem reproduzidas: contato externo, should-set error cleanup, truthy should-set e termination undefined. EventQueue coalescing, interesse/dispatcher EventTarget nativos, PanResponder completo, scroll/windows, hardware/keyboard e mobile seguem abertos. Flags públicas desativadas; CI desta fatia pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2612,6 +2612,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "native-touch-tag-resolution-local-20261004",
+      "at": "2026-10-04T16:47:03.564080+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "647 checks idênticos por variante: original falha em dois checks normativos de retenção; corrigido passa todos. Pressable 47, consumidor 30/40, 22 exemplos/2250 e contratos 227/13 passaram. SDK fresco passa; SDK antigo válido é rejeitado antes de criar saída. Quatro gaps do dispatcher novo e CI desta fatia seguem abertos; nenhum checkpoint ou denominador muda. Hashes executados serão fixados no commit."
+    },
     {
       "id": "event-target-ancestry-hosted-artifact-91e5219",
       "at": "2026-10-04T15:57:32.757855+00:00",

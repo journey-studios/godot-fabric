@@ -629,6 +629,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return root != roots.end() && !root->second->stopping
           ? rn::Bridging<std::shared_ptr<const rn::ShadowNode>>::toJs(rt, node) : jsi::Value::null();
     });
+    bind("godotInstanceHandle", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
+      if (inactive() || count != 1) return jsi::Value::null();
+      auto tag = native_tag(args[0]);
+      if (!tag) return jsi::Value::null();
+      auto node = ui->findShadowNodeByTag_DEPRECATED(*tag);
+      auto current = node ? ui->getNewestCloneOfShadowNode(*node) : nullptr;
+      auto root = current ? roots.find(current->getSurfaceId()) : roots.end();
+      if (root == roots.end() || root->second->stopping) return jsi::Value::null();
+      auto handle = current->getFamily().getInstanceHandle(rt);
+      if (handle.isUndefined()) return jsi::Value::null();
+      return handle;
+    });
     bind("godotMetrics", 1, [this](jsi::Runtime &rt, auto &, const jsi::Value *args, size_t count) {
       if (inactive() || count != 1) return jsi::Value::null();
       auto tag = native_tag(args[0]);

@@ -139,6 +139,17 @@ jobs:
             build/event-target-ancestry-original.log
             build/event-target-ancestry-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:events:dispatch
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-event-dispatch-original
+          path: |
+            build/event-dispatch-original-report.json
+            build/event-dispatch-current-report.json
+            build/event-dispatch-comparison.json
+            build/event-dispatch-original.log
+            build/event-dispatch-current.log
+          if-no-files-found: error
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

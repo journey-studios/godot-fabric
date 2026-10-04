@@ -44,6 +44,16 @@ private Node. `manifest.json` records versions, source commit/dirty status,
 source hashes, native binary hash, Node archive hash and dependency-lock hash.
 Generated addons and vendor trees remain ignored; they are not committed.
 
+Provisioning requires a native build matching the current host sources, headers,
+build/dependency definitions and pointer-overlay generator. The default path
+uses the receipt produced by setup/CMake in `.deps/build/native-sdk-build.json`;
+`--native-sdk` verifies both package integrity and this source combination.
+An older valid SDK is rejected with `SDK_HOST_SOURCE_MISMATCH` before copying,
+and copied host/framework bytes are checked again before the addon manifest is
+published. Rebuild the native addon or supply a matching SDK when that diagnostic
+appears. JS/docs/package edits alone do not require matching native source hashes.
+See the [executed composition guards](../docs/evidence/event-dispatch/README.md).
+
 The initial package is about **625 MiB** because it carries the complete
 laboratory dependency graph and build tools. Size reduction, signed/released
 artifacts, upgrades and target-specific distribution remain open in GF-28/GF-31.
