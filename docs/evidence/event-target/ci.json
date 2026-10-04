@@ -1,0 +1,73 @@
+{
+  "format": "godot-fabric.event-target-original-hosted-evidence/v1",
+  "auditedAt": "2026-10-04T15:13:16.708842+00:00",
+  "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382",
+  "runHead": "515d0d7766f576575887257600049da03c75c4b9",
+  "implementationCommit": "2db8e391eff4de26caab0231be878f4ee807e799",
+  "allFiveJobs": "success",
+  "artifact": {
+    "id": 11306369163,
+    "name": "native-event-target-original"
+  },
+  "report": {
+    "checks": 119,
+    "allPassed": true,
+    "exactLocalCheckIds": true,
+    "manualPerRoot": {
+      "A": 33,
+      "B": 33
+    },
+    "gapIds": [
+      "native-interest",
+      "native-dispatch",
+      "original-parent-cache"
+    ],
+    "allGapsReproduced": true,
+    "platform": "macOS arm64, headless",
+    "godot": "4.7.2-stable (official)",
+    "node": "v22.23.2",
+    "scope": {
+      "manualDispatch": true,
+      "nativeEventTargetIntegrated": false,
+      "parentCacheFixed": false,
+      "publicDefaultEnabled": false,
+      "rendererOverlay": false
+    }
+  },
+  "provenance": {
+    "sourcesVerifiedAgainstRunHead": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/event-target-fixture.jsx": "052101740ac2b982ce0f824328d9280d07850c947d3b9d908a3ac3b05f3e1116",
+      "tests/event-target-probe.gd": "44ef19b32bd18d331875cee06fa3a14b81c4b1e7008012f65c74e6493771dbf4",
+      "tests/event-target-native.test.mjs": "ba99fd00eda40ba6e3a50de5577d1056b36fe384e5e6f9d8466456b9dd14c30f",
+      "scripts/event-target-bundle.mjs": "bab8d4c270856b9c370288e9132182fc8740cf700227890b6d7d65a97d3fd2dd"
+    },
+    "productionSourcesVerifiedAgainstRunHead": {
+      "src/initialize.js": "0249dbe800e0f39c0f1067086c9ad1ea92b3cb767a53867ba7a23bf12ec2df89",
+      "src/private-interface.js": "d5c8f84e6a54387a01de5f51282a301e3abd34f3bbb794e9990ec0bd77a44172",
+      "sdk/toolchain/platform-plugin.mjs": "b3941c8ab0de096d8e3616bbf8d08f0ac562bfc0e3a8c41790881ebf5e4d281a",
+      "native/application_runtime.cpp": "5dbb1ce95d2cd69fdc26a07baab4da58e60d80511d001b6e0eb3839245ae103e"
+    },
+    "originalReactNativeSourcesMatchLocal": {
+      "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+      "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+      "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+      "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+      "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+      "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+      "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda"
+    },
+    "nativeHostSha256": "4699fe15acf68abf3883589f65f41d1b19f7ff4025e6be9c4478d1760c6ae898",
+    "bundleSha256": {
+      "disabled": "68472e12c86a1d7883600386c7990e0f5cef41c3f14d923b2abcf45bd9077da2",
+      "imperative-only": "7dd0a2bbdef756828d5c0ee57e1e9f420992c995d412f98b8a5df47b74adf1ae",
+      "internal-only": "1421c79f84238f9f802253e455ee0100c016b18f1b0b579b2644426bf90001e6",
+      "enabled": "4023a52bcbc20950c6d2e89b52451ff937fa737480f2f39746de603f045ec482"
+    },
+    "rawReportSha256": "2f8b6040ebb4e34931bf13d9318efc085c0e5c90da79f269588482835768e47a"
+  },
+  "limits": "Original-ref/manual baseline and missing contracts; no native EventTarget integration or parent-cache fix, no graphical/hardware/mobile certification. Reference mobile jobs are separate core oracle regressions."
+}

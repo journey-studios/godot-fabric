@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "EventTarget original verificado; conectar entrega nativa e corrigir ancestralidade atual"
   },
-  "updatedAt": "2026-10-04T15:00:45.199189+00:00",
+  "updatedAt": "2026-10-04T15:14:45.624086+00:00",
   "source": {
     "commit": "2db8e391eff4de26caab0231be878f4ee807e799",
     "url": "https://github.com/journey-studios/godot-fabric/blob/2db8e391eff4de26caab0231be878f4ee807e799/ROADMAP.md",
-    "scope": "EventTarget original2db8e39:119/119 headless,33manual por raiz incluídos no total,4Hermes/5surfaces. Cinco fontes do probe e quatro fontes de produção conferidas contra implementação imutável; público inalterado. Três gaps reproduzidos e cleanupzero. Contracts199última suíteNode/13Python,static/publication e8dashboard passaram. Nenhum GF/checkpoint,decisão,peso ou denominador fechado; native integration e CI da nova fatia pendentes.",
+    "scope": "EventTarget original2db8e39:119/119 headless,33manual por raiz incluídos no total,4Hermes/5surfaces. Cinco fontes do probe e quatro fontes de produção conferidas contra implementação imutável; público inalterado. Três gaps reproduzidos e cleanupzero. Contracts199última suíteNode/13Python,static/publication e8dashboard passaram. Nenhum GF/checkpoint,decisão,peso ou denominador fechado; native integration e CI da nova fatia pendentes. CI 515d0d7 passou os cinco jobs; artefato auditado confirma 119 IDs idênticos e três gaps. Pages 37211402478 passou build/deploy e JSON público 515d0d7 foi conferido integralmente fora do main.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -278,6 +278,10 @@
             {
               "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
               "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+            },
+            {
+              "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
             }
           ]
         },
@@ -486,6 +490,10 @@
             {
               "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
               "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+            },
+            {
+              "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
             }
           ]
         },
@@ -788,6 +796,10 @@
             {
               "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
               "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+            },
+            {
+              "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
             }
           ]
         },
@@ -2588,6 +2600,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "event-target-original-hosted-515d0d7",
+      "at": "2026-10-04T15:14:45.624086+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI 515d0d7 passou todos os cinco jobs; artefato nativo auditado confirma119 IDs idênticos,33manual por raiz e três gaps. Fontes do probe/produção conferem com o run; Node CI22.23.2 registrado. Pages37211402478 sucesso e JSON515d0d7 integral conferido. Native delivery/cache seguem abertos; nenhum checkpoint/GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+    },
     {
       "id": "event-target-original-receipt-links-e2e14ea",
       "at": "2026-10-04T15:00:45.199189+00:00",

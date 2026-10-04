@@ -59,8 +59,11 @@ the enabled application's deliberate error remains in its diagnostic history.
 The full contract command passed (last Node suite: 199 tests; Python: 13),
 with static/publication checks and all three dashboard gates passing.
 The CI workflow now runs the probe and uploads its raw report, bundle receipt
-and log. Hosted execution is pending for this new slice. Previous green CI does
-not certify the new probe. No graphical capture, physical input, responder/
+and log. The [hosted receipt](ci.json) audits run
+[37211406382](https://github.com/journey-studios/godot-fabric/actions/runs/37211406382)
+at 515d0d7: all five jobs passed, and the native artifact confirms the same
+119 check IDs, 33 manual checks/root and all three gaps. Its Node is 22.23.2;
+probe/production hashes match the run head and original RN hashes match local. No graphical capture, physical input, responder/
 PanResponder, TextInput/IME, coalescing, multi-window or mobile differential was
 executed here. Native delivery, public types and current-ancestry correction
 remain open. [Next integration acceptance](../../research/event-target-boundary.md).

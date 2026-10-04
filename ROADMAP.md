@@ -740,7 +740,9 @@ ref versus a cold detached sibling. [Executed receipt](docs/evidence/event-targe
 and [source investigation](docs/research/event-target-boundary.md). Production
 flags/bundle are unchanged; native EventTarget delivery and ancestry correction
 remain pending. This does not close any full checkpoint, GF or architectural
-decision. CI execution of this new probe remains separate from local evidence.
+decision. [CI receipt](docs/evidence/event-target/ci.json) audits 119 identical
+check IDs and all three gaps at 515d0d7; all five jobs passed. This hosted
+manual baseline remains separate from native EventTarget integration.
 
 ## M1 — Complete the native UI tree
 
