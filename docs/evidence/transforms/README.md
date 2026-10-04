@@ -32,7 +32,8 @@ rejections. [input-guards.json](input-guards.json) records genuine input under
 external Godot embedding changes. [provenance.json](provenance.json) identifies the source, native SDK,
 binary, toolchain and captures; [regressions.json](regressions.json) separates
 other executed suites. Local results do not certify hosted CI, exported targets
-or complete RN parity.
+or complete RN parity. [ci.json](ci.json) separately records the successful
+manual Pages deployment and the observed hosted jobs; pending jobs stay pending.
 
 ## Original semantics on the actual Control
 

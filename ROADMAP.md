@@ -317,8 +317,11 @@ These external-embedding safety checks do not implement singular JSX rendering.
 The final rebuilt binary passes **205 Node/13 Python**, **10 native tests**,
 **18 headless examples/1,219 checks** and **17 adapter runs/318 checks**.
 The native SDK source and loaded consumer host hashes match the executed final
-implementation. Its new hosted CI and Pages publication remain separate and
-are pending delivery. GF items, full contract/differential/target
+implementation. [Pages run37171971971](https://github.com/journey-studios/godot-fabric/actions/runs/37171971971)
+succeeded with branch JSON5885331, checked against the served public file.
+The [hosted observation](docs/evidence/transforms/ci.json) records the new
+contracts job passing while native/iOS/Android and comparison remain pending;
+this snapshot does not replace their acceptance. GF items, full contract/differential/target
 checkpoints, decisions, weights and the dashboard denominator remain unchanged.
 Valid transform animation during contact, transformed masks, complete
 HostInstance commands, RTL and mobile differential acceptance remain open.

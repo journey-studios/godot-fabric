@@ -1,0 +1,65 @@
+{
+  "format": "godot-fabric.transform-ci-observation/v1",
+  "at": "2026-10-04T02:47:17.886674+00:00",
+  "testedImplementationCommit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f",
+  "localProof": "provenance.json",
+  "implementationCi": {
+    "runId": 37171931529,
+    "headCommit": "5885331529d03624389255b7bd0ab0dd8e859a7f",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529",
+    "status": "in_progress",
+    "conclusion": null,
+    "jobs": [
+      {
+        "name": "reference-android",
+        "status": "in_progress",
+        "conclusion": null,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529/job/111346467935"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "in_progress",
+        "conclusion": null,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529/job/111346468086"
+      },
+      {
+        "name": "reference-ios",
+        "status": "in_progress",
+        "conclusion": null,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529/job/111346468103"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529/job/111346468141"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "not_started",
+        "conclusion": null,
+        "reason": "Waits for native cold start and original iOS/Android references"
+      }
+    ]
+  },
+  "pages": {
+    "runId": 37171971971,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171971971",
+    "status": "completed",
+    "conclusion": "success",
+    "rendererMainCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "dataPublication": {
+      "ref": "codex/react-native-parity-roadmap",
+      "commit": "5885331529d03624389255b7bd0ab0dd8e859a7f",
+      "inMain": false,
+      "at": "2026-10-04T02:44:36.904Z"
+    },
+    "committedJsonMatched": true,
+    "testedSourceCommit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f"
+  },
+  "limits": [
+    "Hosted snapshot is an observation; pending native/reference/comparison jobs are not successful acceptance",
+    "Main renderer deploys branch JSON without merging implementation",
+    "The original reference fixture remains limited and does not certify transforms on Godot mobile ports or full RN parity"
+  ]
+}
