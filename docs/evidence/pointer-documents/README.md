@@ -8,9 +8,10 @@ Document; their original EventTarget Maps supply interest. Component queries
 continue to use existing refs. No listener mirror, ViewProps mutation, public API
 or Godot engine rebuild is introduced.
 
-[Curated receipt](report.json), [isolated example](../../../examples/pointer-document/README.md)
+[Local receipt](report.json), [hosted CI receipt](hosted-ci.json),
+[isolated example](../../../examples/pointer-document/README.md)
 and [source/contract analysis](../../research/native-document-pointer-interest.md).
-All execution below is local macOS arm64 Release, official Godot 4.7.2,
+The local execution below uses macOS arm64 Release, official Godot 4.7.2,
 RN 0.87.1, React 19.2.3 and Node 22.23.3. The receipt pins 25 executed
 sources/configuration inputs, 18 original RN inputs, native build identity,
 per-lane report/check-ID/bundle hashes and the captures. Execution preceded the
@@ -112,20 +113,43 @@ runs/213 checks. Updated View interest passes 193/233; query faults pass 186;
 integrated dispatch remains 181/206. Portable processor and geometry gates each
 pass two tests. ABI certification remains false.
 
-New native CI matrix steps and artifacts are configured.
-[Latest CI](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202)
-is in progress at e65b7ba: contracts and Android reference jobs passed, while
-native/iOS execution and new artifact audit remain pending. [Preceding fault CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
+[Hosted CI](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202)
+completed successfully in all five jobs at **e65b7ba**. The
+[artifact audit](hosted-ci.json) confirms the same eight headless lanes and
+**2,723/2,723 checks**, unique IDs/digests and per-flag bundle bytes as the local
+final execution. All 14 producer pins and 18 original RN inputs match; all 25
+curated code/configuration pins match implementation `00bd804`, head `e65b7ba`
+and actual native checkout `a1d8a980`.
+
+Hosted traces independently confirm capture-only `34=false` before `35=true`,
+the original flag gates and A-negative/B-positive isolation. Only the
+current/enabled Document lane retains its one deliberate root `throw34`
+diagnostic. The same CI host also passes View interest **193/233** and query
+faults **186/186**, with the latter's four expected diagnostics. Probe logs have
+no script error, crash or pointer-registry inconsistency. Three artifact ZIP
+hashes and all lane report/check-ID hashes are recorded in the hosted receipt.
+
+These headless artifacts include neither images nor the compiled native binary.
+Their shared **declared** host hash `5feb2117…` is consistent across all eleven
+reports; it is not required to equal the separately built local `df06c37…` host.
+The local **385/385 and 20 pixels** and the older-host **142 normative failures**
+remain separate evidence; CI did not rerun that old host control.
+
+[Preceding fault CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
 passed five jobs at b88708c and audited 186 fault checks/22 pins/15 RN inputs plus
 193/230 earlier interest checks; it does not certify this Document extension.
 [Preceding Pages publication](https://github.com/journey-studios/godot-fabric/actions/runs/37231095632)
 passed build/deploy with data 73d33da; its full public JSON and local API matched
-that commit after removing only generated `publication`. The [new Pages publication](publication.json) at
+that commit after removing only generated `publication`. The [initial publication receipt](publication.json) at
 [e65b7ba](https://github.com/journey-studios/godot-fabric/actions/runs/37233421454)
 passed build and deploy with the main renderer. Its full public JSON and local
 API equal that committed data after removing only generated `publication`.
+The later [Pages metadata publication](https://github.com/journey-studios/godot-fabric/actions/runs/37233943579)
+also passed build/deploy with its full public JSON verified against the committed
+data. Publication is separate from native CI: this CI receipt covers e65b7ba,
+not a later documentation or dashboard commit.
 The implementation is still outside main. Core iOS/Android reference jobs do not
-certify Godot mobile exports or this matrix.
+certify Godot mobile exports or this native Document matrix.
 
 Other pointer categories, complete responder/PanResponder/type contracts,
 coalescing, null-target delivery, development renderer, performance, hardware,

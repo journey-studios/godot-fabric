@@ -957,12 +957,22 @@ adversarial fixture and simultaneously held sibling retirement remain pending.
 Host regressions pass 250 Node/13 Python contracts, static analysis,
 22 examples/2,250 checks, consumer 30/40, fresh SDK pack/verify, loader 89/21,
 13 adapters/213, updated interest 193/233, query faults 186, integration181/206,
-and portable processor/geometry gates. New CI matrix/artifacts are configured;
-latest CI e65b7ba is in progress: contracts/Android jobs passed, native/iOS and
-new artifact audit remain pending. Previous b88708c fault CI passed five jobs.
+and portable processor/geometry gates. [CI e65b7ba](docs/evidence/pointer-documents/hosted-ci.json)
+passed all five jobs. Its audited artifacts confirm the same 2,723 Document
+checks/IDs/bundles across eight lanes, interest 193/233 and query faults 186.
+All 25 curated pins match implementation, head and native checkout a1d8a980.
+Capture-only and cross-root traces are checked directly. The declared CI host
+is shared by eleven reports; the artifacts contain no binary for independent
+hash verification. Images/385 checks and 142 earlier-host negatives remain
+local proof. Mobile jobs exercise their core reference subset. Previous b88708c
+fault CI also passed five jobs.
 [Pages 37233421454](docs/evidence/pointer-documents/publication.json) published
 e65b7ba successfully; full public JSON and the local API match that data
-commit, removing only generated publication. Source remains outside main.
+commit, removing only generated publication. The subsequent [Pages run37233943579](https://github.com/journey-studios/godot-fabric/actions/runs/37233943579)
+also passed and served the full b7b6c29 JSON, independently compared with the
+commit and local API. Source remains outside main. The next fault fixture will
+exercise a one-shot getter on a real component canonical.publicInstance slot
+before broadening interest to pointerup; resolver faults are not yet certified.
 
 No new checkpoint, GF acceptance, dependency, decision, weight or denominator
 closes. Other pointer categories and responder/PanResponder contracts are next,

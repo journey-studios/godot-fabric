@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Document validado; próximos eventos de ponteiro e fault contracts"
+    "focusTitle": "Document confirmado em CI; falhas no resolver de refs antes de pointerup"
   },
-  "updatedAt": "2026-10-04T20:54:43.596173+00:00",
+  "updatedAt": "2026-10-04T21:06:55.621072+00:00",
   "source": {
     "commit": "00bd80454384cbfbffc1b703df0864674bf11f99",
     "url": "https://github.com/journey-studios/godot-fabric/commit/00bd80454384cbfbffc1b703df0864674bf11f99",
-    "scope": "Document/root local comprovado: 2.723 checks em oito flags, 385 viewport/20 pixels, controle anterior142 falhas;25 pins conferidos em00bd804. Pages37233421454 publicou e65b7ba com JSON público/local integral verificado. CI e65b7ba em progresso: contracts/Android passaram, native/iOS e novos artifacts pendentes.19/156 checkpoints; nenhum GF/peso/denominador adicional.",
+    "scope": "Document/root: local 2.723 checks/385 viewport/20 pixels/142 negativos antigos; CI37233393202 @e65b7ba passou cinco jobs. Artifacts 2.723+193/233+186 auditados,25 pins conferidos contra00bd/head/checkout a1d8a980. Pages37233943579 publicou b7b6c29 com JSON público/local integral verificado. Próxima investigação: getter real de publicInstance antes da consulta. Nenhum novo checkpoint/GF/peso/denominador.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Quatro configurações de Hermes/flags preservam os gates originais: 2.723 checks locais, 385 no viewport e 20 pixels. Root throw34 preserva TouchStart/Raw/React e diagnóstico; stop limpa query/work/timers/frames. Contratos 250/13. Bootstrap/globals completos, demais faults/getters/reentrância/dev/mobile abertos. Nova CI pendente; anterior b88708c teve cinco jobs auditados.",
+      "note": "Quatro configurações de Hermes/flags preservam os gates originais: 2.723 checks locais, 385 no viewport e 20 pixels. Root throw34 preserva TouchStart/Raw/React e diagnóstico; stop limpa query/work/timers/frames. Contratos 250/13. Bootstrap/globals completos, demais faults/getters/reentrância/dev/mobile abertos. CI e65b7ba passou cinco jobs; artifacts conferidos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -314,6 +314,10 @@
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
               "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
             }
           ]
         },
@@ -350,7 +354,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Document capture/bubble e capture-only fazem updates funcionais em um commit original por gesto; 2.723 checks de matriz/385 viewport. Ausência de callbacks não comita. Root throw34 preserva TouchStart no batch. Prioridades completas, StrictMode/dev, transitions/Suspense/Activity/stores e paridade ampla abertos. Nova CI pendente; nenhum checkpoint adicional.",
+      "note": "Document capture/bubble e capture-only fazem updates funcionais em um commit original por gesto; 2.723 checks de matriz/385 viewport. Ausência de callbacks não comita. Root throw34 preserva TouchStart no batch. Prioridades completas, StrictMode/dev, transitions/Suspense/Activity/stores e paridade ampla abertos. CI e65b7ba passou cinco jobs; artifacts conferidos; nenhum checkpoint adicional.",
       "blocker": "",
       "checkpoints": [
         {
@@ -381,6 +385,10 @@
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
               "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
             }
           ]
         },
@@ -417,7 +425,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Raiz por família atual usa handle original; Document/element persistem em rerender, desconectam no retirement e são novos no remount. Listeners antigos: manual positivo/native negativo. Stop balanceado; A-none/B-doc isolado. Root/lifetimes completos e sibling simultaneamente pressionado pendentes. Matriz 2.723/viewport 385 locais, SDK df06; nova CI pendente.",
+      "note": "Raiz por família atual usa handle original; Document/element persistem em rerender, desconectam no retirement e são novos no remount. Listeners antigos: manual positivo/native negativo. Stop balanceado; A-none/B-doc isolado. Root/lifetimes completos e sibling simultaneamente pressionado pendentes. Matriz 2.723/viewport 385 locais, SDK df06; CI e65b7ba passou cinco jobs, artifacts conferidos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -472,6 +480,10 @@
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
               "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
             }
           ]
         },
@@ -508,7 +520,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Document original funciona com native dispatch sozinho; View/element mantêm gate de ambos flags. Root query lê Maps/acessores existentes; slot no-ref null antes/depois, dispatcher pode criar depois. Matriz 2.723, viewport 385/20 pixels; controle antigo 142 falhas. Types/commands completos, outras categorias/getters/reentrância/perf/hardware/mobile abertos; flags públicas off, nova CI pendente.",
+      "note": "Document original funciona com native dispatch sozinho; View/element mantêm gate de ambos flags. Root query lê Maps/acessores existentes; slot no-ref null antes/depois, dispatcher pode criar depois. Matriz 2.723, viewport 385/20 pixels; controle antigo 142 falhas. Types/commands completos, outras categorias/getters/reentrância/perf/hardware/mobile abertos; flags públicas off, CI e65b7ba passou cinco jobs, artifacts conferidos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -615,6 +627,10 @@
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
               "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
             }
           ]
         },
@@ -882,7 +898,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Document/element pointerdown capture/bubble e capture-only provam offset34 false antes de 35 true, Raw/estado/batch, once/remove/abort/lifetime e A-none/B-doc. Matriz 2.723/viewport 385; controle 142 falhas normativas, um diagnóstico root34 retido. Demais pointer/touch/responder/PanResponder/coalescing/faults/hardware/mobile abertos; nova CI pendente.",
+      "note": "Document/element pointerdown capture/bubble e capture-only provam offset34 false antes de 35 true, Raw/estado/batch, once/remove/abort/lifetime e A-none/B-doc. Matriz 2.723/viewport 385; controle 142 falhas normativas, um diagnóstico root34 retido. Demais pointer/touch/responder/PanResponder/coalescing/faults/hardware/mobile abertos; CI e65b7ba passou cinco jobs, artifacts conferidos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -957,6 +973,10 @@
             {
               "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
               "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
             }
           ]
         },
@@ -2757,6 +2777,32 @@
     }
   ],
   "activity": [
+    {
+      "id": "document-ci-audit-e65b7ba",
+      "at": "2026-10-04T21:06:55.621072+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI37233393202 passou cinco jobs em e65b7ba; checkout nativo a1d8a980. Artifacts11314866986/11315021189/11315360516:2.723 Document em oito lanes,interest193/233,fault186. IDs/bundles/14produtores/18RN e25pins conferidos. Capture-only34false→35true e Aneg/Bpositivo observados; rootthrow34 único. Host CI declarado5feb2117 sem binário noartifact;385viewport/142 antigos permanecem locais. Jobs móveis são core reference; nenhum GF/checkpoint/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+    },
+    {
+      "id": "document-pages-b7b6c29-confirmed",
+      "at": "2026-10-04T21:06:55.621072+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37233943579 concluiu build/deploy. JSON público integral igual ao git show b7b6c29 removendo somente publication; API local4318 igual. Renderer mainadad606/dadosbranchfora main. Publicação anterior à auditoria CI posterior; próximo deploy levará essa auditoria. Nenhum aceite novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233943579"
+    },
     {
       "id": "document-pages-e65b7ba-confirmed",
       "at": "2026-10-04T20:54:43.596173+00:00",

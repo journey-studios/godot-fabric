@@ -1,11 +1,14 @@
 # Native pointerdown interest on original document roots
 
-Status: isolated local headless validation executed with pinned RN 0.87.1 and
-Godot 4.7.2. Eight original/current flag lanes passed 2,723 checks. A preceding
-native-host control reproduced 142 failed assertions with the same JS bundles;
-the corrected host passed their complete acceptance. The macOS graphical
-current/enabled lane passed 385/385 with two actual captures. Hosted proof for
-this slice is pending. The
+Status: isolated local and hosted headless validation executed with pinned
+RN 0.87.1 and Godot 4.7.2. Eight original/current flag lanes passed 2,723 checks
+locally and in [CI at e65b7ba](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202).
+The [hosted receipt](../evidence/pointer-documents/hosted-ci.json) records the
+five successful jobs, exact lane IDs/bundles, 14 producer/18 RN inputs and 25
+verified source pins. The local preceding native-host control reproduced 142
+failed assertions with the same JS bundles; the corrected host passed their
+complete acceptance. The separate macOS graphical current/enabled lane passed
+385/385 with two actual captures. The
 [execution receipt](../evidence/pointer-documents/README.md) records the source,
 binary and image provenance. Public imperative/native EventTarget flags remain off.
 
@@ -215,8 +218,20 @@ full event surface, physical hardware, Android/iOS runtime equivalence,
 performance, development renderer behavior and public capability enablement
 remain separate acceptance. The actual-root family guard is source-reviewed;
 an adversarial nested `RootNodeKind` fixture is still absent. Restored priority
-context does not certify the complete priority mapping. Earlier query-only or
-query-fault CI receipts and dashboard publication do not certify this new local
-root/flag extension; its hosted CI remains pending. The
+context does not certify the complete priority mapping. The
+[new hosted artifact audit](../evidence/pointer-documents/hosted-ci.json) verifies
+the root/flag extension's eight headless lanes, including actual capture-only
+qualification, A-negative/B-positive isolation and the single current/enabled
+root fault. View interest 193/233 and query faults 186 also pass on the same
+declared CI host; the separate fault fixture keeps its four expected diagnostics.
+No unexpected script error, registry inconsistency or crash appears in those
+probe logs. The native job log confirms checkout `a1d8a980`, whose pins match
+implementation `00bd804` and tested head `e65b7ba`.
+
+The artifacts contain no PNG or native binary for independent hashing. The
+local 385/20-pixel capture and 142 preceding-host failures are separate
+observations. Original mobile core-reference jobs and dashboard publication do
+not certify Godot mobile exports, this input contract on mobile, or full RN
+parity. Subsequent metadata/publication commits are not new native runs. The
 [isolated example](../../examples/pointer-document/README.md) describes the scene
 and reproduction commands.

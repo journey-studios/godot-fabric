@@ -1,10 +1,11 @@
 # Isolated Document and documentElement pointerdown interest
 
-Status: executed local headless validation with RN 0.87.1 and Godot 4.7.2.
-Eight original/current flag lanes passed 2,723 checks. The preceding native
-addon reproduced 142 failed assertions on the identical current JS bundles.
-The graphical current/enabled lane passed 385/385 and produced the two images
-below. Hosted proof for this slice is pending. See the
+Status: executed local and hosted headless validation with RN 0.87.1 and
+Godot 4.7.2. Eight original/current flag lanes passed 2,723 checks locally and
+in [CI at e65b7ba](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202).
+The local preceding native addon reproduced 142 failed assertions on the
+identical current JS bundles. The separate graphical current/enabled lane
+passed 385/385 and produced the two images below. See the
 [receipt](../../docs/evidence/pointer-documents/README.md) for provenance.
 This isolated example keeps public imperative/native EventTarget flags off by default.
 
@@ -88,6 +89,16 @@ continues to bundle the empty installer.
 | `internal-only` | 338/338 | 340/340 |
 | `enabled` | 338/338 | 363/363 |
 
+The [hosted receipt](../../docs/evidence/pointer-documents/hosted-ci.json)
+confirms these eight headless lanes with identical unique check IDs/digests and
+bundle bytes, 14 producer/18 RN inputs and 25 source pins verified against the
+implementation, tested head and actual checkout. All five workflow jobs passed.
+The same declared CI host also passed View interest 193/233 and query faults
+186. Only current/enabled retains the Document fixture's deliberate root
+`throw34`; the separate fault fixture retains four expected diagnostics.
+The CI artifacts contain no screenshots or compiled native binary. The images
+above and the preceding-host negative control are local evidence.
+
 Document-only listeners qualify descendant input in current interest when native
 dispatch is on, including the imperative-off configuration. Isolated
 documentElement-only listeners require both original flags. Original interest
@@ -144,8 +155,8 @@ With the same current-interest JS bundles and all 18 RN source pins, the older
 as normative failures; neither host crashed or produced a script error.
 
 This demonstrates the missing Godot native root-routing path for this fixture.
-It is not a claim about all React Native platforms. Physical hardware, hosted
-and mobile proof for the new slice, other pointer categories, performance,
+It is not a claim about all React Native platforms. Physical hardware,
+mobile proof for the new slice, other pointer categories, performance,
 development renderer behavior and public enablement remain pending. Existing
 component-path getters remain outside the query catch. Simultaneously held
 sibling-contact retirement/fault cases and broader lazy-field instrumentation

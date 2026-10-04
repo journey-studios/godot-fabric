@@ -2143,16 +2143,21 @@
   },
   "hosted": {
     "thisSliceCI": {
-      "status": "in_progress",
+      "status": "success",
       "headCommit": "e65b7ba73124edb49084502ff4645523734b290b",
       "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202",
       "verifiedJobStatus": {
         "contracts": "success",
+        "native-cold-start": "success",
+        "reference-ios": "success",
         "reference-android": "success",
-        "native-cold-start": "in_progress",
-        "reference-ios": "in_progress"
+        "parity-comparison": "success"
       },
-      "newDocumentArtifactAudited": false
+      "newDocumentArtifactAudited": true,
+      "receipt": "hosted-ci.json",
+      "sourcePinsVerifiedAgainstImplementationHeadAndNativeCheckout": 25,
+      "nativeCheckout": "a1d8a980cd61be69067068ace81a09e8155e4012",
+      "scope": "Headless Document matrix2723 and regression interest193/233/queryfault186; local graphical385 and previous-host142 remain separate. Mobile jobs certify their own core reference subset."
     },
     "previousFaultCI": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491",
     "previousFaultCIScope": "b88708c: five jobs;186faultchecks/22pins/15RNinputs and193/230priorinterest. Does not certify this Document extension.",
@@ -2162,6 +2167,15 @@
     "pages": {
       "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37233421454",
       "dataCommit": "e65b7ba73124edb49084502ff4645523734b290b",
+      "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "buildAndDeploy": "success",
+      "fullPublicAndLocalJSONVerified": true,
+      "onlyRemovedGeneratedField": "publication",
+      "mainIntegration": false
+    },
+    "pagesMetadataFollowup": {
+      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37233943579",
+      "dataCommit": "b7b6c29b53e9cca062ab9a2c2da596ab9f3eca2a",
       "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
       "buildAndDeploy": "success",
       "fullPublicAndLocalJSONVerified": true,
