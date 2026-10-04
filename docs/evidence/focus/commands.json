@@ -7,7 +7,7 @@
   "react": "19.2.3",
   "node": "v22.23.3",
   "command": "npm run test:focus:commands",
-  "implementationCommit": null,
+  "implementationCommit": "877c52914fc56eefeacd367678f27124d7991ebe",
   "runtimeImplementationCommit": "3b09b37acf735664301d3ddaf9ab275519893267",
   "nativeHostSha256": "6abafb9f751b1b75f477b76d0db76dc9d3c4a897a91d76f158cbffc564845f2e",
   "bundleSha256": "604e3d4ad1ac3d34b39dcd611c3620db0c17161ce9fedd7a2b5a68f9518069d2",
@@ -22,7 +22,7 @@
     "docs/research/README.md": "81c3f499d888f1b96c3c1771a2808ce0f4854042f5be5f8b343a3d10b6f4120e",
     "docs/evidence/README.md": "2a1e19bbabea237b073321f9c9d5ece7d962546057efe41de162bee3f20b3f53"
   },
-  "sourcesCheckedAgainstCommit": false,
+  "sourcesCheckedAgainstCommit": true,
   "checks": [
     {
       "name": "Original AppRegistry mounts two shared roots and an independent application",
@@ -913,8 +913,7 @@
   "limits": [
     "Headless native owner/command proof does not establish physical keyboard/IME or mobile focus differentials.",
     "This complement changes tests/CI/research only; runtime inputs and prior focus fixture remain byte-identical.",
-    "Pointer capture source investigation is not an executed implementation or reproduced crash.",
-    "Source pin follows the complement commit."
+    "Pointer capture source investigation is not an executed implementation or reproduced crash."
   ],
   "contracts": {
     "command": "npm run test:contracts",

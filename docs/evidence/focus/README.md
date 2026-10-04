@@ -111,6 +111,7 @@ certifies those hosted lanes, not a new full focus/mobile differential.
 
 ## Native command argument and recovery complement
 
+The complement source is pinned to [877c529](https://github.com/journey-studios/godot-fabric/commit/877c52914fc56eefeacd367678f27124d7991ebe).
 `npm run test:focus:commands` passes **112 checks** and **40 independent native
 focus-owner observations**. Original renderer dispatch sends null, object,
 string and nonempty-array arguments to both focus and blur. Each of the eight
