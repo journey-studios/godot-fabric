@@ -147,3 +147,12 @@ See the [research](../../research/pointer-document-up.md) and
 View Up also passed again at62/62. The saved previous host still reproduces
 54/62 with exactly eight failures on the same current SDK bundle; preceding
 raw controls are preserved separately and current native files restored exactly.
+
+Implementation `84270fbeadd21df728592e3d4cea23b0be09eec9` contains all71 executed code/configuration inputs
+verified by `git show` and SHA-256. Execution still records base0a2f01e and its
+dirty tree; post-commit pinning is separate from running the native fixture.
+
+The [independent read-only audit](audit.json) confirms the eight raw reports,
+71 source paths and22 RN inputs, native PNG hashes/chunk CRCs/20 pixels, final
+Down and View Up controls. Its report snapshot precedes this audit self-link;
+no unexpected script, registry, crash or application errors were found.

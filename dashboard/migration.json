@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document Up e flags validados; próximos: once/abort e refs"
   },
-  "updatedAt": "2026-10-04T23:26:48.291688+00:00",
+  "updatedAt": "2026-10-04T23:36:31.883541+00:00",
   "source": {
-    "commit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
-    "scope": "Document/documentElement Up: oito lanes originais/current × quatro flags,1371 headless; viewport243/20pixels+2counter/save. Event=== entre fases, rootTag/surface e componentes do root nativo, capture-only36false→37true, A negativo enquanto B held, remove/Cancel/stop executados. Down2723,contracts255Node/13Python e static passaram.15produtores/22RN+55native+3config=71inputs atuais conferidos; base0a2f01e/dirty preservada, pin pós-commit pendente. Native/SDK bytes f7 preservados; CI específica pendente. CI ViewUp041 passou5jobs/62+3400checks e16pins; Pages37242930291/data0a2 público/local inteiro confirmado. Sem GF/checkpoint/peso/denominador fechado. ViewUp novamente62/62; controle nativo anterior54/62/oitofalhas no mesmo SDK atualizado, restauração byteexact.",
+    "commit": "84270fbeadd21df728592e3d4cea23b0be09eec9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/84270fbeadd21df728592e3d4cea23b0be09eec9",
+    "scope": "Document/documentElement Up: oito lanes originais/current × quatro flags,1371 headless; viewport243/20pixels+2counter/save. Event=== entre fases, rootTag/surface e componentes do root nativo, capture-only36false→37true, A negativo enquanto B held, remove/Cancel/stop executados. Down2723,contracts255Node/13Python e static passaram.15produtores/22RN+55native+3config=71inputs únicos verificados contra implementação84270fb por git show/SHA-256; base0a2f01e/dirty preservada. Native/SDK bytes f7 preservados; CI específica pendente. CI ViewUp041 passou5jobs/62+3400checks e16pins; Pages37242930291/data0a2 público/local inteiro confirmado. Sem GF/checkpoint/peso/denominador fechado. ViewUp novamente62/62; controle nativo anterior54/62/oitofalhas no mesmo SDK atualizado, restauração byteexact.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -409,6 +409,10 @@
             {
               "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
               "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
             }
           ]
         },
@@ -516,6 +520,10 @@
             {
               "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
               "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
             }
           ]
         },
@@ -675,6 +683,10 @@
             {
               "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
               "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
             }
           ]
         },
@@ -1033,6 +1045,10 @@
             {
               "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
               "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
             }
           ]
         },
@@ -2833,6 +2849,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-source-pins-verified-84270fb",
+      "at": "2026-10-04T23:36:31.883541+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "71inputs únicos de código/configuração conferidos por git show/SHA-256 contra84270fb. Mantidos base0a2f01e/dirty,1371headless/243viewport/20pixels,Down2723 eView62com8negativos anteriores. Prova adicionada aos checkpoints de fatia já concluídos; nenhum novo checkpoint/denominador. CI específica e publicaçãoDocUp pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/84270fbeadd21df728592e3d4cea23b0be09eec9"
+    },
     {
       "id": "pointer-document-up-four-flags-local-verified-20261004",
       "at": "2026-10-04T23:26:48.291688+00:00",

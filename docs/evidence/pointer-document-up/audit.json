@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-document-up-four-flags",
+  "mode": "independent-read-only-source-receipt-and-PNG-audit",
+  "curatedReport": {
+    "file": "docs/evidence/pointer-document-up/report.json",
+    "sha256": "08f0bc0f7971e60e7f63ce8058cd1c8d9dbe2683b19d15bbf3d500e7b7205c88",
+    "executionBaseCommit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
+    "sourceDirtyDuringExecution": true,
+    "implementationCommit": "84270fbeadd21df728592e3d4cea23b0be09eec9",
+    "runtimeSnapshotBeforeImplementationPinSha256": "b9b77d1418b1b54e70d1c29c28aef863499c8ef76efc456279c1c4a2bbd0375b"
+  },
+  "sourceVerification": {
+    "producerPins": 15,
+    "originalReactNativeInputs": 22,
+    "nativePins": 55,
+    "configPins": 3,
+    "uniqueCurrentPaths": 71,
+    "allCurrentBytesMatch": true,
+    "nativePinsEqualPriorViewUp": true,
+    "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+    "nativeFileCurrentHashMatches": true
+  },
+  "headless": {
+    "checks": 1371,
+    "lanes": [
+      {
+        "interest": "original",
+        "flags": "disabled",
+        "checks": 154,
+        "checkIdDigestSha256": "6a6bbd7debacbcd62c4a34612b8c8a52e3837091c5f94556619b2e4d76af00e8",
+        "reportSha256": "c8c64c6af37e86fb9196fe19978f81e861f0fe83b9d4da7d135788235dd5723d",
+        "uniqueIDs": true,
+        "passed": 154
+      },
+      {
+        "interest": "original",
+        "flags": "imperative-only",
+        "checks": 154,
+        "checkIdDigestSha256": "6a6bbd7debacbcd62c4a34612b8c8a52e3837091c5f94556619b2e4d76af00e8",
+        "reportSha256": "67f569c010def8ca41cd12d33d6fe922ed87f0167de6ddec0f23326569fbddf1",
+        "uniqueIDs": true,
+        "passed": 154
+      },
+      {
+        "interest": "original",
+        "flags": "internal-only",
+        "checks": 157,
+        "checkIdDigestSha256": "e6c87a961d60d5a3853ce283e803d01f0b44856785ee31bf38f30cf2eb7baeea",
+        "reportSha256": "10272dec9c105b0872c9d80be6e91eb4aa4b6dc5f70d557576775a76765f73fa",
+        "uniqueIDs": true,
+        "passed": 157
+      },
+      {
+        "interest": "original",
+        "flags": "enabled",
+        "checks": 159,
+        "checkIdDigestSha256": "e2472b21cafae44e1ed61cd3ef3070364444b6cf1f40315b2337b3268ded7ea6",
+        "reportSha256": "608f140ea6e6a6a83f426efd383e4b5588bebf18618da39c65c69812c89537e3",
+        "uniqueIDs": true,
+        "passed": 159
+      },
+      {
+        "interest": "current",
+        "flags": "disabled",
+        "checks": 154,
+        "checkIdDigestSha256": "6a6bbd7debacbcd62c4a34612b8c8a52e3837091c5f94556619b2e4d76af00e8",
+        "reportSha256": "aa3c04a43732f4a126d107bbf777b1b9f8f94cc9a2c72f1ea4bdeaf72303c4f2",
+        "uniqueIDs": true,
+        "passed": 154
+      },
+      {
+        "interest": "current",
+        "flags": "imperative-only",
+        "checks": 154,
+        "checkIdDigestSha256": "6a6bbd7debacbcd62c4a34612b8c8a52e3837091c5f94556619b2e4d76af00e8",
+        "reportSha256": "79b67bfe629e28987e24b8d5a1124d39ddb76f117fe02bcd8214dcf544e5ec89",
+        "uniqueIDs": true,
+        "passed": 154
+      },
+      {
+        "interest": "current",
+        "flags": "internal-only",
+        "checks": 218,
+        "checkIdDigestSha256": "072ea7441e99d3867d119211cc7b96be257e772f6d2b7cb964170fc355b357c6",
+        "reportSha256": "5661b300d1f886ef252881610e5a27100f4d9fc8a87f0456029770fd0f623f71",
+        "uniqueIDs": true,
+        "passed": 218
+      },
+      {
+        "interest": "current",
+        "flags": "enabled",
+        "checks": 221,
+        "checkIdDigestSha256": "1b3f7ff1f7cfe0fca0ffb977b76780a304f0ba71c2af90f5a426180389e76a4c",
+        "reportSha256": "d153d7ab3c0c81d5f54285f443bcfed0cd229c280431113057f18f47a691543e",
+        "uniqueIDs": true,
+        "passed": 221
+      }
+    ],
+    "sameHostAcrossEightLanes": true,
+    "sampledTracesExactlyMatchRaw": 12,
+    "allCuratedCaseSummariesMatchRaw": true,
+    "ownRootAndMaterializedCandidateChecks": true,
+    "sameOriginalEventAcrossUpPhases": true,
+    "DTrueTouchEndDistinctFromUp": true,
+    "DFalseLegacyPoolDistinctFalseObservedOnlyUnpersistedJSX": true,
+    "negativeAWhileBHeldAndNextBPositive": true,
+    "noUnexpectedScriptRegistryCrashOrApplicationError": true,
+    "preexistingGlogInitializationAndDestructorWarningsPresent": true
+  },
+  "capture": {
+    "finalReport": "build/pointer-document-up-current-enabled-report.json",
+    "reportSha256": "100e559e8b71d5856785c20673e880403949190ff82db6daefaa356c0b01f3e4",
+    "checks": 243,
+    "coreHeadlessIDsExact": 221,
+    "pixelChecks": 20,
+    "combinedCounterSaveChecks": 2,
+    "allProducerAndRNAndBundlePinsMatch": true,
+    "independentPythonPNGDecode": true,
+    "allChunkCRCsPassed": true,
+    "docsPNGBytesEqualActualBuildPNG": true,
+    "dimensions": [
+      760,
+      220
+    ],
+    "frames": [
+      {
+        "file": "docs/evidence/pointer-document-up/initial.png",
+        "sha256": "77debf03541c201f97667106a380b58b326f7e6eafad408a799682bbd8718ce4",
+        "pixelsPassed": 10,
+        "counters": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      {
+        "file": "docs/evidence/pointer-document-up/updated.png",
+        "sha256": "7cd2069ed1c57082c2c2c1b22f90758d0bcbaa6e06786f9dfbdae25e91ef23bb",
+        "pixelsPassed": 10,
+        "counters": {
+          "A": 2,
+          "B": 0
+        }
+      }
+    ],
+    "historicalCaptureSubfolderNotFinalReport": true
+  },
+  "regressions": {
+    "downEightLanesChecks": 2723,
+    "allDownReportsPassedUniqueAndHashesMatch": true,
+    "nodeTests": 255,
+    "pythonTests": 13,
+    "staticPassed": true,
+    "allDeclaredLogHashesMatch": true,
+    "viewUpRefreshedOriginal": {
+      "passed": 54,
+      "checks": 62,
+      "exactNegativeChecks": 8
+    },
+    "viewUpRefreshedCurrent": {
+      "passed": 62,
+      "checks": 62
+    },
+    "viewUpSameSDKBundle": true,
+    "priorSDKProofSeparate": true,
+    "newSDKRuntimeCertificationClaimed": false
+  },
+  "publicationSafety": {
+    "curatedFiles": [
+      "docs/evidence/pointer-document-up/report.json",
+      "docs/evidence/pointer-document-up/README.md",
+      "docs/research/pointer-document-up.md",
+      "examples/pointer-document-up/README.md"
+    ],
+    "personalOrPrivatePathsAndCredentialPatternsFound": false,
+    "PNGChunks": [
+      "IHDR",
+      "sRGB",
+      "IDAT",
+      "IEND"
+    ],
+    "PNGPersonalTextMetadataFound": false
+  },
+  "issues": [],
+  "limits": [
+    "Hosted DocUp pending; no new hosted execution or deployment claim.",
+    "Original/current interest modes use intentionally different bundles on same corrected native host, not prior-host causal control.",
+    "Full RN/GF/ABI, mobile hardware/export, Up faults/lifecycle/once/abort/coalescing/pointer capture, development renderer and other priority branches remain open.",
+    "Filtered Down does not certify public Down-to-Up pointer-ID pairing.",
+    "lazyHelperCalled is a fixture constant; actual slots and SDK resolver source provide bounded no-ref evidence.",
+    "Prior SDK native production pin equality does not certify a newly executed SDK runtime."
+  ]
+}

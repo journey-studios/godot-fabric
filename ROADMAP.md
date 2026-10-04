@@ -1108,7 +1108,9 @@ balanced stop pass. Final Down regression passes **2,723 checks**, contracts
 **255 Node/13 Python** and static analysis passes. View Up again passes62/62
 with its same-current-SDK previous host54/62/eight failures. Native/SDK production sources
 are unchanged fromf7c2cf6 and retain its separate SDK proof. This slice adds its
-own eight-lane CI gate/artifact; hosted Document Up remains pending.
+own eight-lane CI gate/artifact; hosted Document Up remains pending. Its71
+unique executed code/configuration inputs match implementation84270fb via
+git show/SHA-256; original execution base0a2f01e/dirty state is retained.
 
 Once/abort, retained/retired refs/remount, dispatch mutation, Up-specific faults/
 reentrancy, captured/no-hit/null-target Up, Down/Up ID pairing, got/lost capture,
