@@ -76,7 +76,10 @@ native host source.
 
 The [isolated example](../../examples/pointer-query-fault/README.md) explains
 the commands and images. The receipt owns source/native digests and captures.
-Hosted CI for this new fault boundary is pending. The preceding query-only
+[Hosted CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
+passed five jobs at `b88708c`; its audited artifact confirms 186 fault checks,
+22 committed pins and 15 RN inputs. The old-host control remains local, and
+the later Document/root extension is outside that head. The preceding query-only
 artifact verified 193 original / 230 current checks at `ab0dc44`; its full
 workflow encountered an iOS `simctl` discovery timeout on attempt 1 and passed
 all five jobs after a same-head rerun (attempt 2). That artifact does not

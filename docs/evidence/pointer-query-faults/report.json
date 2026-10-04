@@ -1557,8 +1557,31 @@
     }
   },
   "hosted": {
-    "status": "pending",
-    "reason": "No hosted execution yet covers this new native query-call catch"
+    "status": "audited",
+    "run": {
+      "id": 37229423491,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491",
+      "headSha": "b88708c5be4b516fea578442a8c4efd3fe111176",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "checkoutCommit": "472e7ce3f1e70036e81db0f22e4f80c0d6d21b70",
+      "checkoutParents": [
+        "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+        "b88708c5be4b516fea578442a8c4efd3fe111176"
+      ]
+    },
+    "record": "hosted-ci.json",
+    "checks": 186,
+    "committedSourcePinsVerified": 22,
+    "producerPins": 14,
+    "reactNativeInputPins": 15,
+    "artifactId": 11312693815,
+    "oldHostControlHosted": false,
+    "binaryRehashedFromArtifact": false,
+    "newCaptures": 0,
+    "completeParity": false,
+    "newDocumentRootCovered": false
   },
   "limitations": [
     "The catch covers only query call and boolean-result validation; family/handle/stateNode/canonical/publicInstance resolution remains outside it",

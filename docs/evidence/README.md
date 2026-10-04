@@ -267,4 +267,7 @@ remount and stop clean up separately; four diagnostics remain visible. Two
 680×160 frames and 16 exact pixels show A=0/B=0 becoming A=3/B=1. This bounds
 query-call/result recovery; getter resolution, reentrancy, documents, complete
 flags/events and hardware/mobile certification remain open. No new GF/checkpoint
-is closed. Its own hosted execution is pending.
+is closed. Its [audited CI](pointer-query-faults/hosted-ci.json) confirms
+186 headless checks/22 pins at b88708c with five successful jobs. The old-host
+negative and graphical captures stay local; later Document/root work is outside
+that committed head.

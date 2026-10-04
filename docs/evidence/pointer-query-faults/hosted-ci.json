@@ -1,0 +1,227 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-10-04T20:05:33.460942+00:00",
+  "auditStatus": "verified-artifacts",
+  "run": {
+    "id": 37229423491,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491",
+    "headSha": "b88708c5be4b516fea578442a8c4efd3fe111176",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "checkoutCommit": "472e7ce3f1e70036e81db0f22e4f80c0d6d21b70",
+    "checkoutParents": [
+      "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "b88708c5be4b516fea578442a8c4efd3fe111176"
+    ]
+  },
+  "workflowJobs": [
+    {
+      "name": "contracts",
+      "id": 111515759212,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "reference-android",
+      "id": 111515759446,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "native-cold-start",
+      "id": 111515759466,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "reference-ios",
+      "id": 111515759513,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "parity-comparison",
+      "id": 111518660466,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "native-pointer-query-faults",
+      "id": 11312693815,
+      "zipSha256": "0dca396a04847abf13e33c77381bafa67d2f5a47db957cddaab40dffddc814aa",
+      "createdAt": "2026-10-04T19:55:43Z",
+      "sourceHead": "b88708c5be4b516fea578442a8c4efd3fe111176"
+    },
+    {
+      "name": "native-pointer-interest",
+      "id": 11312569157,
+      "zipSha256": "ae5131bb1f971f4da3219cbde929c3cca912be77878c9e5a085f2b8069df29c9",
+      "createdAt": "2026-10-04T19:55:34Z",
+      "sourceHead": "b88708c5be4b516fea578442a8c4efd3fe111176"
+    }
+  ],
+  "reports": {
+    "fault": {
+      "checks": 186,
+      "passed": 186,
+      "uniqueChecks": 186,
+      "checkIdsSha256": "0ff35e214c7cbd5acd875d135eee1cf41dd04320c9c8861121a0ea73760a01ce",
+      "reportSha256": "a8d3ecb7299fa8eec21e22af955596d02ae8260f9b065e8d771ae7bb338750dd",
+      "producerPins": 14,
+      "reactNativeInputPins": 15,
+      "bundleSha256": "ec4bf623d111826993f9499dafc1f43b179d44f0326380fb36bd8717254909eb",
+      "declaredNativeHostSha256": "363af4334c6c99191ed317d581a09333be499571c935063cc96dd42afc471173",
+      "newCaptures": 0
+    },
+    "interestOriginal": {
+      "checks": 193,
+      "passed": 193,
+      "uniqueChecks": 193,
+      "checkIdsSha256": "83d2764111dbe7771873b49f07518531ab4966d9d085d26ceb523fb165717053",
+      "reportSha256": "7602b3c0f4db7e7a4b2440ce312c5e11f515381e8f2d044efe00a3d5a534400e",
+      "producerPins": 13,
+      "reactNativeInputPins": 13,
+      "bundleSha256": "46aa23be5a34265b31451ac75c854233c25e1cef49b0ba515e16daef25d07360",
+      "declaredNativeHostSha256": "363af4334c6c99191ed317d581a09333be499571c935063cc96dd42afc471173",
+      "newCaptures": 0
+    },
+    "interestCurrent": {
+      "checks": 230,
+      "passed": 230,
+      "uniqueChecks": 230,
+      "checkIdsSha256": "1d3f0d4482730c19cb12ea41e8c4cd74006d2ecafa9d5cbe4fb558c6ba00a767",
+      "reportSha256": "2ab41bc2717213f59f995c5c3b6bacffe31a73221fb0d39132bb92adea5ad63a",
+      "producerPins": 13,
+      "reactNativeInputPins": 13,
+      "bundleSha256": "e30f11ed9a8463efcbf40a093d8c5077ff8e3f041f34c57056aee576e7a6dac3",
+      "declaredNativeHostSha256": "363af4334c6c99191ed317d581a09333be499571c935063cc96dd42afc471173",
+      "newCaptures": 0
+    }
+  },
+  "sourceVerification": {
+    "curatedPins": 22,
+    "implementationCommit": "1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13",
+    "headCommit": "b88708c5be4b516fea578442a8c4efd3fe111176",
+    "allPinsMatchImplementationHeadAndCheckout": true,
+    "faultProducerPins": 14,
+    "faultReactNativeInputs": 15,
+    "interestProducerPinsEach": 13,
+    "interestReactNativeInputsEach": 13,
+    "reportPinsVerifiedAgainstCommittedSources": true,
+    "sameDeclaredNativeHostAcrossThreeReports": true,
+    "nativeBinaryArtifactAvailable": false,
+    "nativeBinaryIndependentlyHashedByAudit": false
+  },
+  "faultOutcomes": [
+    {
+      "case": "throw34",
+      "offset": 34,
+      "mode": "throw",
+      "matchedOnce": true,
+      "sameBatchTouchStartRawAndReactPreserved": true,
+      "failedPointerDownAbsent": true,
+      "heldContactLegitimate": true,
+      "otherRootGesturePassed": true
+    },
+    {
+      "case": "nonboolean34",
+      "offset": 34,
+      "mode": "nonboolean",
+      "matchedOnce": true,
+      "sameBatchTouchStartRawAndReactPreserved": true,
+      "failedPointerDownAbsent": true,
+      "heldContactLegitimate": true,
+      "otherRootGesturePassed": true
+    },
+    {
+      "case": "throw35",
+      "offset": 35,
+      "mode": "throw",
+      "matchedOnce": true,
+      "sameBatchTouchStartRawAndReactPreserved": true,
+      "failedPointerDownAbsent": true,
+      "heldContactLegitimate": true,
+      "otherRootGesturePassed": true
+    },
+    {
+      "case": "nonboolean35",
+      "offset": 35,
+      "mode": "nonboolean",
+      "matchedOnce": true,
+      "sameBatchTouchStartRawAndReactPreserved": true,
+      "failedPointerDownAbsent": true,
+      "heldContactLegitimate": true,
+      "otherRootGesturePassed": true
+    }
+  ],
+  "faultDiagnostics": [
+    "ERROR: FABRIC_ERROR: E_POINTER_LISTENER_QUERY: GF pointer query deliberate fault: throw34",
+    "ERROR: FABRIC_ERROR: E_POINTER_LISTENER_QUERY: Pointer listener query must return a boolean",
+    "ERROR: FABRIC_ERROR: E_POINTER_LISTENER_QUERY: GF pointer query deliberate fault: throw35",
+    "ERROR: FABRIC_ERROR: E_POINTER_LISTENER_QUERY: Pointer listener query must return a boolean"
+  ],
+  "cleanup": {
+    "actualUpPassed": true,
+    "actualCancelPassed": true,
+    "retirementRemountPassed": true,
+    "queryRetainedForLiveSecondRoot": true,
+    "finalStopBalancedRootsAndNodes": true,
+    "finalStopWorkTimersFramesPointerStateZero": true,
+    "diagnosticsRetainedAfterStop": 4
+  },
+  "logs": {
+    "fault": {
+      "path": "build/query-fault-hosted-b88708c/native-pointer-query-faults/pointer-query-fault-current.log",
+      "sha256": "4e4c3e0b1a71336459c318fb58187cb800b16229fe636d6269b8236dcf7fbcf6",
+      "errorCount": 4,
+      "registryWarnings": 0,
+      "glogInitializationWarningPresent": true
+    },
+    "interestOriginal": {
+      "path": "build/query-fault-hosted-b88708c/native-pointer-interest/pointer-interest-original.log",
+      "sha256": "b4780c69f8a741ed965d712a20280ad5f0eb623e338bd13af97bb380fd5e4442",
+      "errorCount": 0,
+      "registryWarnings": 0,
+      "glogInitializationWarningPresent": true
+    },
+    "interestCurrent": {
+      "path": "build/query-fault-hosted-b88708c/native-pointer-interest/pointer-interest-current.log",
+      "sha256": "cad5559f86fbdc04e538978a54f1a386cac7f95b7ae57ffdac1ddefb3b941bb4",
+      "errorCount": 0,
+      "registryWarnings": 0,
+      "glogInitializationWarningPresent": true
+    }
+  },
+  "nativeJobLog": {
+    "path": "build/query-fault-hosted-b88708c/native-job.log",
+    "sha256": "cf3403bc591f04e671b401a2f420354d0f257306a625a94af97800ab13cb56e0",
+    "compilerErrorLines": 0,
+    "compiledCheckoutMatches": "472e7ce3f1e70036e81db0f22e4f80c0d6d21b70"
+  },
+  "oldHostControl": {
+    "hosted": false,
+    "originalControlPresent": false,
+    "localDocumentedControl": "174/186 with12normativefailedchecks; not rerun here"
+  },
+  "scope": {
+    "newHostedCaptures": 0,
+    "newHostedPixelAssertions": 0,
+    "publicFlagsDefaultEnabled": false,
+    "mobileJobsAreSeparateCoreUIV2References": true,
+    "newDocRootInterestCovered": false
+  },
+  "limits": [
+    "Hosted query-fault receipt covers corrected186checks only; the older native-host12failurecontrol remains local.",
+    "NativeHostSha256 is declared by the runner; no compiled binary is included in these artifacts for independent hashing.",
+    "The same declared CI host may differ from local host bytes; equality is required only across these three CI reports.",
+    "Call and boolean-validation faults are covered; family/handle/property resolution, reentrant queries and stop inside query are outside this acceptance.",
+    "The completed mobile jobs cover original RN core-ui-v2; they do not certify query-fault/input parity or Godot mobile exports.",
+    "New document/root interest under development is absent from committed b88708c and uncovered by this run.",
+    "No new graphical captures or pixel assertions were produced by these headless artifacts.",
+    "glog initialization/destruction warnings remain; no registry warnings or unexpected probe errors were observed.",
+    "Source identity and bounded receipts do not close full GF05/06/07/08/13 or public capability acceptance."
+  ]
+}

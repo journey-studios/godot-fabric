@@ -70,7 +70,15 @@ analysis, 22 examples/2,250 checks, independent consumer 30 build/ownership and
 40 native checks, fresh SDK pack/verify, loader 89 checks/21 cases, and 13 native
 adapter runs/213 checks. Previous interest 193/230 and integrated dispatch
 181/206 remain green, as do portable processor and geometry gates. Adapter ABI
-certification remains false. This new correction's hosted execution is pending.
+certification remains false. [Hosted CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
+passed all five jobs at `b88708c`. Its [audited artifacts](hosted-ci.json) confirm
+186 headless fault checks, 22 committed pins, 14 producers and 15 original RN
+inputs, alongside 193/230 prior-interest regression checks. Four diagnostics are
+retained with no unexpected probe errors. The native digest is declared by the
+runner; no native binary is included for independent hashing. The 12-failure
+old-host control and 204-check captures remain local. Core mobile reference jobs
+do not certify Godot query-fault exports. The later Document/root extension is
+not included in this head.
 
 The catch covers the query call and boolean validation. Family/handle and
 `stateNode.canonical.publicInstance` resolution happen outside it. Getter faults,

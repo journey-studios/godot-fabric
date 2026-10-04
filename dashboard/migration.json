@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Falhas da query isoladas; próximos documentos e matriz de flags"
   },
-  "updatedAt": "2026-10-04T19:43:08.555823+00:00",
+  "updatedAt": "2026-10-04T20:10:18.132573+00:00",
   "source": {
-    "commit": "1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/ROADMAP.md",
-    "scope": "Implementação1286b1b:22pins executados comparados ao commit. Lookup throw/nonboolean isolados; controle174/186 com12falhas,186headless/204viewport/16pixels corrigidos.250/13contratos,22examples2250,consumer30/40,13adapters213 passam. CI anteriorab0dc44 verde no rerun; nova CI/Pages pendentes. Sem GF/checkpoint completo adicional; pesos/denominador preservados.",
+    "commit": "b88708c5be4b516fea578442a8c4efd3fe111176",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b88708c5be4b516fea578442a8c4efd3fe111176",
+    "scope": "CIb88708c auditada:5jobs,186faultchecks/22pins/15RNinputs e193/230regressões;4diagnósticos retidos. Antigo174/186 e204viewport/16pixels seguem locais. Pages37229427417 confirmado comJSONb88708c integral. Nova Document/root query em validação, fora dessehead. Sem GF/checkpoint/pesos/denominador adicional.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Chamada/retorno da query isolados com diagnóstico preservado: antigo174/186, corrigido186/204 e16pixels. TouchStart/Raw/React continuam no mesmo batch; stop remove query e zera work/timers/frames. Contratos250/13. Bootstrap/globals completos, flags, getters/reentrância e mobile permanecem abertos. CI da query anteriorab0dc44 passou; nova correção ainda local.",
+      "note": "Chamada/retorno da query isolados com diagnóstico preservado: antigo174/186, corrigido186/204 e16pixels. TouchStart/Raw/React continuam no mesmo batch; stop remove query e zera work/timers/frames. Contratos250/13. Bootstrap/globals completos, flags, getters/reentrância e mobile permanecem abertos. CI da query anteriorab0dc44 passou; correção confirmada em CIb88708c186checks; documentos/flags em validação.",
       "blocker": "",
       "checkpoints": [
         {
@@ -306,6 +306,10 @@
             {
               "label": "Falhas da query: controle e runtime macOS;22pins no commit",
               "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
             }
           ]
         },
@@ -342,7 +346,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Batch original181/206 comprovado e CI0478499 auditada; query anterior193/230 confirmada em CIab0dc44. Nova falha de lookup preserva TouchStart/Raw e update React:186headless/204viewport, controle antigo12 falhas. Contexto volta a Default, sem certificar prioridades completas. StrictMode/dev,transitions/Suspense/Activity,stores e paridade ampla abertos; nenhum checkpoint adicional.",
+      "note": "Batch original181/206 comprovado e CI0478499 auditada; query anterior193/230 confirmada em CIab0dc44. Nova falha de lookup preserva TouchStart/Raw e update React:186headless/204viewport, controle antigo12 falhas. Contexto volta a Default, sem certificar prioridades completas. StrictMode/dev,transitions/Suspense/Activity,stores e paridade ampla abertos; nenhum checkpoint adicional. CIb88708c5jobs auditados:186faultchecks; nova Document/root query fora dessehead.",
       "blocker": "",
       "checkpoints": [
         {
@@ -365,6 +369,10 @@
             {
               "label": "Falhas da query: controle e runtime macOS;22pins no commit",
               "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
             }
           ]
         },
@@ -401,7 +409,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Query pertence à aplicação; anterior comprova Bheld durante Aunmount. Correção atual comprova Up/Cancel,retirement/remount e stop após lookup inválido, quatro diagnósticos retidos e roots/contacts/work zerados.186/204,consumer30/40,13adapters213. B é liberado antes de Aunmount neste fixture. Getters/reentrância, pause/lifecycle amplo e diferencial abertos.",
+      "note": "Query pertence à aplicação; anterior comprova Bheld durante Aunmount. Correção atual comprova Up/Cancel,retirement/remount e stop após lookup inválido, quatro diagnósticos retidos e roots/contacts/work zerados.186/204,consumer30/40,13adapters213. B é liberado antes de Aunmount neste fixture. Getters/reentrância, pause/lifecycle amplo e diferencial abertos. CIb88708c5jobs auditados:186faultchecks; nova Document/root query fora dessehead.",
       "blocker": "",
       "checkpoints": [
         {
@@ -448,6 +456,10 @@
             {
               "label": "Falhas da query: controle e runtime macOS;22pins no commit",
               "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
             }
           ]
         },
@@ -484,7 +496,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "View/pointerdown lê Maps originais, flattening e refs/lifetime comprovados193/230/260; artefato CIab0dc44 confirma193/230. Novo catch apenas na chamada/retorno preserva native batch186/204/16pixels, controle antigo174/186. Document/documentElement,flags,outros tipos,getters/reentrância,types/commands/perf/hardware/mobile continuam abertos. Flags públicas off; CI nova correção pendente.",
+      "note": "View/pointerdown lê Maps originais, flattening e refs/lifetime comprovados193/230/260; artefato CIab0dc44 confirma193/230. Novo catch apenas na chamada/retorno preserva native batch186/204/16pixels, controle antigo174/186. Document/documentElement,flags,outros tipos,getters/reentrância,types/commands/perf/hardware/mobile continuam abertos. Flags públicas off; CIb88708c186checks confirmada; documentos/flags em validação.",
       "blocker": "",
       "checkpoints": [
         {
@@ -583,6 +595,10 @@
             {
               "label": "Falhas da query: controle e runtime macOS;22pins no commit",
               "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
             }
           ]
         },
@@ -850,7 +866,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "View/pointerdown capture/bubble/dedupe/once/abort/remove-peer/JSX/lifetime preservam RN original193/230/260 e CIab0dc44. Query throw/nonboolean nos offsets34/35 agora rejeita lookup e conserva TouchStart/Raw/React:186/204,12 falhas no controle antigo,4 diagnósticos visíveis. Document/element,flags,outros eventos,responder/PanResponder/coalescing/getters/hardware/mobile ainda abertos.",
+      "note": "View/pointerdown capture/bubble/dedupe/once/abort/remove-peer/JSX/lifetime preservam RN original193/230/260 e CIab0dc44. Query throw/nonboolean nos offsets34/35 agora rejeita lookup e conserva TouchStart/Raw/React:186/204,12 falhas no controle antigo,4 diagnósticos visíveis. Document/element,flags,outros eventos,responder/PanResponder/coalescing/getters/hardware/mobile ainda abertos. CIb88708c5jobs auditados:186faultchecks; nova Document/root query fora dessehead.",
       "blocker": "",
       "checkpoints": [
         {
@@ -917,6 +933,10 @@
             {
               "label": "Falhas da query: controle e runtime macOS;22pins no commit",
               "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
             }
           ]
         },
@@ -2717,6 +2737,32 @@
     }
   ],
   "activity": [
+    {
+      "id": "query-fault-ci-audit-b88708c",
+      "at": "2026-10-04T20:10:18.132573+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI37229423491 passou5jobs. Artifacts186faultchecks/22sourcepins/15RN e193/230interest IDs exatos conferidos em1286b1b,b88708c echeckoutmerge472e7ce3.4diagnósticos visíveis,RawTouchStart/React ecleanups passam. Hostdeclarado363af433 entre3reports sembinário noartifact. Antigo12negative e204viewport continuam locais. NovaDocroot não coberta. Nenhum GF/checkpoint/peso/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+    },
+    {
+      "id": "query-fault-pages-b88708c",
+      "at": "2026-10-04T20:10:18.132573+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37229427417SUCCESS build/deploy; JSON público b88708c integral comparado ao commit removendoapenaspublication,local4318APIigual. Renderer mainadad606,dadosbranchfora main. Publicação contémlookupfaultlocal; auditoriaCIposterior terápublicação própria.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229427417"
+    },
     {
       "id": "query-fault-source-pin-1286b1b",
       "at": "2026-10-04T19:43:08.555823+00:00",

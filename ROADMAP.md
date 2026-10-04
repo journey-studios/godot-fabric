@@ -906,7 +906,10 @@ released before A unmounts in this fault fixture. The earlier held-B retirement
 proof is independent. Contracts250/13, static analysis, 22examples2250,
 consumer30/40, fresh SDK, loader89/21, 13adapters213 and prior interest193/230,
 dispatch181/206 and portable processor/geometry gates pass on the corrected host.
-This new native correction's own CI remains pending.
+[Hosted correction CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491) passed all five jobs at b88708c.
+Its audited artifacts confirm 186 fault checks, 22 committed source pins and
+15 RN inputs, plus 193/230 prior-interest regressions. The old-host negative and
+captures remain local; the run does not cover the subsequent Document extension.
 
 The catch excludes family/handle/public-instance resolution. Getter exceptions,
 reentrancy, stop during query and complete queue-fault behavior remain open.

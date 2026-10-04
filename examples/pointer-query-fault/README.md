@@ -82,6 +82,7 @@ All four deliberate diagnostics survive retirement, recovery and stop.
 Ref-resolution property getters occur outside this new catch and are not
 covered by these faults. Document interest, other pointer categories, the full
 flag matrix, broader error/reentrancy behavior, mobile, hardware and performance
-still need their own acceptance. New hosted CI is pending; the earlier
-query-only CI artifact does not cover this correction. See the
+still need their own acceptance. [This correction's CI](https://github.com/journey-studios/godot-fabric/actions/runs/37229423491)
+passed 186 headless checks at `b88708c`; the old control and captures remain local.
+The later Document/root extension is not covered by that head. See the
 [failure analysis and scope](../../docs/research/pointer-query-faults.md).
