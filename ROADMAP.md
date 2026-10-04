@@ -283,6 +283,9 @@ transforms, physical hardware, OS DPI, multitouch and the remaining interaction
 contracts still require their own evidence. Next in sequence 3: expand View
 transforms and public HostInstance behavior against the original contract.
 No new architectural decision, complete GF item or denominator changes here.
+The [hosted CI receipt](docs/evidence/coordinates/ci.json) keeps local proof,
+current CI, preceding simulator-discovery failure and verified Pages deployment
+separate; none supplies the still-open full differential/target acceptance.
 
 ## Release contract and scope
 

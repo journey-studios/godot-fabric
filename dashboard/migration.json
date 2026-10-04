@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Gestos e coordenadas de roots comprovados; próximo: transforms e HostInstance"
   },
-  "updatedAt": "2026-10-04T01:32:45.633609+00:00",
+  "updatedAt": "2026-10-04T01:39:37.824546+00:00",
   "source": {
     "commit": "48e425345b0ecb7665a7a447c9c14453c8e4ece0",
     "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/ROADMAP.md",
-    "scope": "Implementação 48e4253 conferida com as fontes nativas e fixtures executadas. Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI precedente View b5df4d6 verde; CI desta fatia pendente. Só a slice GF-13 fica done; nenhum GF completo, decisão, peso ou denominador alterado.",
+    "scope": "Implementação 48e4253 conferida com as fontes nativas e fixtures executadas. Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI precedente View b5df4d6 verde; CI desta fatia pendente. Só a slice GF-13 fica done; nenhum GF completo, decisão, peso ou denominador alterado. CI 0e05abe: iOS ETIMEDOUT na descoberta do simulador; comparação skipped. Snapshot de coordenadas f40831e: in_progress; deploy Pages deste snapshot verificado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2480,6 +2480,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "coordinates-ci-observed-20261004",
+      "at": "2026-10-04T01:39:37.824546+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Pages 37168385389 passou build/deploy; JSON público conferido em f40831e. CI anterior 0e05abe passou contracts/native/Android, mas simctl excedeu 60 s antes da app iOS; comparação skipped. CI f40831e registrada separadamente, sem concluir aceites.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/ci.json"
+    },
     {
       "id": "coordinates-source-48e4253",
       "at": "2026-10-04T01:32:45.633609+00:00",

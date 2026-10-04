@@ -25,6 +25,13 @@ identities are in [provenance.json](provenance.json); other completed suites are
 in [regressions.json](regressions.json). These local results do not establish
 new hosted CI, exported targets or complete RN parity.
 
+[Hosted CI and publication](ci.json) record the coordinate snapshot separately.
+The preceding documentation snapshot `0e05abe` passed contracts, native cold
+start and Android; iOS simulator discovery timed out before app execution,
+so its comparison was skipped. The current coordinate run retains its observed
+job states in that receipt. Pages build/deploy succeeded for data `f40831e`,
+and the public JSON exactly matched that committed snapshot.
+
 ## Coordinate contract and correction
 
 Pinned RN [BaseTouch](https://github.com/react/react-native/blob/v0.87.1/packages/react-native/ReactCommon/react/renderer/components/view/BaseTouch.h#L23-L36)
