@@ -152,6 +152,26 @@ export async function bundlePointerQueryFaultProbe() {
       "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
 }
 
+export async function bundlePointerResolverFaultProbe() {
+  return bundleProbe({entryPoint: "tests/pointer-resolver-fault-fixture.jsx", modes: ["enabled"],
+    prefix: "pointer-resolver-fault", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: "experimental", pointerInterestMode: "current",
+    sources: ["tests/event-target-bootstrap.js", "tests/pointer-query-fault-bootstrap.js",
+      "tests/pointer-query-fault-fixture.jsx", "tests/pointer-query-fault-probe.gd",
+      "tests/pointer-resolver-fault-bootstrap.js", "tests/pointer-resolver-fault-fixture.jsx",
+      "tests/pointer-resolver-fault-probe.gd", "tests/pointer-resolver-fault-native.test.mjs",
+      "scripts/event-target-bundle.mjs", "sdk/toolchain/platform-plugin.mjs",
+      "sdk/toolchain/rn-event-target-overlay.mjs", "sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs", "src/private-interface.js",
+      "src/pointer-listener-query.js", "native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js",
+      "src/private/webapis/dom/nodes/ReactNativeDocument.js",
+      "src/private/webapis/dom/nodes/internals/NodeInternals.js",
+      "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js",
+      "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
+}
+
 export async function bundlePointerDocumentProbe({interestMode = "current"} = {}) {
   assert.ok(["original", "current"].includes(interestMode));
   return bundleProbe({entryPoint: "tests/pointer-document-fixture.jsx", modes: eventTargetProbeModes,

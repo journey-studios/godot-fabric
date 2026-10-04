@@ -99,6 +99,16 @@ These are actual 760×220 Godot readbacks with 20 pixel assertions. The
 [receipt](../docs/evidence/pointer-documents/README.md) distinguishes the captured
 A=0/B=0 → A=2/B=0 gesture from later controls and remaining event gaps.
 
+The [ref-getter probe](pointer-resolver-fault/README.md) isolates a throwing
+`canonical.publicInstance` read before the SDK query. It reuses the two-surface
+scene and actual original refs; `npm run test:pointers:resolver-faults` is outside
+the launcher catalog. Its [receipt](../docs/evidence/pointer-resolver-faults/README.md)
+records 62/65 on the preceding native host with three normative failures,
+65/65 corrected headless and 85/85 viewport checks. Actual 680×160 captures
+show A=0/B=0 → A=2/B=0 before B's later gesture and A's Cancel. Only the
+self-restoring `publicInstance` getter was faulted; wider resolver and mobile
+acceptance remain open and public flags stay off.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

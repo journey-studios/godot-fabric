@@ -104,6 +104,15 @@ failures and separate original/binding witnesses. It documents the pinned RN
 numerical limitation and native local-inverse behavior; coalescing, hardware,
 scroll/windows, EventTarget and mobile acceptance remain open.
 
+The later [ref-getter fault record](pointer-resolver-faults/README.md) isolates a
+throwing `canonical.publicInstance` read before the real SDK query. The identical
+65-check fixture retains three same-batch TouchStart/Raw/React failures on the
+previous host and passes all 65 on the corrected host. Two actual 680×160 frames
+add 16 pixel assertions, two React-counter assertions and two saves for 85/85
+viewport checks. The descriptor is restored before throwing; broader getter,
+root/reentrant, hardware/mobile and priority acceptance remain open. Public
+flags stay off and this correction's hosted CI remains pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

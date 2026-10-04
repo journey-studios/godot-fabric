@@ -979,6 +979,43 @@ closes. Other pointer categories and responder/PanResponder contracts are next,
 with complete priorities, dev renderer, performance, hardware/mobile/export
 acceptance still open. Scope remains a verified root-interest slice.
 
+### Component ref resolver failure preserves the native batch (2026-10-04)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[getter fault receipt](docs/evidence/pointer-resolver-faults/README.md) proves a
+failure before the SDK query: one getter on the actual current View family's
+canonical.publicInstance restores its exact original data descriptor before
+throwing. The preceding host loses the same-batch TouchStart callback, Raw
+channels and React commit even though that descriptor is already usable.
+
+Identical JS bundle bytes, 65 check IDs and 18 original RN inputs retain
+**62/65 with three visible normative failures** on the preserved host. The
+corrected host passes **65/65**, with only C++ differing among 17 producers.
+Component property reads now share the query's exception boundary. A failed
+lookup records E_POINTER_LISTENER_QUERY and its cause, rejects that interest
+lookup, and preserves the following original TouchStart/Raw/update in one
+actual native React commit. No pointerdown is manufactured. The failed getter
+enters no SDK callback; seven later healthy false queries are legitimate.
+
+B completes a healthy gesture while A remains physically held. A's actual
+Cancel, next healthy Down/Up, context restoration, descriptor reuse and balanced
+stop pass independently; one diagnostic remains. The actual macOS viewport
+passes **85/85**, including 16 pixel checks, two counter checks and two saves.
+Images show A0/B0 to A2/B0: one healthy A baseline then the preserved fault-batch
+TouchStart, before B input. The fault itself adds the second unit/one commit.
+
+This executes one restored publicInstance getter with both flags. Individual
+stateNode/canonical faults, permanent/proxy/root accessors, reentrant
+stop/retirement, other flags/categories, complete priorities, hardware/mobile,
+performance and dev renderer remain open. The preceding Document CI passed
+five jobs and 2,723 Document checks; this new getter fixture has its own hosted
+CI and publication pending. No new GF, checkpoint, dependency, weight or
+denominator closes. Regression gates pass 250 Node/13 Python, 2,723 Document,
+193/233 interest, 186 query faults, integrated181/206, 22 examples/2,250,
+consumer30/40, fresh SDK pack/verify, loader89/21, 13 adapters/213 and two
+portable processor/geometry tests each. The refreshed query-fault baseline
+retains twelve negatives; no assertion is relaxed. Details are in the receipt.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Document confirmado em CI; falhas no resolver de refs antes de pointerup"
+    "focusTitle": "Getter de ref preserva batch nativo; pointerup e reentrância pendentes"
   },
-  "updatedAt": "2026-10-04T21:06:55.621072+00:00",
+  "updatedAt": "2026-10-04T21:36:02.438586+00:00",
   "source": {
-    "commit": "00bd80454384cbfbffc1b703df0864674bf11f99",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/00bd80454384cbfbffc1b703df0864674bf11f99",
-    "scope": "Document/root: local 2.723 checks/385 viewport/20 pixels/142 negativos antigos; CI37233393202 @e65b7ba passou cinco jobs. Artifacts 2.723+193/233+186 auditados,25 pins conferidos contra00bd/head/checkout a1d8a980. Pages37233943579 publicou b7b6c29 com JSON público/local integral verificado. Próxima investigação: getter real de publicInstance antes da consulta. Nenhum novo checkpoint/GF/peso/denominador.",
+    "commit": "b2e46551ed1456419ba9c2423f0f5affe8062dd9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b2e46551ed1456419ba9c2423f0f5affe8062dd9",
+    "scope": "Fatia getter local comprovada: anterior62/65 com3falhas normativas; corrigido65/65,viewport85/16pixels.65IDs/bundle/18RN iguais,17produtores C++only. Umafalha real emcanonical.publicInstance restaura descriptorantesthrow; SDK0noinstantefault e7queriesfalse depois,TouchStart/Raw/React/umcommit/diagnóstico+cleanup passam. 15gatesregressãopassaram,SDKfrescoa6ae;CI/publicação desta fatia pendentes. DocumentCIe65fivejobs separado. Nenhumcheckpoint/GF/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Quatro configurações de Hermes/flags preservam os gates originais: 2.723 checks locais, 385 no viewport e 20 pixels. Root throw34 preserva TouchStart/Raw/React e diagnóstico; stop limpa query/work/timers/frames. Contratos 250/13. Bootstrap/globals completos, demais faults/getters/reentrância/dev/mobile abertos. CI e65b7ba passou cinco jobs; artifacts conferidos.",
+      "note": "Getter real da ref agora é contido antes do SDK: erro com causa retida preserva TouchStart/Raw/React e limpa contexto/work/query no stop. Original62/65 com3negativos; corrigido65/viewport85. Bootstrap/globals completos, outros getters/permanentes/proxies/reentrância/dev/mobile abertos. CI própria pendente; 15gatesregressãopassaram,SDKnovoigualhostexecutado.",
       "blocker": "",
       "checkpoints": [
         {
@@ -318,6 +318,10 @@
             {
               "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -354,7 +358,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Document capture/bubble e capture-only fazem updates funcionais em um commit original por gesto; 2.723 checks de matriz/385 viewport. Ausência de callbacks não comita. Root throw34 preserva TouchStart no batch. Prioridades completas, StrictMode/dev, transitions/Suspense/Activity/stores e paridade ampla abertos. CI e65b7ba passou cinco jobs; artifacts conferidos; nenhum checkpoint adicional.",
+      "note": "Uma falha em publicInstance preserva callback TouchStart/Raw/update funcional e exatamente um commit nativo de React (2→3).65checks/85viewport, mesmo bundle/IDs no controle anterior3falhas. Prioridades completas, StrictMode/dev/transitions/Suspense/Activity/stores/paridade ampla abertos. CI própria pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -389,6 +393,10 @@
             {
               "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -425,7 +433,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Raiz por família atual usa handle original; Document/element persistem em rerender, desconectam no retirement e são novos no remount. Listeners antigos: manual positivo/native negativo. Stop balanceado; A-none/B-doc isolado. Root/lifetimes completos e sibling simultaneamente pressionado pendentes. Matriz 2.723/viewport 385 locais, SDK df06; CI e65b7ba passou cinco jobs, artifacts conferidos.",
+      "note": "Duas raízes compartilham Hermes/query; B completa gesto enquanto A permanece pressionada depois do getterfault. CancelA/nextDownUp/stop balanceados, diagnóstico único mantido.65checks/85viewport. Retire/remount reentrante e demais lifetimes do getter pendentes; CI própria pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -484,6 +492,10 @@
             {
               "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -520,7 +532,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Document original funciona com native dispatch sozinho; View/element mantêm gate de ambos flags. Root query lê Maps/acessores existentes; slot no-ref null antes/depois, dispatcher pode criar depois. Matriz 2.723, viewport 385/20 pixels; controle antigo 142 falhas. Types/commands completos, outras categorias/getters/reentrância/perf/hardware/mobile abertos; flags públicas off, CI e65b7ba passou cinco jobs, artifacts conferidos.",
+      "note": "Query engloba leiturasstateNode/canonical/publicInstance; executado apenas getterpublicInstance real, descriptor completo restaurado antesthrow e SDK0nesseinstante.7queriesfalse posteriores legítimas.65/85,23pins locais. Types/commands completos, demais slots/proxies/getters/reentrância/hardware/mobile/performance abertos; flags públicas off; CI própria pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -631,6 +643,10 @@
             {
               "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -898,7 +914,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Document/element pointerdown capture/bubble e capture-only provam offset34 false antes de 35 true, Raw/estado/batch, once/remove/abort/lifetime e A-none/B-doc. Matriz 2.723/viewport 385; controle 142 falhas normativas, um diagnóstico root34 retido. Demais pointer/touch/responder/PanResponder/coalescing/faults/hardware/mobile abertos; CI e65b7ba passou cinco jobs, artifacts conferidos.",
+      "note": "Falha real do resolver não descarta mesmo batch TouchStart/Raw/React; nenhuma entrega pointerdown fabricada. ContatoHeld válido atéCancel; Bhealthy/nextgesture/stop balanceados.65checks/85viewport,16pixels,3negativos anteriores. Up/hover/move/responders/coalescing/flags/reentrância/hardware/mobile abertos; CI própria pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -977,6 +993,10 @@
             {
               "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
             }
           ]
         },
@@ -2777,6 +2797,32 @@
     }
   ],
   "activity": [
+    {
+      "id": "resolver-getter-batch-local-20261004",
+      "at": "2026-10-04T21:28:02.009203+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Um getter realcanonical.publicInstance restaura descriptorantesthrow. Controle anterior62/65 com3falhas visíveis TouchStart/Raw/React; corrigido65/65,85viewport/16pixels+2counter+2save.A0B0→A2B0incluihealthybaseline+faultTouchStartumcommit.65IDs/bundle/18RNiguais,17producersonlyC++.SDK0noinstantefault/7falseafter,diagnóstico único/CancelA/BhealthywhileAheld/nextgesture/stopzero passam.23pins locais. 15gatesregressãopassaram250/13,2723Doc,193/233,186,181/206,22examples2250,consumer30/40,loader89/21,13adapters213,portables2+2. SDKnewigualhosta6ae; CI/publicaçãopendentes;semaceiteGF/checkpoint/peso/denominador novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-resolver-faults/README.md"
+    },
+    {
+      "id": "document-ci-pages-b2e4655-confirmed",
+      "at": "2026-10-04T21:28:02.009203+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37235105858 concluiu build/deploy e JSON público completo igual ao commitb2e4655 removendo sópublication;APIlocal4318igual. Renderer mainadad606,dadosbranchfora main. Publicação inclui DocumentCIe65auditada, anterior à nova fatia getter local.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37235105858"
+    },
     {
       "id": "document-ci-audit-e65b7ba",
       "at": "2026-10-04T21:06:55.621072+00:00",

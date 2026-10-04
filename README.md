@@ -121,6 +121,16 @@ separates the original SDK, the previous native host and the corrected host.
 Public flags remain disabled; arbitrary getter/reentrant faults and complete
 pointer/responder contracts remain open.
 
+The [ref-getter example](examples/pointer-resolver-fault/README.md) isolates a
+throwing `canonical.publicInstance` getter before the SDK interest query. The
+previous host loses three same-batch TouchStart/Raw/React outcomes; the corrected
+host passes 65 headless and 85 viewport checks, including actual counter updates.
+[Its evidence](docs/evidence/pointer-resolver-faults/README.md) separates the
+executed one-shot getter from broader resolver/reentrancy and mobile gaps.
+Public flags remain off; hosted CI for this correction is pending.
+
+![A's React TouchStart update survives a ref getter failure](docs/evidence/pointer-resolver-faults/updated.png)
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

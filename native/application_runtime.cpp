@@ -683,18 +683,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         // RootNodeKind can also occur on nested nodes. Only the actual current
         // root family receives RN's specialized handle, after releasing the
         // registry lock. Component queries still use existing public refs.
-        jsi::Value candidate = jsi::Value::undefined();
-        if (is_root_handle) {
-          candidate = jsi::Value(*runtime, handle);
-        } else {
-          auto state = handle.asObject(*runtime).getProperty(*runtime, "stateNode");
-          if (!state.isObject()) return false;
-          auto canonical = state.asObject(*runtime).getProperty(*runtime, "canonical");
-          if (!canonical.isObject()) return false;
-          candidate = canonical.asObject(*runtime).getProperty(*runtime, "publicInstance");
-          if (!candidate.isObject()) return false;
-        }
         try {
+          // Component slot reads can invoke JS getters before entering the SDK.
+          // Their failure must reject only this lookup, just like a query fault.
+          jsi::Value candidate = jsi::Value::undefined();
+          if (is_root_handle) {
+            candidate = jsi::Value(*runtime, handle);
+          } else {
+            auto state = handle.asObject(*runtime).getProperty(*runtime, "stateNode");
+            if (!state.isObject()) return false;
+            auto canonical = state.asObject(*runtime).getProperty(*runtime, "canonical");
+            if (!canonical.isObject()) return false;
+            candidate = canonical.asObject(*runtime).getProperty(*runtime, "publicInstance");
+            if (!candidate.isObject()) return false;
+          }
           auto result = pointer_listener_query->call(*runtime, candidate, static_cast<double>(offset), is_root_handle);
           if (!result.isBool()) throw jsi::JSError(*runtime, "Pointer listener query must return a boolean");
           return result.getBool();

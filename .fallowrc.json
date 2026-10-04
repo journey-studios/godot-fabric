@@ -30,7 +30,8 @@
     "tests/event-dispatch-integrated-fixture.jsx",
     "tests/pointer-interest-fixture.jsx",
     "tests/pointer-query-fault-fixture.jsx",
-    "tests/pointer-document-fixture.jsx"
+    "tests/pointer-document-fixture.jsx",
+    "tests/pointer-resolver-fault-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
