@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "scenario": "native-pointer-up-view-interest",
-  "status": "verified-local-runtime-and-regressions-hosted-ci-pending",
+  "status": "verified-local-runtime-regressions-and-hosted-artifacts",
   "executionBaseCommit": "3ca4174667367c66a914a31c677df4ff221e1ceb",
   "sourceDirtyDuringExecution": true,
   "implementationCommit": "f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
@@ -673,9 +673,19 @@
       "packReceiptAloneDoesNotCertifyRuntime": true
     },
     "hostedCI": {
-      "status": "pending-this-implementation",
-      "runUrl": null,
-      "precedingCIIsNotUpRuntimeProof": true
+      "status": "verified-hosted-artifacts",
+      "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37241023275",
+      "headCommit": "041688ca37d8dde73b58bae3888ba80298c32c8d",
+      "actualNativeCheckout": "5250225103ec2f10be52ffae2c9a9e5765d99457",
+      "allFiveJobsPassed": true,
+      "upChecks": 62,
+      "precedingNativeRegressionChecks": 3400,
+      "nativeReports": 13,
+      "sourcePinsVerified": 16,
+      "sameUpCheckIdsAndBundleAsLocal": true,
+      "nativeBinaryIndependentlyIncluded": false,
+      "controlAndCapturesLocalOnly": true,
+      "receipt": "docs/evidence/pointer-up/hosted-ci.json"
     },
     "dashboardPublication": {
       "status": "verified-branch-data-publication",

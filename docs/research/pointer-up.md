@@ -4,7 +4,9 @@ Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pointer-up/README.md) owns the 62 headless
 checks, 90 graphical checks and eight-failure native control. Public EventTarget
 flags remain disabled. All 16 proportional regression commands and fresh SDK
-pack/verify passed; hosted CI for this Up slice is pending.
+pack/verify passed. [Hosted CI](../evidence/pointer-up/hosted-ci.json) passed five
+jobs at `041688c`, with 62 Up and 3,400 preceding native checks audited. The
+actual checkout is `5250225`; screenshots and the old-host control remain local.
 
 ## Registration and native delivery were separate contracts
 

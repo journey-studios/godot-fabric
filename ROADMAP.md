@@ -1071,8 +1071,11 @@ owns the no-RawUp negative; Document/interest observers track Down topics.
 
 Execution used the working tree after 3ca4174. The receipt pins 81 unique
 executed code/configuration inputs against implementation f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b
-using git show, retaining that original execution base and dirty state. Hosted
-Up CI is pending. [Pages publication](docs/evidence/pointer-up/publication.json)
+using git show, retaining that original execution base and dirty state.
+[Hosted Up CI](docs/evidence/pointer-up/hosted-ci.json) at041688c passed all five
+jobs; five native artifacts reproduce 62 Up checks and 3,400 preceding checks
+in 13 reports. Sixteen producer pins match the actual native checkout5250225.
+The CI host hash is runner-declared; old-host control and captures are local. [Pages publication](docs/evidence/pointer-up/publication.json)
 passed build/deploy in run 37241041419 with main renderer and branch data
 041688c; complete public/local JSON was verified. SDK ABI certification and
 public flags remain false.

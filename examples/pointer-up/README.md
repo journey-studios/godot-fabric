@@ -10,7 +10,9 @@ The [evidence](../../docs/evidence/pointer-up/README.md) records **62/62 headles
 **90/90 actual Viewport checks** and the preceding host's **eight visible failures
 in 62 checks**. The graphical lane adds 24 actual pixels, two React-counter
 checks and two saves/dimension checks. All 16 proportional regression commands
-and fresh SDK pack/verify passed. Hosted CI for this Up slice remains pending.
+and fresh SDK pack/verify passed. [Hosted CI](../../docs/evidence/pointer-up/hosted-ci.json)
+passed five jobs at `041688c`; artifacts reproduce 62 Up and 3,400 preceding
+native checks. Old-host controls and captures remain separate local proof.
 
 ## Run
 

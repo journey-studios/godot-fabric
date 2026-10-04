@@ -103,8 +103,12 @@ Full event-priority mapping, development renderer, physical hardware, Godot
 mobile exports and performance need independent acceptance. All 16 proportional
 regression commands and fresh SDK pack/verify passed;
 loader acceptance is 89 checks/21 cases and 13 actual adapter runs pass 213
-checks. SDK ABI certification remains false. Hosted CI for this Up slice is
-pending. Local execution does not close a full GF item or enable public flags. See the
+checks. SDK ABI certification remains false. [Hosted CI](hosted-ci.json) at
+`041688c` passed all five jobs. Its five native artifacts reproduce 62 Up checks
+and 3,400 preceding checks in 13 reports; 16 sources match the actual native
+checkout `5250225`. The CI binary hash is declared by the runner; the binary,
+old control and captures are separate local proof. This evidence does not close
+a full GF item or enable public flags. See the
 [research](../../research/pointer-up.md) and
 [example](../../../examples/pointer-up/README.md).
 
