@@ -1028,6 +1028,18 @@ passed build/deploy with data11dfb3c; the full public JSON and local API match
 that commit. Source remains outside main. This hosted audit adds evidence to
 the existing slice checkpoints; full GF acceptance remains open.
 
+### Original View pointerup gap reproduced (2026-10-04)
+
+GF-13 remains **In progress**. The [Up negative receipt](docs/evidence/pointer-up/README.md)
+uses original View refs and Maps with both flags in two live roots. Independent
+manual Up dispatch proves registration, while native Up produces no SDK entry.
+The preserved Down-only host retains **54/62 with eight normative failures**
+(callback, Raw, React/native commit and qualification in bubble/capture-only).
+TouchEnd, typed/star Raw touch, held A while B ends, Cancel and balanced stop
+pass independently. Correction is pending at this checkpoint; no complete GF
+or new checkpoint is claimed. View/TT proof does not cover Document/other flags,
+listener lifecycle, captured-Up, Down/Up ID identity or full priority mappings.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

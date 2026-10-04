@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-up-view-interest",
+  "status": "reproduced-native-gap-correction-pending",
+  "executionBaseCommit": "cfca02b3e99349bd719fca680db90b45dc987fc9",
+  "sourceDirtyDuringExecution": true,
+  "command": "node tests/pointer-up-native.test.mjs --allow-original-negative",
+  "environment": {
+    "platform": "macOS",
+    "architecture": "arm64",
+    "godot": "4.7.2-stable (official)",
+    "displayServer": "headless",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3"
+  },
+  "checks": 62,
+  "passed": 54,
+  "failed": 8,
+  "failedCheckIds": [
+    "case/bubble/Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
+    "case/bubble/Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
+    "case/bubble/Physical Up commits exactly one functional React increment and native counter width",
+    "case/bubble/Physical Up uses actual original SDK offsets and the sole registered phase Map",
+    "case/capture-only/Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
+    "case/capture-only/Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
+    "case/capture-only/Physical Up commits exactly one functional React increment and native counter width",
+    "case/capture-only/Physical Up uses actual original SDK offsets and the sole registered phase Map"
+  ],
+  "originalNegativeObserved": true,
+  "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+  "rawReportSha256": "53bc99b1543cbd89f4709c435a59db6288649b6598cba4a62089a8cc7848d8bb",
+  "rawLogSha256": "6f9536eabca11fcd65e92cd27b12d80e67c988b3593478269eec70f64014b6a7",
+  "bundleSha256": "8d1574ef96017489536327eb460a2be9cfe20294ed228fe9daa212ff49e40a26",
+  "producerPins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "fbcdee479ce1d4d2d7486dc51acdb96da96158987b62cf5cab839e47119465a9",
+    "tests/pointer-query-fault-fixture.jsx": "723b45dbd0310fd6acf093fd70a554757e76056e747bc936fb142f2c77cd4714",
+    "tests/pointer-query-fault-probe.gd": "32259515c4fa297caf67ad6360771cbc8627541227d7f23b583fa9c88fd19db8",
+    "tests/pointer-up-fixture.jsx": "3976fc7041540fe2f96e1cd7718ad67ae22fb39a6bd5984864dcf250cb0799eb",
+    "tests/pointer-up-probe.gd": "0259e114269d6d8612c9a66e04bf0503d5c5daa2b2c8b429657fa51aebab4519",
+    "tests/pointer-up-native.test.mjs": "45eef8963c2201e5f4e51269e594531b4517c2597538377ccbecb5435c7f8c9e",
+    "scripts/event-target-bundle.mjs": "2b7110d83e73878fc3f1c33a49adcf70017ad0b0997c426f52644b9fef6e3c0e",
+    "sdk/toolchain/platform-plugin.mjs": "34129e1a2ece65fa5a48a31c637476ded97fe5718e681c1c6a58287eb6c8018d",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f420bb0627b60a9af2df6dfb940bf43652f7eb762aabeec2af70297d1cf0c69c",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "4d931cdf6082051fa7872e33a719dcc01e71db8fba10fd66c1bac67c4882c765",
+    "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4"
+  },
+  "originalReactNativePins": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b"
+  },
+  "observedSDKEntriesOnUp": [
+    0,
+    0
+  ],
+  "stop": {
+    "errors": [],
+    "pointerProcessor": {
+      "active": 0,
+      "activeCapture": 0,
+      "hover": 0,
+      "pendingCapture": 0
+    },
+    "rootCount": 0,
+    "queryInstalled": false
+  },
+  "scope": {
+    "actualNativeInput": true,
+    "actualOriginalViewRefsAndMaps": true,
+    "manualUntrustedUpProvesListenerInstallation": true,
+    "originalFlagsEnabled": true,
+    "healthyNativeTouchEndRawAndCleanup": true,
+    "negativeFailuresRemainVisible": true,
+    "listenerRegistryMirrored": false,
+    "newPublicAPI": false,
+    "publicDefaultEnabled": false
+  },
+  "limitations": [
+    "Correction has not been executed in this initial negative receipt.",
+    "View with both flags only; Document, other flags, removal/once/abort and captured-Up are pending.",
+    "Down pointer is filtered: only Up callback/Raw pointer identity can be proved after correction.",
+    "Both priority-mapping flag branches, mobile exports, hardware, development renderer and full RN parity are pending."
+  ]
+}

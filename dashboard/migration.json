@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Getter com CI auditada; validação nativa de pointerup e reentrância pendentes"
+    "focusTitle": "Pointerup: gap nativo reproduzido, correção View/36–37 em execução"
   },
-  "updatedAt": "2026-10-04T22:00:21.713763+00:00",
+  "updatedAt": "2026-10-04T22:07:17.914519+00:00",
   "source": {
     "commit": "b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
     "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
-    "scope": "Getter local e CI comprovados: anterior 62/65 com 3 falhas normativas; corrigido 65/65, viewport 85/16 pixels. CI 37236875765 passou cinco jobs no head 534d455; checkout nativo 8ce9a862, 23 pins e 12 reports/3.400 checks auditados. SDK zero no instante da falha, 7 consultas saudáveis depois; TouchStart/Raw/React/um commit e cleanup passam. Capturas, controle antigo e mobile permanecem escopos separados. Pages 37237426598 publicou dados 11dfb3c; JSON público/local completos conferidos. Nenhum checkpoint, GF, peso ou denominador novo.",
+    "scope": "Getter CI auditada: cinco jobs, checkout 8ce9a862 e 23 pins; 12 reports/3.400 checks. Pages 37238403321 publicou cfca02b, JSON público/local completos conferidos. Novo gap nativo Up reproduzido: 54/62 com oito falhas normativas View/both flags; TouchEnd/Raw e cleanup continuam verdes. Correção Up pendente, controle negativo preservado; nenhum GF/checkpoint/peso/denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -930,7 +930,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Falha real do resolver não descarta mesmo batch TouchStart/Raw/React; nenhuma entrega pointerdown fabricada. ContatoHeld válido atéCancel; Bhealthy/nextgesture/stop balanceados.65checks/85viewport,16pixels,3negativos anteriores. Up/hover/move/responders/coalescing/flags/reentrância/hardware/mobile abertos; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados.",
+      "note": "Falha real do resolver não descarta mesmo batch TouchStart/Raw/React; nenhuma entrega pointerdown fabricada. ContatoHeld válido atéCancel; Bhealthy/nextgesture/stop balanceados.65checks/85viewport,16pixels,3negativos anteriores. Up/hover/move/responders/coalescing/flags/reentrância/hardware/mobile abertos; CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados. Up reproduzido em View/both flags: 54/62 com oito negativos de callback/Raw/React/query; métodos originais e TouchEnd/cleanup passam. Correção e Document/flags/captured-Up pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2817,6 +2817,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-up-view-gap-native-reproduced-20261004",
+      "at": "2026-10-04T22:07:17.914519+00:00",
+      "taskIds": [
+        "GF-13"
+      ],
+      "message": "Up View/both flags reproduzido no host nativo a6ae:54/62, oito falhas normativas específicas bubble/capture-only. Manual original Up positivo; Up nativo SDK0, sem callback/Raw/commit. TouchStart/TouchEnd/Raw touch, B enquanto A held, Cancel e stop passam. 16 produtores e 18 fontes RN pinados; nenhuma correção/aceite GF ainda certificado. Getter CI anterior e Pages cfca02b conferidos separadamente.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "resolver-getter-ci-534d455-audited",
       "at": "2026-10-04T22:00:21.713763+00:00",
