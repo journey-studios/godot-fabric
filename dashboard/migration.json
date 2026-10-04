@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Interesse View/pointerdown validado; próximos documentos, flags e query-fault cleanup"
+    "focusTitle": "Falhas da query isoladas; próximos documentos e matriz de flags"
   },
-  "updatedAt": "2026-10-04T19:05:12.898511+00:00",
+  "updatedAt": "2026-10-04T19:41:55.418495+00:00",
   "source": {
-    "commit": "ae9d4ed77ff5eccb8825ef47283d13abf81d5910",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/ROADMAP.md",
-    "scope": "Implementaçãoae9d4ed:21pins de código/configuração executados conferidos no commit. Query Map RN qualifica View/pointerdown193/230headless,260viewport/28pixels;250/13contratos,22examples2250,consumer30/40 e SDK/adapters13/213. CI própria e Pages desta fatia ainda pendentes; CI anterior0478499 auditada. Nenhum checkpoint/GF completo adicional;pesos e denominador preservados.",
+    "commit": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+    "scope": "Nova correção local da chamada/retorno da query: controle antigo174/186 com12 falhas; corrigido186headless/204viewport/16pixels. Fontes executadas ainda aguardam commit/pin. CI anteriorab0dc44 passou5jobs no rerun, artefato193/230 auditado; Pagesab0dc44 confirmado. Nenhum novo checkpoint/GF fechado; pesos/denominador preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Query SDK opt-in lê os Maps originais e é removida no stop, com timers/work/frames zerados.193/230headless e260viewport/28pixels; contratos250/13. Flags públicas off. Bootstrap/globals completos, flag matrix e faults da query continuam pendentes. CI anterior0478499 passou; nova CI pendente.",
+      "note": "Chamada/retorno da query isolados com diagnóstico preservado: antigo174/186, corrigido186/204 e16pixels. TouchStart/Raw/React continuam no mesmo batch; stop remove query e zera work/timers/frames. Contratos250/13. Bootstrap/globals completos, flags, getters/reentrância e mobile permanecem abertos. CI da query anteriorab0dc44 passou; nova correção ainda local.",
       "blocker": "",
       "checkpoints": [
         {
@@ -302,6 +302,10 @@
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -338,7 +342,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Batch original181/206 já comprovado e confirmado em CI0478499. A nova query preserva dispatch original; eventos imperativos reais atualizam React/ref/geometria com re-render e duas roots.193/230headless e260viewport/28pixels. StrictMode/dev, transitions/Suspense/Activity, stores e certificação ampla continuam abertos; nenhum novo checkpoint.",
+      "note": "Batch original181/206 comprovado e CI0478499 auditada; query anterior193/230 confirmada em CIab0dc44. Nova falha de lookup preserva TouchStart/Raw e update React:186headless/204viewport, controle antigo12 falhas. Contexto volta a Default, sem certificar prioridades completas. StrictMode/dev,transitions/Suspense/Activity,stores e paridade ampla abertos; nenhum checkpoint adicional.",
       "blocker": "",
       "checkpoints": [
         {
@@ -357,6 +361,10 @@
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -393,7 +401,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Query pertence à aplicação: unmountA conserva o contato ativo de B, libera normalmente e B recebe outro Down; remount tem nova geração no mesmo Hermes. Stop remove query e zera roots/contacts/work.193/230/260,adapters13/213 e consumidor30/40. Pause/lifecycle completo, faults/reentrada ampla e diferencial permanecem abertos.",
+      "note": "Query pertence à aplicação; anterior comprova Bheld durante Aunmount. Correção atual comprova Up/Cancel,retirement/remount e stop após lookup inválido, quatro diagnósticos retidos e roots/contacts/work zerados.186/204,consumer30/40,13adapters213. B é liberado antes de Aunmount neste fixture. Getters/reentrância, pause/lifecycle amplo e diferencial abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -436,6 +444,10 @@
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -472,7 +484,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Query pura reconhece listener original View/pointerdown, inclusive ancestry flattenada com ref/Fiber vivo sem Control.193/230headless,260viewport/28pixels; re-render conserva identidade, replacement/remount não revive família antiga. Document-only manual positivo/nativezero, outros tipos, flag matrix, queryfaults, tipos/commands/perf/hardware/mobile permanecem abertos. Flags públicas off; nova CI pendente.",
+      "note": "View/pointerdown lê Maps originais, flattening e refs/lifetime comprovados193/230/260; artefato CIab0dc44 confirma193/230. Novo catch apenas na chamada/retorno preserva native batch186/204/16pixels, controle antigo174/186. Document/documentElement,flags,outros tipos,getters/reentrância,types/commands/perf/hardware/mobile continuam abertos. Flags públicas off; CI nova correção pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -567,6 +579,10 @@
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -834,7 +850,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "View/pointerdown opt-in usa Map original sem espelho nem ViewProps mutation: capture/bubble, dedupe,once,abort/remove-peer,JSX e lifetime passam193/230/260. Raw negativo recebe Down nativo real. Document-only e demais tipos,quatro diferenças originais,responder/PanResponder,coalescing,flags,faults,hardware/mobile seguem pendentes. CI anterior181/206 auditada; nova CI pendente.",
+      "note": "View/pointerdown capture/bubble/dedupe/once/abort/remove-peer/JSX/lifetime preservam RN original193/230/260 e CIab0dc44. Query throw/nonboolean nos offsets34/35 agora rejeita lookup e conserva TouchStart/Raw/React:186/204,12 falhas no controle antigo,4 diagnósticos visíveis. Document/element,flags,outros eventos,responder/PanResponder/coalescing/getters/hardware/mobile ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -897,6 +913,10 @@
             {
               "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime local; commit/pin pendentes",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
             }
           ]
         },
@@ -2697,6 +2717,45 @@
     }
   ],
   "activity": [
+    {
+      "id": "query-fault-local-20261004",
+      "at": "2026-10-04T19:41:55.418495+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Antigo174/186 com12 falhas normativas; mesmo fixture/bundle corrigido186/186headless e204/204viewport/16pixels/two saves. Quatro throw/nonboolean34/35 preservam TouchStart/Raw/React e diagnóstico; Up/Cancel/retirement/remount/stop separados. Getters/reentrância,documents/flags/outros tipos/mobile abertos.250/13contratos,22examples2250,consumer30/40,13adapters213 passam. Sem checkpoint/GF completo/peso/denominador novo. Commit/pin e CI próprios pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-query-faults/README.md"
+    },
+    {
+      "id": "pointer-interest-ci-rerun-ab0dc44",
+      "at": "2026-10-04T19:41:55.418495+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI37226934414 @ab0dc44: attempt1 iOS simctl list60s timeout antes da app; attempt2 mesmohead passou iOS/parity, reutilizando contracts/native/Android. Artefato nativo193/230 auditado,21pins do commit/13RNinputs, mesmosIDs e bundles; host declarado sem binário no artifact. Mobile jobs são core reference, não Godot pointer-query. Não cobre nova correção C++.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226934414"
+    },
+    {
+      "id": "pointer-interest-pages-ab0dc44",
+      "at": "2026-10-04T19:41:55.418495+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37226931469 concluiu build/deploy; JSON público comparado integralmente ao commitab0dc44 removendo somente publication. API local4318 igual. Renderer mainadad606, dados da branch fora do main. Publicação não certifica RN completo nem a correção local posterior.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226931469"
+    },
     {
       "id": "view-pointerdown-source-pin-ae9d4ed",
       "at": "2026-10-04T19:05:12.898511+00:00",

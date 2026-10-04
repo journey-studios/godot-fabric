@@ -136,6 +136,22 @@ export async function bundlePointerInterestProbe({interestMode = "current"} = {}
       "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js"]});
 }
 
+export async function bundlePointerQueryFaultProbe() {
+  return bundleProbe({entryPoint: "tests/pointer-query-fault-fixture.jsx", modes: ["enabled"],
+    prefix: "pointer-query-fault", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: "experimental", pointerInterestMode: "current",
+    sources: ["tests/event-target-bootstrap.js", "tests/pointer-query-fault-bootstrap.js",
+      "tests/pointer-query-fault-fixture.jsx", "tests/pointer-query-fault-probe.gd",
+      "tests/pointer-query-fault-native.test.mjs", "scripts/event-target-bundle.mjs",
+      "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-event-target-overlay.mjs",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs",
+      "src/private-interface.js", "src/pointer-listener-query.js", "native/application_runtime.cpp",
+      "scripts/rn-pointer-overlay.mjs"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js",
+      "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   await bundleEventTargetProbe();
   console.log("Bundled isolated original EventTarget flag probes; public build/app.js untouched.");

@@ -867,15 +867,53 @@ hardware input.
 Shared guards15 plus native guards6, contracts250Node/13Python, static scan,
 22examples2250, consumer30/40, fresh native SDK pack/verify, loader89/21 and
 13actual adapters213 pass. Previous native dispatch181/206 and pointer
-processor/geometry regressions pass on the new host. This slice's CI is pending;
-the preceding integration CI at0478499 is independently audited above.
+processor/geometry regressions pass on the new host. [Hosted query CI](https://github.com/journey-studios/godot-fabric/actions/runs/37226934414) passed all five jobs at ab0dc44 on attempt 2.
+Attempt 1 timed out listing iOS simulators before app build; the unchanged head
+passed on rerun. The native artifact matches 193/230 IDs, committed sources and
+original RN inputs; it is headless and its mobile jobs exercise the core reference
+suite, not Godot pointer-query mobile parity. The preceding integration CI
+at0478499 is independently audited above.
 
-Next: document/documentElement interest, complete experimental flag combinations
-and visible query-fault cleanup, then other pointer categories and responder gaps.
+Next: document/documentElement interest and complete experimental flag combinations,
+then other pointer categories and responder gaps. The narrow query-fault fix below
+leaves arbitrary resolver/reentrancy faults open.
 Performance, dev renderer, full refs/commands, complete PanResponder,
 hardware/mobile and full release acceptance stay open. Adapter ABI remains
 experimental. No additional checkpoint, complete GF, decision, weight or
 denominator changes. [Scope and platform-specific filters](docs/research/native-pointer-interest.md).
+
+
+### A query fault preserves same-batch TouchStart (2026-10-04)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 stay **In progress**. The native interest
+callback now catches query-call exceptions and non-boolean results, records
+`E_POINTER_LISTENER_QUERY` with the cause, and returns false for that lookup.
+The original queue continues with TouchStart, both Raw channels and its React
+update. It does not manufacture pointerdown or end a still-held physical contact.
+
+The [identical-fixture control and captures](docs/evidence/pointer-query-faults/README.md)
+retain **174/186 on the previous host, with 12 normative failures**, followed by
+**186/186 corrected headless** and **204/204 native viewport** checks. Four
+one-shot faults cover throw/non-boolean at bubble/capture offsets 34/35 on real
+original refs. Only native C++ differs across 14 producers/15 RN inputs; bundle
+bytes and check IDs match. Two 680×160 captures/16 exact pixels show the real
+TouchStart counter committing despite the failed lookup. Four diagnostics stay
+visible and retained; context returns to Default, without certifying all priorities.
+
+Up/Cancel, retirement/remount and stop clear their recorded resources separately.
+B completes a gesture while A is held and works after A retirement; B is already
+released before A unmounts in this fault fixture. The earlier held-B retirement
+proof is independent. Contracts250/13, static analysis, 22examples2250,
+consumer30/40, fresh SDK, loader89/21, 13adapters213 and prior interest193/230,
+dispatch181/206 and portable processor/geometry gates pass on the corrected host.
+This new native correction's own CI remains pending.
+
+The catch excludes family/handle/public-instance resolution. Getter exceptions,
+reentrancy, stop during query and complete queue-fault behavior remain open.
+Document/documentElement and all flag combinations are next, followed by other
+pointer events/responders. Public flags stay off. Hardware/mobile/performance,
+full contracts/dependencies and ABI certification remain pending. No new complete
+checkpoint, GF, decision, weight or denominator changes.
 
 ## M1 — Complete the native UI tree
 

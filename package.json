@@ -53,7 +53,8 @@
     "test:events:ancestry": "node --test tests/event-target-ancestry-native.test.mjs",
     "test:events:dispatch": "node --test tests/event-dispatch-native.test.mjs",
     "test:events:integrated": "node --test tests/event-dispatch-integrated-native.test.mjs",
-    "test:pointers:interest": "node --test tests/pointer-interest-native.test.mjs"
+    "test:pointers:interest": "node --test tests/pointer-interest-native.test.mjs",
+    "test:pointers:query-faults": "node --test tests/pointer-query-fault-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

@@ -73,6 +73,17 @@ and document-only/other pointer categories remain open.
 | --- | --- |
 | [![Original refs in the native pointerdown interest fixture](../docs/evidence/pointer-interest/initial.png)](pointer-interest/README.md) | [![Native pointerdown fixture after listener-driven React updates](../docs/evidence/pointer-interest/updated.png)](pointer-interest/README.md) |
 
+The [query-fault probe](pointer-query-fault/README.md) is another isolated
+validation outside the launcher. `npm run test:pointers:query-faults` preserves
+same-batch TouchStart/Raw/React delivery after four deliberately failed interest
+lookups. The [receipt](../docs/evidence/pointer-query-faults/README.md) records
+174/186 on the previous host, 186/186 corrected headless and 204/204 viewport
+with visible diagnostics and explicit getter/reentrancy limits.
+
+| Before query faults | TouchStart updates React after lookup failure |
+| --- | --- |
+| [![Native query fault fixture before input](../docs/evidence/pointer-query-faults/initial.png)](pointer-query-fault/README.md) | [![Native query fault fixture after recovered React updates](../docs/evidence/pointer-query-faults/updated.png)](pointer-query-fault/README.md) |
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

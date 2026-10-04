@@ -254,3 +254,14 @@ The default installs no query. DocumentElement/other pointer categories,
 arbitrary query-fault cleanup, the full flag matrix, performance, public enablement and hardware/mobile
 remain open. This later local record does not change the initial snapshot's
 hashes or establish hosted validation for the new slice.
+
+The [query-fault containment record](pointer-query-faults/README.md) retains
+12 normative failures in the identical previous-host fixture and 186 corrected
+headless / 204 macOS viewport checks. A thrown or non-boolean interest lookup
+records its cause and rejects that lookup while preserving same-batch
+TouchStart, both Raw channels and functional React state. Up/Cancel, retirement,
+remount and stop clean up separately; four diagnostics remain visible. Two
+680×160 frames and 16 exact pixels show A=0/B=0 becoming A=3/B=1. This bounds
+query-call/result recovery; getter resolution, reentrancy, documents, complete
+flags/events and hardware/mobile certification remain open. No new GF/checkpoint
+is closed. Its own hosted execution is pending.

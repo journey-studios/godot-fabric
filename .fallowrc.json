@@ -28,7 +28,8 @@
     "tests/event-target-ancestry-fixture.jsx",
     "tests/event-dispatch-fixture.jsx",
     "tests/event-dispatch-integrated-fixture.jsx",
-    "tests/pointer-interest-fixture.jsx"
+    "tests/pointer-interest-fixture.jsx",
+    "tests/pointer-query-fault-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",

@@ -678,9 +678,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         if (!canonical.isObject()) return false;
         auto instance = canonical.asObject(*runtime).getProperty(*runtime, "publicInstance");
         if (!instance.isObject()) return false;
-        auto result = pointer_listener_query->call(*runtime, instance, static_cast<double>(offset));
-        if (!result.isBool()) throw jsi::JSError(*runtime, "Pointer listener query must return a boolean");
-        return result.getBool();
+        try {
+          auto result = pointer_listener_query->call(*runtime, instance, static_cast<double>(offset));
+          if (!result.isBool()) throw jsi::JSError(*runtime, "Pointer listener query must return a boolean");
+          return result.getBool();
+        } catch (const std::exception &error) {
+          // Reject only this interest lookup, with an explicit diagnostic.
+          // Escaping here discards the remaining EventQueue batch, including
+          // TouchStart. Its physical contact stays live until Up/Cancel/retire.
+          fail(std::string("E_POINTER_LISTENER_QUERY: ") + error.what());
+          return false;
+        }
       });
       return jsi::Value::undefined();
     });

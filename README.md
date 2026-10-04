@@ -104,6 +104,13 @@ Document-only interest, other pointer categories, hardware/mobile and public
 flag enablement remain open; the default helper still installs no query.
 
 
+The [query-fault example](examples/pointer-query-fault/README.md) exercises a
+failed native interest lookup without losing the same batch's TouchStart or
+React update. The identical previous-host fixture has 12 normative failures;
+the corrected host passes 186 headless and 204 viewport checks while retaining
+four deliberate diagnostics. [Evidence and boundaries](docs/evidence/pointer-query-faults/README.md)
+separate lookup recovery, contact cleanup and remaining getter/reentrancy gaps.
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
@@ -242,6 +249,14 @@ This isolated probe uses its own test command outside the launcher catalog.
 Its two 820×280 Viewport frames have 28 executed pixel assertions; the
 [receipt](docs/evidence/pointer-interest/README.md) keeps injected ScreenTouch
 input separate from hardware/mobile certification.
+
+| Query faults: initial | TouchStart still commits after a failed lookup |
+| --- | --- |
+| [![Two native roots before query faults](docs/evidence/pointer-query-faults/initial.png)](examples/pointer-query-fault/README.md) | [![React counters after lookup recovery and an independent gesture](docs/evidence/pointer-query-faults/updated.png)](examples/pointer-query-fault/README.md) |
+
+The 680×160 frames have 16 exact pixel assertions. Yellow counters change from
+A=0/B=0 to A=3/B=1; the [receipt](docs/evidence/pointer-query-faults/README.md)
+records the four faults and later retirement/stop separately.
 
 ## Write React
 
