@@ -753,7 +753,7 @@
       },
       "getterArtifactAudited": true,
       "receipt": "hosted-ci.json",
-      "receiptSha256": "f372a4960bc14fe1fd92056bfd45163e9a7a648f0c2b27f77fb21a067d7d233a",
+      "receiptSha256": "a281e8ea633154b1453e30eec0321bf4c9c229c482903bd552b022d47efc0fa7",
       "actualNativeCheckout": "8ce9a8622aef2ab462d753efb409d1423571f415",
       "sourcePinsVerifiedAgainstImplementationHeadAndActualCheckout": 23,
       "getterChecks": 65,

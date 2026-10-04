@@ -440,9 +440,10 @@
   "nativeJobLog": {
     "jobId": 111537645915,
     "jobUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765/job/111537645915",
-    "path": "/Users/wallyssonnunes/.codex/worktrees/godot-fabric-contracts/godot-fabric/build/resolver-hosted-534d455/native-job.log",
+    "path": "build/resolver-hosted-534d455/native-job.log",
     "sha256": "5d35f0e06a4c5ed464000bb0d812f52db4ec8fb815574b139d50915c4c4ecdf9",
     "bytes": 220460,
-    "unexpectedScriptRegistryCrashMatches": 0
+    "unexpectedScriptRegistryCrashMatches": 0,
+    "rawLogExcludedFromPublication": true
   }
 }
