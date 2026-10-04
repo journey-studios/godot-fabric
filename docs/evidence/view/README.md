@@ -68,8 +68,9 @@ descendant clip mask. Its interior pixels do not certify every antialiased seam
 or fractional/DPI configuration. ScrollView, rich Text and adapter child
 containers retain their separate acceptance requirements.
 
-A concrete GF-08/GF-13 coordinate gap remains: input page points use Viewport
-coordinates while NativeDOM `measure` reports root coordinates for this
-Surface's offset. The executed interior taps do not establish genuine movement
-gesture or scaled-root correctness. Physical mouse/touch hardware and system
-IME are also outside these injected-input/readback checks.
+This checkpoint discovered a GF-08/GF-13 coordinate gap: input page points used
+Viewport coordinates while NativeDOM `measure` reported root coordinates. The
+later [coordinate checkpoint](../coordinates/README.md) addresses it with
+genuine move-out/return, translated/scaled surfaces and raw window input at
+content density two. These historical View reports and hashes predate that
+correction. Hardware input, system IME and complete ref/input parity remain open.

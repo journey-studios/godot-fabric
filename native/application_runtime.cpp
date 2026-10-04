@@ -440,6 +440,23 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           auto found = views.find(tag);
           return found == views.end() ? point : found->second.control->get_global_transform_with_canvas().affine_inverse().xform(point);
         },
+        [this, id](Vector2 point) {
+          auto root = roots.find(id);
+          auto *host = root == roots.end() ? nullptr : root->second->host();
+          if (!host) return fabric_godot::PointerAdapter::Coordinates{};
+          // RN page points and measure() share the logical React root space.
+          // Godot has already localized native window input before _input.
+          auto page = host->get_global_transform_with_canvas().affine_inverse().xform(point);
+          auto screen = point;
+          if (auto *window = host->get_window()) {
+            const auto transform = window->get_final_transform();
+            // Sample transform and density together: the first input after a
+            // content-scale change can precede the frame's metrics refresh.
+            const auto density = (transform * window->get_global_canvas_transform().affine_inverse()).get_scale().x;
+            screen = (Vector2(window->get_position()) + transform.xform(point)) / density;
+          }
+          return fabric_godot::PointerAdapter::Coordinates{page, screen};
+        },
         [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); });
     if (defer_start) surface.start_pending = true;
     else start_root(id);

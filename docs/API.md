@@ -36,11 +36,11 @@ RN compatibility.
 | Area | Implemented subset | Important limits |
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
-| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, four physical solid border colors and public geometry | RTL, transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open; input page points and offset-root NativeDOM measure currently disagree |
+| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, four physical solid border colors and public geometry | RTL, RN style transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
-| Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
+| Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events and responder-mediated drag | All children mount; no virtualization, inertia, bounce, paging, zoom or complete nested/multitouch scrolling |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
 | SVG / charts | SVG/G/Defs/ClipPath/Path/Rect/Circle/Line/LinearGradient/Stop and simple SVG text, tested with unmodified Chart Kit | Budget 2048×2048, unscaled viewBox, no arbitrary transforms, nested SVG certification or full SVG typography |
@@ -107,10 +107,32 @@ Resource on the same CanvasItem without adding nodes. The
 removal and an asymmetric rounded self-border. It does not establish rounded
 descendant clipping or full mobile/fractional antialiasing parity.
 
-A known GF-08/GF-13 gap remains between Viewport input page points and root-space
-NativeDOM `measure` for an offset Surface. Interior injected taps passed; genuine
-movement gestures and moved/scaled roots still require the coordinate correction
-and separate acceptance.
+The offset-surface input/measurement gap discovered here is addressed by the
+later [coordinate checkpoint](evidence/coordinates/README.md). It exercises
+genuine movement with its own reports and source identities.
+
+## Input coordinate contract
+
+For the supported native Window, `pageX/pageY` are logical React-root points,
+matching the page coordinates returned by original NativeDOM `measure`.
+`locationX/locationY` remain relative to the original touch target throughout
+a gesture, including movement outside it. Godot projects the Viewport point
+through the inverse surface and target transforms respectively. `measureLayout`
+uses the logical React family; `measureInWindow` and DOMRect include the Godot
+embedding.
+
+`screenX/screenY` include the native Window client-area position and its current
+content transform, normalized by content density. Transform and density are
+sampled together for the first input after a scale change. Ordinary raw window
+input is already localized by Godot before this projection; page/local points
+are not divided by density again.
+
+The [public example](../examples/coordinates/README.md) verifies translated and
+positively scaled Godot surfaces, genuine Pressability move-out/return/release,
+independent nonoverlapping roots and raw window pixels at density two. This
+subset does not certify RN style transforms, rotation during a gesture,
+overlapping-root routing, simultaneous multitouch, hardware/DPI policy,
+SubViewport, embedded Windows or singular transforms.
 
 ## Shared application and root authoring
 

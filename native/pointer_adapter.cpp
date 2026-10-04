@@ -6,8 +6,8 @@
 
 namespace fabric_godot {
 using namespace godot;
-PointerAdapter::PointerAdapter(HitTest hit, LocalPoint local, Emit emit)
-    : hit_(std::move(hit)), local_(std::move(local)), emit_(std::move(emit)) {}
+PointerAdapter::PointerAdapter(HitTest hit, LocalPoint local, Project project, Emit emit)
+    : hit_(std::move(hit)), local_(std::move(local)), project_(std::move(project)), emit_(std::move(emit)) {}
 bool PointerAdapter::input(const Ref<InputEvent> &event) {
   // Godot marks mouse-from-touch and touch-from-mouse with device -1. Do not
   // duplicate a physical gesture when project input emulation is enabled.
@@ -44,8 +44,9 @@ void PointerAdapter::update(int id, Vector2 position, const std::string &phase) 
   if (found == touches_.end()) return;
   auto &touch = found->second;
   auto local = local_(touch.target, position);
-  touch.pagePoint = {position.x, position.y};
-  touch.screenPoint = touch.pagePoint;
+  auto projected = project_(position);
+  touch.pagePoint = {projected.page.x, projected.page.y};
+  touch.screenPoint = {projected.screen.x, projected.screen.y};
   touch.offsetPoint = {local.x, local.y};
   touch.timeStamp = rn::HighResTimeStamp::now();
   auto changed = touch;

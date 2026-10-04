@@ -35,6 +35,13 @@
     "scene": "examples/view/scene.tscn"
   },
   {
+    "id": "coordinates",
+    "title": "Root-local gestures in translated and scaled Godot surfaces",
+    "api": "public",
+    "source": "examples/coordinates/App.jsx",
+    "scene": "examples/coordinates/scene.tscn"
+  },
+  {
     "id": "metrics",
     "title": "Original RN dimensions, content density and subscription lifetime",
     "api": "public",

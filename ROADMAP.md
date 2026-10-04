@@ -261,12 +261,28 @@ RTL/logical edges, transforms/origin, rounded descendant masks, fractional/DPI
 geometry, full StyleSheet/shadows/filters and original mobile View differential
 certification still need execution.
 
-Next in sequence 3: GF-08/GF-13 coordinate agreement. In the offset-surface
-fixture, input page points currently use Viewport space while NativeDOM measure
-uses root space; stationary interior taps do not certify movement gestures or
-scaled roots. Add an original RN coordinate oracle and fix this concrete gap
-before extending transformed/scroll gesture behavior. No new architectural
-decision, complete GF item or checkpoint denominator changes here.
+The [coordinate and gesture slice](docs/evidence/coordinates/README.md) now
+addresses that reproduced GF-08/GF-09/GF-13 gap. Public page points and original
+measure use root space; location remains relative to the original target, and
+screen points include native Window origin and current content density. The
+first hit root also samples density immediately after a content-scale change,
+without depending on another root or the next frame to refresh a cache.
+Two independent roots passed **238 headless / 247 native checks**, **6 RGBA
+samples** and three captures. Real MOVE inside/outside/return, release outside,
+moving a held surface, nonuniform root scale and raw-window density-two input
+preserve original Pressability state, target identity and public geometry.
+The preceding host fails **121/238 headless and 121/247 native** checks, while
+the intermediate cached-density host fails exactly **1/238**: first screen point
+was `(990,568)` instead of `(495,284)`. The final host passes the same oracle.
+Regressions passed **202 Node/13 Python**, **10 native tests**, **17 headless
+examples/910 checks** and **17 adapter runs/318 checks**. GF-13 becomes In progress
+with only its first-slice checkpoint done; full input/HostInstance/metrics/View
+and differential/target acceptances remain open. Overlapping/nested roots,
+embedded Window/SubViewport, singular/rotated embeddings, RN component
+transforms, physical hardware, OS DPI, multitouch and the remaining interaction
+contracts still require their own evidence. Next in sequence 3: expand View
+transforms and public HostInstance behavior against the original contract.
+No new architectural decision, complete GF item or denominator changes here.
 
 ## Release contract and scope
 
@@ -514,7 +530,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-10 · P1 · View, styles and RTL | In progress | Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema | GF-04, GF-08, GF-09, GF-25 |
 | GF-11 · P1 · Text and fonts | Planned | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
-| GF-13 · P1 · Input, Pressability and touchables | Planned | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
+| GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
 | GF-14 · P1 · Scroll and refresh | Planned | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
 | GF-15 · P1 · Virtualized lists | Planned | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
 | GF-16 · P1 · Images and asset pipeline | Planned | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |

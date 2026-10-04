@@ -52,6 +52,16 @@ also passed 16 headless scenes / 672 checks, NativeWind 58 native checks and
 17 adapter runs / 318 checks. GF-10 remains in progress; RTL, transforms, rounded
 descendant masks, fractional geometry and mobile View differential work remain.
 
+The later [coordinate record](coordinates/README.md) addresses the offset-root
+input/measurement gap found by the View checkpoint. It retains 238 headless /
+247 native assertions, six RGBA samples and three captures. Genuine move-out,
+return and release exercise original Pressability through translated/scaled
+Godot surfaces and raw window input at content density two. The previous host
+fails 121 assertions in each lane; an intermediate cached-density host fails
+the first contact before a metrics refresh. GF-08/GF-13 remain in progress
+with their wider ref/input acceptance still open. Historical View hashes and
+reports remain separate.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

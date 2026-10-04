@@ -13,8 +13,10 @@ class PointerAdapter {
  public:
   using HitTest = std::function<int(godot::Vector2)>;
   using LocalPoint = std::function<godot::Vector2(int, godot::Vector2)>;
+  struct Coordinates { godot::Vector2 page, screen; };
+  using Project = std::function<Coordinates(godot::Vector2)>;
   using Emit = std::function<void(int, const std::string &, rn::TouchEvent)>;
-  PointerAdapter(HitTest hit, LocalPoint local, Emit emit);
+  PointerAdapter(HitTest hit, LocalPoint local, Project project, Emit emit);
   bool input(const godot::Ref<godot::InputEvent> &event);
   void responder(int tag, bool active, bool block);
   void cancel();
@@ -25,6 +27,7 @@ class PointerAdapter {
  private:
   HitTest hit_;
   LocalPoint local_;
+  Project project_;
   Emit emit_;
   std::map<int, rn::Touch> touches_;
   int responder_tag_{};

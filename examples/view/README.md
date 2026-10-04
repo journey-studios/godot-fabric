@@ -76,8 +76,10 @@ retain StyleBoxFlat; four colors draw through a StyleBox Resource on the same
 CanvasItem. The internal View wrapper, Pressable and ScrollView content retain
 GodotControl. No border overlay nodes participate in hit-testing or layout.
 
-Input page points and NativeDOM `measure` currently disagree on coordinates for
-an offset Surface. These interior tap checks do not certify moved/scaled roots
-or genuine movement gestures; that GF-08/GF-13 correction remains open. RTL,
-transforms, fractional geometry and full StyleSheet utilities also need further
-acceptance.
+This checkpoint found an offset-surface disagreement between input page points
+and NativeDOM `measure`. The later [coordinate example](../coordinates/README.md)
+addresses it with genuine move-out/return, moved/scaled Godot surfaces and raw
+window input at content density two; its
+[evidence](../../docs/evidence/coordinates/README.md) is separate from these
+historical View reports. RTL, RN style transforms, fractional geometry and full
+StyleSheet utilities still need further acceptance.

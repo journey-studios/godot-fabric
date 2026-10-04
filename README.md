@@ -32,8 +32,12 @@ complete React Native props remain open.
 
 The [View geometry example](examples/view/README.md) exercises original public
 View/Fabric ordering, rectangular overflow and four solid border colors through
-real input targets and renderer pixels. Its [evidence](docs/evidence/view/README.md)
-also records the remaining offset-root input/measurement coordinate gap.
+real input targets and renderer pixels. The later
+[coordinate example](examples/coordinates/README.md) fixes the offset-root
+input/measurement disagreement and exercises genuine move-out/return gestures,
+Godot surface scaling and raw window input at content density two. Its
+[evidence](docs/evidence/coordinates/README.md) keeps the failing prior-host and
+first-event density controls separate from the verified implementation.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -112,6 +116,7 @@ CMake lives in a local virtual environment; Godot itself is not recompiled.
 ```sh
 npm run example -- form     # public typed Button/TextInput form
 npm run example -- view     # public View stacking, overflow and four border colors
+npm run example -- coordinates # root/local/screen points and real movement gestures
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
 npm run example -- services # typed Godot calls, signals and shared Zustand data
@@ -147,6 +152,10 @@ clock example separately.
 | View layers | Updated View | Visible overflow |
 | --- | --- | --- |
 | [![Initial View geometry](docs/evidence/view/view-initial.png)](examples/view/README.md) | [![High z values preserve the sibling order](docs/evidence/view/view-updated.png)](examples/view/README.md) | [![Outside child remains visible and selectable](docs/evidence/view/view-visible.png)](examples/view/README.md) |
+
+| Offset roots | Scaled root held | Content density two |
+| --- | --- | --- |
+| [![Two independent roots start at different window positions](docs/evidence/coordinates/coordinate-initial.png)](examples/coordinates/README.md) | [![Scaled root A stays held while root B remains ready](docs/evidence/coordinates/coordinate-scaled.png)](examples/coordinates/README.md) | [![Raw window pixels preserve logical root and local points](docs/evidence/coordinates/coordinate-density.png)](examples/coordinates/README.md) |
 
 ## Write React
 

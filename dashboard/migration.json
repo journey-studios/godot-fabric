@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "View validada; próximo: alinhar coordenadas de eventos, refs e superfície"
+    "focusTitle": "Gestos e coordenadas de roots comprovados; próximo: transforms e HostInstance"
   },
-  "updatedAt": "2026-10-04T01:07:26.708452+00:00",
+  "updatedAt": "2026-10-04T01:26:35.138797+00:00",
   "source": {
     "commit": "6e9f2f305e5981f49b9b2fd1be23ae723ba43363",
     "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/ROADMAP.md",
-    "scope": "Implementação 6e9f2f3 conferida com todas as fontes nativas e fixtures executadas. GF-10 parcial: View67/107, pixels36 e controle negativo9/24; 202 Node/13 Python, 10 nativos, exemplos16/672, NativeWind58, adapters17/318 passaram. CI desta fatia b5df4d6 verde nos cinco jobs; comparação RN limitada ao oráculo atual. Sem conclusão GF, decisão, peso ou denominador alterado.",
+    "scope": "Coordenadas GF-08/GF-09/GF-13: 238 headless / 247 native e 6 pixels; controle anterior com 121 falhas em cada lane e cache intermediário com 1/238. Passaram 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 checks e 17 adapters / 318. CI precedente View b5df4d6 verde; CI desta fatia pendente. Só a slice GF-13 fica done; nenhum GF completo, decisão, peso ou denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -415,7 +415,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Medidas públicas preservam o retângulo integral de filhos clipped e a geometria lógica após flattening/reparent; NativeWind compara public refs com Controls no espaço da janela. Gap concreto: pagePoint do input usa Viewport, measure usa root numa surface deslocada. Coordenadas sob movimento/transforms/DPI e HostInstance completo ainda abertos.",
+      "note": "Refs mantêm medidas root/window e geometria lógica após flattening. Page/location/screen agora concordam com medidas públicas em roots deslocadas/escaladas, movimento e densidade2: 238/247 checks. HostInstance completo, transforms internos, janela/viewport embutidos e certificação continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -434,6 +434,10 @@
             {
               "label": "Medidas clipped/flattened e gap de coordenadas reproduzido",
               "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+            },
+            {
+              "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
             }
           ]
         },
@@ -470,7 +474,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Constraints do inventário mudam sem alterar geometria do HUD ou métricas window/screen. Insets, font scale do OS, multi-window e dispositivos seguem pendentes.",
+      "note": "Densidade do conteúdo e screen points incluem origem real do Window e escala atual, inclusive primeiro evento após mudar density sem frame. Prova raw-window density2 em 238/247 checks; hardware/DPI, insets, font scale, multi-window/viewport e contrato completo ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -485,6 +489,10 @@
             {
               "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
               "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
             }
           ]
         },
@@ -659,7 +667,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Input, Pressability and touchables",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation",
       "dependencies": [
         "GF-06",
@@ -669,14 +677,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "GF-10 comprovou targets de taps injetados mouse/touch e isolamento do device; isso não fecha input. Prioridade: alinhar pagePoint Viewport com measure root em surface deslocada e provar gestos com movimento; transforms/scroll, multitouch, hover, teclado, interrupções e hardware permanecem pendentes.",
+      "note": "Primeira fatia: MOVE real mouse/touch fora/retorno, release fora, surface movida durante gesto, escala 0.8 × 1.2, duas roots e raw-window density 2 preservam Pressability original/target. Passaram 238/247 checks e 6 pixels; controles tiveram 121/121 falhas e timing 1. Multitouch, hover, teclado, transform/scroll, interrupções completas e hardware permanecem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "macOS arm64: coords238/247, pixels6, controles121/121 e timing1/238",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -2467,6 +2480,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "coordinates-verified-20261004",
+      "at": "2026-10-04T01:26:35.138797+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Coordenadas e gestos comprovados: 238 headless / 247 native, 6 pixels e 3 capturas. Controle anterior: 121 falhas por lane; cache intermediário: 1/238; final: zero. Regressões: 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 e adapters 17/318. Primeira slice GF-13 done; nenhum GF completo, decisão, peso ou denominador muda. Próximo: transforms e HostInstance.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/README.md"
+    },
     {
       "id": "view-ci-b5df4d6",
       "at": "2026-10-04T01:07:26.708452+00:00",
