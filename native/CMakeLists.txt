@@ -119,6 +119,17 @@ add_executable(fabric_smoke smoke.cpp)
 target_link_libraries(fabric_smoke PRIVATE fabric_core)
 add_executable(pointer_processor_test pointer_processor_test.cpp)
 target_link_libraries(pointer_processor_test PRIVATE fabric_core)
+add_executable(pointer_geometry_test pointer_geometry_test.cpp)
+target_link_libraries(pointer_geometry_test PRIVATE fabric_core)
+add_executable(pointer_projection_test pointer_projection_test.cpp)
+target_link_libraries(pointer_projection_test PRIVATE fabric_core)
+add_executable(pointer_geometry_original_test EXCLUDE_FROM_ALL
+  pointer_geometry_test.cpp
+  "${RN}/react/renderer/uimanager/PointerEventsProcessor.cpp"
+  "${RN}/react/renderer/uimanager/UIManagerBinding.cpp")
+target_include_directories(pointer_geometry_original_test BEFORE PRIVATE "${RN}")
+target_compile_definitions(pointer_geometry_original_test PRIVATE GODOT_FABRIC_POINTER_GEOMETRY_ORIGINAL=1)
+target_link_libraries(pointer_geometry_original_test PRIVATE fabric_core)
 # Isolated expected-failure control: compile the unchanged downloaded processor
 # against its original header. It is never shipped or part of an ordinary build.
 add_executable(pointer_processor_original_negative_test EXCLUDE_FROM_ALL
@@ -145,7 +156,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
 if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # Retain the binding objects for the pinned Godot class profile as SDK exports,
   # including classes only an external adapter uses. This is one archive in one
@@ -162,7 +173,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test affine_transform_test pointer_processor_test pointer_processor_original_negative_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test affine_transform_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

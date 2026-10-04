@@ -49,6 +49,13 @@
     "scene": "examples/pointers/scene.tscn"
   },
   {
+    "id": "pointer-geometry",
+    "title": "Captured pointer geometry and root transforms",
+    "api": "public",
+    "source": "examples/pointer-geometry/App.jsx",
+    "scene": "examples/pointer-geometry/scene.tscn"
+  },
+  {
     "id": "view",
     "title": "View layers, clipping, public measurements and four-color borders",
     "api": "public",

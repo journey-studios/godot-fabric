@@ -100,7 +100,7 @@ test('the overlay changes native lifetime boundaries without replacing upstream 
   assert.match(source, /catch \(const GodotPointerRetired &\)/);
   // By-value processor layout must always use the overlaid declaration, even
   // when this original header is reached through a quoted local include.
-  assert.equal(files[bindingBase + '.h'], readBinding('h'));
+  assert.match(files[bindingBase + '.h'], /PointerEventProjectionForGodot/);
   assert.match(files[bindingBase + '.h'], /#include <react\/renderer\/uimanager\/PointerEventsProcessor.h>/);
   assert.ok(!files[bindingBase + '.cpp'].includes('if (targetNode != nullptr) {'));
   assert.match(source, /if \(!targetNode && type == "topPointerDown"\) return;/);

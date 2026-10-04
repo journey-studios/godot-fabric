@@ -104,6 +104,19 @@ jobs:
             build/pointer-errors-report.json
             build/pointer-errors.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:geometry
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-pointer-geometry
+          path: |
+            build/pointer-geometry-report.json
+            build/pointer_geometry_test.log
+            build/pointer_geometry_original_test.log
+            build/pointer-geometry-original-build.log
+            build/pointer-projection-report.json
+            build/pointer-projection.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

@@ -76,6 +76,15 @@ The original-source crash controls run in child processes and are expected
 failures, not ignored green tests. Runtime reports/logs stay in ignored `build/`;
 the JSON receipt retains curated checks/provenance instead of raw build logs.
 
+## Subsequent geometry slice
+
+This record describes the preceding untransformed fixture. The later
+[captured geometry evidence](../pointer-geometry/README.md) separately verifies
+transformed/cross-root offsets, flattened refs, immediate density changes,
+singular cancel and hidden capture. It also preserves the incomplete pinned
+RN algorithm as a numerical counterfactual. That later evidence supersedes
+the transformed-offset gap below within its bounded desktop scope.
+
 ## Still open
 
 GF-08/GF-13 stay **In progress**. This is injected, untransformed desktop input,

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Ponteiros e captura públicos verificados; próximos EventTarget e geometria da captura"
+    "focusTitle": "Geometria capturada verificada; próximos EventTarget e contratos restantes de input"
   },
-  "updatedAt": "2026-10-04T11:19:04.112687+00:00",
+  "updatedAt": "2026-10-04T12:35:10.737470+00:00",
   "source": {
-    "commit": "788739dbf7c5184839c5c92bf072c9dca16a01f7",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/ROADMAP.md",
-    "scope": "Ponteiros 788739d: 132/146 checks públicos, 12 pixels/duas capturas, 144 assertions nativas e 43 checks JSX; dois controles RN originais SIGSEGV. Regressões e SDK independente passaram. Artefato CI a15fde4 auditado: 144/43, seis erros esperados, hashes das fontes e cleanup verificados; CI a15fde4 concluiu com sucesso os cinco jobs: contracts, native-cold-start, reference-ios, reference-android e parity-comparison. Pages 37197499767 passou build/deploy, JSON a15fde4 conferido fora do main. Nenhum novo aceite, peso, decisão ou GF fechado.",
+    "commit": "0b5e7f446570266bde5eeb5b6dad638f8edecb23",
+    "url": "https://github.com/journey-studios/godot-fabric/pull/14",
+    "scope": "Base0b5 preservada e main integrado; nova fatia local comprovada por hashes em pointer-geometry/report.json, com pin do commit de implementação na próxima entrega de metadados. Captura631/648+14pixels/3PNGs, controle55/631, original108/108 e binding378. Regressões199Node/13Python,22exemplos/2246 e SDK13headless/213 passaram. CI/publicação desta fatia ainda não executadas. Nenhum aceite completo, decisão, peso, denominador ou GF fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -419,7 +419,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Foco público usa prototype/State/Codegen originais RN e LineEdit real; duas raízes, ref churn, readonly/off-tree, comandos reentrantes e retirement passaram 175/189,12 pixels/duas capturas. Controles anterior 23/160 e elegibilidade removida 11/175 falham como esperado. Árvore/IDs e medidas/transforms mantêm provas separadas. HostInstance completo, EventTarget/pointer capture, hidden trees, hardware/IME e diferenciais mobile permanecem pendentes. Complemento de comandos comprovado localmente e no artefato CI: 112 checks, 40 owners, oito rejeições com recuperação, duas raízes e app independente; nove registros liberados. CI ffcc: contracts/native/Android passaram; iOS falhou antes da app e comparação pulou. Referência iOS posterior passou 13 checks em inputs idênticos; não certifica full parity mobile. Captura pública agora verificada:132/146 checks e 12 pixels; refs originais consultam pending imediatamente e perdem autoridade ao remover/retirar.144 asserts nativos,43 checks JSX com seis erros preservados e stop síncrono; dois controles originais crasham. HostInstance completo/imperative EventTarget, captured transforms e mobile seguem abertos. Props/eventos/capture refs TSX derivam dos types originais; casos negativos de ID/coord passaram. Coordenadas de capture-target em outra raiz não certificadas. Artefato hospedado a15fde4 auditado: 144 assertions C++, 43 checks JSX, dois controles originais SIGSEGV e seis erros deliberados visíveis. Conclusão da execução completa está separada no recibo CI; referências RN não certificam ports Godot.",
+      "note": "Refs/NativeDOM, medidas, foco/comandos e captura públicos têm provas separadas. Geometria capturada agora passa 631/648 checks, incluindo refs flattened e outra raiz transformada; 55 falhas no host anterior, 14 pixels e três capturas. Binding378 e original108/108 preservam campos, autoridade e lifetime; offsets locais corrigem explicitamente o algoritmo RN incompleto. HostInstance completo, imperative EventTarget, demais comandos/hidden trees e diferenciais mobile continuam pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -470,6 +470,10 @@
             {
               "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
+            },
+            {
+              "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-geometry/README.md"
             }
           ]
         },
@@ -506,7 +510,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Densidade do conteúdo e screen points incluem origem real do Window e escala atual, inclusive primeiro evento após mudar density sem frame. Prova raw-window density2 em 238/247 checks; hardware/DPI, insets, font scale, multi-window/viewport e contrato completo ainda abertos.",
+      "note": "Densidade e root/client/screen incluem a escala/origem atuais. A nova captura em duas raízes mantém client/page no root físico e projeta offsets no alvo; o primeiro raw-window move em density2 passa sem frame/refresh JS. Prova631/648, pixels14 e controle anterior55/631. Hardware/DPI, insets, font scale, múltiplas janelas/viewport e o contrato completo continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -525,6 +529,10 @@
             {
               "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
               "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+            },
+            {
+              "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-geometry/README.md"
             }
           ]
         },
@@ -729,7 +737,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transporte original PointerEvent, identidade por aplicação, hover, captura/transferência/soltura/cancel seletivos, mouse canceled/múltiplos botões e release sem duplicação verificados em 132/146 checks,12 pixels/duas capturas.144 asserts nativos e 43 checks JSX cobrem remoção, listener faults e stop síncrono preservando outro contato; dois controles originais SIGSEGV. Pressability e 21 exemplos/1615 passaram. Transforms/scroll capturados, negociação completa PanResponder/responder, hardware/keyboard, multi-window e mobile permanecem pendentes. Artefato hospedado a15fde4 auditado: 144 assertions C++, 43 checks JSX, dois controles originais SIGSEGV e seis erros deliberados visíveis. Conclusão da execução completa está separada no recibo CI; referências RN não certificam ports Godot.",
+      "note": "Ponteiros/captura/lifetime públicos132/146, 144asserts e43JSX continuam documentados. Geometria capturada631/648 cobre transforms, outra raiz, ref lógico, no-hit, React update, density2, cancel singular e alvo display:none. Histórico terminal monotônico tem teste negativo e378checks de binding; original108/108 identifica a diferença numérica upstream. Os22examples/2246 e SDK13headless/213 passaram. EventQueue coalescing real, PanResponder/responder completo, scroll/windows, hardware/keyboard e mobile permanecem pendentes.",
       "blocker": "",
       "checkpoints": [
         {
@@ -752,6 +760,10 @@
             {
               "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
+            },
+            {
+              "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-geometry/README.md"
             }
           ]
         },
@@ -2552,6 +2564,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "captured-pointer-geometry-local-20261004",
+      "at": "2026-10-04T12:35:10.737470+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Fatia local comprovada: captura631/648,14pixels/3capturas,55falhas na fixture idêntica sobre host anterior, original108/108 e binding378. Transform/root/local/density/flattened/singular/hidden têm contratos separados; corrige limitação numérica RN explícita. Regressões e SDK novo passaram; CI e Pages desta implementação pendentes. Preserva18checkpoints concluídos/156 obrigatórios; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-geometry/README.md"
+    },
     {
       "id": "pointer-hosted-artifact-and-pages-a15fde4",
       "at": "2026-10-04T11:19:04.112687+00:00",

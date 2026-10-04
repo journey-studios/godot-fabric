@@ -148,12 +148,32 @@ A listener exception remains visible and retires only its pointer authority;
 a fresh Down can capture again. The binding restores event priority after a
 throw. Original TouchEvent/Pressability runs alongside this pointer transport.
 
-This bounded desktop path uses a generated, SHA-pinned native RN lifetime
-overlay; the downloaded sources and reconciler remain unchanged. SDK headers
-and binary combination identify that overlay. It does not enable the original
-imperative EventTarget feature flags. Captured offsets under transforms,
-complete responder/PanResponder, hardware, scroll/windows, cross-application
-stacking and mobile capture await certification. See [executed tests and images](evidence/pointers/README.md).
+For a visible dispatched target, `offsetX/offsetY` are local coordinates from
+its full inverse native/logical affine. `clientX/clientY`, `x/y` and `pageX/pageY`
+stay in the contact's physical origin root; screen coordinates keep the native
+sample's window units. Cross-root transfer does not rewrite those fields.
+Materialized targets use real Godot transforms; flattened refs compose their
+committed logical suffix from the nearest mounted ancestor.
+
+If an embedding becomes singular, terminal cancellation can reuse the same
+family's offset at the exact last valid native point. With no valid history it
+omits that terminal callback while releasing original contact authority.
+A connected `display:none` target retains original RN delivery using its empty
+layout metrics; this case has no painted local inverse. The public fixture
+checks its captured offsets equal client coordinates.
+
+This bounded desktop path uses a generated, SHA-pinned native RN overlay; the
+downloaded sources and reconciler remain unchanged. SDK headers and binaries
+identify the overlay and require a freshly packaged matching SDK. It does not
+enable original imperative EventTarget flags. The pinned RN AABB-subtraction
+capture algorithm is explicitly incomplete; Godot local offsets intentionally
+differ under rotation/skew/other-root embeddings. See the
+[geometry receipt](evidence/pointer-geometry/README.md) and preceding
+[lifetime receipt](evidence/pointers/README.md).
+
+Actual queued coalescing, complete responder/PanResponder, hardware,
+scroll/windows, cross-application stacking and mobile differentials remain
+open. These executed subsets do not close GF-08/GF-13.
 
 ## Public View geometry
 

@@ -33,6 +33,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [tree](tree/README.md) | Native IDs, original documents, logical traversal, RawText and retained collection snapshots | Public | [App](tree/App.jsx) · [scene](tree/scene.tscn) |
 | [focus](focus/README.md) | Original TextInput.State, real LineEdit focus, ref replacement and reentrant retirement | Public | [App](focus/App.jsx) · [scene](focus/scene.tscn) |
 | [pointers](pointers/README.md) | Original pointer transport, public View capture and selective multi-root lifetime | Public | [App](pointers/App.jsx) · [scene](pointers/scene.tscn) |
+| [pointer-geometry](pointer-geometry/README.md) | Transformed/cross-root capture, logical refs, density and terminal geometry | Public | [App](pointer-geometry/App.jsx) · [scene](pointer-geometry/scene.tscn) |
 | [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
 | [services](services/README.md) | Typed GDScript calls/signals, consistent state and shared Zustand data | Public | [App](services/App.jsx) · [scene](services/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
@@ -163,4 +164,12 @@ got/lost, shared-root contact IDs, selective cancellation, removal and app
 retirement. It passes 132/146 headless/native checks with 12 pixels; the isolated
 exception/real-focus stop fixture passes 43. See [curated evidence](../docs/evidence/pointers/README.md)
 for 144 native assertions, two unchanged-source crash controls and remaining
-hardware/transformed/mobile boundaries.
+hardware/mobile boundaries.
+
+![Captured target geometry after React updates](../docs/evidence/pointer-geometry/pointer-geometry-updated.png)
+
+The [geometry example](pointer-geometry/README.md) adds rotation/skew/reflection,
+shared embedded roots, flattened capture refs, immediate density changes,
+singular cancel and connected hidden capture. Its separate
+[evidence](../docs/evidence/pointer-geometry/README.md) records 631/648 checks,
+14 pixels, three captures and 55 expected failures on the previous host.

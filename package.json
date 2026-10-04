@@ -47,7 +47,8 @@
     "test:adapters:runtime": "node scripts/adapter-runtime-check.mjs",
     "test:transforms:guards": "node scripts/transform-guards-check.mjs",
     "test:focus:commands": "node --test tests/focus-commands-native.test.mjs",
-    "test:pointers:processor": "node --test --test-concurrency=1 tests/pointer-processor-native.test.mjs tests/pointer-errors-native.test.mjs"
+    "test:pointers:processor": "node --test --test-concurrency=1 tests/pointer-processor-native.test.mjs tests/pointer-errors-native.test.mjs",
+    "test:pointers:geometry": "node --test --test-concurrency=1 tests/pointer-geometry-native.test.mjs tests/pointer-projection-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

@@ -133,6 +133,7 @@ PointerAdapter::PointerSample *PointerAdapter::sample(int id, Vector2 position, 
     return nullptr;
   }
   auto &current = pointers_[id];
+  current.viewport_point = position;
   current.target = target;
   current.mouse = mouse;
   auto &event = current.event;
@@ -149,12 +150,18 @@ PointerAdapter::PointerSample *PointerAdapter::sample(int id, Vector2 position, 
 void PointerAdapter::pointer(int id, const std::string &phase) {
   auto found = pointers_.find(id);
   if (found == pointers_.end()) return;
-  if (phase == "down") ++pointer_downs_;
+  if (phase == "down") {
+    ++pointer_downs_;
+    // A mouse survives Up as hover and can reuse its pointer ID. New buttons
+    // start a new contact even if no Down listener causes a projection; old
+    // queued envelopes keep their own history instead of lending it forward.
+    found->second.geometry = std::make_shared<PointerGeometryHistory>();
+  }
   else if (phase == "move") ++pointer_moves_;
   else if (phase == "up") ++pointer_ups_;
   else if (phase == "cancel") ++pointer_cancels_;
   else if (phase == "leave") ++pointer_leaves_;
-  emit_pointer_(found->second.target, phase, found->second.event);
+  emit_pointer_(found->second.target, phase, found->second.event, found->second.viewport_point, found->second.geometry);
 }
 void PointerAdapter::leave_mouse(int id, const Vector2 *position) {
   auto found = pointers_.find(id);

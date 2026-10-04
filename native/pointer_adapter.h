@@ -1,4 +1,5 @@
 #pragma once
+#include "pointer_event.h"
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 #include <react/renderer/components/view/PointerEvent.h>
@@ -18,7 +19,8 @@ class PointerAdapter {
   struct Coordinates { godot::Vector2 page, screen; };
   using Project = std::function<Coordinates(godot::Vector2)>;
   using Emit = std::function<void(int, const std::string &, rn::TouchEvent)>;
-  using EmitPointer = std::function<void(int, const std::string &, rn::PointerEvent)>;
+  using EmitPointer = std::function<void(int, const std::string &, rn::PointerEvent, godot::Vector2,
+      std::shared_ptr<PointerGeometryHistory>)>;
   PointerAdapter(HitTest hit, LocalPoint local, Project project, Emit emit, EmitPointer emit_pointer);
   bool input(const godot::Ref<godot::InputEvent> &event, int pointer_id, bool primary);
   void responder(int tag, bool active, bool block);
@@ -38,6 +40,8 @@ class PointerAdapter {
   EmitPointer emit_pointer_;
   struct PointerSample {
     rn::PointerEvent event{};
+    godot::Vector2 viewport_point;
+    std::shared_ptr<PointerGeometryHistory> geometry{std::make_shared<PointerGeometryHistory>()};
     int target{};
     int touch_id{-1};
     bool mouse{}, active{};

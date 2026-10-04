@@ -60,6 +60,9 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
   EventTarget flags, pending/active capture, removal and commit-order constraints.
   This is source investigation, distinct from executed focus/runtime proof.
 
+- [Captured pointer geometry](pointer-geometry.md): original RN numerical
+  counterexamples, native projection, contact history and executed Godot proof.
+
 ## Useful next experiments
 
 - Text baseline and onTextLayout, then span interaction and explicit font invalidation.

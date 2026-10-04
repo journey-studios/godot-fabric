@@ -8,6 +8,8 @@
 #include "godot_component.h"
 #include "input_adapter.h"
 #include "pointer_adapter.h"
+#include "pointer_event.h"
+#include "pointer_geometry.h"
 #include "svg_node.h"
 #include "scroll_adapter.h"
 #include "appearance_adapter.h"
@@ -48,6 +50,7 @@
 #include <react/renderer/uimanager/UIManagerBinding.h>
 #include <react/renderer/uimanager/UIManagerDelegate.h>
 #include <chrono>
+#include <cctype>
 #include <cmath>
 #include <limits>
 #include <deque>
@@ -309,6 +312,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(ui->getShadowTreeRevisionConsistencyManager());
     rn::RuntimeSchedulerBinding::createAndInstallIfNeeded(*runtime, runtime_scheduler);
     rn::UIManagerBinding::createAndInstallIfNeeded(*runtime, ui);
+    rn::UIManagerBinding::getBinding(*runtime)->setPointerEventProjectionForGodot(
+        [this](const rn::ShadowNode &target, const rn::EventPayload &source, rn::PointerEvent &event) {
+          return project_pointer(target, source, event);
+        });
     native_modules = std::make_unique<fabric_godot::TurboModuleRegistry>(runtime_id, runtime_scheduler);
     native_modules->add_game_services(game_services);
     if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
@@ -485,7 +492,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           return fabric_godot::PointerAdapter::Coordinates{page, screen};
         },
         [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); },
-        [this, id](int tag, const std::string &phase, rn::PointerEvent event) { pointer_event(id, tag, phase, std::move(event)); });
+        [this, id](int tag, const std::string &phase, rn::PointerEvent event, Vector2 point,
+            std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
+          pointer_event(id, tag, phase, std::move(event), point, std::move(history));
+        });
     if (defer_start) surface.start_pending = true;
     else start_root(id);
     return id;
@@ -819,6 +829,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       catch (const std::exception &error) { fail(error.what()); }
     }
     ui->setDelegate(nullptr);
+    rn::UIManagerBinding::getBinding(*runtime)->setPointerEventProjectionForGodot({});
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(nullptr);
     window_listener.reset();
     timer_registry->quit();
@@ -1093,30 +1104,94 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       } else it = pointer_routes.erase(it);
     }
   }
-  void pointer_event(int id, int tag, const std::string &phase, rn::PointerEvent event) {
+  bool project_pointer(const rn::ShadowNode &target, const rn::EventPayload &source, rn::PointerEvent &event) {
+    const auto *sample = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&source);
+    // Other native adapters can still supply ordinary upstream PointerEvents.
+    if (!sample) return true;
+    auto origin = roots.find(sample->source_surface);
+    auto root = roots.find(target.getSurfaceId());
+    if (inactive() || origin == roots.end() || root == roots.end() ||
+        origin->second->stopping || root->second->stopping || retiring.contains(target.getTag())) return false;
+    auto *host = root->second->host();
+    auto *source_host = origin->second->host();
+    if (!host || !source_host || !host->is_inside_tree() || !source_host->is_inside_tree() ||
+        !host->get_window() || !host->get_viewport() ||
+        !source_host->get_window() || !source_host->get_viewport() ||
+        source_host->get_window()->get_instance_id() != sample->window_id ||
+        source_host->get_viewport()->get_instance_id() != sample->viewport_id ||
+        host->get_window()->get_instance_id() != sample->window_id ||
+        host->get_viewport()->get_instance_id() != sample->viewport_id) return false;
+    // Upstream unique moves can replace an earlier queue slot, so their native
+    // sample serials need not be dispatched in increasing order. Older samples
+    // still deliver normally, but cannot erase the newest cancellation history.
+    sample->history->begin(sample->serial, sample->terminal);
+    const fabric_godot::PointerGeometryHistory::NativePoint native_point{
+        sample->viewport_point.x, sample->viewport_point.y};
+    std::optional<Vector2> offset;
+    bool hidden = false;
+    try {
+      offset = fabric_godot::pointer_local_point(*ui, target, sample->viewport_point,
+        host->get_global_transform_with_canvas(), [this](rn::Tag tag) -> std::optional<Transform2D> {
+          auto mounted = views.find(tag);
+          if (mounted == views.end() || retiring.contains(tag) ||
+              !mounted->second.control->is_inside_tree()) return std::nullopt;
+          return mounted->second.control->get_global_transform_with_canvas();
+        }, &hidden);
+    } catch (const std::runtime_error &error) {
+      if (!sample->terminal || !std::string(error.what()).starts_with("E_POINTER_GEOMETRY_")) throw;
+      // A native inverse guard cancels using its last valid sample. Requiring
+      // the now-invalid embedding to be invertible would abort TouchCancel and
+      // leave Pressability held. Never borrow geometry from a different target,
+      // family, sample or pointer; without valid history omit that callback and
+      // let original implicit capture release/unregister finish.
+    }
+    if (!offset) {
+      // Connected display:none refs retain original capture/query/delivery and
+      // original unpainted-node offsets. There is no painted affine to invert;
+      // do not turn a hidden capture into silently swallowed callbacks.
+      if (hidden) return true;
+      if (!sample->terminal) return false;
+      const auto prior = sample->history->previous(target.getFamilyShared(), native_point);
+      if (!prior) return false;
+      event.offsetPoint = *prior;
+      return true;
+    }
+    const auto x = static_cast<rn::Float>(offset->x), y = static_cast<rn::Float>(offset->y);
+    if (!std::isfinite(x) || !std::isfinite(y))
+      throw std::runtime_error("E_POINTER_GEOMETRY_RANGE: target-local point exceeds RN precision");
+    event.offsetPoint = {x, y};
+    sample->history->remember(sample->serial, target.getFamilyShared(), native_point, event.offsetPoint);
+    return true;
+  }
+  void pointer_event(int id, int tag, const std::string &phase, rn::PointerEvent event, Vector2 point,
+      std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
     auto root = roots.find(id);
     if (inactive() || root == roots.end() || root->second->stopping) return;
+    auto *host = root->second->host();
+    if (!host || !host->get_window() || !host->get_viewport()) return;
     ++root->second->events;
+    const auto timestamp = event.timeStamp;
+    const auto payload = std::make_shared<fabric_godot::GodotPointerEvent>(std::move(event), point, id,
+        host->get_window()->get_instance_id(), host->get_viewport()->get_instance_id(), std::move(history),
+        phase == "cancel" || phase == "up" || phase == "leave");
+    const std::string type = phase == "down" ? "pointerDown" : phase == "up" ? "pointerUp" :
+        phase == "cancel" ? "pointerCancel" : phase == "leave" ? "pointerLeave" : "pointerMove";
+    const auto category = phase == "down" ? rn::RawEvent::Category::ContinuousStart :
+        phase == "up" || phase == "cancel" || phase == "leave" ? rn::RawEvent::Category::ContinuousEnd :
+        rn::RawEvent::Category::Unspecified;
     auto found = views.find(tag);
     if (!tag || found == views.end() || retiring.contains(tag) || !found->second.shadow.eventEmitter) {
       // A physical hit can be absent while the contact is captured. A typed
       // null-target event lets RN resolve capture and hover using its registry.
-      std::string type = phase == "down" ? "topPointerDown" : phase == "up" ? "topPointerUp" :
-          phase == "cancel" ? "topPointerCancel" : phase == "leave" ? "topPointerLeave" : "topPointerMove";
-      const auto category = phase == "down" ? rn::RawEvent::Category::ContinuousStart :
-          phase == "up" || phase == "cancel" || phase == "leave" ? rn::RawEvent::Category::ContinuousEnd :
-          rn::RawEvent::Category::Unspecified;
-      const auto timestamp = event.timeStamp;
-      dispatcher->dispatchEvent(rn::RawEvent(type, std::make_shared<rn::PointerEvent>(std::move(event)),
+      dispatcher->dispatchEvent(rn::RawEvent("top" + std::string(1, static_cast<char>(std::toupper(type[0]))) + type.substr(1), payload,
           nullptr, {}, category, false, timestamp));
       return;
     }
     auto emitter = std::static_pointer_cast<const rn::ViewEventEmitter>(found->second.shadow.eventEmitter);
-    if (phase == "down") emitter->onPointerDown(std::move(event));
-    else if (phase == "up") emitter->onPointerUp(std::move(event));
-    else if (phase == "cancel") emitter->onPointerCancel(std::move(event));
-    else if (phase == "leave") emitter->onPointerLeave(std::move(event));
-    else emitter->onPointerMove(std::move(event));
+    // Preserve upstream categories and move coalescing without slicing the
+    // native envelope in onPointer*'s by-value PointerEvent parameter.
+    if (phase == "move") emitter->dispatchUniqueEvent(type, payload, timestamp);
+    else emitter->dispatchEvent(type, payload, category, timestamp);
   }
   std::optional<PointerKey> pointer_key(Root &source, const Ref<InputEvent> &event, Vector2 &position) {
     if (event.is_null() || event->get_device() == -1) return std::nullopt;

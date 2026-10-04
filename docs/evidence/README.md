@@ -98,6 +98,12 @@ crash controls and 43 original JSX listener/real-focus stop checks. The
 [capture analysis](../research/pointer-capture-boundary.md) retains source
 boundaries and incomplete transformed/hardware/mobile acceptance.
 
+The subsequent [captured geometry record](pointer-geometry/README.md) adds
+631/648 public checks, 14 pixels/three captures, 55 expected previous-host
+failures and separate original/binding witnesses. It documents the pinned RN
+numerical limitation and native local-inverse behavior; coalescing, hardware,
+scroll/windows, EventTarget and mobile acceptance remain open.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

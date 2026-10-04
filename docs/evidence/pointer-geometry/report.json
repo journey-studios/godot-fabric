@@ -1,0 +1,5307 @@
+{
+  "format": "godot-fabric.pointer-geometry-evidence/v1",
+  "observedAt": "2026-10-04T12:34:03.611454+00:00",
+  "implementationCommit": null,
+  "baselineCommit": "0b5e7f446570266bde5eeb5b6dad638f8edecb23",
+  "sourceState": "Local verified slice, immutable source hashes below; implementation SHA is pinned in the following metadata commit before publication.",
+  "versions": {
+    "godot": "4.7.2-stable (official)",
+    "react": "19.2.3",
+    "reactNative": "0.87.1",
+    "hermes": "250829098.0.17",
+    "node": "22.23.3"
+  },
+  "platform": {
+    "os": "macOS",
+    "architecture": "arm64",
+    "host": "GDExtension",
+    "engineRecompiled": false,
+    "input": "Input.parse_input_event + raw-window viewport input",
+    "hardwareCertified": false
+  },
+  "commands": [
+    "cmake --build .deps/build --parallel 6",
+    "npm run test:pointers:geometry",
+    "npm run example -- pointer-geometry --headless",
+    "npm run example -- pointer-geometry --capture",
+    "npm run test:contracts",
+    "npm run check:static",
+    "npm run check:publication",
+    "npm run test:examples",
+    "npm run test:transforms:guards",
+    "npm run test:pointers:processor",
+    "npm run test:runtime",
+    "npm run test:application",
+    "npm run test:modules",
+    "npm run test:focus:commands",
+    "npm run test:services",
+    "npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk-pointer-geometry-final",
+    "npm run sdk:native:verify -- --sdk build/native-sdk-pointer-geometry-final",
+    "npm run test:adapters:native -- --sdk build/native-sdk-pointer-geometry-final --out build/adapter-registry-pointer-geometry-final",
+    "npm run test:adapters:loader -- --sdk build/native-sdk-pointer-geometry-final --out build/adapter-loader-pointer-geometry-final",
+    "npm run test:adapters:runtime -- --sdk build/native-sdk-pointer-geometry-final --out build/adapter-runtime-pointer-geometry-final"
+  ],
+  "provenance": {
+    "sources": {
+      "native/application_runtime.cpp": "5dbb1ce95d2cd69fdc26a07baab4da58e60d80511d001b6e0eb3839245ae103e",
+      "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+      "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+      "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+      "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+      "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+      "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+      "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+      "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591",
+      "tests/rn-pointer-overlay.test.mjs": "56faa9426889d8adf53c35a1e1a96abccf183a44f5b27be5cb4e69070c8f4381",
+      "tests/pointer-geometry-native.test.mjs": "34e33c61b60ecd13c3eb664b506caa1c438190f101e8b88c8cca067137bc98e5",
+      "tests/pointer-projection-native.test.mjs": "ae2f4ec18cc3352274e3e4bcfcc5cf4334b126ae4efd21866d08ebff9d37b865",
+      "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+      "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+      "examples/pointer-geometry/App.jsx": "776bbb6ee8903dbf87e93150ab09082ec1320d88bff13f6f8ed9aff75226c41e",
+      "examples/pointer-geometry/scene.tscn": "8b395ef849f208b92fc46ec4c58bfe29710ac60ca87ad066636284d88526d277",
+      "examples/pointer-geometry/validation.gd": "3a55f69654317edfe5575fb677961aacc177f67bc141c8cd7b5d4ddc86eadbd6",
+      "examples/catalog.json": "ff0bbb253d9d87cf029732119aedb42470031aa2912f44b6815e5f3003bc5b10",
+      "examples/entry.jsx": "cf158dc206ba6f69288d75cc0ff4e92ee7878c855cdf428ad042238473739d0a",
+      "tests/examples.test.mjs": "fbb55d1419fbcf0a030d467a5d51f3c84a0a3a343a6696536e6f260631b4015e",
+      "package.json": "734e53a61289e0dd766d868ef11087f1b99571195a36d899efe466c1f0cfa4d4",
+      ".github/workflows/contracts.yml": "1287ccc8f2517593e9d3230c16469b8676a70e661d88c9439ca7d1377e747ab7",
+      ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+      ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+      ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": "ba15a64f6954e887856c8c143295ec899d5d16be4d9cb39191f6a54046f655b4",
+      ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": "d3d61b35bae12af75f174017d59cab152aeaf0b3a0a10d3a391321b12bf3ad1e",
+      ".deps/package/ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+      ".deps/package/ReactCommon/react/renderer/core/EventTarget.cpp": "b2f550880a6dc57997166968d63771016e06dea1c62d1030135b6b9ddb91856f"
+    },
+    "hostSha256": "01b2d2ec0ec0d38cf55213520fbc612e2ebd2295d684df298aeeb9a93f27695d",
+    "publicBundleSha256": "1a97c72edd3ce27a5da84aea15f4d3c7e9de9034735d2875db9228580a0295c0",
+    "rawHeadlessReportSha256": "53e058be9989f8e5410356295abdb8a86f38c021af211f84b2d8ae4a41776a5a",
+    "rawNativeReportSha256": "023880b65e7c49267b2011f098fdbfdd045282d1dbf8698b2f446b0e7e349007",
+    "captures": {
+      "pointer-geometry-initial.png": "cd160ab8e56b4d15c2d3f09c0b067549970082e01c07a2e32559a4b90405f599",
+      "pointer-geometry-updated.png": "13eabaa12394dddbc7234abb820748cc73797a2bb151cd08964136fd02117033",
+      "pointer-geometry-density.png": "3e0e13a3d403f18cf045f26ea54da02fee3e2f97002bf373986f488497929c41"
+    },
+    "regressionLogSha256": {
+      "pointer-geometry-sdk-runtime.log": "53f8daf8059ecc0e701a33abee41b392bf390786990f8b22325c16cb906ceaf6",
+      "pointer-geometry-sdk-verify.log": "ac9425df0449481c6cc1ecc87bbecad8f3c593047568063e997c03beb540b79e",
+      "pointer-geometry-pointer-regression.log": "d184826ca99d9d2de9e3e1cc89f98ef2a6e4c9f06f2ad54551151952de90ed1b",
+      "pointer-geometry-runtime.log": "a9ddabe4ffd3ef9d7c736a4504c0c1947033fd40e2eacc25f2f5706bc676c57f",
+      "pointer-geometry-final-capture.log": "9f24e2ddf52085603e2bb6e114d38ce80d6340da8f79726a4b01f7d4e23ec3ed",
+      "pointer-geometry-final-headless.log": "7b67f791ee24a79c295cd7e198622685a6f2ef041af05d80e4ba6bd4ba43d828",
+      "pointer-geometry-sdk-pack.log": "9460b1a7880bf0d54b42be49ec1efb4b9eeac1e6f4272a11f7fa3345c3059d68",
+      "pointer-geometry-application.log": "4433fa5038a74d9a80cbdd7e93dfdc22378aca3eda707dcfa12c88b79927b6fc",
+      "pointer-geometry-sdk-loader.log": "b25743399027ec600ae7abafd73c9348c1b4eeb11877b458ad46745206456e1a",
+      "pointer-geometry-focus-commands.log": "07b77eb5152065077c1553eb773ad0e412015f54fe181ef2bc29526927a6e094",
+      "pointer-geometry-guards.log": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e",
+      "pointer-geometry-contracts.log": "c38ed705d4a7dbd04d3c8424dd2e9aa9e6e7dacc425eca1a27bea36856a6e8af",
+      "pointer-geometry-examples.log": "7b329569262d7c0fd1e3cdf97c5f72b01bdf59a4ea9ed76a1245abc61f93b224",
+      "pointer-geometry-modules.log": "5d77e37719deccab007852f562087ad01cdf8283e3f5d86d67dca1c7cf555e0b",
+      "pointer-geometry-native-tests.log": "7233f85060982ec31625ea7a36768e33419688626e69acf15d8bb337a854a420",
+      "pointer-geometry-sdk-registry.log": "839e0800af1ca2385c4c024083f3602895cc037e4e6c60e43bd00b4c27c20475",
+      "pointer-geometry-services.log": "4cda163505ee50cb35b3f93baab6a2c6676495264127523131fce4b94a0b7405"
+    }
+  },
+  "publicRuns": {
+    "headless": {
+      "mode": "headless",
+      "count": 631,
+      "passed": true,
+      "injections": 34,
+      "samples": 99,
+      "checkIds": [
+        "initial/mounts",
+        "initial/shared-runtime",
+        "initial/A/origin/affine",
+        "initial/A/origin/corners",
+        "initial/A/origin/identity",
+        "initial/A/origin/layout",
+        "initial/A/origin/measure",
+        "initial/A/origin/window",
+        "initial/A/origin/relative",
+        "initial/A/capture/affine",
+        "initial/A/capture/corners",
+        "initial/A/capture/identity",
+        "initial/A/capture/layout",
+        "initial/A/capture/measure",
+        "initial/A/capture/window",
+        "initial/A/capture/relative",
+        "initial/A/flat/flattened",
+        "initial/A/flat/identity",
+        "initial/A/flat/measure",
+        "initial/A/flat/window",
+        "initial/A/flat/relative",
+        "initial/B/capture/affine",
+        "initial/B/capture/corners",
+        "initial/B/capture/identity",
+        "initial/B/capture/layout",
+        "initial/B/capture/measure",
+        "initial/B/capture/window",
+        "initial/B/capture/relative",
+        "mouse-down/events",
+        "mouse-down/event-0/A/origin/Over/client",
+        "mouse-down/event-0/A/origin/Over/screen",
+        "mouse-down/event-0/A/origin/Over/offset",
+        "mouse-down/event-0/A/origin/Over/identity",
+        "mouse-down/event-1/A/origin/Enter/client",
+        "mouse-down/event-1/A/origin/Enter/screen",
+        "mouse-down/event-1/A/origin/Enter/offset",
+        "mouse-down/event-1/A/origin/Enter/identity",
+        "mouse-down/event-2/A/origin/Down/client",
+        "mouse-down/event-2/A/origin/Down/screen",
+        "mouse-down/event-2/A/origin/Down/offset",
+        "mouse-down/event-2/A/origin/Down/identity",
+        "mouse-down/pending",
+        "mouse-down/registry",
+        "capture-origin/events",
+        "capture-origin/event-0/A/origin/GotPointerCapture/client",
+        "capture-origin/event-0/A/origin/GotPointerCapture/screen",
+        "capture-origin/event-0/A/origin/GotPointerCapture/offset",
+        "capture-origin/event-0/A/origin/GotPointerCapture/identity",
+        "capture-origin/event-1/A/origin/Move/client",
+        "capture-origin/event-1/A/origin/Move/screen",
+        "capture-origin/event-1/A/origin/Move/offset",
+        "capture-origin/event-1/A/origin/Move/identity",
+        "capture-origin/order",
+        "capture-origin/upstream-counterfactual",
+        "capture-origin/registry",
+        "transfer-A/pending",
+        "transfer-A/events",
+        "transfer-A/event-0/A/origin/LostPointerCapture/client",
+        "transfer-A/event-0/A/origin/LostPointerCapture/screen",
+        "transfer-A/event-0/A/origin/LostPointerCapture/offset",
+        "transfer-A/event-0/A/origin/LostPointerCapture/identity",
+        "transfer-A/event-1/A/capture/GotPointerCapture/client",
+        "transfer-A/event-1/A/capture/GotPointerCapture/screen",
+        "transfer-A/event-1/A/capture/GotPointerCapture/offset",
+        "transfer-A/event-1/A/capture/GotPointerCapture/identity",
+        "transfer-A/event-2/A/origin/Out/client",
+        "transfer-A/event-2/A/origin/Out/screen",
+        "transfer-A/event-2/A/origin/Out/offset",
+        "transfer-A/event-2/A/origin/Out/identity",
+        "transfer-A/event-3/A/origin/Leave/client",
+        "transfer-A/event-3/A/origin/Leave/screen",
+        "transfer-A/event-3/A/origin/Leave/offset",
+        "transfer-A/event-3/A/origin/Leave/identity",
+        "transfer-A/event-4/A/capture/Over/client",
+        "transfer-A/event-4/A/capture/Over/screen",
+        "transfer-A/event-4/A/capture/Over/offset",
+        "transfer-A/event-4/A/capture/Over/identity",
+        "transfer-A/event-5/A/capture/Enter/client",
+        "transfer-A/event-5/A/capture/Enter/screen",
+        "transfer-A/event-5/A/capture/Enter/offset",
+        "transfer-A/event-5/A/capture/Enter/identity",
+        "transfer-A/event-6/A/capture/Move/client",
+        "transfer-A/event-6/A/capture/Move/screen",
+        "transfer-A/event-6/A/capture/Move/offset",
+        "transfer-A/event-6/A/capture/Move/identity",
+        "transfer-A/order",
+        "transfer-A/upstream-counterfactual",
+        "update-callback-before-commit/events",
+        "update-callback-before-commit/event-0/A/capture/Move/client",
+        "update-callback-before-commit/event-0/A/capture/Move/screen",
+        "update-callback-before-commit/event-0/A/capture/Move/offset",
+        "update-callback-before-commit/event-0/A/capture/Move/identity",
+        "update-callback/react",
+        "react-updated/A/origin/affine",
+        "react-updated/A/origin/corners",
+        "react-updated/A/origin/identity",
+        "react-updated/A/origin/layout",
+        "react-updated/A/origin/measure",
+        "react-updated/A/origin/window",
+        "react-updated/A/origin/relative",
+        "react-updated/A/capture/affine",
+        "react-updated/A/capture/corners",
+        "react-updated/A/capture/identity",
+        "react-updated/A/capture/layout",
+        "react-updated/A/capture/measure",
+        "react-updated/A/capture/window",
+        "react-updated/A/capture/relative",
+        "react-updated/A/flat/flattened",
+        "react-updated/A/flat/identity",
+        "react-updated/A/flat/measure",
+        "react-updated/A/flat/window",
+        "react-updated/A/flat/relative",
+        "react-updated/B/capture/affine",
+        "react-updated/B/capture/corners",
+        "react-updated/B/capture/identity",
+        "react-updated/B/capture/layout",
+        "react-updated/B/capture/measure",
+        "react-updated/B/capture/window",
+        "react-updated/B/capture/relative",
+        "updated-transform/events",
+        "updated-transform/event-0/A/capture/Move/client",
+        "updated-transform/event-0/A/capture/Move/screen",
+        "updated-transform/event-0/A/capture/Move/offset",
+        "updated-transform/event-0/A/capture/Move/identity",
+        "updated-transform/owner",
+        "transfer-B/pending",
+        "transfer-B/events",
+        "transfer-B/event-0/A/capture/LostPointerCapture/client",
+        "transfer-B/event-0/A/capture/LostPointerCapture/screen",
+        "transfer-B/event-0/A/capture/LostPointerCapture/offset",
+        "transfer-B/event-0/A/capture/LostPointerCapture/identity",
+        "transfer-B/event-1/B/capture/GotPointerCapture/client",
+        "transfer-B/event-1/B/capture/GotPointerCapture/screen",
+        "transfer-B/event-1/B/capture/GotPointerCapture/offset",
+        "transfer-B/event-1/B/capture/GotPointerCapture/identity",
+        "transfer-B/event-2/A/capture/Out/client",
+        "transfer-B/event-2/A/capture/Out/screen",
+        "transfer-B/event-2/A/capture/Out/offset",
+        "transfer-B/event-2/A/capture/Out/identity",
+        "transfer-B/event-3/A/capture/Leave/client",
+        "transfer-B/event-3/A/capture/Leave/screen",
+        "transfer-B/event-3/A/capture/Leave/offset",
+        "transfer-B/event-3/A/capture/Leave/identity",
+        "transfer-B/event-4/B/capture/Over/client",
+        "transfer-B/event-4/B/capture/Over/screen",
+        "transfer-B/event-4/B/capture/Over/offset",
+        "transfer-B/event-4/B/capture/Over/identity",
+        "transfer-B/event-5/B/capture/Enter/client",
+        "transfer-B/event-5/B/capture/Enter/screen",
+        "transfer-B/event-5/B/capture/Enter/offset",
+        "transfer-B/event-5/B/capture/Enter/identity",
+        "transfer-B/event-6/B/capture/Move/client",
+        "transfer-B/event-6/B/capture/Move/screen",
+        "transfer-B/event-6/B/capture/Move/offset",
+        "transfer-B/event-6/B/capture/Move/identity",
+        "transfer-B/order",
+        "transfer-B/id",
+        "transfer-B/upstream-counterfactual",
+        "outside-all-roots/events",
+        "outside-all-roots/event-0/B/capture/Move/client",
+        "outside-all-roots/event-0/B/capture/Move/screen",
+        "outside-all-roots/event-0/B/capture/Move/offset",
+        "outside-all-roots/event-0/B/capture/Move/identity",
+        "outside-all-roots/order",
+        "godot-embedding/A/origin/affine",
+        "godot-embedding/A/origin/corners",
+        "godot-embedding/A/origin/identity",
+        "godot-embedding/A/origin/layout",
+        "godot-embedding/A/origin/measure",
+        "godot-embedding/A/origin/window",
+        "godot-embedding/A/origin/relative",
+        "godot-embedding/A/capture/affine",
+        "godot-embedding/A/capture/corners",
+        "godot-embedding/A/capture/identity",
+        "godot-embedding/A/capture/layout",
+        "godot-embedding/A/capture/measure",
+        "godot-embedding/A/capture/window",
+        "godot-embedding/A/capture/relative",
+        "godot-embedding/A/flat/flattened",
+        "godot-embedding/A/flat/identity",
+        "godot-embedding/A/flat/measure",
+        "godot-embedding/A/flat/window",
+        "godot-embedding/A/flat/relative",
+        "godot-embedding/B/capture/affine",
+        "godot-embedding/B/capture/corners",
+        "godot-embedding/B/capture/identity",
+        "godot-embedding/B/capture/layout",
+        "godot-embedding/B/capture/measure",
+        "godot-embedding/B/capture/window",
+        "godot-embedding/B/capture/relative",
+        "moved-root-capture/events",
+        "moved-root-capture/event-0/B/capture/Move/client",
+        "moved-root-capture/event-0/B/capture/Move/screen",
+        "moved-root-capture/event-0/B/capture/Move/offset",
+        "moved-root-capture/event-0/B/capture/Move/identity",
+        "moved-root-capture/owner",
+        "mirrored-target/A/origin/affine",
+        "mirrored-target/A/origin/corners",
+        "mirrored-target/A/origin/identity",
+        "mirrored-target/A/origin/layout",
+        "mirrored-target/A/origin/measure",
+        "mirrored-target/A/origin/window",
+        "mirrored-target/A/origin/relative",
+        "mirrored-target/A/capture/affine",
+        "mirrored-target/A/capture/corners",
+        "mirrored-target/A/capture/identity",
+        "mirrored-target/A/capture/layout",
+        "mirrored-target/A/capture/measure",
+        "mirrored-target/A/capture/window",
+        "mirrored-target/A/capture/relative",
+        "mirrored-target/A/flat/flattened",
+        "mirrored-target/A/flat/identity",
+        "mirrored-target/A/flat/measure",
+        "mirrored-target/A/flat/window",
+        "mirrored-target/A/flat/relative",
+        "mirrored-target/B/capture/affine",
+        "mirrored-target/B/capture/corners",
+        "mirrored-target/B/capture/identity",
+        "mirrored-target/B/capture/layout",
+        "mirrored-target/B/capture/measure",
+        "mirrored-target/B/capture/window",
+        "mirrored-target/B/capture/relative",
+        "reflected-capture/events",
+        "reflected-capture/event-0/B/capture/Move/client",
+        "reflected-capture/event-0/B/capture/Move/screen",
+        "reflected-capture/event-0/B/capture/Move/offset",
+        "reflected-capture/event-0/B/capture/Move/identity",
+        "reflected-capture/order",
+        "density-immediate/events",
+        "density-immediate/event-0/B/capture/Move/client",
+        "density-immediate/event-0/B/capture/Move/screen",
+        "density-immediate/event-0/B/capture/Move/offset",
+        "density-immediate/event-0/B/capture/Move/identity",
+        "density-immediate/owner",
+        "density-immediate/metrics",
+        "density-two/A/origin/affine",
+        "density-two/A/origin/corners",
+        "density-two/A/origin/identity",
+        "density-two/A/origin/layout",
+        "density-two/A/origin/measure",
+        "density-two/A/origin/window",
+        "density-two/A/origin/relative",
+        "density-two/A/capture/affine",
+        "density-two/A/capture/corners",
+        "density-two/A/capture/identity",
+        "density-two/A/capture/layout",
+        "density-two/A/capture/measure",
+        "density-two/A/capture/window",
+        "density-two/A/capture/relative",
+        "density-two/A/flat/flattened",
+        "density-two/A/flat/identity",
+        "density-two/A/flat/measure",
+        "density-two/A/flat/window",
+        "density-two/A/flat/relative",
+        "density-two/B/capture/affine",
+        "density-two/B/capture/corners",
+        "density-two/B/capture/identity",
+        "density-two/B/capture/layout",
+        "density-two/B/capture/measure",
+        "density-two/B/capture/window",
+        "density-two/B/capture/relative",
+        "captured-up/events",
+        "captured-up/event-0/B/capture/Up/client",
+        "captured-up/event-0/B/capture/Up/screen",
+        "captured-up/event-0/B/capture/Up/offset",
+        "captured-up/event-0/B/capture/Up/identity",
+        "captured-up/event-1/B/capture/Out/client",
+        "captured-up/event-1/B/capture/Out/screen",
+        "captured-up/event-1/B/capture/Out/offset",
+        "captured-up/event-1/B/capture/Out/identity",
+        "captured-up/event-2/B/capture/Leave/client",
+        "captured-up/event-2/B/capture/Leave/screen",
+        "captured-up/event-2/B/capture/Leave/offset",
+        "captured-up/event-2/B/capture/Leave/identity",
+        "captured-up/event-3/B/capture/LostPointerCapture/client",
+        "captured-up/event-3/B/capture/LostPointerCapture/screen",
+        "captured-up/event-3/B/capture/LostPointerCapture/offset",
+        "captured-up/event-3/B/capture/LostPointerCapture/identity",
+        "captured-up/order",
+        "captured-up/registry",
+        "logical-down/events",
+        "logical-down/event-0/A/origin/Over/client",
+        "logical-down/event-0/A/origin/Over/screen",
+        "logical-down/event-0/A/origin/Over/offset",
+        "logical-down/event-0/A/origin/Over/identity",
+        "logical-down/event-1/A/origin/Enter/client",
+        "logical-down/event-1/A/origin/Enter/screen",
+        "logical-down/event-1/A/origin/Enter/offset",
+        "logical-down/event-1/A/origin/Enter/identity",
+        "logical-down/event-2/A/origin/Down/client",
+        "logical-down/event-2/A/origin/Down/screen",
+        "logical-down/event-2/A/origin/Down/offset",
+        "logical-down/event-2/A/origin/Down/identity",
+        "logical-capture/pending",
+        "logical-capture/events",
+        "logical-capture/event-0/A/flat/GotPointerCapture/client",
+        "logical-capture/event-0/A/flat/GotPointerCapture/screen",
+        "logical-capture/event-0/A/flat/GotPointerCapture/offset",
+        "logical-capture/event-0/A/flat/GotPointerCapture/identity",
+        "logical-capture/event-1/A/origin/Out/client",
+        "logical-capture/event-1/A/origin/Out/screen",
+        "logical-capture/event-1/A/origin/Out/offset",
+        "logical-capture/event-1/A/origin/Out/identity",
+        "logical-capture/event-2/A/origin/Leave/client",
+        "logical-capture/event-2/A/origin/Leave/screen",
+        "logical-capture/event-2/A/origin/Leave/offset",
+        "logical-capture/event-2/A/origin/Leave/identity",
+        "logical-capture/event-3/A/flat/Over/client",
+        "logical-capture/event-3/A/flat/Over/screen",
+        "logical-capture/event-3/A/flat/Over/offset",
+        "logical-capture/event-3/A/flat/Over/identity",
+        "logical-capture/event-4/A/flat/Move/client",
+        "logical-capture/event-4/A/flat/Move/screen",
+        "logical-capture/event-4/A/flat/Move/offset",
+        "logical-capture/event-4/A/flat/Move/identity",
+        "logical-capture/order",
+        "logical-capture/upstream-counterfactual",
+        "logical-capture/touch-owner",
+        "logical-capture/touch-coordinates",
+        "logical-cancel/events",
+        "logical-cancel/event-0/A/flat/Cancel/client",
+        "logical-cancel/event-0/A/flat/Cancel/screen",
+        "logical-cancel/event-0/A/flat/Cancel/offset",
+        "logical-cancel/event-0/A/flat/Cancel/identity",
+        "logical-cancel/event-1/A/flat/Out/client",
+        "logical-cancel/event-1/A/flat/Out/screen",
+        "logical-cancel/event-1/A/flat/Out/offset",
+        "logical-cancel/event-1/A/flat/Out/identity",
+        "logical-cancel/event-2/A/flat/Leave/client",
+        "logical-cancel/event-2/A/flat/Leave/screen",
+        "logical-cancel/event-2/A/flat/Leave/offset",
+        "logical-cancel/event-2/A/flat/Leave/identity",
+        "logical-cancel/event-3/A/flat/LostPointerCapture/client",
+        "logical-cancel/event-3/A/flat/LostPointerCapture/screen",
+        "logical-cancel/event-3/A/flat/LostPointerCapture/offset",
+        "logical-cancel/event-3/A/flat/LostPointerCapture/identity",
+        "logical-cancel/order",
+        "logical-cancel/registry",
+        "singular-source-down/events",
+        "singular-source-down/event-0/A/origin/Over/client",
+        "singular-source-down/event-0/A/origin/Over/screen",
+        "singular-source-down/event-0/A/origin/Over/offset",
+        "singular-source-down/event-0/A/origin/Over/identity",
+        "singular-source-down/event-1/A/origin/Enter/client",
+        "singular-source-down/event-1/A/origin/Enter/screen",
+        "singular-source-down/event-1/A/origin/Enter/offset",
+        "singular-source-down/event-1/A/origin/Enter/identity",
+        "singular-source-down/event-2/A/origin/Down/client",
+        "singular-source-down/event-2/A/origin/Down/screen",
+        "singular-source-down/event-2/A/origin/Down/offset",
+        "singular-source-down/event-2/A/origin/Down/identity",
+        "singular-source-last-valid/events",
+        "singular-source-last-valid/event-0/A/capture/GotPointerCapture/client",
+        "singular-source-last-valid/event-0/A/capture/GotPointerCapture/screen",
+        "singular-source-last-valid/event-0/A/capture/GotPointerCapture/offset",
+        "singular-source-last-valid/event-0/A/capture/GotPointerCapture/identity",
+        "singular-source-last-valid/event-1/A/origin/Out/client",
+        "singular-source-last-valid/event-1/A/origin/Out/screen",
+        "singular-source-last-valid/event-1/A/origin/Out/offset",
+        "singular-source-last-valid/event-1/A/origin/Out/identity",
+        "singular-source-last-valid/event-2/A/origin/Leave/client",
+        "singular-source-last-valid/event-2/A/origin/Leave/screen",
+        "singular-source-last-valid/event-2/A/origin/Leave/offset",
+        "singular-source-last-valid/event-2/A/origin/Leave/identity",
+        "singular-source-last-valid/event-3/A/capture/Over/client",
+        "singular-source-last-valid/event-3/A/capture/Over/screen",
+        "singular-source-last-valid/event-3/A/capture/Over/offset",
+        "singular-source-last-valid/event-3/A/capture/Over/identity",
+        "singular-source-last-valid/event-4/A/capture/Enter/client",
+        "singular-source-last-valid/event-4/A/capture/Enter/screen",
+        "singular-source-last-valid/event-4/A/capture/Enter/offset",
+        "singular-source-last-valid/event-4/A/capture/Enter/identity",
+        "singular-source-last-valid/event-5/A/capture/Move/client",
+        "singular-source-last-valid/event-5/A/capture/Move/screen",
+        "singular-source-last-valid/event-5/A/capture/Move/offset",
+        "singular-source-last-valid/event-5/A/capture/Move/identity",
+        "singular-source-last-valid/owner",
+        "singular-survivor-down/events",
+        "singular-survivor-down/event-0/B/capture/Over/client",
+        "singular-survivor-down/event-0/B/capture/Over/screen",
+        "singular-survivor-down/event-0/B/capture/Over/offset",
+        "singular-survivor-down/event-0/B/capture/Over/identity",
+        "singular-survivor-down/event-1/B/capture/Enter/client",
+        "singular-survivor-down/event-1/B/capture/Enter/screen",
+        "singular-survivor-down/event-1/B/capture/Enter/offset",
+        "singular-survivor-down/event-1/B/capture/Enter/identity",
+        "singular-survivor-down/event-2/B/capture/Down/client",
+        "singular-survivor-down/event-2/B/capture/Down/screen",
+        "singular-survivor-down/event-2/B/capture/Down/offset",
+        "singular-survivor-down/event-2/B/capture/Down/identity",
+        "singular-survivor-active/events",
+        "singular-survivor-active/event-0/B/capture/GotPointerCapture/client",
+        "singular-survivor-active/event-0/B/capture/GotPointerCapture/screen",
+        "singular-survivor-active/event-0/B/capture/GotPointerCapture/offset",
+        "singular-survivor-active/event-0/B/capture/GotPointerCapture/identity",
+        "singular-survivor-active/event-1/B/capture/Move/client",
+        "singular-survivor-active/event-1/B/capture/Move/screen",
+        "singular-survivor-active/event-1/B/capture/Move/offset",
+        "singular-survivor-active/event-1/B/capture/Move/identity",
+        "singular-survivor-active/ids",
+        "singular-survivor-active/registry",
+        "singular-source/actual-embedding",
+        "singular-source/cancel-order",
+        "singular-source/exact-terminal-coordinates",
+        "singular-source/finite-events",
+        "singular-source/original-touch-cancel",
+        "singular-source/retired-authority",
+        "singular-source/survivor-live",
+        "singular-source-canceled/registry",
+        "singular-source/restored-embedding",
+        "singular-source/no-resurrection",
+        "singular-source/late-up-survivor",
+        "singular-survivor-continues/events",
+        "singular-survivor-continues/event-0/B/capture/Move/client",
+        "singular-survivor-continues/event-0/B/capture/Move/screen",
+        "singular-survivor-continues/event-0/B/capture/Move/offset",
+        "singular-survivor-continues/event-0/B/capture/Move/identity",
+        "singular-survivor-continues/owner",
+        "singular-survivor-up/events",
+        "singular-survivor-up/event-0/B/capture/Up/client",
+        "singular-survivor-up/event-0/B/capture/Up/screen",
+        "singular-survivor-up/event-0/B/capture/Up/offset",
+        "singular-survivor-up/event-0/B/capture/Up/identity",
+        "singular-survivor-up/event-1/B/capture/Out/client",
+        "singular-survivor-up/event-1/B/capture/Out/screen",
+        "singular-survivor-up/event-1/B/capture/Out/offset",
+        "singular-survivor-up/event-1/B/capture/Out/identity",
+        "singular-survivor-up/event-2/B/capture/Leave/client",
+        "singular-survivor-up/event-2/B/capture/Leave/screen",
+        "singular-survivor-up/event-2/B/capture/Leave/offset",
+        "singular-survivor-up/event-2/B/capture/Leave/identity",
+        "singular-survivor-up/event-3/B/capture/LostPointerCapture/client",
+        "singular-survivor-up/event-3/B/capture/LostPointerCapture/screen",
+        "singular-survivor-up/event-3/B/capture/LostPointerCapture/offset",
+        "singular-survivor-up/event-3/B/capture/LostPointerCapture/identity",
+        "singular-survivor-up/order",
+        "singular-source-finished/registry",
+        "hidden-capture-origin/events",
+        "hidden-capture-origin/event-0/A/origin/Over/client",
+        "hidden-capture-origin/event-0/A/origin/Over/screen",
+        "hidden-capture-origin/event-0/A/origin/Over/offset",
+        "hidden-capture-origin/event-0/A/origin/Over/identity",
+        "hidden-capture-origin/event-1/A/origin/Enter/client",
+        "hidden-capture-origin/event-1/A/origin/Enter/screen",
+        "hidden-capture-origin/event-1/A/origin/Enter/offset",
+        "hidden-capture-origin/event-1/A/origin/Enter/identity",
+        "hidden-capture-origin/event-2/A/origin/Down/client",
+        "hidden-capture-origin/event-2/A/origin/Down/screen",
+        "hidden-capture-origin/event-2/A/origin/Down/offset",
+        "hidden-capture-origin/event-2/A/origin/Down/identity",
+        "hidden-capture-before-hide/events",
+        "hidden-capture-before-hide/event-0/B/capture/GotPointerCapture/client",
+        "hidden-capture-before-hide/event-0/B/capture/GotPointerCapture/screen",
+        "hidden-capture-before-hide/event-0/B/capture/GotPointerCapture/offset",
+        "hidden-capture-before-hide/event-0/B/capture/GotPointerCapture/identity",
+        "hidden-capture-before-hide/event-1/A/origin/Out/client",
+        "hidden-capture-before-hide/event-1/A/origin/Out/screen",
+        "hidden-capture-before-hide/event-1/A/origin/Out/offset",
+        "hidden-capture-before-hide/event-1/A/origin/Out/identity",
+        "hidden-capture-before-hide/event-2/A/origin/Leave/client",
+        "hidden-capture-before-hide/event-2/A/origin/Leave/screen",
+        "hidden-capture-before-hide/event-2/A/origin/Leave/offset",
+        "hidden-capture-before-hide/event-2/A/origin/Leave/identity",
+        "hidden-capture-before-hide/event-3/B/capture/Over/client",
+        "hidden-capture-before-hide/event-3/B/capture/Over/screen",
+        "hidden-capture-before-hide/event-3/B/capture/Over/offset",
+        "hidden-capture-before-hide/event-3/B/capture/Over/identity",
+        "hidden-capture-before-hide/event-4/B/capture/Enter/client",
+        "hidden-capture-before-hide/event-4/B/capture/Enter/screen",
+        "hidden-capture-before-hide/event-4/B/capture/Enter/offset",
+        "hidden-capture-before-hide/event-4/B/capture/Enter/identity",
+        "hidden-capture-before-hide/event-5/B/capture/Move/client",
+        "hidden-capture-before-hide/event-5/B/capture/Move/screen",
+        "hidden-capture-before-hide/event-5/B/capture/Move/offset",
+        "hidden-capture-before-hide/event-5/B/capture/Move/identity",
+        "hidden-capture-before-hide/owner",
+        "hidden-capture/connected-owner",
+        "hidden-capture/registry",
+        "hidden-capture-move/events",
+        "hidden-capture-move/hidden-event-0/Move/connected-identity",
+        "hidden-capture-move/hidden-event-0/Move/native-sample",
+        "hidden-capture-move/hidden-event-0/Move/original-empty-layout-offset",
+        "hidden-capture-move/order",
+        "hidden-capture-move/touch-owner",
+        "hidden-capture-move/touch-coordinates",
+        "hidden-capture-up/events",
+        "hidden-capture-up/hidden-event-0/Up/connected-identity",
+        "hidden-capture-up/hidden-event-0/Up/native-sample",
+        "hidden-capture-up/hidden-event-0/Up/original-empty-layout-offset",
+        "hidden-capture-up/hidden-event-1/Out/connected-identity",
+        "hidden-capture-up/hidden-event-1/Out/native-sample",
+        "hidden-capture-up/hidden-event-1/Out/original-empty-layout-offset",
+        "hidden-capture-up/hidden-event-2/Leave/connected-identity",
+        "hidden-capture-up/hidden-event-2/Leave/native-sample",
+        "hidden-capture-up/hidden-event-2/Leave/original-empty-layout-offset",
+        "hidden-capture-up/hidden-event-3/LostPointerCapture/connected-identity",
+        "hidden-capture-up/hidden-event-3/LostPointerCapture/native-sample",
+        "hidden-capture-up/hidden-event-3/LostPointerCapture/original-empty-layout-offset",
+        "hidden-capture-up/order",
+        "hidden-capture-ended/registry",
+        "hidden-capture/restored",
+        "retirement-origin/events",
+        "retirement-origin/event-0/A/origin/Over/client",
+        "retirement-origin/event-0/A/origin/Over/screen",
+        "retirement-origin/event-0/A/origin/Over/offset",
+        "retirement-origin/event-0/A/origin/Over/identity",
+        "retirement-origin/event-1/A/origin/Enter/client",
+        "retirement-origin/event-1/A/origin/Enter/screen",
+        "retirement-origin/event-1/A/origin/Enter/offset",
+        "retirement-origin/event-1/A/origin/Enter/identity",
+        "retirement-origin/event-2/A/origin/Down/client",
+        "retirement-origin/event-2/A/origin/Down/screen",
+        "retirement-origin/event-2/A/origin/Down/offset",
+        "retirement-origin/event-2/A/origin/Down/identity",
+        "retirement-capture/events",
+        "retirement-capture/event-0/B/capture/GotPointerCapture/client",
+        "retirement-capture/event-0/B/capture/GotPointerCapture/screen",
+        "retirement-capture/event-0/B/capture/GotPointerCapture/offset",
+        "retirement-capture/event-0/B/capture/GotPointerCapture/identity",
+        "retirement-capture/event-1/A/origin/Out/client",
+        "retirement-capture/event-1/A/origin/Out/screen",
+        "retirement-capture/event-1/A/origin/Out/offset",
+        "retirement-capture/event-1/A/origin/Out/identity",
+        "retirement-capture/event-2/A/origin/Leave/client",
+        "retirement-capture/event-2/A/origin/Leave/screen",
+        "retirement-capture/event-2/A/origin/Leave/offset",
+        "retirement-capture/event-2/A/origin/Leave/identity",
+        "retirement-capture/event-3/B/capture/Over/client",
+        "retirement-capture/event-3/B/capture/Over/screen",
+        "retirement-capture/event-3/B/capture/Over/offset",
+        "retirement-capture/event-3/B/capture/Over/identity",
+        "retirement-capture/event-4/B/capture/Enter/client",
+        "retirement-capture/event-4/B/capture/Enter/screen",
+        "retirement-capture/event-4/B/capture/Enter/offset",
+        "retirement-capture/event-4/B/capture/Enter/identity",
+        "retirement-capture/event-5/B/capture/Move/client",
+        "retirement-capture/event-5/B/capture/Move/screen",
+        "retirement-capture/event-5/B/capture/Move/offset",
+        "retirement-capture/event-5/B/capture/Move/identity",
+        "concurrent-down/events",
+        "concurrent-down/event-0/A/origin/Over/client",
+        "concurrent-down/event-0/A/origin/Over/screen",
+        "concurrent-down/event-0/A/origin/Over/offset",
+        "concurrent-down/event-0/A/origin/Over/identity",
+        "concurrent-down/event-1/A/origin/Enter/client",
+        "concurrent-down/event-1/A/origin/Enter/screen",
+        "concurrent-down/event-1/A/origin/Enter/offset",
+        "concurrent-down/event-1/A/origin/Enter/identity",
+        "concurrent-down/event-2/A/origin/Down/client",
+        "concurrent-down/event-2/A/origin/Down/screen",
+        "concurrent-down/event-2/A/origin/Down/offset",
+        "concurrent-down/event-2/A/origin/Down/identity",
+        "concurrent-capture/events",
+        "concurrent-capture/event-0/A/origin/GotPointerCapture/client",
+        "concurrent-capture/event-0/A/origin/GotPointerCapture/screen",
+        "concurrent-capture/event-0/A/origin/GotPointerCapture/offset",
+        "concurrent-capture/event-0/A/origin/GotPointerCapture/identity",
+        "concurrent-capture/event-1/A/origin/Move/client",
+        "concurrent-capture/event-1/A/origin/Move/screen",
+        "concurrent-capture/event-1/A/origin/Move/offset",
+        "concurrent-capture/event-1/A/origin/Move/identity",
+        "concurrent-capture/ids",
+        "concurrent-capture/registry",
+        "retired-target/no-callback",
+        "retired-target/stale",
+        "retired-target/survivor",
+        "retired-target/registry",
+        "origin-survives-retirement/events",
+        "origin-survives-retirement/event-0/A/origin/Over/client",
+        "origin-survives-retirement/event-0/A/origin/Over/screen",
+        "origin-survives-retirement/event-0/A/origin/Over/offset",
+        "origin-survives-retirement/event-0/A/origin/Over/identity",
+        "origin-survives-retirement/event-1/A/origin/Enter/client",
+        "origin-survives-retirement/event-1/A/origin/Enter/screen",
+        "origin-survives-retirement/event-1/A/origin/Enter/offset",
+        "origin-survives-retirement/event-1/A/origin/Enter/identity",
+        "origin-survives-retirement/event-2/A/origin/Move/client",
+        "origin-survives-retirement/event-2/A/origin/Move/screen",
+        "origin-survives-retirement/event-2/A/origin/Move/offset",
+        "origin-survives-retirement/event-2/A/origin/Move/identity",
+        "origin-survives-retirement/id",
+        "origin-survives-retirement/touch-owner",
+        "origin-survives-retirement/touch-coordinates",
+        "concurrent-survivor-move/events",
+        "concurrent-survivor-move/event-0/A/origin/Move/client",
+        "concurrent-survivor-move/event-0/A/origin/Move/screen",
+        "concurrent-survivor-move/event-0/A/origin/Move/offset",
+        "concurrent-survivor-move/event-0/A/origin/Move/identity",
+        "concurrent-survivor-move/owner",
+        "retired-capture-contact-up/events",
+        "retired-capture-contact-up/event-0/A/origin/Up/client",
+        "retired-capture-contact-up/event-0/A/origin/Up/screen",
+        "retired-capture-contact-up/event-0/A/origin/Up/offset",
+        "retired-capture-contact-up/event-0/A/origin/Up/identity",
+        "retired-capture-contact-up/event-1/A/origin/Out/client",
+        "retired-capture-contact-up/event-1/A/origin/Out/screen",
+        "retired-capture-contact-up/event-1/A/origin/Out/offset",
+        "retired-capture-contact-up/event-1/A/origin/Out/identity",
+        "retired-capture-contact-up/event-2/A/origin/Leave/client",
+        "retired-capture-contact-up/event-2/A/origin/Leave/screen",
+        "retired-capture-contact-up/event-2/A/origin/Leave/offset",
+        "retired-capture-contact-up/event-2/A/origin/Leave/identity",
+        "retired-capture-contact-up/survivor",
+        "concurrent-survivor-cancel/events",
+        "concurrent-survivor-cancel/event-0/A/origin/Cancel/client",
+        "concurrent-survivor-cancel/event-0/A/origin/Cancel/screen",
+        "concurrent-survivor-cancel/event-0/A/origin/Cancel/offset",
+        "concurrent-survivor-cancel/event-0/A/origin/Cancel/identity",
+        "concurrent-survivor-cancel/event-1/A/origin/Out/client",
+        "concurrent-survivor-cancel/event-1/A/origin/Out/screen",
+        "concurrent-survivor-cancel/event-1/A/origin/Out/offset",
+        "concurrent-survivor-cancel/event-1/A/origin/Out/identity",
+        "concurrent-survivor-cancel/event-2/A/origin/Leave/client",
+        "concurrent-survivor-cancel/event-2/A/origin/Leave/screen",
+        "concurrent-survivor-cancel/event-2/A/origin/Leave/offset",
+        "concurrent-survivor-cancel/event-2/A/origin/Leave/identity",
+        "concurrent-survivor-cancel/event-3/A/origin/LostPointerCapture/client",
+        "concurrent-survivor-cancel/event-3/A/origin/LostPointerCapture/screen",
+        "concurrent-survivor-cancel/event-3/A/origin/LostPointerCapture/offset",
+        "concurrent-survivor-cancel/event-3/A/origin/LostPointerCapture/identity",
+        "concurrent-survivor-cancel/order",
+        "all-contacts-ended/registry",
+        "stopped/A/controls",
+        "stopped/A/contacts",
+        "stopped/B/controls",
+        "stopped/B/contacts",
+        "stopped/application",
+        "stopped/queues",
+        "stopped/processor",
+        "stopped/routing",
+        "stopped/react"
+      ]
+    },
+    "native": {
+      "mode": "macOS",
+      "count": 648,
+      "passed": true,
+      "injections": 34,
+      "samples": 99,
+      "sharedHeadlessCheckIds": true,
+      "additionalChecks": [
+        {
+          "id": "initial/pixel/A/origin",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "initial/pixel/A/capture",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "initial/pixel/B/capture",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "initial/pixel/A/flat",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "initial/screenshot",
+          "name": "Actual native Viewport capture is saved",
+          "passed": true
+        },
+        {
+          "id": "updated/pixel/A/origin",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "updated/pixel/A/capture",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "updated/pixel/B/capture",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "updated/pixel/A/flat",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "updated/pixel/old-capture-location",
+          "name": "React transform update removes the old capture-target paint",
+          "passed": true
+        },
+        {
+          "id": "updated/screenshot",
+          "name": "Actual native Viewport capture is saved",
+          "passed": true
+        },
+        {
+          "id": "density/pixel/A/origin",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "density/pixel/A/capture",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "density/pixel/B/capture",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "density/pixel/A/flat",
+          "name": "Declared transformed target paints its independently selected native pixel",
+          "passed": true
+        },
+        {
+          "id": "density/pixel/old-capture-location",
+          "name": "React transform update removes the old capture-target paint",
+          "passed": true
+        },
+        {
+          "id": "density/screenshot",
+          "name": "Actual native Viewport capture is saved",
+          "passed": true
+        }
+      ],
+      "pixels": [
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#0284c7",
+          "passed": true,
+          "pixel": [
+            158,
+            258
+          ],
+          "stage": "initial",
+          "target": "A/origin",
+          "viewportPoint": [
+            158.023406982422,
+            258.851684570312
+          ]
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#0f766e",
+          "passed": true,
+          "pixel": [
+            398,
+            301
+          ],
+          "stage": "initial",
+          "target": "A/capture",
+          "viewportPoint": [
+            398.931915283203,
+            301.298950195312
+          ]
+        },
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#a855f7",
+          "passed": true,
+          "pixel": [
+            813,
+            322
+          ],
+          "stage": "initial",
+          "target": "B/capture",
+          "viewportPoint": [
+            813.971557617188,
+            322.195678710938
+          ]
+        },
+        {
+          "actual": [
+            0.917647063732147,
+            0.701960802078247,
+            0.0313725508749485,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#eab308",
+          "passed": true,
+          "pixel": [
+            226,
+            545
+          ],
+          "stage": "initial",
+          "target": "A/flat",
+          "viewportPoint": [
+            226.1826171875,
+            545.934326171875
+          ]
+        },
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#0284c7",
+          "passed": true,
+          "pixel": [
+            160,
+            219
+          ],
+          "stage": "updated",
+          "target": "A/origin",
+          "viewportPoint": [
+            160.221069335938,
+            219.523956298828
+          ]
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#0f766e",
+          "passed": true,
+          "pixel": [
+            430,
+            298
+          ],
+          "stage": "updated",
+          "target": "A/capture",
+          "viewportPoint": [
+            430.98974609375,
+            298.884155273438
+          ]
+        },
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#a855f7",
+          "passed": true,
+          "pixel": [
+            765,
+            320
+          ],
+          "stage": "updated",
+          "target": "B/capture",
+          "viewportPoint": [
+            765.769958496094,
+            320.742797851562
+          ]
+        },
+        {
+          "actual": [
+            0.917647063732147,
+            0.701960802078247,
+            0.0313725508749485,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#eab308",
+          "passed": true,
+          "pixel": [
+            221,
+            463
+          ],
+          "stage": "updated",
+          "target": "A/flat",
+          "viewportPoint": [
+            221.564331054688,
+            463.544158935547
+          ]
+        },
+        {
+          "actual": [
+            0.200000002980232,
+            0.254901975393295,
+            0.333333343267441,
+            1.0
+          ],
+          "density": 1.0,
+          "expected": "#334155",
+          "passed": true,
+          "pixel": [
+            377,
+            255
+          ],
+          "stage": "updated",
+          "target": "A/capture-old-location"
+        },
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "density": 2.0,
+          "expected": "#0284c7",
+          "passed": true,
+          "pixel": [
+            180,
+            258
+          ],
+          "stage": "density",
+          "target": "A/origin",
+          "viewportPoint": [
+            90.4128723144531,
+            129.425842285156
+          ]
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "density": 2.0,
+          "expected": "#0f766e",
+          "passed": true,
+          "pixel": [
+            511,
+            352
+          ],
+          "stage": "density",
+          "target": "A/capture",
+          "viewportPoint": [
+            255.882629394531,
+            176.108322143555
+          ]
+        },
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "density": 2.0,
+          "expected": "#a855f7",
+          "passed": true,
+          "pixel": [
+            727,
+            305
+          ],
+          "stage": "density",
+          "target": "B/capture",
+          "viewportPoint": [
+            363.606231689453,
+            152.871398925781
+          ]
+        },
+        {
+          "actual": [
+            0.917647063732147,
+            0.701960802078247,
+            0.0313725508749485,
+            1.0
+          ],
+          "density": 2.0,
+          "expected": "#eab308",
+          "passed": true,
+          "pixel": [
+            255,
+            545
+          ],
+          "stage": "density",
+          "target": "A/flat",
+          "viewportPoint": [
+            127.900428771973,
+            272.967163085938
+          ]
+        },
+        {
+          "actual": [
+            0.200000002980232,
+            0.254901975393295,
+            0.333333343267441,
+            1.0
+          ],
+          "density": 2.0,
+          "expected": "#334155",
+          "passed": true,
+          "pixel": [
+            445,
+            301
+          ],
+          "stage": "density",
+          "target": "A/capture-old-location"
+        }
+      ],
+      "captures": [
+        "pointer-geometry-initial.png",
+        "pointer-geometry-updated.png",
+        "pointer-geometry-density.png"
+      ]
+    },
+    "selectedNativeSamples": [
+      {
+        "declaredPhase": "initial",
+        "density": 1.0,
+        "expectedClient": [
+          332.1025390625,
+          227.71728515625
+        ],
+        "expectedOffset": [
+          287.842590332031,
+          37.5397491455078
+        ],
+        "expectedScreen": [
+          1424.1025390625,
+          849.71728515625
+        ],
+        "expectedTargetAffine": [
+          0.994521975517273,
+          0.104528456926346,
+          -0.104528456926346,
+          0.994521975517273,
+          79.7607421875,
+          190.295455932617
+        ],
+        "id": "origin",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 332.1025390625,
+          "clientY": 227.71728515625,
+          "isPrimary": true,
+          "offsetX": 287.842590332031,
+          "offsetY": 37.5397338867188,
+          "pageX": 332.1025390625,
+          "pageY": 227.71728515625,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 1424.1025390625,
+          "screenY": 849.71728515625,
+          "target": 30.0,
+          "timeStamp": 81883023.871416,
+          "x": 332.1025390625,
+          "y": 227.71728515625
+        },
+        "originRoot": "A",
+        "stage": "capture-origin",
+        "type": "GotPointerCapture",
+        "upstreamAABBSubtraction": [
+          306.52294921875,
+          87.1954040527344
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          362.1025390625,
+          257.71728515625
+        ]
+      },
+      {
+        "declaredPhase": "initial",
+        "density": 1.0,
+        "expectedClient": [
+          332.1025390625,
+          227.71728515625
+        ],
+        "expectedOffset": [
+          287.842590332031,
+          37.5397491455078
+        ],
+        "expectedScreen": [
+          1424.1025390625,
+          849.71728515625
+        ],
+        "expectedTargetAffine": [
+          0.994521975517273,
+          0.104528456926346,
+          -0.104528456926346,
+          0.994521975517273,
+          79.7607421875,
+          190.295455932617
+        ],
+        "id": "origin",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 332.1025390625,
+          "clientY": 227.71728515625,
+          "isPrimary": true,
+          "offsetX": 287.842590332031,
+          "offsetY": 37.5397338867188,
+          "pageX": 332.1025390625,
+          "pageY": 227.71728515625,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 1424.1025390625,
+          "screenY": 849.71728515625,
+          "target": 30.0,
+          "timeStamp": 81883098.023875,
+          "x": 332.1025390625,
+          "y": 227.71728515625
+        },
+        "originRoot": "A",
+        "stage": "transfer-A",
+        "type": "LostPointerCapture",
+        "upstreamAABBSubtraction": [
+          306.52294921875,
+          87.1954040527344
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          362.1025390625,
+          257.71728515625
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 1.0,
+        "expectedClient": [
+          758.734313964844,
+          280.595703125
+        ],
+        "expectedOffset": [
+          409.471588134766,
+          226.034545898438
+        ],
+        "expectedScreen": [
+          1850.734375,
+          902.595703125
+        ],
+        "expectedTargetAffine": [
+          0.73674088716507,
+          -0.542100667953491,
+          0.563887417316437,
+          0.833829402923584,
+          359.601837158203,
+          344.096282958984
+        ],
+        "id": "capture",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 758.734313964844,
+          "clientY": 280.595703125,
+          "isPrimary": true,
+          "offsetX": 409.471557617188,
+          "offsetY": 226.034515380859,
+          "pageX": 758.734313964844,
+          "pageY": 280.595703125,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 1850.734375,
+          "screenY": 902.595703125,
+          "target": 46.0,
+          "timeStamp": 81883341.67175,
+          "x": 758.734313964844,
+          "y": 280.595703125
+        },
+        "originRoot": "A",
+        "stage": "transfer-B",
+        "type": "LostPointerCapture",
+        "upstreamAABBSubtraction": [
+          439.259857177734,
+          36.8353576660156
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          788.734313964844,
+          310.595703125
+        ]
+      },
+      {
+        "declaredPhase": "initial",
+        "density": 1.0,
+        "expectedClient": [
+          1180.0,
+          705.0
+        ],
+        "expectedOffset": [
+          405.546142578125,
+          492.645782470703
+        ],
+        "expectedScreen": [
+          2272.0,
+          1327.0
+        ],
+        "expectedTargetAffine": [
+          0.824785947799683,
+          -0.20931351184845,
+          0.30783998966217,
+          1.12218797206879,
+          723.855163574219,
+          267.045104980469
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 1180.0,
+          "clientY": 705.0,
+          "isPrimary": true,
+          "offsetX": 405.546081542969,
+          "offsetY": 492.645782470703,
+          "pageX": 1180.0,
+          "pageY": 705.0,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 2272.0,
+          "screenY": 1327.0,
+          "target": 102.0,
+          "timeStamp": 81883413.304625,
+          "x": 1180.0,
+          "y": 705.0
+        },
+        "originRoot": "A",
+        "stage": "outside-all-roots",
+        "type": "Move",
+        "upstreamAABBSubtraction": [
+          1095.48681640625,
+          532.114990234375
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          1210.0,
+          735.0
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 1.0,
+        "expectedClient": [
+          403.729187011719,
+          309.502410888672
+        ],
+        "expectedOffset": [
+          69.9999847412109,
+          40.0
+        ],
+        "expectedScreen": [
+          1495.72924804688,
+          931.50244140625
+        ],
+        "expectedTargetAffine": [
+          0.73674088716507,
+          -0.542100667953491,
+          0.563887417316437,
+          0.833829402923584,
+          359.601837158203,
+          344.096282958984
+        ],
+        "id": "capture",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 403.729187011719,
+          "clientY": 309.502410888672,
+          "isPrimary": true,
+          "offsetX": 69.9999847412109,
+          "offsetY": 39.9999694824219,
+          "pageX": 403.729187011719,
+          "pageY": 309.502410888672,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 1495.72924804688,
+          "screenY": 931.50244140625,
+          "target": 46.0,
+          "timeStamp": 81883261.584625,
+          "x": 403.729187011719,
+          "y": 309.502410888672
+        },
+        "originRoot": "A",
+        "stage": "updated-transform",
+        "type": "Move",
+        "upstreamAABBSubtraction": [
+          84.2547302246094,
+          65.7420654296875
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          433.729187011719,
+          339.502410888672
+        ]
+      },
+      {
+        "declaredPhase": "initial",
+        "density": 1.0,
+        "expectedClient": [
+          859.207336425781,
+          340.646057128906
+        ],
+        "expectedOffset": [
+          65.0,
+          49.9999694824219
+        ],
+        "expectedScreen": [
+          1880.28662109375,
+          906.549133300781
+        ],
+        "expectedTargetAffine": [
+          0.659828782081604,
+          -0.20931351184845,
+          0.246271997690201,
+          1.12218797206879,
+          763.084106445312,
+          272.045104980469
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 859.207336425781,
+          "clientY": 340.646057128906,
+          "isPrimary": true,
+          "offsetX": 64.9999389648438,
+          "offsetY": 50.0,
+          "pageX": 859.207336425781,
+          "pageY": 340.646057128906,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 1880.28662109375,
+          "screenY": 906.549133300781,
+          "target": 102.0,
+          "timeStamp": 81883564.791958,
+          "x": 859.207336425781,
+          "y": 340.646057128906
+        },
+        "originRoot": "A",
+        "stage": "moved-root-capture",
+        "type": "Move",
+        "upstreamAABBSubtraction": [
+          774.694091796875,
+          167.76106262207
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          818.286560058594,
+          314.549133300781
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 1.0,
+        "expectedClient": [
+          804.8447265625,
+          335.824676513672
+        ],
+        "expectedOffset": [
+          80.0,
+          55.0
+        ],
+        "expectedScreen": [
+          1831.36022949219,
+          902.450927734375
+        ],
+        "expectedTargetAffine": [
+          -0.704266250133514,
+          -0.187120527029037,
+          -0.00689573306590319,
+          1.12274253368378,
+          826.080810546875,
+          263.669769287109
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 804.8447265625,
+          "clientY": 335.824676513672,
+          "isPrimary": true,
+          "offsetX": 80.0,
+          "offsetY": 54.9999923706055,
+          "pageX": 804.8447265625,
+          "pageY": 335.824676513672,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 1831.36022949219,
+          "screenY": 902.450927734375,
+          "target": 102.0,
+          "timeStamp": 81883714.596541,
+          "x": 804.8447265625,
+          "y": 335.824676513672
+        },
+        "originRoot": "A",
+        "stage": "reflected-capture",
+        "type": "Move",
+        "upstreamAABBSubtraction": [
+          748.466918945312,
+          149.609359741211
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          769.360229492188,
+          310.450958251953
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 2.0,
+        "expectedClient": [
+          632.9375,
+          249.545440673828
+        ],
+        "expectedOffset": [
+          75.0,
+          40.0
+        ],
+        "expectedScreen": [
+          899.115600585938,
+          435.772705078125
+        ],
+        "expectedTargetAffine": [
+          -0.440166413784027,
+          -0.0935602635145187,
+          -0.00430983304977417,
+          0.561371266841888,
+          401.300506591797,
+          124.334884643555
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 632.9375,
+          "clientY": 249.545440673828,
+          "isPrimary": true,
+          "offsetX": 75.0,
+          "offsetY": 40.0000076293945,
+          "pageX": 632.9375,
+          "pageY": 249.545440673828,
+          "pointerId": 1.0,
+          "pointerType": "mouse",
+          "pressure": 0.5,
+          "screenX": 899.115600585938,
+          "screenY": 435.772705078125,
+          "target": 102.0,
+          "timeStamp": 81883951.822333,
+          "x": 632.9375,
+          "y": 249.545440673828
+        },
+        "originRoot": "A",
+        "stage": "density-immediate",
+        "type": "Move",
+        "upstreamAABBSubtraction": [
+          576.559692382812,
+          63.3301239013672
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          368.115631103516,
+          139.772720336914
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 2.0,
+        "expectedClient": [
+          234.337387084961,
+          526.613159179688
+        ],
+        "expectedOffset": [
+          140.0,
+          95.0000610351562
+        ],
+        "expectedScreen": [
+          679.885559082031,
+          574.306579589844
+        ],
+        "expectedTargetAffine": [
+          0.653576970100403,
+          -0.0695865526795387,
+          0.0918542519211769,
+          0.495134025812149,
+          48.6586227416992,
+          241.010955810547
+        ],
+        "id": "flat",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 234.337387084961,
+          "clientY": 526.613159179688,
+          "isPrimary": true,
+          "offsetX": 140.000015258789,
+          "offsetY": 95.0000610351562,
+          "pageX": 234.337387084961,
+          "pageY": 526.613159179688,
+          "pointerId": 2.0,
+          "pointerType": "touch",
+          "pressure": 1.0,
+          "screenX": 679.885559082031,
+          "screenY": 574.306579589844,
+          "target": 60.0,
+          "timeStamp": 81884264.974125,
+          "x": 234.337387084961,
+          "y": 526.613159179688
+        },
+        "originRoot": "A",
+        "stage": "logical-capture",
+        "type": "GotPointerCapture",
+        "upstreamAABBSubtraction": [
+          182.230804443359,
+          103.817626953125
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          148.885559082031,
+          278.306579589844
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 2.0,
+        "expectedClient": [
+          234.337387084961,
+          526.613159179688
+        ],
+        "expectedOffset": [
+          140.0,
+          95.0000610351562
+        ],
+        "expectedScreen": [
+          679.885559082031,
+          574.306579589844
+        ],
+        "expectedTargetAffine": [
+          0.653576970100403,
+          -0.0695865526795387,
+          0.0918542519211769,
+          0.495134025812149,
+          48.6586227416992,
+          241.010955810547
+        ],
+        "id": "flat",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 0.0,
+          "clientX": 234.337387084961,
+          "clientY": 526.613159179688,
+          "isPrimary": true,
+          "offsetX": 140.000015258789,
+          "offsetY": 95.0000610351562,
+          "pageX": 234.337387084961,
+          "pageY": 526.613159179688,
+          "pointerId": 2.0,
+          "pointerType": "touch",
+          "pressure": 0.0,
+          "screenX": 679.885559082031,
+          "screenY": 574.306579589844,
+          "target": 60.0,
+          "timeStamp": 81884341.777708,
+          "x": 234.337387084961,
+          "y": 526.613159179688
+        },
+        "originRoot": "A",
+        "stage": "logical-cancel",
+        "type": "Cancel",
+        "upstreamAABBSubtraction": [
+          182.230804443359,
+          103.817626953125
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          148.885559082031,
+          278.306579589844
+        ]
+      },
+      {
+        "density": 2.0,
+        "expectedClient": [
+          1072.72717285156,
+          700.0
+        ],
+        "expectedOffset": [
+          1072.72717285156,
+          700.0
+        ],
+        "expectedScreen": [
+          1141.0,
+          661.0
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 1072.72717285156,
+          "clientY": 700.0,
+          "isPrimary": true,
+          "offsetX": 1072.72717285156,
+          "offsetY": 700.0,
+          "pageX": 1072.72717285156,
+          "pageY": 700.0,
+          "pointerId": 5.0,
+          "pointerType": "touch",
+          "pressure": 1.0,
+          "screenX": 1141.0,
+          "screenY": 661.0,
+          "target": 102.0,
+          "timeStamp": 81885268.796708,
+          "x": 1072.72717285156,
+          "y": 700.0
+        },
+        "offsetContract": "Original RN EmptyLayoutMetrics origin zero; no painted target inverse",
+        "originRoot": "A",
+        "stage": "hidden-capture-move",
+        "type": "Move",
+        "viewportPoint": [
+          610.0,
+          365.0
+        ]
+      },
+      {
+        "density": 2.0,
+        "expectedClient": [
+          1072.72717285156,
+          700.0
+        ],
+        "expectedOffset": [
+          1072.72717285156,
+          700.0
+        ],
+        "expectedScreen": [
+          1141.0,
+          661.0
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": 0.0,
+          "buttons": 0.0,
+          "clientX": 1072.72717285156,
+          "clientY": 700.0,
+          "isPrimary": true,
+          "offsetX": 1072.72717285156,
+          "offsetY": 700.0,
+          "pageX": 1072.72717285156,
+          "pageY": 700.0,
+          "pointerId": 5.0,
+          "pointerType": "touch",
+          "pressure": 0.0,
+          "screenX": 1141.0,
+          "screenY": 661.0,
+          "target": 102.0,
+          "timeStamp": 81885339.861125,
+          "x": 1072.72717285156,
+          "y": 700.0
+        },
+        "offsetContract": "Original RN EmptyLayoutMetrics origin zero; no painted target inverse",
+        "originRoot": "A",
+        "stage": "hidden-capture-up",
+        "type": "Up",
+        "viewportPoint": [
+          610.0,
+          365.0
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 2.0,
+        "expectedClient": [
+          648.904357910156,
+          258.901550292969
+        ],
+        "expectedOffset": [
+          55.0,
+          44.9999847412109
+        ],
+        "expectedScreen": [
+          907.897399902344,
+          440.450775146484
+        ],
+        "expectedTargetAffine": [
+          -0.440166413784027,
+          -0.0935602635145187,
+          -0.00430983304977417,
+          0.561371266841888,
+          401.300506591797,
+          124.334884643555
+        ],
+        "id": "capture",
+        "name": "B",
+        "native": {
+          "button": -1.0,
+          "buttons": 1.0,
+          "clientX": 648.904357910156,
+          "clientY": 258.901550292969,
+          "isPrimary": true,
+          "offsetX": 55.0,
+          "offsetY": 44.9999847412109,
+          "pageX": 648.904357910156,
+          "pageY": 258.901550292969,
+          "pointerId": 6.0,
+          "pointerType": "touch",
+          "pressure": 1.0,
+          "screenX": 907.897399902344,
+          "screenY": 440.450775146484,
+          "target": 102.0,
+          "timeStamp": 81885569.229458,
+          "x": 648.904357910156,
+          "y": 258.901550292969
+        },
+        "originRoot": "A",
+        "stage": "retirement-capture",
+        "type": "GotPointerCapture",
+        "upstreamAABBSubtraction": [
+          592.526550292969,
+          72.6862335205078
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          376.897399902344,
+          144.450775146484
+        ]
+      },
+      {
+        "declaredPhase": "updated",
+        "density": 2.0,
+        "expectedClient": [
+          1072.72717285156,
+          700.0
+        ],
+        "expectedOffset": [
+          1073.77697753906,
+          429.81884765625
+        ],
+        "expectedScreen": [
+          1141.0,
+          661.0
+        ],
+        "expectedTargetAffine": [
+          0.546987116336823,
+          0.0522642284631729,
+          -0.0574906542897224,
+          0.497260987758636,
+          47.368408203125,
+          95.1477279663086
+        ],
+        "id": "origin",
+        "name": "A",
+        "native": {
+          "button": -1.0,
+          "buttons": 0.0,
+          "clientX": 1072.72717285156,
+          "clientY": 700.0,
+          "isPrimary": false,
+          "offsetX": 1073.77697753906,
+          "offsetY": 429.81884765625,
+          "pageX": 1072.72717285156,
+          "pageY": 700.0,
+          "pointerId": 7.0,
+          "pointerType": "touch",
+          "pressure": 0.0,
+          "screenX": 1141.0,
+          "screenY": 661.0,
+          "target": 30.0,
+          "timeStamp": 81886093.539791,
+          "x": 1072.72717285156,
+          "y": 700.0
+        },
+        "originRoot": "A",
+        "stage": "concurrent-survivor-cancel",
+        "type": "Cancel",
+        "upstreamAABBSubtraction": [
+          1047.14758300781,
+          559.478149414062
+        ],
+        "upstreamDiffers": true,
+        "viewportPoint": [
+          610.0,
+          365.0
+        ]
+      }
+    ],
+    "singularCancellation": {
+      "cancellationEvents": [
+        {
+          "hidden": false,
+          "id": "capture",
+          "name": "A",
+          "native": {
+            "button": -1.0,
+            "buttons": 0.0,
+            "clientX": 402.864898681641,
+            "clientY": 316.382080078125,
+            "isPrimary": true,
+            "offsetX": 64.9999923706055,
+            "offsetY": 45.0,
+            "pageX": 402.864898681641,
+            "pageY": 316.382080078125,
+            "pointerId": 3.0,
+            "pointerType": "touch",
+            "pressure": 0.0,
+            "screenX": 772.57568359375,
+            "screenY": 469.191040039062,
+            "target": 46.0,
+            "timeStamp": 81884735.243333,
+            "x": 402.864898681641,
+            "y": 316.382080078125
+          },
+          "phase": "updated",
+          "type": "Cancel"
+        },
+        {
+          "hidden": false,
+          "id": "capture",
+          "name": "A",
+          "native": {
+            "button": -1.0,
+            "buttons": 0.0,
+            "clientX": 402.864898681641,
+            "clientY": 316.382080078125,
+            "isPrimary": true,
+            "offsetX": 64.9999923706055,
+            "offsetY": 45.0,
+            "pageX": 402.864898681641,
+            "pageY": 316.382080078125,
+            "pointerId": 3.0,
+            "pointerType": "touch",
+            "pressure": 0.0,
+            "screenX": 772.57568359375,
+            "screenY": 469.191040039062,
+            "target": 46.0,
+            "timeStamp": 81884735.243333,
+            "x": 402.864898681641,
+            "y": 316.382080078125
+          },
+          "phase": "updated",
+          "type": "Out"
+        },
+        {
+          "hidden": false,
+          "id": "capture",
+          "name": "A",
+          "native": {
+            "button": -1.0,
+            "buttons": 0.0,
+            "clientX": 402.864898681641,
+            "clientY": 316.382080078125,
+            "isPrimary": true,
+            "offsetX": 64.9999923706055,
+            "offsetY": 45.0,
+            "pageX": 402.864898681641,
+            "pageY": 316.382080078125,
+            "pointerId": 3.0,
+            "pointerType": "touch",
+            "pressure": 0.0,
+            "screenX": 772.57568359375,
+            "screenY": 469.191040039062,
+            "target": 46.0,
+            "timeStamp": 81884735.243333,
+            "x": 402.864898681641,
+            "y": 316.382080078125
+          },
+          "phase": "updated",
+          "type": "Leave"
+        },
+        {
+          "hidden": false,
+          "id": "capture",
+          "name": "A",
+          "native": {
+            "button": -1.0,
+            "buttons": 0.0,
+            "clientX": 402.864898681641,
+            "clientY": 316.382080078125,
+            "isPrimary": true,
+            "offsetX": 64.9999923706055,
+            "offsetY": 45.0,
+            "pageX": 402.864898681641,
+            "pageY": 316.382080078125,
+            "pointerId": 3.0,
+            "pointerType": "touch",
+            "pressure": 0.0,
+            "screenX": 772.57568359375,
+            "screenY": 469.191040039062,
+            "target": 46.0,
+            "timeStamp": 81884735.243333,
+            "x": 402.864898681641,
+            "y": 316.382080078125
+          },
+          "phase": "updated",
+          "type": "LostPointerCapture"
+        }
+      ],
+      "invalidInputPoint": [
+        253.575714111328,
+        182.191040039062
+      ],
+      "lastValidPointer": {
+        "button": -1.0,
+        "buttons": 1.0,
+        "clientX": 402.864898681641,
+        "clientY": 316.382080078125,
+        "isPrimary": true,
+        "offsetX": 64.9999923706055,
+        "offsetY": 45.0,
+        "pageX": 402.864898681641,
+        "pageY": 316.382080078125,
+        "pointerId": 3.0,
+        "pointerType": "touch",
+        "pressure": 1.0,
+        "screenX": 772.57568359375,
+        "screenY": 469.191040039062,
+        "target": 46.0,
+        "timeStamp": 81884505.636083,
+        "x": 402.864898681641,
+        "y": 316.382080078125
+      },
+      "lastValidTouch": {
+        "identifier": 31.0,
+        "locationX": 367.485290527344,
+        "locationY": 118.322128295898,
+        "pageX": 402.864898681641,
+        "pageY": 316.382080078125,
+        "screenX": 772.57568359375,
+        "screenY": 469.191040039062,
+        "target": 30.0,
+        "timestamp": 81884505.640916
+      },
+      "originalOffsetScale": [
+        1.0,
+        1.0
+      ],
+      "sourceRoot": {
+        "adapters": {
+          "selected": false
+        },
+        "animationFramesRun": 0.0,
+        "applicationStopped": false,
+        "bundleEvaluations": 1.0,
+        "commits": 3.0,
+        "creates": 14.0,
+        "deletes": 0.0,
+        "dimensions": {
+          "screen": {
+            "fontScale": 1.0,
+            "height": 982.0,
+            "scale": 2.0,
+            "width": 1512.0
+          },
+          "window": {
+            "fontScale": 1.0,
+            "height": 380.0,
+            "scale": 2.0,
+            "width": 620.0
+          }
+        },
+        "errors": [],
+        "events": 34.0,
+        "gameServices": {
+          "bindings": 0.0,
+          "callbacksRun": 0.0,
+          "errors": [],
+          "eventBudget": 128.0,
+          "eventsSent": 0.0,
+          "hostTasksCanceled": 0.0,
+          "hostTasksRun": 0.0,
+          "pendingEvents": 0.0,
+          "pendingHostTasks": 0.0,
+          "stopped": false,
+          "subscriptions": 0.0,
+          "taskBudget": 64.0
+        },
+        "hostInstanceId": 27313309140.0,
+        "hostPhasePending": false,
+        "mountReports": 3.0,
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 0.0,
+          "installed": true,
+          "loaded": 4.0,
+          "lookups": 5.0,
+          "registered": 5.0,
+          "retainedUntilVMDestroy": 0.0,
+          "runtimeId": "27296531923",
+          "staleCalls": 0.0,
+          "stopped": false
+        },
+        "nativeTags": 14.0,
+        "nodes": [
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "f8fafcff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 35.0,
+            "fabricWidth": 460.0,
+            "fabricX": 20.0,
+            "fabricY": 18.0,
+            "focused": false,
+            "fontSize": 23.0,
+            "height": 35.0,
+            "id": 27732739559.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 25.0,
+                "baseline": 25.0,
+                "height": 32.0,
+                "width": 290.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 1.0,
+            "measuredHeight": 32.0,
+            "measuredWidth": 290.0,
+            "nativeFontSize": 23.0,
+            "nativeText": "Root A · capture geometry",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "f8fafcff",
+                "end": 25.0,
+                "fontFamily": "",
+                "fontSize": 23.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 8.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 1.0,
+            "width": 460.0,
+            "x": 20.0,
+            "y": 18.0
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "cbd5e1ff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 55.0,
+            "fabricWidth": 460.0,
+            "fabricX": 20.0,
+            "fabricY": 62.0,
+            "focused": false,
+            "fontSize": 12.0,
+            "height": 55.0,
+            "id": 27816625644.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 13.0,
+                "baseline": 13.0,
+                "height": 17.0,
+                "width": 267.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 13.0,
+                "baseline": 30.0,
+                "height": 17.0,
+                "width": 380.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 2.0,
+            "measuredHeight": 34.0,
+            "measuredWidth": 380.0,
+            "nativeFontSize": 12.0,
+            "nativeText": "Original View refs / original Fabric event order\nClient stays in the physical root. Offset follows the capture target.",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "cbd5e1ff",
+                "end": 118.0,
+                "fontFamily": "",
+                "fontSize": 12.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 16.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 2.0,
+            "width": 460.0,
+            "x": 20.0,
+            "y": 62.0
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "ffffffff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 35.0,
+            "fabricWidth": 95.0,
+            "fabricX": 8.0,
+            "fabricY": 8.0,
+            "focused": false,
+            "fontSize": 13.0,
+            "height": 35.0,
+            "id": 28168947201.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 14.0,
+                "baseline": 14.0,
+                "height": 18.0,
+                "width": 50.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 14.0,
+                "baseline": 32.0,
+                "height": 18.0,
+                "width": 53.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 2.0,
+            "measuredHeight": 36.0,
+            "measuredWidth": 53.0,
+            "nativeFontSize": 13.0,
+            "nativeText": "A/origin\nupdated",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "ffffffff",
+                "end": 16.0,
+                "fontFamily": "",
+                "fontSize": 13.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 28.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 2.0,
+            "width": 95.0,
+            "x": 8.0,
+            "y": 8.0
+          },
+          {
+            "appearance": {
+              "background": "0284c7ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 80.0,
+            "fabricWidth": 100.0,
+            "fabricX": 20.0,
+            "fabricY": 25.0,
+            "focused": false,
+            "height": 80.0,
+            "id": 28118615550.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 30.0,
+            "testID": "A-origin",
+            "text": "",
+            "visible": true,
+            "width": 100.0,
+            "x": 5.19214630126953,
+            "y": 38.4931144714355
+          },
+          {
+            "appearance": {
+              "background": "334155ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 160.0,
+            "fabricWidth": 180.0,
+            "fabricX": 25.0,
+            "fabricY": 140.0,
+            "focused": false,
+            "height": 160.0,
+            "id": 27900511729.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 32.0,
+            "testID": "A-origin-parent",
+            "text": "",
+            "visible": true,
+            "width": 180.0,
+            "x": 39.6662216186523,
+            "y": 119.539756774902
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "ffffffff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 35.0,
+            "fabricWidth": 95.0,
+            "fabricX": 8.0,
+            "fabricY": 8.0,
+            "focused": false,
+            "fontSize": 13.0,
+            "height": 35.0,
+            "id": 28353496585.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 14.0,
+                "baseline": 14.0,
+                "height": 18.0,
+                "width": 63.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 14.0,
+                "baseline": 32.0,
+                "height": 18.0,
+                "width": 53.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 2.0,
+            "measuredHeight": 36.0,
+            "measuredWidth": 63.0,
+            "nativeFontSize": 13.0,
+            "nativeText": "A/capture\nupdated",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "ffffffff",
+                "end": 17.0,
+                "fontFamily": "",
+                "fontSize": 13.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 44.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 2.0,
+            "width": 95.0,
+            "x": 8.0,
+            "y": 8.0
+          },
+          {
+            "appearance": {
+              "background": "0f766eff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 90.0,
+            "fabricWidth": 120.0,
+            "fabricX": 20.0,
+            "fabricY": 25.0,
+            "focused": false,
+            "height": 90.0,
+            "id": 28303164928.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 46.0,
+            "testID": "A-capture",
+            "text": "",
+            "visible": true,
+            "width": 120.0,
+            "x": 18.7170295715332,
+            "y": 130.4267578125
+          },
+          {
+            "appearance": {
+              "background": "334155ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 200.0,
+            "fabricWidth": 190.0,
+            "fabricX": 275.0,
+            "fabricY": 160.0,
+            "focused": false,
+            "height": 200.0,
+            "id": 27950843380.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 48.0,
+            "testID": "A-capture-parent",
+            "text": "",
+            "visible": true,
+            "width": 190.0,
+            "x": 307.559783935547,
+            "y": 141.984191894531
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "111827ff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 35.0,
+            "fabricWidth": 95.0,
+            "fabricX": 8.0,
+            "fabricY": 8.0,
+            "focused": false,
+            "fontSize": 12.0,
+            "height": 35.0,
+            "id": 28521268752.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 13.0,
+                "baseline": 13.0,
+                "height": 17.0,
+                "width": 56.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 13.0,
+                "baseline": 30.0,
+                "height": 17.0,
+                "width": 57.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 13.0,
+                "baseline": 47.0,
+                "height": 17.0,
+                "width": 84.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 13.0,
+                "baseline": 64.0,
+                "height": 17.0,
+                "width": 67.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 4.0,
+            "measuredHeight": 68.0,
+            "measuredWidth": 84.0,
+            "nativeFontSize": 12.0,
+            "nativeText": "Flattened logical ref\nNo Control for its wrapper",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "111827ff",
+                "end": 48.0,
+                "fontFamily": "",
+                "fontSize": 12.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 56.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 4.0,
+            "width": 95.0,
+            "x": 8.0,
+            "y": 8.0
+          },
+          {
+            "appearance": {
+              "background": "eab308ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 70.0,
+            "fabricWidth": 110.0,
+            "fabricX": 40.0,
+            "fabricY": 40.0,
+            "focused": false,
+            "height": 70.0,
+            "id": 28470937096.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 58.0,
+            "testID": "A-flat-paint",
+            "text": "",
+            "visible": true,
+            "width": 110.0,
+            "x": 40.0,
+            "y": 40.0
+          },
+          {
+            "appearance": {
+              "background": "334155ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 150.0,
+            "fabricWidth": 300.0,
+            "fabricX": 25.0,
+            "fabricY": 435.0,
+            "focused": false,
+            "height": 150.0,
+            "id": 28001175031.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 62.0,
+            "testID": "A-flat-parent",
+            "text": "",
+            "visible": true,
+            "width": 300.0,
+            "x": 65.7738342285156,
+            "y": 413.394134521484
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "5eead4ff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 38.0,
+            "fabricWidth": 460.0,
+            "fabricX": 20.0,
+            "fabricY": 595.0,
+            "focused": false,
+            "fontSize": 12.0,
+            "height": 38.0,
+            "id": 28051506682.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 13.0,
+                "baseline": 13.0,
+                "height": 17.0,
+                "width": 367.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 1.0,
+            "measuredHeight": 17.0,
+            "measuredWidth": 367.0,
+            "nativeFontSize": 12.0,
+            "nativeText": "updated · local inverse differs from upstream AABB subtraction",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "5eead4ff",
+                "end": 62.0,
+                "fontFamily": "",
+                "fontSize": 12.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 68.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 1.0,
+            "width": 460.0,
+            "x": 20.0,
+            "y": 595.0
+          },
+          {
+            "appearance": {
+              "background": "111c31ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 650.0,
+            "fabricWidth": 520.0,
+            "fabricX": 0.0,
+            "fabricY": 0.0,
+            "focused": false,
+            "height": 650.0,
+            "id": 27682407908.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 70.0,
+            "testID": "A-panel",
+            "text": "",
+            "visible": true,
+            "width": 520.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 650.0,
+            "fabricWidth": 520.0,
+            "fabricX": 0.0,
+            "fabricY": 0.0,
+            "focused": false,
+            "height": 650.0,
+            "id": 27632076255.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 72.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "width": 520.0,
+            "x": 0.0,
+            "y": 0.0
+          }
+        ],
+        "pendingAnimationFrames": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingWork": 0.0,
+        "pointer": {
+          "activePointers": 0.0,
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 2.0,
+          "ends": 1.0,
+          "grants": 0.0,
+          "hoverPointers": 1.0,
+          "moves": 11.0,
+          "pointerCancels": 2.0,
+          "pointerDowns": 3.0,
+          "pointerLeaves": 0.0,
+          "pointerMoves": 11.0,
+          "pointerUps": 1.0,
+          "releases": 0.0,
+          "responder": 0.0,
+          "starts": 3.0
+        },
+        "pointerProcessor": {
+          "active": 1.0,
+          "activeCapture": 1.0,
+          "hover": 1.0,
+          "pendingCapture": 1.0
+        },
+        "pointerRouting": {
+          "active": 1.0,
+          "contacts": 2.0,
+          "hoverPointers": 1.0,
+          "nextId": 5.0,
+          "stored": 2.0,
+          "suppressed": 0.0
+        },
+        "retiringTags": 0.0,
+        "rootCount": 2.0,
+        "runtimeId": 27296531923.0,
+        "state": "mounted",
+        "stopRequested": false,
+        "stopped": false,
+        "surfaceGeneration": 1.0,
+        "surfaceId": 1.0,
+        "textMeasurements": 0.0,
+        "timerEngine": "react-native/TimerManager",
+        "unmountRequested": false,
+        "updates": 19.0,
+        "viewport": {
+          "height": 650.0,
+          "width": 520.0
+        },
+        "viewportUpdates": 2.0,
+        "windowListener": false
+      },
+      "survivorRoot": {
+        "adapters": {
+          "selected": false
+        },
+        "animationFramesRun": 0.0,
+        "applicationStopped": false,
+        "bundleEvaluations": 1.0,
+        "commits": 3.0,
+        "creates": 8.0,
+        "deletes": 0.0,
+        "dimensions": {
+          "screen": {
+            "fontScale": 1.0,
+            "height": 982.0,
+            "scale": 2.0,
+            "width": 1512.0
+          },
+          "window": {
+            "fontScale": 1.0,
+            "height": 380.0,
+            "scale": 2.0,
+            "width": 620.0
+          }
+        },
+        "errors": [],
+        "events": 4.0,
+        "gameServices": {
+          "bindings": 0.0,
+          "callbacksRun": 0.0,
+          "errors": [],
+          "eventBudget": 128.0,
+          "eventsSent": 0.0,
+          "hostTasksCanceled": 0.0,
+          "hostTasksRun": 0.0,
+          "pendingEvents": 0.0,
+          "pendingHostTasks": 0.0,
+          "stopped": false,
+          "subscriptions": 0.0,
+          "taskBudget": 64.0
+        },
+        "hostInstanceId": 27346863577.0,
+        "hostPhasePending": false,
+        "mountReports": 3.0,
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 0.0,
+          "installed": true,
+          "loaded": 4.0,
+          "lookups": 5.0,
+          "registered": 5.0,
+          "retainedUntilVMDestroy": 0.0,
+          "runtimeId": "27296531923",
+          "staleCalls": 0.0,
+          "stopped": false
+        },
+        "nativeTags": 8.0,
+        "nodes": [
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "f8fafcff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 35.0,
+            "fabricWidth": 460.0,
+            "fabricX": 20.0,
+            "fabricY": 18.0,
+            "focused": false,
+            "fontSize": 23.0,
+            "height": 35.0,
+            "id": 28923921946.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 25.0,
+                "baseline": 25.0,
+                "height": 32.0,
+                "width": 290.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 1.0,
+            "measuredHeight": 32.0,
+            "measuredWidth": 290.0,
+            "nativeFontSize": 23.0,
+            "nativeText": "Root B · capture geometry",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "f8fafcff",
+                "end": 25.0,
+                "fontFamily": "",
+                "fontSize": 23.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 80.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 1.0,
+            "width": 460.0,
+            "x": 20.0,
+            "y": 18.0
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "cbd5e1ff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 55.0,
+            "fabricWidth": 460.0,
+            "fabricX": 20.0,
+            "fabricY": 62.0,
+            "focused": false,
+            "fontSize": 12.0,
+            "height": 55.0,
+            "id": 28991030814.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 13.0,
+                "baseline": 13.0,
+                "height": 17.0,
+                "width": 267.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 13.0,
+                "baseline": 30.0,
+                "height": 17.0,
+                "width": 380.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 2.0,
+            "measuredHeight": 34.0,
+            "measuredWidth": 380.0,
+            "nativeFontSize": 12.0,
+            "nativeText": "Original View refs / original Fabric event order\nClient stays in the physical root. Offset follows the capture target.",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "cbd5e1ff",
+                "end": 118.0,
+                "fontFamily": "",
+                "fontSize": 12.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 88.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 2.0,
+            "width": 460.0,
+            "x": 20.0,
+            "y": 62.0
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "ffffffff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 35.0,
+            "fabricWidth": 95.0,
+            "fabricX": 8.0,
+            "fabricY": 8.0,
+            "focused": false,
+            "fontSize": 13.0,
+            "height": 35.0,
+            "id": 29225911852.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 14.0,
+                "baseline": 14.0,
+                "height": 18.0,
+                "width": 63.0,
+                "x": 0.0
+              },
+              {
+                "ascent": 14.0,
+                "baseline": 32.0,
+                "height": 18.0,
+                "width": 53.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 2.0,
+            "measuredHeight": 36.0,
+            "measuredWidth": 63.0,
+            "nativeFontSize": 13.0,
+            "nativeText": "B/capture\nupdated",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "ffffffff",
+                "end": 17.0,
+                "fontFamily": "",
+                "fontSize": 13.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 100.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 2.0,
+            "width": 95.0,
+            "x": 8.0,
+            "y": 8.0
+          },
+          {
+            "appearance": {
+              "background": "a855f7ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 90.0,
+            "fabricWidth": 120.0,
+            "fabricX": 30.0,
+            "fabricY": 35.0,
+            "focused": false,
+            "height": 90.0,
+            "id": 29175580201.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 102.0,
+            "testID": "B-capture",
+            "text": "",
+            "visible": true,
+            "width": 120.0,
+            "x": -30.625,
+            "y": 27.0
+          },
+          {
+            "appearance": {
+              "background": "334155ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 190.0,
+            "fabricWidth": 210.0,
+            "fabricX": 120.0,
+            "fabricY": 165.0,
+            "focused": false,
+            "height": 190.0,
+            "id": 29058139682.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 104.0,
+            "testID": "B-capture-parent",
+            "text": "",
+            "visible": true,
+            "width": 210.0,
+            "x": 85.7081756591797,
+            "y": 191.864074707031
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "textColor": "5eead4ff"
+            },
+            "ellipses": 0.0,
+            "fabricHeight": 38.0,
+            "fabricWidth": 460.0,
+            "fabricX": 20.0,
+            "fabricY": 595.0,
+            "focused": false,
+            "fontSize": 12.0,
+            "height": 38.0,
+            "id": 29108471333.0,
+            "kind": "paragraph",
+            "lineMetrics": [
+              {
+                "ascent": 13.0,
+                "baseline": 13.0,
+                "height": 17.0,
+                "width": 367.0,
+                "x": 0.0
+              }
+            ],
+            "lines": 1.0,
+            "measuredHeight": 17.0,
+            "measuredWidth": 367.0,
+            "nativeFontSize": 12.0,
+            "nativeText": "updated · local inverse differs from upstream AABB subtraction",
+            "opacity": 1.0,
+            "runs": [
+              {
+                "color": "5eead4ff",
+                "end": 62.0,
+                "fontFamily": "",
+                "fontSize": 12.0,
+                "fontWeight": 400.0,
+                "lineHeight": 0.0,
+                "start": 0.0
+              }
+            ],
+            "tag": 110.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "visibleLines": 1.0,
+            "width": 460.0,
+            "x": 20.0,
+            "y": 595.0
+          },
+          {
+            "appearance": {
+              "background": "202039ff",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 650.0,
+            "fabricWidth": 520.0,
+            "fabricX": 0.0,
+            "fabricY": 0.0,
+            "focused": false,
+            "height": 650.0,
+            "id": 28873590295.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 112.0,
+            "testID": "B-panel",
+            "text": "",
+            "visible": true,
+            "width": 520.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          {
+            "appearance": {
+              "background": "00000000",
+              "borderColor": "00000000",
+              "borderColors": [
+                "00000000",
+                "00000000",
+                "00000000",
+                "00000000"
+              ],
+              "borderPainter": "flat",
+              "borderWidths": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ],
+              "cornerRadii": [
+                0.0,
+                0.0,
+                0.0,
+                0.0
+              ]
+            },
+            "fabricHeight": 650.0,
+            "fabricWidth": 520.0,
+            "fabricX": 0.0,
+            "fabricY": 0.0,
+            "focused": false,
+            "height": 650.0,
+            "id": 28823258595.0,
+            "kind": "view",
+            "opacity": 1.0,
+            "tag": 114.0,
+            "testID": "",
+            "text": "",
+            "visible": true,
+            "width": 520.0,
+            "x": 0.0,
+            "y": 0.0
+          }
+        ],
+        "pendingAnimationFrames": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingWork": 0.0,
+        "pointer": {
+          "activePointers": 1.0,
+          "activeTouches": 1.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 0.0,
+          "grants": 0.0,
+          "hoverPointers": 0.0,
+          "moves": 1.0,
+          "pointerCancels": 0.0,
+          "pointerDowns": 1.0,
+          "pointerLeaves": 0.0,
+          "pointerMoves": 1.0,
+          "pointerUps": 0.0,
+          "releases": 0.0,
+          "responder": 0.0,
+          "starts": 1.0
+        },
+        "pointerProcessor": {
+          "active": 1.0,
+          "activeCapture": 1.0,
+          "hover": 1.0,
+          "pendingCapture": 1.0
+        },
+        "pointerRouting": {
+          "active": 1.0,
+          "contacts": 2.0,
+          "hoverPointers": 1.0,
+          "nextId": 5.0,
+          "stored": 2.0,
+          "suppressed": 0.0
+        },
+        "retiringTags": 0.0,
+        "rootCount": 2.0,
+        "runtimeId": 27296531923.0,
+        "state": "mounted",
+        "stopRequested": false,
+        "stopped": false,
+        "surfaceGeneration": 11.0,
+        "surfaceId": 11.0,
+        "textMeasurements": 0.0,
+        "timerEngine": "react-native/TimerManager",
+        "unmountRequested": false,
+        "updates": 12.0,
+        "viewport": {
+          "height": 650.0,
+          "width": 520.0
+        },
+        "viewportUpdates": 2.0,
+        "windowListener": false
+      },
+      "touchCancellation": {
+        "changedTouches": [
+          {
+            "identifier": 31.0,
+            "locationX": 367.485290527344,
+            "locationY": 118.322128295898,
+            "pageX": 402.864898681641,
+            "pageY": 316.382080078125,
+            "screenX": 772.57568359375,
+            "screenY": 469.191040039062,
+            "target": 30.0,
+            "timestamp": 81884735.247291
+          }
+        ],
+        "id": "origin",
+        "name": "A",
+        "native": {
+          "identifier": 31.0,
+          "locationX": 367.485290527344,
+          "locationY": 118.322128295898,
+          "pageX": 402.864898681641,
+          "pageY": 316.382080078125,
+          "screenX": 772.57568359375,
+          "screenY": 469.191040039062,
+          "target": 30.0,
+          "timestamp": 81884735.247291
+        },
+        "touches": [],
+        "type": "Cancel"
+      }
+    },
+    "hiddenCapture": {
+      "events": [
+        {
+          "hidden": true,
+          "id": "capture",
+          "name": "B",
+          "native": {
+            "button": -1.0,
+            "buttons": 1.0,
+            "clientX": 1072.72717285156,
+            "clientY": 700.0,
+            "isPrimary": true,
+            "offsetX": 1072.72717285156,
+            "offsetY": 700.0,
+            "pageX": 1072.72717285156,
+            "pageY": 700.0,
+            "pointerId": 5.0,
+            "pointerType": "touch",
+            "pressure": 1.0,
+            "screenX": 1141.0,
+            "screenY": 661.0,
+            "target": 102.0,
+            "timeStamp": 81885268.796708,
+            "x": 1072.72717285156,
+            "y": 700.0
+          },
+          "phase": "updated",
+          "type": "Move"
+        }
+      ],
+      "hiddenRef": {
+        "captures": {},
+        "connected": true,
+        "measure": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rect": {
+          "bottom": 0.0,
+          "height": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0,
+          "width": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "relativeFailed": true,
+        "tag": 102.0,
+        "window": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "offsetContract": "Pinned RN EmptyLayoutMetrics.frame.origin == {0,0}; offset equals owner-root client",
+      "visibleRef": {
+        "captures": {},
+        "connected": true,
+        "measure": [
+          30.0,
+          35.0,
+          146.030685424805,
+          123.501312255859,
+          56.3778228759766,
+          186.215301513672
+        ],
+        "rect": {
+          "bottom": 174.858306884766,
+          "height": 61.7506561279297,
+          "left": 338.188903808594,
+          "right": 411.204254150391,
+          "top": 113.107650756836,
+          "width": 73.0153503417969,
+          "x": 338.188903808594,
+          "y": 113.107650756836
+        },
+        "relative": [
+          30.0,
+          35.0,
+          120.0,
+          90.0
+        ],
+        "tag": 102.0,
+        "window": [
+          338.188903808594,
+          113.107650756836,
+          73.0153503417969,
+          61.7506561279297
+        ]
+      }
+    },
+    "shutdown": {
+      "native": {
+        "adapters": {
+          "selected": false
+        },
+        "animationFramesRun": 0.0,
+        "bundleEvaluations": 1.0,
+        "dimensions": {
+          "screen": {
+            "fontScale": 1.0,
+            "height": 982.0,
+            "scale": 2.0,
+            "width": 1512.0
+          },
+          "window": {
+            "fontScale": 1.0,
+            "height": 380.0,
+            "scale": 2.0,
+            "width": 620.0
+          }
+        },
+        "errors": [],
+        "gameServices": {
+          "bindings": 0.0,
+          "callbacksRun": 0.0,
+          "errors": [],
+          "eventBudget": 128.0,
+          "eventsSent": 0.0,
+          "hostTasksCanceled": 0.0,
+          "hostTasksRun": 0.0,
+          "pendingEvents": 0.0,
+          "pendingHostTasks": 0.0,
+          "stopped": true,
+          "subscriptions": 0.0,
+          "taskBudget": 64.0
+        },
+        "hostPhasePending": false,
+        "initializationAttempted": true,
+        "nativeModules": {
+          "callableCalls": 0.0,
+          "callableModules": 0.0,
+          "creations": 4.0,
+          "disposals": 2.0,
+          "installed": true,
+          "loaded": 0.0,
+          "lookups": 5.0,
+          "registered": 5.0,
+          "retainedUntilVMDestroy": 4.0,
+          "runtimeId": "27296531923",
+          "staleCalls": 0.0,
+          "stopped": true
+        },
+        "pendingAnimationFrames": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingWork": 0.0,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 8.0,
+          "stored": 0.0,
+          "suppressed": 0.0
+        },
+        "rootCount": 0.0,
+        "runtimeId": 27296531923.0,
+        "runtimeInitialized": true,
+        "stopRequested": false,
+        "stopped": true,
+        "textMeasurements": 0.0,
+        "timerEngine": "react-native/TimerManager",
+        "viewportUpdates": 2.0,
+        "windowListener": false
+      },
+      "react": {
+        "actions": [
+          {
+            "captured": false,
+            "id": "origin",
+            "name": "A",
+            "operation": "arm",
+            "pointerId": -1.0
+          },
+          {
+            "captured": true,
+            "id": "origin",
+            "name": "A",
+            "operation": "captureOnDown",
+            "pointerId": 1.0
+          },
+          {
+            "captured": true,
+            "id": "capture",
+            "name": "A",
+            "operation": "capture",
+            "pointerId": 1.0
+          },
+          {
+            "captured": false,
+            "id": "capture",
+            "name": "A",
+            "operation": "updateOnMove",
+            "pointerId": -1.0
+          },
+          {
+            "id": "capture",
+            "name": "A",
+            "operation": "updateInsideMove",
+            "pointerId": 1.0
+          },
+          {
+            "captured": true,
+            "id": "capture",
+            "name": "B",
+            "operation": "capture",
+            "pointerId": 1.0
+          },
+          {
+            "captured": false,
+            "id": "capture",
+            "name": "B",
+            "operation": "update",
+            "pointerId": -1.0
+          },
+          {
+            "captured": true,
+            "id": "flat",
+            "name": "A",
+            "operation": "capture",
+            "pointerId": 2.0
+          },
+          {
+            "captured": true,
+            "id": "capture",
+            "name": "A",
+            "operation": "capture",
+            "pointerId": 3.0
+          },
+          {
+            "captured": false,
+            "id": "capture",
+            "name": "B",
+            "operation": "arm",
+            "pointerId": -1.0
+          },
+          {
+            "captured": true,
+            "id": "capture",
+            "name": "B",
+            "operation": "captureOnDown",
+            "pointerId": 4.0
+          },
+          {
+            "captured": true,
+            "id": "capture",
+            "name": "B",
+            "operation": "capture",
+            "pointerId": 5.0
+          },
+          {
+            "captured": false,
+            "id": "capture",
+            "name": "B",
+            "operation": "hide",
+            "pointerId": -1.0
+          },
+          {
+            "captured": false,
+            "id": "capture",
+            "name": "B",
+            "operation": "show",
+            "pointerId": -1.0
+          },
+          {
+            "captured": true,
+            "id": "capture",
+            "name": "B",
+            "operation": "capture",
+            "pointerId": 6.0
+          },
+          {
+            "captured": false,
+            "id": "origin",
+            "name": "A",
+            "operation": "arm",
+            "pointerId": -1.0
+          },
+          {
+            "captured": true,
+            "id": "origin",
+            "name": "A",
+            "operation": "captureOnDown",
+            "pointerId": 7.0
+          }
+        ],
+        "cleanups": {
+          "A": 1.0,
+          "B": 1.0
+        },
+        "events": [
+          {
+            "hidden": false,
+            "id": "origin",
+            "name": "A",
+            "native": {
+              "button": -1.0,
+              "buttons": 0.0,
+              "clientX": 1072.72717285156,
+              "clientY": 700.0,
+              "isPrimary": false,
+              "offsetX": 1073.77697753906,
+              "offsetY": 429.81884765625,
+              "pageX": 1072.72717285156,
+              "pageY": 700.0,
+              "pointerId": 7.0,
+              "pointerType": "touch",
+              "pressure": 0.0,
+              "screenX": 1141.0,
+              "screenY": 661.0,
+              "target": 30.0,
+              "timeStamp": 81886093.539791,
+              "x": 1072.72717285156,
+              "y": 700.0
+            },
+            "phase": "updated",
+            "type": "Cancel"
+          },
+          {
+            "hidden": false,
+            "id": "origin",
+            "name": "A",
+            "native": {
+              "button": -1.0,
+              "buttons": 0.0,
+              "clientX": 1072.72717285156,
+              "clientY": 700.0,
+              "isPrimary": false,
+              "offsetX": 1073.77697753906,
+              "offsetY": 429.81884765625,
+              "pageX": 1072.72717285156,
+              "pageY": 700.0,
+              "pointerId": 7.0,
+              "pointerType": "touch",
+              "pressure": 0.0,
+              "screenX": 1141.0,
+              "screenY": 661.0,
+              "target": 30.0,
+              "timeStamp": 81886093.539791,
+              "x": 1072.72717285156,
+              "y": 700.0
+            },
+            "phase": "updated",
+            "type": "Out"
+          },
+          {
+            "hidden": false,
+            "id": "origin",
+            "name": "A",
+            "native": {
+              "button": -1.0,
+              "buttons": 0.0,
+              "clientX": 1072.72717285156,
+              "clientY": 700.0,
+              "isPrimary": false,
+              "offsetX": 1073.77697753906,
+              "offsetY": 429.81884765625,
+              "pageX": 1072.72717285156,
+              "pageY": 700.0,
+              "pointerId": 7.0,
+              "pointerType": "touch",
+              "pressure": 0.0,
+              "screenX": 1141.0,
+              "screenY": 661.0,
+              "target": 30.0,
+              "timeStamp": 81886093.539791,
+              "x": 1072.72717285156,
+              "y": 700.0
+            },
+            "phase": "updated",
+            "type": "Leave"
+          },
+          {
+            "hidden": false,
+            "id": "origin",
+            "name": "A",
+            "native": {
+              "button": -1.0,
+              "buttons": 0.0,
+              "clientX": 1072.72717285156,
+              "clientY": 700.0,
+              "isPrimary": false,
+              "offsetX": 1073.77697753906,
+              "offsetY": 429.81884765625,
+              "pageX": 1072.72717285156,
+              "pageY": 700.0,
+              "pointerId": 7.0,
+              "pointerType": "touch",
+              "pressure": 0.0,
+              "screenX": 1141.0,
+              "screenY": 661.0,
+              "target": 30.0,
+              "timeStamp": 81886093.539791,
+              "x": 1072.72717285156,
+              "y": 700.0
+            },
+            "phase": "updated",
+            "type": "LostPointerCapture"
+          }
+        ],
+        "layouts": {
+          "A/capture": [
+            {
+              "height": 90.0,
+              "width": 120.0,
+              "x": 20.0,
+              "y": 25.0
+            }
+          ],
+          "A/origin": [
+            {
+              "height": 80.0,
+              "width": 100.0,
+              "x": 20.0,
+              "y": 25.0
+            }
+          ],
+          "B/capture": [
+            {
+              "height": 90.0,
+              "width": 120.0,
+              "x": 30.0,
+              "y": 35.0
+            },
+            {
+              "height": 0.0,
+              "width": 0.0,
+              "x": 0.0,
+              "y": 0.0
+            },
+            {
+              "height": 90.0,
+              "width": 120.0,
+              "x": 30.0,
+              "y": 35.0
+            }
+          ]
+        },
+        "live": {},
+        "mounts": {
+          "A": 1.0,
+          "B": 1.0
+        },
+        "retained": {
+          "retired-B": {
+            "captures": {},
+            "connected": false,
+            "rect": {
+              "bottom": 0.0,
+              "height": 0.0,
+              "left": 0.0,
+              "right": 0.0,
+              "top": 0.0,
+              "width": 0.0,
+              "x": 0.0,
+              "y": 0.0
+            },
+            "tag": 102.0
+          }
+        },
+        "touches": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 22.0,
+                "locationX": 1073.77697753906,
+                "locationY": 429.81884765625,
+                "pageX": 1072.72717285156,
+                "pageY": 700.0,
+                "screenX": 1141.0,
+                "screenY": 661.0,
+                "target": 30.0,
+                "timestamp": 81886093.542541
+              }
+            ],
+            "id": "origin",
+            "name": "A",
+            "native": {
+              "identifier": 22.0,
+              "locationX": 1073.77697753906,
+              "locationY": 429.81884765625,
+              "pageX": 1072.72717285156,
+              "pageY": 700.0,
+              "screenX": 1141.0,
+              "screenY": 661.0,
+              "target": 30.0,
+              "timestamp": 81886093.542541
+            },
+            "touches": [],
+            "type": "Cancel"
+          }
+        ]
+      },
+      "rootCleanupChecks": [
+        {
+          "id": "stopped/A/controls",
+          "name": "Every concrete native tag and Control is released",
+          "passed": true
+        },
+        {
+          "id": "stopped/A/contacts",
+          "name": "No root contact, responder or pointer ownership survives shutdown",
+          "passed": true
+        },
+        {
+          "id": "stopped/B/controls",
+          "name": "Every concrete native tag and Control is released",
+          "passed": true
+        },
+        {
+          "id": "stopped/B/contacts",
+          "name": "No root contact, responder or pointer ownership survives shutdown",
+          "passed": true
+        },
+        {
+          "id": "stopped/application",
+          "name": "Application shutdown has no hidden native error",
+          "passed": true
+        },
+        {
+          "id": "stopped/queues",
+          "name": "Timers, frames, queued work and retirement scopes are released",
+          "passed": true
+        },
+        {
+          "id": "stopped/processor",
+          "name": "Original RN active/capture/hover registries are empty",
+          "passed": true
+        },
+        {
+          "id": "stopped/routing",
+          "name": "Application physical routing contains no retained or suppressed contact",
+          "passed": true
+        },
+        {
+          "id": "stopped/react",
+          "name": "Both original React roots mount and clean their effects exactly once",
+          "passed": true
+        }
+      ]
+    }
+  },
+  "previousHostControl": {
+    "at": "2026-10-04T12:09:34.576802+00:00",
+    "implementationCommit": "0b5e7f446570266bde5eeb5b6dad638f8edecb23",
+    "hostSha256": "bda85295fc3939cd3f5b332f4b04507cbe4abc06d50bcbc6cf76c2e7b770fa77",
+    "fixtureSha256": {
+      "examples/pointer-geometry/App.jsx": "776bbb6ee8903dbf87e93150ab09082ec1320d88bff13f6f8ed9aff75226c41e",
+      "examples/pointer-geometry/scene.tscn": "8b395ef849f208b92fc46ec4c58bfe29710ac60ca87ad066636284d88526d277",
+      "examples/pointer-geometry/validation.gd": "3a55f69654317edfe5575fb677961aacc177f67bc141c8cd7b5d4ddc86eadbd6"
+    },
+    "checks": 631,
+    "failedIds": [
+      "capture-origin/event-0/A/origin/GotPointerCapture/offset",
+      "capture-origin/event-1/A/origin/Move/offset",
+      "transfer-A/event-0/A/origin/LostPointerCapture/offset",
+      "transfer-A/event-1/A/capture/GotPointerCapture/offset",
+      "transfer-A/event-2/A/origin/Out/offset",
+      "transfer-A/event-3/A/origin/Leave/offset",
+      "transfer-B/event-0/A/capture/LostPointerCapture/offset",
+      "transfer-B/event-1/B/capture/GotPointerCapture/offset",
+      "transfer-B/event-2/A/capture/Out/offset",
+      "transfer-B/event-3/A/capture/Leave/offset",
+      "transfer-B/event-4/B/capture/Over/offset",
+      "transfer-B/event-5/B/capture/Enter/offset",
+      "transfer-B/event-6/B/capture/Move/offset",
+      "outside-all-roots/event-0/B/capture/Move/offset",
+      "moved-root-capture/event-0/B/capture/Move/offset",
+      "reflected-capture/event-0/B/capture/Move/offset",
+      "density-immediate/event-0/B/capture/Move/offset",
+      "captured-up/event-0/B/capture/Up/offset",
+      "captured-up/event-1/B/capture/Out/offset",
+      "captured-up/event-2/B/capture/Leave/offset",
+      "captured-up/event-3/B/capture/LostPointerCapture/offset",
+      "logical-capture/event-0/A/flat/GotPointerCapture/offset",
+      "logical-capture/event-1/A/origin/Out/offset",
+      "logical-capture/event-2/A/origin/Leave/offset",
+      "logical-capture/event-3/A/flat/Over/offset",
+      "logical-capture/event-4/A/flat/Move/offset",
+      "logical-cancel/event-0/A/flat/Cancel/offset",
+      "logical-cancel/event-1/A/flat/Out/offset",
+      "logical-cancel/event-2/A/flat/Leave/offset",
+      "logical-cancel/event-3/A/flat/LostPointerCapture/offset",
+      "singular-source-last-valid/event-0/A/capture/GotPointerCapture/offset",
+      "singular-source-last-valid/event-1/A/origin/Out/offset",
+      "singular-source-last-valid/event-2/A/origin/Leave/offset",
+      "singular-survivor-active/event-0/B/capture/GotPointerCapture/offset",
+      "singular-source/exact-terminal-coordinates",
+      "singular-survivor-up/event-3/B/capture/LostPointerCapture/offset",
+      "hidden-capture-before-hide/event-0/B/capture/GotPointerCapture/offset",
+      "hidden-capture-before-hide/event-1/A/origin/Out/offset",
+      "hidden-capture-before-hide/event-2/A/origin/Leave/offset",
+      "hidden-capture-before-hide/event-3/B/capture/Over/offset",
+      "hidden-capture-before-hide/event-4/B/capture/Enter/offset",
+      "hidden-capture-before-hide/event-5/B/capture/Move/offset",
+      "retirement-capture/event-0/B/capture/GotPointerCapture/offset",
+      "retirement-capture/event-1/A/origin/Out/offset",
+      "retirement-capture/event-2/A/origin/Leave/offset",
+      "retirement-capture/event-3/B/capture/Over/offset",
+      "retirement-capture/event-4/B/capture/Enter/offset",
+      "retirement-capture/event-5/B/capture/Move/offset",
+      "concurrent-capture/event-0/A/origin/GotPointerCapture/offset",
+      "concurrent-capture/event-1/A/origin/Move/offset",
+      "concurrent-survivor-move/event-0/A/origin/Move/offset",
+      "concurrent-survivor-cancel/event-0/A/origin/Cancel/offset",
+      "concurrent-survivor-cancel/event-1/A/origin/Out/offset",
+      "concurrent-survivor-cancel/event-2/A/origin/Leave/offset",
+      "concurrent-survivor-cancel/event-3/A/origin/LostPointerCapture/offset"
+    ],
+    "status": "expected-failure",
+    "limitation": "Identical final public fixture on preceding committed host; this negative run is not a parity pass",
+    "unchangedFinalFixtureVerified": true,
+    "failureCounts": {
+      "ordinaryOffset": 54,
+      "exactTerminalCoordinates": 1
+    }
+  },
+  "unprojectedOriginalWitness": {
+    "original": {
+      "geometryProjectionInstalled": false,
+      "cases": [
+        {
+          "name": "same-root-translation",
+          "targetSurface": 1,
+          "declaredAffine": [
+            1,
+            0,
+            0,
+            1
+          ],
+          "expectedUpstreamOffset": [
+            15,
+            10
+          ],
+          "declaredOrigin": [
+            120,
+            40
+          ],
+          "client": [
+            135,
+            50
+          ],
+          "screen": [
+            1035,
+            550
+          ],
+          "expectedAffineLocal": [
+            15,
+            10
+          ],
+          "declaredSize": [
+            80,
+            40
+          ],
+          "measuredAabbOrigin": [
+            120,
+            40
+          ],
+          "hypotheticalRootEmbedding": [
+            0,
+            0
+          ],
+          "declaredAabbOrigin": [
+            120,
+            40
+          ],
+          "observedOffset": [
+            15,
+            10
+          ],
+          "upstreamLimitation": false,
+          "moveOrder": [
+            "topGotPointerCapture:4",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:4",
+            "topPointerEnter:4",
+            "topPointerMove:4"
+          ]
+        },
+        {
+          "name": "same-root-rotation-90",
+          "targetSurface": 1,
+          "declaredAffine": [
+            0,
+            1,
+            -1,
+            0
+          ],
+          "expectedUpstreamOffset": [
+            30,
+            15
+          ],
+          "declaredOrigin": [
+            120,
+            40
+          ],
+          "client": [
+            170,
+            35
+          ],
+          "screen": [
+            1070,
+            535
+          ],
+          "expectedAffineLocal": [
+            15,
+            10
+          ],
+          "declaredSize": [
+            80,
+            40
+          ],
+          "measuredAabbOrigin": [
+            140,
+            20
+          ],
+          "hypotheticalRootEmbedding": [
+            0,
+            0
+          ],
+          "declaredAabbOrigin": [
+            140,
+            20
+          ],
+          "observedOffset": [
+            30,
+            15
+          ],
+          "upstreamLimitation": true,
+          "moveOrder": [
+            "topGotPointerCapture:4",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:4",
+            "topPointerEnter:4",
+            "topPointerMove:4"
+          ]
+        },
+        {
+          "name": "same-root-skew-x-45",
+          "targetSurface": 1,
+          "declaredAffine": [
+            1,
+            0,
+            1,
+            1
+          ],
+          "expectedUpstreamOffset": [
+            25,
+            10
+          ],
+          "declaredOrigin": [
+            120,
+            40
+          ],
+          "client": [
+            125,
+            50
+          ],
+          "screen": [
+            1025,
+            550
+          ],
+          "expectedAffineLocal": [
+            15,
+            10
+          ],
+          "declaredSize": [
+            80,
+            40
+          ],
+          "measuredAabbOrigin": [
+            100,
+            40
+          ],
+          "hypotheticalRootEmbedding": [
+            0,
+            0
+          ],
+          "declaredAabbOrigin": [
+            100,
+            40
+          ],
+          "observedOffset": [
+            25,
+            10
+          ],
+          "upstreamLimitation": true,
+          "moveOrder": [
+            "topGotPointerCapture:4",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:4",
+            "topPointerEnter:4",
+            "topPointerMove:4"
+          ]
+        },
+        {
+          "name": "other-root-embedding",
+          "targetSurface": 11,
+          "declaredAffine": [
+            1,
+            0,
+            0,
+            1
+          ],
+          "expectedUpstreamOffset": [
+            415,
+            115
+          ],
+          "declaredOrigin": [
+            40,
+            25
+          ],
+          "client": [
+            455,
+            140
+          ],
+          "screen": [
+            1355,
+            640
+          ],
+          "expectedAffineLocal": [
+            15,
+            15
+          ],
+          "declaredSize": [
+            100,
+            60
+          ],
+          "measuredAabbOrigin": [
+            40,
+            25
+          ],
+          "hypotheticalRootEmbedding": [
+            400,
+            100
+          ],
+          "declaredAabbOrigin": [
+            40,
+            25
+          ],
+          "observedOffset": [
+            415,
+            115
+          ],
+          "upstreamLimitation": true,
+          "moveOrder": [
+            "topGotPointerCapture:14",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:14",
+            "topPointerEnter:14",
+            "topPointerMove:14"
+          ]
+        }
+      ],
+      "source": "unchanged-original-processor-and-binding",
+      "checks": [
+        "same-root-translation: declared affine math independently locates the sample",
+        "same-root-translation: physical family is committed",
+        "same-root-translation: capture family is committed",
+        "same-root-translation: measured RN AABB origin matches declared bounds",
+        "same-root-translation: pending capture is observable immediately",
+        "same-root-translation: set capture emits no immediate notification",
+        "same-root-translation: original got precedes captured move",
+        "same-root-translation: got keeps original discrete priority",
+        "same-root-translation: got preserves source-root client/page point",
+        "same-root-translation: got preserves screen point",
+        "same-root-translation: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-translation: move preserves source-root client/page point",
+        "same-root-translation: move preserves screen point",
+        "same-root-translation: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-translation: got reproduces pinned upstream offset",
+        "same-root-translation: captured move reproduces pinned upstream offset",
+        "same-root-translation: untransformed control matches true local point",
+        "same-root-translation: original captured up precedes implicit lost",
+        "same-root-translation: lost preserves source-root client/page point",
+        "same-root-translation: lost preserves screen point",
+        "same-root-translation: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-translation: lost reproduces the same upstream offset",
+        "same-root-translation: implicit up releases pending capture",
+        "same-root-rotation-90: declared affine math independently locates the sample",
+        "same-root-rotation-90: physical family is committed",
+        "same-root-rotation-90: capture family is committed",
+        "same-root-rotation-90: measured RN AABB origin matches declared bounds",
+        "same-root-rotation-90: pending capture is observable immediately",
+        "same-root-rotation-90: set capture emits no immediate notification",
+        "same-root-rotation-90: original got precedes captured move",
+        "same-root-rotation-90: got keeps original discrete priority",
+        "same-root-rotation-90: got preserves source-root client/page point",
+        "same-root-rotation-90: got preserves screen point",
+        "same-root-rotation-90: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-rotation-90: move preserves source-root client/page point",
+        "same-root-rotation-90: move preserves screen point",
+        "same-root-rotation-90: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-rotation-90: got reproduces pinned upstream offset",
+        "same-root-rotation-90: captured move reproduces pinned upstream offset",
+        "same-root-rotation-90: upstream offset differs from true affine local point",
+        "same-root-rotation-90: original captured up precedes implicit lost",
+        "same-root-rotation-90: lost preserves source-root client/page point",
+        "same-root-rotation-90: lost preserves screen point",
+        "same-root-rotation-90: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-rotation-90: lost reproduces the same upstream offset",
+        "same-root-rotation-90: implicit up releases pending capture",
+        "same-root-skew-x-45: declared affine math independently locates the sample",
+        "same-root-skew-x-45: physical family is committed",
+        "same-root-skew-x-45: capture family is committed",
+        "same-root-skew-x-45: measured RN AABB origin matches declared bounds",
+        "same-root-skew-x-45: pending capture is observable immediately",
+        "same-root-skew-x-45: set capture emits no immediate notification",
+        "same-root-skew-x-45: original got precedes captured move",
+        "same-root-skew-x-45: got keeps original discrete priority",
+        "same-root-skew-x-45: got preserves source-root client/page point",
+        "same-root-skew-x-45: got preserves screen point",
+        "same-root-skew-x-45: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-skew-x-45: move preserves source-root client/page point",
+        "same-root-skew-x-45: move preserves screen point",
+        "same-root-skew-x-45: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-skew-x-45: got reproduces pinned upstream offset",
+        "same-root-skew-x-45: captured move reproduces pinned upstream offset",
+        "same-root-skew-x-45: upstream offset differs from true affine local point",
+        "same-root-skew-x-45: original captured up precedes implicit lost",
+        "same-root-skew-x-45: lost preserves source-root client/page point",
+        "same-root-skew-x-45: lost preserves screen point",
+        "same-root-skew-x-45: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-skew-x-45: lost reproduces the same upstream offset",
+        "same-root-skew-x-45: implicit up releases pending capture",
+        "other-root-embedding: declared affine math independently locates the sample",
+        "other-root-embedding: physical family is committed",
+        "other-root-embedding: capture family is committed",
+        "other-root-embedding: measured RN AABB origin matches declared bounds",
+        "other-root-embedding: pending capture is observable immediately",
+        "other-root-embedding: set capture emits no immediate notification",
+        "other-root-embedding: original got precedes captured move",
+        "other-root-embedding: got keeps original discrete priority",
+        "other-root-embedding: got preserves source-root client/page point",
+        "other-root-embedding: got preserves screen point",
+        "other-root-embedding: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "other-root-embedding: move preserves source-root client/page point",
+        "other-root-embedding: move preserves screen point",
+        "other-root-embedding: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "other-root-embedding: got reproduces pinned upstream offset",
+        "other-root-embedding: captured move reproduces pinned upstream offset",
+        "other-root-embedding: upstream offset differs from true affine local point",
+        "other-root-embedding: original captured up precedes implicit lost",
+        "other-root-embedding: lost preserves source-root client/page point",
+        "other-root-embedding: lost preserves screen point",
+        "other-root-embedding: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "other-root-embedding: lost reproduces the same upstream offset",
+        "other-root-embedding: implicit up releases pending capture",
+        "transfer: pending owner changes before notification",
+        "transfer: changing pending owner emits no immediate lost or got",
+        "transfer: original lost to old target precedes got to other root",
+        "transfer: lost preserves source-root client/page point",
+        "transfer: lost preserves screen point",
+        "transfer: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "transfer: got preserves source-root client/page point",
+        "transfer: got preserves screen point",
+        "transfer: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "transfer: move preserves source-root client/page point",
+        "transfer: move preserves screen point",
+        "transfer: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "transfer: old rotated owner receives its upstream AABB offset",
+        "transfer: other root receives its own upstream AABB offset",
+        "transfer: other-root upstream offset omits declared native embedding",
+        "transfer: terminal up releases new capture owner"
+      ],
+      "count": 108,
+      "status": 0,
+      "signal": null
+    },
+    "overlaid": {
+      "geometryProjectionInstalled": false,
+      "cases": [
+        {
+          "name": "same-root-translation",
+          "targetSurface": 1,
+          "declaredAffine": [
+            1,
+            0,
+            0,
+            1
+          ],
+          "expectedUpstreamOffset": [
+            15,
+            10
+          ],
+          "declaredOrigin": [
+            120,
+            40
+          ],
+          "client": [
+            135,
+            50
+          ],
+          "screen": [
+            1035,
+            550
+          ],
+          "expectedAffineLocal": [
+            15,
+            10
+          ],
+          "declaredSize": [
+            80,
+            40
+          ],
+          "measuredAabbOrigin": [
+            120,
+            40
+          ],
+          "hypotheticalRootEmbedding": [
+            0,
+            0
+          ],
+          "declaredAabbOrigin": [
+            120,
+            40
+          ],
+          "observedOffset": [
+            15,
+            10
+          ],
+          "upstreamLimitation": false,
+          "moveOrder": [
+            "topGotPointerCapture:4",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:4",
+            "topPointerEnter:4",
+            "topPointerMove:4"
+          ]
+        },
+        {
+          "name": "same-root-rotation-90",
+          "targetSurface": 1,
+          "declaredAffine": [
+            0,
+            1,
+            -1,
+            0
+          ],
+          "expectedUpstreamOffset": [
+            30,
+            15
+          ],
+          "declaredOrigin": [
+            120,
+            40
+          ],
+          "client": [
+            170,
+            35
+          ],
+          "screen": [
+            1070,
+            535
+          ],
+          "expectedAffineLocal": [
+            15,
+            10
+          ],
+          "declaredSize": [
+            80,
+            40
+          ],
+          "measuredAabbOrigin": [
+            140,
+            20
+          ],
+          "hypotheticalRootEmbedding": [
+            0,
+            0
+          ],
+          "declaredAabbOrigin": [
+            140,
+            20
+          ],
+          "observedOffset": [
+            30,
+            15
+          ],
+          "upstreamLimitation": true,
+          "moveOrder": [
+            "topGotPointerCapture:4",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:4",
+            "topPointerEnter:4",
+            "topPointerMove:4"
+          ]
+        },
+        {
+          "name": "same-root-skew-x-45",
+          "targetSurface": 1,
+          "declaredAffine": [
+            1,
+            0,
+            1,
+            1
+          ],
+          "expectedUpstreamOffset": [
+            25,
+            10
+          ],
+          "declaredOrigin": [
+            120,
+            40
+          ],
+          "client": [
+            125,
+            50
+          ],
+          "screen": [
+            1025,
+            550
+          ],
+          "expectedAffineLocal": [
+            15,
+            10
+          ],
+          "declaredSize": [
+            80,
+            40
+          ],
+          "measuredAabbOrigin": [
+            100,
+            40
+          ],
+          "hypotheticalRootEmbedding": [
+            0,
+            0
+          ],
+          "declaredAabbOrigin": [
+            100,
+            40
+          ],
+          "observedOffset": [
+            25,
+            10
+          ],
+          "upstreamLimitation": true,
+          "moveOrder": [
+            "topGotPointerCapture:4",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:4",
+            "topPointerEnter:4",
+            "topPointerMove:4"
+          ]
+        },
+        {
+          "name": "other-root-embedding",
+          "targetSurface": 11,
+          "declaredAffine": [
+            1,
+            0,
+            0,
+            1
+          ],
+          "expectedUpstreamOffset": [
+            415,
+            115
+          ],
+          "declaredOrigin": [
+            40,
+            25
+          ],
+          "client": [
+            455,
+            140
+          ],
+          "screen": [
+            1355,
+            640
+          ],
+          "expectedAffineLocal": [
+            15,
+            15
+          ],
+          "declaredSize": [
+            100,
+            60
+          ],
+          "measuredAabbOrigin": [
+            40,
+            25
+          ],
+          "hypotheticalRootEmbedding": [
+            400,
+            100
+          ],
+          "declaredAabbOrigin": [
+            40,
+            25
+          ],
+          "observedOffset": [
+            415,
+            115
+          ],
+          "upstreamLimitation": true,
+          "moveOrder": [
+            "topGotPointerCapture:14",
+            "topPointerOut:2",
+            "topPointerLeave:2",
+            "topPointerOver:14",
+            "topPointerEnter:14",
+            "topPointerMove:14"
+          ]
+        }
+      ],
+      "source": "lifetime-overlay-without-geometry-projection",
+      "checks": [
+        "same-root-translation: declared affine math independently locates the sample",
+        "same-root-translation: physical family is committed",
+        "same-root-translation: capture family is committed",
+        "same-root-translation: measured RN AABB origin matches declared bounds",
+        "same-root-translation: pending capture is observable immediately",
+        "same-root-translation: set capture emits no immediate notification",
+        "same-root-translation: original got precedes captured move",
+        "same-root-translation: got keeps original discrete priority",
+        "same-root-translation: got preserves source-root client/page point",
+        "same-root-translation: got preserves screen point",
+        "same-root-translation: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-translation: move preserves source-root client/page point",
+        "same-root-translation: move preserves screen point",
+        "same-root-translation: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-translation: got reproduces pinned upstream offset",
+        "same-root-translation: captured move reproduces pinned upstream offset",
+        "same-root-translation: untransformed control matches true local point",
+        "same-root-translation: original captured up precedes implicit lost",
+        "same-root-translation: lost preserves source-root client/page point",
+        "same-root-translation: lost preserves screen point",
+        "same-root-translation: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-translation: lost reproduces the same upstream offset",
+        "same-root-translation: implicit up releases pending capture",
+        "same-root-rotation-90: declared affine math independently locates the sample",
+        "same-root-rotation-90: physical family is committed",
+        "same-root-rotation-90: capture family is committed",
+        "same-root-rotation-90: measured RN AABB origin matches declared bounds",
+        "same-root-rotation-90: pending capture is observable immediately",
+        "same-root-rotation-90: set capture emits no immediate notification",
+        "same-root-rotation-90: original got precedes captured move",
+        "same-root-rotation-90: got keeps original discrete priority",
+        "same-root-rotation-90: got preserves source-root client/page point",
+        "same-root-rotation-90: got preserves screen point",
+        "same-root-rotation-90: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-rotation-90: move preserves source-root client/page point",
+        "same-root-rotation-90: move preserves screen point",
+        "same-root-rotation-90: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-rotation-90: got reproduces pinned upstream offset",
+        "same-root-rotation-90: captured move reproduces pinned upstream offset",
+        "same-root-rotation-90: upstream offset differs from true affine local point",
+        "same-root-rotation-90: original captured up precedes implicit lost",
+        "same-root-rotation-90: lost preserves source-root client/page point",
+        "same-root-rotation-90: lost preserves screen point",
+        "same-root-rotation-90: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-rotation-90: lost reproduces the same upstream offset",
+        "same-root-rotation-90: implicit up releases pending capture",
+        "same-root-skew-x-45: declared affine math independently locates the sample",
+        "same-root-skew-x-45: physical family is committed",
+        "same-root-skew-x-45: capture family is committed",
+        "same-root-skew-x-45: measured RN AABB origin matches declared bounds",
+        "same-root-skew-x-45: pending capture is observable immediately",
+        "same-root-skew-x-45: set capture emits no immediate notification",
+        "same-root-skew-x-45: original got precedes captured move",
+        "same-root-skew-x-45: got keeps original discrete priority",
+        "same-root-skew-x-45: got preserves source-root client/page point",
+        "same-root-skew-x-45: got preserves screen point",
+        "same-root-skew-x-45: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-skew-x-45: move preserves source-root client/page point",
+        "same-root-skew-x-45: move preserves screen point",
+        "same-root-skew-x-45: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-skew-x-45: got reproduces pinned upstream offset",
+        "same-root-skew-x-45: captured move reproduces pinned upstream offset",
+        "same-root-skew-x-45: upstream offset differs from true affine local point",
+        "same-root-skew-x-45: original captured up precedes implicit lost",
+        "same-root-skew-x-45: lost preserves source-root client/page point",
+        "same-root-skew-x-45: lost preserves screen point",
+        "same-root-skew-x-45: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "same-root-skew-x-45: lost reproduces the same upstream offset",
+        "same-root-skew-x-45: implicit up releases pending capture",
+        "other-root-embedding: declared affine math independently locates the sample",
+        "other-root-embedding: physical family is committed",
+        "other-root-embedding: capture family is committed",
+        "other-root-embedding: measured RN AABB origin matches declared bounds",
+        "other-root-embedding: pending capture is observable immediately",
+        "other-root-embedding: set capture emits no immediate notification",
+        "other-root-embedding: original got precedes captured move",
+        "other-root-embedding: got keeps original discrete priority",
+        "other-root-embedding: got preserves source-root client/page point",
+        "other-root-embedding: got preserves screen point",
+        "other-root-embedding: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "other-root-embedding: move preserves source-root client/page point",
+        "other-root-embedding: move preserves screen point",
+        "other-root-embedding: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "other-root-embedding: got reproduces pinned upstream offset",
+        "other-root-embedding: captured move reproduces pinned upstream offset",
+        "other-root-embedding: upstream offset differs from true affine local point",
+        "other-root-embedding: original captured up precedes implicit lost",
+        "other-root-embedding: lost preserves source-root client/page point",
+        "other-root-embedding: lost preserves screen point",
+        "other-root-embedding: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "other-root-embedding: lost reproduces the same upstream offset",
+        "other-root-embedding: implicit up releases pending capture",
+        "transfer: pending owner changes before notification",
+        "transfer: changing pending owner emits no immediate lost or got",
+        "transfer: original lost to old target precedes got to other root",
+        "transfer: lost preserves source-root client/page point",
+        "transfer: lost preserves screen point",
+        "transfer: lost preserves identifier, contact, buttons, modifiers and timestamp",
+        "transfer: got preserves source-root client/page point",
+        "transfer: got preserves screen point",
+        "transfer: got preserves identifier, contact, buttons, modifiers and timestamp",
+        "transfer: move preserves source-root client/page point",
+        "transfer: move preserves screen point",
+        "transfer: move preserves identifier, contact, buttons, modifiers and timestamp",
+        "transfer: old rotated owner receives its upstream AABB offset",
+        "transfer: other root receives its own upstream AABB offset",
+        "transfer: other-root upstream offset omits declared native embedding",
+        "transfer: terminal up releases new capture owner"
+      ],
+      "count": 108,
+      "status": 0,
+      "signal": null
+    },
+    "provenance": {
+      "node": "v22.23.3",
+      "sources": {
+        "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "tests/pointer-geometry-native.test.mjs": "34e33c61b60ecd13c3eb664b506caa1c438190f101e8b88c8cca067137bc98e5",
+        "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591",
+        "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+        ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+        ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+        ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": "ba15a64f6954e887856c8c143295ec899d5d16be4d9cb39191f6a54046f655b4",
+        ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": "d3d61b35bae12af75f174017d59cab152aeaf0b3a0a10d3a391321b12bf3ad1e"
+      },
+      "overlaidBinarySha256": "102e6391ae3306f803dfa516cf2667d3a93b46ea6a35210d4b2cae0ff94f8dc3",
+      "originalBinarySha256": "56393b863935d2c6b2e1a2b8c8d64b9892352768e4dbb9651474b501110b5b17"
+    },
+    "limitation": "Direct original/overlaid processor with matching compiled binding sources/header layout; independent hypothetical embeddings, no binding execution, Hermes instance, Godot geometry or hardware.",
+    "bindingExecuted": false,
+    "hermesInstantiated": false
+  },
+  "bindingWitness": {
+    "count": 378,
+    "uniqueChecks": true,
+    "projectionCalls": 37,
+    "deliveredEvents": 42,
+    "retargetedCopySeen": true,
+    "nativeFaultObserved": true,
+    "jsFaultObserved": true,
+    "fixMappingOfEventPrioritiesBetweenFabricAndReact": false,
+    "historyChecks": [
+      "history/first: exact family and native point recover the delivered offset",
+      "history/newest: advancing sample clears earlier geometry",
+      "history/reordered: older delivered sample cannot overwrite newest fallback",
+      "history/reordered: fallback denies a different native point",
+      "history/terminal: advances serial while preserving last valid fallback",
+      "history/older normal: cannot overwrite a newer terminal projection",
+      "history/post-terminal: newer normal sample clears terminal geometry",
+      "history/older terminal: cannot overwrite a newer normal projection",
+      "history/family: same tag with a new family cannot borrow prior geometry",
+      "history/contact: independent contact has no fallback from another contact",
+      "history/retirement: stored geometry does not retain its target family",
+      "history/retirement: expired family cannot authorize a later target",
+      "history/new contact: reset history denies reused pointer identity"
+    ],
+    "selectedBoundaryChecks": [
+      "initial: original public priority is defined before any event",
+      "history/terminal: advances serial while preserving last valid fallback",
+      "history/post-terminal: newer normal sample clears terminal geometry",
+      "history/older terminal: cannot overwrite a newer normal projection",
+      "category/start: first contact reaches JS with pinned discrete priority",
+      "category/start: second contact preserves pinned feature-flag priority mapping",
+      "category/move/3: continuous raw category keeps pinned priority at JS",
+      "category/move/4: continuous raw category keeps pinned priority at JS",
+      "category/move/5: continuous raw category keeps pinned priority at JS",
+      "category/move/6: continuous raw category keeps pinned priority at JS",
+      "native fault: exact projection exception remains visible",
+      "native fault: failed projection publishes no partial pointer",
+      "native fault: only offending capture is revoked",
+      "native fault: offender removed from all four registries",
+      "native fault: concurrent pointer continues on next captured move",
+      "JS fault: handler throws after projection and target retention",
+      "JS fault: cleanup revokes only offender's capture",
+      "JS fault: temporary retained dispatch leaves no offender ownership",
+      "JS fault: concurrent capture continues unchanged",
+      "terminal: captured up precedes original implicit lost",
+      "category/end: terminal raw category reaches JS with pinned discrete priority",
+      "terminal: both fault recoveries and survivor up empty all registries"
+    ],
+    "selectedDeliveries": [
+      {
+        "serial": 3,
+        "origin": 1,
+        "type": "topPointerMove",
+        "priority": 0,
+        "payload": {
+          "timeStamp": 1003,
+          "target": 14,
+          "button": -1,
+          "metaKey": false,
+          "clientY": 3.75,
+          "ctrlKey": true,
+          "twist": 23,
+          "pointerId": 71,
+          "y": 3.75,
+          "buttons": 1,
+          "detail": 19,
+          "isPrimary": true,
+          "shiftKey": false,
+          "pointerType": "touch",
+          "tiltX": 13,
+          "width": 7,
+          "tangentialPressure": 0.125,
+          "offsetY": -41,
+          "offsetX": 44,
+          "pressure": 0.625,
+          "pageY": 3.75,
+          "screenX": 506,
+          "x": 3.25,
+          "clientX": 3.25,
+          "altKey": true,
+          "height": 11,
+          "pageX": 3.25,
+          "screenY": 609,
+          "tiltY": -17
+        }
+      },
+      {
+        "serial": 4,
+        "origin": 11,
+        "type": "topPointerMove",
+        "priority": 0,
+        "payload": {
+          "timeStamp": 1004,
+          "target": 4,
+          "button": -1,
+          "metaKey": false,
+          "clientY": 4.75,
+          "ctrlKey": true,
+          "twist": 23,
+          "pointerId": 81,
+          "y": 4.75,
+          "buttons": 1,
+          "detail": 19,
+          "isPrimary": false,
+          "shiftKey": false,
+          "pointerType": "touch",
+          "tiltX": 13,
+          "width": 7,
+          "tangentialPressure": 0.125,
+          "offsetY": -41,
+          "offsetX": 44,
+          "pressure": 0.625,
+          "pageY": 4.75,
+          "screenX": 508,
+          "x": 4.25,
+          "clientX": 4.25,
+          "altKey": true,
+          "height": 11,
+          "pageX": 4.25,
+          "screenY": 612,
+          "tiltY": -17
+        }
+      },
+      {
+        "serial": 5,
+        "origin": 1,
+        "type": "topPointerMove",
+        "priority": 0,
+        "payload": {
+          "timeStamp": 1005,
+          "target": 14,
+          "button": -1,
+          "metaKey": false,
+          "clientY": 5.75,
+          "ctrlKey": true,
+          "twist": 23,
+          "pointerId": 71,
+          "y": 5.75,
+          "buttons": 1,
+          "detail": 19,
+          "isPrimary": true,
+          "shiftKey": false,
+          "pointerType": "touch",
+          "tiltX": 13,
+          "width": 7,
+          "tangentialPressure": 0.125,
+          "offsetY": -61,
+          "offsetX": 64,
+          "pressure": 0.625,
+          "pageY": 5.75,
+          "screenX": 510,
+          "x": 5.25,
+          "clientX": 5.25,
+          "altKey": true,
+          "height": 11,
+          "pageX": 5.25,
+          "screenY": 615,
+          "tiltY": -17
+        }
+      },
+      {
+        "serial": 6,
+        "origin": 11,
+        "type": "topPointerMove",
+        "priority": 0,
+        "payload": {
+          "timeStamp": 1006,
+          "target": 4,
+          "button": -1,
+          "metaKey": false,
+          "clientY": 6.75,
+          "ctrlKey": true,
+          "twist": 23,
+          "pointerId": 81,
+          "y": 6.75,
+          "buttons": 1,
+          "detail": 19,
+          "isPrimary": false,
+          "shiftKey": false,
+          "pointerType": "touch",
+          "tiltX": 13,
+          "width": 7,
+          "tangentialPressure": 0.125,
+          "offsetY": -61,
+          "offsetX": 64,
+          "pressure": 0.625,
+          "pageY": 6.75,
+          "screenX": 512,
+          "x": 6.25,
+          "clientX": 6.25,
+          "altKey": true,
+          "height": 11,
+          "pageX": 6.25,
+          "screenY": 618,
+          "tiltY": -17
+        }
+      }
+    ],
+    "provenance": {
+      "node": "v22.23.3",
+      "binarySha256": "a0cbb5b7f752bbd56c6bcbb5d9e20a5de2304fe98d039990d3091e40425d6627",
+      "sources": {
+        "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "tests/pointer-projection-native.test.mjs": "ae2f4ec18cc3352274e3e4bcfcc5cf4334b126ae4efd21866d08ebff9d37b865",
+        "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591",
+        "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+        "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        ".deps/package/ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+        ".deps/package/ReactCommon/react/renderer/core/EventTarget.cpp": "b2f550880a6dc57997166968d63771016e06dea1c62d1030135b6b9ddb91856f",
+        ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+        ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+        ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": "ba15a64f6954e887856c8c143295ec899d5d16be4d9cb39191f6a54046f655b4",
+        ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+        ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": "d3d61b35bae12af75f174017d59cab152aeaf0b3a0a10d3a391321b12bf3ad1e"
+      }
+    },
+    "limits": [
+      "Injected portable projection callback does not execute Godot affine geometry or input hardware",
+      "Original EventQueueProcessor flushes retained RawEvent batches; EventQueue enqueue/coalescing is not exercised",
+      "Custom envelope is fixture-owned; public native example proves the production GodotPointerEvent path separately",
+      "History serial ordering is a direct semantic check of the host helper, not an executed EventQueue coalescing claim"
+    ]
+  },
+  "terminalHistoryNegative": {
+    "status": "expected-failure",
+    "exitCode": 1,
+    "boundary": "history/terminal: advances serial while preserving last valid fallback",
+    "logSha256": "5a5b46417c33f9750143ff7473cf5ed61723288c33cd6b6e846ce3b016cc31e6",
+    "scope": "New direct helper assertion ran against the prior normal-only monotonic policy; not an EventQueue coalescing test."
+  },
+  "regressions": {
+    "at": "2026-10-04T12:33:27.010921+00:00",
+    "status": "passed",
+    "contracts": {
+      "node": 199,
+      "python": 13
+    },
+    "interactiveExamples": {
+      "count": 22,
+      "checks": 2246,
+      "mode": "headless"
+    },
+    "transformGuards": 61,
+    "inputGuards": 25,
+    "pointerProcessor": 144,
+    "jsxFaultFixture": 43,
+    "freshSDK": {
+      "abiCertified": false,
+      "hostSha256": "01b2d2ec0ec0d38cf55213520fbc612e2ebd2295d684df298aeeb9a93f27695d",
+      "receiptSha256": "cbf5963a376b9a2cee53bf92a549b6105349e3a7de17b407fbb9022f7830b94e",
+      "manifestSha256": "050b71146e46d7f97af694097d7e53e8f7795d651c4711895fd3eb1ecca86403",
+      "nativeCombinationSha256": "53eb2d9802450461e85b865ce4a95cd198c66f57e532c0eb0cd58ff6be35c262",
+      "sourceHashesVerified": 55,
+      "registry": {
+        "checks": 207,
+        "cases": 11,
+        "reportSha256": "77af56fe02b5b83a66d9214c06d045303715ae08eee9c19427eedf7a6cd705af"
+      },
+      "loader": {
+        "checks": 89,
+        "cases": 21,
+        "reportSha256": "41cb474c5443f53f14d83f7a7c40b956fa495b8332d1291f8ab9e6787ffaf33f"
+      },
+      "runtime": {
+        "runs": 13,
+        "checks": 213,
+        "modes": [
+          "headless"
+        ],
+        "componentMounted": true,
+        "results": {
+          "headless": {
+            "checks": 35,
+            "sha256": "d37717c5e61e3d6afb84cab082ed3265780c75a3e4a0d348d7a5b4163f4a6851",
+            "displayServer": "headless"
+          },
+          "external-appearance": {
+            "checks": 5,
+            "sha256": "2304e625a6dc1f6e4748aff2790f26b2f52ddf3447df2b8b875a5b4e3cb1d3f8",
+            "displayServer": "headless"
+          },
+          "reentrant-stop": {
+            "checks": 8,
+            "sha256": "6b609635288f8534864f77f49ccab83016ed9cc27dc3a3e5ecddc6fc4a0cdef4",
+            "displayServer": "headless"
+          },
+          "reentrant-raf": {
+            "checks": 9,
+            "sha256": "bc59dac722c8e332953832801ba520a220e06f6daab4c4678083afed125c7991",
+            "displayServer": "headless"
+          },
+          "reentrant-timer": {
+            "checks": 9,
+            "sha256": "7c36ff8b084cdc4f53227520c2ea22e13de3bc757a0d740facc23e4559d3dcd1",
+            "displayServer": "headless"
+          },
+          "root-unmount-resize": {
+            "checks": 17,
+            "sha256": "8d8e42b4cb84f0e9d8dccd084b2c12cece346d3c804072325fe5282f60f265d8",
+            "displayServer": "headless"
+          },
+          "root-unmount-pressed": {
+            "checks": 17,
+            "sha256": "1d2f88dcc99a9ecfe161df7ac19f74e604fe6d2d065c4d13b873feed2990536a",
+            "displayServer": "headless"
+          },
+          "root-unmount-raf": {
+            "checks": 18,
+            "sha256": "92a8482dae9bc706f3c32a4dfc3ab19177c63cb40b9ca747c7fe0e30825c47da",
+            "displayServer": "headless"
+          },
+          "root-unmount-timer": {
+            "checks": 18,
+            "sha256": "aabc44e956d2c817713ce885d51020948890ff152e8f8ab2901baf702497a236",
+            "displayServer": "headless"
+          },
+          "root-remount-resize": {
+            "checks": 21,
+            "sha256": "94d05c804678728e3c3877ecb7373fd812be94934aade67373cea151e2a64427",
+            "displayServer": "headless"
+          },
+          "root-free-resize": {
+            "checks": 17,
+            "sha256": "c09bf3dc7f36be21a2e4466a3b9e1e0f776696b8127ca17ce98687ba865f8738",
+            "displayServer": "headless"
+          },
+          "root-owner-switch-resize": {
+            "checks": 18,
+            "sha256": "b8aa03f5c0af6f896dacf74d728bcaf7cd03511453318dc21bd377d4f64cc76c",
+            "displayServer": "headless"
+          },
+          "root-stale-core-owner-switch-resize": {
+            "checks": 21,
+            "sha256": "fb9de5b9cd447f48eb1fb41bebe4c5e043ea828b9a3979e3578e70235cb959c1",
+            "displayServer": "headless"
+          }
+        },
+        "reportSha256": "0039d5cf476b67028d8a69bfc5208646ed4e3b9c203dd49f217a6da010b8515f",
+        "graphicalExecutedThisSlice": false
+      }
+    }
+  },
+  "hosted": {
+    "implementationCI": "not yet executed for this new implementation",
+    "pages": "not yet published for this new implementation",
+    "priorReferenceScope": "Existing original RN mobile core fixtures contain no captured-pointer oracle."
+  },
+  "limits": [
+    "GF-08/GF-09/GF-13 remain in progress; no complete contract, release gate, architecture decision or denominator changes.",
+    "Correct affine target-local offsets intentionally differ from the explicitly incomplete pinned RN AABB-origin capture algorithm.",
+    "Godot examples inject native input, not physical hardware.",
+    "RawEvent batch and direct serial-history checks do not execute EventQueue enqueue/coalescing.",
+    "Typed JSI exception RTTI across framework boundaries is uncertified; the std::exception host boundary is verified.",
+    "Complete imperative EventTarget, nested responder/PanResponder, scroll/multi-window/cross-application stacking and mobile differentials remain open.",
+    "Purely logical scroll suffix uses committed Fabric offsets; unpublished native scroll displacement remains uncertified.",
+    "Native SDK ABI certification is false; earlier graphical/export/mobile records have separate scope."
+  ]
+}

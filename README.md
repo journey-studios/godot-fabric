@@ -69,10 +69,21 @@ original RN pointer events and public View capture refs. Its
 [evidence](docs/evidence/pointers/README.md) records 132 headless /146 native
 checks, 12 pixels, selective multi-root lifetime, 144 native assertions and
 43 original JSX exception/stop checks. Two original-source controls reproduce
-crashes fixed by the generated native lifetime overlay. Full transformed
-capture, hardware, EventTarget and mobile acceptance remain open.
+crashes fixed by the generated native lifetime overlay. Hardware, EventTarget
+and complete mobile acceptance remain open.
 
 ![Original React View capture roots after a key replacement](docs/evidence/pointers/pointers-updated.png)
+
+The [captured geometry example](examples/pointer-geometry/README.md) keeps
+client/page coordinates in the physical origin root and projects offsets into
+each actual target, including transformed targets in another embedded root and
+flattened logical refs. [Its evidence](docs/evidence/pointer-geometry/README.md)
+records 631/648 headless/native checks, a failing previous-host control,
+14 pixels and three captures. Singular cancellation and connected hidden
+capture have explicit contracts. This fixes a documented limitation of the
+pinned RN offset algorithm; complete differential parity remains open.
+
+![Captured targets after React transform updates](docs/evidence/pointer-geometry/pointer-geometry-updated.png)
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -156,6 +167,7 @@ npm run example -- transforms # original RN affine styles, refs and transformed 
 npm run example -- shared   # two registered roots in one Hermes application
 npm run example -- refs     # original RN refs and transformed window geometry
 npm run example -- pointers # original pointer input and public View capture
+npm run example -- pointer-geometry # transformed, cross-root and logical capture
 npm run example -- tree     # native IDs, original documents and logical traversal
 npm run example -- services # typed Godot calls, signals and shared Zustand data
 npm start -- --nativewind   # reactive utility classes and manual theme
@@ -292,6 +304,7 @@ npm run test:services                    # real Hermes DTO, revocation and destr
 npm run test:codegen                     # original spec/schema/C++ generation and stale artifacts
 npm run type-check                      # bounded strict public TSX consumer
 npm run test:contracts                   # types/JS compiler/SVG/font contracts + Python fixtures
+npm run test:pointers:geometry          # pinned RN counterexamples and real Hermes binding
 npm run test:transforms:guards           # rejected styles, invalid embedding input and cleanup
 npm run check:static
 npm run check:publication

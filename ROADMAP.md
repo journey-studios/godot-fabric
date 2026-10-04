@@ -684,6 +684,43 @@ capture, nested responder/PanResponder, hardware/keyboard, multi-window/scroll,
 cross-app stacking or mobile differentials. No architecture decision or full
 checkpoint/GF is newly closed. [Source analysis](docs/research/pointer-capture-boundary.md).
 
+### Captured pointer geometry checkpoint (2026-10-04)
+
+GF-08/GF-09/GF-13 remain **In progress**. The
+[public geometry fixture](examples/pointer-geometry/README.md) passes 631
+headless / 648 native checks, with 14 pixel checks and three Viewport captures.
+The identical final fixture fails 55/631 checks on the previous committed host:
+54 offsets and one exact terminal-coordinate check. Native local projection
+covers rotation/skew/reflection, shared-root embeddings, flattened refs,
+no-hit drag, real React transform commits and immediate raw density-two input.
+Physical-origin client/page/screen fields and original capture ordering remain
+separate from target-local offset and original public AABB measures.
+
+The unchanged RN processor and lifetime overlay, compiled with their matching
+binding sources/headers, each pass 108 portable checks with identical
+unprojected numerical results. That fixture does not execute the binding. Three declared
+cases expose the pinned incomplete capture algorithm. The Godot correction
+intentionally differs from AABB origin subtraction; it is not numerical parity
+with that incomplete algorithm. A real Hermes/binding witness passes 378
+checks, including immutable retained samples, interleaved roots, native/JS
+fault recovery, default priority initialization and monotonic terminal history.
+
+Singular cancel preserves only the same contact/family/exact prior native point;
+another captured contact survives. Connected `display:none` capture keeps the
+pinned empty-layout coordinates and ordering. Late input cannot restore ended
+or retired authority. Native SDK pack/verify, registry 207/11 cases, loader
+89/21 cases and 13 headless consumer runs/213 checks pass with the fresh
+header/binary combination; ABI certification remains false. Contracts pass
+199 Node/13 Python checks and 22 example scenarios/2,246 headless checks pass.
+[Executed receipt](docs/evidence/pointer-geometry/README.md).
+
+Original queued coalescing, complete EventTarget/responder/PanResponder,
+scroll/multi-window/hardware/keyboard and mobile capture differentials remain
+open. Typed JSI exception RTTI across framework boundaries is uncertified.
+No architecture approval, weight, denominator, complete checkpoint or GF item
+changes. New hosted CI and Pages publication are recorded separately after
+execution; prior reference lanes are not evidence for this capture fixture.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

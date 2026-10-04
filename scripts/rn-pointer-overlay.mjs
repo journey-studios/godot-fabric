@@ -164,6 +164,36 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
       uiManager.getNewestCloneOfShadowNode(*pendingOverride) != nullptr;
   if (!hasPendingOverride) {
     activePointerCaptureTargetOverrides_.erase(event.pointerId);`);
+  bindingHeader = replaceOnce(bindingHeader, '#include <jsi/jsi.h>',
+    '#include <jsi/jsi.h>\n#include <functional>\n#include <utility>');
+  bindingHeader = replaceOnce(bindingHeader, ' private:\n', `  // Project the copied public pointer against its actual dispatched target.
+  // The immutable source payload stays owned by the original event queue.
+  using PointerEventProjectionForGodot = std::function<bool(
+      const ShadowNode &, const EventPayload &, PointerEvent &)>;
+  void setPointerEventProjectionForGodot(PointerEventProjectionForGodot projection) {
+    godotPointerEventProjection_ = std::move(projection);
+  }
+
+ private:
+`);
+  bindingHeader = replaceOnce(bindingHeader,
+    '  mutable ReactEventPriority currentEventPriority_;',
+    '  mutable ReactEventPriority currentEventPriority_{ReactEventPriority::Default};\n  PointerEventProjectionForGodot godotPointerEventProjection_;');
+  bindingSource = replaceOnce(bindingSource,
+    '    auto dispatchCallback = [this, &runtime, eventTimestamp](',
+    '    const auto &godotSourcePayload = eventPayload;\n    auto dispatchCallback = [this, &runtime, eventTimestamp, &godotSourcePayload](');
+  bindingSource = replaceOnce(bindingSource,
+    '                                const EventPayload& eventPayload) {\n      auto eventTarget = targetNode.getEventEmitter()->getEventTarget();',
+    `                                const EventPayload& eventPayload) {
+      // Processor copies/retargets deliberately retain the original client,
+      // screen and identity fields. Only native target-local geometry changes.
+      auto projectedPointer = static_cast<const PointerEvent&>(eventPayload);
+      if (godotPointerEventProjection_ &&
+          !godotPointerEventProjection_(targetNode, godotSourcePayload, projectedPointer)) return;
+      auto eventTarget = targetNode.getEventEmitter()->getEventTarget();`);
+  bindingSource = replaceOnce(bindingSource,
+    '            eventPayload,\n            eventTimestamp);',
+    '            projectedPointer,\n            eventTimestamp);');
   bindingSource = replaceOnce(bindingSource,
     '    if (targetNode != nullptr) {\n      pointerEventsProcessor_.interceptPointerEvent(\n          targetNode,\n          type,\n          priority,\n          pointerEvent,\n          dispatchCallback,\n          *uiManager_);\n    }',
     '    // A registered physical pointer can move/up/cancel outside native hits.\n    pointerEventsProcessor_.interceptPointerEvent(\n        targetNode, type, priority, pointerEvent, dispatchCallback, *uiManager_);');
