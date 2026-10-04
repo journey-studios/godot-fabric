@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Foco/TextInputState comprovados; próximos contratos HostInstance/EventTarget e pointer capture"
   },
-  "updatedAt": "2026-10-04T04:43:02.613088+00:00",
+  "updatedAt": "2026-10-04T04:54:34.303777+00:00",
   "source": {
     "commit": "3b09b37acf735664301d3ddaf9ab275519893267",
     "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/ROADMAP.md",
-    "scope": "Implementação3b09b37 verificada: foco175/189,12pixels/duas capturas; controles23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Pagesmanual37177743564 passou build/deploy e publicou JSON0d7c731 pelo mainadad606, comparado integralmente. CI0d7c731 permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Publicação, runtime e aceite integral separados; nenhum GF, decisão, peso ou denominador fechado.",
+    "scope": "Implementação3b09b37 verificada: foco175/189,12pixels/duas capturas; controles23/160 e11/175. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Pagesmanual37177743564 passou build/deploy e publicou JSON0d7c731 pelo mainadad606, comparado integralmente. CI0d7c731 permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Publicação, runtime e aceite integral separados; nenhum GF, decisão, peso ou denominador fechado. Observação posterior: CI37177820811 em1699e5c passou contracts,native-cold-start,reference-ios,reference-android,parity-comparison; cobertura limitada não certifica diferencial completo de foco.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2913,6 +2913,16 @@
       ],
       "message": "Pagesmanual37177743564 concluiu build/deploy; JSON público0d7c731 comparado ao commit com fonte3b09b37 fora do main. CI da nova fatia permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Foco local e publicação não fecham o aceite integral, mobile ou hardware/IME.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177743564"
+    },
+    {
+      "id": "focus-ci-complete-20261004",
+      "at": "2026-10-04T04:54:34.303777+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "CI37177820811 em1699e5c passou os cinco jobs: contracts,native-cold-start,reference-ios,reference-android,parity-comparison. Snapshot pendente anterior preservado; referências limitadas não fecham foco mobile, ports Godot ou aceite integral. Nenhum checkpoint/peso/denominador alterado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811"
     }
   ]
 }

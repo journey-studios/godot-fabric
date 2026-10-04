@@ -103,3 +103,8 @@ build/deploy passed, and the served JSON exactly matched branch data `0d7c731`
 with source `3b09b37`, outside main. The new focus CI remains at the recorded
 snapshot status. The preceding tree CI passed five jobs at `a608d07`; that
 limited reference suite is not a focus differential.
+
+A later completed observation records [run37177820811](https://github.com/journey-studios/godot-fabric/actions/runs/37177820811)
+at `1699e5c`: contracts, native-cold-start, reference-ios, reference-android and
+parity-comparison all passed. The earlier pending snapshot is retained. This
+certifies those hosted lanes, not a new full focus/mobile differential.

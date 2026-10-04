@@ -390,7 +390,10 @@ verification; local runtime proof is distinct from both. Manual Pages run
 [37177743564](https://github.com/journey-studios/godot-fabric/actions/runs/37177743564)
 passed build/deploy and served branch JSON `0d7c731` exactly;
 [the hosted snapshot](docs/evidence/focus/ci.json) keeps new focus CI status
-separate from the completed preceding tree CI.
+separate from the completed preceding tree CI. Later focus snapshot
+[CI37177820811](https://github.com/journey-studios/godot-fabric/actions/runs/37177820811)
+at `1699e5c` passed all five jobs; limited reference coverage remains distinct
+from a full focus/mobile differential.
 
 ## Release contract and scope
 

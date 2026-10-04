@@ -153,5 +153,65 @@
     "The new focus CI is recorded at its actual snapshot status; local proof and Pages success do not infer completed hosted native/reference jobs.",
     "The preceding tree CI passed all five jobs at a608d07; its limited original reference apps do not certify a focus differential or Godot mobile ports.",
     "Dashboard deployment is publication evidence, not runtime/parity certification."
-  ]
+  ],
+  "laterCompletedObservation": {
+    "observedAt": "2026-10-04T04:54:34.303777+00:00",
+    "ci": {
+      "conclusion": "success",
+      "createdAt": "2026-10-04T04:43:24Z",
+      "databaseId": 37177820811,
+      "headSha": "1699e5c2a2ba365ef218d41d3b69c0b130a6fbd1",
+      "jobs": [
+        {
+          "completedAt": "2026-10-04T04:44:25Z",
+          "conclusion": "success",
+          "databaseId": 111364043112,
+          "name": "contracts",
+          "startedAt": "2026-10-04T04:43:28Z",
+          "status": "completed",
+          "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811/job/111364043112"
+        },
+        {
+          "completedAt": "2026-10-04T04:52:34Z",
+          "conclusion": "success",
+          "databaseId": 111364043271,
+          "name": "reference-ios",
+          "startedAt": "2026-10-04T04:43:33Z",
+          "status": "completed",
+          "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811/job/111364043271"
+        },
+        {
+          "completedAt": "2026-10-04T04:48:39Z",
+          "conclusion": "success",
+          "databaseId": 111364043314,
+          "name": "reference-android",
+          "startedAt": "2026-10-04T04:43:28Z",
+          "status": "completed",
+          "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811/job/111364043314"
+        },
+        {
+          "completedAt": "2026-10-04T04:53:10Z",
+          "conclusion": "success",
+          "databaseId": 111364043352,
+          "name": "native-cold-start",
+          "startedAt": "2026-10-04T04:43:34Z",
+          "status": "completed",
+          "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811/job/111364043352"
+        },
+        {
+          "completedAt": "2026-10-04T04:53:32Z",
+          "conclusion": "success",
+          "databaseId": 111365411365,
+          "name": "parity-comparison",
+          "startedAt": "2026-10-04T04:53:13Z",
+          "status": "completed",
+          "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811/job/111365411365"
+        }
+      ],
+      "status": "completed",
+      "updatedAt": "2026-10-04T04:53:33Z",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811"
+    },
+    "scope": "All five jobs passed at the focus publication snapshot1699e5c; reference fixtures remain limited and are not focus differentials."
+  }
 }
