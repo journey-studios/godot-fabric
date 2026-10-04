@@ -2,9 +2,10 @@
   "schemaVersion": 1,
   "scenario": "native-touch-tag-resolution",
   "implementation": {
-    "commit": null,
+    "commit": "7a05e4afdfcc018a34e0eb4b6dc6e74433def234",
     "executedBeforeCommit": true,
-    "sourcePinsVerifiedAgainstCommit": false
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourceCount": 17
   },
   "environment": {
     "platform": "macOS arm64",

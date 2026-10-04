@@ -19,7 +19,10 @@ npm run test:events:dispatch
 
 [Curated receipt](report.json) records the environment, exact source and bundle
 hashes, raw report digests, identical check-ID digest and native responder traces.
-Both variants execute the same **647 checks** on the same native host:
+All 17 executed implementation/config/fixture hashes match implementation
+[`7a05e4a`](https://github.com/journey-studios/godot-fabric/commit/7a05e4afdfcc018a34e0eb4b6dc6e74433def234);
+execution preceded the commit. Both variants execute the same **647 checks**
+on the same native host:
 
 | Renderer lookup | Result | Two contacts inside the owner |
 | --- | --- | --- |

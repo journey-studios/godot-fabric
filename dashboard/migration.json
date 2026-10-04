@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Tags de toque e retenção do responder corrigidas; próximos interesse e dispatcher EventTarget nativos"
   },
-  "updatedAt": "2026-10-04T16:47:03.564080+00:00",
+  "updatedAt": "2026-10-04T16:54:39.696104+00:00",
   "source": {
-    "commit": "08fb54d6224fe7afa50464feab8a11ec3e6eebcc",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/08fb54d6224fe7afa50464feab8a11ec3e6eebcc/ROADMAP.md",
-    "scope": "Execução local antes do commit, base 08fb54d: lookup corrigido passa 647 checks; original falha em dois checks normativos. Consumidor 30/40, contratos 227 Node/13 Python, 22 exemplos/2250, Pressable 47, SDK fresco e rejeição do antigo comprovados. Hashes executados no recibo; pin da implementação e CI desta fatia pendentes. Flags EventTarget públicas desativadas; nenhum novo checkpoint completo.",
+    "commit": "7a05e4afdfcc018a34e0eb4b6dc6e74433def234",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/ROADMAP.md",
+    "scope": "Implementação 7a05e4a: 17 hashes executados conferidos no commit. Lookup corrigido passa 647 checks; original falha em dois checks normativos. Consumidor 30/40, contratos 227 Node/13 Python, 22 exemplos/2250, Pressable 47, SDK fresco e rejeição do antigo comprovados. CI desta fatia pendente; flags EventTarget públicas off; nenhum novo checkpoint ou denominador concluído.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -282,6 +282,10 @@
             {
               "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+            },
+            {
+              "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
             }
           ]
         },
@@ -502,6 +506,10 @@
             {
               "label": "CI91e5219:artefato102/variante com IDs/fontes/RN/host auditados; estado do workflow separado",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
+            },
+            {
+              "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
             }
           ]
         },
@@ -812,6 +820,10 @@
             {
               "label": "CI91e5219:artefato102/variante com IDs/fontes/RN/host auditados; estado do workflow separado",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
+            },
+            {
+              "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
             }
           ]
         },
@@ -2612,6 +2624,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "native-touch-tag-resolution-pinned-7a05e4a",
+      "at": "2026-10-04T16:54:39.696104+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação 7a05e4a fixa 17 fontes públicas executadas. Controle original falha em dois de 647 checks normativos; corrigido passa todos. SDK fresco e default têm mesmos bytes e fontes; antigo íntegro recusado antes de saída. CI ainda pendente; quatro gaps do dispatcher permanecem abertos. Nenhum aceite completo muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/7a05e4afdfcc018a34e0eb4b6dc6e74433def234"
+    },
     {
       "id": "native-touch-tag-resolution-local-20261004",
       "at": "2026-10-04T16:47:03.564080+00:00",
