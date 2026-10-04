@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Transforms 2D comprovados; próximos HostInstance e comandos nativos públicos"
   },
-  "updatedAt": "2026-10-04T02:39:50.421120+00:00",
+  "updatedAt": "2026-10-04T02:43:28.310088+00:00",
   "source": {
-    "commit": "48e425345b0ecb7665a7a447c9c14453c8e4ece0",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/ROADMAP.md",
-    "scope": "Fatia transforms no mesmo Control real: 309 headless/345 native, 33pixels, 3capturas; math40932; rejeições61 e input25; controles65/68 e9/25. Binário SDK final e fontes verificadas: 205Node/13Python, 10nativos, 18exemplos/1219checks e17adapters/318. Implementação local em preparação para commit/PR14 e deploy manual da branch. CI de coordenadas cinco jobs verde; CI de transforms ainda não executada. GF-07/GF-08/GF-10/GF-13 seguem in_progress, sem novo checkpoint done/peso/denominador/decisão.",
+    "commit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f",
+    "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/ROADMAP.md",
+    "scope": "Implementação6e5db7b conferida por gitshow com todas as fontes nativas/fixtures do SDK final42ee5c7. Transforms no mesmo Control:309/345+33pixels/3capturas, math40932, rejeições61/input25; controles65/68 e9/25. Passaram205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. CI hospedada desta fatia ainda não executada; coordenadas anteriores continuam cinco jobs verdes. Evidências e ROADMAP atualizados na PR14, aguardando push/deploy manual da branch. Nenhum GF/aceite completo/decisão/peso/denominador alterado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -382,7 +382,7 @@
             },
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -445,7 +445,7 @@
             },
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -557,7 +557,7 @@
             },
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -703,7 +703,7 @@
             },
             {
               "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
             }
           ]
         },
@@ -2801,6 +2801,18 @@
       ],
       "message": "Fonte/host final42ee5c7 conferidos: transforms309/345+33pixels, math40932, rejeições61/input25, controles65/68/9. Regressões205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. Evidências/fotos e roadmap registrados; commit/push/deploy seguem na mesma PR14. Todos os aceites completos/diferenciais/alvos continuam pendentes.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+    },
+    {
+      "id": "transforms-source-pin-20261004",
+      "at": "2026-10-04T02:43:28.310088+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Commit de implementação6e5db7b corresponde exatamente às fontes nativas/fixtures executadas e SDK42ee5c7; provas e três fotos publicáveis fixadas em URL imutável. CI de transforms e deploy seguem etapas separadas, sem conclusão integral dos GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
     }
   ]
 }

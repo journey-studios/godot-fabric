@@ -165,5 +165,7 @@
     "npm run test:contracts",
     "npm run test:examples",
     "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-transforms-v6-20261004 --out build/adapter-runtime-transforms-v6-20261004 --capture"
-  ]
+  ],
+  "testedImplementationCommit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f",
+  "committedSourceIdentityVerified": true
 }

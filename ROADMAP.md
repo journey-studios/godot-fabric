@@ -290,7 +290,8 @@ Coordinate CI snapshots `f40831e` and `b1732fb` each passed all five jobs,
 including cold start and the current limited RN oracle. The later affine
 transform slice below keeps its new local proof separate from that hosted CI.
 
-The [affine transform slice](docs/evidence/transforms/README.md) extends
+The [affine transform slice](https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md) at verified implementation
+`6e5db7b5cb6a4bce567c7c648240c8637a3b944f` extends
 GF-07/GF-08/GF-10/GF-13 using original RN transform processors and resolved
 ViewProps. Ordered transforms, percentage translation/origins, shear and
 reflection affect the same Godot Control through public base/offset APIs.
