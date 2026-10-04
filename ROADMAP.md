@@ -1111,6 +1111,9 @@ are unchanged fromf7c2cf6 and retain its separate SDK proof. This slice adds its
 own eight-lane CI gate/artifact; hosted Document Up remains pending. Its71
 unique executed code/configuration inputs match implementation84270fb via
 git show/SHA-256; original execution base0a2f01e/dirty state is retained.
+[Pages37244579332](docs/evidence/pointer-document-up/publication.json) passed
+build/deploy using main renderer/dataf7696b3; full public/local JSON confirmed.
+Publication is separate from pending hosted Document Up runtime.
 
 Once/abort, retained/retired refs/remount, dispatch mutation, Up-specific faults/
 reentrancy, captured/no-hit/null-target Up, Down/Up ID pairing, got/lost capture,

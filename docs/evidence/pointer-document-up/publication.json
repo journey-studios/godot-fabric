@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-04T23:42:03.152999+00:00",
+  "run": 37244579332,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244579332",
+  "mainRenderer": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+  "dataCommit": "f7696b3960d344bb8737d8ae567c12aaad317674",
+  "publication": {
+    "ref": "codex/react-native-parity-roadmap",
+    "commit": "f7696b3960d344bb8737d8ae567c12aaad317674",
+    "inMain": false,
+    "at": "2026-10-04T23:40:54.097Z"
+  },
+  "fullPublicJSONEqualsCommittedData": true,
+  "localLiveAPIEqualsCommittedData": true,
+  "publicBytesSha256": "50da0a127eb0be7c7c7d9f097af2a930b91ade1176901337dff7dacc86d0268d",
+  "buildAndDeployPassed": true
+}

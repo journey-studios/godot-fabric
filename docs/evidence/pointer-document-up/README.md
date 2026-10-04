@@ -156,3 +156,9 @@ The [independent read-only audit](audit.json) confirms the eight raw reports,
 71 source paths and22 RN inputs, native PNG hashes/chunk CRCs/20 pixels, final
 Down and View Up controls. Its report snapshot precedes this audit self-link;
 no unexpected script, registry, crash or application errors were found.
+
+[Pages publication](publication.json) passed build/deploy in
+[run37244579332](https://github.com/journey-studios/godot-fabric/actions/runs/37244579332)
+with main renderer and branch dataf7696b3. The full public JSON, excluding only
+generated publication metadata, and the local live API equal committed data.
+This publishes the documented local proof; hosted Document Up remains separate.

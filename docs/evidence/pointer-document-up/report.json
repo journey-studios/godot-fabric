@@ -3637,5 +3637,15 @@
     "status": "passed-no-findings",
     "curatedSnapshotSha256BeforeAddingAuditLink": "08f0bc0f7971e60e7f63ce8058cd1c8d9dbe2683b19d15bbf3d500e7b7205c88",
     "runtimeSnapshotBeforePinSha256": "b9b77d1418b1b54e70d1c29c28aef863499c8ef76efc456279c1c4a2bbd0375b"
+  },
+  "dashboardPublication": {
+    "status": "verified-public-branch-data",
+    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37244579332",
+    "dataCommit": "f7696b3960d344bb8737d8ae567c12aaad317674",
+    "mainRendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "completePublicJSONMatchesCommittedData": true,
+    "localLiveAPIEqualsCommittedData": true,
+    "buildAndDeployPassed": true,
+    "receipt": "docs/evidence/pointer-document-up/publication.json"
   }
 }
