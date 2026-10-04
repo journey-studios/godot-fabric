@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Transforms 2D comprovados; próximos HostInstance e comandos nativos públicos"
   },
-  "updatedAt": "2026-10-04T02:47:17.886674+00:00",
+  "updatedAt": "2026-10-04T02:59:46.504092+00:00",
   "source": {
     "commit": "6e5db7b5cb6a4bce567c7c648240c8637a3b944f",
     "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/ROADMAP.md",
-    "scope": "Implementação6e5db7b com fonte/host SDK42ee5c7 conferidos: transforms309/345+33pixels/3capturas, math40932, rejeições61/input25, controles65/68/9. Passaram205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. Pagesmanual37171971971 publicou JSON5885331 pelo mainadad606; JSON servido foi comparado integralmente. CI5885331: contracts passou; native/iOS/Android em andamento e comparação não iniciada no snapshot registrado. Nenhum GF/aceite completo/peso/denominador/decisão fechado.",
+    "scope": "Implementação6e5db7b e host SDK42ee5c7 verificados: transforms309/345+33pixels/3capturas, math40932, guards61/input25;205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. CI5885331 completou os cinco jobs com sucesso (37171931529); oráculo RN limitado não certifica todos os transforms/alvos/paridade. Pagesmanual37172123003 publicou JSON2022e727 pelo mainadad606, comparado integralmente. Novos dados locais aguardam push e publicação manual. Nenhum GF/aceite completo/peso/denominador/decisão fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2825,6 +2825,18 @@
       ],
       "message": "Deploy manual37171971971 concluiu build/deploy e JSON público5885331 foi comparado ao commit, fonte6e5db7b fora do main. CI37171931529: contracts passou, outras lanes em andamento/comparação pendente; receipt preserva snapshot sem declarar aceites integrais.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171971971"
+    },
+    {
+      "id": "transforms-ci-complete-20261004",
+      "at": "2026-10-04T02:59:46.504092+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "CI5885331: contracts, native-cold-start, reference-ios, reference-android e parity-comparison passaram no run37171931529. Esta é evidência hospedada da fatia; o oráculo limitado não fecha a paridade completa ou os ports Godot mobile. Próximo avanço: métodos de HostInstance e comandos nativos públicos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529"
     }
   ]
 }

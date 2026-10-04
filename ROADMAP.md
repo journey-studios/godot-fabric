@@ -327,6 +327,8 @@ Valid transform animation during contact, transformed masks, complete
 HostInstance commands, RTL and mobile differential acceptance remain open.
 Next in sequence 3: continue the public HostInstance/native-command branch.
 
+The [completed hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) at `5885331` passed contracts, native cold start, original iOS/Android references and parity comparison. The dated earlier pending observation remains in [ci.json](docs/evidence/transforms/ci.json). These limited reference fixtures do not close full transform parity, the Godot mobile ports or GF-08.
+
 ## Release contract and scope
 
 1. Ordinary public RN imports and TypeScript/TSX work, including stable

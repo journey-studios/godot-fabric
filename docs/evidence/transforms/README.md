@@ -149,3 +149,5 @@ during an active gesture, animation, singular/3D rendering, full multitouch and 
 reference differentials still open. The preceding
 [View](../view/README.md) and [coordinate](../coordinates/README.md) records keep
 their historical source and binary identities.
+
+The [hosted run at `5885331`](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) subsequently completed all five jobs successfully. [ci.json](ci.json) preserves both the earlier pending snapshot and the later executed observation; the reference fixtures remain limited and do not certify full transform or mobile-target parity.
