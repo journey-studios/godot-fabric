@@ -739,13 +739,32 @@
     }
   },
   "hosted": {
-    "thisSliceCI": "pending",
+    "thisSliceCI": {
+      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765",
+      "headCommit": "534d455851bdca0f03e5ad53b9090242d04e2855",
+      "status": "in_progress",
+      "verifiedJobStatus": {
+        "contracts": "success",
+        "native-cold-start": "in_progress",
+        "reference-ios": "in_progress",
+        "reference-android": "in_progress"
+      },
+      "getterArtifactAudited": false
+    },
     "precedingDocumentCI": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202",
     "precedingDocumentCIScope": "Five jobs;2723 Document,193/233 interest,186 query faults. Does not certify this getter fixture.",
     "previousPages": "https://github.com/journey-studios/godot-fabric/actions/runs/37235105858",
     "previousPagesDataCommit": "b2e46551ed1456419ba9c2423f0f5affe8062dd9",
     "previousFullPublicAndLocalJSONVerified": true,
-    "newPublication": "pending"
+    "newPublication": {
+      "workflow": "https://github.com/journey-studios/godot-fabric/actions/runs/37236872732",
+      "receipt": "publication.json",
+      "dataCommit": "534d455851bdca0f03e5ad53b9090242d04e2855",
+      "buildAndDeploy": "success",
+      "fullPublicAndLocalJSONVerified": true,
+      "onlyRemovedGeneratedField": "publication",
+      "mainIntegration": false
+    }
   },
   "limitations": [
     "Only one self-restoring publicInstance getter on a real View canonical slot with both flags enabled is executed.",

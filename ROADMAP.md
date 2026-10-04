@@ -1010,12 +1010,16 @@ stateNode/canonical faults, permanent/proxy/root accessors, reentrant
 stop/retirement, other flags/categories, complete priorities, hardware/mobile,
 performance and dev renderer remain open. The preceding Document CI passed
 five jobs and 2,723 Document checks; this new getter fixture has its own hosted
-CI and publication pending. No new GF, checkpoint, dependency, weight or
+CI tracked separately. No new GF, checkpoint, dependency, weight or
 denominator closes. Regression gates pass 250 Node/13 Python, 2,723 Document,
 193/233 interest, 186 query faults, integrated181/206, 22 examples/2,250,
 consumer30/40, fresh SDK pack/verify, loader89/21, 13 adapters/213 and two
 portable processor/geometry tests each. The refreshed query-fault baseline
 retains twelve negatives; no assertion is relaxed. Details are in the receipt.
+[Pages37236872732](docs/evidence/pointer-resolver-faults/publication.json)
+passed build/deploy with data534d455; the full public JSON and local API match
+that commit. Source remains outside main. Getter CI37236875765 is in progress
+with contracts passed; native/mobile jobs and artifact audit remain pending.
 
 ## M1 — Complete the native UI tree
 

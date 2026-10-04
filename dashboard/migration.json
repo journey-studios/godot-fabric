@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Getter de ref preserva batch nativo; pointerup e reentrância pendentes"
   },
-  "updatedAt": "2026-10-04T21:37:48.868082+00:00",
+  "updatedAt": "2026-10-04T21:46:13.385922+00:00",
   "source": {
     "commit": "b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
     "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
@@ -2797,6 +2797,19 @@
     }
   ],
   "activity": [
+    {
+      "id": "resolver-getter-pages-534d455-confirmed",
+      "at": "2026-10-04T21:46:13.385922+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37236872732SUCCESSbuild/deploy;renderer mainadad606/dados534d455fora main. JSONpúblicocompletoigualgitshow534d455 removendo somente publication;APIlocal4318igual. Inclui getter65/85,3negativos,23pins e15gates. CI37236875765 emprogressocomcontracts sucesso; native/mobile/artifact pendentes. Nenhumcheckpoint/GF/peso/denominador novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236872732"
+    },
     {
       "id": "resolver-getter-source-pin-b3920e1",
       "at": "2026-10-04T21:37:48.868082+00:00",

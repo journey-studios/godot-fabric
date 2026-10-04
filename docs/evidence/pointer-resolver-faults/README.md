@@ -115,3 +115,10 @@ CI for this getter fixture is pending. The preceding
 [Document/root CI](https://github.com/journey-studios/godot-fabric/actions/runs/37233393202)
 passed five jobs with its own 2,723 Document checks; that run does not cover this
 later correction. Local evidence and public dashboard publication are separate.
+
+[Pages publication](publication.json) at data `534d455` passed build/deploy;
+its full public JSON equals the committed data after removing only generated
+`publication`, and the local live API equals that data commit. The source remains
+outside main. [Getter CI](https://github.com/journey-studios/godot-fabric/actions/runs/37236875765)
+is in progress at the same head: contracts passed; native/iOS/Android and the
+new artifact audit remain pending. Publication success is separate from CI.
