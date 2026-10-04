@@ -54,6 +54,12 @@ is insufficient: the runner also checks error logs and an acceptance marker.
 Native negative cases require explicit failure without crash/timeout and with
 balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
 
+## Host contract investigations
+
+- [Pointer transport and capture lifetime](pointer-capture-boundary.md): pinned
+  EventTarget flags, pending/active capture, removal and commit-order constraints.
+  This is source investigation, distinct from executed focus/runtime proof.
+
 ## Useful next experiments
 
 - Text baseline and onTextLayout, then span interaction and explicit font invalidation.

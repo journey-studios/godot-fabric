@@ -86,6 +86,15 @@ Original source links explain RawText replacement/null ownerDocument and
 imperative native IDs reverting on a children-only commit. GF-08 remains open
 for complete refs/commands and original mobile differentials.
 
+The [original TextInputState/focus record](focus/README.md) adds 175 headless /
+189 native checks, 12 pixels and two captures. Previous-host and eligibility
+controls fail 23/160 and 11/175. Its [native command complement](focus/commands.json)
+passes 112 checks / 40 owner observations with eight exact argument rejections,
+recovery and nine input registrations cleared across two applications. GF-08/
+GF-12 remain open; physical keyboard/IME, multiline and mobile focus acceptance
+are separate. [Capture lifetime research](../research/pointer-capture-boundary.md)
+is source investigation rather than an executed pointer capability.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

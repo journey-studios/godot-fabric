@@ -45,7 +45,8 @@
     "test:adapters:native": "node scripts/adapter-registry-check.mjs",
     "test:adapters:loader": "node scripts/adapter-loader-check.mjs",
     "test:adapters:runtime": "node scripts/adapter-runtime-check.mjs",
-    "test:transforms:guards": "node scripts/transform-guards-check.mjs"
+    "test:transforms:guards": "node scripts/transform-guards-check.mjs",
+    "test:focus:commands": "node --test tests/focus-commands-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

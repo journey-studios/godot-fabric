@@ -108,3 +108,26 @@ A later completed observation records [run37177820811](https://github.com/journe
 at `1699e5c`: contracts, native-cold-start, reference-ios, reference-android and
 parity-comparison all passed. The earlier pending snapshot is retained. This
 certifies those hosted lanes, not a new full focus/mobile differential.
+
+## Native command argument and recovery complement
+
+`npm run test:focus:commands` passes **112 checks** and **40 independent native
+focus-owner observations**. Original renderer dispatch sends null, object,
+string and nonempty-array arguments to both focus and blur. Each of the eight
+calls reaches the native empty-array guard, reports exactly one expected
+diagnostic and preserves focus, State and editing events. Original Codegen
+commands recover after every rejection. Two shared roots and an independent
+Hermes application keep committing; readonly and retained removed/stopped refs
+cannot steal focus. All nine mounted inputs are explicitly checked as
+unregistered/disconnected after final cleanup. [Curated receipt](commands.json).
+
+The dedicated bundle does not modify the examples bundle. The existing native
+host and all 47 recorded native inputs remain unchanged. The native CI now runs
+this fixture and retains its report/log artifact; a CI configuration is distinct
+from completed hosted evidence. The test is headless and does not extend the
+hardware/mobile claims of the graphical focus example.
+
+[Pointer transport/capture research](../../research/pointer-capture-boundary.md)
+records the next lifetime prerequisite and the pinned EventTarget baseline.
+It does not claim capture support, a reproduced crash or an approved cleanup
+solution.

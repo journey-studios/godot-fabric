@@ -630,6 +630,24 @@ crash, consistent with [upstream issue #111645](https://github.com/godotengine/g
 GF-02 remains In progress; the [evidence record](docs/evidence/cold-start.md)
 distinguishes containment, local verification and the remaining engine boundary.
 
+### Focus command boundary complement (2026-10-04)
+
+The [original-dispatch guard fixture](docs/evidence/focus/commands.json) passes
+**112 checks / 40 native focus-owner observations**. Eight malformed focus/blur
+calls reach exact argument diagnostics, preserve focus/State/events and allow
+later valid commands and React commits across two roots plus an independent
+application. Readonly/removed/stopped targets retain no focus authority; all
+nine input registrations and native lifetimes clear at shutdown. This is a
+headless native complement on the unchanged focus host; CI now runs it, with
+hosted results recorded separately. No new checkpoint or full GF closes.
+
+Before pointer capture, prove selective lifetime cleanup at the commit boundary.
+The [source investigation](docs/research/pointer-capture-boundary.md) separates
+upstream default EventTarget flags from missing pointer transport and pending/
+active capture retirement. It is not a runtime/crash proof or a new approved
+architecture decision. Remaining HostInstance/input acceptance continues in
+sequence 3; hardware/IME, hidden trees and mobile differentials remain open.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

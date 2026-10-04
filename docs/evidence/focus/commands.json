@@ -1,0 +1,926 @@
+{
+  "format": "godot-fabric.focus-command-guards/v1",
+  "at": "2026-10-04T04:58:20.144403+00:00",
+  "mode": "macOS arm64/headless; official Godot Compatibility; Release GDExtension",
+  "godot": "4.7.2-stable (official)",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "node": "v22.23.3",
+  "command": "npm run test:focus:commands",
+  "implementationCommit": null,
+  "runtimeImplementationCommit": "3b09b37acf735664301d3ddaf9ab275519893267",
+  "nativeHostSha256": "6abafb9f751b1b75f477b76d0db76dc9d3c4a897a91d76f158cbffc564845f2e",
+  "bundleSha256": "604e3d4ad1ac3d34b39dcd611c3620db0c17161ce9fedd7a2b5a68f9518069d2",
+  "sourceSha256": {
+    "tests/focus-command-fixture.jsx": "54af2c346208269adf7cd36347ce597a9b0222807a531602b6d3b75c6b429e6f",
+    "tests/focus_commands.gd": "926c2b444d09e4810a03116bbf2c1f2bc7c740671b837ac59eddbe1149c8882a",
+    "tests/focus-commands-native.test.mjs": "dccad54740fb75fa5e61681fb3fbe897230799db28ab612de7098e1ebd81683e",
+    ".fallowrc.json": "f63ad92d12831c14b1a445236cfedc9f3bfd08150b1fd1ebf354f648476a9b65",
+    ".github/workflows/contracts.yml": "5a7d8f9f02fcd534ba6958c80f420fa8f131c0fba5423344de597a65136c502f",
+    "package.json": "85fa247bfd68e67bab9cccc58d90035202cfeefe92a3eb897b4705ed6b244987",
+    "docs/research/pointer-capture-boundary.md": "3ac04faee4635249c576838a68e52b8c8df476a66cf92b451856f00e96de1eab",
+    "docs/research/README.md": "81c3f499d888f1b96c3c1771a2808ce0f4854042f5be5f8b343a3d10b6f4120e",
+    "docs/evidence/README.md": "2a1e19bbabea237b073321f9c9d5ece7d962546057efe41de162bee3f20b3f53"
+  },
+  "sourcesCheckedAgainstCommit": false,
+  "checks": [
+    {
+      "name": "Original AppRegistry mounts two shared roots and an independent application",
+      "passed": true
+    },
+    {
+      "name": "Each application evaluates only the isolated command bundle once",
+      "passed": true
+    },
+    {
+      "name": "Independent application owns a distinct Hermes runtime",
+      "passed": true
+    },
+    {
+      "name": "Public input refs are registered in their application singleton",
+      "passed": true
+    },
+    {
+      "name": "Both applications initialize without a native diagnostic",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: initial original Codegen focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: initial original Codegen focus",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/null reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/null rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/null preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after focus/null rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/null recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/null recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/null recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/null recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/null unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after focus/null",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/null reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/null rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/null preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after blur/null rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/null recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/null recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/null recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/null recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/null unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after blur/null",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/object reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/object rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/object preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after focus/object rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/object recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/object recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/object recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/object recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/object unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after focus/object",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/object reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/object rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/object preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after blur/object rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/object recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/object recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/object recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/object recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/object unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after blur/object",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/string reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/string rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/string preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after focus/string rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/string recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/string recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/string recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/string recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/string unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after focus/string",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/string reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/string rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/string preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after blur/string rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/string recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/string recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/string recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/string recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/string unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after blur/string",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/nonempty reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/nonempty rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed focus/nonempty preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after focus/nonempty rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/nonempty recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/nonempty recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/nonempty recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: focus/nonempty recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: focus/nonempty unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after focus/nonempty",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/nonempty reports exactly the native empty-array guard",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/nonempty rejected",
+      "passed": true
+    },
+    {
+      "name": "Malformed blur/nonempty preserves actual focus, public State and editing events",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root and independent application commit after blur/nonempty rejection",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/nonempty recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/nonempty recovery focus",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/nonempty recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: blur/nonempty recovery blur",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: blur/nonempty unrelated root recovery",
+      "passed": true
+    },
+    {
+      "name": "Valid original Codegen commands add no diagnostic after blur/nonempty",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: readonly original Codegen commands",
+      "passed": true
+    },
+    {
+      "name": "Direct readonly commands preserve native focus and the shared State",
+      "passed": true
+    },
+    {
+      "name": "Committed removal disconnects the retained public input and its original registry entry",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: removed public ref commands",
+      "passed": true
+    },
+    {
+      "name": "Retained removed ref cannot focus, blur, emit editing events or add native authority",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: independent original Codegen focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: independent original Codegen focus",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: native cross-application blur",
+      "passed": true
+    },
+    {
+      "name": "Application stop unregisters both shared roots and disconnects their retained ref",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: stopped application stale commands",
+      "passed": true
+    },
+    {
+      "name": "Stopped application commands cannot steal another owner's focus or change retired diagnostics",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: independent blur after other owner stop",
+      "passed": true
+    },
+    {
+      "name": "Original RN singleton and public State agree: independent blur after other owner stop",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: independent recovery after other owner stop",
+      "passed": true
+    },
+    {
+      "name": "Actual Viewport owner and LineEdit.has_focus agree: final stop",
+      "passed": true
+    },
+    {
+      "name": "Final stop releases application roots: shared",
+      "passed": true
+    },
+    {
+      "name": "Final stop releases scheduled work and retirement scopes: shared",
+      "passed": true
+    },
+    {
+      "name": "Final original registry and all actual event callbacks agree with public State: shared",
+      "passed": true
+    },
+    {
+      "name": "Final stop releases application roots: independent",
+      "passed": true
+    },
+    {
+      "name": "Final stop releases scheduled work and retirement scopes: independent",
+      "passed": true
+    },
+    {
+      "name": "Final original registry and all actual event callbacks agree with public State: independent",
+      "passed": true
+    },
+    {
+      "name": "Native Create/Delete lifetimes are balanced: A",
+      "passed": true
+    },
+    {
+      "name": "Native Create/Delete lifetimes are balanced: B",
+      "passed": true
+    },
+    {
+      "name": "Native Create/Delete lifetimes are balanced: C",
+      "passed": true
+    },
+    {
+      "name": "Only eight deliberate command diagnostics survive final cleanup",
+      "passed": true
+    }
+  ],
+  "focusOwners": [
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "initial original Codegen focus"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/null rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "focus/null recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "focus/null recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/null unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/null rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "blur/null recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "blur/null recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/null unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/object rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "focus/object recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "focus/object recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/object unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/object rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "blur/object recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "blur/object recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/object unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/string rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "focus/string recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "focus/string recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/string unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/string rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "blur/string recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "blur/string recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/string unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/nonempty rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "focus/nonempty recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "focus/nonempty recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "focus/nonempty unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/nonempty rejected"
+    },
+    {
+      "actual": "A-input",
+      "expected": "A-input",
+      "passed": true,
+      "stage": "blur/nonempty recovery focus"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "blur/nonempty recovery blur"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "blur/nonempty unrelated root recovery"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "readonly original Codegen commands"
+    },
+    {
+      "actual": "B-input",
+      "expected": "B-input",
+      "passed": true,
+      "stage": "removed public ref commands"
+    },
+    {
+      "actual": "C-input",
+      "expected": "C-input",
+      "passed": true,
+      "stage": "independent original Codegen focus"
+    },
+    {
+      "actual": "C-input",
+      "expected": "C-input",
+      "passed": true,
+      "stage": "stopped application stale commands"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "independent blur after other owner stop"
+    },
+    {
+      "actual": "C-input",
+      "expected": "C-input",
+      "passed": true,
+      "stage": "independent recovery after other owner stop"
+    },
+    {
+      "actual": "",
+      "expected": "",
+      "passed": true,
+      "stage": "final stop"
+    }
+  ],
+  "cases": [
+    {
+      "command": "focus",
+      "kind": "null",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 1,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "blur",
+      "kind": "null",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 2,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "focus",
+      "kind": "object",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 3,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "blur",
+      "kind": "object",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 4,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "focus",
+      "kind": "string",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 5,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "blur",
+      "kind": "string",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 6,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "focus",
+      "kind": "nonempty",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 7,
+      "editingEventsUnchanged": true
+    },
+    {
+      "command": "blur",
+      "kind": "nonempty",
+      "beforeFocusedKey": "B-input",
+      "afterRejectedFocusedKey": "B-input",
+      "recoveryFocusedKey": "B-input",
+      "errorCount": 8,
+      "editingEventsUnchanged": true
+    }
+  ],
+  "expectedErrors": [
+    "focus requires an empty argument array",
+    "blur requires an empty argument array",
+    "focus requires an empty argument array",
+    "blur requires an empty argument array",
+    "focus requires an empty argument array",
+    "blur requires an empty argument array",
+    "focus requires an empty argument array",
+    "blur requires an empty argument array"
+  ],
+  "afterStop": {
+    "independent": {
+      "stopped": true,
+      "runtimeId": 26776438227,
+      "rootCount": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "pendingWork": 0,
+      "pendingRootRetirements": 0,
+      "errors": []
+    },
+    "shared": {
+      "stopped": true,
+      "runtimeId": 26759661009,
+      "rootCount": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "pendingWork": 0,
+      "pendingRootRetirements": 0,
+      "errors": [
+        "focus requires an empty argument array",
+        "blur requires an empty argument array",
+        "focus requires an empty argument array",
+        "blur requires an empty argument array",
+        "focus requires an empty argument array",
+        "blur requires an empty argument array",
+        "focus requires an empty argument array",
+        "blur requires an empty argument array"
+      ]
+    }
+  },
+  "registrationsAfterStop": {
+    "independent": {
+      "C-input": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 2
+      },
+      "C-readonly": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 4
+      },
+      "C-victim": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 6
+      }
+    },
+    "shared": {
+      "A-input": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 2
+      },
+      "A-readonly": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 4
+      },
+      "A-victim": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 6
+      },
+      "B-input": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 12
+      },
+      "B-readonly": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 14
+      },
+      "B-victim": {
+        "connected": false,
+        "editable": false,
+        "focused": false,
+        "nativeFocused": false,
+        "registered": false,
+        "tag": 16
+      }
+    }
+  },
+  "reportSha256": "540ca6cf08f77285b54079f1e9ec116f46fd15f7affb0a53ba16244ea7667b8c",
+  "logSha256": "28676d84b07a6c39f2eb040efa16f2edf2c2790c2ae58ffc8c06fa0853603711",
+  "limits": [
+    "Headless native owner/command proof does not establish physical keyboard/IME or mobile focus differentials.",
+    "This complement changes tests/CI/research only; runtime inputs and prior focus fixture remain byte-identical.",
+    "Pointer capture source investigation is not an executed implementation or reproduced crash.",
+    "Source pin follows the complement commit."
+  ],
+  "contracts": {
+    "command": "npm run test:contracts",
+    "nodeTests": 207,
+    "pythonTests": 13,
+    "passed": true,
+    "logSha256": "d8da68f6fce881e61d72e21563a8bedc0b475c9ef0d0117adb413259d4417f30"
+  }
+}

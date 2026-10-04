@@ -89,6 +89,7 @@ jobs:
       - run: npm run test:runtime
       - run: npm run test:application
       - run: npm run test:modules
+      - run: npm run test:focus:commands
       - run: npm run test:services
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -99,6 +100,8 @@ jobs:
             build/native-modules.log
             build/metrics-errors-report.json
             build/metrics-errors.log
+            build/focus-commands-report.json
+            build/focus-commands.log
             build/services-boundaries-report.json
             build/services-boundaries.log
             build/services-lifetime-report.json
