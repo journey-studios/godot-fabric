@@ -744,5 +744,126 @@
     "verificationSourcePins": 3,
     "mismatches": [],
     "postCommitPinIsNotANewRun": true
-  }
+  },
+  "reviewReruns": [
+    {
+      "reason": "CodeRabbit review on PR 32: the cross-lane trace now also compares x0, y0, moveX and moveY; vx and vy stay per-lane checks",
+      "commit": "9a6ee3e",
+      "command": "npm run test:responders:pan",
+      "changedSource": {
+        "tests/pan-responder-native.test.mjs": "a89548b646ee6b305580a25c12a5790251c5ca22a03a835c48a38a3f47ad3494"
+      },
+      "otherSourcesMatchPins": true,
+      "nativeHostSha256": "8a5d6e30a23273b1c134e5cb51c6abdddf5e015daafc3168b0031ad11aa27b73",
+      "headlessChecks": 128,
+      "lanes": [
+        {
+          "flagMode": "disabled",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "d1ea8d0817162dfb358740cd7f4a36d28ef15259cab9d81fbfb07b673042a0c8",
+          "bundleMatchesPinnedRun": true,
+          "reportSha256": "28c09442c5494e3562cd16f263d25ac8e0571b7ff5ac21f02fa1961dff9fc867",
+          "logSha256": "b18e1a28f9258b2007bce85fa37363b3c7f25a8e514946b3aff8d85e6a6aa551"
+        },
+        {
+          "flagMode": "imperative-only",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "96bdb5f6c587572400955dc383a68d9df3bc43d9f5746035c47516b800516c24",
+          "bundleMatchesPinnedRun": true,
+          "reportSha256": "9346927efc76e1844e0ad50585bbda14d86e3bce84f892373fdb3f05d91f04fd",
+          "logSha256": "315d06829b9bda8deb9d0ea3f91fb57e8cfb3e7088c329ba7aa300729af4403b"
+        },
+        {
+          "flagMode": "internal-only",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "a5a741eb6bf0aa1ccfdc9584282d06d57a3e46c3e81d8139e6b086a373edf24a",
+          "bundleMatchesPinnedRun": true,
+          "reportSha256": "f421fe8bc9a182a0aac67e15c88817617959d5c799043752e504902357b4b834",
+          "logSha256": "af36d7bf7240deb1bdd0013c07077e611ddf38ecdc664b8e42427e791bfd6055"
+        },
+        {
+          "flagMode": "enabled",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "76c8517d8879172775dc82e2252d1b43bca71ec46e2cd3b9d70d5dcf0522d1b9",
+          "bundleMatchesPinnedRun": true,
+          "reportSha256": "7af4fdb9077b48a17c2eae001c35aaadfd2a2cb32af41be8cf9547936d749f4d",
+          "logSha256": "eff38a363c8fecc3cf9eedee8de9350f9c44eb65fce8c6f106f15a6548041aa4"
+        }
+      ],
+      "crossLaneTrace": [
+        "view",
+        "callback",
+        "x0",
+        "y0",
+        "moveX",
+        "moveY",
+        "dx",
+        "dy",
+        "numberActiveTouches"
+      ],
+      "comparisonSha256": "f25706b4da84a4caeeba2cc4f5672b7cf32bd4f78844d353e71505d42584a4a5",
+      "runnerLogSha256": "aae86904d9131d09318c26ecd5af1323d3a53e8f1e5cdfe082f177565a4fb74b"
+    },
+    {
+      "reason": "CodeRabbit review on PR 32: each normal lane must state all 32 checks",
+      "commit": "54129b3",
+      "tree": "feat/original-pan-responder merged with main 8f80fed (AppState); the PanResponder sources are unchanged",
+      "command": "npm run test:responders:pan",
+      "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
+      "changedSourcesSincePins": {
+        "native/application_runtime.cpp": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+        "tests/pan-responder-native.test.mjs": "fa39b4a69a6f2bd67558a427410a4bdf3e73d65a5294a27736a31d93e25abca3"
+      },
+      "headlessChecks": 128,
+      "lanes": [
+        {
+          "flagMode": "disabled",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "4c3646bea6f22b4479ac0a4a362bfd71bc1cf2ea892ffe8791f82478bdacd227",
+          "reportSha256": "a0a517fbc26c9cf2e64bc1b0250f62f2146bf04778acf55f8fcb69859ab8f609",
+          "logSha256": "5009ba70c7390dd048f68a078c5867c58e56762ef64ad379bc60741fc9f3f43a"
+        },
+        {
+          "flagMode": "imperative-only",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "0bb6893d96eeca038948e96d9a4ff463836bd4986c1d84c05424a62b8807da5f",
+          "reportSha256": "eabfb0fe241e7747bee073d3699e78d347955b0ca7fca4089c71702b270a3220",
+          "logSha256": "71e1ecbb08c751ea57719cd584d6c370fb2f9b3dd8c9c28be3f4d17cbe4db033"
+        },
+        {
+          "flagMode": "internal-only",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "6f22bfda4459dada284ae3e65fce80649b6599b630c82438834a39b918a98bc9",
+          "reportSha256": "34e52e8ea082820f426a6bd8377b601a98b5523be6be061b514ee6ff8ad36e1f",
+          "logSha256": "beb8e80e22e0d69f38fb707a4cad4755dcd8ec8226e01cb222c30f5cc81861bd"
+        },
+        {
+          "flagMode": "enabled",
+          "checks": 32,
+          "passed": 32,
+          "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+          "bundleSha256": "e0839b6d35af095e76fb43c3f61b6e03f85647a3e5a01b58f1f9cc09ef48d73e",
+          "reportSha256": "1e45be24ddc42c67db9198490f28db767e500ac874ad302341f2189dec2ad1c5",
+          "logSha256": "a79cb353c4006ce09e1f8c2b6de0f43dca836078697b2979833af18833b6ce98"
+        }
+      ],
+      "sameCheckIdsAndCallbacksAsPinnedRun": true,
+      "comparisonSha256": "2684ff22f36ebd322be40ba1db37177c504cf953757ba2d3a963573af03f342c",
+      "runnerLogSha256": "a7f4da468f573da450fb4ba63fcf3115ed5d5f127e1bf043beee5cbbb005698e"
+    }
+  ]
 }

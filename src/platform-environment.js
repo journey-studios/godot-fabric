@@ -1,14 +1,20 @@
 import NativeDimensions from "react-native/Libraries/Utilities/Dimensions";
+import RCTDeviceEventEmitter from "react-native/Libraries/EventEmitter/RCTDeviceEventEmitter";
 import { subscribeDimensions, disposeWindowSubscriptions, windowSnapshot } from "./window-dimensions";
 export { default as PixelRatio } from "react-native/Libraries/Utilities/PixelRatio";
+// RN's original AppState, fed by the native module that observes Godot's
+// application lifecycle notifications. It is constructed on first read.
+export { AppState } from "./app-state";
 
 // Políticas explícitas desta surface: tema manual e texto LTR.
-// Não são sondas de acessibilidade, tema ou estado de um sistema móvel.
+// Não são sondas de acessibilidade ou tema do sistema.
 let scheme = "light";
 const appearanceListeners = new Set();
-const stateListeners = new Set();
 const motionListeners = new Set();
 const dimensionSubscriptions = new Set();
+// The device events AppState subscribes to, including its own currentState
+// listener. Counting them never constructs AppState.
+const appStateEvents = ["appStateDidChange", "appStateFocusChange", "memoryWarning"];
 function subscription(listeners, listener) {
   listeners.add(listener);
   return { remove: () => listeners.delete(listener) };
@@ -44,13 +50,6 @@ export const Appearance = {
   },
   addChangeListener: (listener) => subscription(appearanceListeners, listener),
 };
-export const AppState = {
-  currentState: "active",
-  addEventListener(event, listener) {
-    requireEvent(event, "change");
-    return subscription(stateListeners, listener);
-  },
-};
 export const AccessibilityInfo = {
   isReduceMotionEnabled: () => Promise.resolve(false),
   addEventListener(event, listener) {
@@ -62,26 +61,26 @@ export const I18nManager = { isRTL: false };
 export function environmentStats() {
   return {
     theme: scheme,
-    state: AppState.currentState,
     dimensions: dimensionSubscriptions.size,
     appearance: appearanceListeners.size,
-    appState: stateListeners.size,
+    appState: appStateEvents.reduce(
+      (count, type) => count + RCTDeviceEventEmitter.listenerCount(type),
+      0,
+    ),
     reduceMotion: motionListeners.size,
     window: windowSnapshot(),
   };
 }
 export function disposeEnvironment() {
-  AppState.currentState = "inactive";
-  try {
-    stateListeners.forEach((listener) => listener("inactive"));
-  } finally {
-    for (const remove of dimensionSubscriptions) remove();
-    disposeWindowSubscriptions();
-    for (const listeners of [
-      appearanceListeners,
-      stateListeners,
-      motionListeners,
-    ])
-      listeners.clear();
+  // RN sends no AppState event on teardown (Android's onHostDestroy, iOS
+  // invalidation), and the native module stops with the application. Release
+  // the AppState subscriptions as destroying the VM would.
+  for (const type of appStateEvents) {
+    RCTDeviceEventEmitter.removeAllListeners(type);
+  }
+  for (const remove of dimensionSubscriptions) remove();
+  disposeWindowSubscriptions();
+  for (const listeners of [appearanceListeners, motionListeners]) {
+    listeners.clear();
   }
 }

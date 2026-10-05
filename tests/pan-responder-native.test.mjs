@@ -68,6 +68,8 @@ function verify({report, result, log, flagMode}) {
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);
   assert.equal(report.scenario, "native-pan-responder"); assert.equal(report.reactNative, "0.87.1");
   assert.equal(report.flagMode, flagMode); assert.equal(report.displayServer, "headless");
+  // Every normal lane states all 32 checks; the preceding SDK stops at mount.
+  if (!allowPreviousSDK) assert.equal(report.checks.length, 32);
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...report.failures].sort());
@@ -119,11 +121,13 @@ test("the original PanResponder negotiates and tracks gestures from actual Godot
   }
   for (const result of results) verify(result);
   if (allowPreviousSDK || modes.length !== eventTargetProbeModes.length) return;
-  // Both responder implementations (legacy plugin and native dispatch) agree.
+  // Both responder implementations (legacy plugin and native dispatch) agree on
+  // every callback and gesture coordinate; velocity is checked per lane above.
+  const trace = row => [row.view, row.callback, row.x0, row.y0, row.moveX, row.moveY, row.dx, row.dy, row.numberActiveTouches];
   for (const id of Object.keys(cases)) {
-    const reference = reports.disabled.stages[id].react.events.map(row => [row.view, row.callback, row.dx, row.dy, row.numberActiveTouches]);
+    const reference = reports.disabled.stages[id].react.events.map(trace);
     for (const mode of eventTargetProbeModes)
-      assert.deepEqual(reports[mode].stages[id].react.events.map(row => [row.view, row.callback, row.dx, row.dy, row.numberActiveTouches]), reference, `${mode} ${id}`);
+      assert.deepEqual(reports[mode].stages[id].react.events.map(trace), reference, `${mode} ${id}`);
   }
   await writeFile(path.join(root, "build/pan-responder-comparison.json"), JSON.stringify({scenario: "native-pan-responder", modes,
     nativeHostSha256, reports, scope: {actualNativeInput: true, publicDefaultEnabled: false, hardwareCertified: false}}, null, 2) + "\n");
