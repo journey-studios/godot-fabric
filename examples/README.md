@@ -157,8 +157,9 @@ the imperative flag. Capture listeners run at phase 1 and bubble at phase 3, the
 root query reads `1=true` or `1=false`/`25=true` after the target's and ancestors'
 false pairs, and button-less mouse motion qualifies too. Its
 [receipt](../docs/evidence/pointer-document-move/README.md) includes a retained
-control that drops the owner Document from the root query. Hosted CI for this
-matrix is pending.
+control that drops the owner Document from the root query. Hosted run 37351245158
+repeated the 1,932 headless checks
+([receipt](../docs/evidence/pointer-document-move/hosted-ci.json)).
 
 | Before Document Move | After two samples reach DocC and DocB |
 | --- | --- |

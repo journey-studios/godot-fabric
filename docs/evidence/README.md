@@ -175,7 +175,8 @@ phase 3 after false lookups on the target and its ancestors; isolation, removal
 between samples, Cancel, a JSX sentinel and mouse hover are covered. A retained
 control that drops the owner Document from the root query fails 52/40 probe
 checks in the two delivering lanes, and the independent oracle rejects it. Hosted
-CI pending.
+run 37351245158 passed the same 1,932 checks with identical IDs, bundles and stages
+([receipt](pointer-document-move/hosted-ci.json)).
 
 The [View hover record](pointer-hover/README.md) extends the native interest query
 to `pointerover/out/enter/leave` (offsets 0/23, 2/24, 26/28, 27/29) for mouse and

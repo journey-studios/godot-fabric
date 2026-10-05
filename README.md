@@ -175,7 +175,9 @@ The [Document pointermove example](examples/pointer-document-move/README.md)
 certifies original Document and documentElement Move listeners in eight
 original/current × flag lanes: 1,932 headless checks and 330 viewport checks.
 Only the installed current query delivers, at phase 1 for capture and 3 for
-bubble, and a retained control that drops the owner Document fails.
+bubble, and a retained control that drops the owner Document fails. Hosted CI
+repeated the 1,932 headless checks
+([receipt](docs/evidence/pointer-document-move/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-document-move/README.md).
 
 The [hover example](examples/pointer-hover/README.md) lets original View

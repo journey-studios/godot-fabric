@@ -1482,8 +1482,14 @@ Python, static analysis and the publication scan pass, and native/SDK bytes are
 those of the View Move slice. Root query faults, once/AbortSignal, refs, mutation
 and reentry for Document Move remain open. All 20 executed code/configuration
 inputs match implementation c2ad8f5 via git show/SHA-256 (execution base
-2d57c9b/dirty retained). Hosted CI for this slice is pending. No whole GF,
-checkpoint, weight or denominator closes.
+2d57c9b/dirty retained). Hosted Contracts run 37351245158 passed all five jobs at
+46876eb (merge checkout 9515c0d); its [audited artifact](docs/evidence/pointer-document-move/hosted-ci.json)
+repeats the 1,932 headless checks of the eight lanes with identical IDs, bundles
+and stages, no lane error line, and all 20 tracked inputs match c2ad8f5 in
+the checkout tree. [Pages 37352204907](docs/evidence/pointer-document-move/publication.json)
+deployed this record from main a6af188, and the live public JSON and local API match
+it. The viewport and negative control stay local. No whole GF, checkpoint, weight
+or denominator closes.
 
 ### View hover native interest (2026-10-05)
 
