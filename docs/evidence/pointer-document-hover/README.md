@@ -84,3 +84,8 @@ exports mobile e performance.
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
+
+As 22 fontes de código/configuração executadas (19 produtoras do bundle e
+3 de verificação) correspondem à implementação `b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0` por
+`git show`/SHA-256. A execução partiu de 3264107 com as mudanças desta fatia ainda
+locais. Este pin pós-commit não é uma nova corrida.

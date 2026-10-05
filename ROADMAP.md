@@ -1644,7 +1644,9 @@ and root-path controls were rerun with the new bundles and still reproduce
 host). The contracts gates (260 Node/13 Python, static analysis, publication
 scan), `test:recovery` and the 25 native suites pass on the same host, including
 Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
-158, root path 82 and 22 examples. Viewport capture, root query
+158, root path 82 and 22 examples. All 22 executed code/configuration inputs
+match implementation b880b9b via git show/SHA-256 (execution base 3264107/dirty
+retained). Viewport capture, root query
 faults at hover offsets, once/AbortSignal, refs, mutation and reentry during
 Document hover, pen hover and capture while hovering remain open. Hosted CI for
 this slice is pending. No whole GF, checkpoint, weight or denominator closes.

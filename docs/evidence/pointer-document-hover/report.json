@@ -5,7 +5,7 @@
   "at": "2026-10-05T19:16:32.758841+00:00",
   "executionBaseCommit": "32641075801c062c85d31e5703a280e3e10e6a6e",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": null,
+  "implementationCommit": "b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
   "dependsOn": "View hover native interest (#26) and the root hover path (#27): native and SDK bytes are unchanged here",
   "environment": {
     "godot": "4.7.2-stable (official)",
@@ -866,5 +866,16 @@
         "logSha256": "d49e9b99c96d6fa9c90f1ae5953b5602457743a045406da0dc6e8feaa030fd2f"
       }
     }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 22,
+    "pinSetCounts": {
+      "sourcePins": 19,
+      "verificationSourcePins": 3
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
   }
 }

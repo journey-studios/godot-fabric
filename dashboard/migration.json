@@ -10,8 +10,8 @@
   },
   "updatedAt": "2026-10-05T19:16:44.503302+00:00",
   "source": {
-    "commit": "71a64c2d00b2607e29665190a461bf6197fe31c7",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/71a64c2d00b2607e29665190a461bf6197fe31c7",
+    "commit": "b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
     "scope": "Document hover em quatro flags originais: listeners originais de pointerover/out/enter/leave em Document e documentElement sobre o hover nativo de View e o caminho da raiz. Oito lanes (interesse original/current × disabled, imperative-only, internal-only, enabled) com 1530 checks headless. Só a consulta current instalada (D) entrega; documentElement também exige I. Over/out chegam em fase 1 (capture) e 3 (bubble); enter/leave só aos listeners capture, em fase 1, para container, pai e folha ao entrar e sair da superfície; entre a folha e a área vazia a raiz fica no caminho e nada é propagado; listeners bubble de enter/leave na raiz nunca rodam. A raiz lê o caminho de over/out e os Maps capture de enter/leave; Views leem só Maps vazios. Toque, controles manuais, sentinela JSX, isolamento de B e remoção cobertos. Controle negativo retido (raiz ignorando o Document dono para hover) falha 34/22 checks e o oráculo independente rejeita. Só testes mudaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -528,7 +528,7 @@
             },
             {
               "label": "Document hover: 1530 checks em oito lanes e controle negativo",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-matrix/docs/evidence/pointer-document-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0/docs/evidence/pointer-document-hover/README.md"
             }
           ]
         },
@@ -731,7 +731,7 @@
             },
             {
               "label": "Document hover: 1530 checks em oito lanes e controle negativo",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-matrix/docs/evidence/pointer-document-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0/docs/evidence/pointer-document-hover/README.md"
             }
           ]
         },
@@ -986,7 +986,7 @@
             },
             {
               "label": "Document hover: 1530 checks em oito lanes e controle negativo",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-matrix/docs/evidence/pointer-document-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0/docs/evidence/pointer-document-hover/README.md"
             }
           ]
         },
@@ -1440,7 +1440,7 @@
             },
             {
               "label": "Document hover: 1530 checks em oito lanes e controle negativo",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-matrix/docs/evidence/pointer-document-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0/docs/evidence/pointer-document-hover/README.md"
             }
           ]
         },
@@ -3251,7 +3251,7 @@
         "GF-13"
       ],
       "message": "Document hover em oito lanes: 1530 headless. Só a consulta current com D entrega; documentElement também exige I. Over/out nos listeners do Document e do documentElement em fases 1 e 3; enter/leave só no capture, para container, pai e folha ao entrar e sair da superfície; nada entre a folha e a área vazia. Controle negativo (raiz sem o Document dono para hover) falha 34/22 checks e o oráculo rejeita. Down 2731, Document Up 6459 e Document Move 1940 intactos. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-matrix/docs/evidence/pointer-document-hover/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0/docs/evidence/pointer-document-hover/README.md"
     },
     {
       "id": "pointer-root-path-local-verified-20261005",
