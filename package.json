@@ -65,7 +65,8 @@
     "test:pointers:root-path": "node --test tests/pointer-root-path-native.test.mjs",
     "test:pointers:documents:hover": "node --test tests/pointer-document-hover-native.test.mjs",
     "test:pointers:click": "node --test tests/pointer-click-native.test.mjs",
-    "test:responders:pan": "node --test tests/pan-responder-native.test.mjs"
+    "test:responders:pan": "node --test tests/pan-responder-native.test.mjs",
+    "test:responders:shared-touches": "node --test tests/shared-touches-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",
