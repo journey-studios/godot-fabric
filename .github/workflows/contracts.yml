@@ -303,6 +303,19 @@ jobs:
             build/pointer-click-original-*.log
             build/pointer-click-current-*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:responders:pan
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pan-responder
+          path: |
+            build/pan-responder-*-report.json
+            build/pan-responder-comparison.json
+            build/pan-responder-disabled.log
+            build/pan-responder-imperative-only.log
+            build/pan-responder-internal-only.log
+            build/pan-responder-enabled.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
