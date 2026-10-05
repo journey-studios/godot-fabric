@@ -156,6 +156,16 @@ lookup cannot even resolve the View's public ref (a one-shot getter on
 diagnostic, and the next lookup proceeds normally.
 [Resolver evidence](docs/evidence/pointer-up-resolver-faults/README.md).
 
+The isolated [pointermove example](examples/pointer-move/README.md) extends the
+same native interest to original View Move Maps. Real drags and button-less mouse
+motion reach listeners on the target and on its parent as trusted moves, one React
+commit each, at the Default priority that RN's pinned mapping gives unique
+Continuous moves; a View without Move listeners still gets its original TouchMove.
+Its [evidence](docs/evidence/pointer-move/README.md) records 135 headless / 159
+viewport checks, 20 actual pixels and the preceding host's 45 failures with the
+same SDK bundle. Document pointermove, hover events, Move lookup faults and
+pointer capture remain open; hosted CI is pending.
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

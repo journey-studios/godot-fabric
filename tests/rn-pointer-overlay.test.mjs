@@ -108,7 +108,7 @@ test('the overlay changes native lifetime boundaries without replacing upstream 
 });
 
 
-test('the generated native path query extends exactly Down and Up with typed bubble/capture pairs', () => {
+test('the generated native path query extends exactly Down, Up and Move with typed bubble/capture pairs', () => {
   const files = renderPointerOverlay(read('h'), read('cpp'), readBinding('h'), readBinding('cpp'));
   const source = files[base + '.cpp'];
   const helper = source.slice(source.indexOf('static bool hasPointerInterestForGodot('),
@@ -117,14 +117,15 @@ test('the generated native path query extends exactly Down and Up with typed bub
   assert.match(helper, /query\(node, static_cast<std::size_t>\(offsets\[0\]\)\) \|\|\s*query\(node, static_cast<std::size_t>\(offsets\[1\]\)\)/);
   assert.match(helper, /if \(interested\(target\)\) return true;/);
   assert.match(helper, /ancestors\.rbegin\(\)/);
-  assert.equal((source.match(/hasPointerInterestForGodot\(/g) ?? []).length, 3,
-    'one shared helper and exactly two native categories invoke it');
+  assert.equal((source.match(/hasPointerInterestForGodot\(/g) ?? []).length, 4,
+    'one shared helper and exactly three native categories invoke it');
   assert.match(source, /type == "topPointerDown" && hasPointerInterestForGodot\([\s\S]*?\{ViewEvents::Offset::PointerDown, ViewEvents::Offset::PointerDownCapture\}/);
   assert.match(source, /type == "topPointerUp" && hasPointerInterestForGodot\([\s\S]*?\{ViewEvents::Offset::PointerUp, ViewEvents::Offset::PointerUpCapture\}/);
+  assert.match(source, /type == "topPointerMove" && hasPointerInterestForGodot\([\s\S]*?\{ViewEvents::Offset::PointerMove, ViewEvents::Offset::PointerMoveCapture\}/);
   const host = fs.readFileSync(path.join(root, 'native/application_runtime.cpp'), 'utf8');
   const whitelist = host.slice(host.indexOf('pointer_processor().setListenerInterestForGodot('),
     host.indexOf('auto root = roots.find(node.getSurfaceId());', host.indexOf('pointer_processor().setListenerInterestForGodot(')));
   assert.deepEqual([...whitelist.matchAll(/static_cast<std::size_t>\(Offset::(Pointer\w+)\)/g)].map(match => match[1]),
-    ['PointerDown', 'PointerDownCapture', 'PointerUp', 'PointerUpCapture']);
+    ['PointerDown', 'PointerDownCapture', 'PointerUp', 'PointerUpCapture', 'PointerMove', 'PointerMoveCapture']);
   assert.match(whitelist, /using Offset = rn::ViewEvents::Offset;/);
 });

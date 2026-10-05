@@ -73,7 +73,7 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
       builder.onLoad({ filter: /\.js$/ }, async ({ path: filename }) => {
         if (filename === path.join(platformRoot, "pointer-listener-query.js") && pointerInterestMode === "current")
           return {loader: "js", contents: `
-import {hasPointerDownListenerForGodot, hasPointerUpListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
+import {hasPointerDownListenerForGodot, hasPointerUpListenerForGodot, hasPointerMoveListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
 import * as Flags from ${JSON.stringify(path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js"))};
 import {getOwnerDocument} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/NodeInternals.js"))};
 import {isReactNativeDocumentElementInstanceHandle, getPublicInstanceFromReactNativeDocumentElementInstanceHandle} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js"))};
@@ -86,6 +86,8 @@ export function installPointerListenerQuery() {
       // capture for the remaining native pointer categories.
       let query, capture;
       switch (offset) {
+        case 1: query = hasPointerMoveListenerForGodot; capture = false; break;
+        case 25: query = hasPointerMoveListenerForGodot; capture = true; break;
         case 34: query = hasPointerDownListenerForGodot; capture = false; break;
         case 35: query = hasPointerDownListenerForGodot; capture = true; break;
         case 36: query = hasPointerUpListenerForGodot; capture = false; break;

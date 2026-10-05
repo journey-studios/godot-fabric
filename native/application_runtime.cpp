@@ -664,14 +664,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (pointer_listener_query) throw jsi::JSError(rt, "Pointer listener query is already installed");
       pointer_listener_query.emplace(args[0].asObject(rt).asFunction(rt));
       pointer_processor().setListenerInterestForGodot([this](const rn::ShadowNode &node, std::size_t offset) {
-        // Only Down/Up are opted in. Other native filter categories retain
-        // their preceding behavior until separately verified.
+        // Only Down/Up/Move are opted in. Other native filter categories
+        // (hover, click, capture notifications) retain their preceding
+        // behavior until separately verified.
         if (inactive() || !pointer_listener_query) return false;
         using Offset = rn::ViewEvents::Offset;
         if (offset != static_cast<std::size_t>(Offset::PointerDown) &&
             offset != static_cast<std::size_t>(Offset::PointerDownCapture) &&
             offset != static_cast<std::size_t>(Offset::PointerUp) &&
-            offset != static_cast<std::size_t>(Offset::PointerUpCapture)) return false;
+            offset != static_cast<std::size_t>(Offset::PointerUpCapture) &&
+            offset != static_cast<std::size_t>(Offset::PointerMove) &&
+            offset != static_cast<std::size_t>(Offset::PointerMoveCapture)) return false;
         auto root = roots.find(node.getSurfaceId());
         if (root == roots.end() || root->second->stopping) return false;
         auto current = ui->getNewestCloneOfShadowNode(node);

@@ -127,6 +127,26 @@ Both actual 680×160 frames have 12 fixed pixel assertions and matching React
 counters, with saved PNG pixels decoded independently. The updated stage is
 starts A1/B1 and ups A1/B0, before later capture-only and Cancel controls.
 
+The [pointermove probe](pointer-move/README.md) extends the same native interest
+to original View `pointermove` listeners. `npm run test:pointers:move` is outside
+the launcher catalog. Real drag samples qualify listeners on the target (bubble
+`1=true`, capture-only `1=false`/`25=true`, phase 2) and on its parent (phase 3
+or 1 after the target's empty pair); button-less mouse motion qualifies too. Each
+move is one trusted callback with its typed/star Raw and one React commit, at the
+Default priority the pinned mapping gives RN's unique Continuous moves. B without
+listeners reads its whole path false, in order, and emits no pointer move. Its
+[receipt](../docs/evidence/pointer-move/README.md) records 135/135 headless,
+159/159 viewport checks and 45 visible old-host failures with the same SDK bundle.
+Document pointermove, hover events, Move lookup faults and capture remain open;
+hosted CI is pending.
+
+| Before any move | After the bubble case |
+| --- | --- |
+| [![Native targets with zero Move counters](../docs/evidence/pointer-move/initial.png)](pointer-move/README.md) | [![Only A's orange Move bar grows after two drag samples](../docs/evidence/pointer-move/updated.png)](pointer-move/README.md) |
+
+Both 680×160 frames have ten fixed pixel assertions and matching React counters
+(moves A0/B0, then A2/B0), with saved PNG pixels decoded independently.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

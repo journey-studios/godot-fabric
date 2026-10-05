@@ -232,6 +232,17 @@ jobs:
             build/pointer-up-comparison.json
             build/pointer-up-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:move
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-move
+          path: |
+            build/pointer-move-report.json
+            build/pointer-move-current-report.json
+            build/pointer-move-comparison.json
+            build/pointer-move-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

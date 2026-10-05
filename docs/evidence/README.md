@@ -146,6 +146,20 @@ descriptor; with capture and bubble the Up is still delivered. A retained contro
 whose getter silently succeeds fails nine probe checks and the independent oracle.
 Hosted CI pending.
 
+The [View pointermove record](pointer-move/README.md) extends the native interest
+query to original View Move Maps at offsets 1/25: 135/135 corrected headless and
+159/159 viewport checks, with 20 actual pixels in two captures. The same SDK
+bundle, 15 test/SDK producer pins and 19 RN pins retain 45 visible normative
+failures on the preceding host; the two native producers are evidenced by the
+build records, which differ only in the host, those producers and the generated
+`PointerEventsProcessor` tree. Listeners on the target (phase 2) and on its parent
+(phases 1/3) and button-less mouse motion each deliver one trusted move per
+dispatched sample with its typed/star Raw and one commit at the pinned Default
+priority; B without listeners reads its whole path false, in order. The host
+flushes RN's queue after every input event, so per-frame merging comes from
+Godot's input accumulation. The three preceding-host controls reproduce 8/12/3
+failures with the new bundles. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

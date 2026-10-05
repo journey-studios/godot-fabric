@@ -9,7 +9,7 @@ const interceptedInstaller = function(query) {
   if (installations !== 0 || typeof query !== "function") throw Error("Query-fault probe expects exactly one SDK installation");
   const result = installer(function(target, offset, isRootHandle) {
     const matched = fault != null && target === fault.targetref && offset === fault.offset && fault.remaining > 0;
-    const row = {sequence: ++sequence, targetTag: target?.tag ?? null, offset, matched,
+    const row = {sequence: ++sequence, targetTag: target?.tag ?? null, rootHandle: isRootHandle === true, offset, matched,
       action: matched ? fault.mode : "delegate", label: matched ? fault.label : null, resultKind: null, result: null};
     rows.push(row);
     if (matched) {
