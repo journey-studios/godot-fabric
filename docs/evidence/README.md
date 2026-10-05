@@ -128,6 +128,16 @@ captured/null-target Up, full lifecycle/events, mobile or hardware. Regression
 and SDK checks passed, and its [hosted CI](pointer-up/hosted-ci.json) passed in
 run 37241023275; public flags stay off.
 
+The [View Up component fault record](pointer-up-faults/README.md) arms one-shot
+throw/non-boolean faults on the actual View ref at offsets 36/37, in a second
+application: 240 headless and 268 viewport checks. A bubble fault still lets the
+same View's capture listener qualify; an unqualified View hands the lookup to its
+owning-surface ancestors and root, all false, while TouchEnd and contact cleanup
+survive and each consumed fault leaves one diagnostic. A retained control that
+qualifies a failed lookup fails fifteen probe checks and the independent oracle.
+The three preceding-host controls reproduce their 8/12/3 normative failures with
+the new bundles. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

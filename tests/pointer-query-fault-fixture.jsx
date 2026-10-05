@@ -69,12 +69,15 @@ function capability(name) {
     methods: ["addEventListener", "removeEventListener", "dispatchEvent"].map(key => typeof ref[key]),
     targetTag: ref.tag, connected: ref.isConnected, point: [75, 55], query: queryFaultControl.snapshot()};
 }
+// capture is true, false or "both" (one capture and one bubble listener).
 function configure(name, capture = false, type = "pointerdown") {
   if (!["pointerdown", "pointerup"].includes(type)) throw Error("Probe supports only declared pointerdown/pointerup types");
   reset(name); const panel = panels.get(name), ref = panel.refs.only;
-  const callback = function(event) { record(name, type + (capture ? "-capture" : "-bubble"), this, event); };
-  ref.addEventListener(type, callback, capture);
-  panel.bindings.push({ref, callback, capture, type});
+  for (const phase of capture === "both" ? [true, false] : [capture]) {
+    const callback = function(event) { record(name, type + (phase ? "-capture" : "-bubble"), this, event); };
+    ref.addEventListener(type, callback, phase);
+    panel.bindings.push({ref, callback, capture: phase, type});
+  }
   return {targetTag: ref.tag, capture, type};
 }
 function arm(name, caseId) {

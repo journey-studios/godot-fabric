@@ -14,6 +14,8 @@ const allowOriginalNegative = process.argv.includes("--allow-original-negative")
 const capture = process.argv.includes("--capture");
 assert.ok(!capture || !allowOriginalNegative, "Native graphical captures run only against the corrected host");
 const lane = capture ? "capture" : allowOriginalNegative ? "original" : "current";
+// Checks added by the second-application component fault phase.
+const FAULT_CHECKS = 178;
 const digest = value => createHash("sha256").update(value).digest("hex");
 const normativeSuffixes = ["Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
   "Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
@@ -40,6 +42,73 @@ function nativeEvent(value, label, type) {
   assert.equal(row.payloadId, raw[0].payloadId); assert.equal(row.nativeTarget, raw[0].target);
   assert.equal(row.timeStamp, row.nativeTimeStamp); assert.equal(row.timeStamp, raw[0].timeStamp);
   assert.ok(raw[1].sequence < row.sequence);
+}
+// Component query faults at the Up offsets, in a second application after the
+// healthy one stopped. Target rows are [offset, action, result]; every other
+// lookup is an owning-surface ancestor or the root, read 36 then 37 and false.
+function componentFaults(report) {
+  const stages = report.stages, causes = [];
+  const cases = [
+    ["throw36", false, 36, "throw", [], [[36, "throw", null], [37, "delegate", false]], [[36, "delegate", true]]],
+    ["throw36-both", "both", 36, "throw", ["pointerup-capture", "pointerup-bubble"], [[36, "throw", null], [37, "delegate", true]], [[36, "delegate", true]]],
+    ["throw37", true, 37, "throw", [], [[36, "delegate", false], [37, "throw", null]], [[36, "delegate", false], [37, "delegate", true]]],
+    ["nonboolean36", false, 36, "nonboolean", [], [[36, "nonboolean", null], [37, "delegate", false]], [[36, "delegate", true]]],
+    ["nonboolean37", true, 37, "nonboolean", [], [[36, "delegate", false], [37, "nonboolean", null]], [[36, "delegate", false], [37, "delegate", true]]],
+    ["armed37", false, 37, "throw", ["pointerup-bubble"], [[36, "delegate", true]], [[36, "delegate", true]]],
+  ];
+  for (const [id, captureMode, offset, mode, expected, rows, recoveryRows] of cases) {
+    const prefix = "fault/" + id, consumed = rows.some(row => row[1] !== "delegate"), delivered = expected.length > 0;
+    assert.equal(stages[prefix + "/registration"].capture, captureMode);
+    assert.deepEqual(stages[prefix + "/fault"], {targetTag: stages[prefix + "/registration"].targetTag, offset, mode, remaining: 1, label: id});
+    const up = stages[prefix + "/up"], value = up.react;
+    assert.deepEqual(labels(value), [...expected, "touchend"]);
+    nativeEvent(value, "touchend", "topTouchEnd"); clean(value); terminalClean(up);
+    if (delivered) {
+      nativeEvent(value, expected[0], "topPointerUp");
+      assert.ok(value.events.filter(row => row.type === "pointerup").every(row => row.trusted && row.phase === 2 && row.currentPriority === value.discretePriority));
+    } else assert.deepEqual(value.raw.map(row => row.type), ["topTouchEnd", "topTouchEnd"]);
+    assert.equal(value.panels.A.ups, value.baselineUps + expected.length); assert.equal(value.panels.A.starts, value.baselineStarts);
+    assert.equal(up.after.commits, up.before.commits + (delivered ? 1 : 0));
+    const own = value.query.rows.filter(row => row.targetTag === value.targetTag), others = value.query.rows.filter(row => row.targetTag !== value.targetTag);
+    assert.deepEqual(own.map(row => [row.offset, row.action, row.result]), rows.map(([o, a, r]) => [o, a, a === "nonboolean" ? 1 : r]));
+    assert.ok(own.every(row => row.matched === (row.action !== "delegate") && row.resultKind === (row.action === "delegate" ? "boolean" : row.action === "throw" ? "throw" : "number")));
+    if (delivered) assert.deepEqual(others, []);
+    else {
+      // Owning-surface ancestors, then the root handle (no tag) as the final pair.
+      const ownerTags = new Set(up.after.nodes.map(node => node.tag));
+      assert.ok(others.length >= 2 && others.length % 2 === 0 && others.at(-1).targetTag === null && others.at(-2).targetTag === null);
+      assert.ok(others.every(row => row.targetTag === null || ownerTags.has(row.targetTag)));
+      for (let index = 0; index < others.length; index += 2) {
+        const [bubble, captured] = others.slice(index, index + 2);
+        assert.deepEqual([bubble.offset, captured.offset], [36, 37]); assert.equal(bubble.targetTag, captured.targetTag);
+        assert.ok(bubble.sequence < captured.sequence && bubble.sequence > own.at(-1).sequence);
+      }
+      assert.ok(others.every(row => row.action === "delegate" && !row.matched && row.resultKind === "boolean" && row.result === false));
+    }
+    assert.equal(up.consumed, consumed); assert.equal(value.query.fault.remaining, consumed ? 0 : 1);
+    assert.equal(up.errorsAfter.length, up.errorsBefore.length + (consumed ? 1 : 0));
+    if (consumed) {
+      const cause = mode === "throw" ? "GF pointer query deliberate fault: " + id : "Pointer listener query must return a boolean";
+      assert.ok(up.errorsAfter.at(-1).startsWith("E_POINTER_LISTENER_QUERY: ") && up.errorsAfter.at(-1).includes(cause));
+      causes.push(cause);
+    }
+    assert.equal(stages[prefix + "/cleared"], true);
+    const recovery = stages[prefix + "/recovery/up"], healthy = recovery.react;
+    const recoveryLabels = captureMode === "both" ? ["pointerup-capture", "pointerup-bubble"] : captureMode ? ["pointerup-capture"] : ["pointerup-bubble"];
+    assert.deepEqual(labels(healthy), [...recoveryLabels, "touchend"]); nativeEvent(healthy, "touchend", "topTouchEnd"); clean(healthy); terminalClean(recovery);
+    assert.deepEqual(healthy.query.rows.map(row => [row.offset, row.action, row.result]), recoveryRows);
+    assert.ok(healthy.query.rows.every(row => row.targetTag === healthy.targetTag)); assert.equal(healthy.query.fault, null);
+    assert.equal(healthy.panels.A.ups, healthy.baselineUps + recoveryLabels.length); assert.equal(recovery.after.commits, recovery.before.commits + 1);
+    assert.deepEqual(recovery.application.errors, up.errorsAfter);
+  }
+  const b = stages["fault/B-healthy/up"];
+  assert.deepEqual(labels(b.react), ["pointerup-bubble", "touchend"]); nativeEvent(b.react, "pointerup-bubble", "topPointerUp"); clean(b.react); terminalClean(b);
+  assert.deepEqual(report.faultExpectedErrors, causes); assert.equal(causes.length, 5);
+  const stopped = stages["fault/stopped"];
+  assert.ok(stopped.stopped && !stopped.pointerListenerQueryInstalled && stopped.rootCount === 0);
+  assert.equal(stopped.errors.length, causes.length);
+  stopped.errors.forEach((line, index) => assert.ok(line.startsWith("E_POINTER_LISTENER_QUERY: ") && line.includes(causes[index])));
+  return causes;
 }
 function terminalClean(stage, remaining = 0) {
   assert.equal(stage.after.pointer.activePointers, 0); assert.equal(stage.after.pointer.activeTouches, 0);
@@ -131,7 +200,9 @@ test("original imperative View pointerup qualifies native interest while origina
     }
   }
 
-  assert.equal(report.checks.filter(row => !row.name.startsWith("up-capture/")).length, 62, "All executed base check IDs remain present");
+  const base = row => !row.name.startsWith("up-capture/") && !row.name.startsWith("fault/");
+  assert.equal(report.checks.filter(base).length, 62, "All executed base check IDs remain present");
+  assert.equal(report.checks.filter(row => row.name.startsWith("fault/")).length, allowOriginalNegative ? 0 : FAULT_CHECKS, "The old-host control never reaches the second-application fault phase");
   assert.equal(report.checks.filter(row => row.name.startsWith("up-capture/")).length, capture ? 28 : 0, "Twelve actual pixels plus counters and save/dimensions per native frame");
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   assert.deepEqual([...report.expectedOriginalFailures].sort(), [...expectedFailures].sort());
@@ -139,7 +210,12 @@ test("original imperative View pointerup qualifies native interest while origina
   assert.deepEqual([...failures].sort(), allowOriginalNegative ? [...expectedFailures].sort() : [], "Only eight visible Up normative failures qualify as the old-host control");
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...failures].sort());
-  assert.equal([...log.matchAll(/^ERROR:/gm)].length, checkErrors.length, "No diagnostic or unrelated error is hidden");
+  // Only the second application's configured faults print native diagnostics.
+  const nativeErrors = [...log.matchAll(/^ERROR: FABRIC_ERROR: (.+)$/gm)].map(match => match[1]);
+  assert.equal([...log.matchAll(/^ERROR:/gm)].length, checkErrors.length + nativeErrors.length, "No diagnostic or unrelated error is hidden");
+  const faultCauses = allowOriginalNegative ? [] : componentFaults(report);
+  assert.deepEqual(report.faultExpectedErrors, faultCauses); assert.equal(nativeErrors.length, faultCauses.length);
+  nativeErrors.forEach((line, index) => assert.ok(line.startsWith("E_POINTER_LISTENER_QUERY: ") && line.includes(faultCauses[index])));
   assert.match(log, allowOriginalNegative ? /POINTER_UP_ORIGINAL_NEGATIVE: 8/ : /POINTER_UP_PASSED: \d+/);
   assert.equal(bundles.nativeDispatchMode, "experimental"); assert.equal(bundles.pointerInterestMode, "current");
   for (const file of ["tests/pointer-up-fixture.jsx", "tests/pointer-up-probe.gd", "tests/pointer-up-native.test.mjs",
@@ -225,8 +301,8 @@ test("original imperative View pointerup qualifies native interest while origina
   if (!allowOriginalNegative) {
     const originalBytes = await optionalFile("build/pointer-up-original-report.json"), original = originalBytes == null ? null : JSON.parse(originalBytes);
     if (original != null) {
-      assert.ok(original.originalNegativeObserved); assert.deepEqual(original.checks.filter(row => !row.name.startsWith("up-capture/")).map(row => row.name),
-        report.checks.filter(row => !row.name.startsWith("up-capture/")).map(row => row.name), "Native capture only adds separate optional checks");
+      assert.ok(original.originalNegativeObserved); assert.deepEqual(original.checks.filter(base).map(row => row.name),
+        report.checks.filter(base).map(row => row.name), "Native capture and the second-application faults only add separate checks");
       assert.deepEqual(original.provenance.bundles.originalReactNativeSources, bundles.originalReactNativeSources);
       // The final causal control executes the current SDK bundle on both hosts.
       // Only the two verified native producer sources differ.

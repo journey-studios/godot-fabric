@@ -35,9 +35,10 @@ globalThis.godotInstallPointerListenerQuery = interceptedInstaller;
 
 export const queryFaultControl = {
   setFault({targetref, offset, mode, remaining = 1, label}) {
+    // Down interest uses offsets 34/35 and Up interest 36/37 (bubble/capture).
     if (targetref == null || typeof targetref.addEventListener !== "function" ||
-      ![34, 35].includes(offset) || !["throw", "nonboolean"].includes(mode) || remaining !== 1 || typeof label !== "string")
-      throw Error("Query-fault configuration requires a real ref, offset34/35 and one explicit failure");
+      ![34, 35, 36, 37].includes(offset) || !["throw", "nonboolean"].includes(mode) || remaining !== 1 || typeof label !== "string")
+      throw Error("Query-fault configuration requires a real ref, a native pointer offset and one explicit failure");
     fault = {targetref, offset, mode, remaining, label};
     return {targetTag: targetref.tag, offset, mode, remaining, label};
   },

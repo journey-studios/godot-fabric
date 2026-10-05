@@ -1302,6 +1302,42 @@ pointerId pairing remain open. All 71 executed code/configuration inputs match
 implementation eda1bf2 via git show/SHA-256 (execution base f5660c6/dirty
 retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
+
+### View Up component query faults (2026-10-05)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[View Up fault evidence](docs/evidence/pointer-up-faults/README.md) arms one-shot
+throw and non-boolean faults on the actual View ref at offsets 36/37, in a second
+application started after the healthy View Up probe stops: **240 headless checks**
+(the previous 62 IDs preserved in order) and **268 graphical checks** with the
+same 24 pixels. The preceding-host control never runs this phase.
+
+The existing native catch rejects only the failed component lookup. A bubble
+throw on a View with capture and bubble listeners still qualifies through capture
+(36=throw, 37=true) and delivers both listeners at phase 2 in one commit. A
+throw or non-boolean result with no other qualifying lookup on the View hands the
+query to its owning-surface ancestors and the root, each read 36 then 37 and
+false; no Up is delivered, while the original TouchEnd, its Raw pair and contact
+cleanup survive. Each consumed fault leaves one retained E_POINTER_LISTENER_QUERY
+diagnostic; a capture fault stays armed when the bubble lookup qualifies first.
+Recoveries and a final B Up are healthy, and the second application stops with
+exactly the five consumed diagnostics. A retained control that returns true for a
+throw-mode fault fails fifteen probe checks, and the independent oracle rejects
+that report on its own.
+
+Only tests changed: the shared fault bootstrap accepts Up offsets, the shared
+fixture can register capture and bubble on one View, and the View Up probe/oracle
+gain the stages. The View Up, query-fault and resolver-fault preceding-host
+controls were rerun on their preserved hosts with the new bundles and reproduce
+their 8, 12 and 3 normative failures. Query faults 186, resolver faults 65,
+Document Up 6,451, Down 2,723, contracts 255 Node/13 Python, 22 examples and
+static analysis pass; native/SDK bytes are unchanged. Resolver getter faults on
+Up, repeated faults or faults during retirement/stop, other flag branches and
+mixed Document/View paths remain open. All 81 executed code/configuration inputs
+match implementation f9a3b25 via git show/SHA-256 (execution base 988af3c/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
