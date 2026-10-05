@@ -1298,7 +1298,9 @@ Only tests changed: the shared bootstrap accepts Up offsets 36/37 (Down unchange
 the stages. Contracts 255 Node/13 Python, 22 examples and static analysis pass;
 native/SDK bytes are unchanged. Component and resolver faults on Up, repeated
 faults or faults during retirement/stop, captured/no-hit routing and Down/Up
-pointerId pairing remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+pointerId pairing remain open. All 71 executed code/configuration inputs match
+implementation eda1bf2 via git show/SHA-256 (execution base f5660c6/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
