@@ -241,6 +241,15 @@ events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
 checks, and a host whose focus outranks the pause fails 5, which the independent
 oracle rejects. Hosted CI pending.
 
+The [Appearance record](appearance/README.md) runs RN's original `Appearance` and
+`useColorScheme` in two roots of one application, fed through the Callable the
+module registers with Godot's `DisplayServer` for system theme changes: 67
+headless checks. An override wins over the system, `unspecified` follows it
+again, an unsupported system starts `light`, change events are sent only when the
+effective scheme changes and stop sends nothing. The preceding host fails exactly
+the 45 Appearance checks, and a host that emits for every callback fails 17,
+which the independent oracle rejects. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

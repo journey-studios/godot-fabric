@@ -1783,6 +1783,52 @@ implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
 executed tree is the implementation's). Hosted CI for this slice is pending. No
 whole GF, checkpoint, weight or denominator closes.
 
+### Appearance and useColorScheme from the system theme (2026-10-05)
+
+GF-21 remains **In progress**; only its first-slice checkpoint becomes done,
+since AppState (#31) was its first verified slice, and the full item, contract,
+parity and targets remain open. The
+[Appearance evidence](docs/evidence/appearance/README.md) replaces the SDK's
+manual theme with React Native's original `Appearance` and `useColorScheme`,
+read through the public `react-native` import and fed by Godot's system theme and
+the application's `setColorScheme` override: **67 headless checks**, with two
+roots of one Hermes application re-rendering the same scheme.
+
+The native `Appearance` TurboModule implements RN's generated
+`NativeAppearanceCxxSpec` and emits `appearanceChanged` through the original
+`TurboModule::emitDeviceEvent`. One system appearance per application reads
+`DisplayServer.is_dark_mode_supported()`/`is_dark_mode()` and, when the module
+starts, registers the application's `_on_system_theme_changed` as DisplayServer's
+system theme callback (never in editor processes). The scheme is an explicit
+`light`/`dark` override, otherwise the system's, `light` when the system has no
+dark style, as both RN platforms report; `auto` and `unspecified` follow the
+system again and unknown overrides fail with `E_ARGUMENT`. As on iOS and Android,
+`appearanceChanged` is sent only when the effective scheme changes, so a repeated
+or overridden system change re-renders nothing. Stop disposes the module without
+an event, `disposeEnvironment()` releases Appearance's device subscription, and
+`useColorScheme` no longer throws, so chart-kit's `ChartKitProvider` can follow
+the system. The headless DisplayServer has no system theme: the probe supplies
+the system scheme through a validation meta and calls the very Callable the
+module registers.
+
+On the preceding host (main `2ec988e`, whose native tree is `8f80fed`'s) the
+same bundle mounts and stops both roots, but RN's Appearance finds no module and
+reads `null`: exactly the 45 normative checks fail. A retained host that emits
+for every callback and override fails 17 checks, and the independent oracle
+rejects its report. The contracts gates (260 Node/13 Python, static analysis,
+publication scan), `test:recovery`, the 29 native suites (22 examples/2,250
+checks, Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move
+1,940, hover 158, root path 82, Document hover 1,530, click 728, PanResponder
+128, AppState 75, Appearance 67) and the native SDK batch pass on the same host.
+Every bundle that imports `react-native` changes again; the AppState control,
+rerun on its preserved host with the new bundle, still fails exactly 62. Real OS
+theme changes, a game's own DisplayServer theme callback (the last registration
+wins), accent colors, `PlatformColor`, per-window themes and Godot mobile
+exports remain open. All 72 executed code/configuration inputs match
+implementation a402a1f via git show/SHA-256 (execution base 2ec988e; the
+executed tree is the implementation's). Hosted CI for this slice is pending. No
+whole GF, other checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

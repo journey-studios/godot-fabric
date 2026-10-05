@@ -1,0 +1,1032 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-appearance",
+  "status": "verified-local-headless-preceding-host-control-retained-sabotage-and-regressions",
+  "at": "2026-10-05T23:11:30.740955+00:00",
+  "executionBaseCommit": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+  "executedTreeSha": "e7beccaa579f80959ad38c2d2a9473ac8d64b024",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "a402a1f9f74ec6e4426f108ff93fe731afa3a4a0",
+  "dependsOn": "AppState from the Godot application lifecycle (journey-studios/godot-fabric#31)",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "headlessSystemThemeSupported": false,
+    "nativeHostSha256": "6cfaf126b25da671be960536d847f9c5cec91c9c0fecd8567470bf4b0daf33c5"
+  },
+  "commands": [
+    "npm run test:appearance",
+    "node tests/appearance-native.test.mjs --allow-original-negative (preceding host installed in addons/)",
+    "node tests/appearance-native.test.mjs (retained sabotage host), then verifyAppearanceReport on its report"
+  ],
+  "headlessChecks": 67,
+  "normativeChecks": 45,
+  "systemThemeDelivery": {
+    "callable": "Callable(application, \"_on_system_theme_changed\")",
+    "registeredWith": "DisplayServer.set_system_theme_change_callback when the Appearance module starts",
+    "systemValue": "application meta validation_system_color_scheme (the headless DisplayServer has no system theme)",
+    "productionPathFromTheCallback": true
+  },
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Corrected host, headless; every check passes.",
+      "nativeHostSha256": "6cfaf126b25da671be960536d847f9c5cec91c9c0fecd8567470bf4b0daf33c5",
+      "checks": 67,
+      "passed": 67,
+      "failed": 0,
+      "checkIdDigestSha256": "4a64e08f448b1a56d2d169d1115a8b7924b527ff40b820ff924120a048846625",
+      "bundleSha256": "2adf1706c731e773dbc1749668748c879857d4daad701fbdfa3427ccfe200754",
+      "reportSha256": "aadc268e22798a0223519ac1023f32f05004825419f504fca468fc1590fd0ac3",
+      "logSha256": "a4d109ec6945d17fb1946e568c00ad4b87409391ad0f99804bf124c14678f00e"
+    },
+    {
+      "lane": "original",
+      "meaning": "Preceding host replaying the same SDK bundle; expected negative control.",
+      "nativeHostSha256": "60825a18b7313fe889f34b3fddffdc9f50453465a7bcdb56eda02eba042cbfe4",
+      "checks": 67,
+      "passed": 22,
+      "failed": 45,
+      "checkIdDigestSha256": "4a64e08f448b1a56d2d169d1115a8b7924b527ff40b820ff924120a048846625",
+      "bundleSha256": "2adf1706c731e773dbc1749668748c879857d4daad701fbdfa3427ccfe200754",
+      "reportSha256": "81320178abeca4dee434ebf287563419c12ae3ed89bee535273a10493e4b2387",
+      "logSha256": "6106f14bb32c034e72c2c56658065c3f583fb69e552164722d935a564e4f849b"
+    },
+    {
+      "lane": "sabotage",
+      "meaning": "Retained sabotage: appearanceChanged is sent for every system callback and override.",
+      "nativeHostSha256": "ddf9eb07f6521736c18257b349b23061c98197940198519d3ee9abe53399ffd8",
+      "checks": 67,
+      "passed": 50,
+      "failed": 17,
+      "checkIdDigestSha256": "4a64e08f448b1a56d2d169d1115a8b7924b527ff40b820ff924120a048846625",
+      "bundleSha256": "2adf1706c731e773dbc1749668748c879857d4daad701fbdfa3427ccfe200754",
+      "reportSha256": "f66fdbfa62ac0d4bf315dc01bb36ce9a60d983828e23e9712066ae3b50b8f1bd",
+      "logSha256": "e05e308ef66246c275371607ed16d556b187bccb7e1560943df99e0481f70bec"
+    }
+  ],
+  "precedingHostControl": {
+    "nativeHostSha256": "60825a18b7313fe889f34b3fddffdc9f50453465a7bcdb56eda02eba042cbfe4",
+    "builtFrom": "8f80fed (native tree unchanged at 2ec988e)",
+    "buildRecordInputs": 56,
+    "buildRecordMatchesExecutionBase": true,
+    "checks": 67,
+    "normativeFailures": 45,
+    "structuralChecksPassed": 22,
+    "sameSDKBundle": true,
+    "initialColorScheme": null,
+    "initialBackgrounds": {
+      "A": "ef4444ff",
+      "B": "ef4444ff"
+    },
+    "jsLog": [
+      [
+        "A",
+        "cleanup"
+      ],
+      [
+        "B",
+        "cleanup"
+      ]
+    ]
+  },
+  "negativeControls": {
+    "emitsEveryCallback": {
+      "sabotage": "native/system_appearance.h publish() sent appearanceChanged without comparing with the last scheme sent",
+      "nativeHostSha256": "ddf9eb07f6521736c18257b349b23061c98197940198519d3ee9abe53399ffd8",
+      "checks": 67,
+      "failed": 17,
+      "failedChecks": [
+        "auto-unchanged/Every listener receives RN's change exactly once per effective scheme change",
+        "auto-unchanged/The native module holds the effective scheme and counts each change once",
+        "override-dark/The native module holds the effective scheme and counts each change once",
+        "override-light/The native module holds the effective scheme and counts each change once",
+        "override-same/Every listener receives RN's change exactly once per effective scheme change",
+        "override-same/The native module holds the effective scheme and counts each change once",
+        "remove/Every listener receives RN's change exactly once per effective scheme change",
+        "remove/The native module holds the effective scheme and counts each change once",
+        "stop/Stop disposes the Appearance module and releases its observer",
+        "stop/The stopped application keeps counting system changes without emitting",
+        "system-dark-repeat/Every listener receives RN's change exactly once per effective scheme change",
+        "system-dark-repeat/The native module holds the effective scheme and counts each change once",
+        "system-light-overridden/Every listener receives RN's change exactly once per effective scheme change",
+        "system-light-overridden/The native module holds the effective scheme and counts each change once",
+        "unknown-override/The native module holds the effective scheme and counts each change once",
+        "unmount-a/The native module holds the effective scheme and counts each change once",
+        "unspecified/The native module holds the effective scheme and counts each change once"
+      ],
+      "independentNodeOracleRejected": true,
+      "oracleFirstRejectedStep": "system-dark-repeat",
+      "oracleRunBypassedProbeStatusGates": true,
+      "oracleLogSha256": "c7678f11766eaf0e8c705adf549b71f5fc8a4259b5ce7641af6425a6b6ed6b43",
+      "headerRestoredToPreSabotageBytes": true,
+      "rebuiltHostSha256MatchesExecutedHost": true
+    }
+  },
+  "refreshedPrecedingHostControls": {
+    "app-state": {
+      "nativeHostSha256": "e626a31dfe7e15b7a61640b7c4a88bb47710596644fba85ddd81c1901a2c3520",
+      "checks": 75,
+      "normativeFailures": 62,
+      "bundleSha256": "2cf03ef035e562596e69a165f29b6c71ba752046ddb781f48e228b544f82b5d2",
+      "currentLaneChecks": 75,
+      "currentLanePassed": true,
+      "reportSha256": "581630a1417132f1a13e5aa3013e9958566528b95078dfd31131dd652a61d3b2"
+    }
+  },
+  "executedObservations": {
+    "initial": {
+      "colorScheme": "light",
+      "renders": [
+        {
+          "root": "A",
+          "scheme": "light",
+          "sequence": 1
+        },
+        {
+          "root": "B",
+          "scheme": "light",
+          "sequence": 2
+        }
+      ],
+      "nativeBackgrounds": {
+        "A": "e2e8f0ff",
+        "B": "e2e8f0ff"
+      },
+      "deviceListeners": 1,
+      "native": {
+        "callbackRegistered": true,
+        "events": 0,
+        "listeners": 1,
+        "notifications": 0,
+        "observed": true,
+        "observers": 1,
+        "override": "unspecified",
+        "overrides": 0,
+        "scheme": "light",
+        "system": {
+          "dark": false,
+          "supported": false
+        },
+        "unobserved": 0
+      }
+    },
+    "steps": {
+      "system-dark": {
+        "actions": [
+          [
+            "system",
+            "dark"
+          ]
+        ],
+        "emitted": [
+          "dark"
+        ],
+        "listeners": [
+          "library",
+          "A",
+          "B"
+        ],
+        "rerenders": {
+          "A": [
+            "dark"
+          ],
+          "B": [
+            "dark"
+          ]
+        },
+        "nativeBackgrounds": {
+          "A": "0f172aff",
+          "B": "0f172aff"
+        },
+        "colorScheme": "dark",
+        "native": {
+          "scheme": "dark",
+          "override": "unspecified",
+          "system": {
+            "dark": true,
+            "supported": true
+          },
+          "events": 1,
+          "notifications": 1,
+          "overrides": 0
+        }
+      },
+      "system-dark-repeat": {
+        "actions": [
+          [
+            "system",
+            "dark"
+          ]
+        ],
+        "emitted": [],
+        "listeners": [],
+        "rerenders": {},
+        "nativeBackgrounds": {
+          "A": "0f172aff",
+          "B": "0f172aff"
+        },
+        "colorScheme": "dark",
+        "native": {
+          "scheme": "dark",
+          "override": "unspecified",
+          "system": {
+            "dark": true,
+            "supported": true
+          },
+          "events": 1,
+          "notifications": 2,
+          "overrides": 0
+        }
+      },
+      "override-light": {
+        "actions": [
+          [
+            "override",
+            "light"
+          ]
+        ],
+        "emitted": [
+          "light"
+        ],
+        "listeners": [
+          "library",
+          "A",
+          "B"
+        ],
+        "rerenders": {
+          "A": [
+            "light"
+          ],
+          "B": [
+            "light"
+          ]
+        },
+        "nativeBackgrounds": {
+          "A": "e2e8f0ff",
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "light",
+          "system": {
+            "dark": true,
+            "supported": true
+          },
+          "events": 2,
+          "notifications": 2,
+          "overrides": 1
+        }
+      },
+      "system-light-overridden": {
+        "actions": [
+          [
+            "system",
+            "light"
+          ]
+        ],
+        "emitted": [],
+        "listeners": [],
+        "rerenders": {},
+        "nativeBackgrounds": {
+          "A": "e2e8f0ff",
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "light",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 2,
+          "notifications": 3,
+          "overrides": 1
+        }
+      },
+      "override-dark": {
+        "actions": [
+          [
+            "override",
+            "dark"
+          ]
+        ],
+        "emitted": [
+          "dark"
+        ],
+        "listeners": [
+          "library",
+          "A",
+          "B"
+        ],
+        "rerenders": {
+          "A": [
+            "dark"
+          ],
+          "B": [
+            "dark"
+          ]
+        },
+        "nativeBackgrounds": {
+          "A": "0f172aff",
+          "B": "0f172aff"
+        },
+        "colorScheme": "dark",
+        "native": {
+          "scheme": "dark",
+          "override": "dark",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 3,
+          "notifications": 3,
+          "overrides": 2
+        }
+      },
+      "unspecified": {
+        "actions": [
+          [
+            "override",
+            "unspecified"
+          ]
+        ],
+        "emitted": [
+          "light"
+        ],
+        "listeners": [
+          "library",
+          "A",
+          "B"
+        ],
+        "rerenders": {
+          "A": [
+            "light"
+          ],
+          "B": [
+            "light"
+          ]
+        },
+        "nativeBackgrounds": {
+          "A": "e2e8f0ff",
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "unspecified",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 4,
+          "notifications": 3,
+          "overrides": 3
+        }
+      },
+      "auto-unchanged": {
+        "actions": [
+          [
+            "override",
+            "auto"
+          ]
+        ],
+        "emitted": [],
+        "listeners": [],
+        "rerenders": {},
+        "nativeBackgrounds": {
+          "A": "e2e8f0ff",
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "unspecified",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 4,
+          "notifications": 3,
+          "overrides": 4
+        }
+      },
+      "override-same": {
+        "actions": [
+          [
+            "override",
+            "light"
+          ]
+        ],
+        "emitted": [],
+        "listeners": [],
+        "rerenders": {},
+        "nativeBackgrounds": {
+          "A": "e2e8f0ff",
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "light",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 4,
+          "notifications": 3,
+          "overrides": 5
+        }
+      },
+      "unknown-override": {
+        "actions": [
+          [
+            "override",
+            "sepia"
+          ]
+        ],
+        "emitted": [],
+        "listeners": [],
+        "rerenders": {},
+        "nativeBackgrounds": {
+          "A": "e2e8f0ff",
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "light",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 4,
+          "notifications": 3,
+          "overrides": 5
+        }
+      },
+      "remove": {
+        "actions": [
+          [
+            "remove",
+            "A"
+          ],
+          [
+            "override",
+            "unspecified"
+          ],
+          [
+            "system",
+            "dark"
+          ]
+        ],
+        "emitted": [
+          "dark"
+        ],
+        "listeners": [
+          "library",
+          "B"
+        ],
+        "rerenders": {
+          "A": [
+            "dark"
+          ],
+          "B": [
+            "dark"
+          ]
+        },
+        "nativeBackgrounds": {
+          "A": "0f172aff",
+          "B": "0f172aff"
+        },
+        "colorScheme": "dark",
+        "native": {
+          "scheme": "dark",
+          "override": "unspecified",
+          "system": {
+            "dark": true,
+            "supported": true
+          },
+          "events": 5,
+          "notifications": 4,
+          "overrides": 6
+        }
+      },
+      "unmount-a": {
+        "actions": [
+          [
+            "unmount",
+            "A"
+          ],
+          [
+            "system",
+            "light"
+          ]
+        ],
+        "emitted": [
+          "light"
+        ],
+        "listeners": [
+          "library",
+          "B"
+        ],
+        "rerenders": {
+          "B": [
+            "light"
+          ]
+        },
+        "nativeBackgrounds": {
+          "B": "e2e8f0ff"
+        },
+        "colorScheme": "light",
+        "native": {
+          "scheme": "light",
+          "override": "unspecified",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "events": 6,
+          "notifications": 5,
+          "overrides": 6
+        }
+      }
+    },
+    "unknownOverrideError": "Exception in HostFunction: E_ARGUMENT: Appearance.setColorScheme expects light, dark, auto or unspecified",
+    "stop": {
+      "jsLogAfterStop": [
+        [
+          "B",
+          "cleanup"
+        ]
+      ],
+      "colorScheme": "light",
+      "lateChangesReachedJs": 0,
+      "native": {
+        "callbackRegistered": true,
+        "events": 6,
+        "listeners": 1,
+        "notifications": 6,
+        "observed": false,
+        "observers": 1,
+        "override": "unspecified",
+        "overrides": 6,
+        "scheme": "dark",
+        "system": {
+          "dark": true,
+          "supported": true
+        },
+        "unobserved": 1
+      },
+      "retainedMethod": "Exception in HostFunction: E_MODULE_DISPOSED: Appearance",
+      "lookupAfterStop": "Exception in HostObject::get for prop 'Appearance': E_RUNTIME_STOPPED: native module lookup",
+      "disposeEnvironment": {
+        "appearanceDeviceListeners": 0,
+        "colorScheme": "light"
+      }
+    },
+    "initialDark": {
+      "colorScheme": "dark",
+      "renders": [
+        {
+          "root": "C",
+          "scheme": "dark",
+          "sequence": 1
+        }
+      ],
+      "nativeBackgrounds": {
+        "C": "0f172aff"
+      },
+      "native": {
+        "callbackRegistered": true,
+        "events": 0,
+        "listeners": 1,
+        "notifications": 0,
+        "observed": true,
+        "observers": 1,
+        "override": "unspecified",
+        "overrides": 0,
+        "scheme": "dark",
+        "system": {
+          "dark": true,
+          "supported": true
+        },
+        "unobserved": 0
+      }
+    },
+    "counts": {
+      "events": 6,
+      "notifications": 6,
+      "overrides": 6,
+      "unobserved": 1
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "d9f86da77e3b4ad2553ccb482d4d4cf2a44398882adde4d096642fb0c5a9fdb6"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "d4379e320f346113e956c4df3be7549265647257c9c4104501973b3ece1fd66f"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "8c35360768992c86dac27fe457239540a57c0fee304520e2c074a282607194b4"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "77a5dddd11df0b9af5fc79b7e6336cae9e575a823b3ea1490fa8124d65aae70b"
+      },
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 25,
+        "logSha256": "81d052bca651dae6fbf1e55cb04f40a6be4dd75cb4aaf399fe3de3e098fec5ba"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "99155c3b029fdf75b8a8e7bd722cfe573ea16ccf03fe951f7ff75919c60aaa53"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "dece29394b74d49f870c2bec5433b38b1c50f3fe4c49e05a9b55e666766a8b36"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "ff7c71883b0d5e1564996a874656f634364dc2f700fcfc228db64e7c71b0b3a8"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 30,
+        "logSha256": "13df95669ba4907dd99313223700dc9151d07737c8edf29b1b59c4e3668a8641"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 138,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "07318c5fe77a901db85bcd75c4987a6349a2ff96714d2e7061547fa15eb80860"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "fce4b9a33fde60d400c7cac63e617d467eb399c3862abda7c0dcb94fd05b2020"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "69e70d44e85281f887f90c556f87ba2da448f53bf9ede311cf4e62b05ec39136"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "1f3639c108670873a520ebd74845950d95f739efd06fbd80d8faf53f4f7299ba"
+      },
+      "test:appearance": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "cb7d8164cbeb0dd35e4bb899070ce5f9b8053698eba52ff7a6154f6c59b54275"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "f5395b452f9c9115908f47c569d87766bfc4e518adc48f0c980f2fdac405d463"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "b4c83b43552b9277fa1f76439dd5af405dc5ef7faf9b67cc82603cb2be2cf582"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "d6cede35bdc0c5a3a137a5a34477071e734b082626af008304a739885a31a45e"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "82a086a8e9fff11989f34524b4d588183853d2bff23159b15c245958000a03ec"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "cbf07c74fc916bdb07c35f312b9dead89d51863a60bd710c02e15a1f530b0290"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "9624a4227ecfc7814315b19670d309f92fd8df818c8970320b310565cc08032c"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "a400794a07923d644df3061d451aec025b6a60698c527a6b98d174b89e7ea4e2"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "c5ef646a74ea4779efb6b4b39093b74d5f225de08f3348fb55781065509164ae"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "e8ec616e170a994096789468ed2c193e50274086c94704dc0761f5e30c2b2ea5"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 38,
+        "logSha256": "28ad72808f4467b3b4a0c84d5b45e31864804ea2c074a87582aff9495fceda7e"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "f744acaf4775c52ee2eb7c6b6366ec2e5337f3a9ecf309c89484aa74854f3aec"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "3d4cc94f7886ac3ae257f85de544fd3b94f2f1c30244082fec9575dc203cf3bb"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "ab5bd980674a3ae00bcc10861be51c240b7c3a5a21a8ed430c593d85567dc78a"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "67fed452105ee6bea1aef192d5f36a9b9a513aa0c2e68eebc4383dd3d046559c"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "8220887834628ac5b784b9b3671a3963128e8b99c56fecd4fd6b23001e3e3e70"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 30,
+        "logSha256": "4025737a932ecf7ac29ba5239bac87038d90f620d75c173c817c00ec4521207d"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "2a2d1acdb9fbcb790925f3b7b54f672a37fd47accf4c871434be74a681534975"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "d6c62dd643981ce9aaf3d551fda4babdfadca96d098ed91b127cd608928c7b81"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 40,
+        "logSha256": "4216227c1887022fd5513443797733e3f7d1c9f50c321d6d6cb961bf9b259475"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 65,
+        "logSha256": "579d9b6c89d2b412b7c4a54f52870d51b84eda618064c5580b3953357abe01ee"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "2b7e76d4d7c2af7e8c896e2849eb2de693229761d40de73edf89388a7b41eb36"
+      },
+      "test:consumer": {
+        "exitCode": 0,
+        "seconds": 134,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 116,
+        "logSha256": "d9e6ab0dfc5a09270177e9030ab151851aa0b44a4435b6c10266d08fcba6b39c"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 24,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    }
+  },
+  "sourcePins": {
+    "tests/appearance-fixture.jsx": "e3c0c360e8c805640eb5e8404d74eb59960112b5f24798e02b189ab07f9e5dbe",
+    "tests/appearance-probe.gd": "c56e32330722a99870abff6bdc2d49ca8911751a6a7b67846c618dcc13f208e2",
+    "tests/appearance-native.test.mjs": "bec76d6a9ab7a0e0ca64b8969271f5ad0d8d38527027343e6071da6477c0937f",
+    "tests/appearance-oracle.mjs": "78ce14365357655acbe0458b38f018dbfd52e6ac8c5ac0514146ee46b7b8e546",
+    "scripts/appearance-bundle.mjs": "ad742e61603ddd54092b1f8577a44ee2fa83b2e78708e6387fe60636b9823793",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/platform-environment.js": "eabdebe8750b9e3963f9330c1481bf5caf205d17f58588120f31f97e869e2b9e",
+    "src/react-native-platform.jsx": "4d1c46746be0c5d52046933f0b36e235cd1c704e24fcd728e6f63e37275a4a18",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "native/system_appearance.h": "0673d71d92968c6dd335a4bed1d63e9a3e55683e4102d5bd54c7dd7276f48dcd",
+    "native/fabric_application.cpp": "9583db8c8a95c926c0f09d59a11706bfbd3bf7a8bb6d86492721181f89c542e9",
+    "native/fabric_application.h": "e642bda8a528f206e81c74e38737f707f4276fcf231725c1e6cc25125b2deb16",
+    "native/turbo_module_registry.cpp": "c53e6ec47fbd53835f031a0b8e127457c26091a6a0304b48a4ede5844ae7364a",
+    "native/turbo_module_registry.h": "392299982ab1538d0b426829a453d3898dec904e4d19fe116352238398ce0c2b",
+    "native/application_runtime.cpp": "81ff622b20db5f8eb2e05bb347a030cec85fdb7cbff7eedfd8b6d168b19dcea9",
+    "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Utilities/Appearance.js": "460b787a14bbd9f106caa351fc64cf8c367ac401759ddf10410fe746ba62483f",
+    "Libraries/Utilities/NativeAppearance.js": "aa0f6f3cd560314b713b997e4888dd2c2ea1fb3590f3cf96ce90a0b94328ccd6",
+    "src/private/specs_DEPRECATED/modules/NativeAppearance.js": "80b41cdb495b6e18585fbd01dbdee819dc6b9918b2bff6e4e4a363f3a709f81a",
+    "Libraries/Utilities/useColorScheme.js": "a8f6a4ca58c67f8f295d195f80b176ec2ac35c4419b1bb35c1b2825b3c916fc6",
+    "Libraries/EventEmitter/NativeEventEmitter.js": "132e1d5314fde128d56724d26f96b13eb0bbfe56a69e5ac9d17fd6ce297b6d91",
+    "Libraries/EventEmitter/RCTDeviceEventEmitter.js": "a24e33cbb6272ecd5ca580c348434b6444c8a5a36ecdbfca7ae8c3e5ba498ed1",
+    "Libraries/vendor/emitter/EventEmitter.js": "adb61a5de47f0b89f72da0f27a69a9631cf60257beb9b0bc7b5830c081c0e221",
+    "Libraries/TurboModule/TurboModuleRegistry.js": "433e760b8dde773c9f5aaa8832d06f58fe758e83966b2377bb4f240d62820195",
+    "index.js": "5e03e5233650531810ef3129db116e1e534bbf30d85fccf6a10248ef9a088538",
+    "React/CoreModules/RCTAppearance.mm": "c2220b1b6c62acf0e5ca23b678f897fe8f32fb36159b78654caa1bc10d3b72c1",
+    "React/Base/RCTConvert.mm": "2bb1ca67b54c2bb4540217c77e17aef0a5bfa59aa780b989bd5a848f271a1697",
+    "React/Modules/RCTEventEmitter.m": "8dc3fd5e7da3b617970edaa2368c786b5a7edc88c401549da0aafef57f9ab995",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/appearance/AppearanceModule.kt": "be25f7b7a3ee4bea7193a313cf61895dd401aac97d5be0cbda3f2d55ea27ec38",
+    "ReactAndroid/src/main/java/com/facebook/react/views/common/UiModeUtils.kt": "cce7662878eb64850854b744e3896e1d0e562637b2cf461a7edd3ee3426a3dd1",
+    "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86",
+    "ReactCommon/react/nativemodule/core/ReactCommon/TurboModule.cpp": "35454614a9dd58c7d5da95bb824d7d6de3749f2e69aa4258bf7b8b6e99b9aed4"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "81ff622b20db5f8eb2e05bb347a030cec85fdb7cbff7eedfd8b6d168b19dcea9",
+    "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "9583db8c8a95c926c0f09d59a11706bfbd3bf7a8bb6d86492721181f89c542e9",
+    "native/fabric_application.h": "e642bda8a528f206e81c74e38737f707f4276fcf231725c1e6cc25125b2deb16",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+    "native/pointer_adapter.h": "a44aa78379206bfd77afb8fe468fa73e7c5d75e20d68662b3c29f4a2cdcb1588",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "69587ae4399a87e5085d17343abaa68071d6120dcffccfdf86eb65d9549044ac",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/system_appearance.h": "0673d71d92968c6dd335a4bed1d63e9a3e55683e4102d5bd54c7dd7276f48dcd",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c53e6ec47fbd53835f031a0b8e127457c26091a6a0304b48a4ede5844ae7364a",
+    "native/turbo_module_registry.h": "392299982ab1538d0b426829a453d3898dec904e4d19fe116352238398ce0c2b",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "2be32824d5471783ad69d4eefe62985b49aca80a5d2ff97f6710529cc228537b",
+    "package.json": "b77dbcf55094e929a69734caf8734a187ebaa90b3f09162a1a76575ec9c540cc",
+    ".fallowrc.json": "e6bdc85a983162cdf4e6a31a06587a65baf1a4244b8947ab1034301c511e8913",
+    "types/react-native.ts": "3d601531914a8943fbb0d1e7a2dd34a2e47fad2bd71d879863d8d4b9263879de",
+    "tests/types/consumer.tsx": "4a7e1fde2ef66f942e059bc01825bc854bc75db475cffd620b915e073cd4a49d",
+    "scripts/app-state-bundle.mjs": "023d48d68fa7ee099dde21a28481453e1839762cec5af01ea7023889460b414a"
+  },
+  "godotReferenceSources": {
+    "tag": "4.7.2-stable",
+    "commit": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "sha256": {
+      "servers/display/display_server.h": "7a2730a48f707e2139275356be5644d246d51cbc3184cde8658a372ee84547af",
+      "servers/display/display_server_headless.h": "8ac8f7638307c78784284f5d9668befc4d4091377dec5360bb7daf1aa5c56378",
+      "platform/macos/godot_application_delegate.mm": "add49e7036a5559f54bce1798950d435103281042baa6d47f6a1e4663911b4cc",
+      "platform/macos/display_server_macos_base.mm": "89f6be64d90f78603e9fbc609b144b39a98d1664e1b16338731e45394d6526c3",
+      "platform/windows/display_server_windows.cpp": "d8acf9b5888dd897daa507505382d5589f5ccc020c8ab91128b1432d738f5de4",
+      "platform/linuxbsd/freedesktop_portal_desktop.cpp": "c699d8cd077c67046308d191196ba46c69126dbf11c9b726c21a1ab2c7a2669e",
+      "drivers/apple_embedded/display_server_apple_embedded.mm": "99917d4f29e0d7d91d5bc0fe496501f100e0fb2cc4d7072e1cffd20a89b57ca4",
+      "platform/android/display_server_android.cpp": "0487b6c64c88529e361a44160a0ce4a0ca138e8fd79994ed71467a120196b11e",
+      "editor/editor_node.cpp": "ca8e106bffb9501c82cacc196075dfa968a7b9a44130bb84af357202215e3ca6",
+      "doc/classes/DisplayServer.xml": "eac0dbd0002d1b7df79c139d86e563e862503fe517775ff475dbe66a6b58874c"
+    }
+  },
+  "changedFilesSinceExecutionBase": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "native/application_runtime.cpp",
+    "native/application_runtime.h",
+    "native/fabric_application.cpp",
+    "native/fabric_application.h",
+    "native/system_appearance.h",
+    "native/turbo_module_registry.cpp",
+    "native/turbo_module_registry.h",
+    "package.json",
+    "scripts/app-state-bundle.mjs",
+    "scripts/appearance-bundle.mjs",
+    "scripts/native-probe-bundle.mjs",
+    "src/platform-environment.js",
+    "src/react-native-platform.jsx",
+    "tests/appearance-fixture.jsx",
+    "tests/appearance-native.test.mjs",
+    "tests/appearance-oracle.mjs",
+    "tests/appearance-probe.gd",
+    "tests/types/consumer.tsx",
+    "types/react-native.ts"
+  ],
+  "hostedCI": {
+    "status": "pending-appearance-slice"
+  },
+  "limits": [
+    "The headless DisplayServer has no system theme: the system scheme comes from a validation meta and the change is delivered through the Callable the module registers with DisplayServer.",
+    "Real OS theme changes on macOS, Windows, Linux, Android and iOS are not executed.",
+    "DisplayServer keeps one system theme callback: a game that registers its own replaces Fabric's, or is replaced by it, whichever registers last.",
+    "Accent and base colors, PlatformColor/DynamicColorIOS, per-window themes and Godot mobile exports are not covered.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin",
+    "sourcePins": 16,
+    "nativeSourcePins": 57,
+    "verificationSourcePins": 6,
+    "uniqueCodeAndConfigurationInputs": 72,
+    "mismatches": [],
+    "postCommitPinIsNotANewRun": true
+  },
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T23:33:22.148077+00:00",
+    "meaning": "Contracts-job gates and test:recovery rerun after every doc, example and the receipt body above were final; this field was appended afterwards. The dashboard is recorded in the following commit.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "8f2affa6271babccb83543060b656696a31bc0e32aac2f6177bb5f416d5a8c56"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bdbc30898503017d65a8a58c531de0ea6c59a19c2d3ed81b555414ca8fe6eb57"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "61459f764c298450b19139dc4ca0deaa566a58ae30e5f8fe822ec6f9734758ed"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "2140014586af9ee6a690e9aba4d1501c6bd178148f1bce6e5b42dee49e07f3cd"
+      }
+    }
+  }
+}

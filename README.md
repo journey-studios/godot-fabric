@@ -222,6 +222,12 @@ notifications Godot delivers to the `FabricApplication`, with two roots sharing
 one state: 75 headless checks. The preceding host fails exactly its 62
 lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
 
+The [Appearance example](examples/appearance/README.md) runs React Native's
+original `Appearance` and `useColorScheme` from the public import, fed by Godot's
+system theme and the `setColorScheme` override, with two roots re-rendering the
+same scheme: 67 headless checks. The preceding host fails exactly its 45
+Appearance checks. [Evidence](docs/evidence/appearance/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
