@@ -17,6 +17,7 @@ class ScrollAdapter {
   void sample();
   bool command(const std::string &name, const folly::dynamic &args);
   void wheel(int direction, double factor);
+  bool dragging() const { return dragging_; }
   folly::dynamic snapshot() const;
  private:
   godot::ScrollContainer &control_;

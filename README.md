@@ -201,7 +201,14 @@ certifies original Document and documentElement hover listeners in eight
 original/current × flag lanes: 1,530 headless checks. Over/out reach them at
 phases 1 and 3; enter/leave reach only capture listeners, when the pointer enters
 or leaves the surface; a retained control that ignores the owner Document fails.
+Hosted CI repeated the 1,530 checks ([receipt](docs/evidence/pointer-document-hover/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-document-hover/README.md).
+
+The [click example](examples/pointer-click/README.md) certifies `click` on a
+primary release, targeted at the deepest view the press and the release share,
+and the ScrollView drag that cancels its contact, in eight lanes: 728 headless
+checks. The preceding host fails exactly 31 of them.
+[Evidence](docs/evidence/pointer-click/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

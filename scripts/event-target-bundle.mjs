@@ -344,6 +344,33 @@ export async function bundlePointerDocumentMoveProbe({interestMode = "current"} 
       "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
 }
 
+// Click synthesis and scroll takeover over original View, Pressable and
+// ScrollView refs, Documents and listeners in four flags.
+export async function bundlePointerClickProbe({interestMode = "current"} = {}) {
+  assert.ok(["original", "current"].includes(interestMode));
+  return bundleProbe({entryPoint: "tests/pointer-click-fixture.jsx", modes: eventTargetProbeModes,
+    prefix: "pointer-click", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: "experimental", pointerInterestMode: interestMode,
+    defines: {__POINTER_DOCUMENT_INTEREST_MODE__: JSON.stringify(interestMode)},
+    sources: ["tests/event-target-bootstrap.js", "tests/pointer-document-bootstrap.js", "tests/pointer-click-fixture.jsx",
+      "tests/pointer-click-probe.gd", "tests/pointer-click-native.test.mjs", "scripts/event-target-bundle.mjs",
+      "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-event-target-overlay.mjs",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs",
+      "src/private-interface.js", "src/pointer-listener-query.js", "src/base-view-config.js", "src/components.jsx",
+      "src/scroll-view.jsx", "src/render-application.jsx", "native/application_runtime.cpp", "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h", "native/pointer_event.h", "native/scroll_adapter.cpp", "native/scroll_adapter.h",
+      "scripts/rn-pointer-overlay.mjs"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/LegacySyntheticEvent.js", "src/private/webapis/dom/nodes/ReactNativeDocument.js",
+      "Libraries/Pressability/Pressability.js", "Libraries/Components/View/ViewPropTypes.js",
+      "Libraries/NativeComponent/BaseViewConfig.android.js", "Libraries/NativeComponent/BaseViewConfig.ios.js",
+      "ReactAndroid/src/main/java/com/facebook/react/uimanager/JSPointerDispatcher.kt",
+      "React/Fabric/RCTSurfacePointerHandler.mm",
+      "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp",
+      "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   await bundleEventTargetProbe();
   console.log("Bundled isolated original EventTarget flag probes; public build/app.js untouched.");

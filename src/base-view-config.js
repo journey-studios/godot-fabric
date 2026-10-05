@@ -111,6 +111,8 @@ export const controlViewConfig = {
         "onGotPointerCaptureCapture",
         "onLostPointerCapture",
         "onLostPointerCaptureCapture",
+        "onClick",
+        "onClickCapture",
       ].map((name) => [name, true]),
     ),
     pointerEvents: true,
@@ -157,6 +159,13 @@ export const controlViewConfig = {
         },
       ]),
     ),
+    // The host synthesizes click on a primary release, like RN's platforms.
+    topClick: {
+      phasedRegistrationNames: {
+        bubbled: "onClick",
+        captured: "onClickCapture",
+      },
+    },
     topActivate: {
       phasedRegistrationNames: {
         bubbled: "onActivate",
@@ -188,9 +197,9 @@ export const coreEventConfigs = {
 // Generated components extend ViewProps, not the GodotControl-specific props.
 export default {
   validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
-    /^(onTouch|onPointer|onGotPointer|onLostPointer|onResponder|onStartShould|onMoveShould)/.test(name) ||
+    /^(onTouch|onPointer|onGotPointer|onLostPointer|onClick|onResponder|onStartShould|onMoveShould)/.test(name) ||
     ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren"].includes(name))),
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
-    .filter(([name]) => /^(topTouch|topPointer|topGotPointer|topLostPointer)/.test(name))),
+    .filter(([name]) => /^(topTouch|topPointer|topGotPointer|topLostPointer|topClick)/.test(name))),
   directEventTypes: { topLayout: { registrationName: "onLayout" } },
 };

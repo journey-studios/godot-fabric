@@ -36,10 +36,10 @@ void modifiers(rn::PointerEvent &pointer, const InputEventMouse &mouse) {
   pointer.metaKey = mouse.is_meta_pressed();
 }
 }
-PointerAdapter::PointerAdapter(HitTest hit, InsideRoot inside, LocalPoint local, Project project, Emit emit,
-    EmitPointer emit_pointer)
-    : hit_(std::move(hit)), inside_(std::move(inside)), local_(std::move(local)), project_(std::move(project)),
-      emit_(std::move(emit)), emit_pointer_(std::move(emit_pointer)) {}
+PointerAdapter::PointerAdapter(HitTest hit, HitPath path, InsideRoot inside, LocalPoint local, Project project,
+    Emit emit, EmitPointer emit_pointer)
+    : hit_(std::move(hit)), path_(std::move(path)), inside_(std::move(inside)), local_(std::move(local)),
+      project_(std::move(project)), emit_(std::move(emit)), emit_pointer_(std::move(emit_pointer)) {}
 bool PointerAdapter::input(const Ref<InputEvent> &event, int pointer_id, bool primary) {
   invalid_coordinates_ = false;
   if (event.is_null() || pointer_id <= 0) return false;
@@ -154,19 +154,64 @@ PointerAdapter::PointerSample *PointerAdapter::sample(int id, Vector2 position, 
 void PointerAdapter::pointer(int id, const std::string &phase) {
   auto found = pointers_.find(id);
   if (found == pointers_.end()) return;
+  auto &current = found->second;
+  // A taken-over contact already ended for JS with its cancel. A mouse
+  // released afterwards hovers again from its next sample.
+  if (current.taken) {
+    if (phase == "up") current.taken = false;
+    return;
+  }
   if (phase == "down") {
     ++pointer_downs_;
     // A mouse survives Up as hover and can reuse its pointer ID. New buttons
     // start a new contact even if no Down listener causes a projection; old
     // queued envelopes keep their own history instead of lending it forward.
-    found->second.geometry = std::make_shared<PointerGeometryHistory>();
+    current.geometry = std::make_shared<PointerGeometryHistory>();
+    // RN keeps the Down hit path for the release's click. An empty point
+    // inside the root resolves to the root alone, which never clicks.
+    current.down_path = current.target ? path_(current.target) : std::vector<int>();
   }
   else if (phase == "move") ++pointer_moves_;
   else if (phase == "up") ++pointer_ups_;
   else if (phase == "cancel") ++pointer_cancels_;
   else if (phase == "leave") ++pointer_leaves_;
-  emit_pointer_(found->second.target, found->second.root, phase, found->second.event, found->second.viewport_point,
-      found->second.geometry);
+  emit_pointer_(current.target, current.root, phase, current.event, current.viewport_point, current.geometry);
+  if (phase == "up") click(current);
+}
+void PointerAdapter::click(PointerSample &current) {
+  const auto down = std::move(current.down_path);
+  current.down_path.clear();
+  // Like iOS and the W3C model, only the primary pointer's main button clicks.
+  if (!current.event.isPrimary || current.event.button != 0 || down.empty() || !current.target) return;
+  // RN (Android's JSPointerDispatcher) clicks the first view of the release's
+  // hit path that the Down's path shares: their deepest common mounted view.
+  // When they share only the root, RN drops the click there.
+  for (int tag : path_(current.target)) {
+    if (std::find(down.begin(), down.end(), tag) == down.end()) continue;
+    ++pointer_clicks_;
+    emit_pointer_(tag, false, "click", current.event, current.viewport_point, current.geometry);
+    return;
+  }
+}
+// RN's native scroll views intercept a contact begun inside them: JS receives
+// its pointercancel and nothing more until it ends (Android's
+// onChildStartedNativeGesture; UIKit cancels the touches in the view). The
+// touch stream keeps driving the JS responder that scrolls this host.
+void PointerAdapter::takeover(int tag) {
+  for (auto &[id, current] : pointers_) {
+    if (!current.active || current.taken ||
+        std::find(current.down_path.begin(), current.down_path.end(), tag) == current.down_path.end()) continue;
+    current.down_path.clear();
+    auto cancel = current.event;
+    cancel.button = -1;
+    cancel.buttons = 0;
+    cancel.pressure = 0;
+    cancel.timeStamp = rn::HighResTimeStamp::now();
+    ++pointer_cancels_;
+    ++pointer_takeovers_;
+    current.taken = true;
+    emit_pointer_(current.target, current.root, "cancel", cancel, current.viewport_point, current.geometry);
+  }
 }
 void PointerAdapter::leave_mouse(int id, const Vector2 *position) {
   auto found = pointers_.find(id);
@@ -279,21 +324,25 @@ void PointerAdapter::removed(int tag) {
   std::vector<int> ids;
   for (const auto &[id, current] : pointers_) {
     auto touch = touches_.find(current.touch_id);
-    if (current.target == tag || (touch != touches_.end() && touch->second.target == tag)) ids.push_back(id);
+    // A taken-over contact has no pointer target left; only its touch counts.
+    if ((!current.taken && current.target == tag) || (touch != touches_.end() && touch->second.target == tag))
+      ids.push_back(id);
   }
   for (int id : ids) cancel_pointer(id);
 }
 folly::dynamic PointerAdapter::snapshot() const {
-  int active = 0, hover = 0;
+  int active = 0, hover = 0, taken = 0;
   for (const auto &[id, current] : pointers_) {
     if (current.active) ++active;
     else if (current.mouse) ++hover;
+    if (current.taken) ++taken;
   }
   return folly::dynamic::object("activeTouches", touches_.size())("responder", responder_tag_)
       ("blockNative", block_native_)("starts", starts_)("moves", moves_)
       ("ends", ends_)("cancels", cancels_)("grants", grants_)("releases", releases_)
       ("activePointers", active)("hoverPointers", hover)("pointerDowns", pointer_downs_)
       ("pointerMoves", pointer_moves_)("pointerUps", pointer_ups_)
-      ("pointerCancels", pointer_cancels_)("pointerLeaves", pointer_leaves_);
+      ("pointerCancels", pointer_cancels_)("pointerLeaves", pointer_leaves_)("pointerClicks", pointer_clicks_)
+      ("pointerTakeovers", pointer_takeovers_)("takenPointers", taken);
 }
 }
