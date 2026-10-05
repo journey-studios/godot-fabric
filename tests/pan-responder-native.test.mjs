@@ -68,6 +68,8 @@ function verify({report, result, log, flagMode}) {
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);
   assert.equal(report.scenario, "native-pan-responder"); assert.equal(report.reactNative, "0.87.1");
   assert.equal(report.flagMode, flagMode); assert.equal(report.displayServer, "headless");
+  // Every normal lane states all 32 checks; the preceding SDK stops at mount.
+  if (!allowPreviousSDK) assert.equal(report.checks.length, 32);
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...report.failures].sort());
