@@ -143,9 +143,18 @@ func inspect_fault_query(value: Dictionary, name: String, rows: Array, prefix: S
   check(observed == expected and own.all(func(row: Dictionary) -> bool:
     return row.name == name and row.expectedHandle and row.matched == (row.action != "delegate") and row.resultKind == ("boolean" if row.action == "delegate" else "throw" if row.action == "throw" else "number")),
     prefix + "/Actual root lookups consume the configured fault in exact order and delegate the rest")
+  # Same pairing as inspect_query: each owning-surface ancestor reads 36 then 37,
+  # starting at the physical target, all before the first root lookup.
   var components: Array = value.query.rows.filter(func(row: Dictionary) -> bool: return not row.isRootHandle)
-  check(not own.is_empty() and components.size() >= 2 and components.size() % 2 == 0 and int(components[0].candidateTag) == int(value.targetTag) and components.all(func(row: Dictionary) -> bool:
-    return row.action == "delegate" and not row.matched and row.result == false and int(row.offset) in [36, 37] and row.sequence < own[0].sequence),
+  var owner: Dictionary = native(surfaces[name])
+  var owner_tags: Array = owner.nodes.map(func(node: Dictionary) -> int: return int(node.tag))
+  var pairs: bool = not own.is_empty() and components.size() >= 2 and components.size() % 2 == 0 and int(components[0].candidateTag) == int(value.targetTag) and own.all(func(row: Dictionary) -> bool: return int(row.candidateTag) == int(owner.surfaceId)) and components.all(func(row: Dictionary) -> bool: return int(row.candidateTag) in owner_tags)
+  for index in range(0, components.size() - 1, 2):
+    var first: Dictionary = components[index]
+    var second: Dictionary = components[index + 1]
+    pairs = pairs and first.offset == 36 and second.offset == 37 and first.candidateTag == second.candidateTag and int(first.candidateTag) > 0 and first.name == null and second.name == null and first.sequence < second.sequence and second.sequence < own[0].sequence
+  check(pairs and components.all(func(row: Dictionary) -> bool:
+    return row.action == "delegate" and not row.matched and row.resultKind == "boolean" and row.result == false),
     prefix + "/View ancestors delegate healthy false Up lookups before the faulted root")
   check(same_slot(own), prefix + "/Faulted and healthy root lookups preserve observed publicInstance and ref slots")
 

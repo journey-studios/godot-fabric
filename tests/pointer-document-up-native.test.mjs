@@ -101,20 +101,33 @@ function terminal(stage, expected, phases, name, D, installed, offsets, results,
   assert.deepEqual(stage.application.pointerProcessor, {active: remaining, pendingCapture: 0, activeCapture: 0, hover: remaining});
   for (const key of ["active", "contacts", "stored"]) assert.equal(stage.application.pointerRouting[key], remaining);
   if (sentinel) assert.deepEqual(value.query.rows, []);
-  else if (faultRows != null && installed) faultQuery(value, name, faultRows);
+  else if (faultRows != null && installed) faultQuery(value, name, faultRows, stage.after.nodes);
   else query(value, name, installed, offsets, results, stage.after.nodes);
   clean(value, D);
 }
 // Root rows [offset, action, result] in call order; View ancestors still
 // delegate healthy false pairs before the faulted root lookup.
-function faultQuery(value, name, rows) {
+function faultQuery(value, name, rows, nativeNodes) {
   const roots = value.query.rows.filter(row => row.isRootHandle), components = value.query.rows.filter(row => !row.isRootHandle);
   assert.deepEqual(roots.map(row => [row.offset, row.action, row.result]), rows.map(([offset, action, result]) => [offset, action, action === "nonboolean" ? 1 : result]));
   assert.ok(roots.every(row => row.name === name && row.expectedHandle && row.matched === (row.action !== "delegate") &&
     row.resultKind === (row.action === "delegate" ? "boolean" : row.action === "throw" ? "throw" : "number") &&
     row.before.handleExists && row.after.handleExists && row.before.publicInstanceNull === row.after.publicInstanceNull));
+  // Same pairing as query(): each owning-surface ancestor reads 36 then 37,
+  // starting at the physical target, all before the first root lookup.
+  const ownerTags = new Set(nativeNodes.map(node => node.tag));
+  assert.ok(roots.every(row => row.candidateTag === value.panels[name].surfaceId));
   assert.ok(components.length >= 2 && components.length % 2 === 0 && components[0].candidateTag === value.targetTag);
-  assert.ok(components.every(row => row.action === "delegate" && !row.matched && row.result === false && [36, 37].includes(row.offset) && row.sequence < roots[0].sequence));
+  assert.ok(components.every(row => ownerTags.has(row.candidateTag) && row.action === "delegate" && !row.matched &&
+    row.resultKind === "boolean" && row.result === false && row.sequence < roots[0].sequence));
+  for (let index = 0; index < components.length; index += 2) {
+    const [bubble, captured] = components.slice(index, index + 2);
+    assert.deepEqual([bubble.offset, captured.offset], [36, 37]);
+    assert.ok(Number.isSafeInteger(bubble.candidateTag) && bubble.candidateTag > 0);
+    assert.equal(bubble.candidateTag, captured.candidateTag);
+    assert.equal(bubble.name, null); assert.equal(captured.name, null);
+    assert.ok(bubble.sequence < captured.sequence);
+  }
 }
 // One-shot root query faults at the Up offsets, in a second application after
 // the healthy one stopped. A consumed fault rejects only its own lookup with

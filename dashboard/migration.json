@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document Up faults da consulta do root validados; próximos: CI da fatia e faults de componente no Up"
   },
-  "updatedAt": "2026-10-05T14:34:37.800142+00:00",
+  "updatedAt": "2026-10-05T14:51:20.569765+00:00",
   "source": {
     "commit": "d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f",
     "url": "https://github.com/journey-studios/godot-fabric/commit/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f",
-    "scope": "Document Up faults na consulta do root: 6451 checks headless nas oito lanes (5097 anteriores preservados em ordem) e 1179 viewport/10 frames/132 pixels. Faults únicos throw/não booleano no documentElement real nos offsets 36/37, numa segunda aplicação depois do stop da saudável: throw no bubble ainda qualifica pelo capture (36=throw, 37=true) e entrega DocC/DocB num commit; throw no capture ou não booleano sem outro lookup qualificando não entrega Up, mas TouchEnd/Raw e limpeza do contato continuam; cada fault consumido deixa 1 E_POINTER_LISTENER_QUERY retido; fault de capture não é consumido quando o bubble qualifica antes; recuperação e gesto de B saudáveis. Controle negativo retido (fault tratado como true) falha 9 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre 3061cf5/dirty; 71 inputs executados conferidos por git show/SHA-256 contra d2ea122; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "scope": "Document Up faults na consulta do root: 6451 checks headless nas oito lanes (5097 anteriores preservados em ordem) e 1179 viewport/10 frames/132 pixels. Faults únicos throw/não booleano no documentElement real nos offsets 36/37, numa segunda aplicação depois do stop da saudável: throw no bubble ainda qualifica pelo capture (36=throw, 37=true) e entrega DocC/DocB num commit; throw no capture ou não booleano sem outro lookup qualificando não entrega Up, mas TouchEnd/Raw e limpeza do contato continuam; cada fault consumido deixa 1 E_POINTER_LISTENER_QUERY retido; fault de capture não é consumido quando o bubble qualifica antes; recuperação e gesto de B saudáveis. Controle negativo retido (fault tratado como true) falha 9 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Probe e oráculo conferem o pareamento 36/37 dos ancestrais como na consulta saudável (revisão do CodeRabbit). CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -329,7 +329,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -456,7 +456,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -607,7 +607,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -810,7 +810,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -1212,7 +1212,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -3013,6 +3013,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-fault-component-pairs-20261005",
+      "at": "2026-10-05T14:51:20.569765+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Faults DocUp: probe e oráculo passam a exigir, nos casos com fault, que cada ancestral da superfície dona receba 36 e depois 37 com o mesmo tag antes do root, como na consulta saudável. Reexecução completa: 6451 headless, 1179 viewport/132 pixels, controle negativo 9 falhas, Down 2723/contracts/exemplos/static. Nenhum GF/checkpoint/denominador fechado."
+    },
     {
       "id": "pointer-document-up-fault-local-verified-20261005",
       "at": "2026-10-05T14:34:37.800142+00:00",
