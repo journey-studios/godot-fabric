@@ -49,7 +49,8 @@ export const documentQueryControl = {
   },
   clearObservations() { rows = []; return true; },
   setFault(element, offset, mode = "throw", label = "root34") {
-    if (!roots.has(element) || ![34, 35].includes(offset) || !["throw", "nonboolean"].includes(mode))
+    // Down interest uses offsets 34/35 and Up interest 36/37 (bubble/capture).
+    if (!roots.has(element) || ![34, 35, 36, 37].includes(offset) || !["throw", "nonboolean"].includes(mode))
       throw Error("Root fault requires an actual bound documentElement and native offset");
     fault = {element, offset, mode, label, remaining: 1};
     return {offset, mode, label, remaining: 1};

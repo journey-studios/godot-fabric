@@ -224,13 +224,23 @@ doc.addEventListener('pointerup', event => {
 });
 ```
 
+## Faults na consulta do root
+
+A [evidência de faults](../../docs/evidence/pointer-document-up-fault/README.md)
+amplia a matriz para **6.451 checks** headless. Um throw ou retorno não booleano
+na consulta nativa de interesse do documentElement, no Up, rejeita só aquele
+lookup e deixa um diagnóstico. Se o capture ainda qualifica, o Up chega; se
+nenhum lookup qualifica, o Up não chega, mas o `TouchEnd` e a limpeza do contato
+continuam. O gesto seguinte, sem fault, se recupera.
+
 ## Limits
 
 This matrix certifies the listed healthy Document/element Up cases, including
 Document/documentElement rerender, held-root retirement, one replacement root,
-listener removal, addition and abort inside delivered Document Up callbacks, and
-nested Document dispatch from those callbacks.
-It does not certify Up-specific faults, nested dispatch on elements or with
+listener removal, addition and abort inside delivered Document Up callbacks,
+nested Document dispatch from those callbacks, and one-shot root query faults at
+the Up offsets in a second application.
+It does not certify component or resolver faults on Up, nested dispatch on elements or with
 preventDefault/stopPropagation/errors, View/element listener
 mutation, mutation combined with stopPropagation, capture-phase or
 View listeners across retirement, explicit pointer capture, coalescing, full responders, development
@@ -238,6 +248,6 @@ renderer, hardware/mobile exports or performance. Down is filtered here; no
 public Down/Up pointer-ID equality is claimed. The final Down regression passes 2,723 checks; contracts pass 255 Node/13 Python.
 Native/SDK production bytes are unchanged from the separately proven View Up
 slice. Hosted baseline 84270fb passed 1,371 checks in five successful jobs and
-lifecycle run 37246479501 passed 2,143 and refs run 37310815360 passed 2,709; the
-mutation and reentry slices' hosted runs are pending. The
+lifecycle run 37246479501 passed 2,143, refs run 37310815360 passed 2,709,
+mutation run 37319530371 passed 4,401 and reentry run 37321794370 passed 5,097. The
 [research](../../docs/research/pointer-document-up.md) explains the boundaries.

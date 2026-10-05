@@ -497,8 +497,8 @@ only the fresh Document's listeners receive the next gesture.
 
 In the current lanes with native dispatch, listeners delivered by an actual native
 Up remove, add and abort original Document listeners mid-dispatch. The eight-lane
-matrix passes 4,401 headless checks and the graphical lane 835 checks with 118
-pixels. A pending removal or abort is skipped in the same Up, an add to
+matrix passes 4,401 headless checks, also passed in hosted CI, and the graphical
+lane 835 checks with 118 pixels. A pending removal or abort is skipped in the same Up, an add to
 the Map being iterated waits for the next gesture, and bubble listeners added by
 a capture listener run in the same Up even though the root query saw only the
 capture Map. [Evidence and limits](docs/evidence/pointer-document-up-mutation/README.md).
@@ -515,5 +515,21 @@ completion untrusted at target, at the Up's Discrete priority, without native
 query or React update; the native Up then resumes trusted with its phase,
 currentTarget, target, path and `globalThis.event` intact. Re-dispatching the
 native Up itself throws `The event is already being dispatched.` The eight-lane
-matrix passes 5,097 headless checks and the graphical lane 946 checks.
+matrix passes 5,097 headless checks, also passed in hosted CI, and the graphical
+lane 946 checks.
 [Evidence and limits](docs/evidence/pointer-document-up-reentry/README.md).
+
+### Document Up root query faults
+
+A one-shot throw or non-boolean result in the native interest query for the
+actual documentElement, at the Up offsets, rejects only that lookup with one
+retained `E_POINTER_LISTENER_QUERY` diagnostic. A faulted bubble lookup still lets
+a capture listener qualify the Up; with no other qualifying lookup the Up is not
+delivered, while the original TouchEnd and contact cleanup survive. The faults run
+in a second application, so the healthy matrix stays diagnostic-free: 6,451
+headless checks and 1,179 graphical checks with 132 pixels.
+[Evidence and limits](docs/evidence/pointer-document-up-fault/README.md).
+
+| After a faulted bubble lookup and its recovery |
+| --- |
+| ![A4/B0](docs/evidence/pointer-document-up-fault/throw36.png) |

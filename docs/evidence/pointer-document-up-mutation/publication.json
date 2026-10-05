@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-05T14:32:17.004784+00:00",
+  "run": 37325323565,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37325323565",
+  "mainRenderer": "33773437f736f9d9beeffbe9db69ad3bab1524d1",
+  "dataCommit": "d67e9817d4774e7e0a501a00f02baf64059c2449",
+  "publication": {
+    "ref": "d67e9817d4774e7e0a501a00f02baf64059c2449",
+    "commit": "d67e9817d4774e7e0a501a00f02baf64059c2449",
+    "inMain": false,
+    "at": "2026-10-05T14:31:11.228Z"
+  },
+  "fullPublicJSONEqualsCommittedData": true,
+  "localLiveAPIEqualsCommittedData": true,
+  "publicBytesSha256": "0697268c3a6a96475783db2e3665a9b79f9f69d6d45779291879385740c10967",
+  "buildAndDeployPassed": true
+}

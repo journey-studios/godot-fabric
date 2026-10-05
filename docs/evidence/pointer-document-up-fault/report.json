@@ -1,11 +1,13 @@
 {
   "schemaVersion": 1,
-  "scenario": "native-pointer-document-up-reentrant-dispatch-four-flags",
+  "scenario": "native-pointer-document-up-root-query-faults-four-flags",
   "status": "verified-local-headless-and-native-captures",
-  "at": "2026-10-05T14:03:40.891513+00:00",
-  "executionBaseCommit": "dbd6324adb7798f6bed2fb68199450416fcaaa73",
+  "at": "2026-10-05T14:51:00.108253+00:00",
+  "executionBaseCommit": "f5660c6f6c4caf7a0b6ffcb0893d4c40836fbb25",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": "f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24",
+  "docsOnlyCommitsDuringExecution": [],
+  "docsOnlyCommitsTouchNoExecutedInput": true,
+  "implementationCommit": "eda1bf23b5dd20f1460d7276f7a7c364819f6d66",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -20,15 +22,15 @@
     "npm run test:pointers:documents:up",
     "node tests/pointer-document-up-native.test.mjs --interest=current --flag=enabled --capture"
   ],
-  "headlessChecks": 5097,
-  "previousMutationHeadlessChecks": 4401,
+  "headlessChecks": 6451,
+  "previousReentryHeadlessChecks": 5097,
   "sourcePins": {
     "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
-    "tests/pointer-document-bootstrap.js": "0b390630f7b7a37e581cc9949c38964b6a8692e2606fe83e1ed3d7e9a1a9f07c",
+    "tests/pointer-document-bootstrap.js": "3a5ebd4c1bdc7a9c4bf07cd62561bcd9746624f2c2b946e15892b484ff5cc37c",
     "tests/pointer-document-fixture.jsx": "a8ecd284263f31aa4484b2a7088fdfc2cad0ce3fd8c5fa0cd2834900edfe3a39",
-    "tests/pointer-document-up-fixture.jsx": "766ebef1d2cc9be3d9b5cf51694ce6d53ddf151faa59413f96af334ca7f9c2e9",
-    "tests/pointer-document-up-probe.gd": "af5e8048f05cb3304a341b717f0cdf83c49e0b8e826feb089b58dc113465bda2",
-    "tests/pointer-document-up-native.test.mjs": "887edcf6841009d3f65c732688df13f83c9d125f6261ca85237ed014c0c75b19",
+    "tests/pointer-document-up-fixture.jsx": "739a17f83352694d004afbce13a6538bba21503beb619ad31ca39b7936caa801",
+    "tests/pointer-document-up-probe.gd": "42e3920defdc29bf3606ee3ce2d87a54996457fa9f5184aedef26a2c5ea929cc",
+    "tests/pointer-document-up-native.test.mjs": "fcdea96d4b836097cf539cb847772218038671a6c2c972a0fd0ed2af41ab4323",
     "scripts/event-target-bundle.mjs": "bedb3c8998b9643398e5ce23c75e62a9be48cbf43165e78fc338a369ec205df3",
     "sdk/toolchain/platform-plugin.mjs": "e2b98c7ad95a47286bc2250eac7b347805462d953b734827594c4bfbcc8f4605",
     "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
@@ -131,32 +133,66 @@
     {
       "interestMode": "original",
       "flagMode": "disabled",
-      "checks": 571,
-      "passed": 571,
-      "previousMutationChecksPreservedInOrder": 493,
-      "addedChecks": 78,
-      "reportSha256": "7359a8fbb9617c8233e5104f0b1d7bfc29baf11cd2d686be4335d9b2605c624b",
-      "logSha256": "644641bba503f68517fc22d3823167fb8d0341981ec9c03826644b1b52d88fee",
-      "checkIdDigestSha256": "ceafabf414bdff8f1beeb9a27ddd88d596e5f7777b2437b9317df1d7587dd4ac",
-      "bundleSha256": "c1e232470fc0951f1d9634a22f91906512f1c3a0bc2b1c2083467fddf8f52415",
+      "checks": 724,
+      "passed": 724,
+      "previousReentryChecksPreservedInOrder": 571,
+      "addedChecks": 153,
+      "reportSha256": "53188fd5c133a0a12c4772be3dd3a6337bc6632ded7aeb7b38dab6c78de8fda1",
+      "logSha256": "b9b36fe3c4f9ec44093aeb4a08f2a1a1bda886ad89ac01035939e195945670b4",
+      "checkIdDigestSha256": "3cd753cf18aa604ed95513f451c231e5563cb808b56f9e53cfaff8af7ea1855d",
+      "bundleSha256": "c187892f965dea700e76716b760c323b19e2bd3e5e9656b3e6cca29059882ae0",
       "flags": {
         "imperative": false,
         "nativeDispatch": false
       },
       "queryInstallations": 0,
       "configurations": {
-        "cross-root/B": [],
-        "cross-root": [],
-        "nested-bubble": [],
-        "nested-capture": [],
-        "same-event": []
+        "fault": [],
+        "fault/armed37": [],
+        "fault/nonboolean36": [],
+        "fault/nonboolean37": [],
+        "fault/throw36": [],
+        "fault/throw37": []
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 0,
-        "afterCount": 0
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [],
+      "secondApplicationStoppedErrors": 0,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 0,
+      "allErrorLogLines": 0,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -169,6 +205,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -188,7 +225,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/armed37/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -201,6 +238,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -220,31 +258,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-bubble/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
+        "fault/armed37/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -257,6 +271,12 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -276,31 +296,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -313,6 +309,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -332,31 +329,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/same-event/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
+        "fault/nonboolean36/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -369,6 +342,225 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -393,32 +585,66 @@
     {
       "interestMode": "original",
       "flagMode": "imperative-only",
-      "checks": 571,
-      "passed": 571,
-      "previousMutationChecksPreservedInOrder": 493,
-      "addedChecks": 78,
-      "reportSha256": "05a24b175cef9d87e4c4dbab4055424faad7f1751eaa1f8eab357ed7c4e7d799",
-      "logSha256": "b86d569d78034e92192f1dfd031280ae3e8b85f0637337f6017fae9e2e85f20a",
-      "checkIdDigestSha256": "ceafabf414bdff8f1beeb9a27ddd88d596e5f7777b2437b9317df1d7587dd4ac",
-      "bundleSha256": "aca4fa57cf010039c050647acc407f6cb66003b354b76fbba4270ee4e64e219f",
+      "checks": 724,
+      "passed": 724,
+      "previousReentryChecksPreservedInOrder": 571,
+      "addedChecks": 153,
+      "reportSha256": "1930ee4f110ed36ce7a47e50336cc33b9155fedeeb4343dd2cb263d75c01f4af",
+      "logSha256": "92f46efd6ce0709f723998479cbbe81671dabe6637f5051dce4bf9c2c89814fb",
+      "checkIdDigestSha256": "3cd753cf18aa604ed95513f451c231e5563cb808b56f9e53cfaff8af7ea1855d",
+      "bundleSha256": "943e8a3cde7d0852c0afd50b325b1dd70323cc0ed3241a5f096c3398b9ea8f70",
       "flags": {
         "imperative": true,
         "nativeDispatch": false
       },
       "queryInstallations": 0,
       "configurations": {
-        "cross-root/B": [],
-        "cross-root": [],
-        "nested-bubble": [],
-        "nested-capture": [],
-        "same-event": []
+        "fault": [],
+        "fault/armed37": [],
+        "fault/nonboolean36": [],
+        "fault/nonboolean37": [],
+        "fault/throw36": [],
+        "fault/throw37": []
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 0,
-        "afterCount": 0
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [],
+      "secondApplicationStoppedErrors": 0,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 0,
+      "allErrorLogLines": 0,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -431,6 +657,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -450,7 +677,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/armed37/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -463,6 +690,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -482,31 +710,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-bubble/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
+        "fault/armed37/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -519,6 +723,12 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -538,31 +748,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -575,6 +761,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -594,31 +781,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/same-event/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
+        "fault/nonboolean36/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -631,6 +794,225 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -655,48 +1037,81 @@
     {
       "interestMode": "original",
       "flagMode": "internal-only",
-      "checks": 588,
-      "passed": 588,
-      "previousMutationChecksPreservedInOrder": 507,
-      "addedChecks": 81,
-      "reportSha256": "4e69a01c2503456573766af9d947c6c3d5335fa6aa9d406b307c6f6573f35ddc",
-      "logSha256": "193f6437c401786f26fd4cc0ced3ebdc6635750a4da414538969c46e1d8e79ae",
-      "checkIdDigestSha256": "c1235152453103397dd1c74c0463445684501c05323702e8d363e639bc7df337",
-      "bundleSha256": "132676866f9272a24cd83f8fc68277e28583b844daf5693ad203b2a8c5298191",
+      "checks": 741,
+      "passed": 741,
+      "previousReentryChecksPreservedInOrder": 588,
+      "addedChecks": 153,
+      "reportSha256": "8ec921c8e6c9e503fff72ddef60b3fdd4d194935e33e6cb005fbb4046ac8d53e",
+      "logSha256": "f7151fda75ca347783d9a8913df49499e8cd8d6763ac2283884814d8962e25b5",
+      "checkIdDigestSha256": "191e79f19ea0f391e3cda0d44677ff61634afe45af1d54b44de7dd7ccd0571dd",
+      "bundleSha256": "1d399d29661e5da6d759e419b4e130c616aa21eb05f9be9dc0b669c655250258",
       "flags": {
         "imperative": false,
         "nativeDispatch": true
       },
       "queryInstallations": 0,
       "configurations": {
-        "cross-root/B": [
+        "fault": [
           "DocC",
           "DocB"
         ],
-        "cross-root": [
+        "fault/armed37": [
+          "DocC",
           "DocB"
         ],
-        "nested-bubble": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean36": [
+          "DocB"
         ],
-        "nested-capture": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean37": [
+          "DocC"
         ],
-        "same-event": [
-          "DocB1",
-          "DocB2"
+        "fault/throw36": [
+          "DocC",
+          "DocB"
+        ],
+        "fault/throw37": [
+          "DocC"
         ]
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 0,
-        "afterCount": 0
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [],
+      "secondApplicationStoppedErrors": 0,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 0,
+      "allErrorLogLines": 0,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -709,6 +1124,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -728,7 +1144,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/armed37/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -741,6 +1157,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -760,39 +1177,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-bubble/after/manual": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
+        "fault/armed37/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -805,6 +1190,12 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -824,39 +1215,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -869,6 +1228,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -888,37 +1248,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/same-event/after/manual": {
-          "timeline": [
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 2,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
+        "fault/nonboolean36/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -931,6 +1261,225 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -955,48 +1504,81 @@
     {
       "interestMode": "original",
       "flagMode": "enabled",
-      "checks": 590,
-      "passed": 590,
-      "previousMutationChecksPreservedInOrder": 509,
-      "addedChecks": 81,
-      "reportSha256": "7ccbe39fad3e695f1a94a61bcdd5a2051f8f393ca54174a323374049cdc05a97",
-      "logSha256": "32025fdc3231f383d5ad6092d9c082639b1ddc2d597553163821629fa791e917",
-      "checkIdDigestSha256": "e8840e83330f2611a7da5345a407d5eafb16e0713ef12b015dc074cf15a53f6b",
-      "bundleSha256": "26e3338f56d4750620296551019c68b0baf2aed2a9321dfffa8c269d64450a1d",
+      "checks": 743,
+      "passed": 743,
+      "previousReentryChecksPreservedInOrder": 590,
+      "addedChecks": 153,
+      "reportSha256": "b3ed147e7cbfd7225311e5368a14d44d79b1c5ab5860644d24d9df9833b161ef",
+      "logSha256": "4e221368c9554e41f874d0b503bf7d833db5e029ee07e834ce0f330a48491c96",
+      "checkIdDigestSha256": "fff5ac6c869cf115b3d4bfb76bc56e99bcc8a780e9a0c84290f1934017e6ef29",
+      "bundleSha256": "0b99d2eee68485ceca3ad17d9694a31ec7811de3b2778b2c8580af1a52a6da73",
       "flags": {
         "imperative": true,
         "nativeDispatch": true
       },
       "queryInstallations": 0,
       "configurations": {
-        "cross-root/B": [
+        "fault": [
           "DocC",
           "DocB"
         ],
-        "cross-root": [
+        "fault/armed37": [
+          "DocC",
           "DocB"
         ],
-        "nested-bubble": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean36": [
+          "DocB"
         ],
-        "nested-capture": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean37": [
+          "DocC"
         ],
-        "same-event": [
-          "DocB1",
-          "DocB2"
+        "fault/throw36": [
+          "DocC",
+          "DocB"
+        ],
+        "fault/throw37": [
+          "DocC"
         ]
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 0,
-        "afterCount": 0
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [],
+      "secondApplicationStoppedErrors": 0,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 0,
+      "allErrorLogLines": 0,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1009,6 +1591,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1028,7 +1611,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/armed37/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1041,6 +1624,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1060,39 +1644,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-bubble/after/manual": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
+        "fault/armed37/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1105,6 +1657,12 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1124,39 +1682,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1169,6 +1695,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1188,37 +1715,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/same-event/after/manual": {
-          "timeline": [
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 2,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
+        "fault/nonboolean36/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1231,6 +1728,225 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1255,32 +1971,66 @@
     {
       "interestMode": "current",
       "flagMode": "disabled",
-      "checks": 571,
-      "passed": 571,
-      "previousMutationChecksPreservedInOrder": 493,
-      "addedChecks": 78,
-      "reportSha256": "537c33eb313583620033e31848ba0408440bf1dd7d72c0cca0010af45c8ce9f9",
-      "logSha256": "8dd74dc42e2366dcd6929f6318662a528971ac4e5b491c4a47e68c5e47ebf2b8",
-      "checkIdDigestSha256": "ceafabf414bdff8f1beeb9a27ddd88d596e5f7777b2437b9317df1d7587dd4ac",
-      "bundleSha256": "58b70319bc1c2d7e4c67596de6616475733f086600b8294df7eb918fdd42cbd5",
+      "checks": 724,
+      "passed": 724,
+      "previousReentryChecksPreservedInOrder": 571,
+      "addedChecks": 153,
+      "reportSha256": "b5c8734cc9f6329a25defad9f34a1e4f37f144cc46baa3359493bdf4c6a19ff8",
+      "logSha256": "903031c75de2d3238665527d5d5deaeda08f4a45731de867ea66a92400b2efc0",
+      "checkIdDigestSha256": "3cd753cf18aa604ed95513f451c231e5563cb808b56f9e53cfaff8af7ea1855d",
+      "bundleSha256": "8349aab0a41845ca4ed1f801e9ef2148e2ea9854f5189ca44edd9b1fe8ea7186",
       "flags": {
         "imperative": false,
         "nativeDispatch": false
       },
       "queryInstallations": 0,
       "configurations": {
-        "cross-root/B": [],
-        "cross-root": [],
-        "nested-bubble": [],
-        "nested-capture": [],
-        "same-event": []
+        "fault": [],
+        "fault/armed37": [],
+        "fault/nonboolean36": [],
+        "fault/nonboolean37": [],
+        "fault/throw36": [],
+        "fault/throw37": []
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 0,
-        "afterCount": 0
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [],
+      "secondApplicationStoppedErrors": 0,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 0,
+      "allErrorLogLines": 0,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1293,6 +2043,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1312,7 +2063,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/armed37/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1325,6 +2076,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1344,31 +2096,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-bubble/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
+        "fault/armed37/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1381,6 +2109,12 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1400,31 +2134,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1437,6 +2147,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1456,31 +2167,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/same-event/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
+        "fault/nonboolean36/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1493,6 +2180,225 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1517,32 +2423,66 @@
     {
       "interestMode": "current",
       "flagMode": "imperative-only",
-      "checks": 571,
-      "passed": 571,
-      "previousMutationChecksPreservedInOrder": 493,
-      "addedChecks": 78,
-      "reportSha256": "6884dc2570db68c9aa53cf54ef0359fadd1d0f2008e059a9cc8187910decaee5",
-      "logSha256": "e3c1122099fe4415534cedff9cf7115adcdd3b2375771f6048a810a323550ff5",
-      "checkIdDigestSha256": "ceafabf414bdff8f1beeb9a27ddd88d596e5f7777b2437b9317df1d7587dd4ac",
-      "bundleSha256": "975efd6266f12ab5bcd54638f99bbed7606fa5a4f7ed7fab92efde0d795b5a98",
+      "checks": 724,
+      "passed": 724,
+      "previousReentryChecksPreservedInOrder": 571,
+      "addedChecks": 153,
+      "reportSha256": "5dd5eaa2c5a61df68be6bacec584dd9f5fb1f55ecf39f30508d6b3c46c110140",
+      "logSha256": "0b024e6ebc7eb9cb3991f2094cebcc9f07a9ff5085789ad63ef42d4b04677614",
+      "checkIdDigestSha256": "3cd753cf18aa604ed95513f451c231e5563cb808b56f9e53cfaff8af7ea1855d",
+      "bundleSha256": "b407e477ea5f63fefbc25ef380934cd82e828410bc9b84bdffd987c0433fad53",
       "flags": {
         "imperative": true,
         "nativeDispatch": false
       },
       "queryInstallations": 0,
       "configurations": {
-        "cross-root/B": [],
-        "cross-root": [],
-        "nested-bubble": [],
-        "nested-capture": [],
-        "same-event": []
+        "fault": [],
+        "fault/armed37": [],
+        "fault/nonboolean36": [],
+        "fault/nonboolean37": [],
+        "fault/throw36": [],
+        "fault/throw37": []
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 0,
-        "afterCount": 0
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [],
+      "secondApplicationStoppedErrors": 0,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 0,
+      "allErrorLogLines": 0,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1555,6 +2495,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1574,7 +2515,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/armed37/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1587,6 +2528,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1606,31 +2548,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-bubble/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
+        "fault/armed37/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1643,6 +2561,12 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1662,31 +2586,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1699,6 +2599,7 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": null,
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1718,31 +2619,7 @@
             "touchEndDistinct": null
           }
         },
-        "reentry/same-event/after/manual": {
-          "timeline": [],
-          "phases": [],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            0,
-            0
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 0,
-            "sameObject": null,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
+        "fault/nonboolean36/up": {
           "timeline": [
             "TouchEnd"
           ],
@@ -1755,6 +2632,225 @@
           },
           "reentries": [],
           "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 1
+          },
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": null,
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
           "componentQueries": 0,
           "counterBeforeAfter": [
             0,
@@ -1779,116 +2875,263 @@
     {
       "interestMode": "current",
       "flagMode": "internal-only",
-      "checks": 816,
-      "passed": 816,
-      "previousMutationChecksPreservedInOrder": 705,
-      "addedChecks": 111,
-      "reportSha256": "68712b7843cf6e5f77712c49eacb1845ff3fd24cc6f89b23074bf8b83593c1d4",
-      "logSha256": "7dcbceb29e8ab4d24dd38f6958c638352b7b3514c758a0cf62b1b6977cc41055",
-      "checkIdDigestSha256": "7bed27d120ccf27caf322384191ea1e99f594e15625fa32de74ae58cc6510e35",
-      "bundleSha256": "ba2dea84f2d96c30f7ddeaa391012cebd7f86b8a3b521f8de654b1fcaa770221",
+      "checks": 1034,
+      "passed": 1034,
+      "previousReentryChecksPreservedInOrder": 816,
+      "addedChecks": 218,
+      "reportSha256": "e17593b7edc88aaa276778298df60caf482f3d8a6cc9612b6eda2252a6a649ca",
+      "logSha256": "11cea36cd86116831b898115ce7b844309e87bcf4341646c84486e1a2b3c9581",
+      "checkIdDigestSha256": "25dc0c134aa6dfd1c0f0d2ade4e954d794f4eaaa1017f61b1b37ed7fcccb3bf5",
+      "bundleSha256": "843d9c7ab643da00aafdec437502e4047d2946d6a657fe4a95f220e4312fc32a",
       "flags": {
         "imperative": false,
         "nativeDispatch": true
       },
       "queryInstallations": 1,
       "configurations": {
-        "cross-root/B": [
+        "fault": [
           "DocC",
           "DocB"
         ],
-        "cross-root": [
+        "fault/armed37": [
+          "DocC",
           "DocB"
         ],
-        "nested-bubble": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean36": [
+          "DocB"
         ],
-        "nested-capture": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean37": [
+          "DocC"
         ],
-        "same-event": [
-          "DocB1",
-          "DocB2"
+        "fault/throw36": [
+          "DocC",
+          "DocB"
+        ],
+        "fault/throw37": [
+          "DocC"
         ]
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 5,
-        "afterCount": 5
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [
+        "GF document query deliberate fault: root36",
+        "GF document query deliberate fault: root37",
+        "Pointer listener query must return a boolean",
+        "Pointer listener query must return a boolean"
+      ],
+      "secondApplicationStoppedErrors": 4,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 4,
+      "allErrorLogLines": 4,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            2
+          ],
+          "commitsBeforeAfter": [
+            1,
+            2
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/armed37/recovery/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            9,
+            11
+          ],
+          "commitsBeforeAfter": [
+            7,
+            8
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/armed37/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            7,
+            9
+          ],
+          "commitsBeforeAfter": [
+            6,
+            7
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "DocB",
-            "nested:B.DocC",
-            "nested:B.DocB",
-            "reenter:returned",
             "TouchEnd"
           ],
           "phases": [
             3
           ],
-          "nested": [
-            {
-              "name": "B",
-              "label": "DocC",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "B",
-              "label": "DocB",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            }
-          ],
+          "nested": [],
           "nestedEventIdentity": {
-            "count": 2,
-            "distinctFromOuter": true,
-            "sameObject": true
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
           },
-          "reentries": [
-            {
-              "by": "DocB",
-              "nestedCleaned": true,
-              "nestedTrusted": false,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 3,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": true,
-              "sameEvent": false,
-              "target": "B.Doc",
-              "threw": null
-            }
-          ],
+          "reentries": [],
           "rootQueries": [
             {
               "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
               "result": true
             }
           ],
+          "faultAfterUp": null,
           "componentQueries": 6,
           "counterBeforeAfter": [
-            24,
-            25
+            5,
+            6
           ],
           "commitsBeforeAfter": [
-            16,
-            17
+            4,
+            5
           ],
           "rawTypes": [
             "topPointerUp",
@@ -1902,7 +3145,160 @@
             "touchEndDistinct": true
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/nonboolean36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "nonboolean",
+              "resultKind": "number",
+              "result": 1
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 0
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            5,
+            5
+          ],
+          "commitsBeforeAfter": [
+            4,
+            4
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "DocC",
+            "TouchEnd"
+          ],
+          "phases": [
+            1
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            6,
+            7
+          ],
+          "commitsBeforeAfter": [
+            5,
+            6
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 1,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "nonboolean",
+              "resultKind": "number",
+              "result": 1
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 0
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            6,
+            6
+          ],
+          "commitsBeforeAfter": [
+            5,
+            5
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
           "timeline": [
             "DocC",
             "DocB",
@@ -1922,18 +3318,130 @@
           "rootQueries": [
             {
               "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
               "result": true
             }
           ],
+          "faultAfterUp": null,
           "componentQueries": 6,
           "counterBeforeAfter": [
-            5,
-            7
+            2,
+            4
           ],
           "commitsBeforeAfter": [
+            2,
+            3
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "throw",
+              "resultKind": "throw",
+              "result": null
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 0
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            2
+          ],
+          "commitsBeforeAfter": [
+            1,
+            2
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "DocC",
+            "TouchEnd"
+          ],
+          "phases": [
+            1
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
             4,
             5
           ],
+          "commitsBeforeAfter": [
+            3,
+            4
+          ],
           "rawTypes": [
             "topPointerUp",
             "topPointerUp",
@@ -1941,22 +3449,16 @@
             "topTouchEnd"
           ],
           "eventIdentity": {
-            "callbackCount": 2,
+            "callbackCount": 1,
             "sameObject": true,
             "touchEndDistinct": true
           }
         },
-        "reentry/nested-bubble/after/manual": {
+        "fault/throw37/up": {
           "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
+            "TouchEnd"
           ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
+          "phases": [],
           "nested": [],
           "nestedEventIdentity": {
             "count": 0,
@@ -1964,335 +3466,43 @@
             "sameObject": null
           },
           "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            22,
-            22
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "nested:A.DocC",
-            "nested:A.DocB1",
-            "nested:A.DocB2",
-            "reenter:returned",
-            "DocB2",
-            "TouchEnd"
-          ],
-          "phases": [
-            1,
-            3,
-            3
-          ],
-          "nested": [
-            {
-              "name": "A",
-              "label": "DocC",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB1",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB2",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            }
-          ],
-          "nestedEventIdentity": {
-            "count": 3,
-            "distinctFromOuter": true,
-            "sameObject": true
-          },
-          "reentries": [
-            {
-              "by": "DocB1",
-              "nestedCleaned": true,
-              "nestedTrusted": false,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 3,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": true,
-              "sameEvent": false,
-              "target": "A.Doc",
-              "threw": null
-            }
-          ],
           "rootQueries": [
             {
               "offset": 36,
-              "result": true
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "throw",
+              "resultKind": "throw",
+              "result": null
             }
           ],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 0
+          },
           "componentQueries": 6,
           "counterBeforeAfter": [
-            19,
-            22
+            4,
+            4
           ],
           "commitsBeforeAfter": [
-            14,
-            15
+            3,
+            3
           ],
           "rawTypes": [
-            "topPointerUp",
-            "topPointerUp",
             "topTouchEnd",
             "topTouchEnd"
           ],
           "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": true
-          }
-        },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            19,
-            19
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
+            "callbackCount": 0,
+            "sameObject": null,
             "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
-          "timeline": [
-            "DocC",
-            "nested:A.DocC",
-            "nested:A.DocB1",
-            "nested:A.DocB2",
-            "reenter:returned",
-            "DocB1",
-            "DocB2",
-            "TouchEnd"
-          ],
-          "phases": [
-            1,
-            3,
-            3
-          ],
-          "nested": [
-            {
-              "name": "A",
-              "label": "DocC",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB1",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB2",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            }
-          ],
-          "nestedEventIdentity": {
-            "count": 3,
-            "distinctFromOuter": true,
-            "sameObject": true
-          },
-          "reentries": [
-            {
-              "by": "DocC",
-              "nestedCleaned": true,
-              "nestedTrusted": false,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 1,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": true,
-              "sameEvent": false,
-              "target": "A.Doc",
-              "threw": null
-            }
-          ],
-          "rootQueries": [
-            {
-              "offset": 36,
-              "result": true
-            }
-          ],
-          "componentQueries": 6,
-          "counterBeforeAfter": [
-            16,
-            19
-          ],
-          "commitsBeforeAfter": [
-            13,
-            14
-          ],
-          "rawTypes": [
-            "topPointerUp",
-            "topPointerUp",
-            "topTouchEnd",
-            "topTouchEnd"
-          ],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": true
-          }
-        },
-        "reentry/same-event/after/manual": {
-          "timeline": [
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            24,
-            24
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 2,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
-          "timeline": [
-            "DocB1",
-            "reenter:threw",
-            "DocB2",
-            "TouchEnd"
-          ],
-          "phases": [
-            3,
-            3
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [
-            {
-              "by": "DocB1",
-              "nestedCleaned": null,
-              "nestedTrusted": true,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 3,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": null,
-              "sameEvent": true,
-              "target": "A.Doc",
-              "threw": "Failed to execute 'dispatchEvent' on 'EventTarget': The event is already being dispatched."
-            }
-          ],
-          "rootQueries": [
-            {
-              "offset": 36,
-              "result": true
-            }
-          ],
-          "componentQueries": 6,
-          "counterBeforeAfter": [
-            22,
-            24
-          ],
-          "commitsBeforeAfter": [
-            15,
-            16
-          ],
-          "rawTypes": [
-            "topPointerUp",
-            "topPointerUp",
-            "topTouchEnd",
-            "topTouchEnd"
-          ],
-          "eventIdentity": {
-            "callbackCount": 2,
-            "sameObject": true,
-            "touchEndDistinct": true
           }
         }
       }
@@ -2300,116 +3510,263 @@
     {
       "interestMode": "current",
       "flagMode": "enabled",
-      "checks": 819,
-      "passed": 819,
-      "previousMutationChecksPreservedInOrder": 708,
-      "addedChecks": 111,
-      "reportSha256": "027eda92dac437efedcd90ad17152984a41a023baa7da1c5032f843f0aaedd0a",
-      "logSha256": "02d1c73b0571d2643e7ba182de0b71d164a7338afd3d7efaff89fd78aa07417c",
-      "checkIdDigestSha256": "15a97178f85b727f1b26fc5260f0b0a2313d41da513d3bb36b81e0d884565f7a",
-      "bundleSha256": "cf034acc44aff36b32ef088a3ae723997056f9ed4afd317bc7f7fe0f8b17785e",
+      "checks": 1037,
+      "passed": 1037,
+      "previousReentryChecksPreservedInOrder": 819,
+      "addedChecks": 218,
+      "reportSha256": "3ea42fe21d4a16fb9fbc6bde2b513d72c1109c4df9bc916acebf3aafc08005b3",
+      "logSha256": "e33269c133fa07f527cc57154528759d364087084e816ea59690a12f5ba3b78a",
+      "checkIdDigestSha256": "c0297a9c703db1b51b69f1770b6a08b5825f88835f3abceb74ade0ed2d955db1",
+      "bundleSha256": "8da129fd65a18d4131b3620d775e8ed3ee7821832a6defd151d7ec96465e012b",
       "flags": {
         "imperative": true,
         "nativeDispatch": true
       },
       "queryInstallations": 1,
       "configurations": {
-        "cross-root/B": [
+        "fault": [
           "DocC",
           "DocB"
         ],
-        "cross-root": [
+        "fault/armed37": [
+          "DocC",
           "DocB"
         ],
-        "nested-bubble": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean36": [
+          "DocB"
         ],
-        "nested-capture": [
-          "DocC",
-          "DocB1",
-          "DocB2"
+        "fault/nonboolean37": [
+          "DocC"
         ],
-        "same-event": [
-          "DocB1",
-          "DocB2"
+        "fault/throw36": [
+          "DocC",
+          "DocB"
+        ],
+        "fault/throw37": [
+          "DocC"
         ]
       },
-      "crossRootBUnchanged": {
-        "beforeCount": 5,
-        "afterCount": 5
+      "armedFaults": {
+        "fault/armed37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/nonboolean36": {
+          "label": "root36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/nonboolean37": {
+          "label": "root37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 1
+        },
+        "fault/throw36": {
+          "label": "root36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 1
+        },
+        "fault/throw37": {
+          "label": "root37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1
+        }
       },
+      "faultExpectedErrors": [
+        "GF document query deliberate fault: root36",
+        "GF document query deliberate fault: root37",
+        "Pointer listener query must return a boolean",
+        "Pointer listener query must return a boolean"
+      ],
+      "secondApplicationStoppedErrors": 4,
+      "healthyApplicationStoppedErrors": 0,
+      "fabricErrorLogLines": 4,
+      "allErrorLogLines": 4,
       "cases": {
-        "reentry/cross-root/A/up": {
+        "fault/B-healthy/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            2
+          ],
+          "commitsBeforeAfter": [
+            1,
+            2
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/armed37/recovery/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            9,
+            11
+          ],
+          "commitsBeforeAfter": [
+            7,
+            8
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/armed37/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 1
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            7,
+            9
+          ],
+          "commitsBeforeAfter": [
+            6,
+            7
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/nonboolean36/recovery/up": {
           "timeline": [
             "DocB",
-            "nested:B.DocC",
-            "nested:B.DocB",
-            "reenter:returned",
             "TouchEnd"
           ],
           "phases": [
             3
           ],
-          "nested": [
-            {
-              "name": "B",
-              "label": "DocC",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "B",
-              "label": "DocB",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            }
-          ],
+          "nested": [],
           "nestedEventIdentity": {
-            "count": 2,
-            "distinctFromOuter": true,
-            "sameObject": true
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
           },
-          "reentries": [
-            {
-              "by": "DocB",
-              "nestedCleaned": true,
-              "nestedTrusted": false,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 3,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": true,
-              "sameEvent": false,
-              "target": "B.Doc",
-              "threw": null
-            }
-          ],
+          "reentries": [],
           "rootQueries": [
             {
               "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
               "result": true
             }
           ],
+          "faultAfterUp": null,
           "componentQueries": 6,
           "counterBeforeAfter": [
-            26,
-            27
+            5,
+            6
           ],
           "commitsBeforeAfter": [
-            16,
-            17
+            4,
+            5
           ],
           "rawTypes": [
             "topPointerUp",
@@ -2423,7 +3780,160 @@
             "touchEndDistinct": true
           }
         },
-        "reentry/cross-root/B/up": {
+        "fault/nonboolean36/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "nonboolean",
+              "resultKind": "number",
+              "result": 1
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "nonboolean",
+            "offset": 36,
+            "remaining": 0
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            5,
+            5
+          ],
+          "commitsBeforeAfter": [
+            4,
+            4
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/nonboolean37/recovery/up": {
+          "timeline": [
+            "DocC",
+            "TouchEnd"
+          ],
+          "phases": [
+            1
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            6,
+            7
+          ],
+          "commitsBeforeAfter": [
+            5,
+            6
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 1,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/nonboolean37/up": {
+          "timeline": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "nonboolean",
+              "resultKind": "number",
+              "result": 1
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "nonboolean",
+            "offset": 37,
+            "remaining": 0
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            6,
+            6
+          ],
+          "commitsBeforeAfter": [
+            5,
+            5
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          }
+        },
+        "fault/throw36/recovery/up": {
           "timeline": [
             "DocC",
             "DocB",
@@ -2443,18 +3953,130 @@
           "rootQueries": [
             {
               "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
               "result": true
             }
           ],
+          "faultAfterUp": null,
           "componentQueries": 6,
           "counterBeforeAfter": [
-            5,
-            7
+            2,
+            4
           ],
           "commitsBeforeAfter": [
+            2,
+            3
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/throw36/up": {
+          "timeline": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "throw",
+              "resultKind": "throw",
+              "result": null
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": {
+            "label": "root36",
+            "mode": "throw",
+            "offset": 36,
+            "remaining": 0
+          },
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            2
+          ],
+          "commitsBeforeAfter": [
+            1,
+            2
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          }
+        },
+        "fault/throw37/recovery/up": {
+          "timeline": [
+            "DocC",
+            "TouchEnd"
+          ],
+          "phases": [
+            1
+          ],
+          "nested": [],
+          "nestedEventIdentity": {
+            "count": 0,
+            "distinctFromOuter": null,
+            "sameObject": null
+          },
+          "reentries": [],
+          "rootQueries": [
+            {
+              "offset": 36,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": true
+            }
+          ],
+          "faultAfterUp": null,
+          "componentQueries": 6,
+          "counterBeforeAfter": [
             4,
             5
           ],
+          "commitsBeforeAfter": [
+            3,
+            4
+          ],
           "rawTypes": [
             "topPointerUp",
             "topPointerUp",
@@ -2462,22 +4084,16 @@
             "topTouchEnd"
           ],
           "eventIdentity": {
-            "callbackCount": 2,
+            "callbackCount": 1,
             "sameObject": true,
             "touchEndDistinct": true
           }
         },
-        "reentry/nested-bubble/after/manual": {
+        "fault/throw37/up": {
           "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
+            "TouchEnd"
           ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
+          "phases": [],
           "nested": [],
           "nestedEventIdentity": {
             "count": 0,
@@ -2485,348 +4101,56 @@
             "sameObject": null
           },
           "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            24,
-            24
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-bubble/up": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "nested:A.DocC",
-            "nested:A.DocB1",
-            "nested:A.DocB2",
-            "reenter:returned",
-            "DocB2",
-            "TouchEnd"
-          ],
-          "phases": [
-            1,
-            3,
-            3
-          ],
-          "nested": [
-            {
-              "name": "A",
-              "label": "DocC",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB1",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB2",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            }
-          ],
-          "nestedEventIdentity": {
-            "count": 3,
-            "distinctFromOuter": true,
-            "sameObject": true
-          },
-          "reentries": [
-            {
-              "by": "DocB1",
-              "nestedCleaned": true,
-              "nestedTrusted": false,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 3,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": true,
-              "sameEvent": false,
-              "target": "A.Doc",
-              "threw": null
-            }
-          ],
           "rootQueries": [
             {
               "offset": 36,
-              "result": true
+              "action": "delegate",
+              "resultKind": "boolean",
+              "result": false
+            },
+            {
+              "offset": 37,
+              "action": "throw",
+              "resultKind": "throw",
+              "result": null
             }
           ],
+          "faultAfterUp": {
+            "label": "root37",
+            "mode": "throw",
+            "offset": 37,
+            "remaining": 0
+          },
           "componentQueries": 6,
           "counterBeforeAfter": [
-            21,
-            24
+            4,
+            4
           ],
           "commitsBeforeAfter": [
-            14,
-            15
+            3,
+            3
           ],
           "rawTypes": [
-            "topPointerUp",
-            "topPointerUp",
             "topTouchEnd",
             "topTouchEnd"
           ],
           "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": true
-          }
-        },
-        "reentry/nested-capture/after/manual": {
-          "timeline": [
-            "DocC",
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            21,
-            21
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
+            "callbackCount": 0,
+            "sameObject": null,
             "touchEndDistinct": null
-          }
-        },
-        "reentry/nested-capture/up": {
-          "timeline": [
-            "DocC",
-            "nested:A.DocC",
-            "nested:A.DocB1",
-            "nested:A.DocB2",
-            "reenter:returned",
-            "DocB1",
-            "DocB2",
-            "TouchEnd"
-          ],
-          "phases": [
-            1,
-            3,
-            3
-          ],
-          "nested": [
-            {
-              "name": "A",
-              "label": "DocC",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB1",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            },
-            {
-              "name": "A",
-              "label": "DocB2",
-              "trusted": false,
-              "phase": 2,
-              "targetMatches": true,
-              "currentMatches": true,
-              "globalEventMatches": true,
-              "currentPriority": 1
-            }
-          ],
-          "nestedEventIdentity": {
-            "count": 3,
-            "distinctFromOuter": true,
-            "sameObject": true
-          },
-          "reentries": [
-            {
-              "by": "DocC",
-              "nestedCleaned": true,
-              "nestedTrusted": false,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 1,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": true,
-              "sameEvent": false,
-              "target": "A.Doc",
-              "threw": null
-            }
-          ],
-          "rootQueries": [
-            {
-              "offset": 36,
-              "result": true
-            }
-          ],
-          "componentQueries": 6,
-          "counterBeforeAfter": [
-            18,
-            21
-          ],
-          "commitsBeforeAfter": [
-            13,
-            14
-          ],
-          "rawTypes": [
-            "topPointerUp",
-            "topPointerUp",
-            "topTouchEnd",
-            "topTouchEnd"
-          ],
-          "eventIdentity": {
-            "callbackCount": 3,
-            "sameObject": true,
-            "touchEndDistinct": true
-          }
-        },
-        "reentry/same-event/after/manual": {
-          "timeline": [
-            "DocB1",
-            "DocB2"
-          ],
-          "phases": [
-            2,
-            2
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [],
-          "rootQueries": [],
-          "componentQueries": 0,
-          "counterBeforeAfter": [
-            26,
-            26
-          ],
-          "commitsBeforeAfter": null,
-          "rawTypes": [],
-          "eventIdentity": {
-            "callbackCount": 2,
-            "sameObject": true,
-            "touchEndDistinct": null
-          }
-        },
-        "reentry/same-event/up": {
-          "timeline": [
-            "DocB1",
-            "reenter:threw",
-            "DocB2",
-            "TouchEnd"
-          ],
-          "phases": [
-            3,
-            3
-          ],
-          "nested": [],
-          "nestedEventIdentity": {
-            "count": 0,
-            "distinctFromOuter": null,
-            "sameObject": null
-          },
-          "reentries": [
-            {
-              "by": "DocB1",
-              "nestedCleaned": null,
-              "nestedTrusted": true,
-              "outerCurrentMatches": true,
-              "outerGlobalEventMatches": true,
-              "outerPathLength": 5,
-              "outerPhase": 3,
-              "outerTargetSame": true,
-              "outerTrusted": true,
-              "returned": null,
-              "sameEvent": true,
-              "target": "A.Doc",
-              "threw": "Failed to execute 'dispatchEvent' on 'EventTarget': The event is already being dispatched."
-            }
-          ],
-          "rootQueries": [
-            {
-              "offset": 36,
-              "result": true
-            }
-          ],
-          "componentQueries": 6,
-          "counterBeforeAfter": [
-            24,
-            26
-          ],
-          "commitsBeforeAfter": [
-            15,
-            16
-          ],
-          "rawTypes": [
-            "topPointerUp",
-            "topPointerUp",
-            "topTouchEnd",
-            "topTouchEnd"
-          ],
-          "eventIdentity": {
-            "callbackCount": 2,
-            "sameObject": true,
-            "touchEndDistinct": true
           }
         }
       }
     }
   ],
   "capture": {
-    "checks": 946,
-    "pixelChecks": 118,
-    "counterAndSaveChecks": 9,
+    "checks": 1179,
+    "pixelChecks": 132,
+    "counterAndSaveChecks": 10,
     "headlessCheckIdsUnchanged": true,
     "independentNodePNGByteDecode": true,
-    "reportSha256": "87ad38864714703982ce8452c779f3d7ab5dacf2a218ee45ed86e868f912b3e2",
-    "logSha256": "0c130d3b61fc029ed74e2de4cb6ae376b312ee5ee7c2abcacd26bc0fd16d9309",
+    "reportSha256": "e58711f694fcc18590b3db3539d8683a0d9983c159e660300aea489b505db9b7",
+    "logSha256": "9557a2bcaefe39d2394f825b6477eb819148dba44de5267b3a5d0ea266a95d70",
     "frames": [
       {
         "file": "pointer-document-up-initial.png",
@@ -3887,28 +5211,159 @@
           "A": 12,
           "B": 4
         }
+      },
+      {
+        "file": "throw36.png",
+        "committed": true,
+        "sha256": "47bc518a7ba46a0d06d09c3826ed972b49caa48adb466a288363707b355a3a03",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              55,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              57,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              445,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              439,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              441,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 4,
+          "B": 0
+        }
       }
     ]
   },
   "negativeControl": {
-    "sabotage": "after a returned nested dispatch, leave globalThis.event bound to the nested Event",
+    "sabotage": "a throw-mode root fault returns true without throwing, as if a failed lookup qualified the Up",
     "lane": "current/enabled",
     "command": "node tests/pointer-document-up-native.test.mjs --interest=current --flag=enabled",
-    "probeFailures": 3,
+    "probeFailures": 9,
     "failures": [
-      "reentry/nested-capture/up/Nested dispatch is untrusted at target and the outer native Event resumes intact",
-      "reentry/nested-bubble/up/Nested dispatch is untrusted at target and the outer native Event resumes intact",
-      "reentry/cross-root/A/up/Nested dispatch is untrusted at target and the outer native Event resumes intact"
+      "fault/throw36/up/Actual root lookups consume the configured fault in exact order and delegate the rest",
+      "fault/throw36/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/throw37/Actual native Up callbacks have exact flag-dependent propagation order and phases",
+      "fault/throw37/Up Raw typed and star occur once with the exact callback payload terminal fields and timestamps",
+      "fault/throw37/Terminal Raw membership excludes duplicate Up delivery and any Down event",
+      "fault/throw37/Every functional Up update batches into exactly one React commit while TouchEnd adds no state update",
+      "fault/throw37/up/Actual root lookups consume the configured fault in exact order and delegate the rest",
+      "fault/throw37/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/stop/Second application clears roots and contacts while retaining exactly the consumed fault diagnostics"
     ],
-    "sameEventCaseUnaffected": true,
-    "reportSha256": "bc3063cf5edb2a38695a5a2bc508d1fb2c642e3a12110482851fbf46f473b2c6",
-    "logSha256": "fc6280f63abe44cbf9d2f3b44ce715b3e1c111fabece305beca272fb4d5b93de",
-    "nodeTestLogSha256": "4dba3ed98332d9d3c7da8c31a69421f6feab26ecd1f838c9bed0fbd2268b7fc5",
+    "nonbooleanAndUnconsumedCasesUnaffected": true,
+    "reportSha256": "9db464e18139d71c263635bd7b0295197d94385aa47ff29d28af11b542c1495f",
+    "logSha256": "51e72bb741d5c21c137b26a0018cd6874146aa08baba2fadc348da0298e906cf",
+    "nodeTestLogSha256": "2053415e4c2bfb373aa725da46d9dea0f6aec693d53ea4799d09769e0f1843b5",
     "independentNodeOracleRejected": true,
     "oracleRunBypassedProbeStatusGates": true,
     "oracleAcceptsFinalCurrentEnabledReport": true,
-    "oracleLogSha256": "ded5468cdb9979c4546e082a3d859b5a97724544d04ba29e8dcba4b284e6026e",
-    "fixtureRestoredToPreSabotageBytes": true
+    "oracleLogSha256": "fdaa2de1cae99b1c148e3bbe569a1b48906de348915c65dbdac1fb0a30f56fe5",
+    "bootstrapRestoredToPreSabotageBytes": true
   },
   "regressions": {
     "downChecks": 2723,
@@ -3917,109 +5372,81 @@
         "interest": "original",
         "flagMode": "disabled",
         "checks": 336,
-        "reportSha256": "b3985ac85be435d9f91f3dcd5f007837fc19dcb73fe3088160efbb180f4dd4e4"
+        "reportSha256": "b311ac75dc7609cb1e36c6ee920eb0cf2829c230e55a4d74113b30932b91ac3f"
       },
       {
         "interest": "original",
         "flagMode": "imperative-only",
         "checks": 336,
-        "reportSha256": "4385a51d040a7fb56510200fcd87b46e892e1a60fb9298af2044786325b47d43"
+        "reportSha256": "abcd863fba109c6d320f047c73327cd3aebe952463872326170b1380082fcc21"
       },
       {
         "interest": "original",
         "flagMode": "internal-only",
         "checks": 338,
-        "reportSha256": "91587f0e8afc51114d35142be4389563dac3ceb3a38afacfbd9e359b06b8fcec"
+        "reportSha256": "71accb2789e776018295be2ba8946ddbc8e7ddd8b452cfdec67db9083278884c"
       },
       {
         "interest": "original",
         "flagMode": "enabled",
         "checks": 338,
-        "reportSha256": "6c21d8314329b1c39956fcb5819b1eb828b1289061d6a5235db8220d79881fc0"
+        "reportSha256": "3d3cfcb9679ab43b575b727a250e1c6fa43d94b25054c0da369c824050039ffd"
       },
       {
         "interest": "current",
         "flagMode": "disabled",
         "checks": 336,
-        "reportSha256": "0199b2c6eb058805aadc889357ba9b2505296d35636f2e8f1659ad77073748cf"
+        "reportSha256": "744c83d14ebcfe40b6fc423007e44e3fbd333caff776ba58c3f362b258c5c312"
       },
       {
         "interest": "current",
         "flagMode": "imperative-only",
         "checks": 336,
-        "reportSha256": "f2f1b50bb1f3d61845a5577f43075c3a0993d61513f851dd2292fa8dc06bbda6"
+        "reportSha256": "90e56c6ea5d74e91e55a6a16379c4a541d16f0778ed0f896dcc820f1e9145140"
       },
       {
         "interest": "current",
         "flagMode": "internal-only",
         "checks": 340,
-        "reportSha256": "2f2c815cd3804c2ddc3acef940d5c5b677aff0aa68e5dba719dd4f91ac9b8047"
+        "reportSha256": "46a68a26dcc37decca25e141ca9404efcdabd83b10a70b44860dae9d2d02e651"
       },
       {
         "interest": "current",
         "flagMode": "enabled",
         "checks": 363,
-        "reportSha256": "12fe9cf054922d14e06a19cb583b4463c6f36ac1a5c10ce334f6254e0acd8e14"
+        "reportSha256": "c9db6e8c5e269aaabe2a061c1906dd6cc10b478e3c0a460da73f55e9dc6d9508"
       }
     ],
-    "downLogSha256": "6b94e306b2701c14efbaf2da00879ad6b0ce39e647b1655675eddb954249f1ef",
+    "downLogSha256": "628340afb303e66c5bfe39f5b791fd6880abe00b217b9ce5f96607437fa19fde",
     "nativeAndSDKProductionFilesUnchanged": true,
     "changedFilesSinceExecutionBase": [
-      "README.md",
-      "ROADMAP.md",
-      "dashboard/migration.json",
-      "docs/evidence/README.md",
-      "docs/research/pointer-document-up.md",
-      "examples/pointer-document-up/README.md",
-      "tests/pointer-document-fixture.jsx",
       "tests/pointer-document-up-native.test.mjs",
       "tests/pointer-document-up-probe.gd"
     ],
     "newSDKRuntimeCertificationClaimed": false,
     "nodeContractChecks": 255,
     "pythonContractChecks": 13,
-    "contractsLogSha256": "5b7384ecd193d3a759119831f39b1281a2e6b05d728c6863fce3ac2bd07e9422",
+    "contractsLogSha256": "6e9e4ffcaa26008d26920bdf9cc7e1fa89cc278a9f7d8cf6a674a525b048d8ca",
     "examplesLogSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
     "staticCheckPassed": true,
     "publicationScanPassed": true
   },
   "hostedCI": {
-    "status": "verified-hosted-reentry-artifact",
-    "receipt": "hosted-ci.json",
-    "receiptSha256": "5ef018ff8880c2272baf2be065c457e9dc4d9db371a177f44ff4ca9c707836dc",
-    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37321794370",
-    "headSha": "4a907dd2f5fa719f77a7ba5e09d2bfceab855f5f",
-    "checkoutSha": "d52156953cb52fc488df9ccdefa895b49ec93442",
-    "jobs": 5,
-    "headlessChecks": 5097,
-    "checkIdsBundlesAndReentryStagesEqualLocal": true,
-    "trackedInputsMatchImplementationInCheckoutTree": 71,
-    "viewportAndPixelsRemainLocal": true,
-    "previousMutationAudit": "../pointer-document-up-mutation/hosted-ci.json"
+    "status": "pending-fault-slice",
+    "previousReentryAudit": "../pointer-document-up-reentry/hosted-ci.json"
   },
   "limits": [
-    "Reentry starts from delivered Document capture/bubble Up callbacks and dispatches a new untrusted pointerup on the own or another root's Document, or re-dispatches the native Event itself.",
-    "Nested dispatch on documentElement or a View, nested dispatch that throws or calls preventDefault/stopPropagation, listener errors inside nested dispatch and deeper nesting levels are not certified.",
-    "Nested events never update React state in this fixture; the slice does not certify React updates or commits scheduled from a nested dispatch.",
-    "The root interest query runs before dispatch; nested dispatch issues no native query, Raw or state change and does not certify gestures whose query is negative.",
-    "Up query/resolver faults, captured/no-hit/null-target Up, Down/Up pointerId pairing, other event categories, hardware/mobile and performance remain open.",
-    "Original/current are SDK interest-mode controls on the same native binary, not old/new native host controls.",
-    "The executed tree was dirty after dbd6324; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+    "One-shot throw and non-boolean faults on the actual bound documentElement root handle at Up offsets 36/37, run in a second application after the healthy matrix stopped.",
+    "Component (View) Up query faults, resolver getter faults on Up, stateNode/canonical faults, faults during retirement or stop and repeated faults are not certified.",
+    "A consumed fault rejects only its own lookup; the slice shows a capture lookup still qualifying after a bubble fault, but not every listener-phase combination.",
+    "Up query/resolver faults beyond the root handle, captured/no-hit/null-target Up, Down/Up pointerId pairing, other event categories, hardware/mobile and performance remain open.",
+    "Original/current are SDK interest-mode controls on the same native binary, not old/new native host controls; no native code changed.",
+    "The executed tree was dirty after f5660c6; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
   ],
   "sourceVerification": {
     "method": "git show IMPLEMENTATION:path and SHA-256 against executed raw reports",
     "uniqueTrackedInputCount": 71,
     "allExecutedCodeAndConfigurationInputsMatchImplementationCommit": true,
     "executionBaseAndDirtyStatePreserved": true
-  },
-  "dashboardPublication": {
-    "status": "verified-public-branch-data",
-    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37325323565",
-    "dataCommit": "d67e9817d4774e7e0a501a00f02baf64059c2449",
-    "mainRendererCommit": "33773437f736f9d9beeffbe9db69ad3bab1524d1",
-    "completePublicJSONMatchesCommittedData": true,
-    "localLiveAPIEqualsCommittedData": true,
-    "buildAndDeployPassed": true,
-    "receipt": "docs/evidence/pointer-document-up-reentry/publication.json"
   }
 }

@@ -16,6 +16,9 @@ globalThis.PointerDocumentUpProbe = {
   // Retained OldDoc/OldRoot listeners keep their original Up registration on
   // the retired root objects; the replacement root starts with empty Maps.
   rerender: base.rerender, inspectIdentity: base.inspectIdentity, inspectRetained: base.inspectRetained,
+  // One-shot faults on the actual bound documentElement at Up offsets 36/37.
+  faultRoot(name, offset, mode) { return base.faultRoot(name, offset, mode); },
+  clearFault: base.clearFault,
   retainRoot(name) { return base.retainRoot(name, "pointerup"); },
   manualRetained(key) { return base.manualRetained(key, "pointerup"); },
   snapshot() {
