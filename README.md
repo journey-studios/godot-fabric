@@ -203,6 +203,16 @@ phases 1 and 3; enter/leave reach only capture listeners, when the pointer enter
 or leaves the surface; a retained control that ignores the owner Document fails.
 [Evidence](docs/evidence/pointer-document-hover/README.md).
 
+The [touchables example](examples/touchables/README.md) makes
+`TouchableWithoutFeedback` and `TouchableHighlight` public with RN's original
+modules and Pressability: callback order, native underlay and child opacity,
+`delayPressOut`, long press, hitSlop and retention, nesting, disabled and removal
+mid-press under real mouse and touch on two roots, 93 headless checks. The same
+fixture on the preceding SDK fails exactly its 19 render checks, and a retained
+imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
+Animated needs `NativeAnimatedModule`.
+[Evidence](docs/evidence/touchables/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

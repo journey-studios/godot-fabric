@@ -214,6 +214,18 @@ leaving with the root; bubble enter/leave listeners on the root never run. A
 retained control that ignores the owner Document for hover offsets fails 34/22
 probe checks, and the independent oracle rejects it. Hosted CI pending.
 
+The [touchables record](touchables/README.md) runs RN's original
+`TouchableWithoutFeedback` and `TouchableHighlight` from the public facade with
+actual Godot mouse and touch on two roots: 93/93 headless checks. Callbacks keep
+Pressability's order and payloads (press out before press on release), the
+Highlight's underlay and child opacity show on the native Controls with its
+`delayPressOut` timer, and long press, hitSlop and retention, disabled grants,
+nesting and removal mid-press follow RN. The same fixture on the preceding SDK
+fails exactly its 19 render checks; a retained imitation over the SDK Pressable
+fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
+lane shows RN's original TouchableOpacity failing at mount without
+`NativeAnimatedModule`. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.
