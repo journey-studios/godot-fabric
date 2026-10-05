@@ -39,6 +39,7 @@
     "tests/pointer-root-path-fixture.jsx",
     "tests/pointer-document-hover-fixture.jsx",
     "tests/pointer-click-fixture.jsx",
+    "tests/pan-responder-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx",
     "tests/app-state-fixture.jsx",
     "tests/switch-fixture.jsx",

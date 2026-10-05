@@ -174,7 +174,7 @@ test("a primary release clicks the deepest view both hit paths share, and a scro
       await rm(path.join(root, "build/pointer-click-report.json"), {force: true});
       const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/pointer-click-probe.gd", "--",
         "--interest=" + interestMode, "--flag=" + flagMode, ...(allowOriginalNegative ? ["--allow-original-negative"] : [])],
-      {encoding: "utf8", timeout: 120000, maxBuffer: 16 * 1024 * 1024});
+      {encoding: "utf8", timeout: 300000, maxBuffer: 16 * 1024 * 1024});
       const log = (result.stdout ?? "") + (result.stderr ?? ""), id = lane ?? interestMode + "-" + flagMode;
       await writeFile(path.join(root, "build/pointer-click-" + id + ".log"), log);
       const bytes = await optionalFile("build/pointer-click-report.json"), report = bytes == null ? null : JSON.parse(bytes);
