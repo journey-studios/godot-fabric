@@ -212,3 +212,8 @@ certifica:
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
+
+As 77 fontes de código/configuração executadas (17 produtoras do bundle, 55 entradas
+do build nativo e 7 de verificação, com sobreposição) correspondem à implementação
+`f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad` por `git show`/SHA-256. O recibo preserva a base
+a0ec86b e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.

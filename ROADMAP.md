@@ -1440,8 +1440,9 @@ certify: a Document/documentElement `pointermove` listener now qualifies any mov
 in its surface through the shared root path. Document pointermove and its flag
 matrix, resolver faults during Move lookups, hover events, the per-move query
 cost, captured/no-hit moves (non-unique Unspecified in the host, unlike RN),
-responders and multi-touch remain open. Hosted CI for this slice is
-pending. No whole GF, checkpoint, weight or denominator closes.
+responders and multi-touch remain open. All 77 executed
+code/configuration inputs match implementation f9f9817 via git show/SHA-256
+(execution base a0ec86b/dirty retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

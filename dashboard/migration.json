@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "View pointermove nativo validado; próximos: CIs das fatias pendentes e Document pointermove"
   },
-  "updatedAt": "2026-10-05T16:44:32.533664+00:00",
+  "updatedAt": "2026-10-05T16:53:12.155102+00:00",
   "source": {
-    "commit": "63c50137786b4b9789bd1019a381efd43f31a944",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/63c50137786b4b9789bd1019a381efd43f31a944",
-    "scope": "View pointermove com interesse nativo: listeners imperativos originais de pointermove na View qualificam a emissão nativa. 219 checks headless (135 saudáveis e 84 numa aplicação de faults de Move) e 243 viewport/20 pixels; o host anterior com o mesmo bundle do SDK falha exatamente 45 checks normativos. Correção nos quatro pontos de Down/Up: consulta do overlay do EventTarget, offsets 1/25 no plugin do SDK, whitelist do callback nativo e cláusula topPointerMove no overlay gerado do PointerEventsProcessor. Listener na View alvo qualifica com 1=true (bubble) ou 1=false/25=true (capture-only) em fase 2; na View pai, o par vazio do alvo vem antes e os callbacks rodam em fase 3 ou 1. Drags de toque e mouse sem botão entregam 1 callback trusted e 1 commit por amostra despachada, em prioridade Default (moves únicos Continuous do host, como no RN; sem ContinuousStart um move Unspecified rodaria Discrete). B sem listeners consulta o caminho inteiro em ordem (B, pai, container do AppRegistry, raiz), todos false. O host faz flush da fila do RN a cada input, então o coalescing de moves do RN nunca encontra move pendente; o acúmulo de input do Godot funde amostras por frame. Registros de build nativo diferem só em host, application_runtime.cpp, rn-pointer-overlay.mjs e na árvore gerada (5 de 6708 entradas). Controles de host anterior refeitos (View Up 8, query 12, resolver 3). Lookups de Move rodam a cada amostra (hover incluído): o host retém cada causa distinta de falha de Move uma vez como E_POINTER_LISTENER_QUERY, até 16 por aplicação, e só conta as repetições em pointerListenerQuerySuppressed; throw repetido no lookup bubble e não booleano no capture deixam 1 diagnóstico cada, as recuperações entregam e 15 causas distintas preenchem o limite. Também habilitado sem certificação: listener pointermove em Document/documentElement qualifica moves pela raiz. Execução sobre 69bd3b6/dirty; 77 inputs executados conferidos por git show/SHA-256 contra 63c5013; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
+    "scope": "View pointermove com interesse nativo: listeners imperativos originais de pointermove na View qualificam a emissão nativa. 219 checks headless (135 saudáveis e 84 numa aplicação de faults de Move) e 243 viewport/20 pixels; o host anterior com o mesmo bundle do SDK falha exatamente 45 checks normativos. Correção nos quatro pontos de Down/Up: consulta do overlay do EventTarget, offsets 1/25 no plugin do SDK, whitelist do callback nativo e cláusula topPointerMove no overlay gerado do PointerEventsProcessor. Listener na View alvo qualifica com 1=true (bubble) ou 1=false/25=true (capture-only) em fase 2; na View pai, o par vazio do alvo vem antes e os callbacks rodam em fase 3 ou 1. Drags de toque e mouse sem botão entregam 1 callback trusted e 1 commit por amostra despachada, em prioridade Default (moves únicos Continuous do host, como no RN; sem ContinuousStart um move Unspecified rodaria Discrete). B sem listeners consulta o caminho inteiro em ordem (B, pai, container do AppRegistry, raiz), todos false. O host faz flush da fila do RN a cada input, então o coalescing de moves do RN nunca encontra move pendente; o acúmulo de input do Godot funde amostras por frame. Registros de build nativo diferem só em host, application_runtime.cpp, rn-pointer-overlay.mjs e na árvore gerada (5 de 6708 entradas). Controles de host anterior refeitos (View Up 8, query 12, resolver 3). Lookups de Move rodam a cada amostra (hover incluído): o host retém cada causa distinta de falha de Move uma vez como E_POINTER_LISTENER_QUERY, até 16 por aplicação, e só conta as repetições em pointerListenerQuerySuppressed; throw repetido no lookup bubble e não booleano no capture deixam 1 diagnóstico cada, as recuperações entregam e 15 causas distintas preenchem o limite. Também habilitado sem certificação: listener pointermove em Document/documentElement qualifica moves pela raiz. Execução sobre a0ec86b/dirty; 77 inputs executados conferidos por git show/SHA-256 contra f9f9817; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -492,7 +492,7 @@
             },
             {
               "label": "View pointermove nativo: 219 checks, 243 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
             },
             {
               "label": "CI faults de View Up 37330669524: 5 jobs, 240 checks e 81 blobs auditados",
@@ -667,7 +667,7 @@
             },
             {
               "label": "View pointermove nativo: 219 checks, 243 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
             },
             {
               "label": "CI faults de View Up 37330669524: 5 jobs, 240 checks e 81 blobs auditados",
@@ -894,7 +894,7 @@
             },
             {
               "label": "View pointermove nativo: 219 checks, 243 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
             },
             {
               "label": "CI faults de View Up 37330669524: 5 jobs, 240 checks e 81 blobs auditados",
@@ -1320,7 +1320,7 @@
             },
             {
               "label": "View pointermove nativo: 219 checks, 243 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
             },
             {
               "label": "CI faults de View Up 37330669524: 5 jobs, 240 checks e 81 blobs auditados",
@@ -3152,7 +3152,7 @@
         "GF-13"
       ],
       "message": "View pointermove nativo: 219 headless (135 saudáveis + 84 de faults de Move) e 243 viewport/20 pixels; o host anterior com o mesmo bundle falha exatamente 45 checks normativos. Listeners no alvo e no pai (fases 2, 3 e 1), drags e mouse sem botão entregam 1 move trusted e 1 commit por amostra em prioridade Default; B consulta o caminho inteiro false. Falhas de lookup de Move ficam limitadas: 1 diagnóstico por causa distinta, até 16, repetições contadas. Controles de host anterior 8/12/3 refeitos. Document pointermove fica habilitado sem certificação. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad/docs/evidence/pointer-move/README.md"
     },
     {
       "id": "pointer-up-resolver-fault-local-verified-20261005",

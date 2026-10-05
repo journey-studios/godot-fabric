@@ -5,7 +5,7 @@
   "at": "2026-10-05T16:52:12.150093+00:00",
   "executionBaseCommit": "a0ec86bed2e3703cb1dd5b0fe624fbc9a28e6324",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": null,
+  "implementationCommit": "f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -2712,5 +2712,17 @@
         "logSha256": "0e9784d3e517a48ec7e5b0e18e9c8f45dc70c1ab2681d9723e1be7b6ad7caf99"
       }
     }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 77,
+    "pinSetCounts": {
+      "sourcePins": 17,
+      "nativeSourcePins": 55,
+      "verificationSourcePins": 7
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
   }
 }
