@@ -188,5 +188,5 @@ renderer, hardware/mobile exports or performance. Down is filtered here; no
 public Down/Up pointer-ID equality is claimed. The final Down regression passes 2,723 checks; contracts pass 255 Node/13 Python.
 Native/SDK production bytes are unchanged from the separately proven View Up
 slice. Hosted baseline 84270fb passed 1,371 checks in five successful jobs and
-lifecycle run 37246479501 passed 2,143; the refs slice's hosted run is pending. The
+lifecycle run 37246479501 passed 2,143 and refs run 37310815360 passed 2,709. The
 [research](../../docs/research/pointer-document-up.md) explains the boundaries.

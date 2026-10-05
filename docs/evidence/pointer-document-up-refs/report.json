@@ -3499,7 +3499,17 @@
     "publicationScanPassed": true
   },
   "hostedCI": {
-    "status": "pending-refs-slice",
+    "status": "verified-hosted-refs-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "3a5861e4bf481679a103bffff40dc41fa7cd3c050a5bde96c00ef7f06cfb7eea",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37310815360",
+    "headSha": "862e39d260bb6e0cddf92461bcc90991db946b4e",
+    "checkoutSha": "3f52374170835a1562b290e679b825c47111ecc6",
+    "jobs": 5,
+    "headlessChecks": 2709,
+    "checkIdsBundlesAndRefsStagesEqualLocal": true,
+    "trackedInputsMatchImplementationInCheckoutTree": 71,
+    "viewportAndPixelsRemainLocal": true,
     "previousLifecycleAudit": "../pointer-document-up-lifecycle/hosted-ci.json"
   },
   "limits": [
