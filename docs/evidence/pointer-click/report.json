@@ -1,0 +1,1579 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-click",
+  "status": "verified-local-eight-lanes-preceding-host-negative-controls-and-regressions",
+  "at": "2026-10-05T20:53:43.128656+00:00",
+  "executionBaseCommit": "15e1dda2b2daa31650cc0bd427651499a33410eb",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "8948a1c05ae8d99c780182bb7e94adec89d8c789",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "nativeHostSha256": "8a5d6e30a23273b1c134e5cb51c6abdddf5e015daafc3168b0031ad11aa27b73"
+  },
+  "commands": [
+    "npm run test:pointers:click",
+    "npm run test:pointers:click -- --allow-original-negative (preceding host)"
+  ],
+  "headlessChecks": 728,
+  "lanes": [
+    {
+      "interest": "original",
+      "flagMode": "disabled",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "cf852529bf1071216e02d9fab664a83f778424db5a5370608db46f640bd7c933",
+      "reportSha256": "9190f8602c35a3e00942057303f4cebe913200cf07f32150a2880c53769b63c9",
+      "logSha256": "4c5d92f653833af9a4492bcae9300d2ddabea125d11f6647a3643baab0cc43e4",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "C-capture@None",
+        "L1@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnSiblings": [
+        "C-capture@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnTopLevel": [],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "original",
+      "flagMode": "imperative-only",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "c28f8e5ca86a286c1b31f48a8e084c41d14897e4e3d9f34353df2936023bff51",
+      "reportSha256": "888b5845415ff5d650173f6aee053b7ccc5db2668bf1604eccde78a6f443f46c",
+      "logSha256": "d7a331cc9013b48fdf700431e38860cf2a8051e90e8583ff35a1d63836d0d4cf",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "C-capture@None",
+        "L1@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnSiblings": [
+        "C-capture@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnTopLevel": [],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "original",
+      "flagMode": "internal-only",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstalled": false,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "337c94695f8643bf330e1717a2b8a6e491e5ea9de654b7aa78a650e85da991df",
+      "reportSha256": "6a72d39c210a1b6aee5e11658463326aaf842f78d14503d2be2461b7c55dd1be",
+      "logSha256": "8d4c4a6dec90085d7c2e4fe7f27c8812191b6426924922dfe46d2e9c9ec11246",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "DocC@1",
+        "C-capture@1",
+        "L1@2",
+        "G@3",
+        "C@3",
+        "DocB@3"
+      ],
+      "deliveredOnSiblings": [
+        "DocC@1",
+        "C-capture@1",
+        "G@2",
+        "C@3",
+        "DocB@3"
+      ],
+      "deliveredOnTopLevel": [
+        "DocC@1",
+        "DocB@3"
+      ],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "original",
+      "flagMode": "enabled",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstalled": false,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "89a1ef465508aafe864018c9cbbdc7bf872e05c3945d121213aef4fc41155684",
+      "reportSha256": "b29be6c9037ff39e5c599f02ce0ad9426988e62733be5bd16a693e950fa9ee9f",
+      "logSha256": "f0a3e93206b0d9624003d42576837d1207b668f560d76268e60ec5bf9d20426a",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "L1@2",
+        "G@3",
+        "GB@3",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "deliveredOnSiblings": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "G@2",
+        "GB@2",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "deliveredOnTopLevel": [
+        "DocC@1",
+        "RootC@1",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "current",
+      "flagMode": "disabled",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "9d485a86ff81440c92b3debff20ef10f75aa2c158d636ad2a2851c323aa1b0da",
+      "reportSha256": "0f5a6644b22504e44fc78b1c26dcd461174a1eaf781f2fc41f2a0d70eb662441",
+      "logSha256": "6a27a34aaa40a8227a31f618b153311c33b1196684c1bc33f936021963e9f4c7",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "C-capture@None",
+        "L1@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnSiblings": [
+        "C-capture@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnTopLevel": [],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "current",
+      "flagMode": "imperative-only",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "15a7859881f90981900efff69c247a13bf49c7c3bea2ef0b60d09f771cb68d96",
+      "reportSha256": "f3ddeb0620b332b4caa7b1a331c353ddf2b7c9bc503ee985fed7fabe7fb15ef5",
+      "logSha256": "d700ccef264c0a6af7df9a59a3964b0b07b864c72d34ecf6359c9ed5da5a2c84",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "C-capture@None",
+        "L1@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnSiblings": [
+        "C-capture@None",
+        "G@None",
+        "C@None"
+      ],
+      "deliveredOnTopLevel": [],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "current",
+      "flagMode": "internal-only",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstalled": true,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "6ed49778aa9c38d985a2b13397f5b4bf990de47bc805e550e8c43169ab6b9bf8",
+      "reportSha256": "8a18cc8d9bd8500b45484b38e9135feb7462fd2a31c22734ca03b892cab7f89b",
+      "logSha256": "e2393d4155bf104768a2a656c7fb454469e9579ef2e09cc3befc762004ed499a",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "DocC@1",
+        "C-capture@1",
+        "L1@2",
+        "G@3",
+        "C@3",
+        "DocB@3"
+      ],
+      "deliveredOnSiblings": [
+        "DocC@1",
+        "C-capture@1",
+        "G@2",
+        "C@3",
+        "DocB@3"
+      ],
+      "deliveredOnTopLevel": [
+        "DocC@1",
+        "DocB@3"
+      ],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    },
+    {
+      "interest": "current",
+      "flagMode": "enabled",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstalled": true,
+      "checks": 91,
+      "passed": 91,
+      "checkIdDigestSha256": "32fc946ec16b4f0da64f785757946d655d3c03235d6d1e1a30df2eee8b472a98",
+      "bundleSha256": "7673f94efe9aef55fb3887a4515629fd85675f6b2d9596646030045468d30761",
+      "reportSha256": "d21f838389b24eb25e5bd6731c6984e8cf3f72040cbdd0fca4c64297f4436cf4",
+      "logSha256": "1fbc1b655fac720d84ad0fa86fa9ffc3686933f8e8a68bf242bc4a1dd69f1128",
+      "clickTargets": {
+        "B/mouse/same": [
+          "L1"
+        ],
+        "mouse/after-scroll": [
+          "L1"
+        ],
+        "mouse/cancel": [],
+        "mouse/chord-left-last": [
+          "L1"
+        ],
+        "mouse/chord-right-last": [],
+        "mouse/cousin": [
+          "C"
+        ],
+        "mouse/cross-root": [],
+        "mouse/empty-down": [],
+        "mouse/group-to-leaf": [
+          "G"
+        ],
+        "mouse/leaf-to-group": [
+          "G"
+        ],
+        "mouse/middle": [],
+        "mouse/outside": [],
+        "mouse/removed": [],
+        "mouse/right": [],
+        "mouse/root-empty": [],
+        "mouse/same": [
+          "L1"
+        ],
+        "mouse/scroll-takeover": [],
+        "mouse/siblings": [
+          "G"
+        ],
+        "mouse/top-level": [
+          "W"
+        ],
+        "touch/cancel": [],
+        "touch/drag": [
+          "G"
+        ],
+        "touch/pressable": [
+          "P"
+        ],
+        "touch/same": [
+          "L1"
+        ],
+        "touch/scroll-takeover": [],
+        "touch/scroll-tap": [
+          "I0"
+        ],
+        "touch/secondary": [
+          "L1"
+        ]
+      },
+      "deliveredOnSameLeaf": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "L1@2",
+        "G@3",
+        "GB@3",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "deliveredOnSiblings": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "G@2",
+        "GB@2",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "deliveredOnTopLevel": [
+        "DocC@1",
+        "RootC@1",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "counters": {
+        "A": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 3,
+          "ends": 20,
+          "grants": 3,
+          "hoverPointers": 0,
+          "moves": 17,
+          "pointerCancels": 5,
+          "pointerClicks": 13,
+          "pointerDowns": 26,
+          "pointerLeaves": 1,
+          "pointerMoves": 33,
+          "pointerTakeovers": 2,
+          "pointerUps": 21,
+          "releases": 3,
+          "responder": 0,
+          "starts": 23,
+          "takenPointers": 0
+        },
+        "B": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 1,
+          "grants": 0,
+          "hoverPointers": 0,
+          "moves": 0,
+          "pointerCancels": 0,
+          "pointerClicks": 1,
+          "pointerDowns": 1,
+          "pointerLeaves": 1,
+          "pointerMoves": 1,
+          "pointerTakeovers": 0,
+          "pointerUps": 1,
+          "releases": 0,
+          "responder": 0,
+          "starts": 1,
+          "takenPointers": 0
+        },
+        "expectedClicks": {
+          "A": 13,
+          "B": 1
+        }
+      }
+    }
+  ],
+  "precedingHostControl": {
+    "nativeHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1",
+    "builtFrom": "15e1dda2b2daa31650cc0bd427651499a33410eb",
+    "lane": "current-enabled",
+    "checks": 91,
+    "normativeFailures": 31,
+    "clickCasesWithoutClick": 14,
+    "takeoverFailures": 2,
+    "sameSDKBundle": true,
+    "reportSha256": "ad27155002e94320aef43d058e858086e2b0b239e43f36a6185576b13e940f17",
+    "logSha256": "52163123508dbb837b35a7523fe39786cbbfd5d456cd395302ee90e2442e8ce5"
+  },
+  "negativeControls": {
+    "hostClicksReleaseTarget": {
+      "sabotage": "the adapter clicked the release target whenever the Down path was not empty",
+      "checks": 91,
+      "failed": 10,
+      "failingCases": [
+        "mouse/cousin",
+        "mouse/group-to-leaf",
+        "mouse/siblings",
+        "mouse/top-level",
+        "touch/drag"
+      ],
+      "reportSha256": "b9766fe5f14693a7158e8644521d07f43f879be6c79b249e280b2f18f24e9f74",
+      "logSha256": "60379fefc7d3815658af7ddf5659f29f6e7814bf0e7c4c4a4aa28796f9915ad1",
+      "adapterSourceRestoredToPreSabotageBytes": true,
+      "rebuiltHostSha256MatchesExecutedHost": true
+    },
+    "sdkWithoutTopClick": {
+      "sabotage": "the SDK base view config declared neither topClick nor onClick/onClickCapture",
+      "legacyLane": {
+        "checks": 91,
+        "failed": 35,
+        "failingCases": [
+          "B/mouse/same",
+          "cleanup",
+          "mouse/after-scroll",
+          "mouse/chord-left-last",
+          "mouse/cousin",
+          "mouse/group-to-leaf",
+          "mouse/leaf-to-group",
+          "mouse/same",
+          "mouse/scroll-takeover",
+          "mouse/siblings",
+          "mouse/top-level",
+          "native",
+          "touch/drag",
+          "touch/pressable",
+          "touch/same",
+          "touch/scroll-takeover",
+          "touch/scroll-tap",
+          "touch/secondary"
+        ],
+        "reportSha256": "41e929f32e633e9ccda3dd5e7296130e6ffda8b621efe618f60f5b0262beea68",
+        "logSha256": "0af06d0ef9ff39560b454bb6ad5b7cc1893dd811a3dd476d57b12277eb9f281d",
+        "unsupportedTopClickErrors": 64
+      },
+      "enabledLane": {
+        "checks": 91,
+        "failed": 18,
+        "failingCases": [
+          "B/mouse/same",
+          "mouse/after-scroll",
+          "mouse/chord-left-last",
+          "mouse/cousin",
+          "mouse/group-to-leaf",
+          "mouse/leaf-to-group",
+          "mouse/same",
+          "mouse/siblings",
+          "mouse/top-level",
+          "touch/drag",
+          "touch/pressable",
+          "touch/same",
+          "touch/scroll-tap",
+          "touch/secondary"
+        ],
+        "reportSha256": "8ef22da55a5d26baaf8055a9e5e0ce05a2d8a9968768cdf78cbf00e32c432bce",
+        "logSha256": "57cc4b59de0e264dfada5a0cb0edd62858de33c30709c9d93e598a13464dc643"
+      },
+      "baseViewConfigRestoredToPreSabotageBytes": true
+    },
+    "independentNodeOracleRejectedAll": true,
+    "oracleRunBypassedProbeStatusGates": true,
+    "oracleAcceptsFinalReports": true,
+    "oracleLogSha256": "46d84ab23c430b7d5bd1fb30f6fba00d11d313282ecc8626c0274485ee7051bd"
+  },
+  "refreshedPrecedingHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 63,
+      "normativeFailures": 8,
+      "reportSha256": "d5bd469e74a950cab9b664806a93fda57e02fe4c6caf34d233cb0e7451d0fb7d",
+      "bundlerPinSha256": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 187,
+      "normativeFailures": 12,
+      "reportSha256": "8ae19245dc1c5eda2afb55e17ebc5f245c82bce9356028e26467b5524dd8ac42",
+      "bundlerPinSha256": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 66,
+      "normativeFailures": 3,
+      "reportSha256": "ec259fb09c3ee27c51f5674cd7f7085a1cc32b12f99f09cf1b5ef2ec2be934fb",
+      "bundlerPinSha256": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358"
+    },
+    "pointer-move": {
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "preservedHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 136,
+      "normativeFailures": 45,
+      "reportSha256": "aa2e5cfe31d6696e70300d1d254aec1ada2e56bf0deb6af999374344e69043d2",
+      "bundlerPinSha256": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358"
+    },
+    "pointer-hover": {
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "preservedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 137,
+      "normativeFailures": 32,
+      "reportSha256": "23a7d46529be5f96ca151392a7c3b0066f2732298c4248d46e4e3f592d93a92b",
+      "bundlerPinSha256": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358"
+    },
+    "pointer-root-path": {
+      "nativeHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "preservedHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "checks": 45,
+      "normativeFailures": 9,
+      "reportSha256": "ce857b397fb4cf637134617891cdbe12d596e1bd1b3727013fe39b10c1fb5a07",
+      "bundlerPinSha256": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358",
+      "documentCaseCrashedAsExpected": true,
+      "documentCaseLogSha256": "9286c6ff1115d4e0fd6348b30d232906d5e1e1beadcc04ba2762f1151069d275"
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 262,
+        "logSha256": "14e89a0c5f86dc26fd204871c4e00fb19be88aa8a0e5893636dde3473b4b48b7"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "7187e431a51d7a60f9d8855c0d97b943b59dd6f1d0b97eb63d6d4de6a8206111"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "620337fd4ec0cd9fb09f4634c7ec965c9a2bddcb83dbb1a40e8dc50abb29b664"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "de45eff6b1a66104193b1e0eb318c4f31e6574766f06c40efb03e42f16f12dd4"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 125,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 51,
+        "logSha256": "0493ca0d9f9785c8e1fbb5f8e07df438f485df6db28ab2a12d2da140be38c03f"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 63,
+        "logSha256": "3d2f3f3b13418396d22401a68a4a129e865fd626d57d961d1916f43ebe161137"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 49,
+        "logSha256": "3179986bd6480a03568d0199f647ee8d22af06fb26262f61e5fa9f590872fd0d"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 26,
+        "logSha256": "586205ef5169004edc34293b1afb43e1c79919090b3d54754b66b300445b7b3d"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "16130b2b78a7baf6fb376f2fe0e203b2504bb8d824f3be9f21fcd99e23f7cab6"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "c6d129371097b2e41694035934bbbe6eb68d2f451a0952b65cdf8f339efd0d39"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 30,
+        "logSha256": "5207f18178ed99480d8180767128f4bdd69ee0f23bafa799841961aa38e15508"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "49f2237a92a5fa8bb26d46c30a08ac8fca7a32c8c76c14648482df97be9bb06f"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "6d8321d17ceea4ab32a2d397f8d381a0230c279b6beb1b46cdd1f8ed05284d20"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 24,
+        "logSha256": "279c20eb2bae67914faa03fdc435a33ea0ebb423b65550e750c102012c0c1b42"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "5edac4f77413090500504d79492b5ecdba4e6d172d2067f9bdc501a9a9480515"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "fe817ff810fa50a8670b641234114d8dd6cee03aa55f62ed5d56b0f8b75e9892"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 77,
+        "logSha256": "8555c331058e09df8a35b3ffbddfc049c093d9fa2dff93995deefe1d76b751f6"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "90add6d773ee5d46ce1cf367f23e4f4d1f9cf236cb76a92e8d675f231be75d37"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "2c848c3ec286e3911131e02c1d635106a2b3de976df78eae734ff7c75208f870"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 87,
+        "logSha256": "f75817a5b50bd9ec1bbf2e5940542e3bcf24babff57c934ca3e6af197a60c117"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "762196e87bb3f50e5f783b89da0c6b4641ec0c63cde95330014e01de06737928"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "a4c0a55b49a05103eb002c9ef6b304b17c7fc77ec0c5e47371ea3ccc128cd396"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 37,
+        "logSha256": "d3849cc4e146664e1e38c72af6ffb29e51a66274621dd81b490b5cafdbc6b9e0"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "338e2b3f5f2bbfe8ef48ffea4d29b7f1b3d5543b17bd4af491ff3591996b4a52"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "77b14591b602f66636d73a4a0fda1683b0e28cbed8c2ea11779b3e138e02e9f6"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "7fb705818cb65aba45e872faba9e648e32bd438540488030c9414ed04db235eb"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 61,
+        "logSha256": "874deb028b1489feb2feb664fcaabfa00ca2cda34578545434af48cb5d006837"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      },
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "69a4b5100f74c7e69ab7189cba03376487f54b67438951debd2aa520989fcb5f"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "03d097b0b0a2e94a247941a2515d1bbf251d486dc0817e2eaece248bff4e048b"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "23f983c2f9b4f56af28695e12f11a0c74fb729e4b3a180bea9f3d94c8e281a6d"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "3fa77de431c4e3d67e6bd340cb69b63fb156283641b234f5c49ad223955e7e67"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 36,
+        "logSha256": "181ba857f90a8621482bd867bb566e7a67029d90750fbe8c6c04a6f6a54aaa22"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 51,
+        "logSha256": "db769b083f8eb88339b24b8c98fdb6588d4a8e8dc289f7e128a2431ea6cba76f"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 272,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "cold": {
+        "exitCode": 0,
+        "seconds": 23,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      }
+    },
+    "downChecks": 2731,
+    "documentUpChecks": 6459,
+    "documentMoveChecks": 1940,
+    "documentHoverChecks": 1530,
+    "clickChecksInSequence": 728,
+    "viewUpChecks": 297,
+    "queryFaultChecks": 187,
+    "resolverFaultChecks": 66,
+    "moveChecks": 220,
+    "hoverChecks": 158,
+    "rootPathChecks": 82,
+    "nodeContractChecks": 260,
+    "pythonContractChecks": 13,
+    "examples": 22,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true,
+    "firstPassBeforeControlRefresh": {
+      "failedSteps": [
+        "test:pointers:hover",
+        "test:pointers:move",
+        "test:pointers:query-faults",
+        "test:pointers:resolver-faults",
+        "test:pointers:root-path",
+        "test:pointers:up"
+      ],
+      "cause": "each compares its preserved preceding-host control with the current SDK bundle, which this slice changes"
+    },
+    "secondPassExamplesRerun": {
+      "firstAttempt": "the editor import timed out while a Godot editor from an interrupted, sandboxed pass still held the project",
+      "firstAttemptLogSha256": "f3f886b11cf093149f901c0234b7dee8bcbaecf2185588160cb6c3d086082ec7",
+      "rerunExitCode": 0
+    }
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-document-bootstrap.js": "3a5ebd4c1bdc7a9c4bf07cd62561bcd9746624f2c2b946e15892b484ff5cc37c",
+    "tests/pointer-click-fixture.jsx": "09b4eb634ec1038e86d48643fb661a1dfc83623d99382e7f0d43092eee44e505",
+    "tests/pointer-click-probe.gd": "2634c9a536566b660a3e5af9887738525ec09602528f906cf126980984d512b5",
+    "tests/pointer-click-native.test.mjs": "bf119c58980729fae3143b41f2ec5a8e33acff5064b8b5798d6743ad652c47f6",
+    "scripts/event-target-bundle.mjs": "943ebef463cc81eec0a87bf5e7ec299910c9598e2d9965995903fbdd4bb79358",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "src/base-view-config.js": "2257af812c0673c71f59c9b8afcfa46e6953b084b07f2deb5d3f7d9086b1eada",
+    "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+    "src/scroll-view.jsx": "3344473085edb8669cfa5a6e61400110cc3cb8dd300fc3c61ff325de1d6a1294",
+    "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+    "native/application_runtime.cpp": "dd2b491b36219ec89d7978c0c64063008b87a3e939b13096fcbb27384ca909e8",
+    "native/pointer_adapter.cpp": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+    "native/pointer_adapter.h": "a44aa78379206bfd77afb8fe468fa73e7c5d75e20d68662b3c29f4a2cdcb1588",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "69587ae4399a87e5085d17343abaa68071d6120dcffccfdf86eb65d9549044ac",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "Libraries/Components/View/ViewPropTypes.js": "03b0fadc939e7cbffeaf94a505572edd16a9298c8f1980aa35c5862a812eb402",
+    "Libraries/NativeComponent/BaseViewConfig.android.js": "af222c895a62461986affcfd0957488a132d97bb8aab9aa177b0de367890c94b",
+    "Libraries/NativeComponent/BaseViewConfig.ios.js": "957a3dbf606155b1664ea04a0f1888cc2a41bdcc1fd4db8c9c7932395e0dc394",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/JSPointerDispatcher.kt": "873574688e2abc3f7693b8dc4249ec88975e8e1c39ba1b399af8bf5b797c78da",
+    "React/Fabric/RCTSurfacePointerHandler.mm": "402bd6a1e1f97b3eabd3f6a7cc8944dd5dd59859a2cd6deb800fc8b6b43c0e8f",
+    "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp": "b0f33a89e1c812112e1457076667863226b4f42247aa35c2b367e577195dd6b7",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "2cae7b950939547b99000d388c0e2d9f83942cbb4627eac8a48a5a6e27a54f2e",
+    ".github/workflows/dashboard-pages.yml": "4960c62496927a54d961ea354bb19c0f083f3ed1e8516466681940f9a69bf9f6",
+    "package.json": "5ddf3379e00c539bfb4ec5db4c632fc0c8457f029ebe5304f4d8854291e4ab14",
+    ".fallowrc.json": "16529dfea97156f30ca2570ee0c7963880e33985939e5c4a8131fdcd0494817d",
+    "tests/platform-seams.test.mjs": "08a8d214d09b2a59872580fa874232c9f0d34832cd975c3cec4d74993d816404"
+  },
+  "changedFilesSinceExecutionBase": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    ".github/workflows/dashboard-pages.yml",
+    "docs/evidence/pointer-click/README.md",
+    "docs/research/pointer-click.md",
+    "examples/pointer-click/README.md",
+    "native/application_runtime.cpp",
+    "native/pointer_adapter.cpp",
+    "native/pointer_adapter.h",
+    "native/scroll_adapter.h",
+    "package.json",
+    "scripts/event-target-bundle.mjs",
+    "src/base-view-config.js",
+    "src/components.jsx",
+    "tests/platform-seams.test.mjs",
+    "tests/pointer-click-fixture.jsx",
+    "tests/pointer-click-native.test.mjs",
+    "tests/pointer-click-probe.gd"
+  ],
+  "hostedCI": {
+    "status": "pending-click-slice"
+  },
+  "limits": [
+    "Mouse buttons, touches, a Pressable and a vertical ScrollView in two roots, eight original/current x flag lanes on the same host, headless.",
+    "Clicks while captured, auxclick, contextmenu, dblclick/detail, keyboard and accessibility activation, pen input, nested or horizontal scroll takeover and surface selection for empty-area input are not exercised.",
+    "Godot mounts the AppRegistry View, so two top-level children share and click it where RN drops the click at the root; empty root points never click.",
+    "The executed tree was dirty on 15e1dda; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin",
+    "sourcePins": 23,
+    "verificationSourcePins": 5,
+    "mismatches": [],
+    "postCommitPinIsNotANewRun": true
+  }
+}
