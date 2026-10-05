@@ -189,7 +189,8 @@ retained once and then counted, and ancestors without a public instance are
 skipped without being created. The older pointer probes now separate the hover
 lookups every touch and move makes and require them false, and the four
 preceding-host controls still reproduce 8/12/3/45 failures. Document hover and
-the empty-area root target remain open. Hosted CI pending.
+the empty-area root target remain open. Hosted run 37352693788 passed the same 158
+checks with identical IDs, bundle and fault stages ([receipt](pointer-hover/hosted-ci.json)).
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

@@ -3,8 +3,9 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pointer-hover/README.md) owns the 158
 headless checks (137 healthy and 21 in a hover-fault application) and the
-32-failure native control. Public EventTarget flags remain disabled. Hosted CI
-for this slice is pending.
+32-failure native control. Public EventTarget flags remain disabled. Hosted run
+37352693788 repeated the 158 headless checks with identical IDs and bundle
+([receipt](../evidence/pointer-hover/hosted-ci.json)).
 
 ## RN's hover algorithm filters before JS
 

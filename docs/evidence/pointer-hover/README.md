@@ -174,8 +174,18 @@ algoritmo e as mesmas consultas certificadas com mouse. Hover com caneta, captur
 ponteiro durante hover, retirada de root com hover ativo, responders, hardware,
 exports mobile e performance seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37352693788, no head fcaae01 (checkout de merge 5d216dd). O artefato
+`native-pointer-hover` repete os **158 checks headless** com IDs, bundle e estágios
+idênticos aos locais, incluindo o caso de toque e os estágios `fault/*`; além de
+timestamps, da versão patch do Node e do hash do host do runner, só os
+identificadores de alocação do Godot da segunda aplicação diferem, aceitos apenas
+como renomeação um-para-um (88). O log retém exatamente o diagnóstico esperado,
+e as 76 entradas rastreadas batem com 5560798 na árvore do checkout. O controle
+de host anterior continua local. O [Pages](publication.json) (run 37354496135, push da
+`main` em 2643d4c) implantou exatamente os dados commitados, e o JSON público e a API
+local conferem com eles. Nenhum GF, checkpoint, dependência, peso ou denominador
+foi fechado.
 
 As 76 fontes de código/configuração executadas (18 produtoras do bundle,
 55 entradas do build nativo e 5 de verificação, com sobreposição)

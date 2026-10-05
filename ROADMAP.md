@@ -1549,8 +1549,15 @@ delivers none.) Pen hover, touch with other listener
 placements, capture while hovering, responders and multi-touch remain open. All
 76 executed code/configuration inputs match implementation 5560798 via git
 show/SHA-256 (execution base f868160/dirty retained; main a6af188 differs only in
-docs and the dashboard). Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+docs and the dashboard). Hosted Contracts run 37352693788 passed all five jobs at
+fcaae01 (merge checkout 5d216dd); its [audited artifact](docs/evidence/pointer-hover/hosted-ci.json)
+repeats the 158 headless checks with identical IDs, bundle and stages, including
+the touch case and the fault stages, the second application's allocation ids
+differing only by a one-to-one renaming, and all 76 tracked inputs match
+5560798 in the checkout tree. [Pages 37354496135](docs/evidence/pointer-hover/publication.json)
+deployed this record from main 2643d4c, and the live public JSON and local API match
+it. The old-host control stays local. No whole GF, checkpoint, weight or
+denominator closes.
 
 ## M1 — Complete the native UI tree
 
