@@ -536,7 +536,7 @@
             },
             {
               "label": "Click e takeover do ScrollView: 728 checks em oito lanes, host anterior e controles negativos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/pointer-click-synthesis/docs/evidence/pointer-click/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/98b9e03ccf1ce7b91602d1b0aa8d80977f28bae5/docs/evidence/pointer-click/README.md"
             },
             {
               "label": "CI Document hover 37364101069: 5 jobs, 1530 checks e 22 blobs auditados",
@@ -751,7 +751,7 @@
             },
             {
               "label": "Click e takeover do ScrollView: 728 checks em oito lanes, host anterior e controles negativos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/pointer-click-synthesis/docs/evidence/pointer-click/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/98b9e03ccf1ce7b91602d1b0aa8d80977f28bae5/docs/evidence/pointer-click/README.md"
             },
             {
               "label": "CI Document hover 37364101069: 5 jobs, 1530 checks e 22 blobs auditados",
@@ -1018,7 +1018,7 @@
             },
             {
               "label": "Click e takeover do ScrollView: 728 checks em oito lanes, host anterior e controles negativos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/pointer-click-synthesis/docs/evidence/pointer-click/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/98b9e03ccf1ce7b91602d1b0aa8d80977f28bae5/docs/evidence/pointer-click/README.md"
             },
             {
               "label": "CI Document hover 37364101069: 5 jobs, 1530 checks e 22 blobs auditados",
@@ -1484,7 +1484,7 @@
             },
             {
               "label": "Click e takeover do ScrollView: 728 checks em oito lanes, host anterior e controles negativos",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/pointer-click-synthesis/docs/evidence/pointer-click/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/98b9e03ccf1ce7b91602d1b0aa8d80977f28bae5/docs/evidence/pointer-click/README.md"
             },
             {
               "label": "CI Document hover 37364101069: 5 jobs, 1530 checks e 22 blobs auditados",
@@ -3311,7 +3311,7 @@
         "GF-13"
       ],
       "message": "Click na soltura e takeover do ScrollView em oito lanes: 728 headless. Alvo é a View montada mais profunda comum ao Down e ao Up (container quando os dois são filhos de topo); botão direito/do meio, segundo dedo, acorde solto no botão secundário, cancelamento, remoção e soltura fora não clicam. Um tap no Pressable pressiona uma vez. O arrasto do ScrollView emite um pointercancel e depois só toques. Host anterior falha exatamente 31; host que clica o alvo do Up falha 10 e SDK sem topClick quebra o modo legado, ambos rejeitados pelo oráculo. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/pointer-click-synthesis/docs/evidence/pointer-click/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/98b9e03ccf1ce7b91602d1b0aa8d80977f28bae5/docs/evidence/pointer-click/README.md"
     },
     {
       "id": "pointer-root-path-hosted-ci-and-pages-20261005",
