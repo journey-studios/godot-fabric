@@ -254,6 +254,31 @@ export async function bundlePointerDocumentUpProbe({interestMode = "current"} = 
       "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
 }
 
+export async function bundlePointerDocumentMoveProbe({interestMode = "current"} = {}) {
+  assert.ok(["original", "current"].includes(interestMode));
+  return bundleProbe({entryPoint: "tests/pointer-document-move-fixture.jsx", modes: eventTargetProbeModes,
+    prefix: "pointer-document-move", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: "experimental", pointerInterestMode: interestMode,
+    defines: {__POINTER_DOCUMENT_INTEREST_MODE__: JSON.stringify(interestMode)},
+    sources: ["tests/event-target-bootstrap.js", "tests/pointer-document-bootstrap.js",
+      "tests/pointer-document-fixture.jsx", "tests/pointer-document-move-fixture.jsx",
+      "tests/pointer-document-up-probe.gd", "tests/pointer-document-move-probe.gd", "tests/pointer-document-move-native.test.mjs",
+      "tests/native-png.mjs", "scripts/event-target-bundle.mjs",
+      "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-event-target-overlay.mjs",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs",
+      "src/private-interface.js", "src/pointer-listener-query.js", "native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js",
+      "src/private/webapis/dom/nodes/ReactNativeDocument.js", "src/private/webapis/dom/nodes/internals/NodeInternals.js",
+      "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js",
+      "ReactCommon/react/renderer/components/view/primitives.h",
+      "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h",
+      "ReactCommon/react/renderer/core/EventEmitter.cpp",
+      "ReactCommon/react/renderer/core/EventQueue.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp"]});
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
   await bundleEventTargetProbe();
   console.log("Bundled isolated original EventTarget flag probes; public build/app.js untouched.");

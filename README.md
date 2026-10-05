@@ -167,8 +167,16 @@ Continuous moves; a View without Move listeners still gets its original TouchMov
 Its [evidence](docs/evidence/pointer-move/README.md) records 219 headless / 243
 viewport checks, 20 actual pixels and the preceding host's 45 failures with the
 same SDK bundle. A failing Move lookup is retained once per distinct cause and its
-repeats are counted, so hover cannot flood diagnostics. Document pointermove, hover
-events and pointer capture remain open; hosted CI is pending.
+repeats are counted, so hover cannot flood diagnostics. Hover events and pointer
+capture remain open. Hosted CI repeated the 219 headless checks with the same IDs
+and bundle ([receipt](docs/evidence/pointer-move/hosted-ci.json)).
+
+The [Document pointermove example](examples/pointer-document-move/README.md)
+certifies original Document and documentElement Move listeners in eight
+original/current × flag lanes: 1,932 headless checks and 330 viewport checks.
+Only the installed current query delivers, at phase 1 for capture and 3 for
+bubble, and a retained control that drops the owner Document fails.
+[Evidence](docs/evidence/pointer-document-move/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

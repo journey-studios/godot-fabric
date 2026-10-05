@@ -243,6 +243,18 @@ jobs:
             build/pointer-move-comparison.json
             build/pointer-move-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:documents:move
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-document-move
+          path: |
+            build/pointer-document-move-original-*-report.json
+            build/pointer-document-move-current-*-report.json
+            build/pointer-document-move-comparison.json
+            build/pointer-document-move-original-*.log
+            build/pointer-document-move-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

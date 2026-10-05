@@ -162,8 +162,20 @@ priority; B without listeners reads its whole path false, in order. The host
 flushes RN's queue after every input event, so per-frame merging comes from
 Godot's input accumulation. A failing Move lookup is retained once per distinct
 cause, up to 16 causes per application, and repeats are counted. The three
-preceding-host controls reproduce 8/12/3 failures with the new bundles. Hosted CI
-pending.
+preceding-host controls reproduce 8/12/3 failures with the new bundles. Hosted
+run 37345287351 passed the same 219 checks with identical IDs, bundle and fault
+stages ([receipt](pointer-move/hosted-ci.json)).
+
+The [Document pointermove record](pointer-document-move/README.md) runs eight
+lanes (original/current interest × four flag configurations) over the same host:
+1,932 headless checks and 330 viewport checks with 24 pixels. Document listeners
+need native dispatch and documentElement listeners also the imperative flag; only
+the installed current query delivers. Capture runs at phase 1 and bubble at
+phase 3 after false lookups on the target and its ancestors; isolation, removal
+between samples, Cancel, a JSX sentinel and mouse hover are covered. A retained
+control that drops the owner Document from the root query fails 52/40 probe
+checks in the two delivering lanes, and the independent oracle rejects it. Hosted
+CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

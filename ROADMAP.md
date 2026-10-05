@@ -1442,7 +1442,48 @@ matrix, resolver faults during Move lookups, hover events, the per-move query
 cost, captured/no-hit moves (non-unique Unspecified in the host, unlike RN),
 responders and multi-touch remain open. All 77 executed
 code/configuration inputs match implementation f9f9817 via git show/SHA-256
-(execution base a0ec86b/dirty retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+(execution base a0ec86b/dirty retained). Hosted Contracts run 37345287351 passed all
+five jobs at 4ca3f1f (merge checkout 9cf35fd); its [audited artifact](docs/evidence/pointer-move/hosted-ci.json)
+repeats the 219 headless checks with identical IDs, bundle and stages, including
+the 51 fault stages, the second application's allocation ids differing only by a
+one-to-one renaming, the 16 expected diagnostics, and all 77 tracked inputs match
+f9f9817 in the checkout tree. [Pages 37349051758](docs/evidence/pointer-move/publication.json)
+deployed this record from main d75ea51, and the live public JSON and local API match
+it. The viewport and old-host controls stay local. No whole GF, checkpoint, weight
+or denominator closes.
+
+### Document pointermove across four original flags (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[Document Move evidence](docs/evidence/pointer-document-move/README.md) certifies
+original `pointermove` listeners on Document and documentElement over the View
+Move native support, in eight lanes (original/current interest × disabled,
+imperative-only, internal-only and enabled flags): **1,932 headless checks** and
+**330 graphical checks** with 24 pixels in the current/enabled viewport.
+
+Document listeners exist with native dispatch alone and documentElement listeners
+also need imperative events; original interest installs no query and delivers
+nothing. With the current query, two drag samples per case reach Document and
+documentElement capture listeners at phase 1 and bubble listeners at phase 3,
+one Event per sample at the Default priority of unique Continuous moves, with
+the original TouchMove after them and one commit per sample. The root query reads
+1=true, or 1=false then 25=true for capture-only, after the target's and each
+ancestor's false pairs. B's Document listeners stay isolated from A's moves,
+removing the last listener between two samples of one contact stops delivery at
+the next, Cancel reads nothing, a JSX sentinel qualifies by props in every lane
+and button-less mouse motion reaches Document listeners. A retained control that
+drops the owner Document from the root query fails 52 (internal-only) and 40
+(enabled) probe checks, and the independent oracle rejects both reports.
+
+Only tests changed: the Document fixture accepts `pointermove` (TouchMove on the
+target, a JSX `onPointerMove` sentinel and Move Raw) and a wrapper, probe, oracle
+and CI step run the matrix; Down 2,723, Document Up 6,451, contracts 257 Node/13
+Python, static analysis and the publication scan pass, and native/SDK bytes are
+those of the View Move slice. Root query faults, once/AbortSignal, refs, mutation
+and reentry for Document Move remain open. All 20 executed code/configuration
+inputs match implementation c2ad8f5 via git show/SHA-256 (execution base
+2d57c9b/dirty retained). Hosted CI for this slice is pending. No whole GF,
+checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

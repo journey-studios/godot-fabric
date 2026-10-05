@@ -138,7 +138,8 @@ listeners reads its whole path false, in order, and emits no pointer move. Its
 [receipt](../docs/evidence/pointer-move/README.md) records 219/219 headless,
 243/243 viewport checks and 45 visible old-host failures with the same SDK bundle;
 failing Move lookups are retained once per distinct cause and repeats are counted.
-Document pointermove, hover events and capture remain open; hosted CI is pending.
+Hover events and capture remain open. Hosted run 37345287351 repeated the 219
+headless checks ([receipt](../docs/evidence/pointer-move/hosted-ci.json)).
 
 | Before any move | After the bubble case |
 | --- | --- |
@@ -146,6 +147,22 @@ Document pointermove, hover events and capture remain open; hosted CI is pending
 
 Both 680×160 frames have ten fixed pixel assertions and matching React counters
 (moves A0/B0, then A2/B0), with saved PNG pixels decoded independently.
+
+The [Document pointermove matrix](pointer-document-move/README.md) registers
+original `pointermove` listeners on Document and documentElement over a target
+with no pointer listener, in eight lanes (original/current interest × four flag
+configurations): 1,932 headless checks, plus 330 in the current/enabled viewport.
+Only current interest with native dispatch delivers; documentElement also needs
+the imperative flag. Capture listeners run at phase 1 and bubble at phase 3, the
+root query reads `1=true` or `1=false`/`25=true` after the target's and ancestors'
+false pairs, and button-less mouse motion qualifies too. Its
+[receipt](../docs/evidence/pointer-document-move/README.md) includes a retained
+control that drops the owner Document from the root query. Hosted CI for this
+matrix is pending.
+
+| Before Document Move | After two samples reach DocC and DocB |
+| --- | --- |
+| [![Native counters before Move](../docs/evidence/pointer-document-move/initial.png)](pointer-document-move/README.md) | [![Document callbacks update only A](../docs/evidence/pointer-document-move/updated.png)](pointer-document-move/README.md) |
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
