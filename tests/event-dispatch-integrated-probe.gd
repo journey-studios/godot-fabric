@@ -397,7 +397,7 @@ func run_probe() -> void:
     "displayServer": DisplayServer.get_name(), "godot": Engine.get_version_info(), "checks": checks, "stages": stages, "deliberateErrors": deliberate_errors, "captures": captures,
     "scope": {"actualNativeInput": true, "testOnlyOriginalFlagsEnabled": true, "publicDefaultEnabled": false,
       "nativePointerInterestSolved": false, "responderGapsResolved": false, "hardwareCertified": false, "mobileCertified": false,
-      "nativeTouchScope": "root-local", "manualGlobalOracleIsNativeCertification": false, "nativeNullTargetExecuted": false,
+      "nativeTouchScope": "application-wide", "manualGlobalOracleIsNativeCertification": false, "nativeNullTargetExecuted": false,
       "queuedTerminalRootRetirementExecuted": not "--queue-only" in OS.get_cmdline_user_args()}}
   var file := FileAccess.open("res://build/event-dispatch-integrated-report.json", FileAccess.WRITE)
   file.store_string(JSON.stringify(report, "  ") + "\n")
