@@ -17,6 +17,7 @@
 #include "coordinate_transform.h"
 #include "paragraph_view.h"
 #include "switch_view.h"
+#include "activity_indicator_view.h"
 #include "timer_registry.h"
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
@@ -27,6 +28,7 @@
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <react/renderer/components/switch/AppleSwitchComponentDescriptor.h>
+#include <react/renderer/components/FBReactNativeSpec/ComponentDescriptors.h>
 #include <godot_cpp/classes/input_event_mouse_button.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
 #include <godot_cpp/classes/input_event_screen_touch.hpp>
@@ -73,6 +75,7 @@ static std::string component_kind(const rn::ShadowView &shadow) {
   if (shadow.componentName == std::string("ScrollView")) return "scroll";
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
   if (shadow.componentName == std::string(rn::AppleSwitchComponentName)) return "switch";
+  if (shadow.componentName == std::string(rn::ActivityIndicatorViewComponentName)) return "activity";
   if (shadow.componentName == std::string(fabric_godot::ControlName))
     return std::static_pointer_cast<const ControlProps>(shadow.props)->kind;
   return shadow.componentName;
@@ -329,6 +332,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // RN's shared iOS/macOS Switch descriptor ("RCTSwitch" in the generated
     // ViewConfig); its measurement is the Godot one in switch_view.cpp.
     providers.add(rn::concreteComponentDescriptorProvider<rn::SwitchComponentDescriptor>());
+    // The generated descriptor iOS registers for "RCTActivityIndicatorView";
+    // ActivityIndicator.js sizes the frame, so it needs no measurement.
+    providers.add(rn::concreteComponentDescriptorProvider<rn::ActivityIndicatorViewComponentDescriptor>());
     // Original Fabric registry requests selected descriptors lazily. Requests
     // only register immutable providers; native objects wait for Create commits.
     providers.setComponentDescriptorProviderRequest([this](rn::ComponentName name) {
@@ -1051,6 +1057,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       apply_frame(mounted);
       return;
     }
+    if (auto *indicator = Object::cast_to<GodotActivityIndicator>(control)) {
+      indicator->apply(*std::static_pointer_cast<const rn::ActivityIndicatorViewProps>(shadow.props),
+          initial ? nullptr : std::static_pointer_cast<const rn::ActivityIndicatorViewProps>(previous.props).get());
+      fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
+      apply_frame(mounted);
+      return;
+    }
     if (shadow.componentName == std::string("View")) {
       fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
       apply_frame(mounted);
@@ -1590,6 +1603,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             auto *toggle = memnew(GodotSwitch);
             toggle->connect("toggled", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Toggle));
             control = toggle;
+          } else if (next.componentName == std::string(rn::ActivityIndicatorViewComponentName)) {
+            control = memnew(GodotActivityIndicator);
           } else if (kind == "scroll") control = memnew(ScrollContainer);
           else if (kind == "paragraph") control = memnew(GodotParagraph);
           else if (kind == "text") control = memnew(Label);
@@ -1858,9 +1873,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
       if (mounted.external) { node["adapter"] = mounted.external->snapshot(); node["mountId"] = static_cast<int64_t>(mounted.mount_id); }
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
-      if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input" || kind == "switch")
+      if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input" ||
+          kind == "switch" || kind == "activity")
         node["appearance"] = fabric_godot::appearance_snapshot(*control);
       if (auto *toggle = Object::cast_to<GodotSwitch>(control)) node["switch"] = toggle->snapshot();
+      if (auto *indicator = Object::cast_to<GodotActivityIndicator>(control)) node["activity"] = indicator->snapshot();
       if (auto *paragraph = Object::cast_to<GodotParagraph>(control)) {
         auto measured = paragraph->snapshot();
         for (const auto &item : measured.items()) node[item.first] = item.second;

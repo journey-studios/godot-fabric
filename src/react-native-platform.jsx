@@ -4,6 +4,7 @@ import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
 import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
+import OriginalActivityIndicator from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
 import {
   Pressable as GodotPressable,
   Button as GodotButton,
@@ -154,7 +155,14 @@ export function Switch({ style, ...props }) {
 export const TouchableHighlight = unavailable("TouchableHighlight");
 export const TouchableOpacity = unavailable("TouchableOpacity");
 export const TouchableWithoutFeedback = unavailable("TouchableWithoutFeedback");
-export const ActivityIndicator = unavailable("ActivityIndicator");
+// RN's original ActivityIndicator.js takes its non-Android path: a sized View
+// around the generated ActivityIndicatorView component.
+export function ActivityIndicator({ style, ...props }) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalActivityIndicator {...props} style={nativeStyle(style, "ActivityIndicator")} />;
+}
 export const StatusBar = unavailable("StatusBar");
 export const FlatList = unavailable("FlatList");
 export const ImageBackground = unavailable("ImageBackground");
