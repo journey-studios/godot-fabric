@@ -5432,7 +5432,18 @@
     "publicationScanPassed": true
   },
   "hostedCI": {
-    "status": "pending-fault-slice",
+    "status": "verified-hosted-fault-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "c4beffb10665883e694f4b24d909fcf17271e4332ea0e44f8b58588185eade02",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37328158081",
+    "headSha": "6f9e10c33a9424dcfa8c6d3788b1690c789aaa1a",
+    "checkoutSha": "ba30deec12381f07d0b93b5fae2554444ce5f977",
+    "jobs": 5,
+    "headlessChecks": 6451,
+    "checkIdsBundlesAndFaultStagesEqualLocal": true,
+    "secondApplicationAllocationIdsRenamedOneToOnePerLane": 444,
+    "trackedInputsMatchImplementationInCheckoutTree": 71,
+    "viewportAndPixelsRemainLocal": true,
     "previousReentryAudit": "../pointer-document-up-reentry/hosted-ci.json"
   },
   "limits": [

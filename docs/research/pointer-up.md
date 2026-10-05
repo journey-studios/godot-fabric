@@ -97,12 +97,14 @@ counters are A1/B0. Capture-only, Cancel and stop happen later.
 - General Up membership (once, abort, removal, rerender), retained/retired refs,
   captured/no-hit Up, got/lost capture, coalescing and responder transitions
   remain separate from the tested registration switch and balanced stop.
-- Up-specific resolver getter faults and reentrant lifecycle behavior on the
-  View remain uncovered. One-shot component query faults at the Up offsets now
-  have their own [record](../evidence/pointer-up-faults/README.md): the failed
-  lookup alone is rejected with one diagnostic, a same-View capture listener
-  still qualifies after a bubble fault, and an unqualified View hands the lookup
-  to its ancestors and root while TouchEnd and cleanup survive.
+- Reentrant lifecycle behavior on the View remains uncovered. One-shot
+  component query faults at the Up offsets have their own
+  [record](../evidence/pointer-up-faults/README.md): the failed lookup alone is
+  rejected with one diagnostic, a same-View capture listener still qualifies
+  after a bubble fault, and an unqualified View hands the lookup to its
+  ancestors and root while TouchEnd and cleanup survive. A one-shot getter on
+  `canonical.publicInstance` fails the native read before the SDK with the same
+  contract ([resolver record](../evidence/pointer-up-resolver-faults/README.md)).
 - Down is filtered here, so only Up callback/Raw pointer identity is proved.
   A real qualified Down control is needed to compare a public Down/Up pair.
 - Other priority flag branches, development renderer, hardware, exported Godot

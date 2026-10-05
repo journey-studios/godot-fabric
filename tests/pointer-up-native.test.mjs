@@ -15,7 +15,7 @@ const capture = process.argv.includes("--capture");
 assert.ok(!capture || !allowOriginalNegative, "Native graphical captures run only against the corrected host");
 const lane = capture ? "capture" : allowOriginalNegative ? "original" : "current";
 // Checks added by the second-application component fault phase.
-const FAULT_CHECKS = 178;
+const FAULT_CHECKS = 234;
 const digest = value => createHash("sha256").update(value).digest("hex");
 const normativeSuffixes = ["Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
   "Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
@@ -43,9 +43,49 @@ function nativeEvent(value, label, type) {
   assert.equal(row.timeStamp, row.nativeTimeStamp); assert.equal(row.timeStamp, raw[0].timeStamp);
   assert.ok(raw[1].sequence < row.sequence);
 }
-// Component query faults at the Up offsets, in a second application after the
-// healthy one stopped. Target rows are [offset, action, result]; every other
-// lookup is an owning-surface ancestor or the root, read 36 then 37 and false.
+// Component query and resolver getter faults at the Up offsets, in a second
+// application after the healthy one stopped. Target rows are [offset, action,
+// result]; every other lookup is an owning-surface ancestor or the root, read
+// 36 then 37 and false, with the root handle as the final pair.
+function faultedUp(stages, prefix, captureMode, expected, rows, consumed, cause, queryFault, recoveryRows) {
+  const delivered = expected.length > 0, up = stages[prefix + "/up"], value = up.react;
+  assert.deepEqual(labels(value), [...expected, "touchend"]);
+  nativeEvent(value, "touchend", "topTouchEnd"); clean(value); terminalClean(up);
+  if (delivered) {
+    nativeEvent(value, expected[0], "topPointerUp");
+    assert.ok(value.events.filter(row => row.type === "pointerup").every(row => row.trusted && row.phase === 2 && row.currentPriority === value.discretePriority));
+  } else assert.deepEqual(value.raw.map(row => row.type), ["topTouchEnd", "topTouchEnd"]);
+  assert.equal(value.panels.A.ups, value.baselineUps + expected.length); assert.equal(value.panels.A.starts, value.baselineStarts);
+  assert.equal(up.after.commits, up.before.commits + (delivered ? 1 : 0));
+  const own = value.query.rows.filter(row => row.targetTag === value.targetTag), others = value.query.rows.filter(row => row.targetTag !== value.targetTag);
+  assert.deepEqual(own.map(row => [row.offset, row.action, row.result]), rows.map(([o, a, r]) => [o, a, a === "nonboolean" ? 1 : r]));
+  assert.ok(own.every(row => row.matched === (row.action !== "delegate") && row.resultKind === (row.action === "delegate" ? "boolean" : row.action === "throw" ? "throw" : "number")));
+  if (delivered) assert.deepEqual(others, []);
+  else {
+    // Owning-surface ancestors, then the root handle (no tag) as the final pair.
+    const ownerTags = new Set(up.after.nodes.map(node => node.tag));
+    assert.ok(others.length >= 2 && others.length % 2 === 0 && others.at(-1).targetTag === null && others.at(-2).targetTag === null);
+    assert.ok(others.every(row => row.targetTag === null || ownerTags.has(row.targetTag)));
+    for (let index = 0; index < others.length; index += 2) {
+      const [bubble, captured] = others.slice(index, index + 2);
+      assert.deepEqual([bubble.offset, captured.offset], [36, 37]); assert.equal(bubble.targetTag, captured.targetTag);
+      assert.ok(bubble.sequence < captured.sequence && bubble.sequence > own.at(-1).sequence);
+    }
+    assert.ok(others.every(row => row.action === "delegate" && !row.matched && row.resultKind === "boolean" && row.result === false));
+  }
+  assert.equal(up.consumed, consumed);
+  if (queryFault) assert.equal(value.query.fault.remaining, consumed ? 0 : 1); else assert.equal(value.query.fault, null);
+  assert.equal(up.errorsAfter.length, up.errorsBefore.length + (consumed ? 1 : 0));
+  if (consumed) assert.ok(up.errorsAfter.at(-1).startsWith("E_POINTER_LISTENER_QUERY: ") && up.errorsAfter.at(-1).includes(cause));
+  assert.equal(stages[prefix + "/cleared"], true);
+  const recovery = stages[prefix + "/recovery/up"], healthy = recovery.react;
+  const recoveryLabels = captureMode === "both" ? ["pointerup-capture", "pointerup-bubble"] : captureMode ? ["pointerup-capture"] : ["pointerup-bubble"];
+  assert.deepEqual(labels(healthy), [...recoveryLabels, "touchend"]); nativeEvent(healthy, "touchend", "topTouchEnd"); clean(healthy); terminalClean(recovery);
+  assert.deepEqual(healthy.query.rows.map(row => [row.offset, row.action, row.result]), recoveryRows);
+  assert.ok(healthy.query.rows.every(row => row.targetTag === healthy.targetTag)); assert.equal(healthy.query.fault, null);
+  assert.equal(healthy.panels.A.ups, healthy.baselineUps + recoveryLabels.length); assert.equal(recovery.after.commits, recovery.before.commits + 1);
+  assert.deepEqual(recovery.application.errors, up.errorsAfter);
+}
 function componentFaults(report) {
   const stages = report.stages, causes = [];
   const cases = [
@@ -57,53 +97,34 @@ function componentFaults(report) {
     ["armed37", false, 37, "throw", ["pointerup-bubble"], [[36, "delegate", true]], [[36, "delegate", true]]],
   ];
   for (const [id, captureMode, offset, mode, expected, rows, recoveryRows] of cases) {
-    const prefix = "fault/" + id, consumed = rows.some(row => row[1] !== "delegate"), delivered = expected.length > 0;
+    const prefix = "fault/" + id, consumed = rows.some(row => row[1] !== "delegate");
     assert.equal(stages[prefix + "/registration"].capture, captureMode);
     assert.deepEqual(stages[prefix + "/fault"], {targetTag: stages[prefix + "/registration"].targetTag, offset, mode, remaining: 1, label: id});
-    const up = stages[prefix + "/up"], value = up.react;
-    assert.deepEqual(labels(value), [...expected, "touchend"]);
-    nativeEvent(value, "touchend", "topTouchEnd"); clean(value); terminalClean(up);
-    if (delivered) {
-      nativeEvent(value, expected[0], "topPointerUp");
-      assert.ok(value.events.filter(row => row.type === "pointerup").every(row => row.trusted && row.phase === 2 && row.currentPriority === value.discretePriority));
-    } else assert.deepEqual(value.raw.map(row => row.type), ["topTouchEnd", "topTouchEnd"]);
-    assert.equal(value.panels.A.ups, value.baselineUps + expected.length); assert.equal(value.panels.A.starts, value.baselineStarts);
-    assert.equal(up.after.commits, up.before.commits + (delivered ? 1 : 0));
-    const own = value.query.rows.filter(row => row.targetTag === value.targetTag), others = value.query.rows.filter(row => row.targetTag !== value.targetTag);
-    assert.deepEqual(own.map(row => [row.offset, row.action, row.result]), rows.map(([o, a, r]) => [o, a, a === "nonboolean" ? 1 : r]));
-    assert.ok(own.every(row => row.matched === (row.action !== "delegate") && row.resultKind === (row.action === "delegate" ? "boolean" : row.action === "throw" ? "throw" : "number")));
-    if (delivered) assert.deepEqual(others, []);
-    else {
-      // Owning-surface ancestors, then the root handle (no tag) as the final pair.
-      const ownerTags = new Set(up.after.nodes.map(node => node.tag));
-      assert.ok(others.length >= 2 && others.length % 2 === 0 && others.at(-1).targetTag === null && others.at(-2).targetTag === null);
-      assert.ok(others.every(row => row.targetTag === null || ownerTags.has(row.targetTag)));
-      for (let index = 0; index < others.length; index += 2) {
-        const [bubble, captured] = others.slice(index, index + 2);
-        assert.deepEqual([bubble.offset, captured.offset], [36, 37]); assert.equal(bubble.targetTag, captured.targetTag);
-        assert.ok(bubble.sequence < captured.sequence && bubble.sequence > own.at(-1).sequence);
-      }
-      assert.ok(others.every(row => row.action === "delegate" && !row.matched && row.resultKind === "boolean" && row.result === false));
-    }
-    assert.equal(up.consumed, consumed); assert.equal(value.query.fault.remaining, consumed ? 0 : 1);
-    assert.equal(up.errorsAfter.length, up.errorsBefore.length + (consumed ? 1 : 0));
-    if (consumed) {
-      const cause = mode === "throw" ? "GF pointer query deliberate fault: " + id : "Pointer listener query must return a boolean";
-      assert.ok(up.errorsAfter.at(-1).startsWith("E_POINTER_LISTENER_QUERY: ") && up.errorsAfter.at(-1).includes(cause));
-      causes.push(cause);
-    }
-    assert.equal(stages[prefix + "/cleared"], true);
-    const recovery = stages[prefix + "/recovery/up"], healthy = recovery.react;
-    const recoveryLabels = captureMode === "both" ? ["pointerup-capture", "pointerup-bubble"] : captureMode ? ["pointerup-capture"] : ["pointerup-bubble"];
-    assert.deepEqual(labels(healthy), [...recoveryLabels, "touchend"]); nativeEvent(healthy, "touchend", "topTouchEnd"); clean(healthy); terminalClean(recovery);
-    assert.deepEqual(healthy.query.rows.map(row => [row.offset, row.action, row.result]), recoveryRows);
-    assert.ok(healthy.query.rows.every(row => row.targetTag === healthy.targetTag)); assert.equal(healthy.query.fault, null);
-    assert.equal(healthy.panels.A.ups, healthy.baselineUps + recoveryLabels.length); assert.equal(recovery.after.commits, recovery.before.commits + 1);
-    assert.deepEqual(recovery.application.errors, up.errorsAfter);
+    const cause = mode === "throw" ? "GF pointer query deliberate fault: " + id : "Pointer listener query must return a boolean";
+    faultedUp(stages, prefix, captureMode, expected, rows, consumed, cause, true, recoveryRows);
+    if (consumed) causes.push(cause);
+  }
+  // A one-shot getter on the actual canonical.publicInstance, armed after Down,
+  // fails the first native read before the SDK; the capture lookup then reads
+  // the restored data descriptor and enters the SDK normally.
+  const resolverCause = "GF pointer resolver deliberate fault: canonical.publicInstance";
+  for (const [id, captureMode, expected, rows] of [["resolver-bubble", false, [], [[37, "delegate", false]]],
+    ["resolver-both", "both", ["pointerup-capture", "pointerup-bubble"], [[37, "delegate", true]]]]) {
+    const prefix = "fault/" + id, armed = stages[prefix + "/fault"];
+    assert.equal(stages[prefix + "/registration"].capture, captureMode);
+    assert.ok(armed.actualFiber && armed.actualCanonical && armed.descriptorOwnData && armed.descriptorConfigurable && armed.originalRef && armed.connected && armed.valueTagMatches);
+    assert.equal(armed.remaining, 1); assert.equal(armed.targetTag, stages[prefix + "/registration"].targetTag); assert.equal(armed.cause, resolverCause);
+    faultedUp(stages, prefix, captureMode, expected, rows, true, resolverCause, false, [[36, "delegate", true]]);
+    const resolver = stages[prefix + "/up"].react.resolver;
+    assert.ok(!resolver.armed && resolver.remaining === 0 && resolver.descriptorRestored);
+    assert.equal(resolver.attempts.length, 1);
+    assert.ok(resolver.attempts[0].ownerMatches && resolver.attempts[0].descriptorRestoredBeforeThrow);
+    assert.equal(resolver.attempts[0].sdkEntriesBeforeThrow, 0);
+    causes.push(resolverCause);
   }
   const b = stages["fault/B-healthy/up"];
   assert.deepEqual(labels(b.react), ["pointerup-bubble", "touchend"]); nativeEvent(b.react, "pointerup-bubble", "topPointerUp"); clean(b.react); terminalClean(b);
-  assert.deepEqual(report.faultExpectedErrors, causes); assert.equal(causes.length, 5);
+  assert.deepEqual(report.faultExpectedErrors, causes); assert.equal(causes.length, 7);
   const stopped = stages["fault/stopped"];
   assert.ok(stopped.stopped && !stopped.pointerListenerQueryInstalled && stopped.rootCount === 0);
   assert.equal(stopped.errors.length, causes.length);

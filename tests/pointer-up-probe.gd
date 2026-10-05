@@ -193,6 +193,30 @@ func component_fault_case(id: String, capture_mode: Variant, offset: int, mode: 
   check(registration.type == "pointerup" and armed.targetTag == registration.targetTag and armed.offset == offset and armed.mode == mode and armed.remaining == 1 and armed.label == id,
     prefix + "/One one-shot fault is armed on the actual registered View ref at the Up offset")
   await physical_down("A", 0, prefix)
+  var cause := ("GF pointer query deliberate fault: " + id) if mode == "throw" else "Pointer listener query must return a boolean"
+  await faulted_up(prefix, capture_mode, expected, rows, consumed, cause, true, recovery_rows)
+
+# One real gesture whose first native read of A's canonical.publicInstance hits
+# a one-shot getter armed after Down. The getter restores the original data
+# descriptor before throwing, so only that lookup is rejected, before the SDK.
+func resolver_fault_case(id: String, capture_mode: Variant, expected: Array, rows: Array, recovery_rows: Array) -> void:
+  var prefix := "fault/" + id
+  var registration: Dictionary = js("configure('A',%s)" % JSON.stringify(capture_mode))
+  stages[prefix + "/registration"] = registration
+  await physical_down("A", 0, prefix)
+  var armed: Dictionary = js("armResolverFault('A')")
+  stages[prefix + "/fault"] = armed
+  check(armed.actualFiber and armed.actualCanonical and armed.descriptorOwnData and armed.descriptorConfigurable and armed.originalRef and armed.connected and armed.valueTagMatches and armed.remaining == 1 and armed.targetTag == registration.targetTag,
+    prefix + "/One getter is armed after Down on the actual View canonical's original public ref descriptor")
+  await faulted_up(prefix, capture_mode, expected, rows, true, "GF pointer resolver deliberate fault: canonical.publicInstance", false, recovery_rows)
+  var resolver: Dictionary = stages[prefix + "/up"].react.resolver
+  check(not resolver.armed and resolver.remaining == 0 and resolver.descriptorRestored and resolver.attempts.size() == 1 and resolver.attempts[0].ownerMatches and resolver.attempts[0].descriptorRestoredBeforeThrow and resolver.attempts[0].sdkEntriesBeforeThrow == 0,
+    prefix + "/up/The first native lookup reads the getter once, before any SDK entry, and finds the descriptor restored afterwards")
+
+# The physical Up of a faulted gesture, then a healthy recovery gesture with the
+# same listeners. Query faults stay visible in the SDK observer; a resolver
+# getter fails before the SDK, so its observer holds no fault.
+func faulted_up(prefix: String, capture_mode: Variant, expected: Array, rows: Array, consumed: bool, cause: String, query_fault: bool, recovery_rows: Array) -> void:
   js("arm('A',%s)" % JSON.stringify(prefix + "/up"))
   var before := native(surfaces.A)
   var errors_before: Array = native(application).errors
@@ -212,10 +236,10 @@ func component_fault_case(id: String, capture_mode: Variant, offset: int, mode: 
   check(value.panels.A.ups == value.baselineUps + expected.size() and value.panels.A.starts == value.baselineStarts and after.commits == before.commits + (1 if delivered else 0),
     prefix + "/up/Delivered Up callbacks batch into one commit and a rejected Up adds no React state")
   component_fault_query(value, rows, delivered, prefix + "/up")
-  var cause := ("GF pointer query deliberate fault: " + id) if mode == "throw" else "Pointer listener query must return a boolean"
   if consumed:
     fault_errors.append(cause)
-  check(errors.size() == errors_before.size() + (1 if consumed else 0) and (not consumed or (str(errors[-1]).begins_with("E_POINTER_LISTENER_QUERY: ") and str(errors[-1]).contains(cause))) and value.query.fault != null and value.query.fault.remaining == (0 if consumed else 1),
+  var fault_state: bool = (value.query.fault != null and value.query.fault.remaining == (0 if consumed else 1)) if query_fault else value.query.fault == null
+  check(errors.size() == errors_before.size() + (1 if consumed else 0) and (not consumed or (str(errors[-1]).begins_with("E_POINTER_LISTENER_QUERY: ") and str(errors[-1]).contains(cause))) and fault_state,
     prefix + "/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed")
   check(after.pointer.pointerUps == before.pointer.pointerUps + 1 and after.pointer.ends == before.pointer.ends + 1,
     prefix + "/up/Exactly one native Up and TouchEnd sample completes the physical contact")
@@ -262,6 +286,10 @@ func component_fault_controls() -> void:
   await component_fault_case("nonboolean36", false, 36, "nonboolean", [], [[36, "nonboolean", null], [37, "delegate", false]], [[36, "delegate", true]])
   await component_fault_case("nonboolean37", true, 37, "nonboolean", [], [[36, "delegate", false], [37, "nonboolean", null]], [[36, "delegate", false], [37, "delegate", true]])
   await component_fault_case("armed37", false, 37, "throw", ["pointerup-bubble"], [[36, "delegate", true]], [[36, "delegate", true]])
+  # The resolver getter rejects the bubble lookup before the SDK; the capture
+  # lookup then reads the restored descriptor and enters the SDK normally.
+  await resolver_fault_case("resolver-bubble", false, [], [[37, "delegate", false]], [[36, "delegate", true]])
+  await resolver_fault_case("resolver-both", "both", ["pointerup-capture", "pointerup-bubble"], [[37, "delegate", true]], [[36, "delegate", true]])
   stages["fault/B-registration"] = js("configure('B',false)")
   await physical_down("B", 1, "fault/B-healthy")
   js("arm('B','fault/B-healthy/up')")

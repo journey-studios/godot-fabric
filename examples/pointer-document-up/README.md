@@ -249,5 +249,6 @@ public Down/Up pointer-ID equality is claimed. The final Down regression passes 
 Native/SDK production bytes are unchanged from the separately proven View Up
 slice. Hosted baseline 84270fb passed 1,371 checks in five successful jobs and
 lifecycle run 37246479501 passed 2,143, refs run 37310815360 passed 2,709,
-mutation run 37319530371 passed 4,401 and reentry run 37321794370 passed 5,097. The
+mutation run 37319530371 passed 4,401, reentry run 37321794370 passed 5,097 and
+root-fault run 37328158081 passed 6,451. The
 [research](../../docs/research/pointer-document-up.md) explains the boundaries.

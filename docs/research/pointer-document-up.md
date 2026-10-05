@@ -225,7 +225,9 @@ no Up, while the original TouchEnd, its Raw pair and contact cleanup survive.
 Each consumed fault leaves one retained `E_POINTER_LISTENER_QUERY`; a capture
 fault is not consumed when the bubble lookup qualifies first. Recovery gestures
 are healthy. A retained control that turns a throw into a qualifying `true`
-fails nine probe checks, and the oracle rejects it on its own.
+fails nine probe checks, and the oracle rejects it on its own. Hosted run
+37328158081 repeated the 6,451 headless checks
+([receipt](../evidence/pointer-document-up-fault/hosted-ci.json)).
 
 ## Boundaries still open
 
