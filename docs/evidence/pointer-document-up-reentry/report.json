@@ -5,7 +5,7 @@
   "at": "2026-10-05T14:03:40.891513+00:00",
   "executionBaseCommit": "dbd6324adb7798f6bed2fb68199450416fcaaa73",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": null,
+  "implementationCommit": "f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -3995,5 +3995,11 @@
     "Up query/resolver faults, captured/no-hit/null-target Up, Down/Up pointerId pairing, other event categories, hardware/mobile and performance remain open.",
     "Original/current are SDK interest-mode controls on the same native binary, not old/new native host controls.",
     "The executed tree was dirty after dbd6324; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
-  ]
+  ],
+  "sourceVerification": {
+    "method": "git show IMPLEMENTATION:path and SHA-256 against executed raw reports",
+    "uniqueTrackedInputCount": 71,
+    "allExecutedCodeAndConfigurationInputsMatchImplementationCommit": true,
+    "executionBaseAndDirtyStatePreserved": true
+  }
 }

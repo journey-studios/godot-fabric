@@ -118,3 +118,7 @@ Original/current são controles do modo de interesse do SDK sobre o mesmo
 binário nativo, não comparações entre hosts nativos antigos e novos. A CI desta
 fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
+
+As 71 fontes de código/configuração executadas correspondem à implementação
+`f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24` por `git show`/SHA-256. O recibo preserva a
+base dbd6324 e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.
