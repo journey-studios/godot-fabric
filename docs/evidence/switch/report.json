@@ -1081,72 +1081,119 @@
       }
     }
   },
-  "mergeReverification": {
-    "reason": "main moved to 8f80fed (click #29 and AppState #31) after the slice was executed; merged without rebase so a10b19e stays reachable",
-    "mergeCommit": "16cf38c",
-    "mainCommit": "8f80fed",
-    "nativeHostSha256": "5e21fd4075d46464f7977696847819599ac43fad4206ccc4463f39c91b8058b2",
-    "switchChecks": 108,
-    "switchBundleSha256": "6e30128b1f16684856ece1760f6d1da5490a34bc46845b7b91c263d88c693323",
-    "switchReportSha256": "4182aa88ebd67a6eac7fa5a8563a3e5346d418c362ffb92970ce1c069b591da2",
-    "precedingHostControl": {
-      "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
-      "source": "main 8f80fed native sources (built from 24869f9, whose native tree equals 8f80fed's)",
-      "checks": 6,
-      "normativeFailures": [
-        "mount/Each root mounts one native Switch for each of its seven RCTSwitch elements",
-        "mount/The application reports no host or runtime error"
-      ],
-      "reportSha256": "179354223400e3d1d7a267c5b1e42f5c92969b4a082d1645ba2a9cc86151a012",
-      "runnerLogSha256": "5397ea3102b3acddb8b47e2d28b9780d778697a0ba34db08598eaa8bb780ae34",
-      "sameBundleAsCurrent": true,
-      "comparisonSha256": "7d5e45c6f84cf7c37f1b47136d112a7ed768aed12e7159784536f2be0b4ff7b5",
-      "replacesPrecedingHost": "cb0486ebe098ec98c9d7250062205402c9213352d34dbaf3fbe32793329fa83b"
+  "mergeReverifications": [
+    {
+      "reason": "main moved to 8f80fed (click #29 and AppState #31) after the slice was executed; merged without rebase so a10b19e stays reachable",
+      "mergeCommit": "16cf38c",
+      "mainCommit": "8f80fed",
+      "nativeHostSha256": "5e21fd4075d46464f7977696847819599ac43fad4206ccc4463f39c91b8058b2",
+      "switchChecks": 108,
+      "switchBundleSha256": "6e30128b1f16684856ece1760f6d1da5490a34bc46845b7b91c263d88c693323",
+      "switchReportSha256": "4182aa88ebd67a6eac7fa5a8563a3e5346d418c362ffb92970ce1c069b591da2",
+      "precedingHostControl": {
+        "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
+        "source": "main 8f80fed native sources (built from 24869f9, whose native tree equals 8f80fed's)",
+        "checks": 6,
+        "normativeFailures": [
+          "mount/Each root mounts one native Switch for each of its seven RCTSwitch elements",
+          "mount/The application reports no host or runtime error"
+        ],
+        "reportSha256": "179354223400e3d1d7a267c5b1e42f5c92969b4a082d1645ba2a9cc86151a012",
+        "runnerLogSha256": "5397ea3102b3acddb8b47e2d28b9780d778697a0ba34db08598eaa8bb780ae34",
+        "sameBundleAsCurrent": true,
+        "comparisonSha256": "7d5e45c6f84cf7c37f1b47136d112a7ed768aed12e7159784536f2be0b4ff7b5",
+        "replacesPrecedingHost": "cb0486ebe098ec98c9d7250062205402c9213352d34dbaf3fbe32793329fa83b"
+      },
+      "steps": {
+        "test:contracts": {
+          "exitCode": 0,
+          "seconds": 23,
+          "logSha256": "721d52b1351c63820ac8451df17aafaf1cdaf8dcc0a3eb5f018ce5168d010349"
+        },
+        "check:static": {
+          "exitCode": 0,
+          "seconds": 1,
+          "logSha256": "3838a47820b5169e91215ef3aadc23419d9f60f8fa767b47bc2e5091afb7f1ed"
+        },
+        "check:publication": {
+          "exitCode": 0,
+          "seconds": 0,
+          "logSha256": "a5797a916a6deb948c754e472d8b21659e4278bca5ab15f3f022d92c8abacfa9"
+        },
+        "test:switch": {
+          "exitCode": 0,
+          "seconds": 5,
+          "logSha256": "36fa7c98e2be4d06e39627cbee1eb159d00b47660d7538ea958b88e4a7b89f5d"
+        },
+        "test:pointers:click": {
+          "exitCode": 0,
+          "seconds": 57,
+          "logSha256": "404089fcc0108f8606a9f110cbe479ba774bc69337e8286fd4278a6cbf759020"
+        },
+        "test:app-state": {
+          "exitCode": 0,
+          "seconds": 5,
+          "logSha256": "9b1a581110869d69c84da6d4caec975fc3d0efdf3871b22a80c782104f9fcc3b"
+        },
+        "test:examples": {
+          "exitCode": 0,
+          "seconds": 136,
+          "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+        },
+        "test:recovery": {
+          "exitCode": 0,
+          "seconds": 5,
+          "logSha256": "69f361e8418b19eef5975e89aec1cd6c13b6295c6f18450f823d8b44b467883e"
+        }
+      },
+      "nodeContractChecks": 261,
+      "clickChecks": 728,
+      "examples": 22
     },
-    "steps": {
-      "test:contracts": {
-        "exitCode": 0,
-        "seconds": 23,
-        "logSha256": "721d52b1351c63820ac8451df17aafaf1cdaf8dcc0a3eb5f018ce5168d010349"
+    {
+      "reason": "main moved to 2ec988e (PanResponder #32, SDK and tests only); merged again without rebase",
+      "mergeCommit": "049002d",
+      "mainCommit": "2ec988e",
+      "nativeHostSha256": "5e21fd4075d46464f7977696847819599ac43fad4206ccc4463f39c91b8058b2",
+      "nativeSourcesChanged": false,
+      "switchChecks": 108,
+      "switchBundleSha256": "0910fdb56ab67d98eff2e415368b4cb0138b7407227d73a5e91d24b7f27d3840",
+      "switchReportSha256": "b138efe3bbc0bf3a179d4c3319bf324848987f13d5be0db574aa02bd4c3bdb82",
+      "precedingHostControl": {
+        "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
+        "checks": 6,
+        "normativeFailures": [
+          "mount/Each root mounts one native Switch for each of its seven RCTSwitch elements",
+          "mount/The application reports no host or runtime error"
+        ],
+        "reportSha256": "3a7bfe017bb1b4bd2d534e3091c578f040bbf046ec84ccfc6e6f11427116fcaa",
+        "runnerLogSha256": "281e080d1f1c323ac0daa0819e7d928851ee1ab7557195e581c4a0eb92e49cb4",
+        "sameBundleAsCurrent": true,
+        "comparisonSha256": "3829dc9a1f050f7648f65394bf4e7bf8a82a7d17575824eb0caea873f2cd0bd2",
+        "refreshedBecause": "the SDK bundle changed with the PanResponder export"
       },
-      "check:static": {
-        "exitCode": 0,
-        "seconds": 1,
-        "logSha256": "3838a47820b5169e91215ef3aadc23419d9f60f8fa767b47bc2e5091afb7f1ed"
-      },
-      "check:publication": {
-        "exitCode": 0,
-        "seconds": 0,
-        "logSha256": "a5797a916a6deb948c754e472d8b21659e4278bca5ab15f3f022d92c8abacfa9"
-      },
-      "test:switch": {
-        "exitCode": 0,
-        "seconds": 5,
-        "logSha256": "36fa7c98e2be4d06e39627cbee1eb159d00b47660d7538ea958b88e4a7b89f5d"
-      },
-      "test:pointers:click": {
-        "exitCode": 0,
-        "seconds": 57,
-        "logSha256": "404089fcc0108f8606a9f110cbe479ba774bc69337e8286fd4278a6cbf759020"
-      },
-      "test:app-state": {
-        "exitCode": 0,
-        "seconds": 5,
-        "logSha256": "9b1a581110869d69c84da6d4caec975fc3d0efdf3871b22a80c782104f9fcc3b"
-      },
-      "test:examples": {
-        "exitCode": 0,
-        "seconds": 136,
-        "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
-      },
-      "test:recovery": {
-        "exitCode": 0,
-        "seconds": 5,
-        "logSha256": "69f361e8418b19eef5975e89aec1cd6c13b6295c6f18450f823d8b44b467883e"
+      "steps": {
+        "test:contracts": {
+          "exitCode": 0,
+          "logSha256": "103c804131e05dc94dd15e9dea80b0888db6900964f440e809dfbb76a6e28866"
+        },
+        "check:static": {
+          "exitCode": 0,
+          "logSha256": "7a444d1abe62374440df0a94bf0c4e512eccf6a3371a5c81218efe8a9b40f0da"
+        },
+        "check:publication": {
+          "exitCode": 0,
+          "logSha256": "9e4e3bd1b8c99b5b357a27b35ab1d3394fe7651af6e4bd40553300c6871a3a2f"
+        },
+        "test:switch": {
+          "exitCode": 0,
+          "logSha256": "959b4c748673833240504079fd78c8acc19c118ba3c4272f747a1f80b4d4ac83"
+        },
+        "test:responders:pan": {
+          "exitCode": 0,
+          "logSha256": "f4c4ab0db2bbde8e053d242f9f61f2dd95add3178db53830400c0b7e5edd33df"
+        }
       }
-    },
-    "nodeContractChecks": 261,
-    "clickChecks": 728,
-    "examples": 22
-  }
+    }
+  ]
 }

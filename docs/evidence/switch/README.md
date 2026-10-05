@@ -179,8 +179,11 @@ sozinho. No host da árvore mesclada (`5e21fd40`) passaram de novo `test:switch`
 (108/108), o click (728 checks), o AppState, os 22 exemplos, `test:recovery` e os
 três gates do job `contracts` (261 testes Node). O controle foi refeito com o host
 da `main` em `8f80fed` (`06a33274`) no lugar de `cb0486eb`: o mesmo bundle falha
-exatamente os 2 checks normativos de montagem. O recibo registra essa corrida em
-`mergeReverification`.
+exatamente os 2 checks normativos de montagem. Depois a `main` recebeu o
+PanResponder (#32, só SDK e testes): a segunda mescla (`049002d`) manteve o host,
+e `test:switch`, o PanResponder e os gates passaram de novo, com o controle refeito
+para o bundle novo (as mesmas 2 falhas). O recibo registra as duas corridas em
+`mergeReverifications`.
 
 ## Limites
 
