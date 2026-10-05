@@ -178,15 +178,45 @@ freshDoc.addEventListener('pointerup', onUp);     // only this one qualifies Up
 | --- | --- |
 | ![A retirado, B2](../../docs/evidence/pointer-document-up-refs/retired.png) | ![A2/B4](../../docs/evidence/pointer-document-up-refs/remounted.png) |
 
+## Mutação durante o dispatch
+
+A [evidência de mutação](../../docs/evidence/pointer-document-up-mutation/README.md)
+amplia a matriz para **4.401 checks** headless. Listeners chamados por um Up
+nativo real alteram os Maps originais do RN durante o próprio dispatch. Remover
+ou abortar um listener que ainda não rodou o pula no mesmo Up; um listener
+adicionado ao mesmo Document/fase só roda no gesto seguinte; um listener bubble
+adicionado por um capture roda no mesmo Up, mesmo quando a consulta nativa do
+root só viu o capture. Adicionar um listener ao Document de outro root não muda
+esse root até o gesto dele.
+
+```js
+const doc = viewRef.current.ownerDocument;
+const onBubble = event => {}, second = event => {};
+doc.addEventListener('pointerup', () => {
+  doc.addEventListener('pointerup', onBubble);   // runs in this same Up
+}, {capture: true});
+doc.addEventListener('pointerup', () => {
+  doc.removeEventListener('pointerup', second);  // skipped in this Up
+});
+doc.addEventListener('pointerup', second);
+```
+
+| Antes do Up com consulta só de capture | Depois do mesmo Up |
+| --- | --- |
+| ![A9/B4](../../docs/evidence/pointer-document-up-mutation/before.png) | ![A12/B4](../../docs/evidence/pointer-document-up-mutation/added.png) |
+
 ## Limits
 
 This matrix certifies the listed healthy Document/element Up cases, including
-Document/documentElement rerender, held-root retirement and one replacement root.
-It does not certify Up-specific faults, mutation during dispatch, capture-phase or
+Document/documentElement rerender, held-root retirement, one replacement root and
+listener removal, addition and abort inside delivered Document Up callbacks.
+It does not certify Up-specific faults, reentrant dispatch, View/element listener
+mutation, mutation combined with stopPropagation, capture-phase or
 View listeners across retirement, explicit pointer capture, coalescing, full responders, development
 renderer, hardware/mobile exports or performance. Down is filtered here; no
 public Down/Up pointer-ID equality is claimed. The final Down regression passes 2,723 checks; contracts pass 255 Node/13 Python.
 Native/SDK production bytes are unchanged from the separately proven View Up
 slice. Hosted baseline 84270fb passed 1,371 checks in five successful jobs and
-lifecycle run 37246479501 passed 2,143 and refs run 37310815360 passed 2,709. The
+lifecycle run 37246479501 passed 2,143 and refs run 37310815360 passed 2,709; the
+mutation slice's hosted run is pending. The
 [research](../../docs/research/pointer-document-up.md) explains the boundaries.
