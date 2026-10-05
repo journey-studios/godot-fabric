@@ -217,6 +217,13 @@ loss is `inactive`, a pause is `background`, and stop sends no event. Its
 [receipt](../docs/evidence/app-state/README.md) records 75 headless checks, the
 preceding-host control and a retained negative control.
 
+The [Switch probe](switch/README.md) mounts RN's original `Switch.js` in two roots
+and toggles it with actual mouse clicks and touch taps: `npm run test:switch`,
+outside the launcher catalog. A value prop that does not follow is restored by
+Switch.js's `setValue`, disabled input is ignored and colors reach the native
+switch. Its [receipt](../docs/evidence/switch/README.md) records 108/108
+headless checks, the preceding host's 2 mount failures and a retained sabotage.
+
 The [shared touches matrix](shared-touches/README.md) presses the original
 `Pressable`s of two roots with overlapping touches and the mouse in four flag
 lanes: `npm run test:responders:shared-touches`, outside the launcher catalog.

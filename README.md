@@ -230,6 +230,13 @@ application's touches, as RN's one JS responder expects, so a touch in one root
 no longer releases a press held in another. 92 headless checks in four flag
 lanes; the preceding host fails exactly 9. [Evidence](docs/evidence/shared-touches/README.md).
 
+The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
+over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
+mouse clicks and touch taps toggle it, `onChange`/`onValueChange` follow RN's
+order, and Switch.js's `setValue` restores a value prop that does not change.
+108 headless checks in two roots; the preceding host fails the 2 mount checks.
+[Evidence](docs/evidence/switch/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

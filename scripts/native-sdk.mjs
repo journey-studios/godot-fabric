@@ -176,7 +176,9 @@ function snapshot(options) {
     || ['CMakeLists.txt', 'godot-profile.json'].includes(name)).map(name => 'native/' + name);
   sourceFiles.push('dependencies.json', 'scripts/native-sdk.mjs', 'scripts/codegen-contract.mjs', 'scripts/rn-pointer-overlay.mjs');
   const sourceSha256 = Object.fromEntries(sourceFiles.sort().map(name => [name, fileHash(path.join(root, name))]));
+  // The host also compiles RN's generated core-component Props/EventEmitters.
   const sourceTrees = [['react-native', path.join(root, '.deps', lock['react-native'].directory, 'ReactCommon')],
+    ['react-native-specs', path.join(root, '.deps', lock['react-native'].directory, 'React/FBReactNativeSpec')],
     ['godot-cpp', path.join(root, '.deps', lock['godot-cpp'].directory, 'src')],
     ['godot-cpp-generated', path.join(buildDir, 'godot-cpp/gen/src')],
     ['react-native-pointer-overlay', path.join(buildDir, 'rn-pointer-overlay')]]

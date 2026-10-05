@@ -6,7 +6,7 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; próximos: recibos de CI, Touchables (#30) e Switch (#33), e as entregas paralelas (Appearance, ActivityIndicator, listas virtualizadas)"
+    "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; Switch na main; próximos: Touchables (#30), Appearance (#35), ActivityIndicator, listas virtualizadas e notificações de captura"
   },
   "updatedAt": "2026-10-05T23:40:50.400304+00:00",
   "source": {
@@ -1687,7 +1687,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos.",
+      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos. Fatia Switch: o Switch.js original do RN roda sobre o descritor Switch compartilhado de iOS/macOS e um switch nativo desenhado no Godot (108/108 checks headless com clique e toque reais em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do setValue é rejeitada), com teclado, acessibilidade, animação e caminho Android ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1698,6 +1698,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "Switch: 108 checks headless, controle do host anterior e sabotagem",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e51ac18c146890420e7e8a75789faafa53b5bc07/docs/evidence/switch/README.md"
             }
           ]
         },
@@ -3361,6 +3365,15 @@
       ],
       "message": "PanResponder original em quatro lanes: 128 headless. O stub da plataforma, que lançava erro ao criar, dá lugar ao módulo do RN sobre os eventos de responder; o plugin legado e o dispatch nativo produzem os mesmos callbacks e coordenadas do gestureState. Arrastos, dois dedos (centróide dos dois toques), roubo pelo pai, recusa com grant especulativo e reject, pai de captura e remoção no meio do gesto cobertos. SDK anterior falha na montagem; sabotagem sem handlers de captura falha 6 checks e o oráculo rejeita. Sete controles de host anterior refeitos. CI pendente.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/0a19e397d9294ee3d82d192be5101e716d6c623a/docs/evidence/pan-responder/README.md"
+    },
+    {
+      "id": "switch-local-verified-20261005",
+      "at": "2026-10-05T22:15:44.805743+00:00",
+      "taskIds": [
+        "GF-17"
+      ],
+      "message": "Switch público: o Switch.js original do RN segue o caminho não Android sobre o SwitchComponentDescriptor compartilhado de iOS/macOS e um switch nativo desenhado no Godot. 108/108 checks headless com clique e toque reais em duas roots: controlado, valor fixo restaurado por setValue, desabilitado, cores, frame 63×28 (o do RN no iOS 26), remoção no meio do press e topChange bubbling no registro. O host anterior falha exatamente os 2 checks de montagem; a sabotagem do setValue falha 13 checks e o oráculo rejeita. Contracts 261 Node/13 Python e as suítes nativas passaram; CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e51ac18c146890420e7e8a75789faafa53b5bc07/docs/evidence/switch/README.md"
     },
     {
       "id": "pointer-click-hosted-ci-and-pages-20261005",
