@@ -148,16 +148,26 @@ start.
 
 ## Limites
 
-A prova cobre listeners de hover em Views, com as duas flags habilitadas, com mouse.
+A prova cobre listeners de hover em Views, com as duas flags habilitadas, com mouse
+e toque.
 Algumas partes ficam habilitadas sem certificação:
 - Pelo caminho da raiz, listeners de hover em Document/documentElement agora
   qualificam (com a regra de não borbulhar para `enter`/`leave`), mas não foram
   testados nativamente; só os testes unitários do plugin cobrem essa regra.
-- Neste host, a área vazia da superfície não tem alvo, enquanto no RN Android o alvo
-  de fallback é a view raiz (o `TouchTargetHelper` parte do id da raiz e a busca de
-  pointer events devolve a própria raiz). Por isso a raiz e o container entram e saem do hover a
-  cada transição, e listeners de Document em toques ou hover sobre área vazia não
-  recebem nada. Essa divergência é anterior a esta fatia e vira a próxima entrega.
+- Neste host, a área vazia da superfície não tem alvo de hit, enquanto o RN resolve o
+  alvo para a view raiz (o `TouchTargetHelper` no Android e o `hitTest` da
+  `RCTRootComponentView` no iOS). No RN 0.87.1 a família raiz nasce sem dispatcher
+  de eventos e com o `EventTarget` sem instance handle, então nenhum evento com alvo
+  na raiz chega ao JS: listeners de Document não recebem toques, moves nem hover
+  sobre a área vazia em nenhum dos dois. A diferença observável é o caminho de
+  hover: aqui a raiz sai dele a cada transição para a área vazia, enquanto o
+  processador C++ do RN a mantém. Com um listener capture de `pointerenter` ou
+  `pointerleave` no Document, essa saída propaga `leave` (e a volta propaga `enter`)
+  para cada nó do caminho, o que o RN não faz enquanto o ponteiro segue na raiz.
+  Isso é anterior a esta fatia e entra na certificação de hover em Document.
+
+  (Correção: a versão anterior deste item dizia que, no RN, listeners de Document
+  receberiam eventos sobre a área vazia. Eles não recebem.)
 
 Com toque, só a colocação no alvo (bubble) foi exercitada; as outras usam o mesmo
 algoritmo e as mesmas consultas certificadas com mouse. Hover com caneta, captura de

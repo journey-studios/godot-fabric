@@ -1537,10 +1537,15 @@ pack/verify, adapters (loader 89 checks/21 cases, runtime 13 runs/213 checks),
 consumer (30 + 40) and cold start pass too.
 
 This slice exposes a divergence that predates it: the empty
-surface area has no hit target here, while RN Android falls back to the root
-view, so Document listeners miss Down/Up/Move and hover over empty areas and the
-root enters and leaves the hover path on every transition. That root fallback is
-the next delivery. Document hover, pen hover, touch with other listener
+surface area has no hit target here, while RN resolves it to the root view. RN
+0.87.1 drops root-targeted events before JS (the root family has no event
+dispatcher), so Document listeners receive nothing there in either; the
+difference is that this host drops the root from the hover path on each
+transition into an empty area, so a Document capture enter/leave listener sees
+enter/leave for every node of the path, unlike RN's C++ processor. It belongs to
+the Document hover certification, the next delivery. (An earlier version of this
+paragraph claimed that Document listeners miss events RN would deliver there; RN
+delivers none.) Pen hover, touch with other listener
 placements, capture while hovering, responders and multi-touch remain open. All
 76 executed code/configuration inputs match implementation 5560798 via git
 show/SHA-256 (execution base f868160/dirty retained; main a6af188 differs only in
