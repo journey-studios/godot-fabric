@@ -5,7 +5,7 @@
 #include <vector>
 
 class FabricSurface;
-namespace fabric_godot { class ApplicationRuntime; class AdapterLoader; class AppLifecycle; }
+namespace fabric_godot { class ApplicationRuntime; class AdapterLoader; class AppLifecycle; class SystemAppearance; }
 
 // Experimental explicit owner. Final resource/editor authoring is still GF-28.
 class FabricApplication : public godot::Node {
@@ -16,6 +16,8 @@ class FabricApplication : public godot::Node {
   void _process(double delta) override;
   void _exit_tree() override;
   void _notification(int what);
+  // The DisplayServer system theme callback the Appearance module registers.
+  void _on_system_theme_changed();
   godot::String evaluate(const godot::String &source);
   godot::String snapshot();
   void stop();
@@ -47,6 +49,8 @@ class FabricApplication : public godot::Node {
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   // One lifecycle per application: every root's AppState reads the same state.
   std::shared_ptr<fabric_godot::AppLifecycle> app_state;
+  // One system appearance per application, shared by every root.
+  std::shared_ptr<fabric_godot::SystemAppearance> appearance;
   bool bundle_loaded = false;
   bool terminal_stopped = false;
   std::vector<std::string> pre_runtime_errors;

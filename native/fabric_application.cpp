@@ -2,6 +2,7 @@
 #include "application_runtime.h"
 #include "adapter_loader.h"
 #include "app_lifecycle.h"
+#include "system_appearance.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include "fabric_surface.h"
 #include <godot_cpp/classes/file_access.hpp>
@@ -9,6 +10,7 @@
 #include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/window.hpp>
+#include <godot_cpp/core/object.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <folly/json.h>
 #include <stdexcept>
@@ -17,16 +19,44 @@
 using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
 static String gd(const std::string &value) { return String::utf8(value.c_str()); }
+// The headless DisplayServer has no system theme and never calls back, so a
+// validation run supplies the system scheme through this meta instead.
+static constexpr const char *validation_system_scheme = "validation_system_color_scheme";
+static fabric_godot::SystemAppearance::System read_system_appearance(uint64_t id) {
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  if (!application) return {};
+  if (application->has_meta(validation_system_scheme))
+    return {true, String(application->get_meta(validation_system_scheme)) == "dark"};
+  auto *display = Engine::get_singleton()->get_singleton("DisplayServer");
+  if (!display) return {};
+  const bool supported = display->call("is_dark_mode_supported");
+  return {supported, supported && static_cast<bool>(display->call("is_dark_mode"))};
+}
+// DisplayServer keeps a single system theme callback. Editor processes leave it
+// to the editor; at runtime the Appearance module takes it while it observes.
+static bool watch_system_appearance(uint64_t id) {
+  if (Engine::get_singleton()->is_editor_hint()) return false;
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  auto *display = Engine::get_singleton()->get_singleton("DisplayServer");
+  if (!application || !display) return false;
+  display->call("set_system_theme_change_callback", Callable(application, "_on_system_theme_changed"));
+  return true;
+}
 
 FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_godot::GameServiceRegistry>()),
     app_state(std::make_shared<fabric_godot::AppLifecycle>()) {
   set_process_mode(PROCESS_MODE_ALWAYS); set_process(true);
+  // Resolved by ID: the module may outlive this Node until the VM is released.
+  const uint64_t id = get_instance_id();
+  appearance = std::make_shared<fabric_godot::SystemAppearance>(
+      [id] { return read_system_appearance(id); }, [id] { return watch_system_appearance(id); });
 }
 FabricApplication::~FabricApplication() { stop(); }
 void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("evaluate", "source"), &FabricApplication::evaluate);
   ClassDB::bind_method(D_METHOD("snapshot"), &FabricApplication::snapshot);
   ClassDB::bind_method(D_METHOD("stop"), &FabricApplication::stop);
+  ClassDB::bind_method(D_METHOD("_on_system_theme_changed"), &FabricApplication::_on_system_theme_changed);
   ClassDB::bind_method(D_METHOD("invoke_callable", "name", "method", "args"), &FabricApplication::invoke_callable);
   ClassDB::bind_method(D_METHOD("bind_signal", "name", "signal", "arg_schema", "options"), &FabricApplication::bind_signal, DEFVAL(Dictionary()));
   ClassDB::bind_method(D_METHOD("bind_state", "name", "getter", "changed", "value_schema", "options"), &FabricApplication::bind_state, DEFVAL(Dictionary()));
@@ -101,7 +131,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             }
             return metrics;
           },
-          utf8(scenario), get_instance_id(), game_services, app_state,
+          utf8(scenario), get_instance_id(), game_services, app_state, appearance,
           adapter_loader ? adapter_loader->registry() : nullptr);
     }
     int legacy_id = 0;
@@ -124,6 +154,7 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
 }
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
 void FabricApplication::_exit_tree() { stop(); }
+void FabricApplication::_on_system_theme_changed() { appearance->system_changed(); }
 void FabricApplication::_notification(int what) {
   // The platform layers call MainLoop::notification for these OS events and
   // SceneTree::_notification propagates them to every node in the tree.
@@ -155,6 +186,7 @@ String FabricApplication::snapshot() {
   result["runtimeInitialized"] = static_cast<bool>(runtime);
   result["initializationAttempted"] = initialization_attempted;
   result["appState"] = app_state->snapshot();
+  result["systemAppearance"] = appearance->snapshot();
   if (adapter_loader) result["adapterLoader"] = adapter_loader->snapshot();
   for (const auto &error : pre_runtime_errors) result["errors"].push_back(error);
   return gd(folly::toJson(result));

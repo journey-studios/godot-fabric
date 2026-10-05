@@ -1,6 +1,7 @@
 #include "turbo_module_registry.h"
 #include "app_lifecycle.h"
 #include "game_service_registry.h"
+#include "system_appearance.h"
 
 #include <ReactCommon/TurboModuleBinding.h>
 #include <jsi/JSIDynamic.h>
@@ -199,6 +200,64 @@ class NativeAppState final : public rn::NativeAppStateCxxSpec<NativeAppState> {
         emitDeviceEvent("memoryWarning");
         break;
     }
+  }
+};
+
+struct AppearanceModuleState {
+  bool active{true};
+  std::shared_ptr<SystemAppearance> appearance;
+  void stop() {
+    if (!active) return;
+    active = false;
+    appearance->release();
+  }
+};
+
+// Appearance is a platform module: its generated C++ contract and the
+// RCTDeviceEventEmitter delivery are original RN, while the scheme comes from
+// Godot's system theme and the application's override.
+class NativeAppearance final : public rn::NativeAppearanceCxxSpec<NativeAppearance> {
+ public:
+  NativeAppearance(const std::shared_ptr<rn::CallInvoker> &invoker,
+      std::shared_ptr<AppearanceModuleState> state)
+      : rn::NativeAppearanceCxxSpec<NativeAppearance>(invoker), state_(std::move(state)) {
+    state_->appearance->observe([this](const std::string &scheme) { emit(scheme); });
+  }
+  ~NativeAppearance() override { state_->stop(); }
+  std::string getColorScheme(jsi::Runtime &runtime) {
+    live(runtime);
+    return state_->appearance->scheme();
+  }
+  void setColorScheme(jsi::Runtime &runtime, jsi::String style) {
+    live(runtime);
+    try { state_->appearance->set_override(style.utf8(runtime)); }
+    catch (const std::invalid_argument &error) { throw jsi::JSError(runtime, std::string("E_ARGUMENT: ") + error.what()); }
+  }
+  // Appearance.js hands this module to NativeEventEmitter on every platform.
+  // As in Android's AppearanceModule nothing is gated on the count.
+  void addListener(jsi::Runtime &runtime, jsi::String) {
+    live(runtime);
+    state_->appearance->add_listener();
+  }
+  void removeListeners(jsi::Runtime &runtime, double count) {
+    // Late cleanup stays safe after disposal without restoring authority.
+    if (!state_->active) return;
+    try { state_->appearance->remove_listeners(count); }
+    catch (const std::invalid_argument &error) { throw jsi::JSError(runtime, std::string("E_ARGUMENT: ") + error.what()); }
+  }
+
+ private:
+  std::shared_ptr<AppearanceModuleState> state_;
+  void live(jsi::Runtime &runtime) const {
+    if (!state_->active) throw jsi::JSError(runtime, "E_MODULE_DISPOSED: Appearance");
+  }
+  void emit(const std::string &scheme) {
+    // Both platforms send AppearancePreferences: {colorScheme}.
+    emitDeviceEvent("appearanceChanged", [scheme](jsi::Runtime &runtime, std::vector<jsi::Value> &args) {
+      jsi::Object preferences(runtime);
+      preferences.setProperty(runtime, "colorScheme", jsi::String::createFromUtf8(runtime, scheme));
+      args.emplace_back(runtime, preferences);
+    });
   }
 };
 
@@ -469,6 +528,15 @@ void TurboModuleRegistry::add_app_state(const std::shared_ptr<AppLifecycle> &lif
       [app_state](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
         return std::make_shared<NativeAppState>(invoker, app_state);
       }, [app_state] { app_state->stop(); });
+}
+void TurboModuleRegistry::add_appearance(const std::shared_ptr<SystemAppearance> &appearance) {
+  if (!appearance) throw std::invalid_argument("Appearance requires the application's system appearance");
+  auto state = std::make_shared<AppearanceModuleState>();
+  state->appearance = appearance;
+  add(std::string(NativeAppearance::kModuleName),
+      [state](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+        return std::make_shared<NativeAppearance>(invoker, state);
+      }, [state] { state->stop(); });
 }
 void TurboModuleRegistry::add_feature_flags() {
   add(std::string(rn::NativeReactNativeFeatureFlags::kModuleName),

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, RootTagContext, Button, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
@@ -90,6 +90,22 @@ void appState; void blurEvent;
 AppState.addEventListener("change", (state: number) => { void state; });
 // @ts-expect-error unknown AppState events are rejected
 AppState.addEventListener("suspend", () => {});
+
+// Appearance and useColorScheme are the original pinned modules.
+const scheme: ColorSchemeName | null = Appearance.getColorScheme();
+Appearance.setColorScheme("unspecified");
+const appearanceSubscription = Appearance.addChangeListener(({colorScheme}) => {
+  const changed: ColorSchemeName | null = colorScheme;
+  void changed;
+});
+appearanceSubscription.remove();
+function ThemedLabel() {
+  const colorScheme: ColorSchemeName | null = useColorScheme();
+  return <View testID={colorScheme ?? "none"} />;
+}
+void scheme; void ThemedLabel;
+// @ts-expect-error overrides are light, dark, auto or unspecified
+Appearance.setColorScheme("sepia");
 
 // DOM traversal comes from the original pinned public instance types.
 function readTree(element: ViewInstance) {

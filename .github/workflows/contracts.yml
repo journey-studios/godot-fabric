@@ -102,6 +102,18 @@ jobs:
             build/app-state-current.log
             build/app-state-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:appearance
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-appearance
+          path: |
+            build/appearance-report.json
+            build/appearance-current-report.json
+            build/appearance-comparison.json
+            build/appearance-current.log
+            build/appearance-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
