@@ -37,6 +37,11 @@ const cases = {
     normative: ["events", "raw"]},
   "touch/sequential": {events: [...press("A", 1), ...press("B", 1)],
     raw: [start("A", 1, [1]), end("A", 1, []), start("B", 1, [1]), end("B", 1, [])], normative: []},
+  // When A's own touch ends first, the legacy plugin releases A (B's listed
+  // touch is outside it); ReactNativeResponder releases only when no touch
+  // remains, so A presses with B's end, as on one RN surface.
+  "touch/a-lifts-first": {events: press("A", 1), nativeEvents: [["A", "pressIn", [1], "A"], ["A", "pressOut", [2], "B"], ["A", "press", [2], "B"]],
+    raw: [start("A", 1, [1]), start("B", 2, [1, 2]), end("A", 1, [2]), end("B", 2, [])], normative: ["events", "raw"]},
   "touch/cancel-b": {events: [["A", "pressIn", [1], "A"], ["A", "pressOut", [2], "B"]],
     raw: [start("A", 1, [1]), start("B", 2, [1, 2]), end("B", 2, [1], "topTouchCancel"), end("A", 1, [])], normative: ["raw"]},
 };
@@ -48,9 +53,12 @@ function rootsOf(stage) {
     for (const node of surface.nodes) if (node.testID === name + "-press") tags[node.tag] = name;
   return tags;
 }
-function verifyCase(id, stage) {
+// Lanes with native dispatch run ReactNativeResponder.
+const nativeDispatch = flagMode => flagMode === "internal-only" || flagMode === "enabled";
+const expectedEvents = (spec, flagMode) => (nativeDispatch(flagMode) && spec.nativeEvents) || spec.events;
+function verifyCase(id, stage, flagMode) {
   const spec = cases[id], tags = rootsOf(stage), react = stage.react;
-  assert.deepEqual(react.events.map(row => [row.name, row.callback, row.changed, tags[row.target]]), spec.events, id);
+  assert.deepEqual(react.events.map(row => [row.name, row.callback, row.changed, tags[row.target]]), expectedEvents(spec, flagMode), id);
   assert.deepEqual(react.raw.map(row => [tags[row.target], row.type, row.changed, row.touches, row.targetTouches]), spec.raw, id);
   assert.equal(stage.application.pointerRouting.active, 0, id);
 }
@@ -60,8 +68,8 @@ function verify({report, result, log, flagMode}) {
   assert.ok(report != null, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);
   assert.equal(report.scenario, "native-shared-touches"); assert.equal(report.flagMode, flagMode); assert.equal(report.displayServer, "headless");
-  // Both hosts state all 20 checks: the five cases, mount and cleanup.
-  assert.equal(report.checks.length, 20);
+  // Both hosts state all 23 checks: the six cases, mount and cleanup.
+  assert.equal(report.checks.length, 23);
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...report.failures].sort());
@@ -79,7 +87,7 @@ function verify({report, result, log, flagMode}) {
   }
   assert.ok(report.allAssertionsPassed); assert.deepEqual(report.failures, []);
   assert.match(log, /SHARED_TOUCHES_PASSED: \d+/);
-  for (const id of Object.keys(cases)) verifyCase(id, report.stages[id]);
+  for (const id of Object.keys(cases)) verifyCase(id, report.stages[id], flagMode);
   assert.ok(report.afterStop.stopped && report.afterStop.rootCount === 0 && report.afterStop.errors.length === 0);
 }
 
@@ -110,11 +118,14 @@ test("roots of one application share RN's single responder over every touch", as
   }
   for (const result of results) verify(result);
   if (allowOriginalNegative || modes.length !== eventTargetProbeModes.length) return;
-  // Both responder implementations agree on every case.
+  // Lanes of the same responder implementation agree on every case; the two
+  // implementations differ only where the cases state it.
+  const trace = (mode, id) => reports[mode].stages[id].react.events.map(row => [row.name, row.callback, row.changed]);
   for (const id of Object.keys(cases))
-    for (const mode of eventTargetProbeModes)
-      assert.deepEqual(reports[mode].stages[id].react.events.map(row => [row.name, row.callback, row.changed]),
-        reports.disabled.stages[id].react.events.map(row => [row.name, row.callback, row.changed]), `${mode} ${id}`);
+    for (const mode of eventTargetProbeModes) {
+      assert.deepEqual(trace(mode, id), trace(nativeDispatch(mode) ? "enabled" : "disabled", id), `${mode} ${id}`);
+      assert.equal(JSON.stringify(trace("enabled", id)) === JSON.stringify(trace("disabled", id)), cases[id].nativeEvents == null, id);
+    }
   const originalBytes = await optionalFile("build/shared-touches-original-report.json"), original = originalBytes == null ? null : JSON.parse(originalBytes);
   if (original != null) {
     assert.ok(original.originalNegativeObserved);

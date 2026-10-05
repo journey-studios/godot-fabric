@@ -118,6 +118,11 @@ func run_case(spec: Dictionary) -> void:
   check(int(native(surfaces.A).pointer.activeTouches) == 0 and int(native(surfaces.B).pointer.activeTouches) == 0 and
       int(app.pointerRouting.active) == 0, prefix + "/Both roots end without a retained touch or contact")
 
+# Lanes with native dispatch run RN's ReactNativeResponder instead of the
+# legacy ResponderEventPlugin.
+func native_dispatch() -> bool:
+  return flag_mode == "internal-only" or flag_mode == "enabled"
+
 func cases() -> Array:
   return [
     # The first root keeps its press while a second root's touch starts and
@@ -144,6 +149,16 @@ func cases() -> Array:
         ["B", "pressIn", [1], "B"], ["B", "pressOut", [1], "B"], ["B", "press", [1], "B"]],
       "raw": [["A", "topTouchStart", [1], [1], [1]], ["A", "topTouchEnd", [1], [], []],
         ["B", "topTouchStart", [1], [1], [1]], ["B", "topTouchEnd", [1], [], []]]},
+    # A's own touch lifts first while B's stays down. The legacy plugin
+    # releases A at once (B's listed touch is outside it); ReactNativeResponder
+    # keeps its responder until no touch remains, so A presses at B's end, as
+    # on one RN surface.
+    {"id": "touch/a-lifts-first", "normative": ["events", "raw"],
+      "actions": [["down", "A", 0], ["wait", 200], ["down", "B", 1], ["up", "A", 0], ["up", "B", 1]],
+      "events": ([["A", "pressIn", [1], "A"], ["A", "pressOut", [2], "B"], ["A", "press", [2], "B"]] if native_dispatch() else
+        [["A", "pressIn", [1], "A"], ["A", "pressOut", [1], "A"], ["A", "press", [1], "A"]]),
+      "raw": [["A", "topTouchStart", [1], [1], [1]], ["B", "topTouchStart", [2], [1, 2], [2]],
+        ["A", "topTouchEnd", [1], [2], []], ["B", "topTouchEnd", [2], [], []]]},
     # A cancel terminates RN's one responder, whichever root it comes from.
     {"id": "touch/cancel-b", "normative": ["raw"],
       "actions": [["down", "A", 0], ["wait", 200], ["down", "B", 1], ["cancel", "B", 1], ["up", "A", 0]],
