@@ -166,3 +166,10 @@ exports mobile e performance seguem abertos.
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
+
+As 76 fontes de código/configuração executadas (18 produtoras do bundle,
+55 entradas do build nativo e 5 de verificação, com sobreposição)
+correspondem à implementação `5560798bbf28c962735b5ec80791f707272d1ac2` por `git show`/SHA-256. A execução partiu de
+f868160, o head da fatia de Document Move, com as mudanças desta fatia ainda locais;
+o squash dela na `main` (a6af188) só difere em documentação e no dashboard. Este pin
+pós-commit não é uma nova corrida.

@@ -10,8 +10,8 @@
   },
   "updatedAt": "2026-10-05T17:57:08.213682+00:00",
   "source": {
-    "commit": "c2ad8f547d368a4993f3b75a264d2fd191e8ecf9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9",
+    "commit": "5560798bbf28c962735b5ec80791f707272d1ac2",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/5560798bbf28c962735b5ec80791f707272d1ac2",
     "scope": "View hover com interesse nativo: listeners imperativos originais de pointerover/out/enter/leave em Views qualificam o hover nativo com mouse e toque. 158 checks headless (137 saudáveis e 21 numa aplicação de faults de hover); o host anterior com o mesmo bundle falha exatamente 32 checks normativos. Overlay ORa a consulta aos Maps originais depois de cada filtro por ViewProps do handleIncomingPointerEventOnNode: caminho para out/over, por nó (capture e próprio) para leave/enter; SDK mapeia 0/23, 2/24, 26/28, 27/29 e, na raiz, enter/leave não borbulham (só capture do Document e o próprio documentElement). Callbacks na ordem do RN (out, leave; over, enter), fases 2/3/1, capture do pai rodando para o pai e o alvo, prioridade Discrete, um par Raw por evento; um toque entra no caminho no Down (antes do TouchStart, buttons 1) e sai depois da emissão do Up (antes do TouchEnd, buttons 0); manual mantém enter/leave sem bubbling; B sem listeners lê false; ancestrais sem instância pública são pulados sem criação. Falha repetida no lookup de over retida uma vez e contada depois. Os probes anteriores separam os lookups de hover que todo toque e move agora fazem e exigem que sejam false; o fault de resolver no Down deixa passar as 4 leituras de hover do alvo. Divergência anterior exposta: área vazia sem alvo de hit, enquanto o RN Android usa a raiz; próxima entrega. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -512,7 +512,7 @@
             },
             {
               "label": "View hover nativo: 158 checks e controle de host anterior 32",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointer-hover-interest/docs/evidence/pointer-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5560798bbf28c962735b5ec80791f707272d1ac2/docs/evidence/pointer-hover/README.md"
             }
           ]
         },
@@ -699,7 +699,7 @@
             },
             {
               "label": "View hover nativo: 158 checks e controle de host anterior 32",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointer-hover-interest/docs/evidence/pointer-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5560798bbf28c962735b5ec80791f707272d1ac2/docs/evidence/pointer-hover/README.md"
             }
           ]
         },
@@ -938,7 +938,7 @@
             },
             {
               "label": "View hover nativo: 158 checks e controle de host anterior 32",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointer-hover-interest/docs/evidence/pointer-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5560798bbf28c962735b5ec80791f707272d1ac2/docs/evidence/pointer-hover/README.md"
             }
           ]
         },
@@ -1376,7 +1376,7 @@
             },
             {
               "label": "View hover nativo: 158 checks e controle de host anterior 32",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointer-hover-interest/docs/evidence/pointer-hover/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/5560798bbf28c962735b5ec80791f707272d1ac2/docs/evidence/pointer-hover/README.md"
             }
           ]
         },
@@ -3187,7 +3187,7 @@
         "GF-13"
       ],
       "message": "View hover nativo: 158 headless (137 saudáveis + 21 de faults de hover); o host anterior com o mesmo bundle falha exatamente 32 checks normativos. Out/over pelo caminho, enter/leave por nó com a regra de capture do RN; callbacks na ordem, fase e prioridade Discrete do RN com mouse e toque (o toque entra no Down e sai depois do Up); falha repetida de lookup de over retida uma vez. Probes anteriores separam os lookups de hover de cada toque e move e exigem false. Área vazia sem alvo de hit (RN Android usa a raiz) registrada como próxima entrega. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointer-hover-interest/docs/evidence/pointer-hover/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/5560798bbf28c962735b5ec80791f707272d1ac2/docs/evidence/pointer-hover/README.md"
     },
     {
       "id": "pointer-move-hosted-ci-and-pages-20261005",

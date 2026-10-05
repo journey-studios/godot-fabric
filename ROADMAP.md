@@ -1535,7 +1535,10 @@ surface area has no hit target here, while RN Android falls back to the root
 view, so Document listeners miss Down/Up/Move and hover over empty areas and the
 root enters and leaves the hover path on every transition. That root fallback is
 the next delivery. Document hover, pen hover, touch with other listener
-placements, capture while hovering, responders and multi-touch remain open. Hosted CI for this slice is pending. No
+placements, capture while hovering, responders and multi-touch remain open. All
+76 executed code/configuration inputs match implementation 5560798 via git
+show/SHA-256 (execution base f868160/dirty retained; main a6af188 differs only in
+docs and the dashboard). Hosted CI for this slice is pending. No
 whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
