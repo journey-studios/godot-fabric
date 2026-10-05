@@ -73,7 +73,7 @@ function query(value, name, installed, offsets, results, nativeNodes) {
     row.before.publicInstanceNull === row.after.publicInstanceNull && row.before.refAssigned === row.after.refAssigned));
   if (roots.length > 1) assert.ok(roots[0].sequence < roots[1].sequence);
 }
-function terminal(stage, expected, phases, name, D, installed, offsets, results, remaining = 0, legacy = false, sentinel = false) {
+function terminal(stage, expected, phases, name, D, installed, offsets, results, remaining = 0, legacy = false, sentinel = false, faultRows = null) {
   const value = stage.react, pointers = pointerRows(value), touch = value.events.filter(row => row.label === "TouchEnd");
   assert.deepEqual(value.events.map(row => row.label), [...expected, "TouchEnd"]);
   assert.deepEqual(pointers.map(row => row.phase), phases);
@@ -100,8 +100,64 @@ function terminal(stage, expected, phases, name, D, installed, offsets, results,
   assert.equal(stage.after.pointer.activePointers, 0); assert.equal(stage.after.pointer.activeTouches, 0);
   assert.deepEqual(stage.application.pointerProcessor, {active: remaining, pendingCapture: 0, activeCapture: 0, hover: remaining});
   for (const key of ["active", "contacts", "stored"]) assert.equal(stage.application.pointerRouting[key], remaining);
-  if (sentinel) assert.deepEqual(value.query.rows, []); else query(value, name, installed, offsets, results, stage.after.nodes);
+  if (sentinel) assert.deepEqual(value.query.rows, []);
+  else if (faultRows != null && installed) faultQuery(value, name, faultRows);
+  else query(value, name, installed, offsets, results, stage.after.nodes);
   clean(value, D);
+}
+// Root rows [offset, action, result] in call order; View ancestors still
+// delegate healthy false pairs before the faulted root lookup.
+function faultQuery(value, name, rows) {
+  const roots = value.query.rows.filter(row => row.isRootHandle), components = value.query.rows.filter(row => !row.isRootHandle);
+  assert.deepEqual(roots.map(row => [row.offset, row.action, row.result]), rows.map(([offset, action, result]) => [offset, action, action === "nonboolean" ? 1 : result]));
+  assert.ok(roots.every(row => row.name === name && row.expectedHandle && row.matched === (row.action !== "delegate") &&
+    row.resultKind === (row.action === "delegate" ? "boolean" : row.action === "throw" ? "throw" : "number") &&
+    row.before.handleExists && row.after.handleExists && row.before.publicInstanceNull === row.after.publicInstanceNull));
+  assert.ok(components.length >= 2 && components.length % 2 === 0 && components[0].candidateTag === value.targetTag);
+  assert.ok(components.every(row => row.action === "delegate" && !row.matched && row.result === false && [36, 37].includes(row.offset) && row.sequence < roots[0].sequence));
+}
+// One-shot root query faults at the Up offsets, in a second application after
+// the healthy one stopped. A consumed fault rejects only its own lookup with
+// one retained diagnostic; the recovery gesture is healthy.
+function faults(report, D, installed) {
+  const stages = report.stages, docOffsets = installed ? [36] : [36, 37], docResults = installed ? [true] : [false, false];
+  const docs = installed ? ["DocC", "DocB"] : [], phases = labels => labels.map(label => label.endsWith("C") ? 1 : 3);
+  const app = stages["fault/beforeStop"].application;
+  assert.equal(stages["fault/capabilityA"].query.installations, installed ? 1 : 0);
+  const cases = [
+    ["throw36", "doc", 36, "throw", docs, [[36, "throw", null], [37, "delegate", true]], docs, docOffsets, docResults],
+    ["throw37", "doc-capture-only", 37, "throw", [], [[36, "delegate", false], [37, "throw", null]], installed ? ["DocC"] : [], [36, 37], [false, installed]],
+    ["nonboolean36", "doc-remove", 36, "nonboolean", [], [[36, "nonboolean", null], [37, "delegate", false]], installed ? ["DocB"] : [], docOffsets, docResults],
+    ["nonboolean37", "doc-capture-only", 37, "nonboolean", [], [[36, "delegate", false], [37, "nonboolean", null]], installed ? ["DocC"] : [], [36, 37], [false, installed]],
+    ["armed37", "doc", 37, "throw", docs, [[36, "delegate", true]], docs, docOffsets, docResults],
+  ];
+  const expectedErrors = [];
+  for (const [id, kind, offset, mode, expected, rows, recovery, offsets, results] of cases) {
+    const prefix = "fault/" + id, consumed = installed && rows.some(row => row[1] !== "delegate");
+    assert.equal(stages[prefix + "/configuration"].kind, kind);
+    assert.deepEqual(stages[prefix + "/fault"], {offset, mode, label: "root" + offset, remaining: 1});
+    terminal(stages[prefix + "/up"], expected, phases(expected), "A", D, installed, [36, 37], [false, false], 0, false, false, rows);
+    const fault = stages[prefix + "/up"].react.query.fault, errors = stages[prefix + "/errors"];
+    assert.equal(errors.consumed, consumed); assert.equal(fault.remaining, consumed ? 0 : 1);
+    assert.equal(errors.after.length, errors.before.length + (consumed ? 1 : 0));
+    if (consumed) {
+      const cause = mode === "throw" ? "GF document query deliberate fault: root" + offset : "Pointer listener query must return a boolean";
+      assert.ok(errors.after.at(-1).startsWith("E_POINTER_LISTENER_QUERY: ") && errors.after.at(-1).includes(cause));
+      expectedErrors.push(cause);
+    }
+    assert.equal(stages[prefix + "/cleared"], true);
+    terminal(stages[prefix + "/recovery/up"], recovery, phases(recovery), "A", D, installed, offsets, results);
+    assert.equal(stages[prefix + "/recovery/up"].react.query.fault, null);
+  }
+  assert.deepEqual(report.faultExpectedErrors, expectedErrors);
+  assert.equal(expectedErrors.length, installed ? 4 : 0);
+  terminal(stages["fault/B-healthy/up"], docs, installed ? [1, 3] : [], "B", D, installed, docOffsets, docResults);
+  assert.deepEqual(app.errors, stages["fault/stopped"].errors);
+  const stopped = stages["fault/stopped"];
+  assert.ok(stopped.stopped && !stopped.pointerListenerQueryInstalled && stopped.rootCount === 0);
+  assert.equal(stopped.errors.length, expectedErrors.length);
+  stopped.errors.forEach((line, index) => assert.ok(line.startsWith("E_POINTER_LISTENER_QUERY: ") && line.includes(expectedErrors[index])));
+  return expectedErrors;
 }
 // Decode the actual saved Godot PNG, independently of its JSON pixel report.
 // This bounded reader accepts only lossless 8-bit noninterlaced RGB/RGBA images.
@@ -341,10 +397,14 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   assert.ok(report.allAssertionsPassed); assert.deepEqual(report.failures, []);
   assert.ok(report.checks.length > 0 && report.checks.every(row => row.passed));
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
-  assert.equal([...log.matchAll(/^ERROR:/gm)].length, 0, "All runtime diagnostics remain visible; no fault is expected in this healthy matrix");
+  // Only the second application's configured root faults may print native
+  // diagnostics; the healthy matrix and every script stay error-free.
+  const nativeErrors = [...log.matchAll(/^ERROR: FABRIC_ERROR: (.+)$/gm)].map(match => match[1]);
+  assert.equal([...log.matchAll(/^ERROR:/gm)].length, nativeErrors.length, "No script or engine error is hidden behind the configured faults");
   assert.match(log, /POINTER_DOCUMENT_UP_PASSED: \d+/);
   assert.ok(report.scope.actualNativeInput && report.scope.realOriginalDocuments && report.scope.experimentalNativeDispatch);
   for (const key of ["listenerRegistryMirrored", "publicDefaultEnabled", "hardwareCertified", "upQueryFaultsCertified", "explicitCaptureCertified"]) assert.equal(report.scope[key], false);
+  assert.equal(report.scope.upRootQueryFaultsExercised, true);
   const {imperative: I, nativeDispatch: D} = flags(flagMode), installed = interestMode === "current" && D;
   for (const name of ["A", "B"]) {
     const capability = report.stages["capability" + name];
@@ -425,6 +485,9 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   refs(report, I, D, installed);
   mutation(report, I, D, installed);
   reentry(report, D, installed);
+  const faultErrors = faults(report, D, installed);
+  assert.equal(nativeErrors.length, faultErrors.length);
+  nativeErrors.forEach((line, index) => assert.ok(line.startsWith("E_POINTER_LISTENER_QUERY: ") && line.includes(faultErrors[index])));
   const canceled = report.stages["cancel/terminal"], cancel = canceled.react;
   assert.deepEqual(cancel.events.map(row => row.label), ["TouchCancel"]); assert.deepEqual(rawRows(cancel, "topPointerUp"), []);
   raw(cancel, "topTouchCancel", cancel.events); assert.deepEqual(cancel.query.rows, []);
@@ -440,13 +503,13 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   for (const key of ["active", "contacts", "stored"]) assert.equal(stopped.pointerRouting[key], 0);
   assert.deepEqual(stopped.errors, []);
   for (const name of ["A", "B"]) { const owner = report.stages["stoppedRoot" + name]; assert.equal(owner.nativeTags, 0); assert.equal(owner.creates, owner.deletes); assert.equal(owner.pointer.activePointers, 0); assert.equal(owner.pointer.activeTouches, 0); }
-  assert.equal(report.captures.length, headed ? 9 : 0);
+  assert.equal(report.captures.length, headed ? 10 : 0);
   // A null A counter is the retired root generation: its region is clear color.
   const captureStages = [
     ["initial", 0, 0, 10], ["updated", 2, 0, 10],
     ["once-before", 12, 2, 14], ["once-first", 13, 2, 14], ["once-second", 13, 2, 14],
     ["refs-retired", null, 2, 14], ["refs-remounted", 2, 4, 14],
-    ["mutation-before", 9, 4, 14], ["mutation-added", 12, 4, 14],
+    ["mutation-before", 9, 4, 14], ["mutation-added", 12, 4, 14], ["fault-throw36", 4, 0, 14],
   ];
   for (const [index, frame] of report.captures.entries()) {
     const [stage, counterA, counterB, pixels] = captureStages[index];

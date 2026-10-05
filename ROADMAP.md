@@ -1269,6 +1269,38 @@ viewport/pixel proof and negative control stay local. [Pages 37325323565](docs/e
 published this record (data d67e981, main renderer); full public/local JSON matched.
 No whole GF, checkpoint, weight or denominator closes.
 
+
+### Document Up root query faults (2026-10-05)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[fault evidence](docs/evidence/pointer-document-up-fault/README.md) adds one-shot
+root query faults at the Up offsets to all eight lanes: **6,451 headless checks**,
+with the previous 5,097 check IDs preserved in order. The faults run in a second
+application started after the healthy one stops, so the healthy no-diagnostic
+checks keep their meaning; only the two current lanes with D install the query
+and consume faults. The graphical current/enabled lane passes **1,179 checks**,
+including 132 pixels in ten native frames.
+
+The existing native catch rejects only the failed lookup at offsets 36/37 too. A
+bubble throw with Document capture and bubble listeners still qualifies through
+capture (36=throw, 37=true) and delivers DocC and DocB in one commit. A capture
+throw or a non-boolean result at either offset, with no other qualifying lookup,
+delivers no Up, while the original TouchEnd, its Raw pair and contact cleanup
+survive. Each consumed fault leaves one retained E_POINTER_LISTENER_QUERY
+diagnostic; a capture fault stays armed when the bubble lookup qualifies first.
+Recovery gestures and a final B gesture are healthy, and the second application
+stops with exactly the four consumed diagnostics. A retained control that
+returns true for a throw-mode fault fails nine probe checks, and the independent
+oracle rejects that report on its own.
+
+Only tests changed: the shared bootstrap accepts Up offsets 36/37 (Down unchanged,
+2,723 checks), the Up fixture exposes the fault hooks and the probe/oracle gain
+the stages. Contracts 255 Node/13 Python, 22 examples and static analysis pass;
+native/SDK bytes are unchanged. Component and resolver faults on Up, repeated
+faults or faults during retirement/stop, captured/no-hit routing and Down/Up
+pointerId pairing remain open. Hosted CI for this slice is pending. No whole GF,
+checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

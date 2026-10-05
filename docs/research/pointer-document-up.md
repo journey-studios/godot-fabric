@@ -213,9 +213,23 @@ commit or contact change. A retained control that leaks the nested Event into
 Hosted run 37321794370 repeated the 5,097 headless checks
 ([receipt](../evidence/pointer-document-up-reentry/hosted-ci.json)).
 
+## Root query faults at the Up offsets
+
+The [fault evidence](../evidence/pointer-document-up-fault/README.md) arms one-shot
+faults on the actual documentElement root handle at offsets 36/37, in a second
+application started after the healthy one stops, for **6,451 headless checks**.
+The native interest callback already rejects only the failed lookup: a bubble
+throw still lets the capture lookup qualify and deliver `DocC, DocB` in one
+commit; a throw or non-boolean result with no other qualifying lookup delivers
+no Up, while the original TouchEnd, its Raw pair and contact cleanup survive.
+Each consumed fault leaves one retained `E_POINTER_LISTENER_QUERY`; a capture
+fault is not consumed when the bubble lookup qualifies first. Recovery gestures
+are healthy. A retained control that turns a throw into a qualifying `true`
+fails nine probe checks, and the oracle rejects it on its own.
+
 ## Boundaries still open
 
-This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle,
+This healthy matrix does not execute component or resolver faults on Up, reentrant lifecycle,
 nested dispatch on elements or with preventDefault/stopPropagation/errors,
 View/element listener mutation, mutation combined with
 stopPropagation, capture-phase or View listeners across root

@@ -518,3 +518,18 @@ native Up itself throws `The event is already being dispatched.` The eight-lane
 matrix passes 5,097 headless checks, also passed in hosted CI, and the graphical
 lane 946 checks.
 [Evidence and limits](docs/evidence/pointer-document-up-reentry/README.md).
+
+### Document Up root query faults
+
+A one-shot throw or non-boolean result in the native interest query for the
+actual documentElement, at the Up offsets, rejects only that lookup with one
+retained `E_POINTER_LISTENER_QUERY` diagnostic. A faulted bubble lookup still lets
+a capture listener qualify the Up; with no other qualifying lookup the Up is not
+delivered, while the original TouchEnd and contact cleanup survive. The faults run
+in a second application, so the healthy matrix stays diagnostic-free: 6,451
+headless checks and 1,179 graphical checks with 132 pixels.
+[Evidence and limits](docs/evidence/pointer-document-up-fault/README.md).
+
+| After a faulted bubble lookup and its recovery |
+| --- |
+| ![A4/B0](docs/evidence/pointer-document-up-fault/throw36.png) |

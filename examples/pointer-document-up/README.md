@@ -224,13 +224,23 @@ doc.addEventListener('pointerup', event => {
 });
 ```
 
+## Faults na consulta do root
+
+A [evidência de faults](../../docs/evidence/pointer-document-up-fault/README.md)
+amplia a matriz para **6.451 checks** headless. Um throw ou retorno não booleano
+na consulta nativa de interesse do documentElement, no Up, rejeita só aquele
+lookup e deixa um diagnóstico. Se o capture ainda qualifica, o Up chega; se
+nenhum lookup qualifica, o Up não chega, mas o `TouchEnd` e a limpeza do contato
+continuam. O gesto seguinte, sem fault, se recupera.
+
 ## Limits
 
 This matrix certifies the listed healthy Document/element Up cases, including
 Document/documentElement rerender, held-root retirement, one replacement root,
-listener removal, addition and abort inside delivered Document Up callbacks, and
-nested Document dispatch from those callbacks.
-It does not certify Up-specific faults, nested dispatch on elements or with
+listener removal, addition and abort inside delivered Document Up callbacks,
+nested Document dispatch from those callbacks, and one-shot root query faults at
+the Up offsets in a second application.
+It does not certify component or resolver faults on Up, nested dispatch on elements or with
 preventDefault/stopPropagation/errors, View/element listener
 mutation, mutation combined with stopPropagation, capture-phase or
 View listeners across retirement, explicit pointer capture, coalescing, full responders, development
