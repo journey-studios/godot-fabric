@@ -1655,6 +1655,49 @@ retained). Viewport capture, root query
 faults at hover offsets, once/AbortSignal, refs, mutation and reentry during
 Document hover, pen hover and capture while hovering remain open. Hosted CI for
 this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+
+### Switch over a native Godot switch (2026-10-05)
+
+GF-17 remains **In progress**. The [Switch evidence](docs/evidence/switch/README.md)
+replaces the public placeholder that threw on render with RN's original
+`Switch.js`, which takes its non-Android path on Godot: the codegen-generated
+`RCTSwitch` ViewConfig, its bubbling `onChange` (`{value, target}`) and the
+`setValue` command. The host compiles the package's generated FBReactNativeSpec
+Props/EventEmitters, registers RN's shared iOS/macOS `SwitchComponentDescriptor`
+with a Godot measurement beside `IOSSwitchShadowNode.mm`, and mounts
+`GodotSwitch`, a custom-drawn Panel: **108/108 headless checks** with actual mouse
+clicks and touch taps in two roots of one Hermes application.
+
+As in `RCTSwitchComponentView`, a tap toggles natively, `value` applies only when
+it changes, and `onChange` is emitted only when the native value differs from the
+committed prop; Switch.js then calls `onChange` and `onValueChange` and restores a
+value prop that does not follow with exactly one `setValue`. During the press the
+Switch is RN's JS responder without blocking native input; Godot's emulated mouse
+for a touch is ignored; disabled input toggles nothing; colors map to
+`tintColor`/`onTintColor`/`thumbTintColor` and `ios_backgroundColor` paints the
+host. A Switch without a style size measures 63×28, RN's own measurement (UISwitch
+plus two points) on the repo's newest iOS reference runtime (iOS 26.3.1; iOS 18.4
+gives 51×31). Once a Switch renders, RN's global registry makes `topChange`
+bubble, so a Godot TextInput change also reaches ancestors' `onChange`, as RN's
+own TextInput configs do.
+
+The preceding host fails exactly the 2 normative mount checks (Fabric's legacy
+interop resolves `Switch`; the mount rejects it). A retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects its report;
+the restored source rebuilds the identical host. The contracts gates (261 Node/13
+Python, static analysis, publication scan), `test:recovery` and the
+native-cold-start suites pass, including Down 2,731, Document Up 6,459, View Up
+297, Move 220, Document Move 1,940, hover 158, root path 82, Document hover 1,530
+and 22 examples; codegen, the native SDK pack/verify (now recording the 5
+generated spec sources), adapters (loader 89 checks/21 cases, runtime 13
+runs/213 checks), consumer (30 + 40) and cold start pass too. All 72 executed
+code/configuration inputs match implementation a10b19e via git show/SHA-256
+(battery base 3e2dc2d; the amend touched only test/config files, whose readers
+were rerun). Keyboard activation and focus, accessibility, animation and thumb
+dragging, the Android path, per-target defaults, hardware and mobile exports
+remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

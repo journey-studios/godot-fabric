@@ -1627,7 +1627,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos.",
+      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos. Fatia Switch: o Switch.js original do RN roda sobre o descritor Switch compartilhado de iOS/macOS e um switch nativo desenhado no Godot (108/108 checks headless com clique e toque reais em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do setValue é rejeitada), com teclado, acessibilidade, animação e caminho Android ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1638,6 +1638,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "Switch: 108 checks headless, controle do host anterior e sabotagem",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/switch-control/docs/evidence/switch/README.md"
             }
           ]
         },
@@ -3257,6 +3261,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "switch-local-verified-20261005",
+      "at": "2026-10-05T22:15:44.805743+00:00",
+      "taskIds": [
+        "GF-17"
+      ],
+      "message": "Switch público: o Switch.js original do RN segue o caminho não Android sobre o SwitchComponentDescriptor compartilhado de iOS/macOS e um switch nativo desenhado no Godot. 108/108 checks headless com clique e toque reais em duas roots: controlado, valor fixo restaurado por setValue, desabilitado, cores, frame 63×28 (o do RN no iOS 26), remoção no meio do press e topChange bubbling no registro. O host anterior falha exatamente os 2 checks de montagem; a sabotagem do setValue falha 13 checks e o oráculo rejeita. Contracts 261 Node/13 Python e as suítes nativas passaram; CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/switch-control/docs/evidence/switch/README.md"
+    },
     {
       "id": "pointer-root-path-hosted-ci-and-pages-20261005",
       "at": "2026-10-05T19:19:39.410433+00:00",

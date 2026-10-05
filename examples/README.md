@@ -195,6 +195,13 @@ the pointer enters or leaves the surface. Its
 [receipt](../docs/evidence/pointer-document-hover/README.md) records 1,530
 headless checks and a retained negative control.
 
+The [Switch probe](switch/README.md) mounts RN's original `Switch.js` in two roots
+and toggles it with actual mouse clicks and touch taps: `npm run test:switch`,
+outside the launcher catalog. A value prop that does not follow is restored by
+Switch.js's `setValue`, disabled input is ignored and colors reach the native
+switch. Its [receipt](../docs/evidence/switch/README.md) records 108/108
+headless checks, the preceding host's 2 mount failures and a retained sabotage.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
