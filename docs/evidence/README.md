@@ -160,7 +160,17 @@ build records, which differ only in the host, those producers and the generated
 dispatched sample with its typed/star Raw and one commit at the pinned Default
 priority; B without listeners reads its whole path false, in order. The host
 flushes RN's queue after every input event, so per-frame merging comes from
-Godot's input accumulation. A failing Move lookup is retained once per distinct
+Godot's input accumulation.
+
+The [Document pointermove record](pointer-document-move/README.md) runs eight
+lanes (original/current interest × four flag configurations) over the same host:
+1,932 headless checks and 330 viewport checks with 24 pixels. Document listeners
+need native dispatch and documentElement listeners also the imperative flag; only
+the installed current query delivers. Capture runs at phase 1 and bubble at
+phase 3 after false lookups on the target and its ancestors; isolation, removal
+between samples, Cancel, a JSX sentinel and mouse hover are covered. A retained
+control that drops the owner Document from the root query fails 52/40 probe
+checks in the two delivering lanes, and the independent oracle rejects it. A failing Move lookup is retained once per distinct
 cause, up to 16 causes per application, and repeats are counted. The three
 preceding-host controls reproduce 8/12/3 failures with the new bundles. Hosted CI
 pending.

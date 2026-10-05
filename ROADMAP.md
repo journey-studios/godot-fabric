@@ -1444,6 +1444,37 @@ responders and multi-touch remain open. All 77 executed
 code/configuration inputs match implementation f9f9817 via git show/SHA-256
 (execution base a0ec86b/dirty retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
+### Document pointermove across four original flags (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[Document Move evidence](docs/evidence/pointer-document-move/README.md) certifies
+original `pointermove` listeners on Document and documentElement over the View
+Move native support, in eight lanes (original/current interest × disabled,
+imperative-only, internal-only and enabled flags): **1,932 headless checks** and
+**330 graphical checks** with 24 pixels in the current/enabled viewport.
+
+Document listeners exist with native dispatch alone and documentElement listeners
+also need imperative events; original interest installs no query and delivers
+nothing. With the current query, two drag samples per case reach Document and
+documentElement capture listeners at phase 1 and bubble listeners at phase 3,
+one Event per sample at the Default priority of unique Continuous moves, with
+the original TouchMove after them and one commit per sample. The root query reads
+1=true, or 1=false then 25=true for capture-only, after the target's and each
+ancestor's false pairs. B's Document listeners stay isolated from A's moves,
+removing the last listener between two samples of one contact stops delivery at
+the next, Cancel reads nothing, a JSX sentinel qualifies by props in every lane
+and button-less mouse motion reaches Document listeners. A retained control that
+drops the owner Document from the root query fails 52 (internal-only) and 40
+(enabled) probe checks, and the independent oracle rejects both reports.
+
+Only tests changed: the Document fixture accepts `pointermove` (TouchMove on the
+target, a JSX `onPointerMove` sentinel and Move Raw) and a wrapper, probe, oracle
+and CI step run the matrix; Down 2,723, Document Up 6,451, contracts 257 Node/13
+Python, static analysis and the publication scan pass, and native/SDK bytes are
+those of the View Move slice. Root query faults, once/AbortSignal, refs, mutation
+and reentry for Document Move remain open. Hosted CI for this slice is pending. No
+whole GF, checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

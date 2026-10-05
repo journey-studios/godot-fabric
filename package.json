@@ -59,7 +59,8 @@
     "test:pointers:resolver-faults": "node --test tests/pointer-resolver-fault-native.test.mjs",
     "test:pointers:up": "node --test tests/pointer-up-native.test.mjs",
     "test:pointers:move": "node --test tests/pointer-move-native.test.mjs",
-    "test:pointers:documents:up": "node --test tests/pointer-document-up-native.test.mjs"
+    "test:pointers:documents:up": "node --test tests/pointer-document-up-native.test.mjs",
+    "test:pointers:documents:move": "node --test tests/pointer-document-move-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

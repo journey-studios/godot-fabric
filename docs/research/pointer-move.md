@@ -111,11 +111,23 @@ ScreenDrag and button-less MouseMotion events through the native queue.
   exact check IDs, rejects unrelated errors and compares the old-host replay
   against the same bundle, test/SDK producers and RN pins.
 
+## Document and documentElement
+
+The [Document record](../evidence/pointer-document-move/README.md) certifies the
+shared root path for Move in eight lanes, original and current interest times the
+four original flag configurations. Document listeners exist with native dispatch
+alone, documentElement listeners also need imperative events, and only the
+installed current query delivers. The query reads the target's and each View
+ancestor's false 1/25 pair before the root, which answers `1=true` for a bubble
+listener or `1=false` then `25=true` for capture only; callbacks then follow
+original propagation at phase 1 (capture) and phase 3 (bubble). Removing the last
+listener between two samples of one contact stops delivery at the next sample,
+B's Document listeners stay isolated from A's moves, and button-less mouse motion
+reaches Document listeners as well. A retained control that drops the owner
+Document from the root query fails exactly the Document-only cases.
+
 ## Next bounded acceptance
 
-- Document/documentElement `pointermove` across the four original flag
-  configurations. The shared root path already answers offsets 1/25, so a
-  Document listener now qualifies any move in its surface without certification.
 - Resolver getter faults during Move lookups and Document/documentElement Move
   faults, which share the bounded path but are not exercised here.
 - Hover: `pointerover/out` and the enter/leave semantics with the processor's
