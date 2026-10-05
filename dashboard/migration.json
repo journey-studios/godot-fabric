@@ -1659,7 +1659,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos. Fatia Switch: o Switch.js original do RN roda sobre o descritor Switch compartilhado de iOS/macOS e um switch nativo desenhado no Godot (108/108 checks headless com clique e toque reais em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do setValue é rejeitada), com teclado, acessibilidade, animação e caminho Android ainda abertos.",
+      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos. Fatia Switch: o Switch.js original do RN roda sobre o descritor Switch compartilhado de iOS/macOS e um switch nativo desenhado no Godot (108/108 checks headless com clique e toque reais em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do setValue é rejeitada), com teclado, acessibilidade, animação e caminho Android ainda abertos. Fatia ActivityIndicator: o ActivityIndicator.js original do RN roda sobre o descritor ActivityIndicatorView gerado e um spinner nativo desenhado no Godot (33/33 checks headless em frames reais do SceneTree em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do trabalho por frame é rejeitada), com acessibilidade, movimento reduzido e capturas de pixel ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1674,6 +1674,10 @@
             {
               "label": "Switch: 108 checks headless, controle do host anterior e sabotagem",
               "url": "https://github.com/journey-studios/godot-fabric/blob/181ed207d33f55ddbee2648377afd9517b506f5e/docs/evidence/switch/README.md"
+            },
+            {
+              "label": "ActivityIndicator: 33 checks em frames reais, controle do host anterior e sabotagem",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ba2f356badad6c40f2f1c7fecc6b75f1172fe38c/docs/evidence/activity-indicator/README.md"
             }
           ]
         },
@@ -3298,6 +3302,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "activity-indicator-local-verified-20261005",
+      "at": "2026-10-05T23:16:11.266928+00:00",
+      "taskIds": [
+        "GF-17"
+      ],
+      "message": "ActivityIndicator público: o ActivityIndicator.js original do RN segue o caminho não Android sobre o ActivityIndicatorViewComponentDescriptor gerado (o mesmo do iOS) e um spinner nativo desenhado no Godot. 33/33 checks headless em frames reais do SceneTree em duas roots: padrões do RN (cinza do iOS sem cor), tamanhos small/large/numérico, fase que avança uma vez por frame enquanto anima e congela parada, hidesWhenStopped, cor, remontagem e isolamento entre roots. O host anterior falha exatamente os 2 checks de montagem; a sabotagem do trabalho por frame falha 9 checks e o oráculo rejeita. Contracts 262 Node/13 Python e as suítes nativas passaram; CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ba2f356badad6c40f2f1c7fecc6b75f1172fe38c/docs/evidence/activity-indicator/README.md"
+    },
     {
       "id": "switch-local-verified-20261005",
       "at": "2026-10-05T22:15:44.805743+00:00",
