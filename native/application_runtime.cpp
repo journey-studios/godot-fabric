@@ -16,6 +16,7 @@
 #include "transform_adapter.h"
 #include "coordinate_transform.h"
 #include "paragraph_view.h"
+#include "switch_view.h"
 #include "timer_registry.h"
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
@@ -25,6 +26,7 @@
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
 #include <react/renderer/components/text/TextComponentDescriptor.h>
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
+#include <react/renderer/components/switch/AppleSwitchComponentDescriptor.h>
 #include <godot_cpp/classes/input_event_mouse_button.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
 #include <godot_cpp/classes/input_event_screen_touch.hpp>
@@ -70,6 +72,7 @@ static std::string component_kind(const rn::ShadowView &shadow) {
   if (shadow.componentName == std::string("View")) return "view";
   if (shadow.componentName == std::string("ScrollView")) return "scroll";
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
+  if (shadow.componentName == std::string(rn::AppleSwitchComponentName)) return "switch";
   if (shadow.componentName == std::string(fabric_godot::ControlName))
     return std::static_pointer_cast<const ControlProps>(shadow.props)->kind;
   return shadow.componentName;
@@ -114,7 +117,7 @@ class GodotHostPhaseCallback final : public CallableCustom {
  private:
   std::function<void()> callback;
 };
-enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key };
+enum class CoreControlSignal { Activate, Change, FocusEntered, FocusExited, Submit, Key, Toggle };
 // A Control's connection belongs to its original runtime and mount. Binding a
 // mutable FabricSurface would reroute an old queued signal after an owner switch.
 class GodotCoreControlCallback final : public CallableCustom {
@@ -323,6 +326,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     providers.add(rn::concreteComponentDescriptorProvider<rn::ParagraphComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::TextComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::RawTextComponentDescriptor>());
+    // RN's shared iOS/macOS Switch descriptor ("RCTSwitch" in the generated
+    // ViewConfig); its measurement is the Godot one in switch_view.cpp.
+    providers.add(rn::concreteComponentDescriptorProvider<rn::SwitchComponentDescriptor>());
     // Original Fabric registry requests selected descriptors lazily. Requests
     // only register immutable providers; native objects wait for Create commits.
     providers.setComponentDescriptorProviderRequest([this](rn::ComponentName name) {
@@ -1038,6 +1044,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       apply_frame(mounted);
       return;
     }
+    if (auto *toggle = Object::cast_to<GodotSwitch>(control)) {
+      toggle->apply(*std::static_pointer_cast<const rn::SwitchProps>(shadow.props),
+          initial ? nullptr : std::static_pointer_cast<const rn::SwitchProps>(previous.props).get());
+      fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
+      apply_frame(mounted);
+      return;
+    }
     if (shadow.componentName == std::string("View")) {
       fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
       apply_frame(mounted);
@@ -1098,9 +1111,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   Callable core_control_signal(int surface_id, int tag, uint64_t mount_id, CoreControlSignal signal) {
     std::weak_ptr<Impl> owner = shared_from_this();
     const auto thread = host_thread;
-    const bool takes_argument = signal == CoreControlSignal::Change || signal == CoreControlSignal::Submit || signal == CoreControlSignal::Key;
+    const bool takes_argument = signal == CoreControlSignal::Change || signal == CoreControlSignal::Submit ||
+        signal == CoreControlSignal::Key || signal == CoreControlSignal::Toggle;
     return Callable(memnew(GodotCoreControlCallback(takes_argument ? 1 : 0,
-        signal == CoreControlSignal::Key ? Variant::OBJECT : Variant::STRING,
+        signal == CoreControlSignal::Key ? Variant::OBJECT : signal == CoreControlSignal::Toggle ? Variant::BOOL : Variant::STRING,
         [owner, thread, surface_id, tag, mount_id, signal](const Variant **args) {
           if (std::this_thread::get_id() != thread) return;
           auto guard = owner.lock();
@@ -1115,6 +1129,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             if (component_kind(mounted->second.shadow) != "button" || !mounted->second.shadow.eventEmitter) return;
             ++root->second->events;
             std::static_pointer_cast<const ControlEventEmitter>(mounted->second.shadow.eventEmitter)->activate();
+          } else if (signal == CoreControlSignal::Toggle) {
+            const auto &shadow = mounted->second.shadow;
+            if (shadow.componentName != std::string(rn::AppleSwitchComponentName) || !shadow.eventEmitter) return;
+            const bool on = static_cast<bool>(*args[0]);
+            // RCTSwitchComponentView onChange: no event when the native value
+            // already equals the committed value prop. UIManagerBinding mixes
+            // the target tag and timeStamp into the payload, as on iOS.
+            if (std::static_pointer_cast<const rn::SwitchProps>(shadow.props)->value == on) return;
+            ++root->second->events;
+            std::static_pointer_cast<const rn::SwitchEventEmitter>(shadow.eventEmitter)->onChange({.value = on});
           } else if (auto *input = mounted->second.input.get()) {
             if (signal == CoreControlSignal::Change) input->changed(static_cast<String>(*args[0]));
             else if (signal == CoreControlSignal::FocusEntered) input->focus(true);
@@ -1562,6 +1586,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
               if (control && !control->get_parent() && !control->is_inside_tree() && !native_tags.contains(control)) memdelete(control);
               throw std::runtime_error("E_ADAPTER_VIEW: expected an off-tree Control and a contained children host");
             }
+          } else if (next.componentName == std::string(rn::AppleSwitchComponentName)) {
+            auto *toggle = memnew(GodotSwitch);
+            toggle->connect("toggled", core_control_signal(surface_id, next.tag, mount_id, CoreControlSignal::Toggle));
+            control = toggle;
           } else if (kind == "scroll") control = memnew(ScrollContainer);
           else if (kind == "paragraph") control = memnew(GodotParagraph);
           else if (kind == "text") control = memnew(Label);
@@ -1718,6 +1746,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           args[1].isNull() ? std::nullopt : std::optional(args[1].asString()), args[2].asInt(), args[3].asInt());
       return;
     }
+    if (auto *toggle = Object::cast_to<GodotSwitch>(found->second.control); toggle && name == "setValue") {
+      // RCTSwitchHandleCommand: exactly one boolean; never emits onChange.
+      if (!args.isArray() || args.size() != 1 || !args[0].isBool()) {
+        fail("setValue requires [boolean]");
+        return;
+      }
+      toggle->set_value(args[0].asBool());
+      return;
+    }
     fail("Unsupported native command: " + name);
   }
   void uiManagerDidSendAccessibilityEvent(const std::shared_ptr<const rn::ShadowNode> &, const std::string &) override { fail("Accessibility adapter is not implemented"); }
@@ -1821,8 +1858,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
       if (mounted.external) { node["adapter"] = mounted.external->snapshot(); node["mountId"] = static_cast<int64_t>(mounted.mount_id); }
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
-      if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input")
+      if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input" || kind == "switch")
         node["appearance"] = fabric_godot::appearance_snapshot(*control);
+      if (auto *toggle = Object::cast_to<GodotSwitch>(control)) node["switch"] = toggle->snapshot();
       if (auto *paragraph = Object::cast_to<GodotParagraph>(control)) {
         auto measured = paragraph->snapshot();
         for (const auto &item : measured.items()) node[item.first] = item.second;

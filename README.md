@@ -222,6 +222,13 @@ notifications Godot delivers to the `FabricApplication`, with two roots sharing
 one state: 75 headless checks. The preceding host fails exactly its 62
 lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
 
+The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
+over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
+mouse clicks and touch taps toggle it, `onChange`/`onValueChange` follow RN's
+order, and Switch.js's `setValue` restores a value prop that does not change.
+108 headless checks in two roots; the preceding host fails the 2 mount checks.
+[Evidence](docs/evidence/switch/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
