@@ -1141,7 +1141,8 @@ no React state/commit/native ownership effect during abort and a negative second
 native Up. D-disabled fixtures associate no signal; this does not gate the
 AbortSignal class. Down regression passes2723, contracts255Node/13Python, static
 and publication scan pass. Production native/SDK bytes are unchanged. Execution
-base245ccce/dirty is retained; post-commit source pinning and lifecycle CI follow.
+base245ccce/dirty is retained; all71 executed code/configuration inputs match
+implementationa3e6c6b via git show/SHA-256. Lifecycle CI remains pending.
 The older [84270fb hosted audit](docs/evidence/pointer-document-up/hosted-ci.json)
 confirms1371 baseline checks and five successful jobs, separately from2143 local.
 

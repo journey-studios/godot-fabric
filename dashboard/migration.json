@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document Up once/abort validados; próximos: refs e remount"
   },
-  "updatedAt": "2026-10-05T00:02:46.433371+00:00",
+  "updatedAt": "2026-10-05T00:09:33.651263+00:00",
   "source": {
-    "commit": "245ccce68ca24111acfe029a987feb9f28816a64",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/245ccce68ca24111acfe029a987feb9f28816a64",
-    "scope": "Document bubble Up once/pre-aborted/abort-after-first:2143checks/oito lanes; viewport414/5frames/62pixels+5counter-save. Original AbortSignal estado false→true e instanceof real; secondUp36/37false, semRawUp/commit, TouchEnd/cleanup mantidos. OriginalSDK só consome once na primeira manual após2Upsfiltrados. Down2723/contracts255Node13Python/static/publicationscan passam. Native/SDK produção f7unchanged;15produtores/24RN+55native+3config=71inputs únicos; execução depois245ccce/dirty, pin pós-commit pendente. CI baseline84270fb37244296477 passou5jobs/1371 com71pins/22RN/checkout e9adb77d auditados; não certifica lifecycle2143, CI nova pendente. NenhumGF/checkpoint/peso/denominador fechado.",
+    "commit": "a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
+    "scope": "Document bubble Up once/pre-aborted/abort-after-first:2143checks/oito lanes; viewport414/5frames/62pixels+5counter-save. Original AbortSignal estado false→true e instanceof real; secondUp36/37false, semRawUp/commit, TouchEnd/cleanup mantidos. OriginalSDK só consome once na primeira manual após2Upsfiltrados. Down2723/contracts255Node13Python/static/publicationscan passam. Native/SDK produção f7unchanged;15produtores/24RN+55native+3config=71inputs únicos; execução depois245ccce/dirty, 71inputs executados conferidos por git show/SHA-256 contraa3e6c6b. CI baseline84270fb37244296477 passou5jobs/1371 com71pins/22RN/checkout e9adb77d auditados; não certifica lifecycle2143, CI nova pendente. NenhumGF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -417,6 +417,10 @@
             {
               "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
             }
           ]
         },
@@ -532,6 +536,10 @@
             {
               "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
             }
           ]
         },
@@ -568,7 +576,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Maps RN originais36/37 sem nova produção nativa/SDK. DocumentD-only/elementI-and-D e quatroflags preservados; bubbleonce e AbortSignal originais retiram qualificação real do segundoUp.2143/414local,71codepins/24RN executados; pincommitpendente. CI baseline8421371/71pins verificada; novaCIpendente. Types/commands/getters/reentrância/hardware/mobile/performance abertos; defaults off.",
+      "note": "Maps RN originais36/37 sem nova produção nativa/SDK. DocumentD-only/elementI-and-D e quatroflags preservados; bubbleonce e AbortSignal originais retiram qualificação real do segundoUp.2143/414local,71codepins/24RN executados; pinimplementaçãoa3e6c6bconferido. CI baseline8421371/71pins verificada; novaCIpendente. Types/commands/getters/reentrância/hardware/mobile/performance abertos; defaults off.",
       "blocker": "",
       "checkpoints": [
         {
@@ -699,6 +707,10 @@
             {
               "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
             }
           ]
         },
@@ -1065,6 +1077,10 @@
             {
               "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
             }
           ]
         },
@@ -2865,6 +2881,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-lifecycle-source-pins-a3e6c6b",
+      "at": "2026-10-05T00:09:33.651263+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "71inputs únicos executados em245ccce/dirty conferidos por git show/SHA-256 na implementaçãoa3e6c6b.2143headless/414viewport/62pixels/5frames eDown2723/contracts255Node13Python preservados. Evidência acrescentada aos checkpoints slice já completos; semnovo done/peso/denominador. CI lifecycle e nova publicação pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168"
+    },
     {
       "id": "pointer-document-up-lifecycle-local-verified-20261005",
       "at": "2026-10-05T00:02:46.433371+00:00",

@@ -5,7 +5,7 @@
   "at": "2026-10-05T00:00:34.282108+00:00",
   "executionBaseCommit": "245ccce68ca24111acfe029a987feb9f28816a64",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": null,
+  "implementationCommit": "a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -3727,5 +3727,18 @@
     "Original SDK D-enabled native Up is filtered; once is still installed for the first manual untrusted dispatch, then removed for the next. Manual controls never increment React state.",
     "Requested registration trace is not registry membership; real36/37 Map lookups plus native callback/Raw/commit and manual controls establish the lifecycle.",
     "The executed tree was dirty after245ccce; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
-  ]
+  ],
+  "sourceVerification": {
+    "method": "git show IMPLEMENTATION:path and SHA-256 against executed raw reports",
+    "uniqueTrackedInputCount": 71,
+    "allExecutedCodeAndConfigurationInputsMatchImplementationCommit": true,
+    "executionBaseAndDirtyStatePreserved": true
+  },
+  "independentAudit": {
+    "evidence": "audit.json",
+    "sha256": "98938369a964164c4c7407c3028c257e26074fdab5dcc87b2738f3e08a8d625e",
+    "curatedSnapshotSha256": "b6d7cc9bd3218faeeb53400b03bc3aa457fc83f2f69f0f128b4f6f5984757ffa",
+    "snapshotScope": "Implementation a3e6c6b report before post-commit sourceVerification and this self-link; execution results unchanged.",
+    "findings": []
+  }
 }

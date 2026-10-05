@@ -109,3 +109,13 @@ separados. A regressão Down atual passou **2.723 checks**; contracts passaram
 A [CI anterior](../pointer-document-up/hosted-ci.json) passou1371checks em84270fb;
 a CI específica desta ampliação2143 permanece pendente. Veja o [exemplo](../../../examples/pointer-document-up/README.md)
 e a [pesquisa](../../research/pointer-document-up.md).
+
+As71 fontes de código/configuração executadas correspondem à implementação
+`a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168` por `git show`/SHA-256. O recibo preserva
+base245ccce e árvore dirty da execução; este pin pós-commit não é uma nova corrida.
+
+A [auditoria independente](audit.json) confirma os oito relatórios/raw IDs e
+recibo curado,71 fontes/24 RN, cinco PNGs (hashes/CRC/pixels), Down2723 e
+contratos255Node/13Python. As duas ambiguidades de relatório foram corrigidas:
+CI anterior confirmada e identidade Up `null` quando não há Up. O snapshot
+auditado precede os metadados de pin e self-link; resultados executados preservados.
