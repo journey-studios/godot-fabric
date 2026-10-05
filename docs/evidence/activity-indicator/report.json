@@ -1,0 +1,778 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-activity-indicator",
+  "status": "verified-local-headless-old-host-control-sabotage-regressions-and-sdk",
+  "at": "2026-10-05T23:14:55.361237+00:00",
+  "executionBaseCommit": "a6523439b5146b6e5ad8f30fd8c0435af0c4a65a",
+  "sourceDirtyDuringExecution": false,
+  "executionNote": "The battery ran from executionBaseCommit; no executed source changed during it. Docs were written after the doc-scanning steps (contracts, static, publication) and those gates were rerun on the final tree.",
+  "implementationCommit": "a6523439b5146b6e5ad8f30fd8c0435af0c4a65a",
+  "dependsOn": "Switch over a native Godot switch (feat/switch-control, journey-studios/godot-fabric#33)",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64"
+  },
+  "commands": [
+    "npm run test:activity-indicator",
+    "node tests/activity-indicator-native.test.mjs --allow-original-negative (preserved preceding host installed)",
+    "native/activity_indicator_view.cpp never enabling internal process, rebuilt, npm run test:activity-indicator, then tests/activity-indicator-oracle.mjs alone on its report; source restored with git checkout and rebuilt"
+  ],
+  "lanes": [
+    {
+      "lane": "original",
+      "meaning": "Preserved preceding host replaying the current SDK bundle; expected negative control.",
+      "nativeHostSha256": "1d26dec2386d69007b1cf0a01499bac16dbe50ee89d840ba258c67f0cfa882ac",
+      "checks": 6,
+      "passed": 4,
+      "failed": 2,
+      "failedIds": [
+        "mount/Each root mounts one native spinner for each of its five RCTActivityIndicatorView elements",
+        "mount/The application reports no host or runtime error"
+      ],
+      "reportSha256": "2cbc45e081ba0601917f0618f0b544f336159e0e37f69e4c8bd6028a41190d25",
+      "logSha256": "0ccbd02571025c65e7b531dfedcb6df342e2736f436bca6a90926d05c4e03631",
+      "errors": [
+        "Exception in HostFunction: Unsupported GodotControl kind: ActivityIndicatorView",
+        "Exception in HostFunction: map::at:  key not found",
+        "Exception in HostFunction: Unsupported GodotControl kind: ActivityIndicatorView",
+        "Exception in HostFunction: map::at:  key not found"
+      ]
+    },
+    {
+      "lane": "sabotage",
+      "meaning": "Retained sabotage: the spinner never receives per-frame work.",
+      "nativeHostSha256": "d44d2a214619c2e68a009114a70e2fed300dade7c6bbe11d75680c79979edaaf",
+      "checks": 33,
+      "passed": 24,
+      "failed": 9,
+      "failedIds": [
+        "defaults/ActivityIndicator.js defaults reach the native spinner: animating, hidesWhenStopped and small",
+        "spin/The phase advances once per actual SceneTree frame while animating",
+        "stop/Other spinners keep animating",
+        "restart/animating true resumes the spinner from its frozen phase",
+        "restart/The resumed phase advances once per actual frame",
+        "remount/A remounted spinner is a new native instance that starts its own phase",
+        "remount/The remounted spinner advances once per actual frame",
+        "two-roots/B's controlled spinner keeps its own state",
+        "two-roots/B's spinners keep advancing once per actual frame"
+      ],
+      "reportSha256": "dfc1f1ba1d566477ece2fe2ed884c2d52d63b4e54a44b22b3b30f1873f14094f",
+      "logSha256": "0029e38d4e3d16c408b33a4e39a8f8d2975d9f7b7beb3f6c46ff3a99b504bc53",
+      "oracle": {
+        "accepted": false,
+        "rejectedAt": "spin"
+      },
+      "restoredByteForByte": true,
+      "sabotagedSourceSha256": {
+        "native/activity_indicator_view.cpp": "304f82b042da083c296c03baa26c35882af57a450a45c97b24929c173fdc0cce"
+      },
+      "restoredHostSha256": "267763d9cb71466c3ea65b58ca2d87978a4fbefd9bfc318e8abb0a01977ec282"
+    },
+    {
+      "lane": "current",
+      "meaning": "Native ActivityIndicator host, headless.",
+      "nativeHostSha256": "267763d9cb71466c3ea65b58ca2d87978a4fbefd9bfc318e8abb0a01977ec282",
+      "checks": 33,
+      "passed": 33,
+      "failed": 0,
+      "failedIds": [],
+      "reportSha256": "093bbddc4521c66192dc81af8ce2f908663d31b7b9510840af43232b16ad5349",
+      "logSha256": "4898d49e00f239b81071edab701f61ba05a18a94926a91c2d69c883886f76be4",
+      "comparisonSha256": "f4f8430abf5e5a4ad44578fa983b20c5e8cd3d731e3f00039b58e192c6ec1f5a"
+    }
+  ],
+  "causalComparison": {
+    "sameSdkBundle": true,
+    "sdkBundleSha256": "862541ef86a1e1c40e753857de49afa1202c537fa9d141f3f21586dc3ce6d29f",
+    "bundleInputs": 182,
+    "sameTestAndSdkProducerPins": true,
+    "nativeHosts": {
+      "previous": "1d26dec2386d69007b1cf0a01499bac16dbe50ee89d840ba258c67f0cfa882ac",
+      "sabotage": "d44d2a214619c2e68a009114a70e2fed300dade7c6bbe11d75680c79979edaaf",
+      "current": "267763d9cb71466c3ea65b58ca2d87978a4fbefd9bfc318e8abb0a01977ec282"
+    },
+    "originalReactNativeSources": 9,
+    "originalNativeSources": 9
+  },
+  "executedObservations": {
+    "framesPerMeasurement": 10,
+    "mount": {
+      "A-default": {
+        "tag": 2,
+        "frame": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "size": "small",
+        "color": null,
+        "drawColor": "999999ff",
+        "radius": 10
+      },
+      "A-large": {
+        "tag": 8,
+        "frame": [
+          36,
+          36,
+          36,
+          36
+        ],
+        "size": "large",
+        "color": "ff3b30ff",
+        "drawColor": "ff3b30ff",
+        "radius": 18
+      },
+      "A-numeric": {
+        "tag": 14,
+        "frame": [
+          48,
+          48,
+          48,
+          48
+        ],
+        "size": "small",
+        "color": "ffcc00ff",
+        "drawColor": "ffcc00ff",
+        "radius": 24
+      },
+      "A-controlled": {
+        "tag": 20,
+        "frame": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "size": "small",
+        "color": "0a84ffff",
+        "drawColor": "0a84ffff",
+        "radius": 10
+      },
+      "A-removable": {
+        "tag": 26,
+        "frame": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "size": "small",
+        "color": "30b0c7ff",
+        "drawColor": "30b0c7ff",
+        "radius": 10
+      },
+      "B-default": {
+        "tag": 36,
+        "frame": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "size": "small",
+        "color": null,
+        "drawColor": "999999ff",
+        "radius": 10
+      },
+      "B-large": {
+        "tag": 42,
+        "frame": [
+          36,
+          36,
+          36,
+          36
+        ],
+        "size": "large",
+        "color": "ff3b30ff",
+        "drawColor": "ff3b30ff",
+        "radius": 18
+      },
+      "B-numeric": {
+        "tag": 48,
+        "frame": [
+          48,
+          48,
+          48,
+          48
+        ],
+        "size": "small",
+        "color": "ffcc00ff",
+        "drawColor": "ffcc00ff",
+        "radius": 24
+      },
+      "B-controlled": {
+        "tag": 54,
+        "frame": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "size": "small",
+        "color": "0a84ffff",
+        "drawColor": "0a84ffff",
+        "radius": 10
+      },
+      "B-removable": {
+        "tag": 60,
+        "frame": [
+          20,
+          20,
+          20,
+          20
+        ],
+        "size": "small",
+        "color": "30b0c7ff",
+        "drawColor": "30b0c7ff",
+        "radius": 10
+      }
+    },
+    "spin": {
+      "frames": 10,
+      "turnsBefore": 0.126914523809524,
+      "turnsAfter": 0.201702380952381,
+      "drawnTurns": 0.201702380952381,
+      "drawnVisible": true,
+      "processing": true
+    },
+    "stop": {
+      "stopped": {
+        "animating": false,
+        "processing": false,
+        "spinnerVisible": false,
+        "starts": 1,
+        "stops": 1
+      },
+      "controlled": {
+        "frames": 0,
+        "turnsBefore": 0.201702380952381,
+        "turnsAfter": 0.201702380952381,
+        "drawnTurns": 0.201702380952381,
+        "drawnVisible": false,
+        "processing": false
+      },
+      "otherFrames": 10
+    },
+    "static": {
+      "frozenTurns": 0.201702380952381,
+      "drawnTurns": 0.201702380952381,
+      "pair": {
+        "frames": 0,
+        "turnsBefore": 0.201702380952381,
+        "turnsAfter": 0.201702380952381,
+        "drawnTurns": 0.201702380952381,
+        "drawnVisible": true,
+        "processing": false
+      }
+    },
+    "restart": {
+      "frozenTurns": 0.201702380952381,
+      "turns": 0.250313492063492,
+      "starts": 2,
+      "pair": {
+        "frames": 10,
+        "turnsBefore": 0.250313492063492,
+        "turnsAfter": 0.319757936507936,
+        "drawnTurns": 0.319757936507936,
+        "drawnVisible": true,
+        "processing": true
+      }
+    },
+    "color": {
+      "green": "34c759ff",
+      "reset": [
+        null,
+        "999999ff"
+      ]
+    },
+    "remount": {
+      "oldTag": 26,
+      "newTag": 70,
+      "oldTurns": 0.763382777777776,
+      "freshTurns": 0.0486111111111111,
+      "pair": {
+        "frames": 10,
+        "turnsBefore": 0.0486111111111111,
+        "turnsAfter": 0.118055555555556,
+        "drawnTurns": 0.118055555555556,
+        "drawnVisible": true,
+        "processing": true
+      }
+    },
+    "twoRoots": {
+      "controlled": {
+        "animating": true,
+        "color": "0a84ffff",
+        "starts": 1,
+        "stops": 0
+      },
+      "pair": {
+        "frames": 10,
+        "turnsBefore": 0.943938333333331,
+        "turnsAfter": 1.01338277777778,
+        "drawnTurns": 1.01338277777778,
+        "drawnVisible": true,
+        "processing": true
+      }
+    }
+  },
+  "defaults": {
+    "javascript": {
+      "animating": true,
+      "hidesWhenStopped": true,
+      "size": "small",
+      "color": "Platform.OS === 'ios' ? '#999999' : null"
+    },
+    "generatedProps": {
+      "animating": true,
+      "hidesWhenStopped": true,
+      "size": "small",
+      "color": "undefined"
+    },
+    "godotDrawColorWithoutProp": "#999999",
+    "frames": {
+      "small": [
+        20,
+        20
+      ],
+      "large": [
+        36,
+        36
+      ],
+      "number": "square of that side, native size small"
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 31,
+        "logSha256": "4a4ee9262b798fe58feb6872ce25dcbf8fb2dbe1f1ba9afeacbeb02d176cb279",
+        "at": "2026-10-05T22:58:08.675Z"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bdf6b5674792562933fb51b9d8ae53bfa906afecc3b49c8947ad41a536a7e52b",
+        "at": "2026-10-05T22:58:09.095Z"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "8c35360768992c86dac27fe457239540a57c0fee304520e2c074a282607194b4",
+        "at": "2026-10-05T22:58:09.503Z"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "badbd212d11b56230061f398992506ce62825b4a539c25cb04d65d358c7f2651",
+        "at": "2026-10-05T22:58:13.137Z"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "57848578292129ebe491dbf4bdcb1c98a98afc2e099187cc4e94d853f31a556a",
+        "at": "2026-10-05T22:58:20.488Z"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "5c85773f7d1890df11c3f4f082b6d2ef6719fd74fdc43bc481ae505be624f09f",
+        "at": "2026-10-05T23:11:15.955Z"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 239,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
+        "at": "2026-10-05T23:03:14.328Z"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e",
+        "at": "2026-10-05T23:03:19.406Z"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "239acd4f77bbecf549bd49dd4cd1ab30961fd96d37796cab3eb3057806952d9d",
+        "at": "2026-10-05T23:03:25.736Z"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "4a8ded9af6a643f5a5d40b392d4e998f5fc571c6be9027e09bd32eeff1e57af5",
+        "at": "2026-10-05T23:03:38.489Z"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "fc06dac985ac03a311b3e9ddbaf6a23e899e604bbb41bc85219f99ba2aeb1589",
+        "at": "2026-10-05T23:03:51.063Z"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "52a60547132a76667ce40e3a21cff1448005f4ca48b06c0a0b43bc93144b56af",
+        "at": "2026-10-05T23:03:55.917Z"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "02e6c751d9a16ddb51d9fb7173c0b5295b0e35aee1401d320316779fa7f6e6cc",
+        "at": "2026-10-05T23:04:02.146Z"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 22,
+        "logSha256": "de8bd49b28808f4992f651c83e763413ea9b65389631b61fe804b1e95375202d",
+        "at": "2026-10-05T23:04:23.996Z"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "7373af0e92aa63a3ae4c351a33629566105649a4766de348821b6f89b4366b65",
+        "at": "2026-10-05T23:04:38.467Z"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "fce880ed731a6be95ca0553ea50d292d650388e2e0e493cca8975ada5035b8ec",
+        "at": "2026-10-05T23:04:54.690Z"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "e7e713cc7c1e030dc903d0032b6c337e1f0c7be61931282aa616fdb5deb3e8f6",
+        "at": "2026-10-05T23:05:03.035Z"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "f16a602a334ba50dd4a2e80b50c60dd97195f626a0f3d0abf627f4d8590f50c5",
+        "at": "2026-10-05T23:05:17.594Z"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "bcca74be691dc356588eef15747c86f83986d9315c107453405fbcf4ae8e9e2a",
+        "at": "2026-10-05T23:05:36.334Z"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "436a33af771685a3c5482d44fdf3079685620ed081a282676313518ba4724bce",
+        "at": "2026-10-05T23:05:44.352Z"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 25,
+        "logSha256": "8e40f57f4e537b42587786f66ab7e8d7577f7690ab3ef89acf3cf2c198b0b22c",
+        "at": "2026-10-05T23:06:09.794Z"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 52,
+        "logSha256": "31e80f42d17130db2b9568b629aae20f82a2a5d46c2493fbf7046c846f965814",
+        "at": "2026-10-05T23:07:01.440Z"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "b97e9fdf15c815c6778b791c1d19938ceeedb412fb8d93f6809dd87aff17cf75",
+        "at": "2026-10-05T23:07:07.578Z"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "0f43c44baa3bc797f96966dc4dd5fe3e59ded1d40eab560027f5233258ae3ea6",
+        "at": "2026-10-05T23:07:16.871Z"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 89,
+        "logSha256": "b5fc98027bc7dd2c08beff6af12e40226d6ea5a8dcee201d1824bbebf75acb6b",
+        "at": "2026-10-05T23:08:46.125Z"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "76cdba6a6c2fb65ed78bb4f5bddae039d61226f844135fbfa4ab771b1d3ab4c8",
+        "at": "2026-10-05T23:08:52.450Z"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "356285d044c73e475985473d8b855c4a656835123c85b4b996aa6c70db006fa3",
+        "at": "2026-10-05T23:09:00.551Z"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 33,
+        "logSha256": "f5175a8165e85190ec340b819b9e8a86b016d79e76641349f54e11993dfb968a",
+        "at": "2026-10-05T23:09:33.414Z"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "e11897ef96905775cd3b06ea17ffe2b4d5255fd838591c9b8d82abb362dd9d94",
+        "at": "2026-10-05T23:09:38.130Z"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "a54e1d77f563c851a4281b542e863c5073411f021c260fa9d8c25aa052ded55f",
+        "at": "2026-10-05T23:09:41.365Z"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 29,
+        "logSha256": "e8a3f5d1a6920c0d231c87672d4e019f5e56ecd9de2b2be23445c963de29f308",
+        "at": "2026-10-05T23:10:10.520Z"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 61,
+        "logSha256": "2eb98e074cafd461694a807968714db62d09f163070eda4d011497b3dc81ddca",
+        "at": "2026-10-05T23:11:11.775Z"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf",
+        "at": "2026-10-05T23:14:22.325Z"
+      }
+    }
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989",
+        "at": "2026-10-05T22:58:20.840Z"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "f74329e34febbbe2a366ae03fda2e07a136a94e8eaa8d725dff7e6e297d9c866",
+        "at": "2026-10-05T22:58:36.500Z"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "99155c3b029fdf75b8a8e7bd722cfe573ea16ccf03fe951f7ff75919c60aaa53",
+        "at": "2026-10-05T22:58:40.471Z"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "dece29394b74d49f870c2bec5433b38b1c50f3fe4c49e05a9b55e666766a8b36",
+        "at": "2026-10-05T22:58:40.800Z"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "ff7c71883b0d5e1564996a874656f634364dc2f700fcfc228db64e7c71b0b3a8",
+        "at": "2026-10-05T22:58:54.380Z"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 21,
+        "logSha256": "13df95669ba4907dd99313223700dc9151d07737c8edf29b1b59c4e3668a8641",
+        "at": "2026-10-05T22:59:15.492Z"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 45,
+        "logSha256": "7a93992cb47d635ee1b957cb7d67cbdb16caaf58ea9be6e0c08c2a7cbbf122b5",
+        "at": "2026-10-05T23:13:55.152Z"
+      },
+      "test:consumer": {
+        "exitCode": 0,
+        "seconds": 114,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81",
+        "at": "2026-10-05T23:13:10.294Z"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753",
+        "at": "2026-10-05T23:14:15.300Z"
+      }
+    }
+  },
+  "sourcePins": {
+    "tests/activity-indicator-fixture.jsx": "cb8f46c779b93e4676995a3a89f41c7505a06e60c138559cb93ed77eefca595a",
+    "tests/activity-indicator-probe.gd": "62547898aaaaad27bf6e7b09f3768cdac89e1b2673633e9f51485161bb794a4d",
+    "tests/activity-indicator-native.test.mjs": "f6a0eb0e234d5fcdcf43575e07a9ef4895bfaef64988eef77b951d5da5537d98",
+    "tests/activity-indicator-oracle.mjs": "2bd6b1d5a6943f294028b86b3fca13021a80765110e20c005eb5ede00d4f9d7a",
+    "src/react-native-platform.jsx": "26b9497f48f2222809af7dd9b426a909045d82c56509159d661fe912fe35c94c",
+    "src/base-view-config.js": "2257af812c0673c71f59c9b8afcfa46e6953b084b07f2deb5d3f7d9086b1eada",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/application_runtime.cpp": "5b913b06544c88ba5ff4ac8667fd09b7def356bab9b070004a92ac10493d69fa",
+    "native/register.cpp": "1af63e88475a850aa2fc2eec3984ed6cd2c3ddf8ee8ca55e2d5a38d1630c4acd",
+    "native/CMakeLists.txt": "0f036ce601940fa9b7c8555d0a6337ed62bd026104ecf3dc2971aea98ad78df3"
+  },
+  "originalReactNativeSources": {
+    "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator.js": "276303a2c3f0459c462a06775509a73170c36eead3cd9ad28597f9707702fca1",
+    "react-native/Libraries/Components/ActivityIndicator/ActivityIndicatorViewNativeComponent.js": "e98ada5fe3c784bbf691c03042691b81c730eabc24c67f514950273725cd180b",
+    "react-native/src/private/components/activityindicator/specs/ActivityIndicatorViewNativeComponent.js": "38fe7bda9d8abcc9a5e95331b945ddb31e7e7516fbafb0bf61e32a4a6aca1546",
+    "react-native/Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "react-native/Libraries/NativeComponent/NativeComponentRegistry.js": "814b755cfa308d019de15944f5179d32a70d75b8c26289b65714be589ef46742",
+    "react-native/Libraries/NativeComponent/ViewConfig.js": "f787ff3b8de7a056a6a00965e322356c34bc089c0df84d4a7a8f440b2c9e47a2",
+    "react-native/Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "@react-native/babel-plugin-codegen/index.js": "2f85a5d56d1c5596930768d28bd0db445abff3c75325a1bad291f4dec60aa3df",
+    "@react-native/codegen/lib/generators/components/GenerateViewConfigJs.js": "f26da34d19949c296f0909766d3655b603048e95ca494b2e242bf32059dbef93"
+  },
+  "originalNativeSources": {
+    "ReactCommon/react/renderer/componentregistry/componentNameByReactViewName.cpp": "c9e50a6db4f18b59eced75643164ddc0bf5c62afdcd9d9276c3031624a4ad201",
+    "ReactCommon/react/renderer/componentregistry/ComponentDescriptorRegistry.cpp": "2f82c858fd52e637721040399da651b0ce770921fdad852f7bc8d0966ef835da",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/Props.h": "b521a3d93189b3cd8acdab33222d9200fc01f5991b39ed6de862649561502bc1",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/Props.cpp": "c9a855abb5e9b60dcab0f69dc84964664b5a33b9e0cb489e3a4a64df928203b7",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/ShadowNodes.h": "596de66f9ffb89fdb1d0c7a5dc8d0ec71f9e5c6ed1776eea61b4300ad32743bd",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/ShadowNodes.cpp": "90273af5af6d2eed1474f2e340c01660fac7c7faa1454f9152e0ead81b24dbe7",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/ComponentDescriptors.h": "0d5f41ed3ba1ad7f48f40ac3af916d4dbe7c8205045f20638d5ff26e819b7d3c",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/EventEmitters.h": "fcff8489eba5d21f6a126a6f026917525326dd68b42533af42cd5355ee284fd9",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/States.h": "d166668c8c058bb996e4306aafeab461979f34da5581f4e25a2b6f40d2f3e432"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "0f036ce601940fa9b7c8555d0a6337ed62bd026104ecf3dc2971aea98ad78df3",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "5b913b06544c88ba5ff4ac8667fd09b7def356bab9b070004a92ac10493d69fa",
+    "native/application_runtime.h": "f2f24c1908457fe7d941f475eeb7e0b3d081abcb35adf457922b3138ef77e38c",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "7fe3b19ab8aec3de80c539001318eb095615de18fd27000bf3be9045855c86e8",
+    "native/fabric_application.h": "8570d4ef002f24b6b79d8e4dfda75b71e2f29224810ac50e78df3e9746a4f2d9",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+    "native/pointer_adapter.h": "a44aa78379206bfd77afb8fe468fa73e7c5d75e20d68662b3c29f4a2cdcb1588",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "1af63e88475a850aa2fc2eec3984ed6cd2c3ddf8ee8ca55e2d5a38d1630c4acd",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "69587ae4399a87e5085d17343abaa68071d6120dcffccfdf86eb65d9549044ac",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "d10e1e79c834cd3f7a97248efec78ff08ec486da40e7de05b9c61d4acb8664a7",
+    "native/turbo_module_registry.h": "db195aedc103189acca35ca58df4f6dea9e15c9b4109940e7123006f64de6ec6",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "nativeSourceTrees": {
+    "react-native": 475,
+    "react-native-specs": 5,
+    "godot-cpp": 32,
+    "godot-cpp-generated": 71,
+    "react-native-pointer-overlay": 2
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "b0ad86219463903454695d00c403073e7216a57cca6579a0681fb417cb6a54ac",
+    "package.json": "5d145130090ead40fd0509d3aea5d20bc90f57460ad78cf83211ec33e7c681b7",
+    ".fallowrc.json": "0bc9c7b45facffa3fde54e631bba00644a1738077416bec29a4bbd8d291748fd",
+    "tests/platform-seams.test.mjs": "ab18f314618a2613f79429458fc27d482e254ada11bf9bbc14aff9387f7283fc",
+    "tests/types/consumer.tsx": "f06b2a2e4205876c78dac313d75fbfaad97863a205a348e9fc1e5f1bf183f200",
+    "types/react-native.ts": "f9b203432bc5e7924438bce5e1afb7dc24418174e7881b3bafa16c29cb24b12e"
+  },
+  "implementationChangedFiles": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "native/CMakeLists.txt",
+    "native/activity_indicator_view.cpp",
+    "native/activity_indicator_view.h",
+    "native/application_runtime.cpp",
+    "native/register.cpp",
+    "package.json",
+    "src/react-native-platform.jsx",
+    "tests/activity-indicator-fixture.jsx",
+    "tests/activity-indicator-native.test.mjs",
+    "tests/activity-indicator-oracle.mjs",
+    "tests/activity-indicator-probe.gd",
+    "tests/platform-seams.test.mjs",
+    "tests/types/consumer.tsx",
+    "types/react-native.ts"
+  ],
+  "hostedCI": {
+    "status": "pending-activity-indicator-slice"
+  },
+  "limits": [
+    "Headless SceneTree frames: the phase and per-frame work are measured natively; no pixel capture certifies the drawing.",
+    "The spinner is custom-drawn (eight stepped spokes, one turn per second) and fills the frame; UIKit keeps its medium/large size and timing.",
+    "Without a color prop Godot draws RN's iOS gray; ActivityIndicator.js passes null outside iOS, where Android uses the system accent.",
+    "Accessibility, reduced motion, hardware, mobile exports and performance remain open. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/a6523439b5146b6e5ad8f30fd8c0435af0c4a65a",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 74,
+    "pinSetCounts": {
+      "sourcePins": 13,
+      "nativeSourcePins": 60,
+      "verificationSourcePins": 6
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true
+  },
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T23:15:54.447Z",
+    "meaning": "Contracts-job gates rerun after every doc, example and the receipt body above were final; this field was appended afterwards. The dashboard entry follows in its own commit.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "eb46ea742470e0c524a0c4001268bd8516ea6fb5c63e8413b6bb151f3e83c868"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "37317c9cb8871796e56f07ae29841db490bc23a50c672c40a157d17cb97e3c93"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "61459f764c298450b19139dc4ca0deaa566a58ae30e5f8fe822ec6f9734758ed"
+      }
+    }
+  }
+}
