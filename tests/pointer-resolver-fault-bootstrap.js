@@ -13,7 +13,11 @@ function exactDescriptor(actual, expected) {
 }
 export const resolverFaultControl = {
   arm(tag) {
-    if (fault != null) throw Error("Resolver probe arms exactly one getter fault");
+    // One getter at a time: a later fault may replace only a consumed one whose
+    // original descriptor is already restored.
+    if (fault != null && (fault.remaining > 0 ||
+      !exactDescriptor(Object.getOwnPropertyDescriptor(fault.canonical, "publicInstance"), fault.descriptor)))
+      throw Error("Resolver probe arms one getter fault at a time");
     const handle = godotInstanceHandle(tag), canonical = handle?.stateNode?.canonical;
     const descriptor = canonical == null ? null : Object.getOwnPropertyDescriptor(canonical, "publicInstance");
     if (descriptor == null || !Object.prototype.hasOwnProperty.call(descriptor, "value") || !descriptor.configurable ||

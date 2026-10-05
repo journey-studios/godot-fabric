@@ -138,6 +138,14 @@ qualifies a failed lookup fails fifteen probe checks and the independent oracle.
 The three preceding-host controls reproduce their 8/12/3 normative failures with
 the new bundles. Hosted CI pending.
 
+The [View Up resolver record](pointer-up-resolver-faults/README.md) arms a one-shot
+getter on the View's `canonical.publicInstance`, after Down: 296 headless and 324
+viewport checks. The first native read fails before any SDK entry, only that
+lookup is rejected with one diagnostic, and the next lookup reads the restored
+descriptor; with capture and bubble the Up is still delivered. A retained control
+whose getter silently succeeds fails nine probe checks and the independent oracle.
+Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

@@ -150,7 +150,11 @@ after a bubble fault, and an unqualified View hands the lookup to its ancestors 
 root, while the original TouchEnd and contact cleanup survive. The faults run in a
 second application, so the healthy probe stays diagnostic-free: 240 headless and
 268 graphical checks, with the preceding-host controls refreshed.
-[Evidence and limits](docs/evidence/pointer-up-faults/README.md).
+[Evidence and limits](docs/evidence/pointer-up-faults/README.md). When the native
+lookup cannot even resolve the View's public ref (a one-shot getter on
+`canonical.publicInstance`), that lookup fails before the SDK with the same single
+diagnostic, and the next lookup proceeds normally.
+[Resolver evidence](docs/evidence/pointer-up-resolver-faults/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

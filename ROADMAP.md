@@ -1344,6 +1344,39 @@ match implementation f9a3b25 via git show/SHA-256 (execution base 988af3c/dirty
 retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
 denominator closes.
 
+
+### View Up resolver getter faults (2026-10-05)
+
+GF-05/GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[resolver evidence](docs/evidence/pointer-up-resolver-faults/README.md) arms a
+one-shot getter on the actual View's `canonical.publicInstance` after Down, in the
+same second application as the component faults: **296 headless checks** (the
+previous 240 IDs preserved in order) and **324 graphical checks** with the same 24
+pixels.
+
+Component slot reads already share the query's exception boundary. The getter
+restores the original data descriptor before throwing, so the View's first native
+lookup (36) fails before any SDK entry and only that lookup is rejected with one
+retained E_POINTER_LISTENER_QUERY. The next lookup (37) reads the restored
+descriptor and enters the SDK: a capture listener on the same View still
+qualifies and the Up delivers capture and bubble in one commit; with bubble only,
+the query reaches the owning-surface ancestors and root, all false, and no Up is
+delivered while TouchEnd and contact cleanup survive. Recoveries are healthy and
+the second application stops with exactly its seven diagnostics. A retained
+control whose getter silently returns the ref fails nine probe checks, and the
+independent oracle rejects that report on its own.
+
+Only tests changed: the resolver bootstrap accepts a new getter once the previous
+one is consumed and restored, and the View Up fixture/probe/oracle gain the cases;
+the resolver bootstrap is pinned separately because it is outside the bundle
+provenance list. The View Up and resolver-fault preceding-host controls reproduce
+their 8 and 3 normative failures with the new bundles. Query faults 186, resolver
+faults 65, Document Up 6,451, Down 2,723, contracts 255 Node/13 Python, 22 examples
+and static analysis pass; native/SDK bytes are unchanged. stateNode/canonical and
+root-handle resolver faults, repeated faults and faults during retirement/stop
+remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

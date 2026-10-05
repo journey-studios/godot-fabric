@@ -1,0 +1,509 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-up-view-resolver-getter-faults",
+  "status": "verified-local-headless-old-host-controls-and-native-captures",
+  "at": "2026-10-05T15:18:07.387875+00:00",
+  "executionBaseCommit": "01d3add98e593ea42a5273f1115190b84ae251d2",
+  "sourceDirtyDuringExecution": true,
+  "docsOnlyCommitsDuringExecution": [
+    "80450881648029e0e98108cc297a45a4e7a35e55",
+    "84a95abfe21a08d86b56a3367fdbbcd50bdd0d57",
+    "16c144a350b465646ebb988c193afb222c66abd1"
+  ],
+  "docsOnlyCommitsTouchNoExecutedInput": true,
+  "implementationCommit": null,
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "hostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae"
+  },
+  "commands": [
+    "node tests/pointer-up-native.test.mjs",
+    "node tests/pointer-up-native.test.mjs --capture",
+    "node tests/pointer-up-native.test.mjs --allow-original-negative (preserved previous host)"
+  ],
+  "headless": {
+    "checks": 296,
+    "baseChecks": 62,
+    "faultChecks": 234,
+    "previousComponentFaultChecksPreservedInOrder": 240,
+    "addedResolverChecks": 56,
+    "reportSha256": "9637c6ac199d211d5c0673042a0fbf37defe880c20325b17cbfb7e8db36440b4",
+    "logSha256": "bd7b5af5ab9b05c403e3474d6dbe443da2643b506a801fa7a6dcf631dc7c1c03",
+    "checkIdDigestSha256": "1c0e5e84297ace06bc7ca702723a6faa9f1f57244f6c6b4c1a16928d6e41f25a",
+    "bundleSha256": "9d663f55be541e997799ed6e140b0e406b9fdbd9759ad728739fc04db9af129a",
+    "faultExpectedErrors": [
+      "GF pointer query deliberate fault: throw36",
+      "GF pointer query deliberate fault: throw36-both",
+      "GF pointer query deliberate fault: throw37",
+      "Pointer listener query must return a boolean",
+      "Pointer listener query must return a boolean",
+      "GF pointer resolver deliberate fault: canonical.publicInstance",
+      "GF pointer resolver deliberate fault: canonical.publicInstance"
+    ],
+    "secondApplicationStoppedErrors": 7,
+    "healthyApplicationStoppedErrors": 0
+  },
+  "cases": {
+    "resolver-bubble": {
+      "registration": {
+        "capture": false,
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "actualCanonical": true,
+        "actualFiber": true,
+        "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+        "connected": true,
+        "descriptorConfigurable": true,
+        "descriptorOwnData": true,
+        "originalRef": true,
+        "remaining": 1,
+        "targetTag": 2,
+        "valueTagMatches": true
+      },
+      "up": {
+        "callbacks": [
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          }
+        ],
+        "ancestorAndRootRows": [
+          {
+            "targetTag": 8,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 8,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 37,
+            "result": false
+          }
+        ],
+        "upsBeforeAfter": [
+          10,
+          10
+        ],
+        "commitsBeforeAfter": [
+          22,
+          22
+        ],
+        "rawTypes": [
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      },
+      "consumed": true,
+      "resolver": {
+        "armed": false,
+        "attempts": [
+          {
+            "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+            "descriptorRestoredBeforeThrow": true,
+            "ownerMatches": true,
+            "remaining": 0,
+            "sdkEntriesBeforeThrow": 0
+          }
+        ],
+        "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+        "descriptor": {
+          "configurableMatches": true,
+          "enumerableMatches": true,
+          "kind": "data",
+          "valueMatches": true,
+          "writableMatches": true
+        },
+        "descriptorRestored": true,
+        "remaining": 0,
+        "targetTag": 2
+      },
+      "errorsBeforeAfter": [
+        5,
+        6
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          10,
+          11
+        ],
+        "commitsBeforeAfter": [
+          23,
+          24
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    },
+    "resolver-both": {
+      "registration": {
+        "capture": "both",
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "actualCanonical": true,
+        "actualFiber": true,
+        "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+        "connected": true,
+        "descriptorConfigurable": true,
+        "descriptorOwnData": true,
+        "originalRef": true,
+        "remaining": 1,
+        "targetTag": 2,
+        "valueTagMatches": true
+      },
+      "up": {
+        "callbacks": [
+          "pointerup-capture",
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          11,
+          13
+        ],
+        "commitsBeforeAfter": [
+          25,
+          26
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      },
+      "consumed": true,
+      "resolver": {
+        "armed": false,
+        "attempts": [
+          {
+            "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+            "descriptorRestoredBeforeThrow": true,
+            "ownerMatches": true,
+            "remaining": 0,
+            "sdkEntriesBeforeThrow": 0
+          }
+        ],
+        "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+        "descriptor": {
+          "configurableMatches": true,
+          "enumerableMatches": true,
+          "kind": "data",
+          "valueMatches": true,
+          "writableMatches": true
+        },
+        "descriptorRestored": true,
+        "remaining": 0,
+        "targetTag": 2
+      },
+      "errorsBeforeAfter": [
+        6,
+        7
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-capture",
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          13,
+          15
+        ],
+        "commitsBeforeAfter": [
+          27,
+          28
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    }
+  },
+  "oldHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 62,
+      "normativeFailures": 8,
+      "reportSha256": "5382dbb10451cf69f19071e64c9bcdff0c9f4870d2c968f4db2e8c2c8f842960",
+      "bundleSha256": "9d663f55be541e997799ed6e140b0e406b9fdbd9759ad728739fc04db9af129a"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 65,
+      "normativeFailures": 3,
+      "reportSha256": "582e2ab4a23822d83730732af8258c9d8a3198a2c81924a2dd055e04bd3c6656",
+      "bundleSha256": "e21bd0c2e696bcf56c9bb1dd2c59714035521ef8f589e0b25f6dfff38267f00a"
+    }
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "19b9f3d731989554bb7a3752242f20591328032cba641d0837f35fd9a25668ef",
+    "tests/pointer-query-fault-fixture.jsx": "83dec47b13ef1670905e0e03f1c787a058b267decfd9948ccd7c5d1f0ed3e8cf",
+    "tests/pointer-query-fault-probe.gd": "c5cf2bca5f1c41f59ae93efc5b0a88e0e3fbdda07abb3f9d88e57f873ebe7916",
+    "tests/pointer-up-fixture.jsx": "21c343f976fd7ec83e1681cfff77b5f1f52e1a503f20a051154c3cfd70decc62",
+    "tests/pointer-up-probe.gd": "6fef44fa356f4aed8d3f8e7f8c4f267486c398c46843767018c03e7b1b16aa14",
+    "tests/pointer-up-native.test.mjs": "b86e945893d572172dcaa5da0dbee5fcb35bb0a1b9a747b6953cf8a4d49dc52a",
+    "scripts/event-target-bundle.mjs": "bedb3c8998b9643398e5ce23c75e62a9be48cbf43165e78fc338a369ec205df3",
+    "sdk/toolchain/platform-plugin.mjs": "e2b98c7ad95a47286bc2250eac7b347805462d953b734827594c4bfbcc8f4605",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "d5a91d13b68df9d7de04c344ec3435643131b5123467d9cdea97d907f4e27f99",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "additionalSourcePins": {
+    "tests/pointer-resolver-fault-bootstrap.js": "1b99a81a41c77c711cf611dc97225d8a41f6dacf610bcbf589ff48561ff276ec"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+    "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+    "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+    "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "3122db48d30865c64f6129f6e5d4fcc797a1c6ff8b748cb12709a1a7148af752",
+    "package.json": "164dd063544d89be6be8254bc44c40dc6c554487abbbd7c939cf3feec477f548",
+    ".fallowrc.json": "4fa36fdc1f0faf157a49871c4ddce38ae9ead22f7ed28c15722ceff8d4848cd8",
+    "tests/rn-pointer-overlay.test.mjs": "8ad62462651f1fc8ba2f228ae1502e2f8494ee6459483119d52a04eec9e01825",
+    "tests/rn-pointer-interest-overlay.test.mjs": "d3a26dae9e6320792b03ff36515158186978dfd9921a09ec0d3ed80055ba2514",
+    "tests/pointer-terminal-query-assertions.mjs": "25cad6a0ea98c74170c84dabe857b138e6df2fbd96d0de4de90b02ee1bb33682",
+    "tests/pointer-document-native.test.mjs": "e19609f93b33a8ca4abf6a9920e7442e817c1445a5a10d49f401d38530ab4713",
+    "tests/pointer-document-probe.gd": "b9300c4df90f7c7212354f7b533d31acfc2d143018be570dd190798a58d74cec",
+    "tests/pointer-interest-native.test.mjs": "96b86ad70105663f2d0b27d5af3cdc2d77b900ebb2879720a266a356e3e05153",
+    "tests/pointer-interest-probe.gd": "3d4eaab766ac8fe66efc93df4b929ff5f091e9e787c53ccf748fab6efc8e5989",
+    "tests/pointer-query-fault-native.test.mjs": "7bf5f6150fccfa58c06a1efa0c705c78959cdf210a958e5e4965992dfa1ad10f",
+    "tests/pointer-resolver-fault-native.test.mjs": "bfcba267cc6a9816a06323b5e6c9dd62fc969850be8b408cb28814e5502669d6"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b"
+  },
+  "capture": {
+    "checks": 324,
+    "pixelChecks": 24,
+    "frames": [
+      {
+        "file": "build/pointer-up-initial.png",
+        "sha256": "af28b45e5cf7660cc83f5a30ea52505d7bf1462527e68d9dc67b4828b8e0f2bb"
+      },
+      {
+        "file": "build/pointer-up-updated.png",
+        "sha256": "5cfdbfba394afcb436dc0d38413d3676dd4d9aaec069ef3f608732c5f27bf591"
+      }
+    ],
+    "reportSha256": "60e8f3c435a5c4ed24738f96b7d921ba1d9841611ba7f3524a24ca1d34ac12eb",
+    "headlessCheckIdsIncluded": true
+  },
+  "negativeControl": {
+    "sabotage": "the resolver getter restores the descriptor but returns the original ref instead of throwing, so the lookup silently succeeds",
+    "command": "node tests/pointer-up-native.test.mjs",
+    "probeFailures": 9,
+    "failures": [
+      "fault/resolver-bubble/up/Native Up delivers exactly the qualified original listeners before the surviving TouchEnd",
+      "fault/resolver-bubble/up/Up Raw appears once only when a lookup qualified the Up",
+      "fault/resolver-bubble/up/Delivered Up callbacks batch into one commit and a rejected Up adds no React state",
+      "fault/resolver-bubble/up/The actual View ref lookups consume the configured fault in exact order and delegate the rest",
+      "fault/resolver-bubble/up/Ancestors and root are consulted in 36 then 37 pairs only after an unqualified target and stay false",
+      "fault/resolver-bubble/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/resolver-both/up/The actual View ref lookups consume the configured fault in exact order and delegate the rest",
+      "fault/resolver-both/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/stop/Second application clears roots and contacts while retaining exactly the consumed fault diagnostics"
+    ],
+    "componentFaultCasesUnaffected": true,
+    "reportSha256": "0d37925e8031c89ec468f1c6b7dfa61462f348ea8fb9aa68244c0aae73613740",
+    "logSha256": "74b2a8805c685b590e5ccc0f664ce7ef754b52a8b84d5ce2de7762265e90fb1a",
+    "nodeTestLogSha256": "e434cd10a5388a4225116971ea8936c0bb1cf0904a0584c732c1fcda52401065",
+    "oracleLogSha256": "7783677b50d0cc24f2e5ce2b935f70b19a8ce2eb544bc8a1adf06418d6588534",
+    "independentNodeOracleRejected": true,
+    "oracleRunBypassedProbeStatusGates": true,
+    "oracleAcceptsFinalReport": true,
+    "resolverBootstrapRestoredToPreSabotageBytes": true
+  },
+  "regressions": {
+    "query-faults": {
+      "checks": 186,
+      "logSha256": "bf4d82deb27005c67fe01e4419e4a582f93221d1a53c00a94db2e55566c96ae3"
+    },
+    "resolver-faults": {
+      "checks": 65,
+      "logSha256": "e91e732936c361b8e1626e3185d3813210a373bb84e04796fdde6dfb00bfea6e"
+    },
+    "documentUpChecks": 6451,
+    "downChecks": 2723,
+    "nodeContractChecks": 255,
+    "pythonContractChecks": 13,
+    "contractsLogSha256": "a59fd374f5c53474a6d4f5d876d12cb9e56e7b05b71df556f3508eddfacbcebe",
+    "examplesLogSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
+    "staticCheckPassed": true,
+    "nativeAndSDKProductionFilesUnchanged": true,
+    "changedFilesSinceExecutionBase": [
+      "README.md",
+      "ROADMAP.md",
+      "dashboard/migration.json",
+      "docs/evidence/README.md",
+      "docs/evidence/pointer-document-up-fault/README.md",
+      "docs/evidence/pointer-document-up-fault/hosted-ci.json",
+      "docs/evidence/pointer-document-up-fault/report.json",
+      "docs/research/pointer-document-up.md",
+      "examples/pointer-document-up/README.md",
+      "tests/pointer-resolver-fault-bootstrap.js",
+      "tests/pointer-up-fixture.jsx",
+      "tests/pointer-up-native.test.mjs",
+      "tests/pointer-up-probe.gd"
+    ]
+  },
+  "hostedCI": {
+    "status": "pending-view-up-resolver-fault-slice"
+  },
+  "limits": [
+    "One-shot getter faults on the actual View canonical.publicInstance slot, armed after Down and read by the native component lookup before the SDK, in the second application; the old-host control never runs that phase.",
+    "Only the single enabled-flag current lane of the View Up probe; stateNode/canonical faults, permanent or proxy accessors, root-handle resolver faults and repeated faults are not certified.",
+    "Faults during retirement or stop, other flag branches and mixed Document/View paths remain open.",
+    "Captured/no-hit/null-target Up, Down/Up pointerId pairing, other event categories, hardware/mobile and performance remain open.",
+    "The executed tree was dirty after 01d3add; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ]
+}

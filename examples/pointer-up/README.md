@@ -103,6 +103,8 @@ pointer-ID identity is claimed.
 Faults in the native query for this View, at the Up offsets, are covered by a
 [separate record](../../docs/evidence/pointer-up-faults/README.md): only the failed
 lookup is rejected, with one diagnostic, and TouchEnd and contact cleanup survive.
+A failure resolving the View's public ref follows the same contract
+([resolver record](../../docs/evidence/pointer-up-resolver-faults/README.md)).
 
 Document Up, other flag configurations, full membership/ref lifecycle,
 captured/no-hit Up, got/lost capture, coalescing, complete responders and priority
