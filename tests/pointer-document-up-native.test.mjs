@@ -208,7 +208,58 @@ function refs(report, I, D, installed) {
 // Callbacks and the mutations they perform share one sequence; "action:target"
 // marks a mutation between the callbacks around it.
 const timeline = value => [...value.events.map(row => [row.sequence, row.label]),
-  ...value.mutations.map(row => [row.sequence, row.action + ":" + row.target])].sort((a, b) => a[0] - b[0]).map(row => row[1]);
+  ...value.mutations.map(row => [row.sequence, row.action + ":" + row.target]),
+  ...value.nested.map(row => [row.sequence, "nested:" + row.name + "." + row.label]),
+  ...value.reentries.map(row => [row.sequence, "reenter:" + (row.threw == null ? "returned" : "threw")])].sort((a, b) => a[0] - b[0]).map(row => row[1]);
+// Reentrant dispatch from actual native Up callbacks. Nested events are
+// untrusted, at target, Discrete and distinct; the outer native Event resumes
+// with its trust, phase, currentTarget, target, path and global binding.
+function reentry(report, D, installed) {
+  const stages = report.stages, docOffsets = installed ? [36] : [36, 37], docResults = installed ? [true] : [false, false];
+  const callbacks = entries => entries.filter(entry => !entry.includes(":"));
+  function up(id, name, entries, phase) {
+    const stage = stages["reentry/" + id + "/up"], value = stage.react;
+    terminal(stage, callbacks(entries), callbacks(entries).map(label => label.endsWith("C") ? 1 : 3), name, D, installed, docOffsets, docResults);
+    assert.deepEqual(timeline(value), [...entries, "TouchEnd"]); assert.deepEqual(value.mutations, []);
+    assert.equal(value.reentries.length, entries.filter(entry => entry.startsWith("reenter:")).length);
+    const count = value.nested.length;
+    assert.deepEqual(value.nestedEventIdentity, {count, sameObject: count > 0 ? true : null, distinctFromOuter: count > 0 ? true : null});
+    assert.ok(value.nested.every(row => row.type === "pointerup" && !row.trusted && row.phase === 2 && row.targetMatches && row.currentMatches &&
+      row.thisMatches && row.originalEvent && !row.originalSynthetic && row.globalEventMatches && row.currentPriority === value.discretePriority));
+    for (const row of value.reentries) {
+      if (row.threw == null) assert.ok(!row.sameEvent && row.returned === true && !row.nestedTrusted && row.nestedCleaned === true);
+      else assert.ok(row.sameEvent && row.returned === null && /already being dispatched/.test(row.threw) && row.nestedTrusted && row.nestedCleaned === null);
+      assert.ok(row.outerTrusted && row.outerPhase === phase && row.outerCurrentMatches && row.outerTargetSame && row.outerPathLength > 0 && row.outerGlobalEventMatches);
+      assert.ok(value.events.some(event => event.label === row.by && event.sequence < row.sequence));
+    }
+  }
+  function flat(id, expected) {
+    const stage = stages["reentry/" + id + "/manual"], value = stage.react;
+    assert.equal(stage.result.available, D); assert.deepEqual(value.events.map(row => row.label), expected);
+    assert.ok(value.events.every(row => !row.trusted && row.phase === 2 && row.originalEvent));
+    assert.deepEqual(value.nested, []); assert.deepEqual(value.reentries, []); assert.equal(value.nestedEventIdentity.count, 0);
+    assert.deepEqual(value.raw, []); assert.deepEqual(value.query.rows, []); assert.equal(value.panels.A.count, value.baselineCount); clean(value, D);
+  }
+  const configured = {"nested-capture": ["DocC", "DocB1", "DocB2"], "nested-bubble": ["DocC", "DocB1", "DocB2"], "same-event": ["DocB1", "DocB2"], "cross-root": ["DocB"]};
+  for (const [id, labels] of Object.entries(configured)) {
+    const configuration = stages["reentry/" + id + "/configuration"];
+    assert.equal(configuration.kind, "re-" + id); assert.deepEqual(configuration.installed, D ? labels : []);
+  }
+  const on = entries => installed ? entries : [];
+  const nestedA = ["nested:A.DocC", "nested:A.DocB1", "nested:A.DocB2", "reenter:returned"];
+  up("nested-capture", "A", on(["DocC", ...nestedA, "DocB1", "DocB2"]), 1);
+  flat("nested-capture/after", D ? ["DocC", "DocB1", "DocB2"] : []);
+  up("nested-bubble", "A", on(["DocC", "DocB1", ...nestedA, "DocB2"]), 3);
+  flat("nested-bubble/after", D ? ["DocC", "DocB1", "DocB2"] : []);
+  up("same-event", "A", on(["DocB1", "reenter:threw", "DocB2"]), 3);
+  flat("same-event/after", D ? ["DocB1", "DocB2"] : []);
+  assert.deepEqual(stages["reentry/cross-root/B-configuration"].installed, D ? ["DocC", "DocB"] : []);
+  up("cross-root/A", "A", on(["DocB", "nested:B.DocC", "nested:B.DocB", "reenter:returned"]), 3);
+  const unchanged = stages["reentry/cross-root/B-unchanged"];
+  assert.equal(unchanged.after.commits, unchanged.before.commits); assert.deepEqual(unchanged.after.pointer, unchanged.before.pointer);
+  assert.equal(unchanged.afterCount, unchanged.beforeCount);
+  terminal(stages["reentry/cross-root/B/up"], installed ? ["DocC", "DocB"] : [], installed ? [1, 3] : [], "B", D, installed, docOffsets, docResults);
+}
 // Listener mutation inside actual native Up callbacks. The original dispatcher
 // snapshots each target/phase Map when it reaches it; the root query happens
 // before dispatch and reflects membership before this gesture's mutations.
@@ -373,6 +424,7 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   }
   refs(report, I, D, installed);
   mutation(report, I, D, installed);
+  reentry(report, D, installed);
   const canceled = report.stages["cancel/terminal"], cancel = canceled.react;
   assert.deepEqual(cancel.events.map(row => row.label), ["TouchCancel"]); assert.deepEqual(rawRows(cancel, "topPointerUp"), []);
   raw(cancel, "topTouchCancel", cancel.events); assert.deepEqual(cancel.query.rows, []);

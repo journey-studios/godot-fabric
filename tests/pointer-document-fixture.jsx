@@ -29,6 +29,17 @@ function payloadId(payload) {
 }
 function record(name, label, expectedCurrent, receiver, event) {
   if (active == null) return;
+  // A dispatch started from inside a delivered callback is observed apart from
+  // the outer native event; it is untrusted and never updates React state.
+  if (active.nesting > 0) {
+    active.nested.push({sequence: ++sequence, name, label, type: event.type ?? null, trusted: event.isTrusted === true,
+      phase: event.eventPhase ?? null, thisMatches: receiver === expectedCurrent, currentMatches: event.currentTarget === expectedCurrent,
+      targetMatches: event.target === active.nestedTarget, originalEvent: event instanceof OriginalEvent,
+      originalSynthetic: event instanceof LegacySyntheticEvent, globalEventMatches: globalThis.event === event,
+      currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority()});
+    active.nestedRefs.push(event);
+    return;
+  }
   const panel = panels.get(name), native = event.nativeEvent, manual = active.manualTarget != null;
   const targetTag = manual ? null : typeof event.target === "number" ? event.target : getNativeTagFromPublicInstance(event.target) ?? null;
   active.events.push({sequence: ++sequence, name, label, type: event.type ?? null,
@@ -179,6 +190,42 @@ function configureMutation(panel, kind, I) {
     add(panel, doc, "DocB", false, {}, false, (event, ref) => mutate(event, ref, "DocB", "add", "XDoc", addOther));
   } else throw Error("Unknown document mutation: " + kind);
 }
+// Dispatch on target from inside a delivered callback, then observe that the
+// outer event kept its phase, currentTarget, target, trust and global binding.
+function reenter(event, ref, by, label, target, dispatched = null) {
+  const nested = dispatched ?? new OriginalEvent(event.type, {bubbles: true}), outerTarget = event.target;
+  const row = {by, target: label, sameEvent: nested === event, returned: null, threw: null};
+  active.nesting++; active.nestedTarget = target;
+  try { row.returned = target.dispatchEvent(nested); } catch (error) { row.threw = String(error?.message ?? error); }
+  finally { active.nesting--; active.nestedTarget = null; }
+  active.reentries.push({sequence: ++sequence, ...row, nestedTrusted: nested.isTrusted,
+    nestedCleaned: nested === event ? null : nested.currentTarget === null && nested.eventPhase === 0 && nested.composedPath().length === 0,
+    outerTrusted: event.isTrusted === true, outerPhase: event.eventPhase ?? null, outerCurrentMatches: event.currentTarget === ref,
+    outerTargetSame: event.target === outerTarget, outerPathLength: event.composedPath().length,
+    outerGlobalEventMatches: globalThis.event === event});
+}
+// Each kind re-enters dispatch from a callback of the trusted native Up only,
+// so the untrusted nested event cannot recurse and manual dispatch stays flat.
+function configureReentry(panel, kind) {
+  const doc = panel.doc;
+  const nest = by => (event, ref) => { if (event.isTrusted) reenter(event, ref, by, panel.name + ".Doc", doc); };
+  if (kind === "re-nested-capture" || kind === "re-nested-bubble") {
+    const capture = kind === "re-nested-capture";
+    add(panel, doc, "DocC", true, {}, false, capture ? nest("DocC") : null);
+    add(panel, doc, "DocB1", false, {}, false, capture ? null : nest("DocB1"));
+    add(panel, doc, "DocB2");
+  } else if (kind === "re-same-event") {
+    add(panel, doc, "DocB1", false, {}, false, (event, ref) => {
+      if (event.isTrusted) reenter(event, ref, "DocB1", panel.name + ".Doc", doc, event);
+    });
+    add(panel, doc, "DocB2");
+  } else if (kind === "re-cross-root") {
+    const other = panels.get(panel.name === "A" ? "B" : "A");
+    add(panel, doc, "DocB", false, {}, false, (event, ref) => {
+      if (event.isTrusted) reenter(event, ref, "DocB", other.name + ".Doc", other.doc);
+    });
+  } else throw Error("Unknown document reentry: " + kind);
+}
 function configure(name, kind, eventType = "pointerdown") {
   if (!["pointerdown", "pointerup"].includes(eventType)) throw Error("Unsupported document probe event type");
   reset(name); const panel = panels.get(name), doc = panel.doc, element = panel.element;
@@ -210,6 +257,8 @@ function configure(name, kind, eventType = "pointerdown") {
     }
   } else if (kind.startsWith("mut-")) {
     if (D) configureMutation(panel, kind, I);
+  } else if (kind.startsWith("re-")) {
+    if (D) configureReentry(panel, kind);
   } else if (kind !== "none") throw Error("Unknown document configuration: " + kind);
   return {name, kind, installed: panel.bindings.map(binding => binding.label), noPrototypeBorrow: true,
     ...(eventType === "pointerup" ? {eventType} : {})};
@@ -217,7 +266,8 @@ function configure(name, kind, eventType = "pointerdown") {
 function arm(name, caseId, target = "leaf", kind = "normal") {
   const panel = panels.get(name);
   active = {name, caseId, kind, eventType: panel.eventType, targetTag: target === "sentinel" ? panel.sentinelTag : panel.leafTag,
-    manualTarget: null, baselineCount: panel.count, events: [], eventRefs: [], raw: [], payloads: new Map(), mutations: []};
+    manualTarget: null, baselineCount: panel.count, events: [], eventRefs: [], raw: [], payloads: new Map(), mutations: [],
+    nesting: 0, nestedTarget: null, nested: [], nestedRefs: [], reentries: []};
   documentQueryControl.clearObservations();
   return {targetTag: active.targetTag, baselineCount: active.baselineCount};
 }
@@ -278,6 +328,10 @@ function snapshot() {
     currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority(), defaultPriority: nativeFabricUIManager.unstable_DefaultEventPriority,
     globalEventRestored: globalThis.event == null,
     ...(active?.eventType === "pointerup" ? {eventType: active.eventType, mutations: [...active.mutations],
+      nested: [...active.nested], reentries: [...active.reentries],
+      nestedEventIdentity: {count: active.nestedRefs.length,
+        sameObject: active.nestedRefs.length > 0 ? active.nestedRefs.every(event => event === active.nestedRefs[0]) : null,
+        distinctFromOuter: active.nestedRefs.length > 0 ? active.nestedRefs.every(event => !upRefs.includes(event)) : null},
       discretePriority: nativeFabricUIManager.unstable_DiscreteEventPriority,
       upEventIdentity: {callbackCount: upRefs.length,
         sameObject: upRefs.length > 0 ? upRefs.every(event => event === upRefs[0]) : null,

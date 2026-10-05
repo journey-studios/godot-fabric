@@ -1225,6 +1225,38 @@ All 71 executed code/configuration inputs match implementation 4342db0 via git
 show/SHA-256 (execution base de89fb2/dirty retained). Hosted CI for this slice is
 pending. No whole GF, checkpoint, weight or denominator closes.
 
+
+### Document Up reentrant dispatch (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[reentry evidence](docs/evidence/pointer-document-up-reentry/README.md) adds
+reentrant-dispatch stages to all eight lanes: **5,097 headless checks**, with the
+previous 4,401 check IDs preserved in order. Reentry happens inside native Up
+callbacks in the two current lanes with D; the other lanes keep manual/no-method
+controls. The graphical current/enabled lane passes **946 checks** with the same
+118 pixels; nested events change no React state, so no frame is added.
+
+A capture or bubble Document listener that dispatches a new `pointerup` on its
+Document runs the nested dispatch to completion: all three Document listeners at
+phase 2, untrusted, on one Event distinct from the Up, at Discrete priority, and
+the nested Event is clean on return. The native Up then resumes trusted with its
+phase, currentTarget, target, five-target path and `globalThis.event`, and the
+remaining outer listeners run trusted in one commit. Re-dispatching the native Up
+throws "already being dispatched" before changing it. A nested dispatch on B's
+Document reaches B's listeners with no native query, Raw, state, commit or
+contact change; B's next gesture qualifies normally. A retained control that
+leaks the nested Event into `globalThis.event` fails three probe checks, and the
+independent oracle rejects that report on its own.
+
+Only tests changed: the shared fixture gains `re-*` kinds and a separate nested
+channel (Down unchanged, 2,723 checks); contracts 255 Node/13 Python, 22 examples
+and static analysis pass; native/SDK bytes are unchanged. Nested dispatch on
+elements/Views, nested preventDefault/stopPropagation/errors, deeper nesting,
+React updates from nested events, Up faults and captured/no-hit routing remain
+open. All 71 executed code/configuration inputs match implementation f0c00ce via
+git show/SHA-256 (execution base dbd6324/dirty retained). Hosted CI for this slice
+is pending. No whole GF, checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
