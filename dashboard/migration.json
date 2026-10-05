@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "PanResponder original validado nas quatro lanes; próximos: CI desta fatia e as entregas paralelas (AppState, Touchables, Switch)"
   },
-  "updatedAt": "2026-10-05T22:38:23.527565+00:00",
+  "updatedAt": "2026-10-05T22:54:17.715322+00:00",
   "source": {
     "commit": "b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
     "url": "https://github.com/journey-studios/godot-fabric/commit/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
@@ -1693,7 +1693,7 @@
             },
             {
               "label": "Switch: 108 checks headless, controle do host anterior e sabotagem",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/181ed207d33f55ddbee2648377afd9517b506f5e/docs/evidence/switch/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e51ac18c146890420e7e8a75789faafa53b5bc07/docs/evidence/switch/README.md"
             }
           ]
         },
@@ -3334,7 +3334,7 @@
         "GF-17"
       ],
       "message": "Switch público: o Switch.js original do RN segue o caminho não Android sobre o SwitchComponentDescriptor compartilhado de iOS/macOS e um switch nativo desenhado no Godot. 108/108 checks headless com clique e toque reais em duas roots: controlado, valor fixo restaurado por setValue, desabilitado, cores, frame 63×28 (o do RN no iOS 26), remoção no meio do press e topChange bubbling no registro. O host anterior falha exatamente os 2 checks de montagem; a sabotagem do setValue falha 13 checks e o oráculo rejeita. Contracts 261 Node/13 Python e as suítes nativas passaram; CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/181ed207d33f55ddbee2648377afd9517b506f5e/docs/evidence/switch/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e51ac18c146890420e7e8a75789faafa53b5bc07/docs/evidence/switch/README.md"
     },
     {
       "id": "pointer-click-hosted-ci-and-pages-20261005",
