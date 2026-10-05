@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document pointermove validado nas oito lanes; próximos: CI das fatias de Move e eventos de hover"
   },
-  "updatedAt": "2026-10-05T17:02:55.163503+00:00",
+  "updatedAt": "2026-10-05T17:03:55.605751+00:00",
   "source": {
-    "commit": "f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
-    "scope": "Document pointermove em quatro flags originais: listeners originais de pointermove em Document e documentElement sobre o suporte nativo de Move da fatia de View. Oito lanes (interesse original/current × disabled, imperative-only, internal-only, enabled) com 1932 checks headless e 330 no viewport current/enabled com 24 pixels. Só a consulta current instalada (D) entrega; documentElement também exige I. Duas amostras por caso chegam aos listeners de capture em fase 1 e de bubble em fase 3, um Event por amostra em prioridade Default, TouchMove original depois e 1 commit por amostra; a raiz lê 1=true, ou 1=false/25=true para capture-only, depois dos pares false do alvo e dos ancestrais. Isolamento de B, remoção entre amostras, Cancel sem consulta, sentinel JSX por props e hover de mouse cobertos. Controle negativo retido (raiz ignorando o Document dono para Move) falha 52/40 checks e o oráculo independente rejeita. Só testes mudaram; Down 2723, Document Up 6451, contracts 257 Node/13 Python, static e publicação passaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "c2ad8f547d368a4993f3b75a264d2fd191e8ecf9",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9",
+    "scope": "Document pointermove em quatro flags originais: listeners originais de pointermove em Document e documentElement sobre o suporte nativo de Move da fatia de View. Oito lanes (interesse original/current × disabled, imperative-only, internal-only, enabled) com 1932 checks headless e 330 no viewport current/enabled com 24 pixels. Só a consulta current instalada (D) entrega; documentElement também exige I. Duas amostras por caso chegam aos listeners de capture em fase 1 e de bubble em fase 3, um Event por amostra em prioridade Default, TouchMove original depois e 1 commit por amostra; a raiz lê 1=true, ou 1=false/25=true para capture-only, depois dos pares false do alvo e dos ancestrais. Isolamento de B, remoção entre amostras, Cancel sem consulta, sentinel JSX por props e hover de mouse cobertos. Controle negativo retido (raiz ignorando o Document dono para Move) falha 52/40 checks e o oráculo independente rejeita. Só testes mudaram; Down 2723, Document Up 6451, contracts 257 Node/13 Python, static e publicação passaram. Execução sobre 2d57c9b/dirty; 20 inputs executados conferidos por git show/SHA-256 contra c2ad8f5; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -504,7 +504,7 @@
             },
             {
               "label": "Document pointermove: 1932 checks em oito lanes e 330 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-pointermove-interest/docs/evidence/pointer-document-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9/docs/evidence/pointer-document-move/README.md"
             }
           ]
         },
@@ -683,7 +683,7 @@
             },
             {
               "label": "Document pointermove: 1932 checks em oito lanes e 330 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-pointermove-interest/docs/evidence/pointer-document-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9/docs/evidence/pointer-document-move/README.md"
             }
           ]
         },
@@ -914,7 +914,7 @@
             },
             {
               "label": "Document pointermove: 1932 checks em oito lanes e 330 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-pointermove-interest/docs/evidence/pointer-document-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9/docs/evidence/pointer-document-move/README.md"
             }
           ]
         },
@@ -1344,7 +1344,7 @@
             },
             {
               "label": "Document pointermove: 1932 checks em oito lanes e 330 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-pointermove-interest/docs/evidence/pointer-document-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9/docs/evidence/pointer-document-move/README.md"
             }
           ]
         },
@@ -3155,7 +3155,7 @@
         "GF-13"
       ],
       "message": "Document pointermove em oito lanes: 1932 headless e 330 viewport/24 pixels. Só a consulta current com D entrega; capture em fase 1, bubble em fase 3, TouchMove depois, 1 commit por amostra; isolamento, remoção entre amostras, Cancel, sentinel JSX e hover de mouse cobertos. Controle negativo (raiz sem o Document dono) falha 52/40 checks e o oráculo rejeita. Down 2723 e Document Up 6451 intactos. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-pointermove-interest/docs/evidence/pointer-document-move/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/c2ad8f547d368a4993f3b75a264d2fd191e8ecf9/docs/evidence/pointer-document-move/README.md"
     },
     {
       "id": "pointer-up-fault-hosted-ci-and-pages-20261005",

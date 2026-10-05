@@ -1472,8 +1472,10 @@ target, a JSX `onPointerMove` sentinel and Move Raw) and a wrapper, probe, oracl
 and CI step run the matrix; Down 2,723, Document Up 6,451, contracts 257 Node/13
 Python, static analysis and the publication scan pass, and native/SDK bytes are
 those of the View Move slice. Root query faults, once/AbortSignal, refs, mutation
-and reentry for Document Move remain open. Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+and reentry for Document Move remain open. All 20 executed code/configuration
+inputs match implementation c2ad8f5 via git show/SHA-256 (execution base
+2d57c9b/dirty retained). Hosted CI for this slice is pending. No whole GF,
+checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
