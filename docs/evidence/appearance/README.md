@@ -156,3 +156,9 @@ entradas do build nativo e 6 de verificação, com sobreposição) correspondem 
 implementação `a402a1f9f74ec6e4426f108ff93fe731afa3a4a0` por `git show`/SHA-256.
 A execução partiu de `2ec988e` com uma árvore idêntica à da implementação; este
 pin pós-commit não é uma nova corrida.
+
+Na revisão, `removeListeners` passou a comparar a contagem antes de convertê-la
+para `uint64_t` (um `double` acima do tipo não tem conversão definida) em
+`15e8da4`. No host recompilado (`d33c78aa`) o Appearance repetiu os 67 checks e o
+AppState passou de novo, com o controle do host anterior presente; o recibo
+registra a corrida em `reviewReruns`.

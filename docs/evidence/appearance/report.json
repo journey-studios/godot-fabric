@@ -1028,5 +1028,28 @@
         "logSha256": "2140014586af9ee6a690e9aba4d1501c6bd178148f1bce6e5b42dee49e07f3cd"
       }
     }
-  }
+  },
+  "reviewReruns": [
+    {
+      "reason": "CodeRabbit review on PR 35: removeListeners cast a double beyond uint64_t before comparing it",
+      "commit": "15e8da4",
+      "changedSource": {
+        "native/system_appearance.h": "c0560590d4482d5a38a5925193210ace49a7aecb328ab9b0375b60de4c6f90fe"
+      },
+      "nativeHostSha256": "d33c78aa6ac934e511e306bec877d15841a2b7dcc2852a51ab922e266d93555c",
+      "commands": [
+        "npm run test:appearance",
+        "npm run test:app-state"
+      ],
+      "appearanceChecks": 67,
+      "appearancePassed": 67,
+      "appearanceReportSha256": "b83fc3fa35b72321d8e514b7d1e31562262a6e1bc9cb09f57520f9628fe0c8cd",
+      "precedingHostControlStillPresent": true,
+      "appStateExitCode": 0,
+      "logsSha256": {
+        "test-appearance": "5ab1b009472b4cca77f3e8a7ba6863937546fbcf926a2514ab729ade06804d38",
+        "test-app-state": "df55e5a234c541d8ce084e3395b588386d68c178a83f5f9a2749a92e4685ec42"
+      }
+    }
+  ]
 }
