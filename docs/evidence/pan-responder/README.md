@@ -84,8 +84,10 @@ ou denominador foi fechado.
 Na revisão, a comparação entre lanes passou a incluir `x0`, `y0`, `moveX` e
 `moveY` (antes cobria callbacks, deslocamento e toques ativos). O runner de
 `9a6ee3e` repetiu os 128 checks no mesmo host, com os mesmos bundles e IDs; só o
-próprio runner mudou entre as fontes fixadas, e o recibo registra a nova corrida em
-`reviewRerun`.
+próprio runner mudou entre as fontes fixadas. Depois o runner passou a exigir os
+32 checks em cada lane normal (`54129b3`), e a árvore mesclada com a `main`
+(AppState) repetiu os 128 checks no host dela (`06a33274`), com os mesmos IDs e
+callbacks. O recibo registra as duas corridas em `reviewReruns`.
 
 As 14 fontes de código/configuração executadas (11 produtoras do bundle e 3 de
 verificação) correspondem à implementação `b3327e4237b1b7e768b1698194dd5f4f077e5b80`
