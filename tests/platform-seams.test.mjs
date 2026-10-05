@@ -264,3 +264,50 @@ test("the Godot focus bridge retains original TextInputState guards and singleto
     "react-native/Libraries/Utilities/codegenNativeCommands.js", "src/text-input-state.js"])
     assert.ok(Object.keys(result.metafile.inputs).some(input => input.endsWith(suffix)), suffix);
 });
+
+test("public Switch is RN's original Switch.js over the generated RCTSwitch ViewConfig and setValue command", async t => {
+  const directory = fixture(t, {"App.js":
+    'export {default as Native, Commands} from "react-native/Libraries/Components/Switch/SwitchNativeComponent";\n'
+    + 'export {get as viewConfig, customBubblingEventTypes} from "react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry";'});
+  // RN's codegen Babel plugin compiles the original spec. The static ViewConfig
+  // path never reads the legacy UIManager; commands stop at the renderer seam.
+  const result = await build({absWorkingDir: directory, entryPoints: ["App.js"], bundle: true,
+    write: false, format: "cjs", platform: "neutral", mainFields: ["main"],
+    define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"}, metafile: true,
+    plugins: [{name: "switch-boundaries", setup(builder) {
+      builder.onLoad({filter: /\/src\/ui-manager\.js$/}, () => ({contents:
+        'export default new Proxy({}, {get(_, name) { throw new Error("legacy UIManager." + String(name)); }});', loader: "js"}));
+      builder.onLoad({filter: /\/src\/renderer-proxy\.js$/}, () => ({contents:
+        'export function dispatchCommand(ref, name, args) { globalThis.commandCalls.push({ref, name, args}); }', loader: "js"}));
+    }}, ...plugins()]});
+  const commandCalls = [];
+  const host = {RN$Bridgeless: true, nativeModuleProxy: {
+    SourceCode: {getConstants: () => ({scriptURL: "file:///unit-fixture.js"})},
+    DeviceInfo: {getConstants: () => ({Dimensions: {
+      window: {width: 800, height: 600, scale: 1, fontScale: 1},
+      screen: {width: 800, height: 600, scale: 1, fontScale: 1},
+    }})},
+  }, RN$registerCallableModule() {}};
+  const {Native, Commands, viewConfig, customBubblingEventTypes} = execute(result, {commandCalls, global: host, ...host});
+  assert.equal(Native, "RCTSwitch");
+  const config = viewConfig("RCTSwitch");
+  assert.equal(config.uiViewClassName, "RCTSwitch");
+  assert.ok(config.validAttributes.disabled === true && config.validAttributes.value === true);
+  for (const name of ["tintColor", "onTintColor", "thumbTintColor", "thumbColor", "trackColorForFalse", "trackColorForTrue"]) {
+    assert.equal(typeof config.validAttributes[name].process("#ff3b30"), "number", name);
+  }
+  // Only the iOS ViewConfig lists onChange as an attribute; it is still an event.
+  assert.equal(config.validAttributes.onChange, undefined);
+  assert.deepEqual(Object.keys(config.validAttributes.style).sort(), Object.keys(controlViewConfig.validAttributes.style).sort());
+  assert.deepEqual({...config.bubblingEventTypes.topChange.phasedRegistrationNames}, {captured: "onChangeCapture", bubbled: "onChange"});
+  assert.ok(config.bubblingEventTypes.topTouchStart && config.directEventTypes.topLayout);
+  assert.equal(customBubblingEventTypes.topChange, config.bubblingEventTypes.topChange);
+  Commands.setValue({tag: 7}, false);
+  assert.deepEqual(commandCalls.map(call => [call.ref.tag, call.name, Array.from(call.args)]), [[7, "setValue", [false]]]);
+  const publicEntry = fixture(t, {"Public.js": 'export {Switch} from "react-native";'});
+  const inputs = Object.keys((await compile(publicEntry, "Public.js")).metafile.inputs);
+  for (const suffix of ["react-native/Libraries/Components/Switch/Switch.js",
+    "react-native/src/private/components/switch/specs/SwitchNativeComponent.js"]) {
+    assert.ok(inputs.some(input => input.endsWith(suffix)), suffix);
+  }
+});

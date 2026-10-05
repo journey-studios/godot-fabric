@@ -289,6 +289,17 @@ jobs:
             build/pointer-document-hover-original-*.log
             build/pointer-document-hover-current-*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:switch
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-switch
+          path: |
+            build/switch-report.json
+            build/switch-current-report.json
+            build/switch-comparison.json
+            build/switch-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
