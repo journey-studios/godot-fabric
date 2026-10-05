@@ -140,3 +140,7 @@ binário nativo, não comparações entre hosts nativos antigos e novos. A CI de
 fatia ainda será executada; a [CI da fatia refs](../pointer-document-up-refs/hosted-ci.json)
 continua válida para os seus 2.709 checks. Nenhum GF, checkpoint, dependência,
 peso ou denominador foi fechado.
+
+As 71 fontes de código/configuração executadas correspondem à implementação
+`4342db0677731d1ba474ff4e32659b2828ab1831` por `git show`/SHA-256. O recibo preserva a
+base de89fb2 e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.

@@ -10,9 +10,9 @@
   },
   "updatedAt": "2026-10-05T13:45:35.438794+00:00",
   "source": {
-    "commit": "f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
-    "scope": "Document Up mutação durante dispatch: 4401 checks headless nas oito lanes (2709 anteriores preservados em ordem) e 835 viewport/9 frames/118 pixels. Mutações dentro de callbacks Up nativos reais: capture remove bubble → só DocC no mesmo Up e o gesto seguinte consulta 36=false/37=true; remove/abort de irmão pendente no Map em iteração é pulado (removed); add no mesmo Map espera o próximo gesto (re-add duplicado no-op); capture que adiciona RootB (I) e DocB entrega os dois no mesmo Up embora a consulta do root só visse capture; add no Document de B não altera B até o gesto de B. Controle negativo (remoção na fase errada) falha 8 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "4342db0677731d1ba474ff4e32659b2828ab1831",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/4342db0677731d1ba474ff4e32659b2828ab1831",
+    "scope": "Document Up mutação durante dispatch: 4401 checks headless nas oito lanes (2709 anteriores preservados em ordem) e 835 viewport/9 frames/118 pixels. Mutações dentro de callbacks Up nativos reais: capture remove bubble → só DocC no mesmo Up e o gesto seguinte consulta 36=false/37=true; remove/abort de irmão pendente no Map em iteração é pulado (removed); add no mesmo Map espera o próximo gesto (re-add duplicado no-op); capture que adiciona RootB (I) e DocB entrega os dois no mesmo Up embora a consulta do root só visse capture; add no Document de B não altera B até o gesto de B. Controle negativo (remoção na fase errada) falha 8 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre de89fb2/dirty; 71 inputs executados conferidos por git show/SHA-256 contra 4342db0; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -436,7 +436,7 @@
             },
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-dispatch-mutation/docs/evidence/pointer-document-up-mutation/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
             }
           ]
         },
@@ -571,7 +571,7 @@
             },
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-dispatch-mutation/docs/evidence/pointer-document-up-mutation/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
             }
           ]
         },
@@ -758,7 +758,7 @@
             },
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-dispatch-mutation/docs/evidence/pointer-document-up-mutation/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
             }
           ]
         },
@@ -1144,7 +1144,7 @@
             },
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-dispatch-mutation/docs/evidence/pointer-document-up-mutation/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
             }
           ]
         },

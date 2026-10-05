@@ -1219,8 +1219,9 @@ checks) and the Up probe/oracle gain the stages. Contracts 255 Node/13 Python,
 22 examples and static analysis pass; native/SDK bytes are unchanged. Reentrant
 dispatch, View/element listener mutation, stopPropagation with mutation, listener
 errors during mutation, Up faults and captured/no-hit routing remain open.
-Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
-denominator closes.
+All 71 executed code/configuration inputs match implementation 4342db0 via git
+show/SHA-256 (execution base de89fb2/dirty retained). Hosted CI for this slice is
+pending. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
