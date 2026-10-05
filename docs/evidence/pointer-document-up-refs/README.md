@@ -130,3 +130,9 @@ dos logs, além dos blobs da árvore de checkout. Não houve findings.
 
 A CI certifica apenas as lanes headless. O viewport com 535 checks e 90 pixels
 continua sendo evidência local; os limites acima não mudam.
+
+A [publicação no Pages](publication.json) passou build/deploy no
+[run 37317251249](https://github.com/journey-studios/godot-fabric/actions/runs/37317251249)
+com o renderer do main e os dados da branch em `2c00f1e`. O JSON público completo,
+excluindo apenas os metadados de publicação gerados, e a API local ao vivo são
+iguais aos dados commitados. Isso publica a prova e o recibo de CI acima.
