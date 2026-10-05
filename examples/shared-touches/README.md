@@ -4,8 +4,10 @@ This validation presses the original `Pressable` of two roots of one Hermes
 application with actual Godot touches and the mouse at the same time. RN keeps
 one JS responder per runtime, so each TouchEvent lists the active touches of the
 whole application: a touch in one root can neither take the gesture another
-root holds nor end it while that root's own touch is down. It runs in four flag lanes (disabled, imperative-only,
-internal-only and enabled), covering both of RN's responder implementations. Its
+root holds nor end it while that root's own touch is down, though canceling it
+terminates the one responder, as on one RN surface. It runs in four flag lanes
+(disabled, imperative-only, internal-only and enabled), covering both of RN's
+responder implementations. Its
 fixture and command are outside the interactive launcher catalog; the behavior
 needs no flag.
 

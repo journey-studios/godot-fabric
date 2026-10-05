@@ -246,9 +246,10 @@ and bundle ([receipt](app-state/hosted-ci.json)).
 The [shared touches record](shared-touches/README.md) lists every root's active
 touches in each TouchEvent, because the roots of one application share RN's one
 JS responder: 92 headless checks in four flag lanes over two roots' original
-`Pressable`s. A touch in another root no longer releases a held press, and the
-two responder implementations differ only where RN's do, when the responder's
-own touch ends first. The preceding host fails exactly the 9 normative checks.
+`Pressable`s. A touch ending in another root no longer releases a held press
+while the press's own touch is down, while a canceled touch still terminates the
+one responder; the two responder implementations differ only where RN's do,
+when the responder's own touch ends first. The preceding host fails exactly the 9 normative checks.
 Hosted CI pending.
 
 The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's

@@ -226,9 +226,11 @@ lifecycle checks. Hosted CI repeated the 75 checks
 
 The [shared touches example](examples/shared-touches/README.md) presses two
 roots of one application at the same time: every TouchEvent lists the whole
-application's touches, as RN's one JS responder expects, so a touch in one root
-no longer releases a press held in another. 92 headless checks in four flag
-lanes; the preceding host fails exactly 9. [Evidence](docs/evidence/shared-touches/README.md).
+application's touches, as RN's one JS responder expects, so a touch ending in
+one root no longer releases a press held in another while that press's own
+touch is down; a canceled touch still terminates the one responder, as on one RN
+surface. 92 headless checks in four flag lanes; the preceding host fails exactly
+9. [Evidence](docs/evidence/shared-touches/README.md).
 
 The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
 over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
