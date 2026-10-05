@@ -132,3 +132,10 @@ responders, hardware, exports mobile e performance seguem abertos.
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
+
+As 76 fontes de código/configuração executadas (21 produtoras do bundle,
+55 entradas do build nativo e 5 de verificação, com sobreposição)
+correspondem à implementação `71a64c2d00b2607e29665190a461bf6197fe31c7` por `git show`/SHA-256. A execução partiu de
+1302d51 com as mudanças desta fatia ainda locais; o commit ea091a0, que entrou
+durante a corrida, só registra recibos da fatia de hover. Este pin pós-commit não é
+uma nova corrida.

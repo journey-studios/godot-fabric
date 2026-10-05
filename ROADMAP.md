@@ -1600,7 +1600,9 @@ publication scan), `test:recovery` and the 24 native suites pass, including Down
 2,731, Document Up 6,459, View Up 297, query 187, resolver 66, Move 220, Document
 Move 1,940, hover 158, root path 82 and 22 examples; codegen, the native SDK
 pack/verify, adapters (loader 89 checks/21 cases, runtime 13 runs/213 checks),
-consumer (30 + 40) and cold start pass too. Document hover across the flag matrix, documentElement listeners,
+consumer (30 + 40) and cold start pass too. All 76 executed code/configuration
+inputs match implementation 71a64c2 via git show/SHA-256 (execution base
+1302d51/dirty retained; ea091a0 only records hover receipts). Document hover across the flag matrix, documentElement listeners,
 surface selection for empty-area input, pen hover, capture while hovering,
 responders and multi-touch remain open. Hosted CI for this slice is pending. No
 whole GF, checkpoint, weight or denominator closes.

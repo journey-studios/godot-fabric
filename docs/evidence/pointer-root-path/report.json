@@ -9,7 +9,7 @@
   ],
   "docsOnlyCommitsTouchNoExecutedInput": true,
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": null,
+  "implementationCommit": "71a64c2d00b2607e29665190a461bf6197fe31c7",
   "dependsOn": "View hover native interest (journey-studios/godot-fabric#26)",
   "environment": {
     "godot": "4.7.2-stable (official)",
@@ -1435,5 +1435,17 @@
         "logSha256": "3b6bf9fee8693e85c9112be461037cb1e5c4ad7a7a731a260c66f352abd34858"
       }
     }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/71a64c2d00b2607e29665190a461bf6197fe31c7",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 76,
+    "pinSetCounts": {
+      "sourcePins": 21,
+      "nativeSourcePins": 55,
+      "verificationSourcePins": 5
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
   }
 }

@@ -10,8 +10,8 @@
   },
   "updatedAt": "2026-10-05T18:49:27.688050+00:00",
   "source": {
-    "commit": "5560798bbf28c962735b5ec80791f707272d1ac2",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/5560798bbf28c962735b5ec80791f707272d1ac2",
+    "commit": "71a64c2d00b2607e29665190a461bf6197fe31c7",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/71a64c2d00b2607e29665190a461bf6197fe31c7",
     "scope": "Caminho da raiz para pontos vazios: um ponto sem View dentro da superfície resolve para a view raiz, como no RN (TouchTargetHelper no Android, hitTest da RCTRootComponentView no iOS), e a raiz fica no caminho de hover do processador; só um ponto fora sai dela. A raiz nunca é alvo: no RN 0.87.1 a família raiz não tem dispatcher nem instance handle. A consulta de caminho, os laços de enter/leave e o binding a ignoram, enquanto os lookups capture dela propagam enter/leave para os descendentes que entram ou saem junto. Isso corrige um crash do host anterior (SIGSEGV em dispatchEventToJS) com listener capture de pointerenter/pointerleave no Document. 82 checks headless com mouse e toque; o mesmo bundle no host anterior falha 9 checks no caso de View e cai no caso de Document. Seleção de superfície inalterada; chamadas de validação de inverse() passam por require_invertible(). CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
@@ -524,7 +524,7 @@
             },
             {
               "label": "Caminho da raiz: 82 checks, host anterior com 9 falhas e crash",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-root-path/docs/evidence/pointer-root-path/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/71a64c2d00b2607e29665190a461bf6197fe31c7/docs/evidence/pointer-root-path/README.md"
             }
           ]
         },
@@ -723,7 +723,7 @@
             },
             {
               "label": "Caminho da raiz: 82 checks, host anterior com 9 falhas e crash",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-root-path/docs/evidence/pointer-root-path/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/71a64c2d00b2607e29665190a461bf6197fe31c7/docs/evidence/pointer-root-path/README.md"
             }
           ]
         },
@@ -974,7 +974,7 @@
             },
             {
               "label": "Caminho da raiz: 82 checks, host anterior com 9 falhas e crash",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-root-path/docs/evidence/pointer-root-path/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/71a64c2d00b2607e29665190a461bf6197fe31c7/docs/evidence/pointer-root-path/README.md"
             }
           ]
         },
@@ -1424,7 +1424,7 @@
             },
             {
               "label": "Caminho da raiz: 82 checks, host anterior com 9 falhas e crash",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-root-path/docs/evidence/pointer-root-path/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/71a64c2d00b2607e29665190a461bf6197fe31c7/docs/evidence/pointer-root-path/README.md"
             }
           ]
         },
@@ -3235,7 +3235,7 @@
         "GF-13"
       ],
       "message": "Caminho da raiz: um ponto vazio dentro da superfície resolve para a raiz, como no RN, e ela fica no caminho de hover; nunca é alvo de evento. Um listener capture de enter/leave no Document recebe container, pai e alvo só ao entrar e sair da superfície. Corrige um crash do host anterior (sinal 11 em dispatchEventToJS) com esse listener. 82 headless; o host anterior falha 9 checks no caso de View e cai no de Document; controles 8/12/3/45/32 refeitos. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/document-hover-root-path/docs/evidence/pointer-root-path/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/71a64c2d00b2607e29665190a461bf6197fe31c7/docs/evidence/pointer-root-path/README.md"
     },
     {
       "id": "pointer-hover-hosted-ci-and-pages-20261005",
