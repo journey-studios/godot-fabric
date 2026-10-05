@@ -210,6 +210,8 @@ the native Up itself throws before changing it. A nested dispatch on another
 root's Document reaches that root's listeners without native query, Raw, state,
 commit or contact change. A retained control that leaks the nested Event into
 `globalThis.event` fails three probe checks, and the oracle rejects it on its own.
+Hosted run 37321794370 repeated the 5,097 headless checks
+([receipt](../evidence/pointer-document-up-reentry/hosted-ci.json)).
 
 ## Boundaries still open
 

@@ -515,5 +515,6 @@ completion untrusted at target, at the Up's Discrete priority, without native
 query or React update; the native Up then resumes trusted with its phase,
 currentTarget, target, path and `globalThis.event` intact. Re-dispatching the
 native Up itself throws `The event is already being dispatched.` The eight-lane
-matrix passes 5,097 headless checks and the graphical lane 946 checks.
+matrix passes 5,097 headless checks, also passed in hosted CI, and the graphical
+lane 946 checks.
 [Evidence and limits](docs/evidence/pointer-document-up-reentry/README.md).

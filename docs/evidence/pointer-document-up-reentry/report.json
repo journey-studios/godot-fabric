@@ -3984,8 +3984,18 @@
     "publicationScanPassed": true
   },
   "hostedCI": {
-    "status": "pending-reentry-slice",
-    "previousRefsAudit": "../pointer-document-up-refs/hosted-ci.json"
+    "status": "verified-hosted-reentry-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "5ef018ff8880c2272baf2be065c457e9dc4d9db371a177f44ff4ca9c707836dc",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37321794370",
+    "headSha": "4a907dd2f5fa719f77a7ba5e09d2bfceab855f5f",
+    "checkoutSha": "d52156953cb52fc488df9ccdefa895b49ec93442",
+    "jobs": 5,
+    "headlessChecks": 5097,
+    "checkIdsBundlesAndReentryStagesEqualLocal": true,
+    "trackedInputsMatchImplementationInCheckoutTree": 71,
+    "viewportAndPixelsRemainLocal": true,
+    "previousMutationAudit": "../pointer-document-up-mutation/hosted-ci.json"
   },
   "limits": [
     "Reentry starts from delivered Document capture/bubble Up callbacks and dispatches a new untrusted pointerup on the own or another root's Document, or re-dispatches the native Event itself.",

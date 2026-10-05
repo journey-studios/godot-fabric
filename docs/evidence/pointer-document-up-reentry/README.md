@@ -116,9 +116,26 @@ hardware e performance continuam abertos.
 
 Original/current são controles do modo de interesse do SDK sobre o mesmo
 binário nativo, não comparações entre hosts nativos antigos e novos. A CI desta
-fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+fatia está no [recibo hospedado](hosted-ci.json). Nenhum GF, checkpoint,
+dependência, peso ou denominador foi fechado.
 
 As 71 fontes de código/configuração executadas correspondem à implementação
 `f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24` por `git show`/SHA-256. O recibo preserva a
 base dbd6324 e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.
+
+## CI hospedada
+
+O workflow Contracts
+[37321794370](https://github.com/journey-studios/godot-fabric/actions/runs/37321794370)
+passou nos cinco jobs para o head `4a907dd`. O job nativo fez checkout do merge
+`d521569` (`fc13fc9` + `4a907dd`), e as 71 fontes de código/configuração
+dessa árvore têm os mesmos blobs da implementação `f0c00ce`. O artefato
+`native-pointer-document-up` contém as oito lanes headless com **5.097 checks**,
+IDs idênticos aos da baseline local, os mesmos bundles e os 19 estágios
+`reentry/*` em cada lane. Fora timestamps de evento, a versão patch do Node
+(v22.23.2 no runner) e o hash do host compilado pelo runner, os relatórios são
+iguais aos locais. O [recibo](hosted-ci.json) registra os hashes do zip, dos
+relatórios e dos logs, além dos blobs da árvore de checkout. Não houve findings.
+
+A CI certifica apenas as lanes headless. O viewport com 946 checks e 118 pixels
+e o controle negativo continuam sendo evidência local; os limites acima não mudam.

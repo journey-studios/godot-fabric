@@ -1259,8 +1259,13 @@ and static analysis pass; native/SDK bytes are unchanged. Nested dispatch on
 elements/Views, nested preventDefault/stopPropagation/errors, deeper nesting,
 React updates from nested events, Up faults and captured/no-hit routing remain
 open. All 71 executed code/configuration inputs match implementation f0c00ce via
-git show/SHA-256 (execution base dbd6324/dirty retained). Hosted CI for this slice
-is pending. No whole GF, checkpoint, weight or denominator closes.
+git show/SHA-256 (execution base dbd6324/dirty retained). Hosted Contracts run
+37321794370 passed all five jobs at 4a907dd (merge checkout d521569); its
+[audited artifact](docs/evidence/pointer-document-up-reentry/hosted-ci.json)
+repeats the 5,097 headless checks with identical IDs, bundles and reentry
+stages, and all 71 tracked inputs match f0c00ce in the checkout tree. The
+viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
+weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
