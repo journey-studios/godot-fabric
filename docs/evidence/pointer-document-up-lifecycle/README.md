@@ -106,9 +106,10 @@ Mobile/exports, hardware, development renderer e performance seguem abertos.
 A implementação nativa e o SDK são os anteriores; seus recibos permanecem
 separados. A regressão Down atual passou **2.723 checks**; contracts passaram
 **255 Node/13 Python**, análise estática e scan de publicação passaram.
-A [CI anterior](../pointer-document-up/hosted-ci.json) passou1371checks em84270fb;
-a CI específica desta ampliação2143 permanece pendente. Veja o [exemplo](../../../examples/pointer-document-up/README.md)
-e a [pesquisa](../../research/pointer-document-up.md).
+A [CI anterior](../pointer-document-up/hosted-ci.json) passou 1.371 checks em 84270fb.
+A CI desta ampliação está no [recibo hospedado](hosted-ci.json). Veja o
+[exemplo](../../../examples/pointer-document-up/README.md) e a
+[pesquisa](../../research/pointer-document-up.md).
 
 As71 fontes de código/configuração executadas correspondem à implementação
 `a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168` por `git show`/SHA-256. O recibo preserva
@@ -119,3 +120,20 @@ recibo curado,71 fontes/24 RN, cinco PNGs (hashes/CRC/pixels), Down2723 e
 contratos255Node/13Python. As duas ambiguidades de relatório foram corrigidas:
 CI anterior confirmada e identidade Up `null` quando não há Up. O snapshot
 auditado precede os metadados de pin e self-link; resultados executados preservados.
+
+## CI hospedada
+
+O workflow Contracts
+[37246479501](https://github.com/journey-studios/godot-fabric/actions/runs/37246479501)
+passou nos cinco jobs para o head `fc52215`. O job nativo fez checkout do merge
+`3eaf9c2` (main `adad606` + `fc52215`), e as 71 fontes de código/configuração
+dessa árvore têm os mesmos blobs da implementação `a3e6c6b`. O artefato
+`native-pointer-document-up` contém as oito lanes headless com **2.143 checks**,
+IDs idênticos aos da baseline local, os mesmos bundles e os 23 estágios
+`lifecycle/*` em cada lane. Fora timestamps de evento, a versão patch do Node
+(v22.23.2 no runner) e o hash do host compilado pelo runner, os relatórios são
+iguais aos locais. O [recibo](hosted-ci.json) registra os hashes do zip, dos
+relatórios e dos logs, além dos blobs da árvore de checkout. Não houve findings.
+
+A CI certifica apenas as lanes headless. O viewport com 414 checks e 62 pixels
+continua sendo evidência local; os limites acima não mudam.

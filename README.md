@@ -140,7 +140,8 @@ TouchEnd/Raw and terminal cleanup remain intact. Its
 checks, 24 actual pixels and the preceding host's eight failures with the same
 current SDK bundle. Public flags remain off; Document Up, other flag branches
 and broader event/lifecycle acceptance are open. All 16 proportional regression
-commands and fresh SDK pack/verify passed; this Up slice’s hosted CI is pending.
+commands and fresh SDK pack/verify passed; its hosted CI is verified in
+[run 37241023275](docs/evidence/pointer-up/hosted-ci.json).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -460,7 +461,7 @@ passes 243 checks and 20 native pixels. Document capture/bubble increment A
 twice in one commit while B stays unchanged. Methods follow the original gates;
 Event identity, own-root queries, removal, Cancel and stop are checked.
 [Evidence and limits](docs/evidence/pointer-document-up/README.md) keep this
-local proof separate from its pending hosted CI.
+local proof separate from its [hosted CI receipt](docs/evidence/pointer-document-up/hosted-ci.json).
 
 | Before Document Up | After Document capture and bubble |
 | --- | --- |
@@ -469,8 +470,9 @@ local proof separate from its pending hosted CI.
 ### Document Up listener lifecycle
 
 The [isolated example](examples/pointer-document-up/README.md) now validates
-original RN `once` and `AbortSignal` with actual Godot input:2,143 checks in eight
-flag/SDK lanes and414 graphical checks, including62 independently decoded pixels.
+original RN `once` and `AbortSignal` with actual Godot input: 2,143 checks in eight
+flag/SDK lanes, also passed in hosted CI, and 414 graphical checks, including 62
+independently decoded pixels.
 The first once Up extends A's yellow counter; the second preserves it while B
 remains unchanged. [Evidence and remaining boundaries](docs/evidence/pointer-document-up-lifecycle/README.md).
 

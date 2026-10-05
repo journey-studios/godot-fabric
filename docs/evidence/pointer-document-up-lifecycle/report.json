@@ -3714,10 +3714,19 @@
     "publicationScanPassed": true
   },
   "hostedCI": {
-    "status": "pending-lifecycle-slice",
+    "status": "verified-hosted-lifecycle-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "be4a34ab2cfada0733ff41ff49af5199ec16e2c8af847a6f877f398ddb450e12",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37246479501",
+    "headSha": "fc522150a33f1bf66dc9ca9c1ba7dfe5bd56a181",
+    "checkoutSha": "3eaf9c2c6f963d9c7686d294fcdc20787fcdf20e",
+    "jobs": 5,
+    "headlessChecks": 2143,
+    "checkIdsBundlesAndLifecycleStagesEqualLocal": true,
+    "trackedInputsMatchImplementationInCheckoutTree": 71,
+    "viewportAndPixelsRemainLocal": true,
     "baseline1371Audit": "../pointer-document-up/hosted-ci.json",
-    "baselineRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477",
-    "baselineDoesNotCertifyLifecycle2143": true
+    "baselineRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
   },
   "limits": [
     "Document bubble once and AbortSignal only; element/View lifecycle and capture-phase lifecycle are not certified by this slice.",

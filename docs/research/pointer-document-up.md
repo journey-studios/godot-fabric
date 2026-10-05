@@ -6,8 +6,9 @@ owns 1,371 headless checks, 243 actual macOS viewport checks and 20 native pixel
 The final Down regression passes 2,723 checks, contracts 255 Node/13 Python and
 static analysis passes. Native/SDK production bytes are unchanged from the
 preceding View Up implementation; its SDK proof stays separate. This slice has
-its own hosted gate: baseline84270fb passed1,371 checks and all five workflow jobs.
-The later lifecycle2143 slice below has separate local proof and pending CI.
+its own hosted gate: baseline 84270fb passed 1,371 checks and all five workflow jobs.
+The later lifecycle slice below passed 2,143 hosted checks in run 37246479501
+([receipt](../evidence/pointer-document-up-lifecycle/hosted-ci.json)).
 Public EventTarget defaults remain disabled.
 
 ## The root-level contract

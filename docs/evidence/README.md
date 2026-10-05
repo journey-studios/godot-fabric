@@ -124,8 +124,9 @@ paired comparison. The initial earlier-SDK negative receipt remains historical.
 Bubble `36=true` and capture-only `36=false` then `37=true` have independent
 controls. B actually queries false while A remains held; Cancel and stop clean
 up separately. View/both-flags acceptance does not certify Document Up,
-captured/null-target Up, full lifecycle/events, mobile or hardware. Regression,
-SDK and hosted CI acceptance for this slice are pending; public flags stay off.
+captured/null-target Up, full lifecycle/events, mobile or hardware. Regression
+and SDK checks passed, and its [hosted CI](pointer-up/hosted-ci.json) passed in
+run 37241023275; public flags stay off.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
@@ -315,4 +316,4 @@ B held, Cancel and stop are verified. Down regression passes 2,723 checks.
 Hosted Document Up is pending; native/SDK bytes reuse the separately proven
 View Up implementation and full event/RN/ABI acceptance remains open.
 
-- [Document Up bubble once/AbortSignal](pointer-document-up-lifecycle/README.md):2,143 headless checks,414 native viewport checks,62 pixels and five actual PNGs; original/current SDK controls and pending lifecycle CI are separate.
+- [Document Up bubble once/AbortSignal](pointer-document-up-lifecycle/README.md):2,143 headless checks,414 native viewport checks,62 pixels and five actual PNGs; original/current SDK controls are separate. Hosted run 37246479501 passed the same 2,143 checks with identical IDs, bundles and lifecycle stages ([receipt](pointer-document-up-lifecycle/hosted-ci.json)).

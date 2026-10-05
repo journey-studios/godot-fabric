@@ -1142,9 +1142,14 @@ native Up. D-disabled fixtures associate no signal; this does not gate the
 AbortSignal class. Down regression passes2723, contracts255Node/13Python, static
 and publication scan pass. Production native/SDK bytes are unchanged. Execution
 base245ccce/dirty is retained; all71 executed code/configuration inputs match
-implementationa3e6c6b via git show/SHA-256. Lifecycle CI remains pending.
-The older [84270fb hosted audit](docs/evidence/pointer-document-up/hosted-ci.json)
-confirms1371 baseline checks and five successful jobs, separately from2143 local.
+implementationa3e6c6b via git show/SHA-256. Hosted Contracts run 37246479501
+passed all five jobs at fc52215 (merge checkout 3eaf9c2); its
+[audited artifact](docs/evidence/pointer-document-up-lifecycle/hosted-ci.json)
+repeats the 2,143 headless checks with identical IDs, bundles and lifecycle
+stages, and all 71 tracked inputs match a3e6c6b in the checkout tree. The
+viewport/pixel proof stays local. The older
+[84270fb hosted audit](docs/evidence/pointer-document-up/hosted-ci.json)
+still confirms the 1,371 baseline checks separately.
 
 This slice covers bubble Document listeners. Other phases and View/element
 lifecycle, dispatch-time abort/mutation/reentrancy, refs/remount, Up faults,
