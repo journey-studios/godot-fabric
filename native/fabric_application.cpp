@@ -1,6 +1,7 @@
 #include "fabric_application.h"
 #include "application_runtime.h"
 #include "adapter_loader.h"
+#include "app_lifecycle.h"
 #include <godot_cpp/classes/project_settings.hpp>
 #include "fabric_surface.h"
 #include <godot_cpp/classes/file_access.hpp>
@@ -17,7 +18,8 @@ using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
 static String gd(const std::string &value) { return String::utf8(value.c_str()); }
 
-FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_godot::GameServiceRegistry>()) {
+FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_godot::GameServiceRegistry>()),
+    app_state(std::make_shared<fabric_godot::AppLifecycle>()) {
   set_process_mode(PROCESS_MODE_ALWAYS); set_process(true);
 }
 FabricApplication::~FabricApplication() { stop(); }
@@ -99,7 +101,8 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             }
             return metrics;
           },
-          utf8(scenario), get_instance_id(), game_services, adapter_loader ? adapter_loader->registry() : nullptr);
+          utf8(scenario), get_instance_id(), game_services, app_state,
+          adapter_loader ? adapter_loader->registry() : nullptr);
     }
     int legacy_id = 0;
     if (!bundle_loaded) {
@@ -121,6 +124,18 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
 }
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
 void FabricApplication::_exit_tree() { stop(); }
+void FabricApplication::_notification(int what) {
+  // The platform layers call MainLoop::notification for these OS events and
+  // SceneTree::_notification propagates them to every node in the tree.
+  switch (what) {
+    case NOTIFICATION_APPLICATION_FOCUS_IN: app_state->focus(true); break;
+    case NOTIFICATION_APPLICATION_FOCUS_OUT: app_state->focus(false); break;
+    case NOTIFICATION_APPLICATION_PAUSED: app_state->pause(true); break;
+    case NOTIFICATION_APPLICATION_RESUMED: app_state->pause(false); break;
+    case NOTIFICATION_OS_MEMORY_WARNING: app_state->memory_warning(); break;
+    default: break;
+  }
+}
 void FabricApplication::stop() {
   if (terminal_stopped) return;
   terminal_stopped = true;
@@ -139,6 +154,7 @@ String FabricApplication::snapshot() {
           ("gameServices", game_services->snapshot())("errors", folly::dynamic::array());
   result["runtimeInitialized"] = static_cast<bool>(runtime);
   result["initializationAttempted"] = initialization_attempted;
+  result["appState"] = app_state->snapshot();
   if (adapter_loader) result["adapterLoader"] = adapter_loader->snapshot();
   for (const auto &error : pre_runtime_errors) result["errors"].push_back(error);
   return gd(folly::toJson(result));

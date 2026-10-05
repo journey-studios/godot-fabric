@@ -232,6 +232,15 @@ every lane. The preceding SDK fails at mount when its stub throws, and a
 PanResponder without capture-phase handlers fails 6 checks rejected by the
 independent oracle. Hosted CI pending.
 
+The [AppState record](app-state/README.md) delivers Godot's application focus,
+pause and memory-warning notifications through the running main loop to an actual
+`FabricApplication` whose two roots read RN's original `AppState`: 75 headless
+checks. Focus loss is `inactive`, a pause is `background`, only new states are
+sent, focus changes also send `focus`/`blur`, a paused game tree still delivers
+events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
+checks, and a host whose focus outranks the pause fails 5, which the independent
+oracle rejects. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

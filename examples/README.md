@@ -210,6 +210,13 @@ lanes: `npm run test:responders:pan`, outside the launcher catalog. Its
 [receipt](../docs/evidence/pan-responder/README.md) records 128 headless checks,
 the preceding-SDK control and a retained sabotage.
 
+The [AppState probe](app-state/README.md) delivers Godot's focus, pause and
+memory-warning notifications to an application whose two roots subscribe to the
+public `AppState`: `npm run test:app-state`, outside the launcher catalog. Focus
+loss is `inactive`, a pause is `background`, and stop sends no event. Its
+[receipt](../docs/evidence/app-state/README.md) records 75 headless checks, the
+preceding-host control and a retained negative control.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
