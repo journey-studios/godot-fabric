@@ -102,8 +102,17 @@ combinações de flags, nem caminhos com listeners de Document ou várias Views.
 capturado/sem hit/sem alvo, pareamento Down/Up por pointerId, outras categorias
 de evento, mobile/exports, hardware e performance continuam abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
-ou denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37330669524, no head 01d3add (checkout de merge fa37a92). O artefato
+`native-pointer-up` repete os **240 checks headless** com IDs, bundle e estágios
+`fault/*` idênticos aos locais; além de timestamps, da versão patch do Node e do
+hash do host do runner, só os identificadores de alocação do Godot da segunda
+aplicação diferem, aceitos apenas como renomeação um-para-um (472). O log retém
+exatamente os cinco diagnósticos esperados, e as 81 entradas rastreadas batem com
+f9a3b25 na árvore do checkout. A captura, os controles de host anterior e o
+controle negativo continuam locais. O [Pages](publication.json) (run 37331641273,
+push da `main` em 84a95ab) implantou exatamente os dados commitados. Nenhum GF,
+checkpoint, dependência, peso ou denominador foi fechado.
 
 As 81 fontes de código/configuração executadas correspondem à implementação
 `f9a3b25601e746c527fd9172020d9240b25ee9be` por `git show`/SHA-256. O recibo preserva a

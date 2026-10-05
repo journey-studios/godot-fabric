@@ -154,7 +154,10 @@ second application, so the healthy probe stays diagnostic-free: 240 headless and
 lookup cannot even resolve the View's public ref (a one-shot getter on
 `canonical.publicInstance`), that lookup fails before the SDK with the same single
 diagnostic, and the next lookup proceeds normally.
-[Resolver evidence](docs/evidence/pointer-up-resolver-faults/README.md).
+[Resolver evidence](docs/evidence/pointer-up-resolver-faults/README.md). Both fault
+slices passed hosted CI with the same check IDs and bundles
+([component](docs/evidence/pointer-up-faults/hosted-ci.json),
+[resolver](docs/evidence/pointer-up-resolver-faults/hosted-ci.json)).
 
 The isolated [pointermove example](examples/pointer-move/README.md) extends the
 same native interest to original View Move Maps. Real drags and button-less mouse

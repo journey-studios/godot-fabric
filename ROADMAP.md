@@ -1305,8 +1305,9 @@ retained). Hosted Contracts run 37328158081 passed all five jobs at 6f9e10c
 repeats the 6,451 headless checks with identical IDs, bundles and fault stages,
 the second application's Godot allocation ids differing only by a one-to-one
 renaming, and all 71 tracked inputs match eda1bf2 in the checkout tree. The
-viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
-weight or denominator closes.
+viewport/pixel proof and negative control stay local. [Pages 37329106287](docs/evidence/pointer-document-up-fault/publication.json)
+deployed this record from main 988af3c with the committed data. No whole GF,
+checkpoint, weight or denominator closes.
 
 
 ### View Up component query faults (2026-10-05)
@@ -1341,8 +1342,13 @@ static analysis pass; native/SDK bytes are unchanged. Resolver getter faults on
 Up, repeated faults or faults during retirement/stop, other flag branches and
 mixed Document/View paths remain open. All 81 executed code/configuration inputs
 match implementation f9a3b25 via git show/SHA-256 (execution base 988af3c/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
-denominator closes.
+retained). Hosted Contracts run 37330669524 passed all five jobs at 01d3add (merge
+checkout fa37a92); its [audited artifact](docs/evidence/pointer-up-faults/hosted-ci.json)
+repeats the 240 headless checks with identical IDs, bundle and fault stages, the
+second application's allocation ids differing only by a one-to-one renaming, and
+all 81 tracked inputs match f9a3b25 in the checkout tree. [Pages 37331641273](docs/evidence/pointer-up-faults/publication.json)
+deployed this record from main 84a95ab. The viewport, old-host and negative
+controls stay local. No whole GF, checkpoint, weight or denominator closes.
 
 
 ### View Up resolver getter faults (2026-10-05)
@@ -1376,7 +1382,13 @@ and static analysis pass; native/SDK bytes are unchanged. stateNode/canonical an
 root-handle resolver faults, repeated faults and faults during retirement/stop
 remain open. All 82 executed code/configuration inputs, including the resolver
 bootstrap, match implementation 6b3554c via git show/SHA-256 (execution base
-01d3add/dirty retained). Hosted CI for this slice is pending. No whole GF,
+01d3add/dirty retained). Hosted Contracts run 37332057453 passed all five jobs at
+b02ab93 (merge checkout 3265374); its [audited artifact](docs/evidence/pointer-up-resolver-faults/hosted-ci.json)
+repeats the 296 headless checks with identical IDs, bundle and stages, allocation
+ids differing only by a one-to-one renaming, and all 82 tracked inputs match
+6b3554c in the checkout tree. [Pages 37333111502](docs/evidence/pointer-up-resolver-faults/publication.json)
+deployed this record from main add4486, and the live public JSON and local API
+match it. The viewport, old-host and negative controls stay local. No whole GF,
 checkpoint, weight or denominator closes.
 
 

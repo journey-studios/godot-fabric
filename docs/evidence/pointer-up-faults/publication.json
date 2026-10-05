@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-05T15:51:25.173403+00:00",
+  "run": 37331641273,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37331641273",
+  "event": "push",
+  "branch": "main",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/22",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "dataCommit": "84a95abfe21a08d86b56a3367fdbbcd50bdd0d57",
+  "rendererCommit": "84a95abfe21a08d86b56a3367fdbbcd50bdd0d57",
+  "inMain": true,
+  "deployedArtifact": {
+    "name": "github-pages",
+    "zipSha256": "96d32e5bdbf7d8f678ab7823ba5a26b7fb193ea0063312eac1cef858e0fed302",
+    "migrationJsonSha256": "a166675f7a4dc6113d3940c31ab7039694c7107dcf12d87521b34660c5e32e21",
+    "publicationMetadataPresent": false
+  },
+  "deployedJSONEqualsCommittedData": true,
+  "deployedRendererEqualsCommittedDashboard": true,
+  "livePublicSite": {
+    "supersededBy": "later main deployments; this receipt verifies the deployed artifact bytes of this run"
+  }
+}

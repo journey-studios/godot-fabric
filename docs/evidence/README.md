@@ -136,7 +136,8 @@ owning-surface ancestors and root, all false, while TouchEnd and contact cleanup
 survive and each consumed fault leaves one diagnostic. A retained control that
 qualifies a failed lookup fails fifteen probe checks and the independent oracle.
 The three preceding-host controls reproduce their 8/12/3 normative failures with
-the new bundles. Hosted CI pending.
+the new bundles. Hosted run 37330669524 passed the same 240 checks with identical
+IDs, bundle and fault stages ([receipt](pointer-up-faults/hosted-ci.json)).
 
 The [View Up resolver record](pointer-up-resolver-faults/README.md) arms a one-shot
 getter on the View's `canonical.publicInstance`, after Down: 296 headless and 324
@@ -144,7 +145,8 @@ viewport checks. The first native read fails before any SDK entry, only that
 lookup is rejected with one diagnostic, and the next lookup reads the restored
 descriptor; with capture and bubble the Up is still delivered. A retained control
 whose getter silently succeeds fails nine probe checks and the independent oracle.
-Hosted CI pending.
+Hosted run 37332057453 passed the same 296 checks with identical IDs, bundle and
+stages ([receipt](pointer-up-resolver-faults/hosted-ci.json)).
 
 The [View pointermove record](pointer-move/README.md) extends the native interest
 query to original View Move Maps at offsets 1/25: 135/135 corrected headless and
