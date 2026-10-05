@@ -195,6 +195,14 @@ the pointer enters or leaves the surface. Its
 [receipt](../docs/evidence/pointer-document-hover/README.md) records 1,530
 headless checks and a retained negative control.
 
+The [click matrix](pointer-click/README.md) presses and releases mouse buttons
+and touches over a group, a sibling, a top-level view, a `Pressable` and a
+`ScrollView` in eight lanes: `npm run test:pointers:click`, outside the launcher
+catalog. A primary release clicks the deepest view both hit paths share, and a
+scroll drag cancels its contact. Its
+[receipt](../docs/evidence/pointer-click/README.md) records 728 headless checks,
+the preceding-host control and two retained negative controls.
+
 The [touchables probe](touchables/README.md) presses RN's original
 `TouchableWithoutFeedback` and `TouchableHighlight`, imported from `react-native`,
 with real mouse and touch on two roots: `npm run test:touchables`, outside the

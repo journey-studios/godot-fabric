@@ -82,8 +82,18 @@ Document seguem abertos, assim como hover com caneta, captura de ponteiro durant
 hover, seleção de superfície para input na área vazia, responders, hardware,
 exports mobile e performance.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 15e1dda (run
+37364101069). O job nativo passou e o artefato `native-pointer-document-hover`
+repete os **1.530 checks headless** nas oito lanes com IDs, bundles e estágios
+idênticos aos locais; além de timestamps, da versão patch do Node e do hash do host
+do runner, nada difere, e as 22 entradas rastreadas batem com b880b9b na árvore do
+checkout. O pool hospedado não executou de primeira os jobs `reference-ios`,
+`contracts` e `parity-comparison`; eles passaram na segunda, terceira e quarta
+tentativas. O run da PR (37362661181) perdeu o `reference-ios` para um timeout do
+`xcrun simctl` e teve os jobs nativo e Android cancelados pelos runners hospedados.
+O [Pages](publication.json) (run 37364101010, push da `main` em 15e1dda) implantou
+exatamente os dados commitados, e o JSON público e a API local conferem com eles.
+Nenhum GF, checkpoint, dependência, peso ou denominador foi fechado.
 
 As 22 fontes de código/configuração executadas (19 produtoras do bundle e
 3 de verificação) correspondem à implementação `b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0` por

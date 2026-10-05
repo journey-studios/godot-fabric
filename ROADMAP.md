@@ -1653,8 +1653,54 @@ Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
 match implementation b880b9b via git show/SHA-256 (execution base 3264107/dirty
 retained). Viewport capture, root query
 faults at hover offsets, once/AbortSignal, refs, mutation and reentry during
-Document hover, pen hover and capture while hovering remain open. Hosted CI for
-this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+Document hover, pen hover and capture while hovering remain open. Hosted
+Contracts run 37364101069 (the push of main 15e1dda) passed all five jobs, three of
+them in attempts 2-4 after the hosted pool did not run them; its
+[audited artifact](docs/evidence/pointer-document-hover/hosted-ci.json) repeats
+the 1,530 headless checks with identical IDs, bundles and stages, and all
+22 tracked inputs match b880b9b. [Pages 37364101010](docs/evidence/pointer-document-hover/publication.json)
+deployed this record from main 15e1dda, and the live public JSON and local API
+match it. No whole GF, checkpoint, weight or denominator closes.
+
+### Click on release and scroll takeover (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[click evidence](docs/evidence/pointer-click/README.md) makes the host
+synthesize `click` like RN's platforms and lets a scroll drag take its contact
+over, in eight lanes (original/current interest × four flag configurations):
+**728 headless checks**.
+
+When a primary pointer releases its main button, the adapter clicks the deepest
+mounted view on both the Down and the Up hit paths (Android's
+`JSPointerDispatcher`, the web's nearest common ancestor), with iOS's
+primary/main-button filter; a contact whose paths share only the root does not
+click. The click copies the Up's sample with an offset local to its own target,
+is Discrete, follows the Up and precedes the contact's TouchEnd, and never reads
+a listener Map. Right and middle buttons, a second finger, a chord released on
+another button, a canceled contact, a removed target and a release outside the
+surface never click. Godot mounts the AppRegistry View, so two top-level
+children click it where RN would drop the click at the root. When the SDK
+ScrollView starts a drag, the contacts begun inside it receive one
+`pointercancel` and then only touches, like RN's native scroll views, so a scroll
+never clicks; a tap on a `Pressable` still presses once.
+
+The SDK base view config now declares `topClick` with `onClick`/
+`onClickCapture` (without it the legacy plugin throws on every click with the
+default flags), and the SDK Pressable keeps Pressability's `onClick`, which
+ignores pointer clicks, as RN's does. The native job timeout rises to 45 minutes
+(its suites take 21-24) and the Ubuntu jobs are pinned to ubuntu-24.04. The
+preceding host runs the same bundle and fails exactly 31 normative checks; a
+host that clicks the release target fails 10, and an SDK without `topClick`
+throws in the legacy lane; the independent oracle rejects all three. The six
+preceding-host controls that pin the SDK bundle were rerun with the new bundles
+and still reproduce 8/12/3/45/32/9 failures; the contracts gates, `test:recovery`,
+the 26 native suites and the native SDK batch pass on the same host. Captured
+clicks, `auxclick`/`contextmenu`, keyboard and accessibility activation, pen,
+nested or horizontal scroll takeover and surface selection for empty-area input
+remain open. All 28 executed code/configuration inputs match implementation
+8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted CI
+for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+
 
 ### Original TouchableWithoutFeedback and TouchableHighlight (2026-10-05)
 
