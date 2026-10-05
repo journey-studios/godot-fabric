@@ -256,6 +256,61 @@ func removal() -> void:
   await physical_down("A", 0, "removal/negative")
   await finish_up("A", 0, "removal/negative", [], [], [36, 37], [false, false])
 
+# Native input precedes every manual check in these lifecycle controls. A
+# manual once event would otherwise remove the listener before the first Up.
+func once_control() -> void:
+  var prefix := "lifecycle/once"
+  stages[prefix + "/configuration"] = js("configure('A','doc-once')")
+  var expected := ["DocB"] if installed() else []
+  await capture_frame("pointer-document-up-once-before.png", 12, 2, true)
+  await physical_down("A", 0, prefix + "/first")
+  await finish_up("A", 0, prefix + "/first", expected, [3] if installed() else [], [36] if installed() else [36, 37], [true] if installed() else [false, false])
+  await capture_frame("pointer-document-up-once-first.png", 13, 2, true)
+  await physical_down("A", 0, prefix + "/second")
+  await finish_up("A", 0, prefix + "/second", [], [], [36, 37], [false, false])
+  await capture_frame("pointer-document-up-once-second.png", 13, 2, true)
+  # Original SDK filtering never invoked once, so its real public listener is
+  # still present. Current SDK native dispatch already consumed it exactly once.
+  var manual_expected := ["DocB"] if native_dispatch and not installed() else []
+  manual("A", prefix + "/after-native", false, manual_expected)
+  manual("A", prefix + "/after-manual", false, [])
+
+func pre_aborted_control() -> void:
+  var prefix := "lifecycle/abort-pre"
+  # The shared helper aborts the original controller before addEventListener;
+  # its requested binding trace is not evidence of membership in the RN Map.
+  stages[prefix + "/configuration"] = js("configure('A','doc-abort-pre')")
+  stages[prefix + "/signal"] = js("signal('A')")
+  check(stages[prefix + "/signal"] == {"available": native_dispatch, "originalSignal": true if native_dispatch else null, "aborted": true if native_dispatch else null},
+    prefix + "/Actual original signal is already aborted before listener registration or absent under the original method gate")
+  for pass_name: String in ["first", "second"]:
+    await physical_down("A", 0, prefix + "/" + pass_name)
+    await finish_up("A", 0, prefix + "/" + pass_name, [], [], [36, 37], [false, false])
+  manual("A", prefix + "/after-native", false, [])
+
+func post_up_abort_control() -> void:
+  var prefix := "lifecycle/abort-after"
+  stages[prefix + "/configuration"] = js("configure('A','doc-abort-after')")
+  stages[prefix + "/signal-before"] = js("signal('A')")
+  check(stages[prefix + "/signal-before"] == {"available": native_dispatch, "originalSignal": true if native_dispatch else null, "aborted": false if native_dispatch else null},
+    prefix + "/Actual original signal starts un-aborted or is absent under the original method gate")
+  var expected := ["DocB"] if installed() else []
+  await physical_down("A", 0, prefix + "/first")
+  await finish_up("A", 0, prefix + "/first", expected, [3] if installed() else [], [36] if installed() else [36, 37], [true] if installed() else [false, false])
+  # This listener is not once. The independent manual positive also proves
+  # original SDK installation after a filtered native first Up, without state.
+  manual("A", prefix + "/before-abort", false, ["DocB"] if native_dispatch else [])
+  var before := native(surfaces.A)
+  var count_before: Variant = state().panels.A.count
+  var result: Variant = js("abort('A')")
+  var after := native(surfaces.A)
+  check(result == {"available": native_dispatch, "originalSignal": true if native_dispatch else null, "aborted": true if native_dispatch else null} and before.commits == after.commits and before.pointer == after.pointer and state().panels.A.count == count_before and state().query.rows.is_empty() and context_clean(state()),
+    prefix + "/Abort call changes no React state native ownership or interest query while original cleanup is checked by the next Up")
+  stages[prefix + "/abort"] = {"result": result, "before": before, "after": after, "beforeCount": count_before, "afterCount": state().panels.A.count, "react": state()}
+  await physical_down("A", 0, prefix + "/second")
+  await finish_up("A", 0, prefix + "/second", [], [], [36, 37], [false, false])
+  manual("A", prefix + "/after-abort", false, [])
+
 func cancel_control() -> void:
   js("configure('A','doc-capture-only')")
   await physical_down("A", 0, "cancel")
@@ -272,7 +327,7 @@ func cancel_control() -> void:
   clean_contact("A", "cancel")
   stages["cancel/terminal"] = {"react": value, "before": before, "after": after, "application": native(application)}
 
-func capture_frame(filename: String, updated: bool) -> void:
+func capture_frame(filename: String, expected_a: int, expected_b: int, lifecycle: bool = false) -> void:
   if not capture or DisplayServer.get_name() == "headless":
     return
   await RenderingServer.frame_post_draw
@@ -280,14 +335,24 @@ func capture_frame(filename: String, updated: bool) -> void:
   var saved := image.save_png("res://build/" + filename)
   var pixels: Array = []
   for origin: Vector2i in [Vector2i.ZERO, Vector2i(400, 0)]:
+    var expected_count := expected_a if origin == Vector2i.ZERO else expected_b
     var points := [Vector2i(5, 5), Vector2i(75, 55), Vector2i(260, 55), Vector2i(25, 175), Vector2i(45, 175)]
-    var colors := ["0f172aff", "2563ebff", "0f766eff", "fde047ff", "fde047ff" if updated and origin == Vector2i.ZERO else "0f172aff"]
+    var colors := ["0f172aff", "2563ebff", "0f766eff", "fde047ff", "fde047ff" if expected_count >= 2 else "0f172aff"]
     for index in range(points.size()):
       var point: Vector2i = origin + points[index]
       var actual := image.get_pixelv(point).to_html()
       check(actual == colors[index], "capture/" + filename + "/Actual native pixel " + str(point) + " matches the committed Up counter")
       pixels.append({"point": [point.x, point.y], "color": actual, "expected": colors[index]})
-  check(state().panels.A.count == (2 if updated else 0) and state().panels.B.count == 0 and saved == OK and image.get_width() == 760 and image.get_height() == 220,
+  if lifecycle:
+    # The first once Up extends A from x88 to x92. The second Up preserves
+    # that edge; B's independent two-update edge stays at x448 throughout.
+    var points := [Vector2i(90, 175), Vector2i(94, 175), Vector2i(447, 175), Vector2i(449, 175)]
+    var colors := ["fde047ff" if expected_a == 13 else "0f172aff", "0f172aff", "fde047ff", "0f172aff"]
+    for index in range(points.size()):
+      var actual := image.get_pixelv(points[index]).to_html()
+      check(actual == colors[index], "capture/" + filename + "/Actual once edge pixel " + str(points[index]) + " matches native listener consumption")
+      pixels.append({"point": [points[index].x, points[index].y], "color": actual, "expected": colors[index]})
+  check(state().panels.A.count == expected_a and state().panels.B.count == expected_b and saved == OK and image.get_width() == 760 and image.get_height() == 220,
     "capture/" + filename + "/Saved native viewport and actual React counters describe the same Up stage")
   captures.append({"file": "build/" + filename, "width": image.get_width(), "height": image.get_height(), "pixels": pixels, "reactCounters": state().panels})
 
@@ -329,13 +394,16 @@ func run_probe() -> void:
       "capability/" + name + "/Document D-only and element I-and-D APIs preserve the original method matrix and sole SDK query")
   check(stages.capabilityA.methods.view == (available if native_dispatch and imperative else absent) and stages.capabilityA.docOwnsRef and stages.capabilityB.methods.view == null and stages.capabilityB.noRef.publicInstanceNull and not stages.capabilityB.noRef.refAssigned,
     "capability/Real ref and initially cold no-ref leaves preserve ownership and original method availability")
-  await capture_frame("pointer-document-up-initial.png", false)
+  await capture_frame("pointer-document-up-initial.png", 0, 0)
   await case_for("doc")
-  await capture_frame("pointer-document-up-updated.png", true)
+  await capture_frame("pointer-document-up-updated.png", 2, 0)
   for kind: String in ["all", "element", "doc-capture-only", "element-capture-only"]:
     await case_for(kind)
   await isolation()
   await removal()
+  await once_control()
+  await pre_aborted_control()
+  await post_up_abort_control()
   await cancel_control()
   # Independent JSX sentinel proves native Up transport in every flag lane. Its
   # sibling prop cannot qualify any preceding blue-leaf Up.

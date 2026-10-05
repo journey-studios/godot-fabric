@@ -314,3 +314,5 @@ queries, exact Event identity, healthy legacy pooling, removal, negative A while
 B held, Cancel and stop are verified. Down regression passes 2,723 checks.
 Hosted Document Up is pending; native/SDK bytes reuse the separately proven
 View Up implementation and full event/RN/ABI acceptance remains open.
+
+- [Document Up bubble once/AbortSignal](pointer-document-up-lifecycle/README.md):2,143 headless checks,414 native viewport checks,62 pixels and five actual PNGs; original/current SDK controls and pending lifecycle CI are separate.

@@ -1108,17 +1108,47 @@ balanced stop pass. Final Down regression passes **2,723 checks**, contracts
 **255 Node/13 Python** and static analysis passes. View Up again passes62/62
 with its same-current-SDK previous host54/62/eight failures. Native/SDK production sources
 are unchanged fromf7c2cf6 and retain its separate SDK proof. This slice adds its
-own eight-lane CI gate/artifact; hosted Document Up remains pending. Its71
+own eight-lane CI gate/artifact. [Hosted run37244296477](docs/evidence/pointer-document-up/hosted-ci.json)
+passed all five jobs; the eight-lane1371 artifact,22 RN inputs and actual checkout
+e9adb77d/71pins match baseline84270fb. Captures/binary/mobile outputs are separate. Its71
 unique executed code/configuration inputs match implementation84270fb via
 git show/SHA-256; original execution base0a2f01e/dirty state is retained.
 [Pages37244579332](docs/evidence/pointer-document-up/publication.json) passed
 build/deploy using main renderer/dataf7696b3; full public/local JSON confirmed.
-Publication is separate from pending hosted Document Up runtime.
+Publication is separate from the later verified baseline84270fb hosted runtime.
 
-Once/abort, retained/retired refs/remount, dispatch mutation, Up-specific faults/
+Broader listener lifecycle beyond the following Document bubble slice, retained/retired
+refs/remount, dispatch mutation, Up-specific faults/
 reentrancy, captured/no-hit/null-target Up, Down/Up ID pairing, got/lost capture,
 other event categories and hardware/mobile/dev/performance remain open.
 No whole GF, dependency, checkpoint, weight or denominator closes.
+
+### Document Up bubble listener lifecycle: once and AbortSignal
+
+[Lifecycle evidence](docs/evidence/pointer-document-up-lifecycle/README.md) extends
+Document Up to **2,143 headless checks** across eight original/current flag lanes.
+The graphical current/enabled lane passes **414 checks** in five native frames,
+with62 pixels independently decoded from PNGs and five counter/save assertions.
+The [example](examples/pointer-document-up/README.md) shows the three actual once
+frames A12/B2→A13/B2→A13/B2: first Up increments/commits once; second has no Up
+callback/Raw/commit and real root36/37false while TouchEnd/cleanup remain healthy.
+Original SDK filtered native Ups leave once installed for the first manual
+untrusted control; a second manual control observes consumption without state.
+
+Pre-aborted signals remain inert. Abort-after-first observes the original RN
+AbortSignal instance and false→true state, positive manual before/negative after,
+no React state/commit/native ownership effect during abort and a negative second
+native Up. D-disabled fixtures associate no signal; this does not gate the
+AbortSignal class. Down regression passes2723, contracts255Node/13Python, static
+and publication scan pass. Production native/SDK bytes are unchanged. Execution
+base245ccce/dirty is retained; post-commit source pinning and lifecycle CI follow.
+The older [84270fb hosted audit](docs/evidence/pointer-document-up/hosted-ci.json)
+confirms1371 baseline checks and five successful jobs, separately from2143 local.
+
+This slice covers bubble Document listeners. Other phases and View/element
+lifecycle, dispatch-time abort/mutation/reentrancy, refs/remount, Up faults,
+captured/no-hit routing, Down/Up ID pairing, full responders, hardware/mobile/dev
+and performance remain open. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

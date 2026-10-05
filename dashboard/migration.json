@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Document Up e flags validados; próximos: once/abort e refs"
+    "focusTitle": "Document Up once/abort validados; próximos: refs e remount"
   },
-  "updatedAt": "2026-10-04T23:43:38.611130+00:00",
+  "updatedAt": "2026-10-05T00:02:46.433371+00:00",
   "source": {
-    "commit": "84270fbeadd21df728592e3d4cea23b0be09eec9",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/84270fbeadd21df728592e3d4cea23b0be09eec9",
-    "scope": "Document/documentElement Up: oito lanes originais/current × quatro flags,1371 headless; viewport243/20pixels+2counter/save. Event=== entre fases, rootTag/surface e componentes do root nativo, capture-only36false→37true, A negativo enquanto B held, remove/Cancel/stop executados. Down2723,contracts255Node/13Python e static passaram.15produtores/22RN+55native+3config=71inputs únicos verificados contra implementação84270fb por git show/SHA-256; base0a2f01e/dirty preservada. Native/SDK bytes f7 preservados; CI específica pendente. CI ViewUp041 passou5jobs/62+3400checks e16pins; Pages37242930291/data0a2 público/local inteiro confirmado. Sem GF/checkpoint/peso/denominador fechado. ViewUp novamente62/62; controle nativo anterior54/62/oitofalhas no mesmo SDK atualizado, restauração byteexact. Pages37244579332/main renderer/dataf7696b3 confirmou build/deploy eJSON público/local completo desta provaDocUp; implementação fora do main.",
+    "commit": "245ccce68ca24111acfe029a987feb9f28816a64",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/245ccce68ca24111acfe029a987feb9f28816a64",
+    "scope": "Document bubble Up once/pre-aborted/abort-after-first:2143checks/oito lanes; viewport414/5frames/62pixels+5counter-save. Original AbortSignal estado false→true e instanceof real; secondUp36/37false, semRawUp/commit, TouchEnd/cleanup mantidos. OriginalSDK só consome once na primeira manual após2Upsfiltrados. Down2723/contracts255Node13Python/static/publicationscan passam. Native/SDK produção f7unchanged;15produtores/24RN+55native+3config=71inputs únicos; execução depois245ccce/dirty, pin pós-commit pendente. CI baseline84270fb37244296477 passou5jobs/1371 com71pins/22RN/checkout e9adb77d auditados; não certifica lifecycle2143, CI nova pendente. NenhumGF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -362,7 +362,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "DocumentUp: oito lanes1371 e viewport243/20pixels. Doc+element quatrocallbacks no mesmo Event original incrementam quatro vezes em exatamente um commit React/nativo; Raw/Discrete→Default preservados. Down2723/255Node13Python/static passaram. ViewUpCI041 passada; CI DocumentUp pendente. StrictMode/dev/transitions/Suspense/Activity/stores/prioridades completas e paridade ampla abertos.",
+      "note": "DocumentUp lifecycle:2143/oito lanes e414viewport/62pixels. Once primeiroUp→1update/1commit; segundo→0. Abort original false→true semstate/commit; pre-aborted inerte. Down2723/contracts255Node13Python/static passaram. CI baseline8421371 verificada; lifecycleCIpendente. StrictMode/dev/transitions/Suspense/Activity/stores/prioridades completas e paridade ampla abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -413,6 +413,10 @@
             {
               "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
               "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
             }
           ]
         },
@@ -449,7 +453,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Duas raízes no mesmo Hermes mantêm Documents próprios. DocumentUp A negativo enquanto B held não consulta componentes estrangeiros nem muda B; Bpositivo, remoçãofinal, Cancel e stop balanceados passam1371/243. Primeiro Down deB noRef preserva null antes/depois daquery; positivoUp após materialização. Retire/remount/reentrância/demaislifetimes e CI DocumentUp pendentes; ViewUpCI041 passou.",
+      "note": "Documents originais/duas roots e cleanup nativo mantidos nas oito lanes2143. Once consome apenas primeiroUp; abort-after-first remove interesse semownership/state; sinais originais observados. Retire/remount/refs/reentrância e demaislifetimes abertos. CI baseline8421371 passou5jobs; lifecycleCI2143pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -524,6 +528,10 @@
             {
               "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
               "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
             }
           ]
         },
@@ -560,7 +568,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "DocumentUp SDK current admite36/37 em Maps originais sem nova produção nativa. DocumentD-only e element/ViewI-and-D preservam quatroflags/métodos originais, roothandle/surfaceId e todoscomponentes da própria árvore verificados.1371/243local e71inputs atuais conferidos; CI específica pendente. Types/commands completos, demaisproxies/getters/reentrância,hardware/mobile/performance abertos; flags públicas off.",
+      "note": "Maps RN originais36/37 sem nova produção nativa/SDK. DocumentD-only/elementI-and-D e quatroflags preservados; bubbleonce e AbortSignal originais retiram qualificação real do segundoUp.2143/414local,71codepins/24RN executados; pincommitpendente. CI baseline8421371/71pins verificada; novaCIpendente. Types/commands/getters/reentrância/hardware/mobile/performance abertos; defaults off.",
       "blocker": "",
       "checkpoints": [
         {
@@ -687,6 +695,10 @@
             {
               "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
               "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
             }
           ]
         },
@@ -954,7 +966,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "DocumentUp:1371 checks/oito lanes originais/current quatroflags; viewport243/20pixels. Doc/element/both/capture-only fases exatas, mesmoEventUp, Raw/payload/timestamp/ID e umcommit, query36/37ownsroot, Anegativo/Bheld, remoçãofinal/Cancel/stop passam. Down2723/contracts255Node13Python/static verdes; CI DocumentUp pendente. ViewUp62/90 e CI041 cincojobs/62+3400checks auditados; Pages37242930291/data0a2 confirmado. Once/abort/refslifecycle/capturedUp/DownUpID/move/hover/responders/coalescing/mobile/dev/performance abertos.",
+      "note": "DocumentUp once/pre-aborted/abort-after-first passaram2143/oito SDK-flaglanes e414viewport/62pixels. Once A12/B2→A13/B2→A13/B2:1commit primeiro,zero segundo;36/37negativos/semRawUp,TouchEnd/cleanup reais. Sinal originalfalse→true, manualpré/pósabort e controle originalSDKonce passam. Down2723/contracts255Node13Python/static. CI baseline8421371/5jobs verificada; lifecycleCIpendente. View/element/outrasfases lifecycle,dispatchmutation/refs/capturedUp/DownUpID/move/hover/responders/mobile/dev/performance abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1049,6 +1061,10 @@
             {
               "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
               "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
             }
           ]
         },
@@ -2849,6 +2865,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-lifecycle-local-verified-20261005",
+      "at": "2026-10-05T00:02:46.433371+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Once/pre-aborted/abort-after-first em Document bubble:2143checks/oito lanes e414viewport/5frames/62pixels. Sinal original estado/identidade, first/secondnativeUp e manualoriginalSDK discriminantes; Down2723/contracts255Node13Python/static/scan passam. CI baseline8421371/5jobs/71pins auditada, semcertificar nova lifecycleCI. NativeSDK unchanged; pinimplementação/publicação pendentes, nenhum novo fechamento ou denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
     {
       "id": "pointer-document-up-public-pages-verified-37244579332",
       "at": "2026-10-04T23:43:38.611130+00:00",

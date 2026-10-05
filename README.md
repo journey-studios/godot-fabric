@@ -465,3 +465,15 @@ local proof separate from its pending hosted CI.
 | Before Document Up | After Document capture and bubble |
 | --- | --- |
 | [![Native Document Up counters A0/B0](docs/evidence/pointer-document-up/initial.png)](examples/pointer-document-up/README.md) | [![Native callbacks update A2/B0 in one commit](docs/evidence/pointer-document-up/updated.png)](examples/pointer-document-up/README.md) |
+
+### Document Up listener lifecycle
+
+The [isolated example](examples/pointer-document-up/README.md) now validates
+original RN `once` and `AbortSignal` with actual Godot input:2,143 checks in eight
+flag/SDK lanes and414 graphical checks, including62 independently decoded pixels.
+The first once Up extends A's yellow counter; the second preserves it while B
+remains unchanged. [Evidence and remaining boundaries](docs/evidence/pointer-document-up-lifecycle/README.md).
+
+| Before once | First native Up | Second native Up |
+| --- | --- | --- |
+| ![A12/B2](docs/evidence/pointer-document-up-lifecycle/once-before.png) | ![A13/B2](docs/evidence/pointer-document-up-lifecycle/once-first.png) | ![A13/B2 preserved](docs/evidence/pointer-document-up-lifecycle/once-second.png) |

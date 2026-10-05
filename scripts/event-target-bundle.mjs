@@ -226,6 +226,7 @@ export async function bundlePointerDocumentUpProbe({interestMode = "current"} = 
       "src/private-interface.js", "src/pointer-listener-query.js", "native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"],
     extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
       "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js",
+      "src/private/webapis/dom/abort-api/AbortController.js", "src/private/webapis/dom/abort-api/AbortSignal.js",
       "src/private/webapis/dom/nodes/ReactNativeDocument.js", "src/private/webapis/dom/nodes/internals/NodeInternals.js",
       "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js",
       "ReactCommon/react/renderer/components/view/primitives.h",

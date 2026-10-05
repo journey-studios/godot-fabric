@@ -10,6 +10,8 @@ globalThis.PointerDocumentUpProbe = {
   manualDocument: base.manualDocument, manualElement: base.manualElement,
   resetAll: base.resetAll, removeFinal: base.removeFinal, noRefSnapshot: base.noRefSnapshot,
   rejectLateOverride: base.rejectLateOverride,
+  signal: base.registeredSignal,
+  abort(name) { base.abortRegistered(name); return base.registeredSignal(name); },
   configure(name, kind) { return base.configure(name, kind, "pointerup"); },
   snapshot() {
     return {...base.snapshot(), scope: {actualNativeInput: true, realOriginalDocuments: true,

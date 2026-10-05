@@ -3647,5 +3647,15 @@
     "localLiveAPIEqualsCommittedData": true,
     "buildAndDeployPassed": true,
     "receipt": "docs/evidence/pointer-document-up/publication.json"
+  },
+  "followupCI": {
+    "status": "verified-completed-workflow-and-headless-artifact",
+    "headCommit": "84270fbeadd21df728592e3d4cea23b0be09eec9",
+    "actualCheckout": "e9adb77d89055b7a75d02eb149863e5feff22dd2",
+    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477",
+    "headlessChecks": 1371,
+    "jobsPassed": 5,
+    "evidence": "hosted-ci.json",
+    "scope": "Baseline84270fb only; later once/abort slice, native captures, compiled binary, previous-host control and mobile output are separate."
   }
 }

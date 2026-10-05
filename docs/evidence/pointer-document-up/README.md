@@ -128,7 +128,13 @@ passes **2,723 checks**. Contracts pass **255 Node and 13 Python tests** and
 static analysis passes. Native and SDK production sources are unchanged from
 [f7c2cf6](../pointer-up/report.json); its fresh SDK proof remains separate,
 without claiming a new SDK runtime certification. This slice adds its own
-eight-lane hosted gate and artifact; hosted Document Up is **pending**.
+eight-lane hosted gate and artifact. [The hosted audit](hosted-ci.json) confirms
+**1,371/1,371 checks** in all eight lanes and five successful workflow jobs in
+[run37244296477](https://github.com/journey-studios/godot-fabric/actions/runs/37244296477).
+Actual checkout `e9adb77d` has the same71 tracked inputs as implementation84270fb;
+IDs, bundle digests and22 original RN inputs match the frozen local baseline.
+The artifact declares its host hash without including the compiled binary.
+Captures, prior-host controls and mobile job outputs remain separate.
 
 ## Limits
 
@@ -161,4 +167,5 @@ no unexpected script, registry, crash or application errors were found.
 [run37244579332](https://github.com/journey-studios/godot-fabric/actions/runs/37244579332)
 with main renderer and branch dataf7696b3. The full public JSON, excluding only
 generated publication metadata, and the local live API equal committed data.
-This publishes the documented local proof; hosted Document Up remains separate.
+This publishes the documented local proof. The later hosted audit above covers
+the baseline84270fb matrix; publication and CI are separate evidence.

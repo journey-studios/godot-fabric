@@ -7,6 +7,7 @@ import OriginalEvent from "../node_modules/react-native/src/private/webapis/dom/
 import OriginalEventTarget from "../node_modules/react-native/src/private/webapis/dom/events/EventTarget";
 import ReactNativeDocument from "../node_modules/react-native/src/private/webapis/dom/nodes/ReactNativeDocument";
 import ReactNativeElement from "../node_modules/react-native/src/private/webapis/dom/nodes/ReactNativeElement";
+import {AbortSignal as OriginalAbortSignal} from "../node_modules/react-native/src/private/webapis/dom/abort-api/AbortSignal";
 import LegacySyntheticEvent from "../node_modules/react-native/src/private/renderer/events/LegacySyntheticEvent";
 import {getInternalInstanceHandleFromNativeTag, getInternalInstanceHandleFromPublicInstance,
   getNativeTagFromPublicInstance} from "../src/private-interface";
@@ -230,6 +231,11 @@ function snapshot() {
 globalThis.PointerDocumentProbe = {bindRoot, capability, configure, arm, manualDocument, manualElement, snapshot, noRefSnapshot,
   resetAll() { for (const name of panels.keys()) reset(name); return true; },
   removeFinal(name) { reset(name); return true; },
+  registeredSignal(name) {
+    const signal = panels.get(name).controller?.signal;
+    return {available: signal != null, originalSignal: signal == null ? null : signal instanceof OriginalAbortSignal,
+      aborted: signal?.aborted ?? null};
+  },
   abortRegistered(name) { panels.get(name).controller?.abort(); return true; },
   rerender(name) { const panel = panels.get(name); panel.beforeIdentity = {doc: panel.doc, element: panel.element, ref: panel.refs.leaf};
     panel.setRevision(value => value + 1); return true; },

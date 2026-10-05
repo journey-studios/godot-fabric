@@ -145,6 +145,16 @@ function nativePng(bytes) {
   }};
 }
 
+function lifecycleManual(stage, expected, D) {
+  const value = stage.react;
+  assert.equal(stage.result.available, D); assert.ok(stage.result.noPrototypeBorrow);
+  assert.deepEqual(value.events.map(row => row.label), expected);
+  if (D) assert.ok(stage.result.returned && !stage.result.trusted && stage.result.targetMatches && stage.result.cleaned);
+  assert.ok(value.events.every(row => row.type === "pointerup" && !row.trusted && row.phase === 2 &&
+    row.targetMatches && row.currentMatches && row.thisMatches && row.originalEvent && !row.originalSynthetic));
+  assert.deepEqual(value.raw, []); assert.deepEqual(value.query.rows, []);
+  assert.equal(value.panels.A.count, value.baselineCount); clean(value, D);
+}
 function verify({report, result, log, interestMode, flagMode, bundles, headed}) {
   assert.equal(result.error, undefined, log); assert.equal(result.signal, null, log); assert.equal(result.status, 0, log);
   assert.ok(report != null, log);
@@ -210,6 +220,32 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   terminal(report.stages["removal/positive/up"], positive, installed ? [1, 3] : [], "A", D, installed, installed ? [36] : [36, 37], installed ? [true] : [false, false]);
   assert.equal(report.stages["removal/removed"], true);
   terminal(report.stages["removal/negative/up"], [], [], "A", D, installed, [36, 37], [false, false]);
+  // Requested registrations are traces of calls, not a mirrored RN registry.
+  // The real first and second native queries establish membership/cleanup.
+  for (const [id, kind] of [["once", "doc-once"], ["abort-pre", "doc-abort-pre"], ["abort-after", "doc-abort-after"]]) {
+    const prefix = "lifecycle/" + id, configuration = report.stages[prefix + "/configuration"];
+    assert.equal(configuration.eventType, "pointerup"); assert.equal(configuration.kind, kind);
+    assert.ok(configuration.noPrototypeBorrow); assert.deepEqual(configuration.installed, D ? ["DocB"] : []);
+    const firstExpected = id !== "abort-pre" && installed ? ["DocB"] : [];
+    terminal(report.stages[prefix + "/first/up"], firstExpected, firstExpected.length > 0 ? [3] : [], "A", D, installed,
+      firstExpected.length > 0 ? [36] : [36, 37], firstExpected.length > 0 ? [true] : [false, false]);
+    terminal(report.stages[prefix + "/second/up"], [], [], "A", D, installed, [36, 37], [false, false]);
+    if (id === "once") {
+      lifecycleManual(report.stages[prefix + "/after-native/manual"], D && !installed ? ["DocB"] : [], D);
+      lifecycleManual(report.stages[prefix + "/after-manual/manual"], [], D);
+    } else if (id === "abort-pre") {
+      assert.deepEqual(report.stages[prefix + "/signal"], {available: D, originalSignal: D ? true : null, aborted: D ? true : null});
+      lifecycleManual(report.stages[prefix + "/after-native/manual"], [], D);
+    } else {
+      lifecycleManual(report.stages[prefix + "/before-abort/manual"], D ? ["DocB"] : [], D);
+      const aborted = report.stages[prefix + "/abort"];
+      assert.deepEqual(report.stages[prefix + "/signal-before"], {available: D, originalSignal: D ? true : null, aborted: D ? false : null});
+      assert.deepEqual(aborted.result, {available: D, originalSignal: D ? true : null, aborted: D ? true : null}); assert.equal(aborted.before.commits, aborted.after.commits);
+      assert.deepEqual(aborted.before.pointer, aborted.after.pointer); assert.equal(aborted.beforeCount, aborted.afterCount);
+      assert.deepEqual(aborted.react.query.rows, []); clean(aborted.react, D);
+      lifecycleManual(report.stages[prefix + "/after-abort/manual"], [], D);
+    }
+  }
   const canceled = report.stages["cancel/terminal"], cancel = canceled.react;
   assert.deepEqual(cancel.events.map(row => row.label), ["TouchCancel"]); assert.deepEqual(rawRows(cancel, "topPointerUp"), []);
   raw(cancel, "topTouchCancel", cancel.events); assert.deepEqual(cancel.query.rows, []);
@@ -225,16 +261,20 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   for (const key of ["active", "contacts", "stored"]) assert.equal(stopped.pointerRouting[key], 0);
   assert.deepEqual(stopped.errors, []);
   for (const name of ["A", "B"]) { const owner = report.stages["stoppedRoot" + name]; assert.equal(owner.nativeTags, 0); assert.equal(owner.creates, owner.deletes); assert.equal(owner.pointer.activePointers, 0); assert.equal(owner.pointer.activeTouches, 0); }
-  assert.equal(report.captures.length, headed ? 2 : 0);
+  assert.equal(report.captures.length, headed ? 5 : 0);
+  const captureStages = [
+    ["initial", 0, 0, 10], ["updated", 2, 0, 10],
+    ["once-before", 12, 2, 14], ["once-first", 13, 2, 14], ["once-second", 13, 2, 14],
+  ];
   for (const [index, frame] of report.captures.entries()) {
-    const updated = index === 1;
-    assert.equal(frame.file, "build/pointer-document-up-" + (updated ? "updated" : "initial") + ".png");
-    assert.equal(frame.width, 760); assert.equal(frame.height, 220); assert.equal(frame.pixels.length, 10);
-    assert.equal(frame.reactCounters.A.count, updated ? 2 : 0); assert.equal(frame.reactCounters.B.count, 0);
+    const [stage, counterA, counterB, pixels] = captureStages[index];
+    assert.equal(frame.file, "build/pointer-document-up-" + stage + ".png");
+    assert.equal(frame.width, 760); assert.equal(frame.height, 220); assert.equal(frame.pixels.length, pixels);
+    assert.equal(frame.reactCounters.A.count, counterA); assert.equal(frame.reactCounters.B.count, counterB);
   }
   assert.equal(bundles.nativeDispatchMode, "experimental"); assert.equal(bundles.pointerInterestMode, interestMode); assert.equal(bundles.parentMode, "current"); assert.equal(bundles.rendererTagMode, "current");
   for (const file of ["tests/event-target-bootstrap.js", "tests/pointer-document-bootstrap.js", "tests/pointer-document-fixture.jsx", "tests/pointer-document-up-fixture.jsx", "tests/pointer-document-up-probe.gd", "tests/pointer-document-up-native.test.mjs", "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs", "scripts/rn-pointer-overlay.mjs", "native/application_runtime.cpp"]) assert.match(bundles.sources[file], /^[0-9a-f]{64}$/);
-  for (const file of ["ReactCommon/react/renderer/components/view/primitives.h", "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp", "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp", "src/private/webapis/dom/nodes/ReactNativeDocument.js", "src/private/webapis/dom/nodes/internals/NodeInternals.js", "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js"]) assert.match(bundles.originalReactNativeSources[file], /^[0-9a-f]{64}$/);
+  for (const file of ["ReactCommon/react/renderer/components/view/primitives.h", "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp", "ReactCommon/react/renderer/core/EventQueueProcessor.cpp", "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp", "src/private/webapis/dom/abort-api/AbortController.js", "src/private/webapis/dom/abort-api/AbortSignal.js", "src/private/webapis/dom/nodes/ReactNativeDocument.js", "src/private/webapis/dom/nodes/internals/NodeInternals.js", "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js"]) assert.match(bundles.originalReactNativeSources[file], /^[0-9a-f]{64}$/);
   assert.ok(bundles.bundles[flagMode].inputs.includes("node_modules/react-native/src/private/renderer/events/dispatchNativeEvent.js"));
 }
 

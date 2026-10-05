@@ -6,7 +6,9 @@ owns 1,371 headless checks, 243 actual macOS viewport checks and 20 native pixel
 The final Down regression passes 2,723 checks, contracts 255 Node/13 Python and
 static analysis passes. Native/SDK production bytes are unchanged from the
 preceding View Up implementation; its SDK proof stays separate. This slice has
-its own hosted gate with CI pending. Public EventTarget defaults remain disabled.
+its own hosted gate: baseline84270fb passed1,371 checks and all five workflow jobs.
+The later lifecycle2143 slice below has separate local proof and pending CI.
+Public EventTarget defaults remain disabled.
 
 ## The root-level contract
 
@@ -116,10 +118,50 @@ query, physical contacts, processor capture/hover registries, routes, work, time
 animation frames and pending retirements. Native Control creates/deletes balance
 for both roots and recorded application errors remain empty.
 
+## Ciclo de vida: `once` e `AbortSignal` do RN
+
+Uma fatia posterior amplia a matriz com três casos de listener bubble do
+Document: `once`, sinal já abortado ao registrar e abort após o primeiro Up.
+As oito execuções headless passam **2.143 checks**; a tabela da
+[evidência de lifecycle](../evidence/pointer-document-up-lifecycle/README.md)
+separa esses resultados do recibo anterior de 1.371 checks e suas imagens.
+A implementação nativa e o SDK permanecem iguais à fatia anterior.
+
+Com interesse current e D habilitado, o primeiro Up consome o listener
+`{once: true}`: root `36=true`, um `DocB` trusted em fase 3, um par Raw e
+um incremento funcional em um commit. O segundo gesto consulta
+`36=false, 37=false`; Up não entrega callback/Raw nem incrementa o contador.
+TouchEnd/Raw e a limpeza física continuam funcionando nos dois gestos.
+A emissão manual posterior também encontra o listener consumido.
+
+No controle `interestMode=original`, D permite registrar o listener, mas não
+instala a consulta nativa. Dois gestos físicos permanecem filtrados e não
+consomem `once`. A primeira emissão manual posterior chama `DocB` untrusted,
+em fase 2, e o consome; a segunda fica vazia. Esse controle confirma instalação
+e consumo original separadamente da qualificação de input nativo.
+
+O caso pre-aborted observa a instância original de `AbortSignal` do RN com
+`aborted=true`. A tentativa de registrar não produz entrega nos dois gestos nem
+na emissão manual. O caso abort-after observa `aborted=false`, executa o
+primeiro Up e um controle manual positivo; então o abort muda o sinal para
+`true` sem alterar contador, commits, ownership físico ou consultas do SDK.
+O segundo Up e a emissão manual posterior ficam vazios. Quando D está
+desabilitado, os métodos do Document estão ausentes e a fixture não associa
+um sinal ao registro. A classe AbortSignal não recebe um novo gate D.
+
+A prova cobre esses três listeners bubble de Document, com prioridades,
+identidades, Raw e terminais verificados pelo mesmo oráculo. Não certifica
+`once`/abort em todas as fases, View/documentElement, abort dentro de uma entrega
+ou gesto ativo, retired refs ou reentrância. A execução gráfica passou414checks
+em cinco frames nativos, com62pixels conferidos por readback Godot e decode
+Node independente. As três capturas novas mostram `once`: A12/B2 antes,
+A13/B2 após o primeiro Up e A13/B2 após o segundo; veja o exemplo e os PNGs
+da evidência. A CI baseline84270fb confirma1371checks, separada da nova fatia.
+
 ## Boundaries still open
 
 This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle,
-once/abort, listener mutation during delivery, retained or retired refs, root
+listener mutation during delivery, retained or retired refs, root
 replacement/remount, captured/no-hit/null-target Up, got/lost capture, coalescing
 or full responder negotiation. Down is deliberately filtered here, so no public
 Down/Up pointer-ID pair is established. Development renderer, other event-priority
