@@ -13,7 +13,9 @@ reproduz, e o [recibo](report.json) fixa fontes, hashes e resultados.
 | só interno / habilitado | 32 cada | `ReactNativeResponder` do dispatch nativo |
 
 São **128 checks headless**. As duas implementações produzem exatamente os mesmos
-callbacks e o mesmo `gestureState` nas quatro lanes.
+callbacks e as mesmas coordenadas do `gestureState` (`x0`, `y0`, `moveX`, `moveY`,
+`dx`, `dy` e toques ativos) nas quatro lanes; a velocidade depende do tempo das
+amostras e é verificada em cada lane.
 
 ```sh
 npm run test:responders:pan
@@ -78,6 +80,12 @@ nativos do Godot seguem abertos.
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
 ou denominador foi fechado.
+
+Na revisão, a comparação entre lanes passou a incluir `x0`, `y0`, `moveX` e
+`moveY` (antes cobria callbacks, deslocamento e toques ativos). O runner de
+`9a6ee3e` repetiu os 128 checks no mesmo host, com os mesmos bundles e IDs; só o
+próprio runner mudou entre as fontes fixadas, e o recibo registra a nova corrida em
+`reviewRerun`.
 
 As 14 fontes de código/configuração executadas (11 produtoras do bundle e 3 de
 verificação) correspondem à implementação `b3327e4237b1b7e768b1698194dd5f4f077e5b80`

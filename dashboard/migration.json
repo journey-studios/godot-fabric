@@ -3315,7 +3315,7 @@
       "taskIds": [
         "GF-13"
       ],
-      "message": "PanResponder original em quatro lanes: 128 headless. O stub da plataforma, que lançava erro ao criar, dá lugar ao módulo do RN sobre os eventos de responder; o plugin legado e o dispatch nativo produzem os mesmos callbacks e gestureState. Arrastos, dois dedos (centróide dos dois toques), roubo pelo pai, recusa com grant especulativo e reject, pai de captura e remoção no meio do gesto cobertos. SDK anterior falha na montagem; sabotagem sem handlers de captura falha 6 checks e o oráculo rejeita. Sete controles de host anterior refeitos. CI pendente.",
+      "message": "PanResponder original em quatro lanes: 128 headless. O stub da plataforma, que lançava erro ao criar, dá lugar ao módulo do RN sobre os eventos de responder; o plugin legado e o dispatch nativo produzem os mesmos callbacks e coordenadas do gestureState. Arrastos, dois dedos (centróide dos dois toques), roubo pelo pai, recusa com grant especulativo e reject, pai de captura e remoção no meio do gesto cobertos. SDK anterior falha na montagem; sabotagem sem handlers de captura falha 6 checks e o oráculo rejeita. Sete controles de host anterior refeitos. CI pendente.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/0a19e397d9294ee3d82d192be5101e716d6c623a/docs/evidence/pan-responder/README.md"
     },
     {
