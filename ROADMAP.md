@@ -1333,8 +1333,10 @@ their 8, 12 and 3 normative failures. Query faults 186, resolver faults 65,
 Document Up 6,451, Down 2,723, contracts 255 Node/13 Python, 22 examples and
 static analysis pass; native/SDK bytes are unchanged. Resolver getter faults on
 Up, repeated faults or faults during retirement/stop, other flag branches and
-mixed Document/View paths remain open. Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+mixed Document/View paths remain open. All 81 executed code/configuration inputs
+match implementation f9a3b25 via git show/SHA-256 (execution base 988af3c/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+denominator closes.
 
 ## M1 — Complete the native UI tree
 

@@ -104,3 +104,7 @@ de evento, mobile/exports, hardware e performance continuam abertos.
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
 ou denominador foi fechado.
+
+As 81 fontes de código/configuração executadas correspondem à implementação
+`f9a3b25601e746c527fd9172020d9240b25ee9be` por `git show`/SHA-256. O recibo preserva a
+base 988af3c e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.

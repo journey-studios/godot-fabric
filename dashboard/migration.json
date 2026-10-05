@@ -10,9 +10,9 @@
   },
   "updatedAt": "2026-10-05T15:06:39.007174+00:00",
   "source": {
-    "commit": "eda1bf23b5dd20f1460d7276f7a7c364819f6d66",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/eda1bf23b5dd20f1460d7276f7a7c364819f6d66",
-    "scope": "View Up faults na consulta de componente: 240 checks headless (62 anteriores preservados em ordem) e 268 viewport/24 pixels. Faults únicos throw/não booleano na ref real da View nos offsets 36/37, numa segunda aplicação depois do stop da saudável: throw no bubble com capture e bubble na View ainda qualifica pelo capture (36=throw, 37=true) e entrega os dois em fase 2 num commit; sem outro lookup qualificando, a consulta passa aos ancestrais da superfície e ao root, todos 36/37 false, sem Up, mas TouchEnd/Raw e limpeza do contato continuam; cada fault consumido deixa 1 E_POINTER_LISTENER_QUERY; fault de capture não consumido quando o bubble qualifica antes; recuperação e Up de B saudáveis. Controles de host anterior refeitos com os bundles novos: View Up 8, query-fault 12, resolver-fault 3 falhas normativas. Controle negativo retido (fault tratado como true) falha 15 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Query faults 186, resolver 65, Document Up 6451, Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "f9a3b25601e746c527fd9172020d9240b25ee9be",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/f9a3b25601e746c527fd9172020d9240b25ee9be",
+    "scope": "View Up faults na consulta de componente: 240 checks headless (62 anteriores preservados em ordem) e 268 viewport/24 pixels. Faults únicos throw/não booleano na ref real da View nos offsets 36/37, numa segunda aplicação depois do stop da saudável: throw no bubble com capture e bubble na View ainda qualifica pelo capture (36=throw, 37=true) e entrega os dois em fase 2 num commit; sem outro lookup qualificando, a consulta passa aos ancestrais da superfície e ao root, todos 36/37 false, sem Up, mas TouchEnd/Raw e limpeza do contato continuam; cada fault consumido deixa 1 E_POINTER_LISTENER_QUERY; fault de capture não consumido quando o bubble qualifica antes; recuperação e Up de B saudáveis. Controles de host anterior refeitos com os bundles novos: View Up 8, query-fault 12, resolver-fault 3 falhas normativas. Controle negativo retido (fault tratado como true) falha 15 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Query faults 186, resolver 65, Document Up 6451, Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre 988af3c/dirty; 81 inputs executados conferidos por git show/SHA-256 contra f9a3b25; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -333,7 +333,7 @@
             },
             {
               "label": "View Up faults da consulta de componente: 240 checks e 268 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-component-faults/docs/evidence/pointer-up-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9a3b25601e746c527fd9172020d9240b25ee9be/docs/evidence/pointer-up-faults/README.md"
             }
           ]
         },
@@ -464,7 +464,7 @@
             },
             {
               "label": "View Up faults da consulta de componente: 240 checks e 268 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-component-faults/docs/evidence/pointer-up-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9a3b25601e746c527fd9172020d9240b25ee9be/docs/evidence/pointer-up-faults/README.md"
             }
           ]
         },
@@ -619,7 +619,7 @@
             },
             {
               "label": "View Up faults da consulta de componente: 240 checks e 268 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-component-faults/docs/evidence/pointer-up-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9a3b25601e746c527fd9172020d9240b25ee9be/docs/evidence/pointer-up-faults/README.md"
             }
           ]
         },
@@ -826,7 +826,7 @@
             },
             {
               "label": "View Up faults da consulta de componente: 240 checks e 268 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-component-faults/docs/evidence/pointer-up-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9a3b25601e746c527fd9172020d9240b25ee9be/docs/evidence/pointer-up-faults/README.md"
             }
           ]
         },
@@ -1232,7 +1232,7 @@
             },
             {
               "label": "View Up faults da consulta de componente: 240 checks e 268 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-component-faults/docs/evidence/pointer-up-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f9a3b25601e746c527fd9172020d9240b25ee9be/docs/evidence/pointer-up-faults/README.md"
             }
           ]
         },
