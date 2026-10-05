@@ -210,6 +210,12 @@ and the ScrollView drag that cancels its contact, in eight lanes: 728 headless
 checks. The preceding host fails exactly 31 of them.
 [Evidence](docs/evidence/pointer-click/README.md).
 
+The [AppState example](examples/app-state/README.md) runs React Native's original
+`AppState` from the public import, fed by the focus, pause and memory-warning
+notifications Godot delivers to the `FabricApplication`, with two roots sharing
+one state: 75 headless checks. The preceding host fails exactly its 62
+lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

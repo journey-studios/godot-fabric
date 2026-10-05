@@ -1701,6 +1701,52 @@ remain open. All 28 executed code/configuration inputs match implementation
 8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted CI
 for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
+### AppState from the Godot application lifecycle (2026-10-05)
+
+GF-21 moves to **In progress**. The
+[AppState evidence](docs/evidence/app-state/README.md) replaces the SDK's fixed
+`AppState` with React Native's original module, read through the public
+`react-native` import and fed by the lifecycle notifications Godot delivers to
+the `FabricApplication`: **75 headless checks**, with two roots of one Hermes
+application sharing one state.
+
+The native `AppState` TurboModule implements RN's generated
+`NativeAppStateCxxSpec` and emits through the original
+`TurboModule::emitDeviceEvent`. One lifecycle per application takes
+`NOTIFICATION_APPLICATION_FOCUS_IN/OUT`, `PAUSED/RESUMED` and
+`OS_MEMORY_WARNING`, including notifications that arrive before the runtime
+exists. The state is `background` while paused, `inactive` while unfocused and
+`active` otherwise: on iOS, where Godot sends FOCUS_OUT on `WillResignActive` and
+PAUSED on `DidEnterBackground`, this reproduces RCTAppState's sequence, and a
+desktop application that loses focus is `inactive`, iOS's state for a foreground
+application that receives no events. Only a new state is sent; every actual
+focus change also sends Android's `appStateFocusChange` (`focus`/`blur`) after
+the state event, and each memory warning sends `memoryWarning`. A paused game
+tree is not the lifecycle (V2-D11) and keeps delivering events. Stopping the
+application disposes the module without an event, as Android's `onHostDestroy`
+does; `disposeEnvironment()` no longer invents `inactive` and only releases the
+AppState listeners. A CommonJS getter keeps RN's lazy `AppState` export, so
+bundles that never read it still run on hosts without the module.
+
+On the preceding host (main `72155bc`) the same bundle mounts and stops both
+roots but fails its first AppState read with `'AppState' could not be found`:
+exactly the 62 normative checks fail. A retained host whose focus outranks the
+pause fails 5 checks, and the independent oracle rejects its report. The
+contracts gates (260 Node/13 Python, static analysis, publication scan),
+`test:recovery`, the 27 native suites (22 examples, Down 2,731, Document Up
+6,459, View Up 297, Move 220, Document Move 1,940, hover 158, root path 82,
+Document hover 1,530, click 728, AppState 75) and the native SDK batch pass on
+the same host. Every bundle that imports `react-native` changes, so the
+preceding-host controls that pin the SDK bundle need new bundles; the click
+suite's new bundles still pass its 728 checks on the preceding host, which has
+no AppState module. Window minimization, real OS focus, Godot Android/iOS
+exports (Android would report a transitional `inactive`, iOS also
+`focus`/`blur`), Appearance/`useColorScheme`, device configuration and resume
+with pending work remain open. All 70 executed code/configuration inputs match
+implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
+executed tree is the implementation's). Hosted CI for this slice is pending. No
+whole GF, checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
@@ -1729,7 +1775,7 @@ observe the real system and retain the original event/callback contracts.
 | --- | --- | --- | --- |
 | GF-19 · P1 · Animated and layout animation | Planned | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
 | GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
-| GF-21 · P1 · System environment and app lifecycle | Planned | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
+| GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | Planned | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
 | GF-23 · P1 · Shared device services | Planned | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
 | GF-24 · P1 · OS-specific public contracts | Planned | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |
