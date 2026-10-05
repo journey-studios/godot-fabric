@@ -1147,7 +1147,8 @@ passed all five jobs at fc52215 (merge checkout 3eaf9c2); its
 [audited artifact](docs/evidence/pointer-document-up-lifecycle/hosted-ci.json)
 repeats the 2,143 headless checks with identical IDs, bundles and lifecycle
 stages, and all 71 tracked inputs match a3e6c6b in the checkout tree. The
-viewport/pixel proof stays local. The older
+viewport/pixel proof stays local. [Pages 37308701669](docs/evidence/pointer-document-up-lifecycle/publication.json)
+published this record (data bd4ccd6, main renderer); full public/local JSON matched. The older
 [84270fb hosted audit](docs/evidence/pointer-document-up/hosted-ci.json)
 still confirms the 1,371 baseline checks separately.
 

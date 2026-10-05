@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document Up once/abort com CI verificada; próximos: refs e remount"
   },
-  "updatedAt": "2026-10-05T12:18:46.080012+00:00",
+  "updatedAt": "2026-10-05T12:20:34.242841+00:00",
   "source": {
     "commit": "a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
     "url": "https://github.com/journey-studios/godot-fabric/commit/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
-    "scope": "Document bubble Up once/pre-aborted/abort-after-first:2143checks/oito lanes; viewport414/5frames/62pixels+5counter-save. Original AbortSignal estado false→true e instanceof real; secondUp36/37false, semRawUp/commit, TouchEnd/cleanup mantidos. OriginalSDK só consome once na primeira manual após2Upsfiltrados. Down2723/contracts255Node13Python/static/publicationscan passam. Native/SDK produção f7unchanged;15produtores/24RN+55native+3config=71inputs únicos; execução depois245ccce/dirty, 71inputs executados conferidos por git show/SHA-256 contraa3e6c6b. CI baseline84270fb37244296477 passou5jobs/1371 com71pins/22RN/checkout e9adb77d auditados; CI lifecycle 37246479501 em fc52215 (checkout 3eaf9c2) passou 5 jobs e repetiu 2143 checks com IDs, bundles e estágios lifecycle iguais aos locais; 71 blobs conferem com a3e6c6b; viewport/pixels seguem locais. NenhumGF/checkpoint/peso/denominador fechado.",
+    "scope": "Document bubble Up once/pre-aborted/abort-after-first:2143checks/oito lanes; viewport414/5frames/62pixels+5counter-save. Original AbortSignal estado false→true e instanceof real; secondUp36/37false, semRawUp/commit, TouchEnd/cleanup mantidos. OriginalSDK só consome once na primeira manual após2Upsfiltrados. Down2723/contracts255Node13Python/static/publicationscan passam. Native/SDK produção f7unchanged;15produtores/24RN+55native+3config=71inputs únicos; execução depois245ccce/dirty, 71inputs executados conferidos por git show/SHA-256 contraa3e6c6b. CI baseline84270fb37244296477 passou5jobs/1371 com71pins/22RN/checkout e9adb77d auditados; CI lifecycle 37246479501 em fc52215 (checkout 3eaf9c2) passou 5 jobs e repetiu 2143 checks com IDs, bundles e estágios lifecycle iguais aos locais; 71 blobs conferem com a3e6c6b; viewport/pixels seguem locais. NenhumGF/checkpoint/peso/denominador fechado. Pages 37308701669/main renderer/data bd4ccd6 confirmou build/deploy e JSON público/local completo do recibo de CI lifecycle.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2897,6 +2897,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-lifecycle-public-pages-verified-37308701669",
+      "at": "2026-10-05T12:20:34.242841+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages 37308701669 concluiu build/deploy com renderer do main e dados bd4ccd6. JSON público completo e API local iguais ao commit; publicado o recibo da CI lifecycle 37246479501 (2143 checks). Nenhum GF/checkpoint/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37308701669"
+    },
     {
       "id": "pointer-document-up-lifecycle-hosted-ci-37246479501",
       "at": "2026-10-05T12:18:46.080012+00:00",

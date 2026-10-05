@@ -3749,5 +3749,15 @@
     "curatedSnapshotSha256": "b6d7cc9bd3218faeeb53400b03bc3aa457fc83f2f69f0f128b4f6f5984757ffa",
     "snapshotScope": "Implementation a3e6c6b report before post-commit sourceVerification and this self-link; execution results unchanged.",
     "findings": []
+  },
+  "dashboardPublication": {
+    "status": "verified-public-branch-data",
+    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37308701669",
+    "dataCommit": "bd4ccd62c64887c58908debcb76ef5f361db93ae",
+    "mainRendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "completePublicJSONMatchesCommittedData": true,
+    "localLiveAPIEqualsCommittedData": true,
+    "buildAndDeployPassed": true,
+    "receipt": "docs/evidence/pointer-document-up-lifecycle/publication.json"
   }
 }
