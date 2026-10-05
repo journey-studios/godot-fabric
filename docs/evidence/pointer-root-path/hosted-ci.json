@@ -1,0 +1,461 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-root-path",
+  "status": "verified-completed-hosted-workflow-and-headless-root-path-artifact",
+  "run": {
+    "id": 37359026197,
+    "headSha": "a478778dd53842c50ecbbce016aaba2241c9988e",
+    "event": "pull_request",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111928644235,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197/job/111928644235"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111928645082,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197/job/111928645082"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111928645204,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197/job/111928645204"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111928645599,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197/job/111928645599"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111938224628,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197/job/111938224628"
+      }
+    ]
+  },
+  "implementationCommit": "71a64c2d00b2607e29665190a461bf6197fe31c7",
+  "runHeadIsPostCommitSourcePin": true,
+  "actualCheckout": {
+    "sha": "0523b2719d1b27a77245b3360a7528a1fa97dfe6",
+    "parents": [
+      "2643d4c5391d048d715046cc26212646ed582910",
+      "a478778dd53842c50ecbbce016aaba2241c9988e"
+    ],
+    "treeSha": "8bfca3e8af21242977bf181ea316d7f1a76d6ad8",
+    "method": "full checkout SHA from native job git-log output; immutable GitHub Git tree compared to git blob hashes of implementation commit bytes",
+    "trackedPinSetCounts": {
+      "sourcePins": 21,
+      "nativeSourcePins": 55,
+      "verificationSourcePins": 5
+    },
+    "allCuratedTrackedPathsVerified": 76,
+    "allTrackedInputContentIdenticalToImplementationCommit": true,
+    "runHeadTrackedInputsIdenticalToImplementationCommit": true
+  },
+  "artifact": {
+    "id": 11365834536,
+    "name": "native-pointer-root-path",
+    "zipFile": "build/pointer-root-path-hosted-a478778/native-pointer-root-path.zip",
+    "zipSizeBytes": 51750,
+    "zipSha256": "5addf0dae4a7a43266606fb433913cf78d49bc94328dffd3706443925971e99e",
+    "files": [
+      "pointer-root-path-comparison.json",
+      "pointer-root-path-current-report.json",
+      "pointer-root-path-current.log",
+      "pointer-root-path-report.json"
+    ]
+  },
+  "verification": {
+    "checks": 82,
+    "passed": 82,
+    "localChecks": 82,
+    "uniqueCheckIds": true,
+    "checkIdDigestSha256": "5f597175ea2df35b0ef9fb36930366da2e3833281b64bf58066becffcbae4b30",
+    "checkIdsExactlyMatchLocalBaseline": true,
+    "localReportSha256MatchesCuratedLane": true,
+    "bundleSha256": "cd4e7034d29661263ceccc8844bafcec258d8ec802b805288ea376e1d9519da5",
+    "bundleExactlyMatchesLocalBaseline": true,
+    "faultStages": 0,
+    "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+    "unexplainedDifferences": [],
+    "secondApplicationAllocationIdsRenamed": 0,
+    "secondApplicationAllocationRenamingBijective": true,
+    "retainedFaultDiagnosticsMatchExpected": true,
+    "retainedFaultDiagnostics": 0,
+    "passedMarkerInLog": true,
+    "reportSha256": "27cb0f28be7513ebea51c2a1af14ccd1f515448d1663f417b66b04ae579bc7bf",
+    "logSha256": "969f675c67aaffb172f2e0c7e78c1cba3abd7d82cb9b88ab26deb84bdfdb419f",
+    "probeReportEqualsCurrentReportExceptProvenance": true,
+    "comparisonCurrentEqualsReport": true,
+    "originalControlPresentInHostedRun": false,
+    "producerPins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/pointer-query-fault-bootstrap.js": "b7337214cb7071b7fd8e7f6adc3d7a4397b3cf142ed38042cb3609d2013736c9",
+      "tests/pointer-query-fault-fixture.jsx": "55369ae573573c71243b1d7cb29d50be675013c898ca3d7fd1faba1a8c2ec6a8",
+      "tests/pointer-query-fault-probe.gd": "09e45cf893d752ad30a8701e1256b1a5cd53c3afb6aed2101b6c9531c4ece54d",
+      "tests/pointer-move-probe.gd": "667da53a9a7c8223fc64f7052914b33287e9f221be845c5cb1ed0f46425542a3",
+      "tests/pointer-hover-probe.gd": "c2e2243dc957ec7cc9ad072cabdf8b44e0ffe245ad76f86185cdef41b853518b",
+      "tests/pointer-root-path-fixture.jsx": "04390f4b6c3625c319e6b81d034d38284d1a9fab1d945c8699c7dd75a8d0e8ca",
+      "tests/pointer-root-path-probe.gd": "7f2e429b17befc95f6363af730e1c7929d275a125af138e00f315adf6c23ed78",
+      "tests/pointer-root-path-native.test.mjs": "010184a84867c43680608b9ec3e4df5bea88d3c24190f684b6a9e594ef3e480c",
+      "scripts/event-target-bundle.mjs": "e1160d33ef4422c0e8614bf7e5f72237ffe10a28422356c77d236c7a24d832a7",
+      "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+      "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "native/application_runtime.cpp": "7e0d658a10ab0a97835d76aaa8495ab7bb2a42fc8670852176f236ac51862694",
+      "native/pointer_adapter.cpp": "19dc59f7b4fc4734a2c731d031d73025090d763f3429372fbf2cff1344d941e5",
+      "native/pointer_adapter.h": "3df6ab12f9d12a6297a47d6e836f1fea210501103057d92d0b4549bbfe979647",
+      "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+      "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+    },
+    "producerPinsEqualCurated": true,
+    "originalReactNativeSourcesEqualCurated": true,
+    "declaredNativeHostSha256": "e0ece951534a9be2e0375cffed17ea3620f04a60e93835dc68fdd84beb1eabeb",
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "node": "v22.23.2",
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "4db3350761d300fc8728037140d5934e2c9acfe0d174a91ea6273872947c3c82",
+        "gitBlobSha1": "4dc762b86bf6f969c20bdad7360cb8b4cc9312da"
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "6b1c7450d3b76d98e3e7fb01b306c38dad2599d5c7a9a93ceb54931afdba2a4d",
+        "gitBlobSha1": "dd502d41d8e3322aace0c3457b68a5088d0d621b"
+      },
+      "dependencies.json": {
+        "sha256": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "gitBlobSha1": "f0480c2a65061b3bfc7d6350e07d5189d3b8dda9"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+        "gitBlobSha1": "d2451e8fc6314eb726a2fb4137488167e67c912d"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "gitBlobSha1": "b72cd2f29399e1c85f8b49cbc6bae3bbb1c26355"
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab"
+      },
+      "native/affine_transform.h": {
+        "sha256": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+        "gitBlobSha1": "9d5f274ad58504550d49b34e5ad72ffe05bfed81"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+        "gitBlobSha1": "1d14a7e8eb4edfd1811909c2541e42ed50612b34"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "7e0d658a10ab0a97835d76aaa8495ab7bb2a42fc8670852176f236ac51862694",
+        "gitBlobSha1": "a53414d2425593e574272d5d1036efb941d07f12"
+      },
+      "native/application_runtime.h": {
+        "sha256": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+        "gitBlobSha1": "751bf8bc332fd3ed79c21a612dcb04dd9feccc88"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+        "gitBlobSha1": "406d2f6ba689cc54e4b09c21a93d3ba985c05344"
+      },
+      "native/fabric_application.h": {
+        "sha256": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+        "gitBlobSha1": "4f7d4715c4ad74ab97941909bec934add1aad733"
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "gitBlobSha1": "7236f0fa2dcc99a0b116b9106c5875a704ece920"
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0"
+      },
+      "native/godot-profile.json": {
+        "sha256": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+        "gitBlobSha1": "668bd0863459c8f7f10112740a251a5d90b5172f"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "gitBlobSha1": "f5b738bf9ac46cbbc28d0fffe121bd905ad6983b"
+      },
+      "native/godot_dom.h": {
+        "sha256": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "gitBlobSha1": "0fa395d405c49add5db2aa13d81e56883cce5daf"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2"
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "gitBlobSha1": "7412ebe6f12f3e9a5c7b02ffa18538c11aa9c4eb"
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "gitBlobSha1": "83600b2957d39833353c6045b0d2cf85ff13a6f7"
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "19dc59f7b4fc4734a2c731d031d73025090d763f3429372fbf2cff1344d941e5",
+        "gitBlobSha1": "8cfa858db178b6dfbd0208eb219c10e5f598c31a"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "3df6ab12f9d12a6297a47d6e836f1fea210501103057d92d0b4549bbfe979647",
+        "gitBlobSha1": "a0d2546f4a6da42293ae819c2b401b464a2fbe0e"
+      },
+      "native/pointer_event.h": {
+        "sha256": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "gitBlobSha1": "1fded160c6d93d439ff2775cf32679394ddb4501"
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+        "gitBlobSha1": "cfad3573a78bef9d8ecb4349f45e6e43ea231aa0"
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "gitBlobSha1": "ac6ec4d84af956672279ec8f7099a764a55c7e89"
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396"
+      },
+      "native/register.cpp": {
+        "sha256": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+        "gitBlobSha1": "307ed1bbac314d3cd5b915071efb1defe588ccf0"
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+        "gitBlobSha1": "14af1106f5c8d786b5c96e122f40692c95f6f2e9"
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+        "gitBlobSha1": "a74cc715a6794916ab2644da3fcdad8db398017d"
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+        "gitBlobSha1": "2bd6b1ed6e2970b91f87ef521f78ea232b2a0bf9"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+        "gitBlobSha1": "46f1ebb22aad93543d09657d5d8dc2b5d139d819"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+        "gitBlobSha1": "effede550d8bcf5efbc3366fae775201e1250dc1"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+        "gitBlobSha1": "7cfc03da2a76fdb44f9b890ab80bca06c017e161"
+      },
+      "package.json": {
+        "sha256": "fc3d8d51e91c40384afa876591c99996ac367ddbd91c539e3b54ce7a0d5070c5",
+        "gitBlobSha1": "efa0e89849d9597d5862fb8e84b99cd93cb79eab"
+      },
+      "scripts/codegen-contract.mjs": {
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "gitBlobSha1": "82e8e7fdac887d69c6f233132dbe26acdac6fbe2"
+      },
+      "scripts/event-target-bundle.mjs": {
+        "sha256": "e1160d33ef4422c0e8614bf7e5f72237ffe10a28422356c77d236c7a24d832a7",
+        "gitBlobSha1": "572cda2de0d3c2bf41f352701739c991a6eee04d"
+      },
+      "scripts/native-sdk.mjs": {
+        "sha256": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+        "gitBlobSha1": "9366491c432af511009f96688b9a9c3a6f400ff2"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af",
+        "gitBlobSha1": "5f832f5f73490ce8a2eb7e62d9ce559a8e7a3d4f"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "gitBlobSha1": "e8bce20845e3645b3adfdb7ed11f6f575b5a9b59"
+      },
+      "sdk/toolchain/rn-event-target-overlay.mjs": {
+        "sha256": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+        "gitBlobSha1": "23178f4625fb76d225851517e5581df041f4644f"
+      },
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": {
+        "sha256": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+        "gitBlobSha1": "5d7376444a54621ac232810d7f3821690fc3e801"
+      },
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": {
+        "sha256": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+        "gitBlobSha1": "a6bcdf649452eed1fd11c130cda7d73080f0a0dd"
+      },
+      "src/pointer-listener-query.js": {
+        "sha256": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+        "gitBlobSha1": "8b09d3dd6c56a98ba8e28dc0e17f3717f167ef7d"
+      },
+      "src/private-interface.js": {
+        "sha256": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+        "gitBlobSha1": "dbfbcd49e5b894e8006bc2fb08f775e7ca5756f1"
+      },
+      "tests/event-target-bootstrap.js": {
+        "sha256": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "gitBlobSha1": "102550470787757049f07e0710bdcbed795fb5f6"
+      },
+      "tests/pointer-hover-probe.gd": {
+        "sha256": "c2e2243dc957ec7cc9ad072cabdf8b44e0ffe245ad76f86185cdef41b853518b",
+        "gitBlobSha1": "e3b9aadb0fc6d4f56d0acd5385f7e0573d4a42e9"
+      },
+      "tests/pointer-move-probe.gd": {
+        "sha256": "667da53a9a7c8223fc64f7052914b33287e9f221be845c5cb1ed0f46425542a3",
+        "gitBlobSha1": "e63f88fab4a3a731eb9945a5d7121a3f0b05cafc"
+      },
+      "tests/pointer-query-fault-bootstrap.js": {
+        "sha256": "b7337214cb7071b7fd8e7f6adc3d7a4397b3cf142ed38042cb3609d2013736c9",
+        "gitBlobSha1": "83ab96035bf4ddf9e87967f6346d9ba77c7d0c28"
+      },
+      "tests/pointer-query-fault-fixture.jsx": {
+        "sha256": "55369ae573573c71243b1d7cb29d50be675013c898ca3d7fd1faba1a8c2ec6a8",
+        "gitBlobSha1": "a5e856b4b10440c98fed9df8b52ffaa1fc6c0b2e"
+      },
+      "tests/pointer-query-fault-probe.gd": {
+        "sha256": "09e45cf893d752ad30a8701e1256b1a5cd53c3afb6aed2101b6c9531c4ece54d",
+        "gitBlobSha1": "a182ce68e4ab731a91e80ff492c8532d598dcf51"
+      },
+      "tests/pointer-root-path-fixture.jsx": {
+        "sha256": "04390f4b6c3625c319e6b81d034d38284d1a9fab1d945c8699c7dd75a8d0e8ca",
+        "gitBlobSha1": "250e36d202819c1421def639242ce34c43797404"
+      },
+      "tests/pointer-root-path-native.test.mjs": {
+        "sha256": "010184a84867c43680608b9ec3e4df5bea88d3c24190f684b6a9e594ef3e480c",
+        "gitBlobSha1": "13e034b1be61f2d10bc32c739a35f7e5a04eebde"
+      },
+      "tests/pointer-root-path-probe.gd": {
+        "sha256": "7f2e429b17befc95f6363af730e1c7929d275a125af138e00f315adf6c23ed78",
+        "gitBlobSha1": "f686342be5ee194852a913c7e80793b3a2b4fc35"
+      },
+      "tests/rn-pointer-interest-overlay.test.mjs": {
+        "sha256": "7ce50ec5f6bc5cc349e9b010fe79d561753de834b058e92156a5697b695ead50",
+        "gitBlobSha1": "69be39fe714fa52b5762393bd1649be5a28acd7d"
+      },
+      "tests/rn-pointer-overlay.test.mjs": {
+        "sha256": "055d049be2d479f64186214013e16cf9c2f1a7afe609016482f157e98f6b9c1e",
+        "gitBlobSha1": "ba43e3d57b27db31a97a72ec810414241890ff6f"
+      }
+    }
+  },
+  "onlyDifferencesFromLocalBaseline": [
+    "event timeStamp/nativeTimeStamp values",
+    "provenance.nativeHostSha256 (runner-built host)",
+    "provenance.node v22.23.2 on runner versus v22.23.3 locally"
+  ],
+  "limits": [
+    "All five jobs completed successfully; this artifact audit certifies only the headless root-path probe (mouse, touch, View and Document capture listeners).",
+    "No native binary is included; the two-part preceding-host control (including its Document-case crash) remains local evidence.",
+    "Bundle and native host hashes are declared by the runner; source pins, check IDs and stages were independently compared with the local baseline.",
+    "Git-tree verification establishes tracked content at the actual merge checkout; it does not inspect a compiled native binary.",
+    "Mobile/parity job outputs and Pages deployment are separate."
+  ],
+  "findings": [],
+  "nativeJobLog": {
+    "file": "build/pointer-root-path-hosted-a478778/native-job.log",
+    "sha256": "5e19362b92071081d42f9cffff09b9c2058add67047ea2d458852521a74d9aee",
+    "checkoutVerified": true,
+    "compilerOrScriptErrors": 0,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

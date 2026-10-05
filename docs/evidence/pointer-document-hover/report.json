@@ -1,0 +1,881 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-document-hover-four-flags",
+  "status": "verified-local-eight-lanes-negative-control-and-regressions",
+  "at": "2026-10-05T19:16:32.758841+00:00",
+  "executionBaseCommit": "32641075801c062c85d31e5703a280e3e10e6a6e",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
+  "dependsOn": "View hover native interest (#26) and the root hover path (#27): native and SDK bytes are unchanged here",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "nativeHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1"
+  },
+  "commands": [
+    "npm run test:pointers:documents:hover"
+  ],
+  "headlessChecks": 1530,
+  "lanes": [
+    {
+      "interest": "original",
+      "flagMode": "disabled",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 186,
+      "passed": 186,
+      "checkIdDigestSha256": "914f6fad463c2faed3ad4490fff96d318542e9a44b81c03619b0cdd51fc29faa",
+      "bundleSha256": "6ea09e8ab8b99191ebf87ec8fb24489e41f5424a6e4657c6e6d73db570b2f2db",
+      "reportSha256": "0aca3680c8b41b49af869c405ca809cb26bb59ccecf17932bdb4332ef47f2fcd",
+      "logSha256": "676367fd4ae8bd57865a1c87d2158633d0125f4e16ef5b6f0cc28d826b409f90",
+      "deliveredOnEntry": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "touch": [],
+      "sentinel": [
+        "legacy:JSX@None",
+        "legacy:JSX@None"
+      ]
+    },
+    {
+      "interest": "original",
+      "flagMode": "imperative-only",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 186,
+      "passed": 186,
+      "checkIdDigestSha256": "914f6fad463c2faed3ad4490fff96d318542e9a44b81c03619b0cdd51fc29faa",
+      "bundleSha256": "fce85946d61fa8d07df5bef86748284d499de527f94b7ddcb98965dbbcae0bae",
+      "reportSha256": "eeb7ffba5a6334fdde3d35ae8fd6ced34e87187c30d31e29fbb06388a6831713",
+      "logSha256": "787f4b315f20d55f7ebdf97f73774507247609821ebebe0fdb2d046da63cb57a",
+      "deliveredOnEntry": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "touch": [],
+      "sentinel": [
+        "legacy:JSX@None",
+        "legacy:JSX@None"
+      ]
+    },
+    {
+      "interest": "original",
+      "flagMode": "internal-only",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstalled": false,
+      "checks": 186,
+      "passed": 186,
+      "checkIdDigestSha256": "e6bb73425644185779eeb205a1b9f16e68b6760ef7ebf7d44d626154531c62cc",
+      "bundleSha256": "d27db76d9660b43723fd06dfb8b3fd7b159794f448c1017ae30f8917a7d28be1",
+      "reportSha256": "5d4a5fe88a6f4ef82d71afa3c73dd32b2352c8f94098c3151ea9e3bb9a92be88",
+      "logSha256": "7211f440618ae132f2050d2158bb98584bfc71ed06b3937e3ba138b3ea49c33e",
+      "deliveredOnEntry": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "touch": [],
+      "sentinel": [
+        "pointerenter:JSX@2",
+        "pointerleave:JSX@2"
+      ]
+    },
+    {
+      "interest": "original",
+      "flagMode": "enabled",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstalled": false,
+      "checks": 186,
+      "passed": 186,
+      "checkIdDigestSha256": "e6bb73425644185779eeb205a1b9f16e68b6760ef7ebf7d44d626154531c62cc",
+      "bundleSha256": "9b88fd87747947e28ab9c06d8e4f7c9029310313b37e3a6d899ce1333d016a5c",
+      "reportSha256": "ab8b62c1b1db658e94008db095b8423816e2e6bfa5f731c0700315f52d96b441",
+      "logSha256": "65a311e8117900f0bac17e3f6fd12fc1862ea5727111d7a080a8b7ee361d2604",
+      "deliveredOnEntry": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "touch": [],
+      "sentinel": [
+        "pointerenter:JSX@2",
+        "pointerleave:JSX@2"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "disabled",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 186,
+      "passed": 186,
+      "checkIdDigestSha256": "914f6fad463c2faed3ad4490fff96d318542e9a44b81c03619b0cdd51fc29faa",
+      "bundleSha256": "82adb15201227899ce6cfe6ec4439cc2058082f89dca3c32197ee6799c991f59",
+      "reportSha256": "8598904afa86f5f7d94ff60771f0ac214b4945267e0b77a67981e2612c9057ef",
+      "logSha256": "d07994fed8c186bf5accabe24b9bd2986d917d3fee49bd1b33a1e8956fa51616",
+      "deliveredOnEntry": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "touch": [],
+      "sentinel": [
+        "legacy:JSX@None",
+        "legacy:JSX@None"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "imperative-only",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 186,
+      "passed": 186,
+      "checkIdDigestSha256": "914f6fad463c2faed3ad4490fff96d318542e9a44b81c03619b0cdd51fc29faa",
+      "bundleSha256": "b255b44a7526438fe9aa923fcaa357771d2f2a29a5fcab16f418b671cf6131d6",
+      "reportSha256": "32519ba88a5ee60ca42c598afa0b330cda7973e2c943d83f19a83922ef02895d",
+      "logSha256": "6297677206ca4cedb0526ccb58977fe238448235aca44af5c6ece0f8b02f384d",
+      "deliveredOnEntry": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [],
+        "doc": [],
+        "element": [],
+        "doc-capture-only": [],
+        "element-capture-only": []
+      },
+      "touch": [],
+      "sentinel": [
+        "legacy:JSX@None",
+        "legacy:JSX@None"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "internal-only",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstalled": true,
+      "checks": 203,
+      "passed": 203,
+      "checkIdDigestSha256": "f2a327411cb8025616335906a34d842e88199ef210eb9bc27e836586d7547693",
+      "bundleSha256": "f225b71206c13c35e35d684a418af20f88591e3302191e6bf0d4fc523c65e0f6",
+      "reportSha256": "3a64043e8e56d60ec04acb0d91d308558ba9de192a2d138f737b0ed259180b5f",
+      "logSha256": "a2f32f33b296019a6b0053f5848812d329341f089e1c2ec9af341e521720eb75",
+      "deliveredOnEntry": {
+        "all": [
+          "pointerover:DocC@1",
+          "pointerover:DocB@3",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1"
+        ],
+        "doc": [
+          "pointerover:DocC@1",
+          "pointerover:DocB@3",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1"
+        ],
+        "element": [],
+        "doc-capture-only": [
+          "pointerover:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1"
+        ],
+        "element-capture-only": []
+      },
+      "deliveredInsideRoot": {
+        "all": [
+          "pointerout:DocC@1",
+          "pointerout:DocB@3",
+          "pointerover:DocC@1",
+          "pointerover:DocB@3"
+        ],
+        "doc": [
+          "pointerout:DocC@1",
+          "pointerout:DocB@3",
+          "pointerover:DocC@1",
+          "pointerover:DocB@3"
+        ],
+        "element": [],
+        "doc-capture-only": [
+          "pointerout:DocC@1",
+          "pointerover:DocC@1"
+        ],
+        "element-capture-only": []
+      },
+      "deliveredOnExit": {
+        "all": [
+          "pointerout:DocC@1",
+          "pointerout:DocB@3",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1"
+        ],
+        "doc": [
+          "pointerout:DocC@1",
+          "pointerout:DocB@3",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1"
+        ],
+        "element": [],
+        "doc-capture-only": [
+          "pointerout:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1"
+        ],
+        "element-capture-only": []
+      },
+      "touch": [
+        "pointerover:DocC@1",
+        "pointerover:DocB@3",
+        "pointerenter:DocC@1",
+        "pointerenter:DocC@1",
+        "pointerenter:DocC@1",
+        "pointerout:DocC@1",
+        "pointerout:DocB@3",
+        "pointerleave:DocC@1",
+        "pointerleave:DocC@1",
+        "pointerleave:DocC@1"
+      ],
+      "sentinel": [
+        "pointerenter:JSX@2",
+        "pointerleave:JSX@2"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "enabled",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstalled": true,
+      "checks": 211,
+      "passed": 211,
+      "checkIdDigestSha256": "f6dafba9cab94e6e31acecee84e8cf6d390efc41e16772b95d4ca2ac2cbd70d3",
+      "bundleSha256": "b836ff73563fc9782b77650d80a36ba7c62b41796ac1f577f7eae0cb5e4b3508",
+      "reportSha256": "08ddb97c1c37fa01c092f4e3cee8f55113cfa00d52779ac06928829ca5878775",
+      "logSha256": "f51534343d04e1c579cd5e06adb571c5d24c89c232151deeb41f91d957f1f500",
+      "deliveredOnEntry": {
+        "all": [
+          "pointerover:DocC@1",
+          "pointerover:RootC@1",
+          "pointerover:RootB@3",
+          "pointerover:DocB@3",
+          "pointerenter:DocC@1",
+          "pointerenter:RootC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:RootC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:RootC@1"
+        ],
+        "doc": [
+          "pointerover:DocC@1",
+          "pointerover:DocB@3",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1"
+        ],
+        "element": [
+          "pointerover:RootC@1",
+          "pointerover:RootB@3",
+          "pointerenter:RootC@1",
+          "pointerenter:RootC@1",
+          "pointerenter:RootC@1"
+        ],
+        "doc-capture-only": [
+          "pointerover:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1",
+          "pointerenter:DocC@1"
+        ],
+        "element-capture-only": [
+          "pointerover:RootC@1",
+          "pointerenter:RootC@1",
+          "pointerenter:RootC@1",
+          "pointerenter:RootC@1"
+        ]
+      },
+      "deliveredInsideRoot": {
+        "all": [
+          "pointerout:DocC@1",
+          "pointerout:RootC@1",
+          "pointerout:RootB@3",
+          "pointerout:DocB@3",
+          "pointerover:DocC@1",
+          "pointerover:RootC@1",
+          "pointerover:RootB@3",
+          "pointerover:DocB@3"
+        ],
+        "doc": [
+          "pointerout:DocC@1",
+          "pointerout:DocB@3",
+          "pointerover:DocC@1",
+          "pointerover:DocB@3"
+        ],
+        "element": [
+          "pointerout:RootC@1",
+          "pointerout:RootB@3",
+          "pointerover:RootC@1",
+          "pointerover:RootB@3"
+        ],
+        "doc-capture-only": [
+          "pointerout:DocC@1",
+          "pointerover:DocC@1"
+        ],
+        "element-capture-only": [
+          "pointerout:RootC@1",
+          "pointerover:RootC@1"
+        ]
+      },
+      "deliveredOnExit": {
+        "all": [
+          "pointerout:DocC@1",
+          "pointerout:RootC@1",
+          "pointerout:RootB@3",
+          "pointerout:DocB@3",
+          "pointerleave:DocC@1",
+          "pointerleave:RootC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:RootC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:RootC@1"
+        ],
+        "doc": [
+          "pointerout:DocC@1",
+          "pointerout:DocB@3",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1"
+        ],
+        "element": [
+          "pointerout:RootC@1",
+          "pointerout:RootB@3",
+          "pointerleave:RootC@1",
+          "pointerleave:RootC@1",
+          "pointerleave:RootC@1"
+        ],
+        "doc-capture-only": [
+          "pointerout:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1",
+          "pointerleave:DocC@1"
+        ],
+        "element-capture-only": [
+          "pointerout:RootC@1",
+          "pointerleave:RootC@1",
+          "pointerleave:RootC@1",
+          "pointerleave:RootC@1"
+        ]
+      },
+      "touch": [
+        "pointerover:DocC@1",
+        "pointerover:RootC@1",
+        "pointerover:RootB@3",
+        "pointerover:DocB@3",
+        "pointerenter:DocC@1",
+        "pointerenter:RootC@1",
+        "pointerenter:DocC@1",
+        "pointerenter:RootC@1",
+        "pointerenter:DocC@1",
+        "pointerenter:RootC@1",
+        "pointerout:DocC@1",
+        "pointerout:RootC@1",
+        "pointerout:RootB@3",
+        "pointerout:DocB@3",
+        "pointerleave:DocC@1",
+        "pointerleave:RootC@1",
+        "pointerleave:DocC@1",
+        "pointerleave:RootC@1",
+        "pointerleave:DocC@1",
+        "pointerleave:RootC@1"
+      ],
+      "sentinel": [
+        "pointerenter:JSX@2",
+        "pointerleave:JSX@2"
+      ]
+    }
+  ],
+  "negativeControl": {
+    "sabotage": "the SDK root branch skipped the owner Document for every hover offset, as if only documentElement Maps could qualify hover",
+    "lanes": {
+      "internal-only": {
+        "checks": 203,
+        "failed": 34,
+        "failingGroups": [
+          "all",
+          "doc",
+          "doc-capture-only",
+          "isolation",
+          "removal",
+          "touch"
+        ],
+        "reportSha256": "3cbb76d8c68662168be1fdc56283f8cac34160b6570dd4417dd8fb0168657873",
+        "logSha256": "cd0d08c4be5e9e99fe2ea94735d231fe399b8f4e98954bbe6458afc5d4c9f6f8"
+      },
+      "enabled": {
+        "checks": 211,
+        "failed": 22,
+        "failingGroups": [
+          "doc",
+          "doc-capture-only",
+          "isolation",
+          "removal"
+        ],
+        "reportSha256": "60ed0e85f789bc9b9c925f26bd4acf76bbca129a60743b6119d28dc0ab65cee0",
+        "logSha256": "664effee63beb6db7354c682cf67497a8a0923bb0b16fdac064dafcd81466d1c"
+      }
+    },
+    "independentNodeOracleRejectedBoth": true,
+    "oracleRunBypassedProbeStatusGates": true,
+    "oracleAcceptsFinalReports": true,
+    "oracleLogSha256": "cf4ef75031faa8a0801bd58448db883aff2e712a1d39145656bba9fa01ea6d8d",
+    "platformPluginRestoredToPreSabotageBytes": true
+  },
+  "oldHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 63,
+      "normativeFailures": 8,
+      "reportSha256": "214797b9e1d5bd6d0f8c56f05bfc5ae04af9e1400ab83a60f9684d57fbdd917a",
+      "bundlerPinSha256": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 187,
+      "normativeFailures": 12,
+      "reportSha256": "309a8cf014a5515aa42f3db737e0c34b6e4aaad8425aede688c81a949405e1d8",
+      "bundlerPinSha256": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 66,
+      "normativeFailures": 3,
+      "reportSha256": "cfafc63774696ad9fd1f51567d11899be80773a6661cb7bc6c4890270bfb3672",
+      "bundlerPinSha256": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2"
+    },
+    "pointer-move": {
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "preservedHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 136,
+      "normativeFailures": 45,
+      "reportSha256": "3c2003de8d5b859a878586716a5adf26b95d1e0c6d70f838821247107a7b178d",
+      "bundlerPinSha256": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2"
+    },
+    "pointer-hover": {
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "preservedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 137,
+      "normativeFailures": 32,
+      "reportSha256": "97d1baf2d73897f33aa2bbd383fa5a4eb6d6a44a1c4976312e6deaf7f087deb5",
+      "bundlerPinSha256": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2"
+    },
+    "pointer-root-path": {
+      "nativeHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "preservedHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "checks": 45,
+      "normativeFailures": 9,
+      "reportSha256": "839252cd7484426322fb16af7fdb9aa2b30f489f1fa845999116f6eb17cf9402",
+      "bundlerPinSha256": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2",
+      "documentCaseCrashedAsExpected": true,
+      "documentCaseLogSha256": "f821dae19d12f6a3d54f84b08534830a7639cce4cd0dbfbf206de4ce0cea6c4e"
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "529b6e1f8c65c7c01e663dd0992f82d6465744994e9506280aaae9d23a15e030"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "722273af99e92cd1376f4bc5bc689d61a1f0b5051e006bf5085a1c97000ad35a"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "53037f3d19cf9696bc8edac1550c76dbfd66568cd28250e7fef5b5a613761ba0"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "3050fb1afc544f9ee95b3c6e5ae77c491f9f1ef230476071964040b73f2051b9"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 128,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "fd54cec122dcab7a2aae829162d50dc6658a650644bcac8506a0b0583ab4455c"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "b51e7fd26c97f6694d51f2c4c71e7f29c52ff7fbad2c5ae043e7e64d84ed52e8"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "9a60f391029c6725f14f1a59ee3f4eba02109a191db4af4646669a112d7f6c73"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "70a40114356629c4c9fbded0c868d3ae68875bcd27f0ad75cffd75623fb1fdb8"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "d597051fd4f40d18af4f312d554e6eb80ec110903f4ee0eb3a50236ab12d4869"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "c6259cde1aa1b4e5b51d8a606a8199393ef30db045b6953e5952b0aa2d416a8d"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "2291e9e47a2e549dacef6dd0afaec2f59441d0ae7464140ee8c65d4890372b91"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "a082d5a4fb34a7dae481e03e01742695bbb2886969117427d0ab07e5d6910fae"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "6f407b06a9bc9ff5f5184628a49e3b283cc0df6a3d36b7ca93ffcf97aedc0934"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "b2b5915e6c487a1961ed516b8a3dd0d9487158077b20f78c2cf18bdd79a65d97"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "5d5a65f4d0cbeab567d34409dd9ba2fc81f48e4ab5fccc9288c1afef123357ee"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "47c90375fb9309dade0c46b1cb50ee02221ce3b5096bb31951661b66ae1bff87"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "2bfe27b34126641123d780d3bdabdfb20eb0559f1510a7285a362c3edb18ca10"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "cdbc0531229baf14c13c2335c36d99aa45bcfafae6c8db5b13306819d3f924f2"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "63da18a0c43bce1be5f83879396d1f865ee6139190e2b585bc04411c3186c581"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 62,
+        "logSha256": "5ca164a883b1490c446521ad42df28b033c1b7121b9e5d1c054c199e15d03d57"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "ca960d9bfba33d9e03c0b48f2fdd97eafd40a18b762577e9586ff4a5b2d7663a"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "4cf896c401ad6dd0364f670e1adcf4bf2fb6bac89b42b8354f87fc87ef38f2d7"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 30,
+        "logSha256": "8012ffb87fc1ace9d44e709316e68e10ed74326525412c2873537e1390f66825"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "50a44a1a9ed3f2af7e5ccd31e5f9ed81fe4f521d0a9fe93f257b9681b23460b5"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "8cf7beefec6a771dd4260ba23531e3200f29f508896a916c2c9920c3a32e4b8a"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 28,
+        "logSha256": "5c45018ad2a213b5bf6b8b82e459fa79b09efb172238bbc2d2671c905e96050b"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    },
+    "downChecks": 2731,
+    "documentUpChecks": 6459,
+    "documentMoveChecks": 1940,
+    "documentHoverChecksInSequence": 1530,
+    "viewUpChecks": 297,
+    "queryFaultChecks": 187,
+    "resolverFaultChecks": 66,
+    "moveChecks": 220,
+    "hoverChecks": 158,
+    "rootPathChecks": 82,
+    "nodeContractChecks": 260,
+    "pythonContractChecks": 13,
+    "examples": 22,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true,
+    "nativeAndSDKProductionFilesUnchanged": true
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-document-bootstrap.js": "3a5ebd4c1bdc7a9c4bf07cd62561bcd9746624f2c2b946e15892b484ff5cc37c",
+    "tests/pointer-document-fixture.jsx": "646115d9228fea523b1b26244fe495c27c24d0ea392c4bcba412785dfde1fd31",
+    "tests/pointer-document-hover-fixture.jsx": "f69940b9d54237baeb16c407752ea883918d947eeb47bca67da088b995b6c251",
+    "tests/pointer-document-up-probe.gd": "1d5fabda72eeeae0f54ec7bab82727d135faced84bd0110a12cf86c4f44817fe",
+    "tests/pointer-document-hover-probe.gd": "ddf63823c1b992fd7eb3a84030305fe9f09dc53fc29589bc9189ce491651f10c",
+    "tests/pointer-document-hover-native.test.mjs": "8ee84ee08210773f5457f5791445e076285f97e4fee5e3f571ccb591f584b784",
+    "scripts/event-target-bundle.mjs": "c316f773f0ddd824dd2a7fe73af59ef17ba89e72826ae6013b2dcfc721ff50d2",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "7e0d658a10ab0a97835d76aaa8495ab7bb2a42fc8670852176f236ac51862694",
+    "native/pointer_adapter.cpp": "19dc59f7b4fc4734a2c731d031d73025090d763f3429372fbf2cff1344d941e5",
+    "native/pointer_adapter.h": "3df6ab12f9d12a6297a47d6e836f1fea210501103057d92d0b4549bbfe979647",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+    "src/private/webapis/dom/nodes/internals/NodeInternals.js": "2e8d491275a6c818e9acc3b7d4d49a76d90b1fb96b9c82a75ae18033f9a908ac",
+    "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js": "2420fa1425c70cd7d4c707f655dd8562024c0a3956a7cbebd760ab9ac01ccbda",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+    "ReactCommon/react/renderer/uimanager/PointerHoverTracker.cpp": "1652ac4a624a22e9de2e21f01408718289d4aaee66887599d07fb9ef02e77fff",
+    "ReactCommon/react/renderer/core/EventEmitter.cpp": "892993afa65eb62554792517f027491144861984b1a6406f00c876beafc17b78",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "677ef2374c58301eec6169b4833bc6cd0a3e4193106a20abe7b0f67918917d15",
+    "package.json": "7da103654ca610f140176d02663b0b6054d8d234869ad379679d6e5b45a2b6ee",
+    ".fallowrc.json": "30f1615914e769500042a8b687687a618ef60c7e4f14b43beb45a534fdcf3c32"
+  },
+  "changedFilesSinceExecutionBase": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "README.md",
+    "ROADMAP.md",
+    "docs/evidence/README.md",
+    "docs/evidence/pointer-document-hover/README.md",
+    "docs/research/pointer-hover.md",
+    "examples/README.md",
+    "examples/pointer-document-hover/README.md",
+    "package.json",
+    "scripts/event-target-bundle.mjs",
+    "tests/pointer-document-fixture.jsx",
+    "tests/pointer-document-hover-fixture.jsx",
+    "tests/pointer-document-hover-native.test.mjs",
+    "tests/pointer-document-hover-probe.gd"
+  ],
+  "hostedCI": {
+    "status": "pending-document-hover-slice"
+  },
+  "limits": [
+    "Document and documentElement over/out/enter/leave listeners under a button-less mouse and a touch, in eight original/current x flag lanes on the same host, headless.",
+    "No viewport capture; root query faults at hover offsets, once/AbortSignal, refs/retirement, mutation and reentry during hover dispatch are not exercised for Document listeners.",
+    "Pen hover, pointer capture while hovering, surface selection for empty-area input, responders, hardware, mobile exports and performance remain open.",
+    "The executed tree was dirty on 3264107; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T19:17:33.592394+00:00",
+    "meaning": "Contracts-job gates rerun after every doc, dashboard, example and the receipt body above were final; this field was appended afterwards.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "e79c9f980c8a598b5872b99ba2cc385cc82c84b0aec47f7571613d03d79dd15c"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "3563881e1a599e20921c6e8a3a2a793e16a9f3d038479aea80681c3baa9f7b55"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "d49e9b99c96d6fa9c90f1ae5953b5602457743a045406da0dc6e8feaa030fd2f"
+      }
+    }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 22,
+    "pinSetCounts": {
+      "sourcePins": 19,
+      "verificationSourcePins": 3
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
+  }
+}

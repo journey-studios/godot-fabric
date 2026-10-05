@@ -201,7 +201,18 @@ handle: the path query, the enter/leave loops and the binding all skip it, while
 its capture lookups still propagate to entering and leaving descendants. On the
 preceding host the same bundle fails exactly 9 View-case checks, and its Document
 case crashes (signal 11 in `dispatchEventToJS`) when enter is emitted to the root.
-Hosted CI pending.
+Hosted run 37359026197 passed the same 82 checks with identical IDs and bundle
+([receipt](pointer-root-path/hosted-ci.json)).
+
+The [Document hover record](pointer-document-hover/README.md) runs Document and
+documentElement over/out/enter/leave listeners in eight lanes (original/current
+interest × four flag configurations): 1,530 headless checks. Document listeners
+need native dispatch and documentElement listeners also the imperative flag; only
+the installed current query delivers. Over/out reach them at phases 1 and 3;
+enter/leave reach only capture listeners at phase 1, for the nodes entering or
+leaving with the root; bubble enter/leave listeners on the root never run. A
+retained control that ignores the owner Document for hover offsets fails 34/22
+probe checks, and the independent oracle rejects it. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

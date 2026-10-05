@@ -130,8 +130,16 @@ Hover em Document na matriz de flags e listeners no documentElement, a seleção
 superfície para input na área vazia, hover com caneta, captura durante hover,
 responders, hardware, exports mobile e performance seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37359026197, no head a478778 (checkout de merge 0523b27). O artefato
+`native-pointer-root-path` repete os **82 checks headless** com IDs, bundle e estágios
+idênticos aos locais; além de timestamps, da versão patch do Node e do hash do host
+do runner, nada difere, o log não tem linha de erro e as 76 entradas
+rastreadas batem com 71a64c2 na árvore do checkout. O controle em duas partes no
+host anterior continua local. O [Pages](publication.json) (run 37360227776, push da
+`main` em 3264107) implantou exatamente os dados commitados, e o JSON público e a API
+local conferem com eles. Nenhum GF, checkpoint, dependência, peso ou denominador
+foi fechado.
 
 As 76 fontes de código/configuração executadas (21 produtoras do bundle,
 55 entradas do build nativo e 5 de verificação, com sobreposição)
