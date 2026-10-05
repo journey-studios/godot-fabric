@@ -1222,8 +1222,13 @@ checks) and the Up probe/oracle gain the stages. Contracts 255 Node/13 Python,
 dispatch, View/element listener mutation, stopPropagation with mutation, listener
 errors during mutation, Up faults and captured/no-hit routing remain open.
 All 71 executed code/configuration inputs match implementation 4342db0 via git
-show/SHA-256 (execution base de89fb2/dirty retained). Hosted CI for this slice is
-pending. No whole GF, checkpoint, weight or denominator closes.
+show/SHA-256 (execution base de89fb2/dirty retained). Hosted Contracts run
+37319530371 passed all five jobs at c7e5037 (merge checkout 2717fe2); its
+[audited artifact](docs/evidence/pointer-document-up-mutation/hosted-ci.json)
+repeats the 4,401 headless checks with identical IDs, bundles and mutation
+stages, and all 71 tracked inputs match 4342db0 in the checkout tree. The
+viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
+weight or denominator closes.
 
 
 ### Document Up reentrant dispatch (2026-10-05)

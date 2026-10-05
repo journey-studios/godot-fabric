@@ -193,7 +193,8 @@ root query saw only the capture Map: native delivery is not filtered by phase.
 An add to another root's Document leaves that root unchanged until its own
 gesture, which then qualifies. A deliberate wrong-phase removal fails eight probe
 checks, and the independent oracle rejects that retained report on its own. The graphical lane passes 835 checks with 118
-pixels; native/SDK bytes are unchanged.
+pixels; native/SDK bytes are unchanged. Hosted run 37319530371 repeated the 4,401
+headless checks ([receipt](../evidence/pointer-document-up-mutation/hosted-ci.json)).
 
 ## Reentrant dispatch from native callbacks
 

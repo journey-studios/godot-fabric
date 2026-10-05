@@ -497,8 +497,8 @@ only the fresh Document's listeners receive the next gesture.
 
 In the current lanes with native dispatch, listeners delivered by an actual native
 Up remove, add and abort original Document listeners mid-dispatch. The eight-lane
-matrix passes 4,401 headless checks and the graphical lane 835 checks with 118
-pixels. A pending removal or abort is skipped in the same Up, an add to
+matrix passes 4,401 headless checks, also passed in hosted CI, and the graphical
+lane 835 checks with 118 pixels. A pending removal or abort is skipped in the same Up, an add to
 the Map being iterated waits for the next gesture, and bubble listeners added by
 a capture listener run in the same Up even though the root query saw only the
 capture Map. [Evidence and limits](docs/evidence/pointer-document-up-mutation/README.md).
