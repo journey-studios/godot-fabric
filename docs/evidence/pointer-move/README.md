@@ -210,8 +210,18 @@ certifica:
   responders/PanResponder, multi-toque, a prioridade com o mapeamento corrigido,
   hardware, exports mobile e performance seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37345287351, no head 4ca3f1f (checkout de merge 9cf35fd). O artefato
+`native-pointer-move` repete os **219 checks headless** com IDs, bundle e estágios
+idênticos aos locais, incluindo os 51 estágios `fault/*`; além de timestamps, da
+versão patch do Node e do hash do host do runner, só os identificadores de
+alocação do Godot da segunda aplicação diferem, aceitos apenas como renomeação
+um-para-um (516). O log retém exatamente os 16 diagnósticos esperados, e as 77
+entradas rastreadas batem com f9f9817 na árvore do checkout. A captura e os
+controles de host anterior continuam locais. O [Pages](publication.json) (run
+37349051758, push da `main` em d75ea51) implantou exatamente os dados commitados, e o
+JSON público e a API local conferem com eles. Nenhum GF, checkpoint, dependência,
+peso ou denominador foi fechado.
 
 As 77 fontes de código/configuração executadas (17 produtoras do bundle, 55 entradas
 do build nativo e 7 de verificação, com sobreposição) correspondem à implementação

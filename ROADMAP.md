@@ -1442,7 +1442,15 @@ matrix, resolver faults during Move lookups, hover events, the per-move query
 cost, captured/no-hit moves (non-unique Unspecified in the host, unlike RN),
 responders and multi-touch remain open. All 77 executed
 code/configuration inputs match implementation f9f9817 via git show/SHA-256
-(execution base a0ec86b/dirty retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+(execution base a0ec86b/dirty retained). Hosted Contracts run 37345287351 passed all
+five jobs at 4ca3f1f (merge checkout 9cf35fd); its [audited artifact](docs/evidence/pointer-move/hosted-ci.json)
+repeats the 219 headless checks with identical IDs, bundle and stages, including
+the 51 fault stages, the second application's allocation ids differing only by a
+one-to-one renaming, the 16 expected diagnostics, and all 77 tracked inputs match
+f9f9817 in the checkout tree. [Pages 37349051758](docs/evidence/pointer-move/publication.json)
+deployed this record from main d75ea51, and the live public JSON and local API match
+it. The viewport and old-host controls stay local. No whole GF, checkpoint, weight
+or denominator closes.
 
 ### Document pointermove across four original flags (2026-10-05)
 

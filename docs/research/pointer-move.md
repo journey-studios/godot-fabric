@@ -4,7 +4,8 @@ Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pointer-move/README.md) owns the 219
 headless checks (135 healthy and 84 in a Move-fault application), 243 graphical
 checks and the 45-failure native control. Public EventTarget flags remain
-disabled. Hosted CI for this slice is pending.
+disabled. Hosted run 37345287351 repeated the 219 headless checks with identical
+IDs and bundle ([receipt](../evidence/pointer-move/hosted-ci.json)).
 
 ## The filter is upstream, the gap is imperative registration
 
