@@ -53,12 +53,12 @@ func tag_for(value: Dictionary, test_id: String) -> int:
       return int(node.tag)
   return 0
 
-func bind(name: String) -> void:
+func bind(name: String, stage: String = "") -> void:
   var value := native(surfaces[name])
   var leaf_tag := tag_for(value, name + "-leaf")
   var sentinel_tag := tag_for(value, name + "-sentinel")
   check(leaf_tag > 0 and sentinel_tag > 0 and leaf_tag != sentinel_tag, "bind/" + name + "/surface-" + str(value.surfaceId) + "/Two actual materialized Controls have distinct native tags")
-  stages["capability" + name] = js("bindRoot(%s,%d,%d,%d)" % [JSON.stringify(name), int(value.surfaceId), leaf_tag, sentinel_tag])
+  stages["capability" + name if stage.is_empty() else stage] = js("bindRoot(%s,%d,%d,%d)" % [JSON.stringify(name), int(value.surfaceId), leaf_tag, sentinel_tag])
 
 func inject(name: String, index: int, phase: String = "start", target: String = "leaf") -> void:
   var event := InputEventScreenTouch.new()
@@ -327,6 +327,117 @@ func cancel_control() -> void:
   clean_contact("A", "cancel")
   stages["cancel/terminal"] = {"react": value, "before": before, "after": after, "application": native(application)}
 
+func doc_offsets() -> Array:
+  return [36] if installed() else [36, 37]
+
+func doc_results() -> Array:
+  return [true] if installed() else [false, false]
+
+# A real React commit keeps the original Document, documentElement and keyed
+# View ref, so every Up listener installed before it still qualifies the next
+# physical terminal with unchanged propagation.
+func rerender_control() -> void:
+  var prefix := "refs/rerender"
+  js("resetAll()")
+  stages[prefix + "/configuration"] = js("configure('A','all')")
+  var before := native(surfaces.A)
+  js("rerender('A')")
+  await settle()
+  var identity: Dictionary = js("inspectIdentity('A')")
+  stages[prefix + "/identity"] = {"identity": identity, "before": before, "after": native(surfaces.A)}
+  check(identity.docSame and identity.elementSame and identity.refSame and identity.getterSame and identity.revision == 1 and native(surfaces.A).commits == before.commits + 1,
+    prefix + "/One actual React commit preserves the original Document documentElement keyed View ref and root getter")
+  await physical_down("A", 0, prefix)
+  var expected := expectation("all")
+  await finish_up("A", 0, prefix, expected, [1, 1, 3, 3] if expected.size() == 4 else [1, 3] if expected.size() == 2 else [], doc_offsets(), doc_results())
+
+# Retire A while A and B both hold real contacts. The retained OldDoc/OldRoot
+# Up listeners stay registered on the retired objects but observe no Up, and
+# B's later release still qualifies through its own original Document.
+func retirement_control() -> Dictionary:
+  var prefix := "refs/retire"
+  js("resetAll()")
+  stages[prefix + "/B-configuration"] = js("configure('B','doc')")
+  var retained: Dictionary = js("retainRoot('A')")
+  stages[prefix + "/retained"] = retained
+  check(int(retained.surfaceId) == int(native(surfaces.A).surfaceId),
+    prefix + "/Retained objects belong to the actual mounted A root generation")
+  await physical_down("B", 1, prefix + "/B-held")
+  await physical_down("A", 2, prefix + "/A-held", 1)
+  js("arm('A',%s)" % JSON.stringify(prefix + "/unmount"))
+  var before_a := native(surfaces.A)
+  var before_b := native(surfaces.B)
+  var count_b: Variant = state().panels.B.count
+  surfaces.A.call("unmount")
+  await settle()
+  var value := state()
+  var after_a := native(surfaces.A)
+  var after_b := native(surfaces.B)
+  var app := native(application)
+  var identities: Dictionary = js("inspectRetained(%s)" % JSON.stringify(retained.key))
+  stages[prefix + "/unmount"] = {"react": value, "beforeA": before_a, "afterA": after_a, "beforeB": before_b, "afterB": after_b,
+    "application": app, "identities": identities, "beforeCountB": count_b, "afterCountB": value.panels.B.count}
+  check(after_a.nativeTags == 0 and after_a.creates == after_a.deletes and app.rootCount == 1 and after_a.pointer.activePointers == 0 and after_a.pointer.activeTouches == 0 and after_a.pointer.pointerCancels == before_a.pointer.pointerCancels + 1 and after_a.pointer.pointerUps == before_a.pointer.pointerUps and after_a.pointer.ends == before_a.pointer.ends,
+    prefix + "/Held root retirement balances native Controls and cancels its contact without a physical Up")
+  # The host cancels A's held contact before teardown: the leaf observes one
+  # original TouchCancel, and no Up reaches the retained root listeners.
+  var cancel_rows: Array = value.events.filter(func(row: Dictionary) -> bool: return row.label == "TouchCancel")
+  check(labels(value) == ["TouchCancel"] and value.raw.size() == 2 and exact_raw(value, "topTouchCancel", cancel_rows) and cancel_rows[0].name == "A" and cancel_rows[0].targetMatches and cancel_rows[0].currentMatches and cancel_rows[0].currentPriority == value.discretePriority and (trusted_rows(cancel_rows, value, "A") if native_dispatch else (cancel_rows[0].compiledLegacySynthetic and not cancel_rows[0].originalEvent)),
+    prefix + "/Retirement delivers exactly one original TouchCancel with its own Raw identity")
+  check(pointer_rows(value).is_empty() and raw_rows(value, "topPointerUp").is_empty() and value.query.rows.is_empty() and not value.panels.has("A") and context_clean(value),
+    prefix + "/Retained Document and documentElement Up listeners observe no Up Raw query or React state during retirement")
+  check(after_b.pointer == before_b.pointer and after_b.commits == before_b.commits and value.panels.B.count == count_b and after_b.pointer.activePointers == 1 and after_b.pointer.activeTouches == 1 and app.pointerProcessor.active == 1 and app.pointerRouting.contacts == 1,
+    prefix + "/Sibling B keeps its held contact metrics and React state through A retirement")
+  var available := ["function", "function", "function"]
+  var absent := ["undefined", "undefined", "undefined"]
+  check(not identities.docConnected and not identities.elementConnected and identities.oldRootGetterNull and identities.originalDoc and identities.methods == (available if native_dispatch else absent),
+    prefix + "/Retained original Document and documentElement disconnect and leave the root registry with their method matrix")
+  await capture_refs("pointer-document-up-refs-retired.png", -1, 2)
+  var expected := expectation("doc")
+  await finish_up("B", 1, prefix + "/B-positive", expected, [1, 3] if not expected.is_empty() else [], doc_offsets(), doc_results())
+  return retained
+
+# The replacement root generation starts with empty original Maps. Retained
+# listeners stay local manual positives, the cancelled contact's late release
+# is swallowed, and only fresh Document listeners qualify a new gesture.
+func remount_control(retained: Dictionary) -> void:
+  var prefix := "refs/remount"
+  check(surfaces.A.call("mount"), prefix + "/Same physical surface mounts a replacement original root")
+  await settle()
+  bind("A", prefix + "/capability")
+  var capability: Dictionary = stages[prefix + "/capability"]
+  var fresh: Dictionary = js("inspectRetained(%s)" % JSON.stringify(retained.key))
+  stages[prefix + "/identities"] = fresh
+  check(fresh.currentDocFresh and fresh.currentElementFresh and not fresh.docConnected and int(capability.surfaceId) != int(retained.surfaceId) and capability.originalDoc and capability.docConnected and capability.elementConnected and capability.originalRootGetterIdentity and capability.distinctOtherRoot and native(application).rootCount == 2,
+    prefix + "/Replacement root owns a connected fresh Document and never reuses retained identities")
+  js("resetAll()")
+  await physical_down("A", 0, prefix + "/retained-inert")
+  await finish_up("A", 0, prefix + "/retained-inert", [], [], [36, 37], [false, false])
+  js("arm('A',%s)" % JSON.stringify(prefix + "/retained-manual"))
+  var result: Dictionary = js("manualRetained(%s)" % JSON.stringify(retained.key))
+  var value := state()
+  check((result.available and result.returned and not result.trusted and result.targetMatches and result.cleaned and labels(value) == ["OldDoc"] and value.events.all(func(row: Dictionary) -> bool:
+    return row.type == "pointerup" and not row.trusted and row.phase == 2 and row.targetMatches and row.currentMatches and row.thisMatches and row.originalEvent and not row.originalSynthetic)) if native_dispatch else (not result.available and value.events.is_empty()),
+    prefix + "/retained-manual/Retained original Document Up listener remains an untrusted local manual positive")
+  check(value.raw.is_empty() and value.query.rows.is_empty() and value.panels.A.count == value.baselineCount and context_clean(value),
+    prefix + "/retained-manual/Retained manual Up creates no Raw native query React increment or context leak")
+  stages[prefix + "/retained-manual"] = {"result": result, "react": value}
+  stages[prefix + "/configuration"] = js("configure('A','doc')")
+  js("arm('A',%s)" % JSON.stringify(prefix + "/stale-release"))
+  var before := native(surfaces.A)
+  var app_before := native(application)
+  await inject("A", 2, "end")
+  var stale := state()
+  var after := native(surfaces.A)
+  var app_after := native(application)
+  stages[prefix + "/stale-release"] = {"react": stale, "before": before, "after": after, "applicationBefore": app_before, "application": app_after}
+  check(stale.events.is_empty() and stale.raw.is_empty() and stale.query.rows.is_empty() and stale.panels.A.count == stale.baselineCount and after.commits == before.commits and after.pointer == before.pointer and app_after.pointerProcessor == app_before.pointerProcessor and app_after.pointerRouting == app_before.pointerRouting and context_clean(stale),
+    prefix + "/stale-release/Release of the contact cancelled by retirement delivers no Up Raw query or state to fresh Document listeners")
+  var expected := expectation("doc")
+  await physical_down("A", 0, prefix + "/fresh-document")
+  await finish_up("A", 0, prefix + "/fresh-document", expected, [1, 3] if not expected.is_empty() else [], doc_offsets(), doc_results())
+  await capture_refs("pointer-document-up-refs-remounted.png", 2, 4)
+
 func capture_frame(filename: String, expected_a: int, expected_b: int, lifecycle: bool = false) -> void:
   if not capture or DisplayServer.get_name() == "headless":
     return
@@ -355,6 +466,35 @@ func capture_frame(filename: String, expected_a: int, expected_b: int, lifecycle
   check(state().panels.A.count == expected_a and state().panels.B.count == expected_b and saved == OK and image.get_width() == 760 and image.get_height() == 220,
     "capture/" + filename + "/Saved native viewport and actual React counters describe the same Up stage")
   captures.append({"file": "build/" + filename, "width": image.get_width(), "height": image.get_height(), "pixels": pixels, "reactCounters": state().panels})
+
+# Retirement and replacement frames. A retired surface shows only the project
+# clear color; the replacement root draws a fresh counter beside B's own edge.
+# project.godot default_clear_color (0.045, 0.065, 0.10) reads back truncated.
+const CLEAR := "0b1019ff"
+
+func capture_refs(filename: String, expected_a: int, expected_b: int) -> void:
+  if not capture or DisplayServer.get_name() == "headless":
+    return
+  await RenderingServer.frame_post_draw
+  var image := root.get_texture().get_image()
+  var saved := image.save_png("res://build/" + filename)
+  var pixels: Array = []
+  for column: Array in [[Vector2i.ZERO, expected_a], [Vector2i(400, 0), expected_b]]:
+    var origin: Vector2i = column[0]
+    var count: int = column[1]
+    var end := 40 + count * 4
+    var points := [Vector2i(5, 5), Vector2i(75, 55), Vector2i(260, 55), Vector2i(25, 175), Vector2i(45, 175), Vector2i(end - 1, 175), Vector2i(end + 1, 175)]
+    var colors := ["0f172aff", "2563ebff", "0f766eff", "fde047ff", "fde047ff" if count >= 2 else "0f172aff", "fde047ff", "0f172aff"]
+    for index in range(points.size()):
+      var point: Vector2i = origin + points[index]
+      var expected: String = CLEAR if count < 0 else colors[index]
+      var actual := image.get_pixelv(point).to_html()
+      check(actual == expected, "capture/" + filename + "/Actual native pixel " + str(point) + " matches the root generation and Up counter")
+      pixels.append({"point": [point.x, point.y], "color": actual, "expected": expected})
+  var panels: Dictionary = state().panels
+  check((not panels.has("A") if expected_a < 0 else panels.A.count == expected_a) and panels.B.count == expected_b and saved == OK and image.get_width() == 760 and image.get_height() == 220,
+    "capture/" + filename + "/Saved native viewport and actual React roots describe the same retirement stage")
+  captures.append({"file": "build/" + filename, "width": image.get_width(), "height": image.get_height(), "pixels": pixels, "reactCounters": panels})
 
 func _initialize() -> void:
   for argument: String in OS.get_cmdline_user_args():
@@ -405,6 +545,9 @@ func run_probe() -> void:
   await pre_aborted_control()
   await post_up_abort_control()
   await cancel_control()
+  await rerender_control()
+  var retained: Dictionary = await retirement_control()
+  await remount_control(retained)
   # Independent JSX sentinel proves native Up transport in every flag lane. Its
   # sibling prop cannot qualify any preceding blue-leaf Up.
   js("resetAll()")

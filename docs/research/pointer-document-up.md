@@ -159,11 +159,29 @@ Node independente. As três capturas novas mostram `once`: A12/B2 antes,
 A13/B2 após o primeiro Up e A13/B2 após o segundo; veja o exemplo e os PNGs
 da evidência. A CI baseline84270fb confirma1371checks, separada da nova fatia.
 
+## Retained roots, retirement and remount
+
+The [refs evidence](../evidence/pointer-document-up-refs/README.md) adds three
+root-generation controls to every lane, for **2,709 headless checks**. A real
+rerender keeps the original Document, documentElement, View ref and root getter,
+and the next Up delivers the same listeners. Retiring A while A and B hold
+contacts cancels A first: its leaf observes exactly one original TouchCancel with
+its own Raw pair, and no `pointerup`, Raw Up, interest query or React update
+reaches the retained OldDoc/OldRoot listeners. B keeps its contact and metrics,
+then its Up qualifies normally. The replacement root has a new surface and a
+connected fresh Document. A gesture with only retained listeners queries
+`36=false, 37=false`; a manual dispatch on the retained Document still reaches
+OldDoc, so inertness is not listener removal. The release for the index
+cancelled by retirement is swallowed even with fresh listeners installed, and
+the next complete gesture qualifies through the fresh Document only. No native
+or SDK file changed; the graphical lane passes 535 checks with 90 pixels.
+
 ## Boundaries still open
 
 This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle,
-listener mutation during delivery, retained or retired refs, root
-replacement/remount, captured/no-hit/null-target Up, got/lost capture, coalescing
+listener mutation during delivery, capture-phase or View listeners across root
+retirement, application stop/restart or keyed remount of the whole tree,
+captured/no-hit/null-target Up, got/lost capture, coalescing
 or full responder negotiation. Down is deliberately filtered here, so no public
 Down/Up pointer-ID pair is established. Development renderer, other event-priority
 branches, hardware, Godot mobile exports, complete RN parity and performance

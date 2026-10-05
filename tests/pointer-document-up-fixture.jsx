@@ -13,6 +13,11 @@ globalThis.PointerDocumentUpProbe = {
   signal: base.registeredSignal,
   abort(name) { base.abortRegistered(name); return base.registeredSignal(name); },
   configure(name, kind) { return base.configure(name, kind, "pointerup"); },
+  // Retained OldDoc/OldRoot listeners keep their original Up registration on
+  // the retired root objects; the replacement root starts with empty Maps.
+  rerender: base.rerender, inspectIdentity: base.inspectIdentity, inspectRetained: base.inspectRetained,
+  retainRoot(name) { return base.retainRoot(name, "pointerup"); },
+  manualRetained(key) { return base.manualRetained(key, "pointerup"); },
   snapshot() {
     return {...base.snapshot(), scope: {actualNativeInput: true, realOriginalDocuments: true,
       realSDKQueryObservedOnlyForTest: true, listenerRegistryMirrored: false,

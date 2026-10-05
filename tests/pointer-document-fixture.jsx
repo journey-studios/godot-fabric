@@ -184,8 +184,8 @@ function manualElement(name) {
     cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0,
     noPrototypeBorrow: true};
 }
-function retainRoot(name) {
-  configure(name, "doc-retain");
+function retainRoot(name, eventType = "pointerdown") {
+  configure(name, "doc-retain", eventType);
   const panel = panels.get(name), key = name + "-" + panel.surfaceId;
   retained.set(key, {name, doc: panel.doc, element: panel.element, surfaceId: panel.surfaceId});
   return {key, surfaceId: panel.surfaceId};
@@ -198,13 +198,14 @@ function inspectRetained(key, name = "A") {
     currentElementFresh: current == null || current.element !== old.element,
     methods: methods(old.doc), originalDoc: old.doc instanceof ReactNativeDocument};
 }
-function manualRetained(key) {
+function manualRetained(key, eventType = "pointerdown") {
   const old = retained.get(key);
   if (typeof old.doc.dispatchEvent !== "function") return {available: false, noPrototypeBorrow: true};
   active.manualTarget = old.doc;
-  const event = new OriginalEvent("pointerdown", {bubbles: true}), returned = old.doc.dispatchEvent(event);
+  const event = new OriginalEvent(eventType, {bubbles: true}), returned = old.doc.dispatchEvent(event);
   return {available: true, returned, trusted: event.isTrusted, targetMatches: event.target === old.doc,
-    cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0};
+    cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0,
+    noPrototypeBorrow: true};
 }
 function snapshot() {
   const upRefs = active?.eventType === "pointerup" ? active.eventRefs.filter((event, index) =>

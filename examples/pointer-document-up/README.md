@@ -154,14 +154,39 @@ cresce no primeiro Up e fica igual no segundo.
 A aceitação cobre listeners bubble do Document; outras fases, View/element,
 abort durante gesto ativo ou callback e retired refs seguem fora desta fatia.
 
+## Rerender, retirada e remount do root
+
+A [evidência de refs](../../docs/evidence/pointer-document-up-refs/README.md)
+amplia a matriz para **2.709 checks** headless. Um rerender mantém Document,
+documentElement e a ref da View, e o Up seguinte entrega os mesmos listeners.
+Retirar A com um contato ativo produz um único `TouchCancel` original e nenhum
+`pointerup`; o contato que B segura continua intacto e o Up de B é entregue
+depois. A nova geração de A tem um Document novo: os listeners retidos no
+Document antigo não recebem input nativo (embora ainda respondam a uma emissão
+manual), o release do contato cancelado é descartado, e só os listeners do
+Document novo qualificam o gesto seguinte.
+
+```js
+const oldDoc = viewRef.current.ownerDocument;
+oldDoc.addEventListener('pointerup', onOldUp);   // root generation 1
+// ...surface unmounts while a finger is down, then mounts again...
+const freshDoc = newViewRef.current.ownerDocument; // freshDoc !== oldDoc
+freshDoc.addEventListener('pointerup', onUp);     // only this one qualifies Up
+```
+
+| A retirado, B com contato | A remontado após gesto novo |
+| --- | --- |
+| ![A retirado, B2](../../docs/evidence/pointer-document-up-refs/retired.png) | ![A2/B4](../../docs/evidence/pointer-document-up-refs/remounted.png) |
+
 ## Limits
 
-This matrix certifies the listed healthy Document/element Up cases. It does not
-certify Up-specific faults, mutation during dispatch, retired refs,
-remount, explicit pointer capture, coalescing, full responders, development
+This matrix certifies the listed healthy Document/element Up cases, including
+Document/documentElement rerender, held-root retirement and one replacement root.
+It does not certify Up-specific faults, mutation during dispatch, capture-phase or
+View listeners across retirement, explicit pointer capture, coalescing, full responders, development
 renderer, hardware/mobile exports or performance. Down is filtered here; no
 public Down/Up pointer-ID equality is claimed. The final Down regression passes 2,723 checks; contracts pass 255 Node/13 Python.
 Native/SDK production bytes are unchanged from the separately proven View Up
-slice. Hosted baseline84270fb passed1,371checks in five successful jobs; the
-new lifecycle2143 hosted run remains pending. The
+slice. Hosted baseline 84270fb passed 1,371 checks in five successful jobs and
+lifecycle run 37246479501 passed 2,143; the refs slice's hosted run is pending. The
 [research](../../docs/research/pointer-document-up.md) explains the boundaries.

@@ -155,6 +155,56 @@ function lifecycleManual(stage, expected, D) {
   assert.deepEqual(value.raw, []); assert.deepEqual(value.query.rows, []);
   assert.equal(value.panels.A.count, value.baselineCount); clean(value, D);
 }
+// Rerender keeps identities; retirement cancels held A without Up while B
+// survives; the replacement root has fresh Maps, inert retained listeners and
+// swallows the release of the contact cancelled by retirement.
+function refs(report, I, D, installed) {
+  const stages = report.stages, docExpected = installed ? ["DocC", "DocB"] : [];
+  const docOffsets = installed ? [36] : [36, 37], docResults = installed ? [true] : [false, false];
+  const rerender = stages["refs/rerender/identity"];
+  assert.deepEqual(rerender.identity, {docSame: true, elementSame: true, refSame: true, getterSame: true, revision: 1});
+  assert.equal(rerender.after.commits, rerender.before.commits + 1);
+  const allExpected = !installed ? [] : I ? ["DocC", "RootC", "RootB", "DocB"] : ["DocC", "DocB"];
+  terminal(stages["refs/rerender/up"], allExpected, allExpected.length === 4 ? [1, 1, 3, 3] : allExpected.length === 2 ? [1, 3] : [], "A", D, installed, docOffsets, docResults);
+  const retained = stages["refs/retire/retained"];
+  assert.equal(retained.surfaceId, stages.capabilityA.surfaceId); assert.equal(retained.key, "A-" + retained.surfaceId);
+  assert.deepEqual(stages["refs/retire/B-configuration"].installed, D ? ["DocC", "DocB"] : []);
+  const retirement = stages["refs/retire/unmount"], retiring = retirement.react, cancel = retiring.events;
+  assert.deepEqual(cancel.map(row => row.label), ["TouchCancel"]); raw(retiring, "topTouchCancel", cancel);
+  assert.equal(retiring.raw.length, 2); assert.deepEqual(rawRows(retiring, "topPointerUp"), []); assert.deepEqual(retiring.query.rows, []);
+  assert.ok(cancel[0].name === "A" && cancel[0].targetMatches && cancel[0].currentMatches && cancel[0].currentPriority === retiring.discretePriority);
+  if (D) assert.ok(cancel[0].trusted && cancel[0].originalEvent && cancel[0].originalSynthetic && cancel[0].thisMatches && cancel[0].globalEventMatches && cancel[0].ownerDocumentMatches);
+  else assert.ok(cancel[0].compiledLegacySynthetic && !cancel[0].originalEvent);
+  assert.equal(retiring.panels.A, undefined); clean(retiring, D);
+  const {beforeA, afterA, beforeB, afterB, application} = retirement;
+  assert.equal(afterA.nativeTags, 0); assert.equal(afterA.creates, afterA.deletes);
+  assert.equal(afterA.pointer.pointerCancels, beforeA.pointer.pointerCancels + 1); assert.equal(afterA.pointer.cancels, beforeA.pointer.cancels + 1);
+  assert.equal(afterA.pointer.pointerUps, beforeA.pointer.pointerUps); assert.equal(afterA.pointer.ends, beforeA.pointer.ends);
+  assert.equal(afterA.pointer.activePointers, 0); assert.equal(afterA.pointer.activeTouches, 0);
+  assert.equal(application.rootCount, 1); assert.deepEqual(application.pointerProcessor, {active: 1, pendingCapture: 0, activeCapture: 0, hover: 1});
+  for (const key of ["active", "contacts", "stored"]) assert.equal(application.pointerRouting[key], 1);
+  assert.deepEqual(afterB.pointer, beforeB.pointer); assert.equal(afterB.commits, beforeB.commits);
+  assert.equal(retirement.afterCountB, retirement.beforeCountB); assert.equal(afterB.pointer.activePointers, 1);
+  assert.deepEqual(retirement.identities, {currentDocFresh: true, currentElementFresh: true, docConnected: false, elementConnected: false,
+    methods: methods(D), oldRootGetterNull: true, originalDoc: true});
+  terminal(stages["refs/retire/B-positive/up"], docExpected, installed ? [1, 3] : [], "B", D, installed, docOffsets, docResults);
+  const capability = stages["refs/remount/capability"], fresh = stages["refs/remount/identities"];
+  assert.notEqual(capability.surfaceId, retained.surfaceId); assert.notEqual(capability.surfaceId, stages.capabilityB.surfaceId);
+  for (const key of ["originalDoc", "originalElement", "docOwnsElement", "docConnected", "elementConnected", "originalRootGetterIdentity", "distinctOtherRoot"]) assert.equal(capability[key], true);
+  assert.deepEqual(capability.methods.doc, methods(D)); assert.deepEqual(capability.methods.element, methods(I && D));
+  assert.equal(capability.query.installations, installed ? 1 : 0);
+  assert.ok(fresh.currentDocFresh && fresh.currentElementFresh && !fresh.docConnected && !fresh.elementConnected && fresh.oldRootGetterNull);
+  terminal(stages["refs/remount/retained-inert/up"], [], [], "A", D, installed, [36, 37], [false, false]);
+  lifecycleManual(stages["refs/remount/retained-manual"], D ? ["OldDoc"] : [], D);
+  assert.deepEqual(stages["refs/remount/configuration"].installed, D ? ["DocC", "DocB"] : []);
+  const stale = stages["refs/remount/stale-release"];
+  assert.deepEqual(stale.react.events, []); assert.deepEqual(stale.react.raw, []); assert.deepEqual(stale.react.query.rows, []);
+  assert.equal(stale.react.panels.A.count, stale.react.baselineCount); assert.equal(stale.after.commits, stale.before.commits);
+  assert.deepEqual(stale.after.pointer, stale.before.pointer);
+  assert.deepEqual(stale.application.pointerProcessor, stale.applicationBefore.pointerProcessor);
+  assert.deepEqual(stale.application.pointerRouting, stale.applicationBefore.pointerRouting); clean(stale.react, D);
+  terminal(stages["refs/remount/fresh-document/up"], docExpected, installed ? [1, 3] : [], "A", D, installed, docOffsets, docResults);
+}
 function verify({report, result, log, interestMode, flagMode, bundles, headed}) {
   assert.equal(result.error, undefined, log); assert.equal(result.signal, null, log); assert.equal(result.status, 0, log);
   assert.ok(report != null, log);
@@ -246,6 +296,7 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
       lifecycleManual(report.stages[prefix + "/after-abort/manual"], [], D);
     }
   }
+  refs(report, I, D, installed);
   const canceled = report.stages["cancel/terminal"], cancel = canceled.react;
   assert.deepEqual(cancel.events.map(row => row.label), ["TouchCancel"]); assert.deepEqual(rawRows(cancel, "topPointerUp"), []);
   raw(cancel, "topTouchCancel", cancel.events); assert.deepEqual(cancel.query.rows, []);
@@ -261,16 +312,18 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   for (const key of ["active", "contacts", "stored"]) assert.equal(stopped.pointerRouting[key], 0);
   assert.deepEqual(stopped.errors, []);
   for (const name of ["A", "B"]) { const owner = report.stages["stoppedRoot" + name]; assert.equal(owner.nativeTags, 0); assert.equal(owner.creates, owner.deletes); assert.equal(owner.pointer.activePointers, 0); assert.equal(owner.pointer.activeTouches, 0); }
-  assert.equal(report.captures.length, headed ? 5 : 0);
+  assert.equal(report.captures.length, headed ? 7 : 0);
+  // A null A counter is the retired root generation: its region is clear color.
   const captureStages = [
     ["initial", 0, 0, 10], ["updated", 2, 0, 10],
     ["once-before", 12, 2, 14], ["once-first", 13, 2, 14], ["once-second", 13, 2, 14],
+    ["refs-retired", null, 2, 14], ["refs-remounted", 2, 4, 14],
   ];
   for (const [index, frame] of report.captures.entries()) {
     const [stage, counterA, counterB, pixels] = captureStages[index];
     assert.equal(frame.file, "build/pointer-document-up-" + stage + ".png");
     assert.equal(frame.width, 760); assert.equal(frame.height, 220); assert.equal(frame.pixels.length, pixels);
-    assert.equal(frame.reactCounters.A.count, counterA); assert.equal(frame.reactCounters.B.count, counterB);
+    assert.equal(frame.reactCounters.A?.count ?? null, counterA); assert.equal(frame.reactCounters.B.count, counterB);
   }
   assert.equal(bundles.nativeDispatchMode, "experimental"); assert.equal(bundles.pointerInterestMode, interestMode); assert.equal(bundles.parentMode, "current"); assert.equal(bundles.rendererTagMode, "current");
   for (const file of ["tests/event-target-bootstrap.js", "tests/pointer-document-bootstrap.js", "tests/pointer-document-fixture.jsx", "tests/pointer-document-up-fixture.jsx", "tests/pointer-document-up-probe.gd", "tests/pointer-document-up-native.test.mjs", "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs", "scripts/rn-pointer-overlay.mjs", "native/application_runtime.cpp"]) assert.match(bundles.sources[file], /^[0-9a-f]{64}$/);

@@ -1157,6 +1157,34 @@ lifecycle, dispatch-time abort/mutation/reentrancy, refs/remount, Up faults,
 captured/no-hit routing, Down/Up ID pairing, full responders, hardware/mobile/dev
 and performance remain open. No whole GF, checkpoint, weight or denominator closes.
 
+### Document Up across rerender, retirement and remount (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[refs evidence](docs/evidence/pointer-document-up-refs/README.md) adds three
+root-generation controls to all eight lanes: **2,709 headless checks**, with the
+previous 2,143 check IDs preserved in order. The graphical current/enabled lane
+passes **535 checks**, including 90 pixels in seven native frames.
+
+A real rerender keeps Document, documentElement, the View ref and the root getter;
+the next Up delivers the same listeners and phases. Retiring A while A and B hold
+contacts cancels A first: one original TouchCancel with its Raw pair, no Up
+callback/Raw/query/state for retained OldDoc/OldRoot listeners, balanced native
+Controls and one extra pointerCancel. B keeps its contact and metrics, then its Up
+qualifies. The replacement root has a new surface and a fresh connected Document;
+retained listeners query 36/37 false for its gestures while a manual dispatch still
+reaches OldDoc. The release of the index cancelled by retirement is swallowed even
+with fresh listeners installed; the next complete gesture qualifies only through
+the fresh Document.
+
+Only tests changed: the shared fixture takes the event type for retained roots
+(Down stays the default) and the Up probe/oracle gain the stages. Down regression
+passes 2,723, contracts 255 Node/13 Python and static analysis. Native/SDK bytes
+are unchanged. Capture-phase or View listeners across retirement, application
+stop/restart, keyed remount of the whole tree, general Down/Up pointerId pairing,
+dispatch-time mutation/reentrancy, Up faults and captured/no-hit routing remain
+open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

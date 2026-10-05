@@ -479,3 +479,16 @@ remains unchanged. [Evidence and remaining boundaries](docs/evidence/pointer-doc
 | Before once | First native Up | Second native Up |
 | --- | --- | --- |
 | ![A12/B2](docs/evidence/pointer-document-up-lifecycle/once-before.png) | ![A13/B2](docs/evidence/pointer-document-up-lifecycle/once-first.png) | ![A13/B2 preserved](docs/evidence/pointer-document-up-lifecycle/once-second.png) |
+
+### Document Up across root generations
+
+The same example now checks Document Up listeners across a rerender, a root
+retired while a finger is down and its replacement: 2,709 headless checks and
+535 graphical checks with 90 pixels. Retirement cancels the held contact with
+one TouchCancel and no Up, retained listeners never qualify the new root, and
+only the fresh Document's listeners receive the next gesture.
+[Evidence and limits](docs/evidence/pointer-document-up-refs/README.md).
+
+| A retired, B holding | A remounted after a fresh gesture |
+| --- | --- |
+| ![A retired, B2](docs/evidence/pointer-document-up-refs/retired.png) | ![A2/B4](docs/evidence/pointer-document-up-refs/remounted.png) |
