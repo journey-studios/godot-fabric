@@ -105,10 +105,34 @@ faults de query/resolver Up e pointer capture continuam abertos, assim como
 mobile/exports, hardware e performance.
 
 A regressão Down passou **2.723 checks**; contracts passaram **255 Node/13
-Python** e a análise estática passou. A CI desta fatia ainda será executada. A
+Python** e a análise estática passou. A CI desta fatia está no
+[recibo hospedado](hosted-ci.json); a
 [CI da fatia anterior](../pointer-document-up-lifecycle/hosted-ci.json) continua
 válida para os seus 2.143 checks.
 
 As 71 fontes de código/configuração executadas correspondem à implementação
 `f7c0babf32717a2e399cb9c9ed90f669d721d8a2` por `git show`/SHA-256. O recibo preserva a
 base 3b74ae8 e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.
+
+## CI hospedada
+
+O workflow Contracts
+[37310815360](https://github.com/journey-studios/godot-fabric/actions/runs/37310815360)
+passou nos cinco jobs para o head `862e39d`. O job nativo fez checkout do merge
+`3f52374` (main `adad606` + `862e39d`), e as 71 fontes de código/configuração
+dessa árvore têm os mesmos blobs da implementação `f7c0bab`. O artefato
+`native-pointer-document-up` contém as oito lanes headless com **2.709 checks**,
+IDs idênticos aos da baseline local, os mesmos bundles e os 19 estágios `refs/*`
+em cada lane. Fora timestamps de evento, a versão patch do Node (v22.23.2 no
+runner) e o hash do host compilado pelo runner, os relatórios são iguais aos
+locais. O [recibo](hosted-ci.json) registra os hashes do zip, dos relatórios e
+dos logs, além dos blobs da árvore de checkout. Não houve findings.
+
+A CI certifica apenas as lanes headless. O viewport com 535 checks e 90 pixels
+continua sendo evidência local; os limites acima não mudam.
+
+A [publicação no Pages](publication.json) passou build/deploy no
+[run 37317251249](https://github.com/journey-studios/godot-fabric/actions/runs/37317251249)
+com o renderer do main e os dados da branch em `2c00f1e`. O JSON público completo,
+excluindo apenas os metadados de publicação gerados, e a API local ao vivo são
+iguais aos dados commitados. Isso publica a prova e o recibo de CI acima.

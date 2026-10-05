@@ -175,6 +175,8 @@ OldDoc, so inertness is not listener removal. The release for the index
 cancelled by retirement is swallowed even with fresh listeners installed, and
 the next complete gesture qualifies through the fresh Document only. No native
 or SDK file changed; the graphical lane passes 535 checks with 90 pixels.
+Hosted run 37310815360 repeated the 2,709 headless checks
+([receipt](../evidence/pointer-document-up-refs/hosted-ci.json)).
 
 ## Boundaries still open
 

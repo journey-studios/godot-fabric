@@ -483,8 +483,8 @@ remains unchanged. [Evidence and remaining boundaries](docs/evidence/pointer-doc
 ### Document Up across root generations
 
 The same example now checks Document Up listeners across a rerender, a root
-retired while a finger is down and its replacement: 2,709 headless checks and
-535 graphical checks with 90 pixels. Retirement cancels the held contact with
+retired while a finger is down and its replacement: 2,709 headless checks, also
+passed in hosted CI, and 535 graphical checks with 90 pixels. Retirement cancels the held contact with
 one TouchCancel and no Up, retained listeners never qualify the new root, and
 only the fresh Document's listeners receive the next gesture.
 [Evidence and limits](docs/evidence/pointer-document-up-refs/README.md).

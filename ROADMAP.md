@@ -1183,8 +1183,14 @@ are unchanged. Capture-phase or View listeners across retirement, application
 stop/restart, keyed remount of the whole tree, general Down/Up pointerId pairing,
 dispatch-time mutation/reentrancy, Up faults and captured/no-hit routing remain
 open. All 71 executed code/configuration inputs match implementation f7c0bab
-via git show/SHA-256 (execution base 3b74ae8/dirty retained). Hosted CI for this
-slice is pending. No whole GF, checkpoint, weight or denominator closes.
+via git show/SHA-256 (execution base 3b74ae8/dirty retained). Hosted Contracts
+run 37310815360 passed all five jobs at 862e39d (merge checkout 3f52374); its
+[audited artifact](docs/evidence/pointer-document-up-refs/hosted-ci.json) repeats
+the 2,709 headless checks with identical IDs, bundles and refs stages, and all 71
+tracked inputs match f7c0bab in the checkout tree. The viewport/pixel proof stays
+local. [Pages 37317251249](docs/evidence/pointer-document-up-refs/publication.json)
+published this record (data 2c00f1e, main renderer); full public/local JSON matched.
+No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
