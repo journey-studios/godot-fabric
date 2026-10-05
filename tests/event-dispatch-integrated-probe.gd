@@ -184,20 +184,25 @@ func fault_case(id: String, target: String, faults: Array, expected_message: Str
   await inject("end", "A", "mixed")
 
 func cross_root_case() -> void:
-  var cap := arm("A", "native-root-local", {"updateCount": false})
+  var cap := arm("A", "native-application-wide", {"updateCount": false})
   var steps: Array = []
   var actions: Array = [["start", "A", "first", 7], ["start", "B", "only", 8], ["end", "A", "first", 7], ["move", "B", "only", 8], ["end", "B", "only", 8]]
+  # Every TouchEvent lists the application's touches, as one RN surface would.
+  # When A's own touch ends, the legacy plugin releases A (B's listed touch is
+  # outside it); ReactNativeResponder releases only when no touch remains, as
+  # the explicit global oracle below shows.
+  var held := 2 if integration_mode == "original" else 4
   for index in range(actions.size()):
     var action: Array = actions[index]
     await inject(action[0], action[1], action[2], action[3])
     var a := native(surfaces.A)
     var b := native(surfaces.B)
     steps.append({"react": snapshot(), "A": a.pointer, "B": b.pointer})
-    check(a.pointer.responder == (cap.tags.responder if index < 2 else 0) and b.pointer.responder == 0,
-      "Native root-local contacts preserve exact responder owner at step " + str(index))
-  stages.nativeRootLocal = steps
-  check(steps[2].A.activeTouches == 0 and steps[2].B.activeTouches == 1 and steps[2].react.raw.back().touches == 0,
-    "Native root-local payload declares zero A contacts while B remains physically active")
+    check(a.pointer.responder == (cap.tags.responder if index < held else 0) and b.pointer.responder == 0,
+      "Native application-wide contacts keep RN's responder owner at step " + str(index))
+  stages.nativeApplicationWide = steps
+  check(steps[2].A.activeTouches == 0 and steps[2].B.activeTouches == 1 and steps[2].react.raw.back().touches == 1,
+    "Native payload still lists B's contact when A's ends while B remains physically active")
   var contacts: Array = [[{"name": "A", "id": "first", "identifier": 7}], [{"name": "A", "id": "first", "identifier": 7}, {"name": "B", "id": "only", "identifier": 8}],
     [{"name": "B", "id": "only", "identifier": 8}], [{"name": "B", "id": "only", "identifier": 8}], []]
   arm("A", "manual-root-local", {"updateCount": false})
@@ -208,7 +213,7 @@ func cross_root_case() -> void:
     var result: Variant = js("manualGlobalStep(%s,%s,%s,%d,%s)" % [JSON.stringify(action[1]), JSON.stringify(action[2]), JSON.stringify(action[0]), action[3], JSON.stringify(local)])
     local_steps.append({"result": result, "react": snapshot(), "A": native(surfaces.A).pointer})
     check(result.dispatchCount == 1 and result.error == null and native(surfaces.A).pointer.responder == (cap.tags.responder if index < 2 else 0),
-      "Original manual root-local oracle matches native responder owner at step " + str(index))
+      "Manual root-local oracle releases A at its own end, as per-surface touch lists would, at step " + str(index))
   stages.manualRootLocal = local_steps
   arm("A", "manual-global", {"updateCount": false})
   var manual_steps: Array = []
