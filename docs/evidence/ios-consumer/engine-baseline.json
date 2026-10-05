@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "target": "ios-simulator",
+  "architecture": "x86_64",
+  "configuration": "Release",
+  "godotVersion": "4.7.2.stable.official.ed1daf0bf",
+  "godotRebuilt": false,
+  "fabricExtensionIncluded": false,
+  "runtimeExecuted": true,
+  "physicalDeviceExecuted": false,
+  "simulatorRuntime": "iOS 18.4",
+  "template": {
+    "templateSHA256": "fd3280d10dc75356dded006f6f8813f40a5aebd32d128592b781256d8ffbdff4",
+    "engineLibrarySHA256": "70eb90ffd6dc850d3724a81e73368476cdcf5f8a98735f8306f20dbfd0951b5b",
+    "slice": "ios-arm64_x86_64-simulator",
+    "declaredArchitectures": [
+      "arm64",
+      "x86_64"
+    ],
+    "actualArchitectures": [
+      "x86_64"
+    ]
+  },
+  "fixtureSHA256": {
+    "project.godot": "f52b0c9a28626d203a2e24a2a13e13122815e7850965ef9cb33cf0c93383c2df",
+    "main.tscn": "b03e7841dc5a8f038a1c7bd960840b7288d13e69db23f935cc65a5239c9cafe4",
+    "validation.gd": "4b9405862b5e197afba915b3e718455e8554c1acdb1585043be73e92ddfd276f",
+    "icon.svg": "9d034db15932e7bf8f23bb33af4410de28b8354b2072ac75d938c4c7ee5c714b",
+    "export_presets.cfg": "384326b6303a134afddd018d0db94ed57fa4321e8b97e3f71af0843bf9f2994c"
+  },
+  "appBinarySHA256": "9b80646a8e227aa91b77a24c1469442296914c59d581f0661817c41f00426578",
+  "report": {
+    "architecture": "x86_64",
+    "checks": [
+      {
+        "name": "Original Godot iOS x86_64 runtime",
+        "passed": true
+      },
+      {
+        "name": "No Fabric extension exists",
+        "passed": true
+      },
+      {
+        "name": "Native Godot Button and Label",
+        "passed": true
+      },
+      {
+        "name": "Compatibility renderer",
+        "passed": true
+      },
+      {
+        "name": "Native viewport capture",
+        "passed": true
+      }
+    ],
+    "host": "godot-native-baseline",
+    "os": "iOS",
+    "passed": true,
+    "renderer": "gl_compatibility",
+    "schemaVersion": 1
+  },
+  "observedEngineDiagnostic": {
+    "text": "ERROR: Mouse is not supported by this display server.\n   at: mouse_get_position (servers/display/display_server.cpp:536)\n",
+    "count": 1,
+    "scope": "root Window startup in official Godot engine, reproduced without SDK or GDExtension",
+    "source": "https://github.com/godotengine/godot/blob/4.7.2-stable/scene/main/window.cpp#L1588-L1590"
+  },
+  "successMarkerFlushed": true,
+  "cleanup": {
+    "isolatedAppTerminatedByRunner": true,
+    "isolatedAppUninstalled": true,
+    "ownedSimulatorShutdown": true
+  },
+  "runtimeLogSHA256": "31b49daf417d34b9400c39fe883615253d16152d7a4a42e2077cc08aaa6e52db",
+  "limitations": [
+    "Native Godot baseline reproduces one official engine startup error; no React/Fabric proof",
+    "UIKit process remained after SceneTree.quit; runner explicitly terminated its isolated app"
+  ],
+  "processExitedAfterQuit": false
+}

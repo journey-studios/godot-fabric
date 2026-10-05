@@ -1,0 +1,30 @@
+{
+  "format": "godot-fabric.root-retirement-dashboard-verification/v1",
+  "at": "2026-10-03T23:50:08.449390+00:00",
+  "dataSha256": "9cf97b183be231f3b5d4507690c0384b4b4f59be0a5b6ef6afae2f3d6473f33f",
+  "tasks": 40,
+  "requiredTasks": 39,
+  "closedTasks": 0,
+  "completedCheckpoints": 16,
+  "checkpoints": 160,
+  "stages": [
+    {
+      "command": "npm run dashboard:check; npm run test:dashboard; npm run dashboard:build",
+      "exitCode": 0,
+      "logSha256": "5f925e9f765d1c5390b1300235d6523d8792521c122aa0af50a724ff37d2d94e"
+    },
+    {
+      "command": "npm run check:publication",
+      "exitCode": 0,
+      "logSha256": "5402674488c71ea7b2d84f0ff8d5178d1346f3c98948c52baf7b6a107b6f6cce"
+    },
+    {
+      "command": "npm run check:static",
+      "exitCode": 0,
+      "logSha256": "907d389a999739a88a745c726e1955c04254b48b8ab3f97324341b7cc24720ee"
+    }
+  ],
+  "scope": "Executed local data validation/tests/Pages artifact preparation; not a public deployment",
+  "sourceCommit": "47432df8b76816a44cf72af2184ab4794c6c5338",
+  "requiredCheckpoints": 156
+}

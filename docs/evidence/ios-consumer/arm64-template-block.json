@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "target": "ios-simulator",
+  "stage": "official-template-preflight",
+  "consumerExported": false,
+  "runtimeExecuted": false,
+  "godotRebuilt": false,
+  "blocker": "Installed official template lacks arm64 engine code",
+  "templateSHA256": "fd3280d10dc75356dded006f6f8813f40a5aebd32d128592b781256d8ffbdff4",
+  "engineLibrarySHA256": "70eb90ffd6dc850d3724a81e73368476cdcf5f8a98735f8306f20dbfd0951b5b",
+  "slice": "ios-arm64_x86_64-simulator",
+  "declaredArchitectures": [
+    "arm64",
+    "x86_64"
+  ],
+  "actualArchitectures": [
+    "x86_64"
+  ]
+}

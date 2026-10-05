@@ -1,0 +1,2714 @@
+{
+  "format": "godot-fabric.transform-input-guards/v1",
+  "at": "2026-10-04T02:33:27.843008+00:00",
+  "command": "npm run test:transforms:guards",
+  "platform": "macos-arm64",
+  "godot": "4.7.2-stable (official)",
+  "reactNative": "0.87.1",
+  "displayServer": "headless",
+  "inputTransport": "Input.parse_input_event",
+  "validationInputDevice": 1001,
+  "passed": true,
+  "checks": 25,
+  "assertions": [
+    {
+      "name": "A fresh application mounts the real original RN TransformGallery",
+      "passed": true
+    },
+    {
+      "name": "The responder target and transformed ancestor are mounted native Controls",
+      "passed": true
+    },
+    {
+      "name": "Both external local transforms have finite nonzero determinants: ignored-start",
+      "passed": true
+    },
+    {
+      "name": "Finite composed coefficients actually overflow the global determinant: ignored-start",
+      "passed": true
+    },
+    {
+      "name": "Overflowing global inverse ignores START without any contact, event or responder",
+      "passed": true
+    },
+    {
+      "name": "An invalid START cannot activate original RN Pressability",
+      "passed": true
+    },
+    {
+      "name": "Physical END after the ignored START remains ignored",
+      "passed": true
+    },
+    {
+      "name": "Restored embedding accepts a genuine START with independent target-local and page coordinates",
+      "passed": true
+    },
+    {
+      "name": "Restoration completes exactly one original RN press and releases its responder",
+      "passed": true
+    },
+    {
+      "name": "The positive input control contains only finite contact coordinates",
+      "passed": true
+    },
+    {
+      "name": "A genuine START and valid MOVE establish a live responder and last valid sample: overflow",
+      "passed": true
+    },
+    {
+      "name": "Both external local transforms have finite nonzero determinants: active-contact",
+      "passed": true
+    },
+    {
+      "name": "Finite composed coefficients actually overflow the global determinant: active-contact",
+      "passed": true
+    },
+    {
+      "name": "Invalid MOVE cancels once, releases authority and adds no move or end sample: overflow",
+      "passed": true
+    },
+    {
+      "name": "Original Pressability cancellation preserves every coordinate from the last valid MOVE without NaN: overflow",
+      "passed": true
+    },
+    {
+      "name": "Cancellation clears original pressed state without completing a press: overflow",
+      "passed": true
+    },
+    {
+      "name": "Restoration and physical END cannot resurrect or press the canceled contact: overflow",
+      "passed": true
+    },
+    {
+      "name": "A genuine START and valid MOVE establish a live responder and last valid sample: singular-surface",
+      "passed": true
+    },
+    {
+      "name": "Public Surface offset transform produces a genuine singular embedding without zero-scale clamping",
+      "passed": true
+    },
+    {
+      "name": "Invalid MOVE cancels once, releases authority and adds no move or end sample: singular-surface",
+      "passed": true
+    },
+    {
+      "name": "Original Pressability cancellation preserves every coordinate from the last valid MOVE without NaN: singular-surface",
+      "passed": true
+    },
+    {
+      "name": "Cancellation clears original pressed state without completing a press: singular-surface",
+      "passed": true
+    },
+    {
+      "name": "Restoration and physical END cannot resurrect or press the canceled contact: singular-surface",
+      "passed": true
+    },
+    {
+      "name": "Input guard lifetime shuts down without errors, roots or scheduling resources",
+      "passed": true
+    },
+    {
+      "name": "Input guard shutdown balances native Controls and retains no contact or responder",
+      "passed": true
+    }
+  ],
+  "oracle": "Independent JSX input points; actual local/global determinant classification; exact last-valid event coordinate preservation",
+  "stages": {
+    "ignored-start": {
+      "afterPhysicalEnd": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            705.519226074219,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 0.0,
+          "grants": 0.0,
+          "moves": 0.0,
+          "releases": 0.0,
+          "responder": 0.0,
+          "starts": 0.0
+        },
+        "events": [],
+        "pressedState": {
+          "held": false,
+          "presses": 0.0
+        }
+      },
+      "afterStart": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0000000200408773e+20,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0000000200408773e+20,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -2.080127099489512e+21,
+            -6.397113883850424e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            8660253696.0,
+            5000000000.0,
+            -5000000000.0,
+            8660253696.0,
+            -208012705792.0,
+            -639711379456.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 9.999999320799471e+19,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -1.3480762687346694e+21,
+            -3.665063153751315e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 0.0,
+          "grants": 0.0,
+          "moves": 0.0,
+          "releases": 0.0,
+          "responder": 0.0,
+          "starts": 0.0
+        },
+        "events": [],
+        "pressedState": {
+          "held": false,
+          "presses": 0.0
+        }
+      },
+      "invalidEmbedding": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0000000200408773e+20,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0000000200408773e+20,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -2.080127099489512e+21,
+            -6.397113883850424e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            8660253696.0,
+            5000000000.0,
+            -5000000000.0,
+            8660253696.0,
+            -208012705792.0,
+            -639711379456.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 9.999999320799471e+19,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -1.3480762687346694e+21,
+            -3.665063153751315e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 0.0,
+          "grants": 0.0,
+          "moves": 0.0,
+          "releases": 0.0,
+          "responder": 0.0,
+          "starts": 0.0
+        },
+        "events": [],
+        "pressedState": {
+          "held": false,
+          "presses": 0.0
+        }
+      },
+      "pointerBefore": {
+        "activeTouches": 0.0,
+        "blockNative": false,
+        "cancels": 0.0,
+        "ends": 0.0,
+        "grants": 0.0,
+        "moves": 0.0,
+        "releases": 0.0,
+        "responder": 0.0,
+        "starts": 0.0
+      }
+    },
+    "initial": {
+      "ancestor": {
+        "control": "gesture-parent",
+        "globalCoefficients": [
+          0.866025388240814,
+          0.5,
+          -0.5,
+          0.866025388240814,
+          698.19873046875,
+          497.028869628906
+        ],
+        "globalCoefficientsFinite": true,
+        "globalDeterminant": 1.0,
+        "globalDeterminantFinite": true,
+        "localCoefficients": [
+          0.866025388240814,
+          0.5,
+          -0.5,
+          0.866025388240814,
+          698.19873046875,
+          497.028869628906
+        ],
+        "localCoefficientsFinite": true,
+        "localDeterminant": 1.0,
+        "localDeterminantFinite": true
+      },
+      "embedding": {
+        "control": "Surface",
+        "globalCoefficients": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "globalCoefficientsFinite": true,
+        "globalDeterminant": 1.0,
+        "globalDeterminantFinite": true,
+        "localCoefficients": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "localCoefficientsFinite": true,
+        "localDeterminant": 1.0,
+        "localDeterminantFinite": true
+      },
+      "target": {
+        "control": "gesture",
+        "globalCoefficients": [
+          0.866025388240814,
+          0.5,
+          -0.5,
+          0.866025388240814,
+          705.519226074219,
+          524.349365234375
+        ],
+        "globalCoefficientsFinite": true,
+        "globalDeterminant": 1.0,
+        "globalDeterminantFinite": true,
+        "localCoefficients": [
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          20.0,
+          20.0
+        ],
+        "localCoefficientsFinite": true,
+        "localDeterminant": 1.0,
+        "localDeterminantFinite": true
+      }
+    },
+    "overflow-active-contact": {
+      "afterCancellation": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0000000200408773e+20,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0000000200408773e+20,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -2.080127099489512e+21,
+            -6.397113883850424e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            8660253696.0,
+            5000000000.0,
+            -5000000000.0,
+            8660253696.0,
+            -208012705792.0,
+            -639711379456.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 9.999999320799471e+19,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -1.3480762687346694e+21,
+            -3.665063153751315e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 1.0,
+          "ends": 1.0,
+          "grants": 2.0,
+          "moves": 1.0,
+          "releases": 2.0,
+          "responder": 0.0,
+          "starts": 2.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701039.544,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701039.544,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "type": "PressMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "type": "TouchMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701423.33175
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701423.33175,
+            "touches": [],
+            "type": "PressOut"
+          }
+        ],
+        "pressedState": {
+          "held": false,
+          "presses": 1.0
+        }
+      },
+      "afterPhysicalEnd": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            705.519226074219,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 1.0,
+          "ends": 1.0,
+          "grants": 2.0,
+          "moves": 1.0,
+          "releases": 2.0,
+          "responder": 0.0,
+          "starts": 2.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701039.544,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701039.544,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "type": "PressMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "type": "TouchMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701423.33175
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701423.33175,
+            "touches": [],
+            "type": "PressOut"
+          }
+        ],
+        "pressedState": {
+          "held": false,
+          "presses": 1.0
+        }
+      },
+      "cancellationEvents": [
+        {
+          "changedTouches": [
+            {
+              "identifier": 3.0,
+              "locationX": 44.0,
+              "locationY": 35.0000305175781,
+              "pageX": 726.124328613281,
+              "pageY": 576.660278320312,
+              "screenX": 726.124328613281,
+              "screenY": 576.660278320312,
+              "target": 116.0,
+              "timestamp": 45701423.33175
+            }
+          ],
+          "identifier": 3.0,
+          "locationX": 44.0,
+          "locationY": 35.0000305175781,
+          "pageX": 726.124328613281,
+          "pageY": 576.660278320312,
+          "screenX": 726.124328613281,
+          "screenY": 576.660278320312,
+          "target": 116.0,
+          "timestamp": 45701423.33175,
+          "touches": [],
+          "type": "PressOut"
+        }
+      ],
+      "invalidEmbedding": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0000000200408773e+20,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            10000000000.0,
+            0.0,
+            0.0,
+            10000000000.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0000000200408773e+20,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -2.080127099489512e+21,
+            -6.397113883850424e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            8660253696.0,
+            5000000000.0,
+            -5000000000.0,
+            8660253696.0,
+            -208012705792.0,
+            -639711379456.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 9.999999320799471e+19,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            8.66025407805674e+19,
+            5.000000100204387e+19,
+            -5.000000100204387e+19,
+            8.66025407805674e+19,
+            -1.3480762687346694e+21,
+            -3.665063153751315e+21
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": "inf",
+          "globalDeterminantFinite": false,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 1.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 1.0,
+          "grants": 2.0,
+          "moves": 1.0,
+          "releases": 1.0,
+          "responder": 116.0,
+          "starts": 2.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701039.544,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701039.544,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701039.544
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "type": "PressMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701225.682541
+              }
+            ],
+            "type": "TouchMove"
+          }
+        ],
+        "pressedState": {
+          "held": true,
+          "presses": 1.0
+        }
+      },
+      "lastValidSample": {
+        "changedTouches": [
+          {
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541
+          }
+        ],
+        "identifier": 3.0,
+        "locationX": 44.0,
+        "locationY": 35.0000305175781,
+        "pageX": 726.124328613281,
+        "pageY": 576.660278320312,
+        "screenX": 726.124328613281,
+        "screenY": 576.660278320312,
+        "target": 116.0,
+        "timestamp": 45701225.682541,
+        "touches": [
+          {
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701225.682541
+          }
+        ],
+        "type": "TouchMove"
+      },
+      "pointerBeforeInvalidMove": {
+        "activeTouches": 1.0,
+        "blockNative": false,
+        "cancels": 0.0,
+        "ends": 1.0,
+        "grants": 2.0,
+        "moves": 1.0,
+        "releases": 1.0,
+        "responder": 116.0,
+        "starts": 2.0
+      }
+    },
+    "restored-control": {
+      "active": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            705.519226074219,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 1.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 0.0,
+          "grants": 1.0,
+          "moves": 0.0,
+          "releases": 0.0,
+          "responder": 116.0,
+          "starts": 1.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700651.609,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700651.609,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "type": "TouchStart"
+          }
+        ],
+        "pressedState": {
+          "held": true,
+          "presses": 0.0
+        }
+      },
+      "afterPhysicalEnd": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            705.519226074219,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 1.0,
+          "grants": 1.0,
+          "moves": 0.0,
+          "releases": 1.0,
+          "responder": 0.0,
+          "starts": 1.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700651.609,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700651.609,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700651.609
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700838.867083
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700838.867083,
+            "touches": [],
+            "type": "PressOut"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700838.867083
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700838.867083,
+            "touches": [],
+            "type": "Press"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45700838.867083
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45700838.867083,
+            "touches": [],
+            "type": "TouchEnd"
+          }
+        ],
+        "pressedState": {
+          "held": false,
+          "presses": 1.0
+        }
+      },
+      "pointerBefore": {
+        "activeTouches": 0.0,
+        "blockNative": false,
+        "cancels": 0.0,
+        "ends": 0.0,
+        "grants": 0.0,
+        "moves": 0.0,
+        "releases": 0.0,
+        "responder": 0.0,
+        "starts": 0.0
+      }
+    },
+    "singular-surface-active-contact": {
+      "afterCancellation": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            450.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 0.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            450.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 0.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.0,
+            0.5,
+            0.0,
+            0.866025388240814,
+            450.0,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 0.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.0,
+            0.5,
+            0.0,
+            0.866025388240814,
+            450.0,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 0.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 2.0,
+          "ends": 1.0,
+          "grants": 3.0,
+          "moves": 2.0,
+          "releases": 3.0,
+          "responder": 0.0,
+          "starts": 3.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701813.756666,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701813.756666,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "type": "PressMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "type": "TouchMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45702198.754
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45702198.754,
+            "touches": [],
+            "type": "PressOut"
+          }
+        ],
+        "pressedState": {
+          "held": false,
+          "presses": 1.0
+        }
+      },
+      "afterPhysicalEnd": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            705.519226074219,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 1.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 2.0,
+          "ends": 1.0,
+          "grants": 3.0,
+          "moves": 2.0,
+          "releases": 3.0,
+          "responder": 0.0,
+          "starts": 3.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701813.756666,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701813.756666,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "type": "PressMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "type": "TouchMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45702198.754
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45702198.754,
+            "touches": [],
+            "type": "PressOut"
+          }
+        ],
+        "pressedState": {
+          "held": false,
+          "presses": 1.0
+        }
+      },
+      "cancellationEvents": [
+        {
+          "changedTouches": [
+            {
+              "identifier": 3.0,
+              "locationX": 44.0,
+              "locationY": 35.0000305175781,
+              "pageX": 726.124328613281,
+              "pageY": 576.660278320312,
+              "screenX": 726.124328613281,
+              "screenY": 576.660278320312,
+              "target": 116.0,
+              "timestamp": 45702198.754
+            }
+          ],
+          "identifier": 3.0,
+          "locationX": 44.0,
+          "locationY": 35.0000305175781,
+          "pageX": 726.124328613281,
+          "pageY": 576.660278320312,
+          "screenX": 726.124328613281,
+          "screenY": 576.660278320312,
+          "target": 116.0,
+          "timestamp": 45702198.754,
+          "touches": [],
+          "type": "PressOut"
+        }
+      ],
+      "invalidEmbedding": {
+        "embedding": {
+          "control": "Surface",
+          "globalCoefficients": [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            450.0,
+            0.0
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 0.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            450.0,
+            0.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 0.0,
+          "localDeterminantFinite": true
+        },
+        "ancestor": {
+          "control": "gesture-parent",
+          "globalCoefficients": [
+            0.0,
+            0.5,
+            0.0,
+            0.866025388240814,
+            450.0,
+            497.028869628906
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 0.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            0.866025388240814,
+            0.5,
+            -0.5,
+            0.866025388240814,
+            698.19873046875,
+            497.028869628906
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "target": {
+          "control": "gesture",
+          "globalCoefficients": [
+            0.0,
+            0.5,
+            0.0,
+            0.866025388240814,
+            450.0,
+            524.349365234375
+          ],
+          "globalCoefficientsFinite": true,
+          "globalDeterminant": 0.0,
+          "globalDeterminantFinite": true,
+          "localCoefficients": [
+            1.0,
+            0.0,
+            0.0,
+            1.0,
+            20.0,
+            20.0
+          ],
+          "localCoefficientsFinite": true,
+          "localDeterminant": 1.0,
+          "localDeterminantFinite": true
+        },
+        "pointer": {
+          "activeTouches": 1.0,
+          "blockNative": false,
+          "cancels": 1.0,
+          "ends": 1.0,
+          "grants": 3.0,
+          "moves": 2.0,
+          "releases": 2.0,
+          "responder": 116.0,
+          "starts": 3.0
+        },
+        "events": [
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701813.756666,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "type": "PressIn"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 40.0000610351562,
+            "locationY": 35.0,
+            "pageX": 722.660278320312,
+            "pageY": 574.660278320312,
+            "screenX": 722.660278320312,
+            "screenY": 574.660278320312,
+            "target": 116.0,
+            "timestamp": 45701813.756666,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 40.0000610351562,
+                "locationY": 35.0,
+                "pageX": 722.660278320312,
+                "pageY": 574.660278320312,
+                "screenX": 722.660278320312,
+                "screenY": 574.660278320312,
+                "target": 116.0,
+                "timestamp": 45701813.756666
+              }
+            ],
+            "type": "TouchStart"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "type": "PressMove"
+          },
+          {
+            "changedTouches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333,
+            "touches": [
+              {
+                "identifier": 3.0,
+                "locationX": 44.0,
+                "locationY": 35.0000305175781,
+                "pageX": 726.124328613281,
+                "pageY": 576.660278320312,
+                "screenX": 726.124328613281,
+                "screenY": 576.660278320312,
+                "target": 116.0,
+                "timestamp": 45701993.195333
+              }
+            ],
+            "type": "TouchMove"
+          }
+        ],
+        "pressedState": {
+          "held": true,
+          "presses": 1.0
+        }
+      },
+      "lastValidSample": {
+        "changedTouches": [
+          {
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333
+          }
+        ],
+        "identifier": 3.0,
+        "locationX": 44.0,
+        "locationY": 35.0000305175781,
+        "pageX": 726.124328613281,
+        "pageY": 576.660278320312,
+        "screenX": 726.124328613281,
+        "screenY": 576.660278320312,
+        "target": 116.0,
+        "timestamp": 45701993.195333,
+        "touches": [
+          {
+            "identifier": 3.0,
+            "locationX": 44.0,
+            "locationY": 35.0000305175781,
+            "pageX": 726.124328613281,
+            "pageY": 576.660278320312,
+            "screenX": 726.124328613281,
+            "screenY": 576.660278320312,
+            "target": 116.0,
+            "timestamp": 45701993.195333
+          }
+        ],
+        "type": "TouchMove"
+      },
+      "pointerBeforeInvalidMove": {
+        "activeTouches": 1.0,
+        "blockNative": false,
+        "cancels": 1.0,
+        "ends": 1.0,
+        "grants": 3.0,
+        "moves": 2.0,
+        "releases": 2.0,
+        "responder": 116.0,
+        "starts": 3.0
+      }
+    }
+  },
+  "cleanup": {
+    "stopped": true,
+    "rootCount": 0.0,
+    "pendingTimers": 0.0,
+    "pendingAnimationFrames": 0.0,
+    "pendingWork": 0.0,
+    "pendingRootRetirements": 0.0,
+    "errors": []
+  },
+  "nativeCleanup": {
+    "nativeTags": 0.0,
+    "creates": 47.0,
+    "deletes": 47.0,
+    "pointer": {
+      "activeTouches": 0.0,
+      "blockNative": false,
+      "cancels": 2.0,
+      "ends": 1.0,
+      "grants": 3.0,
+      "moves": 2.0,
+      "releases": 3.0,
+      "responder": 0.0,
+      "starts": 3.0
+    }
+  },
+  "negativeControl": {
+    "hostSha256": "8a20625de9004334f9dc0cf8ced4f5f299bfc3090cb20b1325331b2113e06ba2",
+    "source": "Immutable intermediate transform SDK v2 before global inverse guards",
+    "sameSourceSha256": {
+      "build/app.js": "7ef127c965d781165dcc6532fe11bb58ffc241a2d75923c912da4c01f080df73",
+      "examples/transforms/App.jsx": "6934205eb071c01641afde9b6f05d9b5e015fa6638d63d1852b13a0ec23e338b",
+      "examples/transforms/input-guards.gd": "18780ee5280587281980065cf4b824df0e50c593f0c769a77b7df7bc0ee6945e",
+      "examples/transforms/input-guards.tscn": "3a1bd32a77926ce1ca6299534936ee6c2f1d4dc8126bebe8fa3afe3588620144"
+    },
+    "sameFinalFixtureAndBundle": true,
+    "expectedExitCode": 1,
+    "checks": 25,
+    "failures": 9,
+    "failedAssertions": [
+      "Overflowing global inverse ignores START without any contact, event or responder",
+      "An invalid START cannot activate original RN Pressability",
+      "Physical END after the ignored START remains ignored",
+      "Invalid MOVE cancels once, releases authority and adds no move or end sample: overflow",
+      "Original Pressability cancellation preserves every coordinate from the last valid MOVE without NaN: overflow",
+      "Restoration and physical END cannot resurrect or press the canceled contact: overflow",
+      "Invalid MOVE cancels once, releases authority and adds no move or end sample: singular-surface",
+      "Original Pressability cancellation preserves every coordinate from the last valid MOVE without NaN: singular-surface",
+      "Restoration and physical END cannot resurrect or press the canceled contact: singular-surface"
+    ],
+    "visibleGodotInverseErrors": 1,
+    "rawReportSha256": "a707117be99336c50ff3b1cd28387253c247ecfe78ae3fad09ef078577d492cd"
+  },
+  "rawReportSha256": "79d45d288112f771bb1695469ef157f217e44c0bb31f2223784aa7d6a6954c3c",
+  "limits": [
+    "Injected touch in one native Window; no hardware certification",
+    "Invalid external embeddings are canceled; this does not implement rendering singular/3D RN styles",
+    "Arbitrary valid animation/embedding changes during a held contact remain pending"
+  ]
+}

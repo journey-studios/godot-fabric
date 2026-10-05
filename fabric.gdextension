@@ -6,3 +6,5 @@ reloadable = false
 [libraries]
 macos.debug.arm64 = "res://addons/fabric_godot.dylib"
 macos.release.arm64 = "res://addons/fabric_godot.dylib"
+ios.release.arm64 = "res://addons/ios/godot_fabric.release.xcframework"
+ios.release.x86_64 = "res://addons/ios/godot_fabric.release.x86_64-simulator.xcframework"

@@ -1,0 +1,425 @@
+{
+  "format": "godot-fabric.view-negative-control/v1",
+  "nativeHostSha256": "ef8cb2108b86d11ddb643bb02fd7f95db557f2d69ce475a2d20c22e07b1b448d",
+  "nativeImplementationCommit": "47432df8b76816a44cf72af2184ab4794c6c5338",
+  "bundleSha256": "3c036d52d10f183b263fdf51f623238a07a8567c854e6b94ccdd5ce212a0d674",
+  "fixtureSha256": "99a24574c2de4fbb35af6b91a9f938a4898838663e5091c0ecf983f2032af49b",
+  "scope": "Prior compatible JS uses GodotControl for public View; final fixture and input isolation are shared with the current host. This lane is expected to fail.",
+  "lanes": {
+    "headless": {
+      "checks": 67,
+      "failures": [
+        {
+          "name": "mouse hit target and released responder: nested-shared",
+          "passed": false
+        },
+        {
+          "name": "touch hit target and released responder: nested-shared",
+          "passed": false
+        },
+        {
+          "name": "mouse hit target and released responder: static",
+          "passed": false
+        },
+        {
+          "name": "touch hit target and released responder: static",
+          "passed": false
+        },
+        {
+          "name": "mouse hit target and released responder: clip-scroll-outside",
+          "passed": false
+        },
+        {
+          "name": "touch hit target and released responder: clip-scroll-outside",
+          "passed": false
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: alpha",
+          "passed": false
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: uniform",
+          "passed": false
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: removed",
+          "passed": false
+        }
+      ],
+      "pixels": [],
+      "device": 1001,
+      "staleRef": {
+        "connected": false,
+        "rect": {
+          "bottom": 0.0,
+          "height": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0,
+          "width": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "tag": 48.0
+      }
+    },
+    "native": {
+      "checks": 107,
+      "failures": [
+        {
+          "name": "Rendered pixel matches nested-front: nested-isolated",
+          "passed": false
+        },
+        {
+          "name": "mouse hit target and released responder: nested-shared",
+          "passed": false
+        },
+        {
+          "name": "touch hit target and released responder: nested-shared",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches nested-front: nested-restored",
+          "passed": false
+        },
+        {
+          "name": "mouse hit target and released responder: static",
+          "passed": false
+        },
+        {
+          "name": "touch hit target and released responder: static",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches static-front: static",
+          "passed": false
+        },
+        {
+          "name": "mouse hit target and released responder: clip-scroll-outside",
+          "passed": false
+        },
+        {
+          "name": "touch hit target and released responder: clip-scroll-outside",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches outside: clip-scroll",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches top: borders",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches right: borders",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches bottom: borders",
+          "passed": false
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: alpha",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches top: border-alpha",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches right: border-alpha",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches bottom: border-alpha",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches left: border-alpha",
+          "passed": false
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: uniform",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches top: border-uniform",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches right: border-uniform",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches bottom: border-uniform",
+          "passed": false
+        },
+        {
+          "name": "Rendered pixel matches left: border-uniform",
+          "passed": false
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: removed",
+          "passed": false
+        }
+      ],
+      "pixels": [
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "expected": "#06b6d4",
+          "id": "nested-front",
+          "passed": false,
+          "point": [
+            569,
+            317
+          ],
+          "stage": "nested-isolated"
+        },
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "expected": "#06b6d4",
+          "id": "nested-front",
+          "passed": false,
+          "point": [
+            569,
+            317
+          ],
+          "stage": "nested-restored"
+        },
+        {
+          "actual": [
+            0.878431379795074,
+            0.321568638086319,
+            0.321568638086319,
+            1.0
+          ],
+          "expected": "#14b8a6",
+          "id": "static-front",
+          "passed": false,
+          "point": [
+            154,
+            519
+          ],
+          "stage": "static"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#16233b",
+          "id": "outside",
+          "passed": false,
+          "point": [
+            431,
+            499
+          ],
+          "stage": "clip-scroll"
+        },
+        {
+          "actual": [
+            0.960784316062927,
+            0.619607865810394,
+            0.0431372560560703,
+            1.0
+          ],
+          "expected": "#ef4444",
+          "id": "top",
+          "passed": false,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.960784316062927,
+            0.619607865810394,
+            0.0431372560560703,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "right",
+          "passed": false,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.960784316062927,
+            0.619607865810394,
+            0.0431372560560703,
+            1.0
+          ],
+          "expected": "#3b82f6",
+          "id": "bottom",
+          "passed": false,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.5686274766922,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "top",
+          "passed": false,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.5686274766922,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#80ff80",
+          "id": "right",
+          "passed": false,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.5686274766922,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#8080ff",
+          "id": "bottom",
+          "passed": false,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.5686274766922,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#ffff80",
+          "id": "left",
+          "passed": false,
+          "point": [
+            611,
+            494
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.0666666701436043,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "top",
+          "passed": false,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.0666666701436043,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "right",
+          "passed": false,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.0666666701436043,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "bottom",
+          "passed": false,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            0.545098066329956,
+            0.0666666701436043,
+            0.113725490868092,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "left",
+          "passed": false,
+          "point": [
+            611,
+            494
+          ],
+          "stage": "border-uniform"
+        }
+      ],
+      "device": 1001,
+      "staleRef": {
+        "connected": false,
+        "rect": {
+          "bottom": 0.0,
+          "height": 0.0,
+          "left": 0.0,
+          "right": 0.0,
+          "top": 0.0,
+          "width": 0.0,
+          "x": 0.0,
+          "y": 0.0
+        },
+        "tag": 48.0
+      }
+    }
+  }
+}

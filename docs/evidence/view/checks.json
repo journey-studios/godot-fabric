@@ -1,0 +1,7036 @@
+{
+  "format": "godot-fabric.view-checks/v1",
+  "lanes": {
+    "headless": {
+      "scenario": "view",
+      "godot": "4.7.2-stable (official)",
+      "react": "19.2.3",
+      "reactNative": "0.87.1",
+      "engine": "hermes",
+      "renderer": "fabric",
+      "displayServer": "headless",
+      "inputTransport": "viewport-pointer",
+      "validationInputDevice": 1001,
+      "checks": [
+        {
+          "name": "AppRegistry mounts one ViewGeometry root",
+          "passed": true
+        },
+        {
+          "name": "Every geometry, input and border probe has a real native Control",
+          "passed": true
+        },
+        {
+          "name": "Public refs connect to the mounted Fabric tree",
+          "passed": true
+        },
+        {
+          "name": "The fixture owns one root and one bundle evaluation without host errors",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "A foreign device cannot move or release the injected active pointer",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "Keyed reordering and unclamped z values preserve the sibling instance",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "Removing a sibling invalidates its retained public ref and native Control",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "Flatten/context transition preserves the child's full geometry and native instance: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "Flatten/context transition preserves the child's full geometry and native instance: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "Flatten/context transition preserves the child's full geometry and native instance: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: static",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: static",
+          "passed": true
+        },
+        {
+          "name": "Static zIndex has no stacking effect and Yoga keeps the overlapping layout",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-hidden-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-hidden-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-hidden-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-hidden-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-hidden",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-visible-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-visible-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-visible-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-visible-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-visible",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-scroll-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-scroll-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-scroll-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-scroll-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-scroll",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-removed-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-removed-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-removed-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-removed-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-removed",
+          "passed": true
+        },
+        {
+          "name": "Public border View measures agree with its full native rectangle",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: borders",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: borders",
+          "passed": true
+        },
+        {
+          "name": "The rounded corner probe retains independent asymmetric border widths",
+          "passed": true
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: alpha",
+          "passed": true
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: uniform",
+          "passed": true
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: removed",
+          "passed": true
+        },
+        {
+          "name": "All View rerenders preserve the component and shutdown runs its effect cleanup once",
+          "passed": true
+        },
+        {
+          "name": "Shutdown retires every native Control without host errors",
+          "passed": true
+        },
+        {
+          "name": "Shutdown leaves no pending responder, timer, frame or retirement work",
+          "passed": true
+        }
+      ],
+      "stages": {
+        "border-alpha": {
+          "appearance": {
+            "background": "ffffffff",
+            "borderColor": "ffff0080",
+            "borderColors": [
+              "ffff0080",
+              "ff000080",
+              "00ff0080",
+              "0000ff80"
+            ],
+            "borderPainter": "multicolor",
+            "borderWidths": [
+              8.0,
+              8.0,
+              8.0,
+              8.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "ffff0080",
+                "borderColors": [
+                  "ffff0080",
+                  "ff000080",
+                  "00ff0080",
+                  "0000ff80"
+                ],
+                "borderPainter": "multicolor",
+                "borderWidths": [
+                  8.0,
+                  8.0,
+                  8.0,
+                  8.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29511124557.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "alpha",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "border-corner": {
+          "geometry": {
+            "godotWindowRect": [
+              713.0,
+              472.0,
+              60.0,
+              60.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "ff0000ff",
+                "borderColors": [
+                  "ff0000ff",
+                  "0000ffff",
+                  "ff0000ff",
+                  "0000ffff"
+                ],
+                "borderPainter": "multicolor",
+                "borderWidths": [
+                  2.0,
+                  10.0,
+                  2.0,
+                  10.0
+                ],
+                "cornerRadii": [
+                  18.0,
+                  18.0,
+                  18.0,
+                  18.0
+                ]
+              },
+              "fabricHeight": 60.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 60.0,
+              "id": 31121737365.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 148.0,
+              "testID": "border-corner",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 106.0,
+              "y": 28.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                106.0,
+                28.0,
+                60.0,
+                60.0,
+                689.0,
+                448.0
+              ],
+              "rect": {
+                "bottom": 532.0,
+                "height": 60.0,
+                "left": 713.0,
+                "right": 773.0,
+                "top": 472.0,
+                "width": 60.0,
+                "x": 713.0,
+                "y": 472.0
+              },
+              "tag": 148.0,
+              "window": [
+                713.0,
+                472.0,
+                60.0,
+                60.0
+              ]
+            },
+            "valid": true
+          }
+        },
+        "border-removed": {
+          "appearance": {
+            "background": "ffffffff",
+            "borderColor": "00000000",
+            "borderColors": [
+              "00000000",
+              "00000000",
+              "00000000",
+              "00000000"
+            ],
+            "borderPainter": "flat",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29511124557.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "removed",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "border-uniform": {
+          "appearance": {
+            "background": "ffffffff",
+            "borderColor": "ff000080",
+            "borderColors": [
+              "ff000080",
+              "ff000080",
+              "ff000080",
+              "ff000080"
+            ],
+            "borderPainter": "flat",
+            "borderWidths": [
+              8.0,
+              8.0,
+              8.0,
+              8.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "ff000080",
+                "borderColors": [
+                  "ff000080",
+                  "ff000080",
+                  "ff000080",
+                  "ff000080"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  8.0,
+                  8.0,
+                  8.0,
+                  8.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29511124557.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "uniform",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "borders": {
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "111827ff",
+                "borderColor": "f59e0bff",
+                "borderColors": [
+                  "f59e0bff",
+                  "ef4444ff",
+                  "22c55eff",
+                  "3b82f6ff"
+                ],
+                "borderPainter": "multicolor",
+                "borderWidths": [
+                  8.0,
+                  8.0,
+                  8.0,
+                  8.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29511124557.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "border-child",
+                "pageX": 712.0,
+                "pageY": 506.0,
+                "target": 146.0
+              }
+            ],
+            "expected": "border-child",
+            "point": [
+              712.0,
+              506.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 33.0,
+              "grants": 33.0,
+              "moves": 0.0,
+              "releases": 33.0,
+              "responder": 0.0,
+              "starts": 33.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "border-child",
+                "pageX": 712.0,
+                "pageY": 506.0,
+                "target": 146.0
+              }
+            ],
+            "expected": "border-child",
+            "point": [
+              712.0,
+              506.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 34.0,
+              "grants": 34.0,
+              "moves": 0.0,
+              "releases": 34.0,
+              "responder": 0.0,
+              "starts": 34.0
+            }
+          }
+        },
+        "clip-hidden": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 30903633538.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-hidden-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 21.0,
+              "grants": 21.0,
+              "moves": 0.0,
+              "releases": 21.0,
+              "responder": 0.0,
+              "starts": 21.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 22.0,
+              "grants": 22.0,
+              "moves": 0.0,
+              "releases": 22.0,
+              "responder": 0.0,
+              "starts": 22.0
+            }
+          }
+        },
+        "clip-hidden-outside": {
+          "mouse": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 20.0,
+              "grants": 20.0,
+              "moves": 0.0,
+              "releases": 20.0,
+              "responder": 0.0,
+              "starts": 20.0
+            }
+          },
+          "touch": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 21.0,
+              "grants": 21.0,
+              "moves": 0.0,
+              "releases": 21.0,
+              "responder": 0.0,
+              "starts": 21.0
+            }
+          }
+        },
+        "clip-removed": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 30903633538.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-removed-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 30.0,
+              "grants": 30.0,
+              "moves": 0.0,
+              "releases": 30.0,
+              "responder": 0.0,
+              "starts": 30.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 32.0,
+              "grants": 32.0,
+              "moves": 0.0,
+              "releases": 32.0,
+              "responder": 0.0,
+              "starts": 32.0
+            }
+          }
+        },
+        "clip-removed-outside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 29.0,
+              "grants": 29.0,
+              "moves": 0.0,
+              "releases": 29.0,
+              "responder": 0.0,
+              "starts": 29.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 31.0,
+              "grants": 31.0,
+              "moves": 0.0,
+              "releases": 31.0,
+              "responder": 0.0,
+              "starts": 31.0
+            }
+          }
+        },
+        "clip-scroll": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 30903633538.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "scroll",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-scroll-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 27.0,
+              "grants": 27.0,
+              "moves": 0.0,
+              "releases": 27.0,
+              "responder": 0.0,
+              "starts": 27.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 28.0,
+              "grants": 28.0,
+              "moves": 0.0,
+              "releases": 28.0,
+              "responder": 0.0,
+              "starts": 28.0
+            }
+          }
+        },
+        "clip-scroll-outside": {
+          "mouse": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 26.0,
+              "grants": 26.0,
+              "moves": 0.0,
+              "releases": 26.0,
+              "responder": 0.0,
+              "starts": 26.0
+            }
+          },
+          "touch": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 27.0,
+              "grants": 27.0,
+              "moves": 0.0,
+              "releases": 27.0,
+              "responder": 0.0,
+              "starts": 27.0
+            }
+          }
+        },
+        "clip-visible": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 30903633538.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "visible",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-visible-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 24.0,
+              "grants": 24.0,
+              "moves": 0.0,
+              "releases": 24.0,
+              "responder": 0.0,
+              "starts": 24.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 26.0,
+              "grants": 26.0,
+              "moves": 0.0,
+              "releases": 26.0,
+              "responder": 0.0,
+              "starts": 26.0
+            }
+          }
+        },
+        "clip-visible-outside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 23.0,
+              "grants": 23.0,
+              "moves": 0.0,
+              "releases": 23.0,
+              "responder": 0.0,
+              "starts": 23.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 25.0,
+              "grants": 25.0,
+              "moves": 0.0,
+              "releases": 25.0,
+              "responder": 0.0,
+              "starts": 25.0
+            }
+          }
+        },
+        "nested-isolated": {
+          "geometry": {
+            "godotWindowRect": [
+              509.0,
+              267.0,
+              110.0,
+              70.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "a855f7ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 70.0,
+              "fabricWidth": 110.0,
+              "focused": false,
+              "height": 70.0,
+              "id": 30266099314.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 74.0,
+              "testID": "nested-child",
+              "text": "",
+              "visible": true,
+              "width": 110.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                110.0,
+                70.0,
+                485.0,
+                243.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 70.0,
+                "left": 509.0,
+                "right": 619.0,
+                "top": 267.0,
+                "width": 110.0,
+                "x": 509.0,
+                "y": 267.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                110.0,
+                70.0
+              ],
+              "tag": 74.0,
+              "window": [
+                509.0,
+                267.0,
+                110.0,
+                70.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 13.0,
+              "grants": 13.0,
+              "moves": 0.0,
+              "releases": 13.0,
+              "responder": 0.0,
+              "starts": 13.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 14.0,
+              "grants": 14.0,
+              "moves": 0.0,
+              "releases": 14.0,
+              "responder": 0.0,
+              "starts": 14.0
+            }
+          }
+        },
+        "nested-restored": {
+          "geometry": {
+            "godotWindowRect": [
+              509.0,
+              267.0,
+              110.0,
+              70.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "a855f7ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 70.0,
+              "fabricWidth": 110.0,
+              "focused": false,
+              "height": 70.0,
+              "id": 30266099314.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 74.0,
+              "testID": "nested-child",
+              "text": "",
+              "visible": true,
+              "width": 110.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                110.0,
+                70.0,
+                485.0,
+                243.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 70.0,
+                "left": 509.0,
+                "right": 619.0,
+                "top": 267.0,
+                "width": 110.0,
+                "x": 509.0,
+                "y": 267.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                110.0,
+                70.0
+              ],
+              "tag": 74.0,
+              "window": [
+                509.0,
+                267.0,
+                110.0,
+                70.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 17.0,
+              "grants": 17.0,
+              "moves": 0.0,
+              "releases": 17.0,
+              "responder": 0.0,
+              "starts": 17.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 18.0,
+              "grants": 18.0,
+              "moves": 0.0,
+              "releases": 18.0,
+              "responder": 0.0,
+              "starts": 18.0
+            }
+          }
+        },
+        "nested-shared": {
+          "geometry": {
+            "godotWindowRect": [
+              509.0,
+              267.0,
+              110.0,
+              70.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "a855f7ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 70.0,
+              "fabricWidth": 110.0,
+              "focused": false,
+              "height": 70.0,
+              "id": 30266099314.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 74.0,
+              "testID": "nested-child",
+              "text": "",
+              "visible": true,
+              "width": 110.0,
+              "x": 40.0,
+              "y": 25.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                110.0,
+                70.0,
+                485.0,
+                243.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 70.0,
+                "left": 509.0,
+                "right": 619.0,
+                "top": 267.0,
+                "width": 110.0,
+                "x": 509.0,
+                "y": 267.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                110.0,
+                70.0
+              ],
+              "tag": 74.0,
+              "window": [
+                509.0,
+                267.0,
+                110.0,
+                70.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "nested-child",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 74.0
+              }
+            ],
+            "expected": "nested-child",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 15.0,
+              "grants": 15.0,
+              "moves": 0.0,
+              "releases": 15.0,
+              "responder": 0.0,
+              "starts": 15.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": false,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "nested-child",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 74.0
+              }
+            ],
+            "expected": "nested-child",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 16.0,
+              "grants": 16.0,
+              "moves": 0.0,
+              "releases": 16.0,
+              "responder": 0.0,
+              "starts": 16.0
+            }
+          }
+        },
+        "siblings-equal": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "3b82f6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 29729228378.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 54.0,
+              "testID": "sibling-blue",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 54.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 5.0,
+              "grants": 5.0,
+              "moves": 0.0,
+              "releases": 5.0,
+              "responder": 0.0,
+              "starts": 5.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 0.0,
+              "red": 0.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 6.0,
+              "grants": 6.0,
+              "moves": 0.0,
+              "releases": 6.0,
+              "responder": 0.0,
+              "starts": 6.0
+            }
+          }
+        },
+        "siblings-high": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "e05252ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 29779560029.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 48.0,
+              "testID": "sibling-red",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 48.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 9.0,
+              "grants": 9.0,
+              "moves": 0.0,
+              "releases": 9.0,
+              "responder": 0.0,
+              "starts": 9.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 10.0,
+              "grants": 10.0,
+              "moves": 0.0,
+              "releases": 10.0,
+              "responder": 0.0,
+              "starts": 10.0
+            }
+          }
+        },
+        "siblings-initial": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "e05252ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 29779560029.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 48.0,
+              "testID": "sibling-red",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 48.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 1.0,
+              "grants": 1.0,
+              "moves": 0.0,
+              "releases": 1.0,
+              "responder": 0.0,
+              "starts": 1.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": -2.0,
+              "red": 4.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 2.0,
+              "grants": 2.0,
+              "moves": 0.0,
+              "releases": 2.0,
+              "responder": 0.0,
+              "starts": 2.0
+            }
+          }
+        },
+        "siblings-raised": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "3b82f6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 29729228378.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 54.0,
+              "testID": "sibling-blue",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 54.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 3.0,
+              "grants": 3.0,
+              "moves": 0.0,
+              "releases": 3.0,
+              "responder": 0.0,
+              "starts": 3.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 6.0,
+              "red": -3.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 4.0,
+              "grants": 4.0,
+              "moves": 0.0,
+              "releases": 4.0,
+              "responder": 0.0,
+              "starts": 4.0
+            }
+          }
+        },
+        "siblings-removed": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "3b82f6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 29729228378.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 54.0,
+              "testID": "sibling-blue",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 54.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 11.0,
+              "grants": 11.0,
+              "moves": 0.0,
+              "releases": 11.0,
+              "responder": 0.0,
+              "starts": 11.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 12.0,
+              "grants": 12.0,
+              "moves": 0.0,
+              "releases": 12.0,
+              "responder": 0.0,
+              "starts": 12.0
+            }
+          }
+        },
+        "siblings-reordered": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "e05252ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 29779560029.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 48.0,
+              "testID": "sibling-red",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 48.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 7.0,
+              "grants": 7.0,
+              "moves": 0.0,
+              "releases": 7.0,
+              "responder": 0.0,
+              "starts": 7.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue",
+              "red"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 0.0,
+              "red": 0.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 8.0,
+              "grants": 8.0,
+              "moves": 0.0,
+              "releases": 8.0,
+              "responder": 0.0,
+              "starts": 8.0
+            }
+          }
+        },
+        "stale-removed": {
+          "connected": false,
+          "rect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "tag": 48.0
+        },
+        "static": {
+          "geometry": {
+            "godotWindowRect": [
+              94.0,
+              459.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "14b8a6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30618420864.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 108.0,
+              "testID": "static-front",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 40.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                40.0,
+                15.0,
+                130.0,
+                80.0,
+                70.0,
+                435.0
+              ],
+              "rect": {
+                "bottom": 539.0,
+                "height": 80.0,
+                "left": 94.0,
+                "right": 224.0,
+                "top": 459.0,
+                "width": 130.0,
+                "x": 94.0,
+                "y": 459.0
+              },
+              "relative": [
+                40.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 108.0,
+              "window": [
+                94.0,
+                459.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "static-front",
+                "pageX": 154.0,
+                "pageY": 519.0,
+                "target": 108.0
+              }
+            ],
+            "expected": "static-front",
+            "point": [
+              154.0,
+              519.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 19.0,
+              "grants": 19.0,
+              "moves": 0.0,
+              "releases": 19.0,
+              "responder": 0.0,
+              "starts": 19.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "static-front",
+                "pageX": 154.0,
+                "pageY": 519.0,
+                "target": 108.0
+              }
+            ],
+            "expected": "static-front",
+            "point": [
+              154.0,
+              519.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 20.0,
+              "grants": 20.0,
+              "moves": 0.0,
+              "releases": 20.0,
+              "responder": 0.0,
+              "starts": 20.0
+            }
+          }
+        }
+      },
+      "pixels": [],
+      "initialInstances": {
+        "border-box": 29511124557.0,
+        "border-child": 31071405709.0,
+        "border-corner": 31121737365.0,
+        "clip-child": 30903633538.0,
+        "clip-parent": 29209134651.0,
+        "nested-arena": 28739372575.0,
+        "nested-child": 30266099314.0,
+        "nested-front": 30215767663.0,
+        "nested-parent": 30165436011.0,
+        "sibling-blue": 29729228378.0,
+        "sibling-red": 29779560029.0,
+        "siblings-arena": 28521268754.0,
+        "static-back": 30568089201.0,
+        "static-front": 30618420864.0,
+        "view-raise": 27934066159.0
+      },
+      "shutdown": {
+        "creates": 52.0,
+        "deletes": 52.0,
+        "nativeTags": 0.0,
+        "retiringTags": 0.0,
+        "rootCount": 0.0,
+        "errors": [],
+        "stopped": true,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 34.0,
+          "grants": 34.0,
+          "moves": 0.0,
+          "releases": 34.0,
+          "responder": 0.0,
+          "starts": 34.0
+        }
+      }
+    },
+    "native": {
+      "scenario": "view",
+      "godot": "4.7.2-stable (official)",
+      "react": "19.2.3",
+      "reactNative": "0.87.1",
+      "engine": "hermes",
+      "renderer": "fabric",
+      "displayServer": "macOS",
+      "inputTransport": "viewport-pointer",
+      "validationInputDevice": 1001,
+      "checks": [
+        {
+          "name": "AppRegistry mounts one ViewGeometry root",
+          "passed": true
+        },
+        {
+          "name": "Every geometry, input and border probe has a real native Control",
+          "passed": true
+        },
+        {
+          "name": "Public refs connect to the mounted Fabric tree",
+          "passed": true
+        },
+        {
+          "name": "The fixture owns one root and one bundle evaluation without host errors",
+          "passed": true
+        },
+        {
+          "name": "Renderer capture saved: initial",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches sibling-red: siblings-initial",
+          "passed": true
+        },
+        {
+          "name": "A real GUI pointer click on public Button updates the same React layer state",
+          "passed": true
+        },
+        {
+          "name": "A foreign device cannot move or release the injected active pointer",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches sibling-blue: siblings-raised",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches sibling-blue: siblings-equal",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches sibling-red: siblings-reordered",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches sibling-red: siblings-high",
+          "passed": true
+        },
+        {
+          "name": "Renderer capture saved: updated",
+          "passed": true
+        },
+        {
+          "name": "Keyed reordering and unclamped z values preserve the sibling instance",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "Sibling public measures retain the full layout rectangle: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches sibling-blue: siblings-removed",
+          "passed": true
+        },
+        {
+          "name": "Removing a sibling invalidates its retained public ref and native Control",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "Flatten/context transition preserves the child's full geometry and native instance: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches nested-front: nested-isolated",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "Flatten/context transition preserves the child's full geometry and native instance: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches nested-child: nested-shared",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "Flatten/context transition preserves the child's full geometry and native instance: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches nested-front: nested-restored",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: static",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: static",
+          "passed": true
+        },
+        {
+          "name": "Static zIndex has no stacking effect and Yoga keeps the overlapping layout",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches static-front: static",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-hidden-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-hidden-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-hidden-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-hidden-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-hidden",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches outside: clip-hidden",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches inside: clip-hidden",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-visible-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-visible-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-visible-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-visible-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-visible",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches outside: clip-visible",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches inside: clip-visible",
+          "passed": true
+        },
+        {
+          "name": "Renderer capture saved: visible",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-scroll-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-scroll-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-scroll-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-scroll-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-scroll",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches outside: clip-scroll",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches inside: clip-scroll",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-removed-outside",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: clip-removed-inside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-removed-outside",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: clip-removed-inside",
+          "passed": true
+        },
+        {
+          "name": "Overflow only clips drawing/input; public child measures and identity stay whole: clip-removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches outside: clip-removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches inside: clip-removed",
+          "passed": true
+        },
+        {
+          "name": "Public border View measures agree with its full native rectangle",
+          "passed": true
+        },
+        {
+          "name": "mouse hit target and released responder: borders",
+          "passed": true
+        },
+        {
+          "name": "touch hit target and released responder: borders",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches top: borders",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches right: borders",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches bottom: borders",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches left: borders",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches child: borders",
+          "passed": true
+        },
+        {
+          "name": "The rounded corner probe retains independent asymmetric border widths",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches left-side-corner-join: border-corner",
+          "passed": true
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: alpha",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches top: border-alpha",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches right: border-alpha",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches bottom: border-alpha",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches left: border-alpha",
+          "passed": true
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: uniform",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches top: border-uniform",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches right: border-uniform",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches bottom: border-uniform",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches left: border-uniform",
+          "passed": true
+        },
+        {
+          "name": "Border painter transition preserves the View and applies every edge width: removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches top: border-removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches right: border-removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches bottom: border-removed",
+          "passed": true
+        },
+        {
+          "name": "Rendered pixel matches left: border-removed",
+          "passed": true
+        },
+        {
+          "name": "All View rerenders preserve the component and shutdown runs its effect cleanup once",
+          "passed": true
+        },
+        {
+          "name": "Shutdown retires every native Control without host errors",
+          "passed": true
+        },
+        {
+          "name": "Shutdown leaves no pending responder, timer, frame or retirement work",
+          "passed": true
+        }
+      ],
+      "stages": {
+        "border-alpha": {
+          "appearance": {
+            "background": "ffffffff",
+            "borderColor": "ffff0080",
+            "borderColors": [
+              "ffff0080",
+              "ff000080",
+              "00ff0080",
+              "0000ff80"
+            ],
+            "borderPainter": "multicolor",
+            "borderWidths": [
+              8.0,
+              8.0,
+              8.0,
+              8.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "ffff0080",
+                "borderColors": [
+                  "ffff0080",
+                  "ff000080",
+                  "00ff0080",
+                  "0000ff80"
+                ],
+                "borderPainter": "multicolor",
+                "borderWidths": [
+                  8.0,
+                  8.0,
+                  8.0,
+                  8.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29913777742.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "alpha",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "border-corner": {
+          "geometry": {
+            "godotWindowRect": [
+              713.0,
+              472.0,
+              60.0,
+              60.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "ff0000ff",
+                "borderColors": [
+                  "ff0000ff",
+                  "0000ffff",
+                  "ff0000ff",
+                  "0000ffff"
+                ],
+                "borderPainter": "multicolor",
+                "borderWidths": [
+                  2.0,
+                  10.0,
+                  2.0,
+                  10.0
+                ],
+                "cornerRadii": [
+                  18.0,
+                  18.0,
+                  18.0,
+                  18.0
+                ]
+              },
+              "fabricHeight": 60.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 60.0,
+              "id": 31524390550.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 148.0,
+              "testID": "border-corner",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 106.0,
+              "y": 28.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                106.0,
+                28.0,
+                60.0,
+                60.0,
+                689.0,
+                448.0
+              ],
+              "rect": {
+                "bottom": 532.0,
+                "height": 60.0,
+                "left": 713.0,
+                "right": 773.0,
+                "top": 472.0,
+                "width": 60.0,
+                "x": 713.0,
+                "y": 472.0
+              },
+              "tag": 148.0,
+              "window": [
+                713.0,
+                472.0,
+                60.0,
+                60.0
+              ]
+            },
+            "valid": true
+          }
+        },
+        "border-removed": {
+          "appearance": {
+            "background": "ffffffff",
+            "borderColor": "00000000",
+            "borderColors": [
+              "00000000",
+              "00000000",
+              "00000000",
+              "00000000"
+            ],
+            "borderPainter": "flat",
+            "borderWidths": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29913777742.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "removed",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "border-uniform": {
+          "appearance": {
+            "background": "ffffffff",
+            "borderColor": "ff000080",
+            "borderColors": [
+              "ff000080",
+              "ff000080",
+              "ff000080",
+              "ff000080"
+            ],
+            "borderPainter": "flat",
+            "borderWidths": [
+              8.0,
+              8.0,
+              8.0,
+              8.0
+            ],
+            "cornerRadii": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ]
+          },
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "ffffffff",
+                "borderColor": "ff000080",
+                "borderColors": [
+                  "ff000080",
+                  "ff000080",
+                  "ff000080",
+                  "ff000080"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  8.0,
+                  8.0,
+                  8.0,
+                  8.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29913777742.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "uniform",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "borders": {
+          "geometry": {
+            "godotWindowRect": [
+              607.0,
+              444.0,
+              180.0,
+              100.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "111827ff",
+                "borderColor": "f59e0bff",
+                "borderColors": [
+                  "f59e0bff",
+                  "ef4444ff",
+                  "22c55eff",
+                  "3b82f6ff"
+                ],
+                "borderPainter": "multicolor",
+                "borderWidths": [
+                  8.0,
+                  8.0,
+                  8.0,
+                  8.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 100.0,
+              "fabricWidth": 180.0,
+              "focused": false,
+              "height": 100.0,
+              "id": 29913777742.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 150.0,
+              "testID": "border-box",
+              "text": "",
+              "visible": true,
+              "width": 180.0,
+              "x": 583.0,
+              "y": 420.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                12.0,
+                66.0,
+                180.0,
+                100.0,
+                583.0,
+                420.0
+              ],
+              "rect": {
+                "bottom": 544.0,
+                "height": 100.0,
+                "left": 607.0,
+                "right": 787.0,
+                "top": 444.0,
+                "width": 180.0,
+                "x": 607.0,
+                "y": 444.0
+              },
+              "tag": 150.0,
+              "window": [
+                607.0,
+                444.0,
+                180.0,
+                100.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "border-child",
+                "pageX": 712.0,
+                "pageY": 506.0,
+                "target": 146.0
+              }
+            ],
+            "expected": "border-child",
+            "point": [
+              712.0,
+              506.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 34.0,
+              "grants": 33.0,
+              "moves": 0.0,
+              "releases": 33.0,
+              "responder": 0.0,
+              "starts": 34.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "border-child",
+                "pageX": 712.0,
+                "pageY": 506.0,
+                "target": 146.0
+              }
+            ],
+            "expected": "border-child",
+            "point": [
+              712.0,
+              506.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 35.0,
+              "grants": 34.0,
+              "moves": 0.0,
+              "releases": 34.0,
+              "responder": 0.0,
+              "starts": 35.0
+            }
+          }
+        },
+        "clip-hidden": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 31306286723.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-hidden-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 22.0,
+              "grants": 21.0,
+              "moves": 0.0,
+              "releases": 21.0,
+              "responder": 0.0,
+              "starts": 22.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 23.0,
+              "grants": 22.0,
+              "moves": 0.0,
+              "releases": 22.0,
+              "responder": 0.0,
+              "starts": 23.0
+            }
+          }
+        },
+        "clip-hidden-outside": {
+          "mouse": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 21.0,
+              "grants": 20.0,
+              "moves": 0.0,
+              "releases": 20.0,
+              "responder": 0.0,
+              "starts": 21.0
+            }
+          },
+          "touch": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 22.0,
+              "grants": 21.0,
+              "moves": 0.0,
+              "releases": 21.0,
+              "responder": 0.0,
+              "starts": 22.0
+            }
+          }
+        },
+        "clip-removed": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 31306286723.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "default",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-removed-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 31.0,
+              "grants": 30.0,
+              "moves": 0.0,
+              "releases": 30.0,
+              "responder": 0.0,
+              "starts": 31.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 33.0,
+              "grants": 32.0,
+              "moves": 0.0,
+              "releases": 32.0,
+              "responder": 0.0,
+              "starts": 33.0
+            }
+          }
+        },
+        "clip-removed-outside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 30.0,
+              "grants": 29.0,
+              "moves": 0.0,
+              "releases": 29.0,
+              "responder": 0.0,
+              "starts": 30.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 32.0,
+              "grants": 31.0,
+              "moves": 0.0,
+              "releases": 31.0,
+              "responder": 0.0,
+              "starts": 32.0
+            }
+          }
+        },
+        "clip-scroll": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 31306286723.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "scroll",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-scroll-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 28.0,
+              "grants": 27.0,
+              "moves": 0.0,
+              "releases": 27.0,
+              "responder": 0.0,
+              "starts": 28.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 29.0,
+              "grants": 28.0,
+              "moves": 0.0,
+              "releases": 28.0,
+              "responder": 0.0,
+              "starts": 29.0
+            }
+          }
+        },
+        "clip-scroll-outside": {
+          "mouse": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 27.0,
+              "grants": 26.0,
+              "moves": 0.0,
+              "releases": 26.0,
+              "responder": 0.0,
+              "starts": 27.0
+            }
+          },
+          "touch": {
+            "events": [],
+            "expected": "",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 28.0,
+              "grants": 27.0,
+              "moves": 0.0,
+              "releases": 27.0,
+              "responder": 0.0,
+              "starts": 28.0
+            }
+          }
+        },
+        "clip-visible": {
+          "geometry": {
+            "godotWindowRect": [
+              391.0,
+              464.0,
+              60.0,
+              40.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "22c55eff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 40.0,
+              "fabricWidth": 60.0,
+              "focused": false,
+              "height": 40.0,
+              "id": 31306286723.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 126.0,
+              "testID": "clip-child",
+              "text": "",
+              "visible": true,
+              "width": 60.0,
+              "x": 60.0,
+              "y": 20.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                60.0,
+                20.0,
+                60.0,
+                40.0,
+                367.0,
+                440.0
+              ],
+              "rect": {
+                "bottom": 504.0,
+                "height": 40.0,
+                "left": 391.0,
+                "right": 451.0,
+                "top": 464.0,
+                "width": 60.0,
+                "x": 391.0,
+                "y": 464.0
+              },
+              "relative": [
+                60.0,
+                20.0,
+                60.0,
+                40.0
+              ],
+              "tag": 126.0,
+              "window": [
+                391.0,
+                464.0,
+                60.0,
+                40.0
+              ]
+            },
+            "valid": true
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "visible",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          }
+        },
+        "clip-visible-inside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 25.0,
+              "grants": 24.0,
+              "moves": 0.0,
+              "releases": 24.0,
+              "responder": 0.0,
+              "starts": 25.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 401.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              401.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 27.0,
+              "grants": 26.0,
+              "moves": 0.0,
+              "releases": 26.0,
+              "responder": 0.0,
+              "starts": 27.0
+            }
+          }
+        },
+        "clip-visible-outside": {
+          "mouse": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 24.0,
+              "grants": 23.0,
+              "moves": 0.0,
+              "releases": 23.0,
+              "responder": 0.0,
+              "starts": 24.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "clip-child",
+                "pageX": 431.0,
+                "pageY": 499.0,
+                "target": 126.0
+              }
+            ],
+            "expected": "clip-child",
+            "point": [
+              431.0,
+              499.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 26.0,
+              "grants": 25.0,
+              "moves": 0.0,
+              "releases": 25.0,
+              "responder": 0.0,
+              "starts": 26.0
+            }
+          }
+        },
+        "nested-isolated": {
+          "geometry": {
+            "godotWindowRect": [
+              509.0,
+              267.0,
+              110.0,
+              70.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "a855f7ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 70.0,
+              "fabricWidth": 110.0,
+              "focused": false,
+              "height": 70.0,
+              "id": 30668752499.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 74.0,
+              "testID": "nested-child",
+              "text": "",
+              "visible": true,
+              "width": 110.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                110.0,
+                70.0,
+                485.0,
+                243.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 70.0,
+                "left": 509.0,
+                "right": 619.0,
+                "top": 267.0,
+                "width": 110.0,
+                "x": 509.0,
+                "y": 267.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                110.0,
+                70.0
+              ],
+              "tag": 74.0,
+              "window": [
+                509.0,
+                267.0,
+                110.0,
+                70.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 14.0,
+              "grants": 13.0,
+              "moves": 0.0,
+              "releases": 13.0,
+              "responder": 0.0,
+              "starts": 14.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 15.0,
+              "grants": 14.0,
+              "moves": 0.0,
+              "releases": 14.0,
+              "responder": 0.0,
+              "starts": 15.0
+            }
+          }
+        },
+        "nested-restored": {
+          "geometry": {
+            "godotWindowRect": [
+              509.0,
+              267.0,
+              110.0,
+              70.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "a855f7ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 70.0,
+              "fabricWidth": 110.0,
+              "focused": false,
+              "height": 70.0,
+              "id": 30668752499.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 74.0,
+              "testID": "nested-child",
+              "text": "",
+              "visible": true,
+              "width": 110.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                110.0,
+                70.0,
+                485.0,
+                243.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 70.0,
+                "left": 509.0,
+                "right": 619.0,
+                "top": 267.0,
+                "width": 110.0,
+                "x": 509.0,
+                "y": 267.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                110.0,
+                70.0
+              ],
+              "tag": 74.0,
+              "window": [
+                509.0,
+                267.0,
+                110.0,
+                70.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 18.0,
+              "grants": 17.0,
+              "moves": 0.0,
+              "releases": 17.0,
+              "responder": 0.0,
+              "starts": 18.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "nested-front",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 82.0
+              }
+            ],
+            "expected": "nested-front",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 19.0,
+              "grants": 18.0,
+              "moves": 0.0,
+              "releases": 18.0,
+              "responder": 0.0,
+              "starts": 19.0
+            }
+          }
+        },
+        "nested-shared": {
+          "geometry": {
+            "godotWindowRect": [
+              509.0,
+              267.0,
+              110.0,
+              70.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "a855f7ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 70.0,
+              "fabricWidth": 110.0,
+              "focused": false,
+              "height": 70.0,
+              "id": 30668752499.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 74.0,
+              "testID": "nested-child",
+              "text": "",
+              "visible": true,
+              "width": 110.0,
+              "x": 40.0,
+              "y": 25.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                110.0,
+                70.0,
+                485.0,
+                243.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 70.0,
+                "left": 509.0,
+                "right": 619.0,
+                "top": 267.0,
+                "width": 110.0,
+                "x": 509.0,
+                "y": 267.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                110.0,
+                70.0
+              ],
+              "tag": 74.0,
+              "window": [
+                509.0,
+                267.0,
+                110.0,
+                70.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "nested-child",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 74.0
+              }
+            ],
+            "expected": "nested-child",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 16.0,
+              "grants": 15.0,
+              "moves": 0.0,
+              "releases": 15.0,
+              "responder": 0.0,
+              "starts": 16.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": false,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "nested-child",
+                "pageX": 569.0,
+                "pageY": 317.0,
+                "target": 74.0
+              }
+            ],
+            "expected": "nested-child",
+            "point": [
+              569.0,
+              317.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 17.0,
+              "grants": 16.0,
+              "moves": 0.0,
+              "releases": 16.0,
+              "responder": 0.0,
+              "starts": 17.0
+            }
+          }
+        },
+        "siblings-equal": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "3b82f6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30131881563.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 54.0,
+              "testID": "sibling-blue",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 54.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 6.0,
+              "grants": 5.0,
+              "moves": 0.0,
+              "releases": 5.0,
+              "responder": 0.0,
+              "starts": 6.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 0.0,
+              "red": 0.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 7.0,
+              "grants": 6.0,
+              "moves": 0.0,
+              "releases": 6.0,
+              "responder": 0.0,
+              "starts": 7.0
+            }
+          }
+        },
+        "siblings-high": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "e05252ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30182213214.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 48.0,
+              "testID": "sibling-red",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 48.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 10.0,
+              "grants": 9.0,
+              "moves": 0.0,
+              "releases": 9.0,
+              "responder": 0.0,
+              "starts": 10.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 11.0,
+              "grants": 10.0,
+              "moves": 0.0,
+              "releases": 10.0,
+              "responder": 0.0,
+              "starts": 11.0
+            }
+          }
+        },
+        "siblings-initial": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "e05252ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30182213214.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 48.0,
+              "testID": "sibling-red",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 48.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 1.0,
+              "grants": 1.0,
+              "moves": 0.0,
+              "releases": 1.0,
+              "responder": 0.0,
+              "starts": 1.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": -2.0,
+              "red": 4.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 2.0,
+              "grants": 2.0,
+              "moves": 0.0,
+              "releases": 2.0,
+              "responder": 0.0,
+              "starts": 2.0
+            }
+          }
+        },
+        "siblings-raised": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "3b82f6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30131881563.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 54.0,
+              "testID": "sibling-blue",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 54.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 4.0,
+              "grants": 3.0,
+              "moves": 0.0,
+              "releases": 3.0,
+              "responder": 0.0,
+              "starts": 4.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "red",
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 6.0,
+              "red": -3.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 5.0,
+              "grants": 4.0,
+              "moves": 0.0,
+              "releases": 4.0,
+              "responder": 0.0,
+              "starts": 5.0
+            }
+          }
+        },
+        "siblings-removed": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "3b82f6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30131881563.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 54.0,
+              "testID": "sibling-blue",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 54.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 12.0,
+              "grants": 11.0,
+              "moves": 0.0,
+              "releases": 11.0,
+              "responder": 0.0,
+              "starts": 12.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 4097.0,
+              "red": 5001.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-blue",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 54.0
+              }
+            ],
+            "expected": "sibling-blue",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 13.0,
+              "grants": 12.0,
+              "moves": 0.0,
+              "releases": 12.0,
+              "responder": 0.0,
+              "starts": 13.0
+            }
+          }
+        },
+        "siblings-reordered": {
+          "geometry": {
+            "godotWindowRect": [
+              74.0,
+              257.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "e05252ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 30182213214.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 48.0,
+              "testID": "sibling-red",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 20.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                20.0,
+                15.0,
+                130.0,
+                80.0,
+                50.0,
+                233.0
+              ],
+              "rect": {
+                "bottom": 337.0,
+                "height": 80.0,
+                "left": 74.0,
+                "right": 204.0,
+                "top": 257.0,
+                "width": 130.0,
+                "x": 74.0,
+                "y": 257.0
+              },
+              "relative": [
+                20.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 48.0,
+              "window": [
+                74.0,
+                257.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 8.0,
+              "grants": 7.0,
+              "moves": 0.0,
+              "releases": 7.0,
+              "responder": 0.0,
+              "starts": 8.0
+            }
+          },
+          "state": {
+            "border": "opaque",
+            "order": [
+              "blue",
+              "red"
+            ],
+            "overflow": "hidden",
+            "parentContext": true,
+            "z": {
+              "blue": 0.0,
+              "red": 0.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "sibling-red",
+                "pageX": 139.0,
+                "pageY": 322.0,
+                "target": 48.0
+              }
+            ],
+            "expected": "sibling-red",
+            "point": [
+              139.0,
+              322.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 9.0,
+              "grants": 8.0,
+              "moves": 0.0,
+              "releases": 8.0,
+              "responder": 0.0,
+              "starts": 9.0
+            }
+          }
+        },
+        "stale-removed": {
+          "connected": false,
+          "rect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "tag": 48.0
+        },
+        "static": {
+          "geometry": {
+            "godotWindowRect": [
+              94.0,
+              459.0,
+              130.0,
+              80.0
+            ],
+            "native": {
+              "appearance": {
+                "background": "14b8a6ff",
+                "borderColor": "00000000",
+                "borderColors": [
+                  "00000000",
+                  "00000000",
+                  "00000000",
+                  "00000000"
+                ],
+                "borderPainter": "flat",
+                "borderWidths": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "cornerRadii": [
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0
+                ]
+              },
+              "fabricHeight": 80.0,
+              "fabricWidth": 130.0,
+              "focused": false,
+              "height": 80.0,
+              "id": 31021074049.0,
+              "kind": "view",
+              "opacity": 1.0,
+              "tag": 108.0,
+              "testID": "static-front",
+              "text": "",
+              "visible": true,
+              "width": 130.0,
+              "x": 40.0,
+              "y": 15.0
+            },
+            "public": {
+              "connected": true,
+              "measure": [
+                40.0,
+                15.0,
+                130.0,
+                80.0,
+                70.0,
+                435.0
+              ],
+              "rect": {
+                "bottom": 539.0,
+                "height": 80.0,
+                "left": 94.0,
+                "right": 224.0,
+                "top": 459.0,
+                "width": 130.0,
+                "x": 94.0,
+                "y": 459.0
+              },
+              "relative": [
+                40.0,
+                15.0,
+                130.0,
+                80.0
+              ],
+              "tag": 108.0,
+              "window": [
+                94.0,
+                459.0,
+                130.0,
+                80.0
+              ]
+            },
+            "valid": true
+          },
+          "mouse": {
+            "events": [
+              {
+                "id": "static-front",
+                "pageX": 154.0,
+                "pageY": 519.0,
+                "target": 108.0
+              }
+            ],
+            "expected": "static-front",
+            "point": [
+              154.0,
+              519.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 20.0,
+              "grants": 19.0,
+              "moves": 0.0,
+              "releases": 19.0,
+              "responder": 0.0,
+              "starts": 20.0
+            }
+          },
+          "touch": {
+            "events": [
+              {
+                "id": "static-front",
+                "pageX": 154.0,
+                "pageY": 519.0,
+                "target": 108.0
+              }
+            ],
+            "expected": "static-front",
+            "point": [
+              154.0,
+              519.0
+            ],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 21.0,
+              "grants": 20.0,
+              "moves": 0.0,
+              "releases": 20.0,
+              "responder": 0.0,
+              "starts": 21.0
+            }
+          }
+        }
+      },
+      "pixels": [
+        {
+          "actual": [
+            0.878431379795074,
+            0.321568638086319,
+            0.321568638086319,
+            1.0
+          ],
+          "expected": "#e05252",
+          "id": "sibling-red",
+          "passed": true,
+          "point": [
+            139,
+            322
+          ],
+          "stage": "siblings-initial"
+        },
+        {
+          "actual": [
+            0.23137255012989,
+            0.509803950786591,
+            0.964705884456635,
+            1.0
+          ],
+          "expected": "#3b82f6",
+          "id": "sibling-blue",
+          "passed": true,
+          "point": [
+            139,
+            322
+          ],
+          "stage": "siblings-raised"
+        },
+        {
+          "actual": [
+            0.23137255012989,
+            0.509803950786591,
+            0.964705884456635,
+            1.0
+          ],
+          "expected": "#3b82f6",
+          "id": "sibling-blue",
+          "passed": true,
+          "point": [
+            139,
+            322
+          ],
+          "stage": "siblings-equal"
+        },
+        {
+          "actual": [
+            0.878431379795074,
+            0.321568638086319,
+            0.321568638086319,
+            1.0
+          ],
+          "expected": "#e05252",
+          "id": "sibling-red",
+          "passed": true,
+          "point": [
+            139,
+            322
+          ],
+          "stage": "siblings-reordered"
+        },
+        {
+          "actual": [
+            0.878431379795074,
+            0.321568638086319,
+            0.321568638086319,
+            1.0
+          ],
+          "expected": "#e05252",
+          "id": "sibling-red",
+          "passed": true,
+          "point": [
+            139,
+            322
+          ],
+          "stage": "siblings-high"
+        },
+        {
+          "actual": [
+            0.23137255012989,
+            0.509803950786591,
+            0.964705884456635,
+            1.0
+          ],
+          "expected": "#3b82f6",
+          "id": "sibling-blue",
+          "passed": true,
+          "point": [
+            139,
+            322
+          ],
+          "stage": "siblings-removed"
+        },
+        {
+          "actual": [
+            0.0235294122248888,
+            0.713725507259369,
+            0.831372559070587,
+            1.0
+          ],
+          "expected": "#06b6d4",
+          "id": "nested-front",
+          "passed": true,
+          "point": [
+            569,
+            317
+          ],
+          "stage": "nested-isolated"
+        },
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "expected": "#a855f7",
+          "id": "nested-child",
+          "passed": true,
+          "point": [
+            569,
+            317
+          ],
+          "stage": "nested-shared"
+        },
+        {
+          "actual": [
+            0.0235294122248888,
+            0.713725507259369,
+            0.831372559070587,
+            1.0
+          ],
+          "expected": "#06b6d4",
+          "id": "nested-front",
+          "passed": true,
+          "point": [
+            569,
+            317
+          ],
+          "stage": "nested-restored"
+        },
+        {
+          "actual": [
+            0.0784313753247261,
+            0.721568644046783,
+            0.650980412960052,
+            1.0
+          ],
+          "expected": "#14b8a6",
+          "id": "static-front",
+          "passed": true,
+          "point": [
+            154,
+            519
+          ],
+          "stage": "static"
+        },
+        {
+          "actual": [
+            0.0862745121121407,
+            0.137254908680916,
+            0.23137255012989,
+            1.0
+          ],
+          "expected": "#16233b",
+          "id": "outside",
+          "passed": true,
+          "point": [
+            431,
+            499
+          ],
+          "stage": "clip-hidden"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "inside",
+          "passed": true,
+          "point": [
+            401,
+            499
+          ],
+          "stage": "clip-hidden"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "outside",
+          "passed": true,
+          "point": [
+            431,
+            499
+          ],
+          "stage": "clip-visible"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "inside",
+          "passed": true,
+          "point": [
+            401,
+            499
+          ],
+          "stage": "clip-visible"
+        },
+        {
+          "actual": [
+            0.0862745121121407,
+            0.137254908680916,
+            0.23137255012989,
+            1.0
+          ],
+          "expected": "#16233b",
+          "id": "outside",
+          "passed": true,
+          "point": [
+            431,
+            499
+          ],
+          "stage": "clip-scroll"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "inside",
+          "passed": true,
+          "point": [
+            401,
+            499
+          ],
+          "stage": "clip-scroll"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "outside",
+          "passed": true,
+          "point": [
+            431,
+            499
+          ],
+          "stage": "clip-removed"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "inside",
+          "passed": true,
+          "point": [
+            401,
+            499
+          ],
+          "stage": "clip-removed"
+        },
+        {
+          "actual": [
+            0.937254905700684,
+            0.266666680574417,
+            0.266666680574417,
+            1.0
+          ],
+          "expected": "#ef4444",
+          "id": "top",
+          "passed": true,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.133333340287209,
+            0.772549033164978,
+            0.368627458810806,
+            1.0
+          ],
+          "expected": "#22c55e",
+          "id": "right",
+          "passed": true,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.23137255012989,
+            0.509803950786591,
+            0.964705884456635,
+            1.0
+          ],
+          "expected": "#3b82f6",
+          "id": "bottom",
+          "passed": true,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.960784316062927,
+            0.619607865810394,
+            0.0431372560560703,
+            1.0
+          ],
+          "expected": "#f59e0b",
+          "id": "left",
+          "passed": true,
+          "point": [
+            611,
+            494
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            0.658823549747467,
+            0.333333343267441,
+            0.968627452850342,
+            1.0
+          ],
+          "expected": "#a855f7",
+          "id": "child",
+          "passed": true,
+          "point": [
+            712,
+            506
+          ],
+          "stage": "borders"
+        },
+        {
+          "actual": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "expected": "#ff0000",
+          "id": "left-side-corner-join",
+          "passed": true,
+          "point": [
+            714,
+            485
+          ],
+          "stage": "border-corner"
+        },
+        {
+          "actual": [
+            1.0,
+            0.498039215803146,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "top",
+          "passed": true,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            0.498039215803146,
+            1.0,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#80ff80",
+          "id": "right",
+          "passed": true,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            0.498039215803146,
+            0.498039215803146,
+            1.0,
+            1.0
+          ],
+          "expected": "#8080ff",
+          "id": "bottom",
+          "passed": true,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            1.0,
+            1.0,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#ffff80",
+          "id": "left",
+          "passed": true,
+          "point": [
+            611,
+            494
+          ],
+          "stage": "border-alpha"
+        },
+        {
+          "actual": [
+            1.0,
+            0.498039215803146,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "top",
+          "passed": true,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            1.0,
+            0.498039215803146,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "right",
+          "passed": true,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            1.0,
+            0.498039215803146,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "bottom",
+          "passed": true,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            1.0,
+            0.498039215803146,
+            0.498039215803146,
+            1.0
+          ],
+          "expected": "#ff8080",
+          "id": "left",
+          "passed": true,
+          "point": [
+            611,
+            494
+          ],
+          "stage": "border-uniform"
+        },
+        {
+          "actual": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "expected": "#ffffff",
+          "id": "top",
+          "passed": true,
+          "point": [
+            697,
+            448
+          ],
+          "stage": "border-removed"
+        },
+        {
+          "actual": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "expected": "#ffffff",
+          "id": "right",
+          "passed": true,
+          "point": [
+            783,
+            494
+          ],
+          "stage": "border-removed"
+        },
+        {
+          "actual": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "expected": "#ffffff",
+          "id": "bottom",
+          "passed": true,
+          "point": [
+            697,
+            540
+          ],
+          "stage": "border-removed"
+        },
+        {
+          "actual": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "expected": "#ffffff",
+          "id": "left",
+          "passed": true,
+          "point": [
+            611,
+            494
+          ],
+          "stage": "border-removed"
+        }
+      ],
+      "initialInstances": {
+        "border-box": 29913777742.0,
+        "border-child": 31474058894.0,
+        "border-corner": 31524390550.0,
+        "clip-child": 31306286723.0,
+        "clip-parent": 29611787836.0,
+        "nested-arena": 29142025760.0,
+        "nested-child": 30668752499.0,
+        "nested-front": 30618420848.0,
+        "nested-parent": 30568089196.0,
+        "sibling-blue": 30131881563.0,
+        "sibling-red": 30182213214.0,
+        "siblings-arena": 28923921939.0,
+        "static-back": 30970742386.0,
+        "static-front": 31021074049.0,
+        "view-raise": 28336719344.0
+      },
+      "shutdown": {
+        "creates": 52.0,
+        "deletes": 52.0,
+        "nativeTags": 0.0,
+        "retiringTags": 0.0,
+        "rootCount": 0.0,
+        "errors": [],
+        "stopped": true,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pointer": {
+          "activeTouches": 0.0,
+          "blockNative": false,
+          "cancels": 0.0,
+          "ends": 35.0,
+          "grants": 34.0,
+          "moves": 0.0,
+          "releases": 34.0,
+          "responder": 0.0,
+          "starts": 35.0
+        }
+      }
+    }
+  }
+}

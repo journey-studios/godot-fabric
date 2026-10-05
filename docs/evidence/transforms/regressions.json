@@ -1,0 +1,253 @@
+{
+  "format": "godot-fabric.transform-regressions/v1",
+  "at": "2026-10-04T02:38:02.297867+00:00",
+  "node": {
+    "tests": 205,
+    "passed": 205,
+    "parity": 6,
+    "dashboard": 8,
+    "explicitContracts": 191,
+    "command": "npm run test:contracts",
+    "logSha256": "0e560778347bd098313c2d5422f577868ddb8b955c395e693042213d5b3e9a7d"
+  },
+  "python": {
+    "tests": 13,
+    "passed": 13
+  },
+  "native": {
+    "tests": 10,
+    "passed": 10,
+    "command": "node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+    "logSha256": "605e87d253b0f4d938c19fce372610a0e186aef21ce2d75065b59368893d3841"
+  },
+  "examples": {
+    "runs": 18,
+    "checks": 1219,
+    "passed": true,
+    "reports": [
+      {
+        "scenario": "chart",
+        "checks": 34,
+        "passed": true,
+        "reportSha256": "d2ebb4fe9284291043e9068f1c319a4aa77f6c27fb631108f13b52013553263b"
+      },
+      {
+        "scenario": "coordinates",
+        "checks": 238,
+        "passed": true,
+        "reportSha256": "ce22ac28fe651087c09eff05275ee0269359bdbfc2a66109e2fb8d61f8d89dc2"
+      },
+      {
+        "scenario": "counter",
+        "checks": 19,
+        "passed": true,
+        "reportSha256": "7463a840074d76a841eac11d067315e2ffd6ad69c48e8873c1de30d7313fedd4"
+      },
+      {
+        "scenario": "form",
+        "checks": 39,
+        "passed": true,
+        "reportSha256": "648b9beb2c589df5752ab660ca4f1f0a760f909616270f990a82830eb8419b34"
+      },
+      {
+        "scenario": "input",
+        "checks": 45,
+        "passed": true,
+        "reportSha256": "a3d65198b8af3fc4fdf06a9f5f6edee1f63ae11bf0e100778573cd179099c89c"
+      },
+      {
+        "scenario": "layout",
+        "checks": 47,
+        "passed": true,
+        "reportSha256": "19f27f14c27a705d3807f072498064389bc9c23582a2496c4a9f6dd72ab2a7ce"
+      },
+      {
+        "scenario": "metrics",
+        "checks": 64,
+        "passed": true,
+        "reportSha256": "7ad40265ba701e7023d8c22fe31d574869023e23ef2d8c756bb01e3dd3e09ff8"
+      },
+      {
+        "scenario": "nativewind",
+        "checks": 49,
+        "passed": true,
+        "reportSha256": "9ac4d5ed2b31cd03ca2df9f2ef8645ae4460cbd504df3cab517f44d062663e53"
+      },
+      {
+        "scenario": "pressable",
+        "checks": 43,
+        "passed": true,
+        "reportSha256": "7e40323d985c27c5cd802735294872066a134f8ab72ddc6eec062b938d720291"
+      },
+      {
+        "scenario": "react",
+        "checks": 36,
+        "passed": true,
+        "reportSha256": "4745708bf5bba850a8e2529e1d6e16426519cb3206fcc2ba3313934ac54841ae"
+      },
+      {
+        "scenario": "refs",
+        "checks": 23,
+        "passed": true,
+        "reportSha256": "bdc7bfd898b654bacf8a00317e20aeb469f1ca653def2d97b706288d473df7ef"
+      },
+      {
+        "scenario": "runtime",
+        "checks": 23,
+        "passed": true,
+        "reportSha256": "1cb3992f387a30b18bee9bc2fe78bc19b2286a52955968eb1386758d884bf2a3"
+      },
+      {
+        "scenario": "scroll",
+        "checks": 62,
+        "passed": true,
+        "reportSha256": "0b2206128db65154f6558b2f8249500eb388c491dd6d34715f7f8ef59791ac65"
+      },
+      {
+        "scenario": "services",
+        "checks": 36,
+        "passed": true,
+        "reportSha256": "52df49fcfb52c2bc8b640bfa07b34c0989f205e58928bfb0afd1f50d7c2d7004"
+      },
+      {
+        "scenario": "shared",
+        "checks": 35,
+        "passed": true,
+        "reportSha256": "3b433f1eab444d9e57df7fdd1953dc9b2b63da4fed22c44731659f6cb2ab0797"
+      },
+      {
+        "scenario": "transforms",
+        "checks": 309,
+        "passed": true,
+        "reportSha256": "c58082f4de1a2e16b2b6d21162e9cf046deba2b6515a398f603d05d61f6e93cc"
+      },
+      {
+        "scenario": "typography",
+        "checks": 50,
+        "passed": true,
+        "reportSha256": "dc53a8980899a303199b943a3eb4381dfad3144928aa1e43526f29035e40701b"
+      },
+      {
+        "scenario": "view",
+        "checks": 67,
+        "passed": true,
+        "reportSha256": "bb4a3d0bbf2a718151d03633f9a73ebfe0243ae4bc139c7fd8bf605d919a462b"
+      }
+    ]
+  },
+  "adapters": {
+    "runs": 17,
+    "checks": 318,
+    "nativeHostSha256": "42ee5c75a70e8fc7fdee9d6144c810248abe6aa1a2f0100abd2f3383e18eac79",
+    "passed": true,
+    "nativeAdapterLinked": true,
+    "componentMounted": true,
+    "abiCertified": false,
+    "reports": [
+      {
+        "scenario": "headless",
+        "checks": 35,
+        "sha256": "ef48dd9af1bbb400ed47848f097ad3ab3c57b6bbe23f6d44c79e7a9009b4c16d",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "external-appearance",
+        "checks": 5,
+        "sha256": "2b8343cc4745439cbb1bc9611ef9abd56f42e81e9b3ce9203dcf28c0e0cde627",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "reentrant-stop",
+        "checks": 8,
+        "sha256": "6bb4311051ead3bb63089eaec6544a0e69a1bd80b6a3279a7e27636934e4edc7",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "reentrant-raf",
+        "checks": 9,
+        "sha256": "6273c82dcd2636d022ce4b7c2dfeea84e9d9a4420d75d3f550419b0a0aead762",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "reentrant-timer",
+        "checks": 9,
+        "sha256": "2cc2e60af10087889e19457d586f511ac3173e0daa3efb95f13425ee5415f522",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-unmount-resize",
+        "checks": 17,
+        "sha256": "6c1464cff19947f2464f86fb8c470e5ff890b5e581b5af42737290999a32b7a9",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-unmount-pressed",
+        "checks": 17,
+        "sha256": "0c3a8efd5bf86986e4cbae07e9be054973b6e6161a317908e217f93a59f6484f",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-unmount-raf",
+        "checks": 18,
+        "sha256": "f9f69dead8f323da2de3613c6f318865649a8598404385b99d5ba3d4ac4b58ab",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-unmount-timer",
+        "checks": 18,
+        "sha256": "0c0858dba9974c0ca3a7080f7c38d8b0dc339838f0edeb001246038c0e214842",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-remount-resize",
+        "checks": 21,
+        "sha256": "e25d30a8d1f14c61340b2744529eaeda28017cf00b236dc6d10d455f4250d739",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-free-resize",
+        "checks": 17,
+        "sha256": "3d917905efc3cfc2be7364044b182304b77c446edfc5a4d165ee904a757f0028",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-owner-switch-resize",
+        "checks": 18,
+        "sha256": "2c867859c582e2a3e9c17a160ed126bd3c2951f3abd3e35e79036b92871faf81",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "root-stale-core-owner-switch-resize",
+        "checks": 21,
+        "sha256": "f01754cd02f8b7fb325636543d566f4ba965c0036673675b9f4a5db6fcc910b4",
+        "displayServer": "headless"
+      },
+      {
+        "scenario": "graphical",
+        "checks": 37,
+        "sha256": "fd27b58a8a11bcefdaf5333458899c98dc127a549b8814c9947a95426a67e7a7",
+        "displayServer": "macOS"
+      },
+      {
+        "scenario": "root-unmount-graphical",
+        "checks": 21,
+        "sha256": "7061e9ffd6bb661719d181ada6621de1074ad04610cd7a3da4b5353a99220019",
+        "displayServer": "macOS"
+      },
+      {
+        "scenario": "root-remount-graphical",
+        "checks": 25,
+        "sha256": "06bc6a31b90b71856a843c67e4f3176047aaa84eda7cef9b35dc075f1d7414f1",
+        "displayServer": "macOS"
+      },
+      {
+        "scenario": "root-owner-switch-graphical",
+        "checks": 22,
+        "sha256": "99e53976ef2da556ec2881d73dec8ebdac8fcd408109ea97cf815206d7f25c14",
+        "displayServer": "macOS"
+      }
+    ],
+    "rawReportSha256": "b4e5a8b41f5d638d736ff622d6a49e18ef69f4e6a7144b6ebf6869390aaa2e49"
+  },
+  "hostedCi": "Coordinate f40831e/b1732fb passed five jobs; new transform implementation CI not executed yet"
+}

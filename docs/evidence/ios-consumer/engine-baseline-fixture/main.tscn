@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3]
+[ext_resource type="Script" path="res://validation.gd" id="1"]
+[node name="NativeOnly" type="Control"]
+script=ExtResource("1")
+anchors_preset=15
+anchor_right=1.0
+anchor_bottom=1.0
+[node name="Label" type="Label" parent="."]
+text="Native Godot baseline"
+position=Vector2(40,160)
+[node name="Button" type="Button" parent="."]
+text="Native button"
+position=Vector2(40,240)

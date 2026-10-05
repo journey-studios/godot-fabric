@@ -1,0 +1,1399 @@
+{
+  "format": "godot-fabric.root-retirement-checks/v1",
+  "scope": "Curated assertion names/results from executed reports; sourceReportSha256 identifies each unmodified raw report",
+  "runs": 17,
+  "checks": 318,
+  "lanes": [
+    {
+      "lane": "headless",
+      "sourceReportSha256": "49d76c8c325bb459d63e3ec1f079f1e12af38c6d549ebc85492242f6d03133bd",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Original generated descriptor mounts real Godot Controls in both roots",
+          "passed": true
+        },
+        {
+          "name": "External components share one Hermes VM across independent Fabric roots",
+          "passed": true
+        },
+        {
+          "name": "Identified external library loads before one bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "Runtime witness does not claim ABI certification",
+          "passed": true
+        },
+        {
+          "name": "Selected providers are sealed and installed per application",
+          "passed": true
+        },
+        {
+          "name": "Original Props reach the external adapter without core ControlProps casts",
+          "passed": true
+        },
+        {
+          "name": "Yoga commits native geometry for the external Control",
+          "passed": true
+        },
+        {
+          "name": "The generated host component uses a real Godot Button",
+          "passed": true
+        },
+        {
+          "name": "Factories run only for committed native views and one lazy TurboModule",
+          "passed": true
+        },
+        {
+          "name": "Original generated CxxSpec runs a synchronous method in Hermes",
+          "passed": true
+        },
+        {
+          "name": "Original AsyncPromise resolves through the application CallInvoker",
+          "passed": true
+        },
+        {
+          "name": "Original Codegen EventEmitter delivers the TurboModule event once",
+          "passed": true
+        },
+        {
+          "name": "Native Button signal invokes the original typed component emitter once",
+          "passed": true
+        },
+        {
+          "name": "Typed component delivery remains scoped to its committed root",
+          "passed": true
+        },
+        {
+          "name": "Keyed React reorder preserves native instance identity and factories",
+          "passed": true
+        },
+        {
+          "name": "Original named Codegen Commands target the current external mount",
+          "passed": true
+        },
+        {
+          "name": "Re-render updates immutable generated Props without recreating the Control",
+          "passed": true
+        },
+        {
+          "name": "An external prop update preserves the other root",
+          "passed": true
+        },
+        {
+          "name": "A retained native transport resolves the current committed emitter",
+          "passed": true
+        },
+        {
+          "name": "Typed event payload and React callback follow the latest render",
+          "passed": true
+        },
+        {
+          "name": "An off-thread callback cannot touch host maps or emit into React",
+          "passed": true
+        },
+        {
+          "name": "Rejected off-thread delivery leaves the event count unchanged",
+          "passed": true
+        },
+        {
+          "name": "Removing props restores original Codegen defaults",
+          "passed": true
+        },
+        {
+          "name": "React removal disposes the external callbacks before native Control deletion",
+          "passed": true
+        },
+        {
+          "name": "A captured transport loses authority when its mount is retired",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command a surviving native instance",
+          "passed": true
+        },
+        {
+          "name": "An individual root teardown releases its external views and React effects",
+          "passed": true
+        },
+        {
+          "name": "A callback captured by an unmounted root cannot enter the live application",
+          "passed": true
+        },
+        {
+          "name": "The live application can remount a selected external component",
+          "passed": true
+        },
+        {
+          "name": "Remount obtains fresh Control, Fabric tag and host authority identity",
+          "passed": true
+        },
+        {
+          "name": "Remount reuses the module and bundle while constructing new views",
+          "passed": true
+        },
+        {
+          "name": "Application stop removes all remaining external native trees",
+          "passed": true
+        },
+        {
+          "name": "Application stop retires selected module providers and native scheduling",
+          "passed": true
+        },
+        {
+          "name": "An extracted generated method cannot mutate a disposed native module",
+          "passed": true
+        },
+        {
+          "name": "Original component/module lifecycle completes without host errors",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "external-appearance",
+      "sourceReportSha256": "1ee9cdb851aa0dc43af2dd1dce137f5b37b931d533d292dee2adaa905d47bc78",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Appearance fixture mounts original external Props on a real Button",
+          "passed": true
+        },
+        {
+          "name": "An external adapter can own its native font color",
+          "passed": true
+        },
+        {
+          "name": "Generic ViewProps updates preserve the external adapter's font color",
+          "passed": true
+        },
+        {
+          "name": "Original prop defaults and layout changes preserve external font ownership",
+          "passed": true
+        },
+        {
+          "name": "Appearance fixture releases both roots without host errors",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "reentrant-stop",
+      "sourceReportSha256": "0161f073e4be5c56bbeb9ea16e60b05888392d30f75d584ca3dd6d98fab4e1ac",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Reentrant-stop fixture has real external Controls in both roots",
+          "passed": true
+        },
+        {
+          "name": "A native signal synchronously requests application stop during resize",
+          "passed": true
+        },
+        {
+          "name": "Stop retires authority while preserving the Control until the emitting stack returns",
+          "passed": true
+        },
+        {
+          "name": "Deferred teardown completes once the outer execution stack unwinds",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown clears both external native trees",
+          "passed": true
+        },
+        {
+          "name": "Views, module providers and React effects dispose once on reentrant stop",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals after the stop request cannot enqueue events",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown finishes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "reentrant-raf",
+      "sourceReportSha256": "823bc0c7a21174ef9f84ead4cd347c96c890b5b8e003b7bb008b30986ffef079",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Reentrant-stop fixture has real external Controls in both roots",
+          "passed": true
+        },
+        {
+          "name": "A native signal synchronously requests application stop during raf",
+          "passed": true
+        },
+        {
+          "name": "Stop retires authority while preserving the Control until the emitting stack returns",
+          "passed": true
+        },
+        {
+          "name": "Deferred teardown completes once the outer execution stack unwinds",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown clears both external native trees",
+          "passed": true
+        },
+        {
+          "name": "Views, module providers and React effects dispose once on reentrant stop",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals after the stop request cannot enqueue events",
+          "passed": true
+        },
+        {
+          "name": "Remaining raf callbacks do not execute after the stop request",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown finishes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "reentrant-timer",
+      "sourceReportSha256": "3fd903ffc449e76d9b2e64eb51a99f4fce652f3329c28ffcc3a23636cea23396",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Reentrant-stop fixture has real external Controls in both roots",
+          "passed": true
+        },
+        {
+          "name": "A native signal synchronously requests application stop during timer",
+          "passed": true
+        },
+        {
+          "name": "Stop retires authority while preserving the Control until the emitting stack returns",
+          "passed": true
+        },
+        {
+          "name": "Deferred teardown completes once the outer execution stack unwinds",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown clears both external native trees",
+          "passed": true
+        },
+        {
+          "name": "Views, module providers and React effects dispose once on reentrant stop",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals after the stop request cannot enqueue events",
+          "passed": true
+        },
+        {
+          "name": "Remaining timer callbacks do not execute after the stop request",
+          "passed": true
+        },
+        {
+          "name": "Reentrant shutdown finishes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-unmount-resize",
+      "sourceReportSha256": "85c847808e8b5858e833f42ac64c732351239a8fdbb83e39f56c9c6762f3b254",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "A native resize signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Repeated root unmount is idempotent after deferred retirement",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-unmount-pressed",
+      "sourceReportSha256": "466f8148cfd55d87c1077b8d066c87dbda8dd94c34f7a67ca6d2907a0938f920",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "A native pressed signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Repeated root unmount is idempotent after deferred retirement",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-unmount-raf",
+      "sourceReportSha256": "29975474184f7611fde181a85118c2db9706185d7c3ce4d944cf81dd38afff1f",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "A native raf signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The remaining shared raf callback executes for the surviving root",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Repeated root unmount is idempotent after deferred retirement",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-unmount-timer",
+      "sourceReportSha256": "c56ff9b674451bb0b390f74c6025f675e1e52f6ce984953c0bbdd2cf6b13be97",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "A native timer signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The remaining shared timer callback executes for the surviving root",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Repeated root unmount is idempotent after deferred retirement",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-remount-resize",
+      "sourceReportSha256": "ea4958d44c8b2ec6fe9842ccc091a8aaecddaf4be408180969cf5243e923b83f",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "A native resize signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Same-host immediate remount keeps its new surface generation after old cleanup",
+          "passed": true
+        },
+        {
+          "name": "Immediate remount constructs fresh Controls, Fabric tags and mount identities",
+          "passed": true
+        },
+        {
+          "name": "Old cleanup runs exactly once while the new generation creates two views",
+          "passed": true
+        },
+        {
+          "name": "New-generation state and named Commands survive delayed old ref and effect cleanup",
+          "passed": true
+        },
+        {
+          "name": "The remounted generation receives the latest original typed event",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-free-resize",
+      "sourceReportSha256": "4c53d39a04de52e41c1907b5407dde4f03e964b4341231575e0f9f7dff2c7e64",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "A native resize signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "A synchronously freed host stays absent after exactly one deferred retirement",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-owner-switch-resize",
+      "sourceReportSha256": "3ed307a7913f1639dec0afb6a09d01597b7d41cb80c557c8b540312cfce323f7",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Owner-switch fixture starts with two real roots in the original application",
+          "passed": true
+        },
+        {
+          "name": "Resize synchronously retires the old owner's root authority once",
+          "passed": true
+        },
+        {
+          "name": "Owner switch retains old Controls until the signal returns and then deletes them",
+          "passed": true
+        },
+        {
+          "name": "Old-owner external and core signals cannot enqueue after retirement",
+          "passed": true
+        },
+        {
+          "name": "Both applications remain live with one independent root after owner switch",
+          "passed": true
+        },
+        {
+          "name": "Late old cleanup preserves the same host's repeated root ID in its new runtime",
+          "passed": true
+        },
+        {
+          "name": "The new owner constructs a fresh native Control and completes its Fabric mount",
+          "passed": true
+        },
+        {
+          "name": "Each application evaluates the original bundle once in its own Hermes VM",
+          "passed": true
+        },
+        {
+          "name": "Only the old generation disposes while the new owner creates two views",
+          "passed": true
+        },
+        {
+          "name": "The original generated TurboModule is isolated and live in each runtime",
+          "passed": true
+        },
+        {
+          "name": "The retired owner's captured emitter cannot target the new runtime",
+          "passed": true
+        },
+        {
+          "name": "The old runtime's retained public ref cannot command the new owner's Control",
+          "passed": true
+        },
+        {
+          "name": "The old owner's remaining root continues applying state without identity changes",
+          "passed": true
+        },
+        {
+          "name": "The new owner applies state and original named Commands after old completion",
+          "passed": true
+        },
+        {
+          "name": "Typed and core callbacks remain scoped to the correct owner after switching",
+          "passed": true
+        },
+        {
+          "name": "Stopping the old owner cannot retire the new owner's repeated root ID",
+          "passed": true
+        },
+        {
+          "name": "Each owner tears down only its own remaining views and React effects once",
+          "passed": true
+        },
+        {
+          "name": "Cross-owner retirement completes without queued work or host errors",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-stale-core-owner-switch-resize",
+      "sourceReportSha256": "3f52883d95d136a4ab0ac652189323e2fbf04355c75afbc469cec84e35c0673e",
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "Owner-switch fixture starts with two real roots in the original application",
+          "passed": true
+        },
+        {
+          "name": "Resize synchronously retires the old owner's root authority once",
+          "passed": true
+        },
+        {
+          "name": "Owner switch retains old Controls until the signal returns and then deletes them",
+          "passed": true
+        },
+        {
+          "name": "Old-owner external and core signals cannot enqueue after retirement",
+          "passed": true
+        },
+        {
+          "name": "Both applications remain live with one independent root after owner switch",
+          "passed": true
+        },
+        {
+          "name": "Late old cleanup preserves the same host's repeated root ID in its new runtime",
+          "passed": true
+        },
+        {
+          "name": "The new owner constructs a fresh native Control and completes its Fabric mount",
+          "passed": true
+        },
+        {
+          "name": "Each application evaluates the original bundle once in its own Hermes VM",
+          "passed": true
+        },
+        {
+          "name": "Only the old generation disposes while the new owner creates two views",
+          "passed": true
+        },
+        {
+          "name": "The original generated TurboModule is isolated and live in each runtime",
+          "passed": true
+        },
+        {
+          "name": "The retained old core Button defers its signal across repeated tags and root IDs in different runtimes",
+          "passed": true
+        },
+        {
+          "name": "An old deferred core Callable cannot deliver through the host's new application or repeated tag",
+          "passed": true
+        },
+        {
+          "name": "The new core Button still delivers exactly one event through its original current Callable",
+          "passed": true
+        },
+        {
+          "name": "The retired owner's captured emitter cannot target the new runtime",
+          "passed": true
+        },
+        {
+          "name": "The old runtime's retained public ref cannot command the new owner's Control",
+          "passed": true
+        },
+        {
+          "name": "The old owner's remaining root continues applying state without identity changes",
+          "passed": true
+        },
+        {
+          "name": "The new owner applies state and original named Commands after old completion",
+          "passed": true
+        },
+        {
+          "name": "Typed and core callbacks remain scoped to the correct owner after switching",
+          "passed": true
+        },
+        {
+          "name": "Stopping the old owner cannot retire the new owner's repeated root ID",
+          "passed": true
+        },
+        {
+          "name": "Each owner tears down only its own remaining views and React effects once",
+          "passed": true
+        },
+        {
+          "name": "Cross-owner retirement completes without queued work or host errors",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "graphical",
+      "sourceReportSha256": "0d63ebf866474923f8775a5dd7bf3d073b29bd11f11da691a3b46dfaa93b1cbd",
+      "displayServer": "macOS",
+      "checks": [
+        {
+          "name": "Original generated descriptor mounts real Godot Controls in both roots",
+          "passed": true
+        },
+        {
+          "name": "External components share one Hermes VM across independent Fabric roots",
+          "passed": true
+        },
+        {
+          "name": "Identified external library loads before one bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "Runtime witness does not claim ABI certification",
+          "passed": true
+        },
+        {
+          "name": "Selected providers are sealed and installed per application",
+          "passed": true
+        },
+        {
+          "name": "Original Props reach the external adapter without core ControlProps casts",
+          "passed": true
+        },
+        {
+          "name": "Yoga commits native geometry for the external Control",
+          "passed": true
+        },
+        {
+          "name": "The generated host component uses a real Godot Button",
+          "passed": true
+        },
+        {
+          "name": "Factories run only for committed native views and one lazy TurboModule",
+          "passed": true
+        },
+        {
+          "name": "Original generated CxxSpec runs a synchronous method in Hermes",
+          "passed": true
+        },
+        {
+          "name": "Original AsyncPromise resolves through the application CallInvoker",
+          "passed": true
+        },
+        {
+          "name": "Original Codegen EventEmitter delivers the TurboModule event once",
+          "passed": true
+        },
+        {
+          "name": "Native Button signal invokes the original typed component emitter once",
+          "passed": true
+        },
+        {
+          "name": "Typed component delivery remains scoped to its committed root",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: initial",
+          "passed": true
+        },
+        {
+          "name": "Keyed React reorder preserves native instance identity and factories",
+          "passed": true
+        },
+        {
+          "name": "Original named Codegen Commands target the current external mount",
+          "passed": true
+        },
+        {
+          "name": "Re-render updates immutable generated Props without recreating the Control",
+          "passed": true
+        },
+        {
+          "name": "An external prop update preserves the other root",
+          "passed": true
+        },
+        {
+          "name": "A retained native transport resolves the current committed emitter",
+          "passed": true
+        },
+        {
+          "name": "Typed event payload and React callback follow the latest render",
+          "passed": true
+        },
+        {
+          "name": "An off-thread callback cannot touch host maps or emit into React",
+          "passed": true
+        },
+        {
+          "name": "Rejected off-thread delivery leaves the event count unchanged",
+          "passed": true
+        },
+        {
+          "name": "Removing props restores original Codegen defaults",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: updated",
+          "passed": true
+        },
+        {
+          "name": "React removal disposes the external callbacks before native Control deletion",
+          "passed": true
+        },
+        {
+          "name": "A captured transport loses authority when its mount is retired",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command a surviving native instance",
+          "passed": true
+        },
+        {
+          "name": "An individual root teardown releases its external views and React effects",
+          "passed": true
+        },
+        {
+          "name": "A callback captured by an unmounted root cannot enter the live application",
+          "passed": true
+        },
+        {
+          "name": "The live application can remount a selected external component",
+          "passed": true
+        },
+        {
+          "name": "Remount obtains fresh Control, Fabric tag and host authority identity",
+          "passed": true
+        },
+        {
+          "name": "Remount reuses the module and bundle while constructing new views",
+          "passed": true
+        },
+        {
+          "name": "Application stop removes all remaining external native trees",
+          "passed": true
+        },
+        {
+          "name": "Application stop retires selected module providers and native scheduling",
+          "passed": true
+        },
+        {
+          "name": "An extracted generated method cannot mutate a disposed native module",
+          "passed": true
+        },
+        {
+          "name": "Original component/module lifecycle completes without host errors",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-unmount-graphical",
+      "sourceReportSha256": "d6aec26ea31468050314ed71809a16eefd3129685dee0a42cfa184ac5c111041",
+      "displayServer": "macOS",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: root-initial",
+          "passed": true
+        },
+        {
+          "name": "Surviving roots paint their panel, title and core Button: root-initial",
+          "passed": true
+        },
+        {
+          "name": "A native resize signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Repeated root unmount is idempotent after deferred retirement",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: root-unmounted",
+          "passed": true
+        },
+        {
+          "name": "Surviving roots paint their panel, title and core Button: root-unmounted",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-remount-graphical",
+      "sourceReportSha256": "eb63f1ecc12d408ee73a1a441c1610e7fbc10f76ab2ec7f2dadd2dd99a6064bf",
+      "displayServer": "macOS",
+      "checks": [
+        {
+          "name": "Root-retirement fixture has real external and core Controls in two mounted roots",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: root-initial",
+          "passed": true
+        },
+        {
+          "name": "Surviving roots paint their panel, title and core Button: root-initial",
+          "passed": true
+        },
+        {
+          "name": "A native resize signal synchronously requests one root retirement",
+          "passed": true
+        },
+        {
+          "name": "Root authority retires immediately while both emitting Controls remain valid",
+          "passed": true
+        },
+        {
+          "name": "External and core pressed signals cannot deliver queued events after root retirement",
+          "passed": true
+        },
+        {
+          "name": "Deferred root retirement completes without stopping application scheduling",
+          "passed": true
+        },
+        {
+          "name": "Old external and core Controls are deleted only after the native signal returns",
+          "passed": true
+        },
+        {
+          "name": "Only the retired generation releases two views and one React effect",
+          "passed": true
+        },
+        {
+          "name": "Shared original TurboModule remains live after one root retires",
+          "passed": true
+        },
+        {
+          "name": "Root retirement preserves the Hermes VM and its single bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "The other root preserves its surface, Control, Fabric tag and mount authority",
+          "passed": true
+        },
+        {
+          "name": "An emitter captured by the retired generation cannot enter the surviving application",
+          "passed": true
+        },
+        {
+          "name": "A stale public ref cannot command or emit into the old or remounted generation",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues applying React state updates",
+          "passed": true
+        },
+        {
+          "name": "The surviving root continues delivering its core native callback",
+          "passed": true
+        },
+        {
+          "name": "Same-host immediate remount keeps its new surface generation after old cleanup",
+          "passed": true
+        },
+        {
+          "name": "Immediate remount constructs fresh Controls, Fabric tags and mount identities",
+          "passed": true
+        },
+        {
+          "name": "Old cleanup runs exactly once while the new generation creates two views",
+          "passed": true
+        },
+        {
+          "name": "New-generation state and named Commands survive delayed old ref and effect cleanup",
+          "passed": true
+        },
+        {
+          "name": "The remounted generation receives the latest original typed event",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: root-remounted",
+          "passed": true
+        },
+        {
+          "name": "Surviving roots paint their panel, title and core Button: root-remounted",
+          "passed": true
+        },
+        {
+          "name": "Final application stop releases every remaining generation exactly once",
+          "passed": true
+        },
+        {
+          "name": "Per-root reentrant retirement completes without a host error",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "lane": "root-owner-switch-graphical",
+      "sourceReportSha256": "48cad6c5843c3f96fc2db9cfd9a98aa2c868df7d19510b7eca7a31dbc45c28a0",
+      "displayServer": "macOS",
+      "checks": [
+        {
+          "name": "Owner-switch fixture starts with two real roots in the original application",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: root-initial",
+          "passed": true
+        },
+        {
+          "name": "Surviving roots paint their panel, title and core Button: root-initial",
+          "passed": true
+        },
+        {
+          "name": "Resize synchronously retires the old owner's root authority once",
+          "passed": true
+        },
+        {
+          "name": "Owner switch retains old Controls until the signal returns and then deletes them",
+          "passed": true
+        },
+        {
+          "name": "Old-owner external and core signals cannot enqueue after retirement",
+          "passed": true
+        },
+        {
+          "name": "Both applications remain live with one independent root after owner switch",
+          "passed": true
+        },
+        {
+          "name": "Late old cleanup preserves the same host's repeated root ID in its new runtime",
+          "passed": true
+        },
+        {
+          "name": "The new owner constructs a fresh native Control and completes its Fabric mount",
+          "passed": true
+        },
+        {
+          "name": "Each application evaluates the original bundle once in its own Hermes VM",
+          "passed": true
+        },
+        {
+          "name": "Only the old generation disposes while the new owner creates two views",
+          "passed": true
+        },
+        {
+          "name": "The original generated TurboModule is isolated and live in each runtime",
+          "passed": true
+        },
+        {
+          "name": "The retired owner's captured emitter cannot target the new runtime",
+          "passed": true
+        },
+        {
+          "name": "The old runtime's retained public ref cannot command the new owner's Control",
+          "passed": true
+        },
+        {
+          "name": "The old owner's remaining root continues applying state without identity changes",
+          "passed": true
+        },
+        {
+          "name": "The new owner applies state and original named Commands after old completion",
+          "passed": true
+        },
+        {
+          "name": "Typed and core callbacks remain scoped to the correct owner after switching",
+          "passed": true
+        },
+        {
+          "name": "Rendered capture: root-owner-switched",
+          "passed": true
+        },
+        {
+          "name": "Surviving roots paint their panel, title and core Button: root-owner-switched",
+          "passed": true
+        },
+        {
+          "name": "Stopping the old owner cannot retire the new owner's repeated root ID",
+          "passed": true
+        },
+        {
+          "name": "Each owner tears down only its own remaining views and React effects once",
+          "passed": true
+        },
+        {
+          "name": "Cross-owner retirement completes without queued work or host errors",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

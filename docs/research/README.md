@@ -54,6 +54,19 @@ is insufficient: the runner also checks error logs and an acceptance marker.
 Native negative cases require explicit failure without crash/timeout and with
 balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
 
+## Host contract investigations
+
+- [Pointer transport and capture lifetime](pointer-capture-boundary.md): pinned
+  EventTarget flags, pending/active capture, removal and commit-order constraints.
+  This is source investigation, distinct from executed focus/runtime proof.
+
+- [Captured pointer geometry](pointer-geometry.md): original RN numerical
+  counterexamples, native projection, contact history and executed Godot proof.
+
+- [Imperative EventTarget boundary](event-target-boundary.md): three pinned
+  source gaps reproduced with 119 original-ref checks; current-parent correction
+  passes 102 checks/variant. Native integration and responder controls remain pending.
+
 ## Useful next experiments
 
 - Text baseline and onTextLayout, then span interaction and explicit font invalidation.

@@ -1,0 +1,78 @@
+{
+  "format": "godot-fabric.focus-negative-controls/v1",
+  "sameFinalFixture": true,
+  "fixtureSha256": {
+    "examples/focus/App.jsx": "87c2439ca146c3721b5541c48cf96101d48349d9a32475c645157e36ffa0dfdc",
+    "examples/focus/scene.tscn": "e01eb1ac912ac3889704a635c6ea6a9c9501ea9aadec9c56ea51d05ed64dcf4b",
+    "examples/focus/validation.gd": "7ceb298da8eeb983061c3d62d3d9430734fd3a61aaec3f6547362d0d0f439e87"
+  },
+  "controls": [
+    {
+      "mode": "prior-native",
+      "exitCode": 1,
+      "checks": 160,
+      "expectedFailures": [
+        "initial-A: A callback ref can focus its input because registration precedes the user callback",
+        "callback-ref: Viewport owner, every actual LineEdit and original/public State agree",
+        "Callback ref focus emits one genuine native focus event",
+        "autoFocus: Viewport owner, every actual LineEdit and original/public State agree",
+        "AutoFocus in a second root transfers actual focus and emits native blur/endEditing",
+        "public-ref-focus: Viewport owner, every actual LineEdit and original/public State agree",
+        "repeat-and-unfocused-blur: Viewport owner, every actual LineEdit and original/public State agree",
+        "public-State-focus: Viewport owner, every actual LineEdit and original/public State agree",
+        "public-State-blur: Viewport owner, every actual LineEdit and original/public State agree",
+        "original-codegen-focus: Viewport owner, every actual LineEdit and original/public State agree",
+        "readonly-and-original-View-noop: Viewport owner, every actual LineEdit and original/public State agree",
+        "committed-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+        "native-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+        "Public input focus capability reflects the actual committed native editability",
+        "committed-editable-restored: Viewport owner, every actual LineEdit and original/public State agree",
+        "churned: Callback ref cleanup does not clear the live input's focused State",
+        "callback-ref-churn: Viewport owner, every actual LineEdit and original/public State agree",
+        "off-tree: Reparenting rejects focus while the same original registered input is temporarily off-tree",
+        "A real native focus_entered callback retires its own root once",
+        "partial: Retiring root A preserves root B's focused singleton entry",
+        "partial-root-retirement: Viewport owner, every actual LineEdit and original/public State agree",
+        "Native focus_entered can stop the application reentrantly through the original command",
+        "Original focus contracts leave no host error or scheduling resources"
+      ],
+      "hostErrors": [
+        "Unsupported native command: focus",
+        "Unsupported native command: focus",
+        "Unsupported native command: focus",
+        "Unsupported native command: focus",
+        "Unsupported native command: focus",
+        "Unsupported native command: focus"
+      ],
+      "logSha256": "662f739c94b402c28713d168ebe7d85e8f345d598d8f1efd8098cc47f49dd221",
+      "reportSha256": "d3e445a64d045142dc63c40c11f42dc83bc97a4ced815f67f72a043e6b0b5bbf",
+      "hostSha256": "42ee5c75a70e8fc7fdee9d6144c810248abe6aa1a2f0100abd2f3383e18eac79",
+      "bundleSha256": "3d4529d04cb613a99010e92bbd605b0cd6dcc65ea58ddc13cd6f45fd0b84474a"
+    },
+    {
+      "mode": "without-native-eligibility",
+      "exitCode": 1,
+      "checks": 175,
+      "expectedFailures": [
+        "native-readonly-noop: Viewport owner, every actual LineEdit and original/public State agree",
+        "Public input focus capability reflects the actual committed native editability",
+        "committed-editable-restored: Viewport owner, every actual LineEdit and original/public State agree",
+        "off-tree: Reparenting rejects focus while the same original registered input is temporarily off-tree",
+        "off-tree: An off-tree retained ref cannot steal the surviving native input's singleton focus",
+        "inside-off-tree-reparenting: Viewport owner, every actual LineEdit and original/public State agree",
+        "off-tree-reparenting: Viewport owner, every actual LineEdit and original/public State agree",
+        "replacement-stale-commands: Viewport owner, every actual LineEdit and original/public State agree",
+        "retiring: Stopping root rejects focus while its original ref is still connected and registered",
+        "retiring: A retained stopping-root ref cannot steal the surviving root's singleton focus",
+        "inside-reentrant-retirement: Viewport owner, every actual LineEdit and original/public State agree"
+      ],
+      "hostErrors": [],
+      "logSha256": "5da3364a6fb15b931ba1b7c521141ced0a87927b51c03f0668a40493ffaec0ac",
+      "reportSha256": "ff46892878772875c0741f2e38839cdf2e59527fd096df213cec33160360ae0f",
+      "hostSha256": "6abafb9f751b1b75f477b76d0db76dc9d3c4a897a91d76f158cbffc564845f2e",
+      "bundleSha256": "e5830b1f9e34e85bad4960da887a3f57dd80f3aac0e364045ab9c0290bf07365"
+    }
+  ],
+  "positiveBundleSha256": "3d4529d04cb613a99010e92bbd605b0cd6dcc65ea58ddc13cd6f45fd0b84474a",
+  "restoredExactSourceHostAndBundle": true
+}

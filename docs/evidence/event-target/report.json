@@ -1,0 +1,828 @@
+{
+  "format": "godot-fabric.event-target-original-evidence/v1",
+  "observedAt": "2026-10-04T14:58:04.762304+00:00",
+  "implementationCommit": "2db8e391eff4de26caab0231be878f4ee807e799",
+  "baselineCommit": "7f53ab68763169e0ea19e963ca99838165efc21b",
+  "sourceState": "All five probe source hashes and four unchanged production sources verified against this immutable implementation commit. Execution preceded the commit. Bundles and native host identify separately hashed local artifacts; native host was not rebuilt for this slice.",
+  "versions": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3"
+  },
+  "platform": {
+    "os": "Darwin",
+    "architecture": "arm64",
+    "displayServer": "headless",
+    "input": "Input.parse_input_event, validation device 1001",
+    "hardwareCertified": false,
+    "graphicalCertified": false,
+    "mobileCertified": false
+  },
+  "command": "npm run test:events:original",
+  "scope": {
+    "manualDispatch": true,
+    "nativeEventTargetIntegrated": false,
+    "parentCacheFixed": false,
+    "publicDefaultEnabled": false,
+    "rendererOverlay": false
+  },
+  "summary": {
+    "passed": 119,
+    "total": 119,
+    "manualChecksPerRoot": {
+      "A": 33,
+      "B": 33
+    },
+    "manualIncludedInTotal": true,
+    "runtimes": 4,
+    "surfaces": 5,
+    "gapsReproduced": 3,
+    "deliberateErrors": 1,
+    "passiveWarnings": 2,
+    "ciExecuted": false
+  },
+  "checks": [
+    {
+      "name": "Original ref capability probe is available: disabled",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix chooses original ReadOnlyNode base at module evaluation: disabled",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix gates every public element EventTarget method: disabled",
+      "passed": true
+    },
+    {
+      "name": "Document capability follows its own original final class: disabled",
+      "passed": true
+    },
+    {
+      "name": "Globals retain original constructors and late/repeated override is rejected: disabled",
+      "passed": true
+    },
+    {
+      "name": "Original logical EventTarget ancestry includes a genuinely flattened View: disabled",
+      "passed": true
+    },
+    {
+      "name": "Original ref capability probe is available: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix chooses original ReadOnlyNode base at module evaluation: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix gates every public element EventTarget method: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Document capability follows its own original final class: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Globals retain original constructors and late/repeated override is rejected: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Original logical EventTarget ancestry includes a genuinely flattened View: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Original ref capability probe is available: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix chooses original ReadOnlyNode base at module evaluation: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix gates every public element EventTarget method: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Document capability follows its own original final class: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Globals retain original constructors and late/repeated override is rejected: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Original logical EventTarget ancestry includes a genuinely flattened View: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Original ref capability probe is available: enabled",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix chooses original ReadOnlyNode base at module evaluation: enabled",
+      "passed": true
+    },
+    {
+      "name": "Flag matrix gates every public element EventTarget method: enabled",
+      "passed": true
+    },
+    {
+      "name": "Document capability follows its own original final class: enabled",
+      "passed": true
+    },
+    {
+      "name": "Globals retain original constructors and late/repeated override is rejected: enabled",
+      "passed": true
+    },
+    {
+      "name": "Original logical EventTarget ancestry includes a genuinely flattened View: enabled",
+      "passed": true
+    },
+    {
+      "name": "Two enabled roots share actual Hermes and retain distinct native surface identities",
+      "passed": true
+    },
+    {
+      "name": "Imperative-only mounted Control supports manual Event dispatch",
+      "passed": true
+    },
+    {
+      "name": "Manual listener positive does not impersonate native RawEventEmitter or JSX input",
+      "passed": true
+    },
+    {
+      "name": "Real touch down is ingested into the native route even without JSX pointer listeners",
+      "passed": true
+    },
+    {
+      "name": "EXPECTED_GAP: native-interest",
+      "passed": true
+    },
+    {
+      "name": "Interest-negative contact releases through genuine touch up",
+      "passed": true
+    },
+    {
+      "name": "Mixed mounted Control independently supports manual Event dispatch",
+      "passed": true
+    },
+    {
+      "name": "The exact mixed Control's imperative listener works before the native-dispatch negative",
+      "passed": true
+    },
+    {
+      "name": "Real JSX handler positively receives the same native pointer down observed by original RawEventEmitter",
+      "passed": true
+    },
+    {
+      "name": "EXPECTED_GAP: native-dispatch",
+      "passed": true
+    },
+    {
+      "name": "Negative native cases restore original default event priority",
+      "passed": true
+    },
+    {
+      "name": "Parent-cache control starts with two connected refs but dispatches only the warm one",
+      "passed": true
+    },
+    {
+      "name": "Original NativeDOM reports current disconnection while former parent remains mounted",
+      "passed": true
+    },
+    {
+      "name": "Never-dispatched detached ref performs legal self-dispatch without a stale ancestor",
+      "passed": true
+    },
+    {
+      "name": "EXPECTED_GAP: original-parent-cache",
+      "passed": true
+    },
+    {
+      "name": "Original public listener error arrives exactly once through real TimerManager after dispatch returns",
+      "passed": true
+    },
+    {
+      "name": "Public timer fault preserves live runtime and default priority",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Original ref exposes EventTarget",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Non-cancelled custom event returns true",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Logical capture and bubble order includes flattened node",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Public target/currentTarget/this, exact eventPhase and original document path",
+      "passed": true
+    },
+    {
+      "name": "A/manual/composedPath returns a separate array",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Original CustomEvent detail, timestamp and untrusted dispatch",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Dispatch cleanup preserves target and clears transient fields",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Non-bubbling event still captures and reaches both target phases",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Dedupe includes capture and duplicate options do not replace registration",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Removal matches callback/type/capture and ignores passive/once",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Removing capture registration leaves no duplicate listeners",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Object handleEvent retains object this",
+      "passed": true
+    },
+    {
+      "name": "A/manual/once is removed before a nested dispatch of a fresh event",
+      "passed": true
+    },
+    {
+      "name": "A/manual/once remains absent on later dispatch",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Removal affects snapshot but additions wait for a future dispatch",
+      "passed": true
+    },
+    {
+      "name": "A/manual/A newly registered listener participates in the next dispatch",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Original aborted signal prevents registration",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Old signal cannot remove a new registration of the same callback",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Abort removes the current registration and preserves original reason",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Passive listener cannot cancel a cancelable event",
+      "passed": true
+    },
+    {
+      "name": "A/manual/preventDefault controls dispatchEvent boolean",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Non-cancelable event ignores preventDefault",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Ancestor stopPropagation prevents descendant delivery",
+      "passed": true
+    },
+    {
+      "name": "A/manual/stopImmediatePropagation prevents later listeners on same target",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Same event rejects reentrant dispatch but can be reused after cleanup",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Foreign event-shaped object is rejected",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Missing callback argument is rejected",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Primitive callback is rejected",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Foreign AbortSignal-shaped object is rejected",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Original public AbortSignal cannot be constructed directly",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Pinned original explicitly rejects null signal option",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Pinned original rejects null removal options",
+      "passed": true
+    },
+    {
+      "name": "A/manual/Null callback is an inert registration/removal",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Original ref exposes EventTarget",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Non-cancelled custom event returns true",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Logical capture and bubble order includes flattened node",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Public target/currentTarget/this, exact eventPhase and original document path",
+      "passed": true
+    },
+    {
+      "name": "B/manual/composedPath returns a separate array",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Original CustomEvent detail, timestamp and untrusted dispatch",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Dispatch cleanup preserves target and clears transient fields",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Non-bubbling event still captures and reaches both target phases",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Dedupe includes capture and duplicate options do not replace registration",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Removal matches callback/type/capture and ignores passive/once",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Removing capture registration leaves no duplicate listeners",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Object handleEvent retains object this",
+      "passed": true
+    },
+    {
+      "name": "B/manual/once is removed before a nested dispatch of a fresh event",
+      "passed": true
+    },
+    {
+      "name": "B/manual/once remains absent on later dispatch",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Removal affects snapshot but additions wait for a future dispatch",
+      "passed": true
+    },
+    {
+      "name": "B/manual/A newly registered listener participates in the next dispatch",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Original aborted signal prevents registration",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Old signal cannot remove a new registration of the same callback",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Abort removes the current registration and preserves original reason",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Passive listener cannot cancel a cancelable event",
+      "passed": true
+    },
+    {
+      "name": "B/manual/preventDefault controls dispatchEvent boolean",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Non-cancelable event ignores preventDefault",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Ancestor stopPropagation prevents descendant delivery",
+      "passed": true
+    },
+    {
+      "name": "B/manual/stopImmediatePropagation prevents later listeners on same target",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Same event rejects reentrant dispatch but can be reused after cleanup",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Foreign event-shaped object is rejected",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Missing callback argument is rejected",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Primitive callback is rejected",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Foreign AbortSignal-shaped object is rejected",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Original public AbortSignal cannot be constructed directly",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Pinned original explicitly rejects null signal option",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Pinned original rejects null removal options",
+      "passed": true
+    },
+    {
+      "name": "B/manual/Null callback is an inert registration/removal",
+      "passed": true
+    },
+    {
+      "name": "shared/manual/Original documents isolate two React roots in one runtime",
+      "passed": true
+    },
+    {
+      "name": "A/fault/Public dispatch reports listener fault asynchronously and continues peers",
+      "passed": true
+    },
+    {
+      "name": "A/fault/Public fault restores original event/global transient fields",
+      "passed": true
+    },
+    {
+      "name": "Isolated flag runtime stops all roots/timers with only the deliberate fault: disabled",
+      "passed": true
+    },
+    {
+      "name": "Isolated flag runtime stops all roots/timers with only the deliberate fault: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Isolated flag runtime stops all roots/timers with only the deliberate fault: internal-only",
+      "passed": true
+    },
+    {
+      "name": "Isolated flag runtime stops all roots/timers with only the deliberate fault: enabled",
+      "passed": true
+    },
+    {
+      "name": "Probe retires all native nodes: A",
+      "passed": true
+    },
+    {
+      "name": "Probe retires all native nodes: B",
+      "passed": true
+    },
+    {
+      "name": "Probe retires all native nodes: disabled",
+      "passed": true
+    },
+    {
+      "name": "Probe retires all native nodes: imperative-only",
+      "passed": true
+    },
+    {
+      "name": "Probe retires all native nodes: internal-only",
+      "passed": true
+    }
+  ],
+  "capabilities": {
+    "disabled": {
+      "documentMethods": {
+        "addEventListener": "undefined",
+        "dispatchEvent": "undefined",
+        "removeEventListener": "undefined"
+      },
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "flatTag": 8,
+      "globalsOriginal": true,
+      "logicalFlatParent": true,
+      "methods": {
+        "addEventListener": "undefined",
+        "dispatchEvent": "undefined",
+        "removeEventListener": "undefined"
+      },
+      "mode": "disabled",
+      "name": "disabled",
+      "originalElement": true,
+      "originalEventTarget": false,
+      "overrideRejection": "Feature flags were accessed before being overridden: enableImperativeEvents, enableNativeEventTargetEventDispatching"
+    },
+    "enabled": {
+      "documentMethods": {
+        "addEventListener": "function",
+        "dispatchEvent": "function",
+        "removeEventListener": "function"
+      },
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "flatTag": 8,
+      "globalsOriginal": true,
+      "logicalFlatParent": true,
+      "methods": {
+        "addEventListener": "function",
+        "dispatchEvent": "function",
+        "removeEventListener": "function"
+      },
+      "mode": "enabled",
+      "name": "A",
+      "originalElement": true,
+      "originalEventTarget": true,
+      "overrideRejection": "Feature flags cannot be overridden more than once"
+    },
+    "imperative-only": {
+      "documentMethods": {
+        "addEventListener": "undefined",
+        "dispatchEvent": "undefined",
+        "removeEventListener": "undefined"
+      },
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "flatTag": 8,
+      "globalsOriginal": true,
+      "logicalFlatParent": true,
+      "methods": {
+        "addEventListener": "undefined",
+        "dispatchEvent": "undefined",
+        "removeEventListener": "undefined"
+      },
+      "mode": "imperative-only",
+      "name": "imperative-only",
+      "originalElement": true,
+      "originalEventTarget": false,
+      "overrideRejection": "Feature flags cannot be overridden more than once"
+    },
+    "internal-only": {
+      "documentMethods": {
+        "addEventListener": "function",
+        "dispatchEvent": "function",
+        "removeEventListener": "function"
+      },
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "flatTag": 8,
+      "globalsOriginal": true,
+      "logicalFlatParent": true,
+      "methods": {
+        "addEventListener": "undefined",
+        "dispatchEvent": "undefined",
+        "removeEventListener": "undefined"
+      },
+      "mode": "internal-only",
+      "name": "internal-only",
+      "originalElement": true,
+      "originalEventTarget": true,
+      "overrideRejection": "Feature flags cannot be overridden more than once"
+    }
+  },
+  "gaps": [
+    {
+      "id": "native-interest",
+      "observed": true,
+      "status": "original-gap-observed",
+      "details": {
+        "explanation": "Imperative-only pointerdown listener does not inform the original native ViewProps interest filter.",
+        "nativeEventsBefore": 0,
+        "nativeEventsAfter": 2,
+        "tags": {
+          "mixedTag": 4,
+          "onlyTag": 2
+        },
+        "raw": [],
+        "declarative": [],
+        "imperative": []
+      }
+    },
+    {
+      "id": "native-dispatch",
+      "observed": true,
+      "status": "original-gap-observed",
+      "details": {
+        "explanation": "Native interest supplied by the second Control's functional JSX handler exposes the unchanged compiled legacy dispatcher; it does not call that same Control's EventTarget listener.",
+        "raw": [
+          {
+            "pointerId": 2,
+            "target": 4,
+            "timeStamp": 86053852.145875,
+            "type": "topPointerDown"
+          }
+        ],
+        "declarative": [
+          {
+            "name": "A",
+            "pointerId": 2,
+            "target": 4,
+            "trusted": null
+          }
+        ],
+        "imperative": [],
+        "tags": {
+          "mixedTag": 4,
+          "onlyTag": 2
+        }
+      }
+    },
+    {
+      "id": "original-parent-cache",
+      "observed": true,
+      "status": "original-gap-observed",
+      "details": {
+        "explanation": "Original permanent parent cache propagates warm detached ref to an old ancestor; cold detached control does not.",
+        "primed": {
+          "coldConnected": true,
+          "coldParent": true,
+          "trace": [
+            {
+              "at": "self",
+              "id": "warm",
+              "target": true
+            },
+            {
+              "at": "old-parent",
+              "id": "warm",
+              "target": true
+            }
+          ],
+          "warmConnected": true,
+          "warmParent": true
+        },
+        "afterRemoval": {
+          "coldConnected": false,
+          "coldParentNull": true,
+          "coldStaleParentAbsent": true,
+          "originalParentCacheObserved": true,
+          "parentConnected": true,
+          "trace": [
+            {
+              "at": "self",
+              "id": "warm",
+              "target": true
+            },
+            {
+              "at": "old-parent",
+              "id": "warm",
+              "target": true
+            },
+            {
+              "at": "self",
+              "id": "cold",
+              "target": true
+            }
+          ],
+          "warmConnected": false,
+          "warmParentNull": true
+        }
+      }
+    }
+  ],
+  "publicFault": {
+    "caught": null,
+    "returned": true,
+    "trace": [
+      "fault",
+      "peer"
+    ]
+  },
+  "afterStop": {
+    "disabled": {
+      "rootCount": 0,
+      "pendingWork": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "stopped": true,
+      "errors": []
+    },
+    "enabled": {
+      "rootCount": 0,
+      "pendingWork": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "stopped": true,
+      "errors": [
+        "EventTarget deliberate public listener fault\n\nError: EventTarget deliberate public listener fault\n    at anonymous (res://build/event-target-enabled.js:6:21903)\n    at call (native)\n    at invokeListeners (res://build/event-target-enabled.js:2:34329)\n    at invoke (res://build/event-target-enabled.js:2:33488)\n    at dispatch (res://build/event-target-enabled.js:2:32031)\n    at dispatchEvent (res://build/event-target-enabled.js:2:38505)\n    at publicFault (res://build/event-target-enabled.js:6:22093)\n    at global (res://build/event-target-enabled.js:1:44)"
+      ]
+    },
+    "imperative-only": {
+      "rootCount": 0,
+      "pendingWork": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "stopped": true,
+      "errors": []
+    },
+    "internal-only": {
+      "rootCount": 0,
+      "pendingWork": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "stopped": true,
+      "errors": []
+    }
+  },
+  "provenance": {
+    "node": "v22.23.3",
+    "bundles": {
+      "format": "godot-fabric.event-target-probe-bundles/v1",
+      "bundles": {
+        "disabled": {
+          "sha256": "68472e12c86a1d7883600386c7990e0f5cef41c3f14d923b2abcf45bd9077da2",
+          "inputCount": 163
+        },
+        "imperative-only": {
+          "sha256": "7dd0a2bbdef756828d5c0ee57e1e9f420992c995d412f98b8a5df47b74adf1ae",
+          "inputCount": 163
+        },
+        "internal-only": {
+          "sha256": "1421c79f84238f9f802253e455ee0100c016b18f1b0b579b2644426bf90001e6",
+          "inputCount": 163
+        },
+        "enabled": {
+          "sha256": "4023a52bcbc20950c6d2e89b52451ff937fa737480f2f39746de603f045ec482",
+          "inputCount": 163
+        }
+      },
+      "sources": {
+        "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "tests/event-target-fixture.jsx": "052101740ac2b982ce0f824328d9280d07850c947d3b9d908a3ac3b05f3e1116",
+        "tests/event-target-probe.gd": "44ef19b32bd18d331875cee06fa3a14b81c4b1e7008012f65c74e6493771dbf4",
+        "tests/event-target-native.test.mjs": "ba99fd00eda40ba6e3a50de5577d1056b36fe384e5e6f9d8466456b9dd14c30f",
+        "scripts/event-target-bundle.mjs": "bab8d4c270856b9c370288e9132182fc8740cf700227890b6d7d65a97d3fd2dd"
+      },
+      "originalReactNativeSources": {
+        "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+        "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+        "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+        "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+        "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+        "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+        "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+        "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+        "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+        "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda"
+      }
+    },
+    "productionSources": {
+      "src/initialize.js": "0249dbe800e0f39c0f1067086c9ad1ea92b3cb767a53867ba7a23bf12ec2df89",
+      "src/private-interface.js": "d5c8f84e6a54387a01de5f51282a301e3abd34f3bbb794e9990ec0bd77a44172",
+      "sdk/toolchain/platform-plugin.mjs": "b3941c8ab0de096d8e3616bbf8d08f0ac562bfc0e3a8c41790881ebf5e4d281a",
+      "native/application_runtime.cpp": "5dbb1ce95d2cd69fdc26a07baab4da58e60d80511d001b6e0eb3839245ae103e"
+    },
+    "publicBundleSha256": "1a97c72edd3ce27a5da84aea15f4d3c7e9de9034735d2875db9228580a0295c0",
+    "nativeHostSha256": "01b2d2ec0ec0d38cf55213520fbc612e2ebd2295d684df298aeeb9a93f27695d",
+    "rawReportSha256": "abb34ec7f73440350465eee25a91e0d1b3f197f11d1139f353806a53b5595397"
+  },
+  "regressions": {
+    "contractsCommand": "npm run test:contracts",
+    "lastNodeSuite": 199,
+    "pythonTests": 13,
+    "staticCheck": "passed",
+    "publicationCheck": "passed",
+    "dashboardCheck": "passed",
+    "dashboardTests": 8,
+    "dashboardBuild": "passed"
+  }
+}

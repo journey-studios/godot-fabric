@@ -18,7 +18,7 @@ func _ready() -> void:
   verify(node("empty").height > 0 and node("empty").height < 50, "Empty text keeps one native line with finite geometry")
   verify(node("clipped").height == 12, "Explicit Yoga height overrides native font minimum")
   verify(data().textMeasurements > 0, "Fabric invokes native TextServer measurement during Yoga layout")
-  verify(react().windowSubscribers == 1 and data().windowListener, "Window hook subscribes through the native host")
+  verify(react().windowSubscribers == 1 and data().nativeModules.installed and data().dimensions.window.width == 900, "Window hook subscribes through original RN Dimensions and native DeviceInfo")
   verify_frames_match("initial")
   verify_layout_effect("initial")
 
@@ -82,7 +82,7 @@ func _ready() -> void:
   var stopped := data()
   var stopped_react := react()
   verify(stopped.stopped and stopped.nodes.is_empty() and stopped.creates == stopped.deletes, "Scene exit releases every measured native Control")
-  verify(stopped_react.cleanups == 1 and stopped_react.windowSubscribers == 0 and not stopped.windowListener, "Scene exit removes React window subscriptions and native callback")
+  verify(stopped_react.cleanups == 1 and stopped_react.windowSubscribers == 0 and stopped.nativeModules.stopped and stopped.nativeModules.loaded == 0, "Scene exit removes React window subscriptions and native module authority")
   verify(stopped.errors.is_empty() and stopped.pendingTimers == 0, "Layout surface leaves no host errors or timers")
   surface.free()
   save_report("layout", before_stop, stopped, stopped_react)

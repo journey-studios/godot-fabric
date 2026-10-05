@@ -1,0 +1,1118 @@
+{
+  "format": "godot-fabric.root-retirement-boundaries/v1",
+  "scope": "Selected native authority snapshots and React/module counters, copied from the reports identified in runtime.json; omitted native node/style arrays",
+  "lanes": {
+    "root-unmount-resize": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 9
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "resize",
+      "remount": false,
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true
+    },
+    "root-unmount-pressed": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 1,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 8
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "pressed",
+      "remount": false,
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 1,
+        "unmountRequested": true
+      },
+      "retained": true
+    },
+    "root-unmount-raf": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 2,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 10
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "raf",
+      "remount": false,
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true
+    },
+    "root-unmount-timer": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 2,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 10
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "timer",
+      "remount": false,
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 1,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true
+    },
+    "root-remount-resize": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 2
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 3,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 6,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 13
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "resize",
+      "mountAccepted": true,
+      "remount": true,
+      "remountRequestedSurface": {
+        "state": "mounting",
+        "runtimeId": 27615299031,
+        "surfaceId": 21,
+        "surfaceGeneration": 21,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": false
+      },
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true,
+      "retainedAfterMount": true
+    },
+    "root-free-resize": {
+      "authorityRetired": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 9
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": true,
+      "hostFreed": true,
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "resize",
+      "remount": false,
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "retained": true
+    },
+    "root-owner-switch-resize": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedOtherApplication": {
+        "runtimeId": 29460792860,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedOtherStats": {
+        "cleanups": 0,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 1,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 2,
+          "disposals": 0,
+          "modules": 1,
+          "rejected": 0,
+          "stopped": false,
+          "updates": 4
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 9
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "owner-switch-resize",
+      "mountAccepted": true,
+      "remountRequestedSurface": {
+        "state": "mounting",
+        "runtimeId": 29460792860,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": false
+      },
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedOtherApplication": {
+        "runtimeId": 29460792860,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 1,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true,
+      "retainedAfterMount": true,
+      "stoppedOtherApplication": {
+        "runtimeId": 29460792860,
+        "rootCount": 0,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": true,
+        "stopRequested": false,
+        "errors": []
+      }
+    },
+    "root-stale-core-owner-switch-resize": {
+      "afterDeferredCoreSurface": {
+        "state": "mounted",
+        "runtimeId": 29460792860,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": false
+      },
+      "afterFreshCoreStats": {
+        "cleanups": 0,
+        "events": [
+          {
+            "kind": "core",
+            "panel": "first"
+          }
+        ],
+        "lifecycle": {
+          "first": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 1,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 2,
+          "disposals": 0,
+          "modules": 1,
+          "rejected": 0,
+          "stopped": false,
+          "updates": 4
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedOtherApplication": {
+        "runtimeId": 29460792860,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedOtherStats": {
+        "cleanups": 0,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 1,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 2,
+          "disposals": 0,
+          "modules": 1,
+          "rejected": 0,
+          "stopped": false,
+          "updates": 4
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 9
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "hostInstanceId": 27531412945,
+      "initialApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "stale-core-owner-switch-resize",
+      "mountAccepted": true,
+      "newCore": {
+        "id": 30165435954,
+        "tag": 14,
+        "kind": "button",
+        "testID": "first-internal"
+      },
+      "oldCore": {
+        "id": 28236056055,
+        "tag": 14,
+        "kind": "button",
+        "testID": "first-internal"
+      },
+      "oldCoreRetainedBeforeDeferredSignal": true,
+      "oldCoreSignalDeferred": true,
+      "remountRequestedSurface": {
+        "state": "mounting",
+        "runtimeId": 29460792860,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": false
+      },
+      "requestedApplication": {
+        "runtimeId": 27615299031,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedOtherApplication": {
+        "runtimeId": 29460792860,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 1,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 27615299031,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27531412945,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true,
+      "retainedAfterMount": true,
+      "stoppedOtherApplication": {
+        "runtimeId": 29460792860,
+        "rootCount": 0,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": true,
+        "stopRequested": false,
+        "errors": []
+      }
+    },
+    "root-unmount-graphical": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 9
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27950843347,
+      "initialApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "resize",
+      "remount": false,
+      "requestedApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 28034729433,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27950843347,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true
+    },
+    "root-remount-graphical": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 2
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 3,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 6,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 13
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "freeHost": false,
+      "hostInstanceId": 27950843347,
+      "initialApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "resize",
+      "mountAccepted": true,
+      "remount": true,
+      "remountRequestedSurface": {
+        "state": "mounting",
+        "runtimeId": 28034729433,
+        "surfaceId": 21,
+        "surfaceGeneration": 21,
+        "hostInstanceId": 27950843347,
+        "events": 0,
+        "unmountRequested": false
+      },
+      "requestedApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 28034729433,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27950843347,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true,
+      "retainedAfterMount": true
+    },
+    "root-owner-switch-graphical": {
+      "authorityRetired": true,
+      "blockedSignals": true,
+      "completedApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedOtherApplication": {
+        "runtimeId": 29813114394,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "completedOtherStats": {
+        "cleanups": 0,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 1,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 2,
+          "disposals": 0,
+          "modules": 1,
+          "rejected": 0,
+          "stopped": false,
+          "updates": 4
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "completedStats": {
+        "cleanups": 1,
+        "events": [],
+        "lifecycle": {
+          "first": {
+            "cleanups": 1,
+            "mounts": 1
+          },
+          "second": {
+            "cleanups": 0,
+            "mounts": 1
+          }
+        },
+        "mounts": 2,
+        "probe": {
+          "accepted": 0,
+          "commands": 0,
+          "creates": 4,
+          "disposals": 2,
+          "modules": 1,
+          "rejected": 1,
+          "stopped": false,
+          "updates": 9
+        },
+        "probeError": "",
+        "promise": null,
+        "results": []
+      },
+      "hostInstanceId": 27950843347,
+      "initialApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "initialSurfaceGeneration": 1,
+      "initialSurfaceId": 1,
+      "mode": "owner-switch-resize",
+      "mountAccepted": true,
+      "remountRequestedSurface": {
+        "state": "mounting",
+        "runtimeId": 29813114394,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27950843347,
+        "events": 0,
+        "unmountRequested": false
+      },
+      "requestedApplication": {
+        "runtimeId": 28034729433,
+        "rootCount": 2,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 1,
+        "pendingWork": 0,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedOtherApplication": {
+        "runtimeId": 29813114394,
+        "rootCount": 1,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 1,
+        "stopped": false,
+        "stopRequested": false,
+        "errors": []
+      },
+      "requestedSurface": {
+        "state": "retiring",
+        "runtimeId": 28034729433,
+        "surfaceId": 1,
+        "surfaceGeneration": 1,
+        "hostInstanceId": 27950843347,
+        "events": 0,
+        "unmountRequested": true
+      },
+      "retained": true,
+      "retainedAfterMount": true,
+      "stoppedOtherApplication": {
+        "runtimeId": 29813114394,
+        "rootCount": 0,
+        "bundleEvaluations": 1,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "stopped": true,
+        "stopRequested": false,
+        "errors": []
+      }
+    }
+  }
+}

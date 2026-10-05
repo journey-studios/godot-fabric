@@ -28,6 +28,21 @@ The bounded GF-05 runtime implementation and its 13-case original-native
 comparison are recorded in [the runtime example](evidence/runtime/README.md).
 The tables below preserve the audit-date findings.
 
+## Subsequent checkpoint — 2026-10-03
+
+The [native foundation evidence](evidence/native-foundation/README.md) adds
+original public refs/NativeDOM, original TurboModuleBinding and generated
+bootstrap modules, plus original Dimensions/PixelRatio with live Godot content
+metrics. Module lifetime, callable re-registration, stale refs and rejected
+metrics cleanup have native acceptance tests. The external consumer also runs
+with the new original public-instance initialization path.
+
+GF-08/GF-09/GF-25 remain in progress: this checkpoint does not complete the
+full public contracts or typed game-service operations/revisions. The
+[iOS build evidence](IOS_BUILD.md) starts GF-31 with device/simulator build,
+link and packaging only; Godot consumer export and runtime proof remain open.
+The audit-date tables below remain historical.
+
 The bounded GF-07 [shared application](evidence/shared-roots/README.md) adds
 original AppRegistry/RootTagContext, distinct native roots, prop updates and
 independent unmount/remount over one runtime. Native positive/negative checks

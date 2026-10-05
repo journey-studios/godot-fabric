@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-10-04T19:43:17.310324+00:00",
+  "run": {
+    "id": 37226934414,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226934414",
+    "headSha": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+    "attempt": 2,
+    "status": "completed",
+    "conclusion": "success",
+    "checkoutCommit": "bd10f9a4f8a69a9fd57aac23c094534e351c5035",
+    "checkoutParents": [
+      "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+    ]
+  },
+  "jobs": [
+    {
+      "name": "contracts",
+      "attempt1JobId": 111508408250,
+      "attempt1Conclusion": "success",
+      "attempt2JobId": 111512226593,
+      "attempt2Conclusion": "success",
+      "execution": "reused-attempt1",
+      "startedAt": "2026-10-04T19:05:36Z",
+      "completedAt": "2026-10-04T19:06:35Z"
+    },
+    {
+      "name": "native-cold-start",
+      "attempt1JobId": 111508408230,
+      "attempt1Conclusion": "success",
+      "attempt2JobId": 111512253592,
+      "attempt2Conclusion": "success",
+      "execution": "reused-attempt1",
+      "startedAt": "2026-10-04T19:05:43Z",
+      "completedAt": "2026-10-04T19:19:29Z"
+    },
+    {
+      "name": "reference-android",
+      "attempt1JobId": 111508408273,
+      "attempt1Conclusion": "success",
+      "attempt2JobId": 111512252682,
+      "attempt2Conclusion": "success",
+      "execution": "reused-attempt1",
+      "startedAt": "2026-10-04T19:05:36Z",
+      "completedAt": "2026-10-04T19:11:45Z"
+    },
+    {
+      "name": "reference-ios",
+      "attempt1JobId": 111508408094,
+      "attempt1Conclusion": "failure",
+      "attempt2JobId": 111512225462,
+      "attempt2Conclusion": "success",
+      "execution": "new-attempt2",
+      "startedAt": "2026-10-04T19:27:35Z",
+      "completedAt": "2026-10-04T19:33:16Z"
+    },
+    {
+      "name": "parity-comparison",
+      "attempt1JobId": 111511058911,
+      "attempt1Conclusion": "skipped",
+      "attempt2JobId": 111513657833,
+      "attempt2Conclusion": "success",
+      "execution": "new-attempt2",
+      "startedAt": "2026-10-04T19:33:20Z",
+      "completedAt": "2026-10-04T19:33:48Z"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "native-pointer-interest",
+      "id": 11312810473,
+      "zipSha256": "708abbe806e7c41dddc4dbae1a61d8e2f0797b595b7ceac080e7123648017c4d",
+      "createdAt": "2026-10-04T19:15:31Z",
+      "runHead": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+    },
+    {
+      "name": "parity-ios",
+      "id": 11313366647,
+      "zipSha256": "0a96cb809aff33896a433e5dd446b5df4baf70488ae648e5d41934c1a5959311",
+      "createdAt": "2026-10-04T19:33:04Z",
+      "runHead": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+    },
+    {
+      "name": "parity-android",
+      "id": 11311559825,
+      "zipSha256": "64bd1dc79df8fcbd2ce940ca6b19c69d25e3e7d6cfa4ba6dcf2714ddf516d451",
+      "createdAt": "2026-10-04T19:11:43Z",
+      "runHead": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+    },
+    {
+      "name": "parity-godot",
+      "id": 11312249510,
+      "zipSha256": "24b4695fd857b2d1515f268f5db2baaf7c0b9ed84047d94899696f2f797a4a73",
+      "createdAt": "2026-10-04T19:19:25Z",
+      "runHead": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+    },
+    {
+      "name": "parity-comparison",
+      "id": 11312972621,
+      "zipSha256": "19c5fc25996e0d8dae1ac2ed4e4d1f24de4084be81e56f92b248c79e37f0e03d",
+      "createdAt": "2026-10-04T19:33:45Z",
+      "runHead": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+    }
+  ],
+  "coreParity": {
+    "fixture": "core-ui-v2",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "renderer": "fabric",
+    "engine": "hermes",
+    "eachHostChecks": 13,
+    "hosts": [
+      "godot",
+      "ios",
+      "android"
+    ],
+    "uniqueCaseIds": 13,
+    "comparisonStatus": "matched_subset",
+    "completeMobileReferences": true,
+    "observationsIdentical": true,
+    "sourcePins": {
+      "fixtureSha256": "494c0d77e6f7a062d11fc83fd454675158c6a675bf1bc078707a806656cc314b",
+      "runtimeSha256": "4789b9a6e5ee2669dda9a83168119bc884194c9fbb7788585c2e186ec89cd67a",
+      "casesSha256": "59042db76c90659482ded32a01269b85ffa27440c8348cce2c87feb48cf700e4",
+      "upstreamSha256": "34b15149f573c1d032f3049dfce13b9136255783aa77763f8f1a64beaef770d3"
+    },
+    "iosMode": "Release arm64 iPhone simulator",
+    "reportSha256": {
+      "ios": "740141632e7a20361f39afd55d9ea10b915475b2ccbea3003a7c9c52eda75215",
+      "android": "59c3299a67ad782130227c669a5fea1d1acfa5135d910f923e5f878cc3bcdb05",
+      "godot": "3a9b984e3ef394480e46a8e4824e00613de03b939e4884206e5e73c8de18400a",
+      "comparison": "4dcba19a18f52e71fef31c164451f3aa6d7892ac07dc2f084059a20a5cc8086c"
+    }
+  },
+  "pointerInterest": {
+    "variants": {
+      "original": {
+        "checks": 193,
+        "passed": 193,
+        "checkIdsSha256": "83d2764111dbe7771873b49f07518531ab4966d9d085d26ceb523fb165717053",
+        "reportSha256": "957b34a90e2928e8c9311919491fb30ecbc1137c3f76896a60f96da255aa1fa6",
+        "nativeHostSha256": "4c0616a5774c203298ef6b67ecfdde420a29a56a1e48ee930ad0158d9fbe7d87",
+        "frames": 0
+      },
+      "current": {
+        "checks": 230,
+        "passed": 230,
+        "checkIdsSha256": "1d3f0d4482730c19cb12ea41e8c4cd74006d2ecafa9d5cbe4fb558c6ba00a767",
+        "reportSha256": "c457adf323bc6f3de75dfaa06da700480e4c3d31e5f05731ac0c3aa28f838b67",
+        "nativeHostSha256": "4c0616a5774c203298ef6b67ecfdde420a29a56a1e48ee930ad0158d9fbe7d87",
+        "frames": 0
+      }
+    },
+    "producerPins": 13,
+    "reactNativeInputPins": 13,
+    "curatedSourcePins": 21,
+    "allPinsVerifiedAtHeadAndCheckout": true,
+    "sameNativeHostWithinHostedVariants": true,
+    "hostedCheckIdsMatchCuratedReceipt": true,
+    "publicDefaultEnabled": false,
+    "binaryRehashedFromArtifact": false
+  },
+  "visualEvidence": {
+    "newHostedCaptures": 0,
+    "newHostedPixelAssertions": 0,
+    "retainedLocalGraphicalChecks": 260,
+    "retainedLocalPixelAssertions": 28,
+    "localImagesHashVerified": [
+      {
+        "path": "docs/evidence/pointer-interest/initial.png",
+        "sha256": "de7f79a653d884164a66a2fd9cef1dadbf384288392f3849930aa273dfd9a241",
+        "width": 820,
+        "height": 280
+      },
+      {
+        "path": "docs/evidence/pointer-interest/updated.png",
+        "sha256": "6fda0d33e7594684bbed272c19fa07aff3b19f0866c61cf164f141e17f35aed9",
+        "width": 820,
+        "height": 280
+      }
+    ],
+    "localImagesCertifiedByRerun": false
+  },
+  "logs": {
+    "iosAttempt2": {
+      "path": "build/pointer-interest-hosted-ab0dc44/completed-attempt2/ios-attempt2.log",
+      "sha256": "9e48943f59b9adc1ad0b581bf67480b0f40721c0d80755268122b4a8c69f5c8d",
+      "completion": "PARITY_REFERENCE_PASSED: original RN ios, 13 checks"
+    },
+    "parityAttempt2": {
+      "path": "build/pointer-interest-hosted-ab0dc44/completed-attempt2/parity-attempt2.log",
+      "sha256": "042107cc6054d98467aa37b680069d4c9bff05dc3d126d66a2c7dbf06def20d7",
+      "completion": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    }
+  },
+  "limits": [
+    "This run covers ab0dc44 pointer-interest, not the later pointer-query-fault correction.",
+    "The 13 core-ui-v2 cases do not certify complete RN APIs, event ordering, scheduler semantics or Godot iOS/Android exports.",
+    "iOS is original RN in simulator; Android is the reused original RN emulator reference; pointer-interest is headless macOS Godot.",
+    "No new screenshots or pixel acceptance were produced by the hosted rerun.",
+    "Successful reused jobs preserve attempt1 execution timestamps despite receiving attempt2 API job identities.",
+    "Compiler/Node deprecation warnings are present; do not claim globally warning-free CI.",
+    "Hosted native host is compared only within the two CI variants, not expected equal to the local native binary.",
+    "The artifact contains the reported native-host digest but no native binary to independently rehash."
+  ],
+  "firstAttemptFailure": {
+    "job": "reference-ios",
+    "cause": "spawnSync xcrun ETIMEDOUT during simctl list devices available --json (60000ms)",
+    "parityComparison": "skipped"
+  }
+}

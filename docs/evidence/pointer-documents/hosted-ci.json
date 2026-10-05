@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-10-04T21:04:01.932206+00:00",
+  "auditStatus": "verified-artifacts",
+  "run": {
+    "id": 37233393202,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "e65b7ba73124edb49084502ff4645523734b290b"
+  },
+  "implementationCommit": "00bd80454384cbfbffc1b703df0864674bf11f99",
+  "checkoutCommit": "a1d8a980cd61be69067068ace81a09e8155e4012",
+  "checkoutParents": [
+    "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "e65b7ba73124edb49084502ff4645523734b290b"
+  ],
+  "workflowJobs": [
+    {
+      "id": 111527607896,
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 111527608087,
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 111527608127,
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 111527608165,
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 111530477685,
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "native-pointer-documents",
+      "id": 11314866986,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202/artifacts/11314866986",
+      "zipSha256": "3834e0c76f25e696976192aec51bdab467bacc6249c9555dd69cb374e0a95f9c",
+      "zipBytes": 598849,
+      "comparisonReceipts": [
+        {
+          "artifactMember": "pointer-document-comparison.json",
+          "sha256": "350700056156b9d32047ec8e38b26e03d2ff388d3db1917f083fc085ea4eda66"
+        }
+      ]
+    },
+    {
+      "name": "native-pointer-interest",
+      "id": 11315021189,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202/artifacts/11315021189",
+      "zipSha256": "135616762bb99328861a237564a93a3bc156ebce6aef16ce809930a8999148a2",
+      "zipBytes": 75173,
+      "comparisonReceipts": [
+        {
+          "artifactMember": "pointer-interest-comparison.json",
+          "sha256": "bcccacfc77541103e2afe7f3fbd78f527593e581d0ffb5884e1dae25e1d18d7e"
+        }
+      ]
+    },
+    {
+      "name": "native-pointer-query-faults",
+      "id": 11315360516,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202/artifacts/11315360516",
+      "zipSha256": "e2c8f3535bde4aeee882bbea4250b786d44337b0c01111246ba46e8a57b51df6",
+      "zipBytes": 49568,
+      "comparisonReceipts": [
+        {
+          "artifactMember": "pointer-query-fault-comparison.json",
+          "sha256": "74931ba12246d2259108a6cab20b0ac320f46197c3478822658c6f09dc7a4299"
+        },
+        {
+          "artifactMember": "pointer-query-fault-report.json",
+          "sha256": "8b919120e4a702ae4a6fab6004711e189424b1fd745789bbcca71ea3bfa1ecdc"
+        }
+      ]
+    }
+  ],
+  "documentMatrix": {
+    "scenario": "native-pointer-document-interest-four-flags",
+    "checks": 2723,
+    "passed": 2723,
+    "failed": 0,
+    "laneCount": 8,
+    "flagModes": [
+      "disabled",
+      "imperative-only",
+      "internal-only",
+      "enabled"
+    ],
+    "lanes": {
+      "original": {
+        "disabled": {
+          "artifactMember": "pointer-document-original-disabled-report.json",
+          "checks": 336,
+          "passed": 336,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "rawReportSha256": "e07d7ce97726cfec544e595e9f6f1d91aa5527b4b74426bd7287a9da99b2b580",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": false,
+            "nativeDispatch": false
+          },
+          "bundleSha256": "f5803d3d5beca8780296e7f33c0ee3a122d87d9c199a237b92156785c7b7ddd0",
+          "queryInstallations": 0
+        },
+        "imperative-only": {
+          "artifactMember": "pointer-document-original-imperative-only-report.json",
+          "checks": 336,
+          "passed": 336,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "rawReportSha256": "9a38896e8c5fe994b3a5b16e4ddfb9be4d9b0f28b2ea51af7dd1a4c92a9b745f",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": false
+          },
+          "bundleSha256": "26cb212c8b97945ed2449450d967665f67260e71e209f6ff3af7b4dea7c474cc",
+          "queryInstallations": 0
+        },
+        "internal-only": {
+          "artifactMember": "pointer-document-original-internal-only-report.json",
+          "checks": 338,
+          "passed": 338,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+          "rawReportSha256": "15958525090278d6471562cb7419e4b74ac7c8203c26df1cc65fc96cb6e2fb6a",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": false,
+            "nativeDispatch": true
+          },
+          "bundleSha256": "55208b97ef6ce08d7a77b96535387d411ea4bca3e6bd6a218a051d069adfdea0",
+          "queryInstallations": 0
+        },
+        "enabled": {
+          "artifactMember": "pointer-document-original-enabled-report.json",
+          "checks": 338,
+          "passed": 338,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+          "rawReportSha256": "50d180e60beb2ff400b6ec28a971f8ab1359526dcc1c2ee9c09c0ab2280a13ef",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": true
+          },
+          "bundleSha256": "831c41ec352ff2daaa9a4064923bb94de26eb3c7d67ef13175e03ee64f9ed088",
+          "queryInstallations": 0
+        }
+      },
+      "current": {
+        "disabled": {
+          "artifactMember": "pointer-document-current-disabled-report.json",
+          "checks": 336,
+          "passed": 336,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "rawReportSha256": "f06c6ac0f0ed1613de2f8c5a12d7efb4d38b55a958d73f6353cc70ffc4782a5c",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": false,
+            "nativeDispatch": false
+          },
+          "bundleSha256": "e96d9cfb1ca185c03fbedec69a3e6dbd26e3bb920b01fddb32fe16687d6b89bb",
+          "queryInstallations": 0
+        },
+        "imperative-only": {
+          "artifactMember": "pointer-document-current-imperative-only-report.json",
+          "checks": 336,
+          "passed": 336,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "rawReportSha256": "af43dff4a9074f030d2e5fcc442b04f02d0974b53d3a558b1aea710a49c2153e",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": false
+          },
+          "bundleSha256": "edb0a30e0bc808226b2fdfbee7ca9fc913c99d3eb3ef90b0da813f530d473fd7",
+          "queryInstallations": 0
+        },
+        "internal-only": {
+          "artifactMember": "pointer-document-current-internal-only-report.json",
+          "checks": 340,
+          "passed": 340,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "37ae174c47393d062de25ecbe8b5d066782830e638931ec31cabf1bf16469aae",
+          "rawReportSha256": "97b53df9c0e959512d391781ddf35e92edcd4dd29d0dca3957f20f77f0c7c6b1",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 0,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": false,
+            "nativeDispatch": true
+          },
+          "bundleSha256": "d775c88bce4f3a3e431b1ad2777204ca5ce928f6d393f3687a22345689e6c949",
+          "queryInstallations": 1
+        },
+        "enabled": {
+          "artifactMember": "pointer-document-current-enabled-report.json",
+          "checks": 363,
+          "passed": 363,
+          "failed": 0,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "9850e15e8878f1b8bd25bb7a5c5c3cc5c263e980a4c31a684246ac95fa411179",
+          "rawReportSha256": "a98c983b6c0da1781da2680633cdf330b4cdccf57864784b7a4307b201894c4f",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "expectedDiagnosticCount": 1,
+          "unexpectedProbeErrors": 0,
+          "scriptErrors": 0,
+          "registryWarnings": 0,
+          "crashes": 0,
+          "flags": {
+            "imperative": true,
+            "nativeDispatch": true
+          },
+          "bundleSha256": "8661900ab128c686828599484fa20f23fe5a531d7dad3679da2ea772a50b1595",
+          "queryInstallations": 1
+        }
+      }
+    },
+    "checkIdDigestFormat": "sha256 of UTF-8 newline-joined check names, without a final newline",
+    "sameUniqueCheckIdsAndPerFlagBundleAsLocalFinal": true,
+    "producerPinCountPerLane": 14,
+    "originalRNInputCountPerLane": 18,
+    "sameProducerPinsAcrossEightLanes": true,
+    "sameOriginalRNInputsAcrossEightLanes": true,
+    "bundleReceiptFormat": "godot-fabric.event-target-probe-bundles/v1",
+    "bundleModes": {
+      "parentMode": "current",
+      "rendererTagMode": "current",
+      "nativeDispatchMode": "experimental"
+    },
+    "bundleInputCountPerFlag": 170,
+    "originalPointerInterestOverlay": {
+      "module": "src/private/webapis/dom/events/EventTarget.js",
+      "originalSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "generatedSourceSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53"
+    },
+    "currentPointerInterestOverlay": {
+      "module": "src/private/webapis/dom/events/EventTarget.js",
+      "originalSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "generatedSourceSha256": "299fd273b30c35e34858d1984ea58b5760aaae6e082d64611fc5aef97fb45c01"
+    }
+  },
+  "regressions": {
+    "interestOriginal": {
+      "artifactMember": "pointer-interest-original-report.json",
+      "checks": 193,
+      "passed": 193,
+      "failed": 0,
+      "checkIdsUnique": true,
+      "checkIdsSha256": "83d2764111dbe7771873b49f07518531ab4966d9d085d26ceb523fb165717053",
+      "rawReportSha256": "e845fdbc0182e5f68f27fc663863c1ff9422822598b30651946308dcccc5fed7",
+      "producerPinCount": 13,
+      "originalRNInputCount": 13,
+      "expectedDiagnosticCount": 0,
+      "unexpectedProbeErrors": 0,
+      "scriptErrors": 0,
+      "registryWarnings": 0,
+      "crashes": 0
+    },
+    "interestCurrent": {
+      "artifactMember": "pointer-interest-current-report.json",
+      "checks": 233,
+      "passed": 233,
+      "failed": 0,
+      "checkIdsUnique": true,
+      "checkIdsSha256": "3d37ac6213ec42da4a7d92d8c9c96d7b3964aed57dcee8c1c77ba5515a2170ec",
+      "rawReportSha256": "256631e12dd9959d79fe259900a7925156021cb51e47f2dc64e56f180c516b0f",
+      "producerPinCount": 13,
+      "originalRNInputCount": 13,
+      "expectedDiagnosticCount": 0,
+      "unexpectedProbeErrors": 0,
+      "scriptErrors": 0,
+      "registryWarnings": 0,
+      "crashes": 0
+    },
+    "queryFaultCurrent": {
+      "artifactMember": "pointer-query-fault-current-report.json",
+      "checks": 186,
+      "passed": 186,
+      "failed": 0,
+      "checkIdsUnique": true,
+      "checkIdsSha256": "0ff35e214c7cbd5acd875d135eee1cf41dd04320c9c8861121a0ea73760a01ce",
+      "rawReportSha256": "7b87ef36adaf68c406e29e4e5c7924a3751f32e8dda3c12553651ce47af9b44c",
+      "producerPinCount": 14,
+      "originalRNInputCount": 15,
+      "expectedDiagnosticCount": 4,
+      "unexpectedProbeErrors": 0,
+      "scriptErrors": 0,
+      "registryWarnings": 0,
+      "crashes": 0
+    },
+    "queryFaultDiagnostics": [
+      "E_POINTER_LISTENER_QUERY: deliberate throw34",
+      "E_POINTER_LISTENER_QUERY: nonboolean return at34",
+      "E_POINTER_LISTENER_QUERY: deliberate throw35",
+      "E_POINTER_LISTENER_QUERY: nonboolean return at35"
+    ]
+  },
+  "sourceVerification": {
+    "implementationCommit": "00bd80454384cbfbffc1b703df0864674bf11f99",
+    "headSha": "e65b7ba73124edb49084502ff4645523734b290b",
+    "actualCheckout": "a1d8a980cd61be69067068ace81a09e8155e4012",
+    "curatedSourcePinCount": 25,
+    "allPinsMatchImplementationAndHeadViaGitShow": true,
+    "allPinsMatchActualCheckoutGitBlobContents": true,
+    "producerPinsMatchCuratedSourcePins": true,
+    "originalRNInputsMatchLocalPinnedFiles": true,
+    "sourcePins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/pointer-document-bootstrap.js": "0b390630f7b7a37e581cc9949c38964b6a8692e2606fe83e1ed3d7e9a1a9f07c",
+      "tests/pointer-document-fixture.jsx": "e26dadb31c45e5b7ad1eadcae3d1113a81d3a72a3a37f69bd3fd9ca977b64818",
+      "tests/pointer-document-probe.gd": "bcd4c24d9062b4f7a560336780fb01080707e2a65556f796b3e1a698cf2397f4",
+      "tests/pointer-document-native.test.mjs": "6a251f041b6496d054d9b038a452b1da5593767cb20485db388f378e44b31da8",
+      "scripts/event-target-bundle.mjs": "e24978757e48609f4ef5182b4a7ffd3bf64ddebe9171b3bd97f23a50276556a9",
+      "sdk/toolchain/platform-plugin.mjs": "34129e1a2ece65fa5a48a31c637476ded97fe5718e681c1c6a58287eb6c8018d",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f420bb0627b60a9af2df6dfb940bf43652f7eb762aabeec2af70297d1cf0c69c",
+      "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "native/application_runtime.cpp": "5b07f1c2ed36e19df50758c8d6cab82ac04777bd069963910ac1f30b1a7db5bf",
+      "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4",
+      "tests/rn-pointer-interest-overlay.test.mjs": "9a0c0576e99255879dd3d087b714ec384a90d85b795c323d4094346dab8b35da",
+      "tests/pointer-interest-native.test.mjs": "c20dd9ae6ad1f3ba911691102cf03ec185b6a76200fca1075741c277e5203f26",
+      "tests/pointer-interest-probe.gd": "e4da2a89a149a7b991ebdb3b73b30ae769bf36477aef6a85c0f4075cd84018a4",
+      "tests/pointer-query-fault-bootstrap.js": "fbcdee479ce1d4d2d7486dc51acdb96da96158987b62cf5cab839e47119465a9",
+      "tests/rn-pointer-overlay.test.mjs": "56faa9426889d8adf53c35a1e1a96abccf183a44f5b27be5cb4e69070c8f4381",
+      "package.json": "6bc40fc01537f9bd1d23db5b79e1fc013430c8c94c1af7eacb71666f7683df11",
+      ".fallowrc.json": "8b0a3e1c9023be987a736b0d7d63464eb0e178a6c11c2f0a268d715e310ff1a7",
+      ".github/workflows/contracts.yml": "2e540e1aedf3eed34aa11629322af63bdb276ac8b6cb795c73ebea573a8570e0",
+      "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+      "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87",
+      "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68"
+    },
+    "originalReactNativeSources": {
+      "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+      "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+      "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+      "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+      "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+      "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+      "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+      "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+      "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+      "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+      "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+      "src/private/webapis/dom/nodes/internals/NodeInternals.js": "2e8d491275a6c818e9acc3b7d4d49a76d90b1fb96b9c82a75ae18033f9a908ac",
+      "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js": "2420fa1425c70cd7d4c707f655dd8562024c0a3956a7cbebd760ab9ac01ccbda",
+      "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+      "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+    }
+  },
+  "nativeHost": {
+    "sha256": "5feb2117ab5beb2f1f764a09ae0aad2fe150be85193788d568e46f9925c8d824",
+    "hashDeclaredByRunner": true,
+    "sameAcrossAllElevenHostedReports": true,
+    "binaryArtifactIncluded": false,
+    "localHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+    "localAndHostedBinaryEqualityRequired": false
+  },
+  "nativeJobLog": {
+    "jobId": 111527608087,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202/job/111527608087",
+    "downloadedLogSha256": "0443f4981265ed4a7644261a20287fc044d3a1986f7dc60418d56276a542745e",
+    "checkoutConfirmedInLog": "a1d8a980cd61be69067068ace81a09e8155e4012"
+  },
+  "acceptance": {
+    "captureOnlyRoot34FalseBefore35True": {
+      "DocumentInternalOnly": true,
+      "DocumentEnabled": true,
+      "DocumentElementEnabled": true
+    },
+    "documentElementInternalOnlyMethodsAbsentAndBothOffsetsFalse": true,
+    "captureOnlyManualOriginalPositiveSeparateFromNative": true,
+    "AWithoutListenersBWithDocumentNoRawNoCallbacksBStateAndContactMetricsUnchanged": true,
+    "followingBInputNativePositiveWithCurrentNativeDispatch": true,
+    "originalInterestPreservesNativeAbsence": true,
+    "rootThrow34OnlyCurrentEnabled": {
+      "retainedDiagnosticCount": 1,
+      "code": "E_POINTER_LISTENER_QUERY",
+      "sameBatchOriginalTouchStartRawAndReactUpdateContinue": true,
+      "CancelRecoveryAndStopPreserveDiagnostic": true
+    },
+    "otherSevenDocumentLanesRetainedErrorCount": 0,
+    "unexpectedProbeScriptErrorsRegistryWarningsAndCrashes": 0
+  },
+  "scope": {
+    "actualNativeInput": true,
+    "experimentalNativeDispatch": true,
+    "fourImmutableFlagConfigurations": true,
+    "publicFlagsDefaultEnabled": false,
+    "newHostedCaptures": 0,
+    "newHostedPixelAssertions": 0,
+    "previousNativeHostControlPresent": false,
+    "localGraphicalChecks": 385,
+    "localPixelAssertions": 20,
+    "localPreviousHostNormativeFailures": 142,
+    "mobileJobsAreSeparateCoreReferences": true,
+    "mobileArtifactContentsAuditedHere": false,
+    "pagesPublicationCovered": false,
+    "completeRNParityCertified": false,
+    "fullGFCheckpointClosed": false
+  },
+  "limits": [
+    "This run tests head e65b7ba73124edb49084502ff4645523734b290b. Later documentation/dashboard commits or Pages deployments are not new native CI runs.",
+    "The three native artifacts are headless. The local385checks/20pixels/twoPNGs and142previous-native-host normative failures remain separate evidence.",
+    "NativeHostSha256 is declared by the runner; no compiled binary is present in these artifacts for independent hashing. Equality is required within this CI host, not against local build bytes.",
+    "Only pointerdown interest is extended. Other pointer categories, full responder/PanResponder, coalescing, registered-null targets and complete event priority mapping remain open.",
+    "The Document matrix covers rootthrow34 with both flags only; root nonboolean/capture/internal-only/getter/reentrant-stop faults and simultaneous sibling contacts during retirement/fault are not certified. The186component-query fault fixture is separate evidence.",
+    "No-ref purity observes canonical.publicInstance before/after the installed query; lazyHelperCalled is an annotation, not independent call instrumentation. Downstream original dispatch may materialize the public ref.",
+    "The current-root-family guard is source-reviewed but has no separate nested-RootNodeKind adversarial fixture. Component handle/stateNode/canonical/publicInstance resolution remains outside the native query-call catch.",
+    "Success of original mobile core-reference jobs does not certify this probe on mobile, Godot mobile exports, hardware, development renderer, performance or full ABI/RN parity.",
+    "glog initialization/destruction warnings may remain; no unexpected probe errors, pointer-registry warnings or crashes were observed.",
+    "GF-05/06/07/08/13 and public capability enablement remain open."
+  ]
+}

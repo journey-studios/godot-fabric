@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://examples/services/game.gd" id="1"]
+[ext_resource type="Script" path="res://examples/services/validation.gd" id="2"]
+
+[node name="GameServicesExample" type="Node"]
+script = ExtResource("1")
+
+[node name="Application" type="FabricApplication" parent="."]
+metadata/scenario = "services"
+
+[node name="HUD" type="FabricSurface" parent="."]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 484.0
+offset_bottom = 554.0
+application_path = NodePath("../Application")
+component_name = "ServicesHUD"
+
+[node name="Inventory" type="FabricSurface" parent="."]
+offset_left = 512.0
+offset_top = 24.0
+offset_right = 972.0
+offset_bottom = 554.0
+application_path = NodePath("../Application")
+component_name = "ServicesInventory"
+
+[node name="Validation" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("2")

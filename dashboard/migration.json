@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Refs, métricas e módulos nativos"
+    "focusTitle": "Document Up refs/remount validados; próximos: CI da fatia e mutation durante dispatch"
   },
-  "updatedAt": "2026-10-03T17:10:28.948Z",
+  "updatedAt": "2026-10-05T12:34:53.407187+00:00",
   "source": {
-    "commit": "4085865a309de62cf4e893324f485439f5fb4b55",
-    "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/ROADMAP.md",
-    "scope": "main + fatias verificadas da PR #14",
+    "commit": "f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
+    "scope": "Document Up rerender/retirada/remount: 2709 checks headless nas oito lanes (2143 anteriores preservados em ordem) e 535 viewport/7 frames/90 pixels. Rerender mantém Document/documentElement/ref/getter e o Up seguinte; retirar A com A e B segurando contato entrega 1 TouchCancel original e nenhum Up/Raw/query/estado aos listeners retidos, B intacto e positivo depois. Root novo com Document novo: retidos consultam 36/37 false, manual retido ainda chega a OldDoc, release do índice cancelado descartado, gesto novo qualifica só pelo Document novo. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python e static passaram. Execução sobre 3b74ae8/dirty; 71 inputs executados conferidos por git show/SHA-256 contra f7c0bab; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -150,7 +150,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Fachada completa, assets e todos os contratos públicos ainda precisam de cobertura.",
+      "note": "Aliases app/lib/SDK isolados no TypeScript original e runtime; literal types e native texts distintos no consumidor30/40/43, React único e hash de recuperação preservados. 54 testes de resolução, 13 Metro, 8 determinismo/transform e 3 hooks passaram. Perfil ESNext/Preserve + Bundler; NodeNext/Node16/CJS, types runtime e .d.ts rejeitados visivelmente. Duas diferenças Metro documentadas. Tipos/imports/assets/profiles completos, workspaces, exports e D20 abertos. CI 80729da confirmou cinco jobs da fatia de aliases; esse run precede root retirement.",
       "blocker": "",
       "checkpoints": [
         {
@@ -161,6 +161,22 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+            },
+            {
+              "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+            },
+            {
+              "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701"
             }
           ]
         },
@@ -197,7 +213,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Censo completo de props/valores, updates/removal e implementação final permanece aberto.",
+      "note": "DTOs rejeitam 64 casos exatos nativos, strings inválidas, accessors/hidden keys e dados fora dos limites antes de executar Callables. Censo completo de props/valores, updates/removal e implementação final segue aberto.",
       "blocker": "",
       "checkpoints": [
         {
@@ -208,6 +224,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -243,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Bootstrap completo, idle, erros, globals e starvation seguem pendentes.",
+      "note": "Getter real da ref agora é contido antes do SDK: erro com causa retida preserva TouchStart/Raw/React e limpa contexto/work/query no stop. Original62/65 com3negativos; corrigido65/viewport85. Bootstrap/globals completos, outros getters/permanentes/proxies/reentrância/dev/mobile abertos. CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados; 15gatesregressãopassaram,SDKnovoigualhostexecutado.",
       "blocker": "",
       "checkpoints": [
         {
@@ -254,6 +274,58 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/runtime/README.md"
+            },
+            {
+              "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+            },
+            {
+              "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+            },
+            {
+              "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
+            },
+            {
+              "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
+            },
+            {
+              "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+            },
+            {
+              "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
+            },
+            {
+              "label": "CI getter 534d455: cinco jobs, 65 checks e checkout/pins auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765"
             }
           ]
         },
@@ -282,7 +354,7 @@
       "phase": "M0",
       "priority": "P1",
       "title": "React/Fabric semantic suite",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Exercise every applicable feature in the pinned native React renderer, including dev StrictMode, refs/cleanup, transitions, Suspense, effects/external stores, batching, supported Activity/hidden-tree behavior and errors. Verify abandoned renders produce no native mounts and events/updates preserve upstream priority. Reuse upstream reconciliation rather than implement a second scheduler",
       "dependencies": [
         "GF-01",
@@ -290,14 +362,75 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "DocumentUp lifecycle:2143/oito lanes e414viewport/62pixels. Once primeiroUp→1update/1commit; segundo→0. Abort original false→true semstate/commit; pre-aborted inerte. Down2723/contracts255Node13Python/static passaram. CI baseline 842 1371 verificada; CI lifecycle 37246479501 repetiu 2143 checks em fc52215. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais, CI pendente. StrictMode/dev/transitions/Suspense/Activity/stores/prioridades completas e paridade ampla abertos.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
+            },
+            {
+              "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+            },
+            {
+              "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
+            },
+            {
+              "label": "CI getter 534d455: cinco jobs, 65 checks e checkout/pins auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765"
+            },
+            {
+              "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
+            },
+            {
+              "label": "CI lifecycle 37246479501: 5 jobs, 2143 checks e 71 blobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37246479501"
+            },
+            {
+              "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -332,7 +465,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Pausa/resume, overlays e comparação completa permanecem abertos.",
+      "note": "Documents originais/duas roots e cleanup nativo mantidos nas oito lanes2143. Once consome apenas primeiroUp; abort-after-first remove interesse semownership/state; sinais originais observados. Retirada com contato ativo, remount com Document novo e listeners retidos inertes validados localmente (2709 checks); reentrância, stop/restart e demais lifetimes abertos. CI baseline 842 1371 passou 5 jobs; CI lifecycle 37246479501 passou 5 jobs/2143 checks.",
       "blocker": "",
       "checkpoints": [
         {
@@ -343,6 +476,86 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/shared-roots/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+            },
+            {
+              "label": "CI shutdown: cinco jobs, consumidor35 e stop 8/9/9",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
+            },
+            {
+              "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+            },
+            {
+              "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
+            },
+            {
+              "label": "CI getter 534d455: cinco jobs, 65 checks e checkout/pins auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765"
+            },
+            {
+              "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
+            },
+            {
+              "label": "CI lifecycle 37246479501: 5 jobs, 2143 checks e 71 blobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37246479501"
+            },
+            {
+              "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
             }
           ]
         },
@@ -379,7 +592,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: fatia local validada; refs/comandos completos e certificação seguem abertos.",
+      "note": "Maps RN originais36/37 sem nova produção nativa/SDK. DocumentD-only/elementI-and-D e quatroflags preservados; bubbleonce e AbortSignal originais retiram qualificação real do segundoUp.2143/414local,71codepins/24RN executados; pinimplementaçãoa3e6c6bconferido. CI baseline 842 1371/71 pins verificada; CI lifecycle 37246479501 2143 checks/71 blobs no checkout 3eaf9c2. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais, CI pendente. Types/commands/getters/reentrância/hardware/mobile/performance abertos; defaults off.",
       "blocker": "",
       "checkpoints": [
         {
@@ -390,6 +603,138 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Medidas clipped/flattened e gap de coordenadas reproduzido",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+            },
+            {
+              "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a012f9ed0943f4996553ff78ab543317d8ed46f0/docs/evidence/tree/README.md"
+            },
+            {
+              "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/0d7c73106fba30b02fbc4ac34e51b2f1699d9f0d/docs/evidence/focus/README.md"
+            },
+            {
+              "label": "Comandos nativos:112checks/40owners,8rejeições e recuperação real",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+            },
+            {
+              "label": "CI nativa concluída: comandos 112 checks/40 owners e oito rejeições exatas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
+            },
+            {
+              "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+            },
+            {
+              "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
+            },
+            {
+              "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+            },
+            {
+              "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
+            },
+            {
+              "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+            },
+            {
+              "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+            },
+            {
+              "label": "Ancestralidade: 102checks/variante, NativeDOM removals/root/remount e listeners pré-reorder; source pin conferido",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dfdaee72a8c9b2aff64d43b52ba051bff5a659bf/docs/evidence/event-target-ancestry/README.md"
+            },
+            {
+              "label": "CI91e5219:artefato102/variante com IDs/fontes/RN/host auditados; estado do workflow separado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
+            },
+            {
+              "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
+            },
+            {
+              "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
+            },
+            {
+              "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+            },
+            {
+              "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
+            },
+            {
+              "label": "CI getter 534d455: cinco jobs, 65 checks e checkout/pins auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765"
+            },
+            {
+              "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
+            },
+            {
+              "label": "CI lifecycle 37246479501: 5 jobs, 2143 checks e 71 blobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37246479501"
+            },
+            {
+              "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
             }
           ]
         },
@@ -426,7 +771,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: métricas de OS, font scale, insets e dispositivos seguem pendentes.",
+      "note": "Densidade e root/client/screen incluem a escala/origem atuais. A nova captura em duas raízes mantém client/page no root físico e projeta offsets no alvo; o primeiro raw-window move em density2 passa sem frame/refresh JS. Prova631/648, pixels14 e controle anterior55/631. Hardware/DPI, insets, font scale, múltiplas janelas/viewport e o contrato completo continuam abertos. CI f90206f concluída nos cinco jobs; artefato confirma binding378 e headless631, sem certificado de captura mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -437,6 +782,22 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "Root/local/screen, MOVE e density2: 238/247 com controles negativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+            },
+            {
+              "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+            },
+            {
+              "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
             }
           ]
         },
@@ -465,7 +826,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "View, styles and RTL",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Complete shared View props/styles and StyleSheet/color utilities: logical edges, RTL, baseline/layout constraints, transforms/origin, borders, opacity/clipping, z-order, supported shadows/filters and hit geometry. Reproduce asymmetric border colors before fixing. Certify mount/update/removal, fractional layout, custom colors and dynamic RTL against the pinned schema",
       "dependencies": [
         "GF-04",
@@ -475,14 +836,31 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "macOS arm64: View67/107, pixels36, controle negativo9/24 e regressões16/672",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+            },
+            {
+              "label": "CI b5df4d6: cinco jobs passaram, escopo limitado aos contratos atuais",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Árvore/IDs89/99, oito pixels, controle negativo25/89 e duas capturas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a012f9ed0943f4996553ff78ab543317d8ed46f0/docs/evidence/tree/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -563,7 +941,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Multiline, IME, seleção completa, teclado móvel e autofill seguem abertos.",
+      "note": "Singleton TextInputState original e quatro statics públicos conectados ao foco nativo: callback ref, autoFocus, transferências, readonly real, reparenting e cleanup/reentrância comprovados175/189. Controles negativos23/160 e11/175. Multiline, IME, seleção completa, teclado móvel/insets, autofill, comandos restantes e diferenciais RN permanecem abertos. Complemento de comandos comprovado localmente e no artefato CI: 112 checks, 40 owners, oito rejeições com recuperação, duas raízes e app independente; nove registros liberados. CI ffcc: contracts/native/Android passaram; iOS falhou antes da app e comparação pulou. Referência iOS posterior passou 13 checks em inputs idênticos; não certifica full parity mobile.",
       "blocker": "",
       "checkpoints": [
         {
@@ -574,6 +952,18 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/public-controls/README.md"
+            },
+            {
+              "label": "TextInputState original e foco real175/189,12pixels; controles23/160 e11/175",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/0d7c73106fba30b02fbc4ac34e51b2f1699d9f0d/docs/evidence/focus/README.md"
+            },
+            {
+              "label": "Comandos nativos:112checks/40owners,8rejeições e recuperação real",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+            },
+            {
+              "label": "CI nativa concluída: comandos 112 checks/40 owners e oito rejeições exatas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178664886/job/111366530925"
             }
           ]
         },
@@ -602,7 +992,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Input, Pressability and touchables",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation",
       "dependencies": [
         "GF-06",
@@ -612,14 +1002,119 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "DocumentUp once/pre-aborted/abort-after-first passaram2143/oito SDK-flaglanes e414viewport/62pixels. Once A12/B2→A13/B2→A13/B2:1commit primeiro,zero segundo;36/37negativos/semRawUp,TouchEnd/cleanup reais. Sinal originalfalse→true, manualpré/pósabort e controle originalSDKonce passam. Down2723/contracts255Node13Python/static. CI baseline 842 1371/5 jobs verificada; CI lifecycle 37246479501 5 jobs/2143 checks auditada. View/element/outrasfases lifecycle,dispatchmutation/capturedUp/DownUpID/move/hover/responders/mobile/dev/performance abertos. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais, CI pendente.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "macOS arm64: coords238/247, pixels6, controles121/121 e timing1/238",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+            },
+            {
+              "label": "Transforms309/345+33pixels, math40932, guards61/input25 e controles65/68/9",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+            },
+            {
+              "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+            },
+            {
+              "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
+            },
+            {
+              "label": "Captura631/648,14pixels; controle55/631, original108/108 e binding378",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+            },
+            {
+              "label": "CI f90206f: cinco jobs passaram; artefatos original108/108,binding378,headless631 auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
+            },
+            {
+              "label": "Baseline EventTarget original119headless;33manual/raiz,3gaps reproduzidos; native integration pendente",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+            },
+            {
+              "label": "CI 515d0d7: 119 check IDs e três gaps originais auditados; cinco jobs passaram",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+            },
+            {
+              "label": "CI91e5219:artefato102/variante com IDs/fontes/RN/host auditados; estado do workflow separado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
+            },
+            {
+              "label": "Tags nativas: 647 IDs por variante; controle original falha em dois checks, corrigido passa todos; Pressability e SDK verificados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7a05e4afdfcc018a34e0eb4b6dc6e74433def234/docs/evidence/event-dispatch/README.md"
+            },
+            {
+              "label": "Native batch181/206;236viewport/28pixels, queue negativo e crash corrigidos; consumidor30/40,22exemplos2250; local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
+            },
+            {
+              "label": "CI897b127: cinco jobs verdes; artefato647 IDs/17 pins e dois negativos originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
+            },
+            {
+              "label": "Query Map RN:193/230headless,260viewport/28pixels;14casos,lifetime B e SDK/consumer/adapters;local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
+            },
+            {
+              "label": "CI0478499:cinco jobs verdes;181/206 IDs,16pins/13RN e bundles auditados; anterior à query",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+            },
+            {
+              "label": "Falhas da query: controle e runtime macOS;22pins no commit",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+            },
+            {
+              "label": "CI b88708c:186faultchecks/22pins; controle/capturas locais separados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+            },
+            {
+              "label": "Document/root local: 2.723 flags, 385 viewport/20 pixels, 142 negativos; capture-only e isolamento",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+            },
+            {
+              "label": "CI Document e65b7ba: cinco jobs e matriz auditada",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+            },
+            {
+              "label": "Getter real de ref:65checks/85viewport,3negativos e batch preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
+            },
+            {
+              "label": "CI getter 534d455: cinco jobs, 65 checks e checkout/pins auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765"
+            },
+            {
+              "label": "Up View: 62/90, controle 8 negativos, SDK/regressões e frames nativos",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+            },
+            {
+              "label": "DocumentUp1371/243,20pixels e71inputs executados na implementação84270fb",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/84270fbeadd21df728592e3d4cea23b0be09eec9/docs/evidence/pointer-document-up/README.md"
+            },
+            {
+              "label": "CI DocumentUp baseline842:1371checks/71pins/22RN e cincojobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477"
+            },
+            {
+              "label": "Document bubble Up once/AbortSignal:2143checks/414viewport/62pixels e71inputs executados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168/docs/evidence/pointer-document-up-lifecycle/README.md"
+            },
+            {
+              "label": "CI lifecycle 37246479501: 5 jobs, 2143 checks e 71 blobs auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37246479501"
+            },
+            {
+              "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -1150,7 +1645,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: operações GodotFabric, revisões/conexões e extensões seguem pendentes.",
+      "note": "Calls, snapshots/revisões, signals, DTOs, rebind/generation e destruição síncrona executados no Hermes/Godot. NativeModules compat completo, callable modules, extensão externa, byte/time budgets e cross-thread permanecem abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1161,6 +1656,10 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/native-foundation/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
             }
           ]
         },
@@ -1189,7 +1688,7 @@
       "phase": "M3",
       "priority": "P1",
       "title": "Codegen and custom Fabric components",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging",
       "dependencies": [
         "GF-08",
@@ -1199,14 +1698,51 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Codegen original/SDK/SPI/loader comprovados nas fatias anteriores; agora root retirement e stale refs/events passam com Badge/Probe originais e core Button. External ViewProps sem cast para core; cor de fonte externa preservada em 5 checks, contra 2 falhas no binário precedente. Total consumidor17runs/318checks macOS arm64 Release. Containers/state/schema/reflection completo, async, RN diferencial e exports/ABI/alvos continuam abertos.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "label": "Codegen/SDK/registro e montagem de componente/módulo externos comprovados",
+          "done": true,
+          "evidence": [
+            {
+              "label": "Codegen 20 testes / 6 unidades C++; fonte e hashes registrados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
+            },
+            {
+              "label": "Falha CI de seleção Node / correção e compilação local 6/6",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
+            },
+            {
+              "label": "CI corrigida: cinco jobs e seis unidades Codegen compiladas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37145700599"
+            },
+            {
+              "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Consumidor externo 35/37 e loader 21/89; evidência local da PR",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+            },
+            {
+              "label": "Shutdown reentrante 8/9/9 e consumidor 35/37; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+            },
+            {
+              "label": "CI external Codegen consumer35 e shutdown8/9/9",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37153564796"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -1291,7 +1827,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Instalação/update completos, extensões e export por alvo seguem abertos.",
+      "note": "Addon/editor e consumer30/40/43 precedentes confirmados pela CI 80729da nos cinco jobs. Novo SDK compilado/pack verificado e original-Codegen consumer separado passou 17 Godot/318checks com remount/owner switch e captura/pixels. Esta nova fatia tem evidência local; CI própria ainda pendente. Instalação/update/dev tooling e exports Debug/Release por alvo abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1302,6 +1838,46 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/evidence/consumer/README.md"
+            },
+            {
+              "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+            },
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Addon ativa packet de seleção e JSX original em consumidor externo",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+            },
+            {
+              "label": "TSConfig: race reproduzido, consumidor18/40 e seis rebuilds iguais",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
+            },
+            {
+              "label": "Resolução local: consumer27/40/43, aliases40/43, nested40; React/Codegen preservados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+            },
+            {
+              "label": "Aliases por origem: consumer30/40/43; Metro13 com diferenças explícitas, Codegen preservado",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+            },
+            {
+              "label": "Root retirement: 17 Godot/318 checks, stale core, font ownership e capturas/pixels; evidência local",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+            },
+            {
+              "label": "CI scoped-alias: cinco jobs em 80729da; anterior a root retirement",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37159723701"
             }
           ]
         },
@@ -1430,7 +2006,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #14: compile/link/package apenas; execução Godot iOS e outros alvos não certificados.",
+      "note": "Três builds iOS Release, dois XCFrameworks, device arm64 export/link e execução x86_64/Rosetta 22/22. Debug, Android, Linux/Windows e bridges OS/AT permanecem abertos. Combinação macOS arm64 Release do SDK compartilhado identificada por headers/fontes/bibliotecas; ABI estável e identidade inicializada não certificadas. CI 37147754831 passou os cinco jobs em 7a67f96; artefato confirma SDK/link e 207 checks, sem montagem externa/ABI certificada. Nova fatia macOS identifica UUIDs carregados e hashes de receipts separadamente, com binding witness observado; isso não recertifica iOS histórico, outros modos/alvos ou ABI estável. SDK fresco inclui header overlay antes do RN original e registra fonte/manifesto gerados. Pack/verify,registro 207/11,loader 89/21 e adapter independente 17 runs/318 incluindo quatro janelas passaram; combinação experimental não certifica ABI universal. Artefato hospedado a15fde4 auditado: 144 assertions C++, 43 checks JSX, dois controles originais SIGSEGV e seis erros deliberados visíveis. Conclusão da execução completa está separada no recibo CI; referências RN não certificam ports Godot.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1441,6 +2017,26 @@
             {
               "label": "Evidência da fatia validada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4085865a309de62cf4e893324f485439f5fb4b55/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            },
+            {
+              "label": "SDK relocado / cliente linkado / 207 checks de registro; limites documentados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+            },
+            {
+              "label": "CI SDK: cinco jobs e 207 checks do cliente relocado",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+            },
+            {
+              "label": "Ponteiros132/146,144native,43JSX; dois controles originais,12pixels e SDK17/318",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+            },
+            {
+              "label": "CI a15fde4: artefato de ponteiros 144/43 e dois controles originais auditados",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
             }
           ]
         },
@@ -1614,7 +2210,7 @@
       "phase": "M4",
       "priority": "P1",
       "title": "iOS arm64 and simulator",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Integrate static/xcframework dependencies with the Godot Xcode export, respecting linkage/signing/store constraints without modifying the engine. Prove simulator and physical-device startup, touch/IME/insets, lifecycle, accessibility/network/services and debug/release packaging; archive/install evidence uses the consumer app",
       "dependencies": [
         "GF-02",
@@ -1629,14 +2225,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
-      "blocker": "",
+      "note": "Consumer próprio executou 22/22 no iOS 18.4 x86_64/Rosetta; device arm64 export/link unsigned. Device físico, Debug, touch/IME/AT e serviços ainda não certificados; simulador arm64 tem bloqueio específico da template oficial.",
+      "blocker": "Somente simulador arm64: template oficial Godot 4.7.2 contém libgodot.a x86_64; execução arm64 não é possível sem template corrigida. Outras fatias continuam.",
       "checkpoints": [
         {
           "id": "slice",
-          "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "label": "iOS: consumer exportado/linkado e runtime x86_64/Rosetta 22/22",
+          "done": true,
+          "evidence": [
+            {
+              "label": "iOS: 3 builds, device arm64 export/link e simulador x86_64 22/22",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -2111,14 +2712,24 @@
     {
       "id": "HUD-3",
       "label": "Update the HUD from Godot data/signals, including an initial revision and changes during connection. Invoke a typed game operation from the inventory; observe defined results/errors and event ordering.",
-      "done": false,
-      "evidence": []
+      "done": true,
+      "evidence": [
+        {
+          "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+        }
+      ]
     },
     {
       "id": "HUD-4",
       "label": "Resize only the inventory: its constraints/layout and input/measure geometry update while HUD geometry and window metrics retain their meanings.",
-      "done": false,
-      "evidence": []
+      "done": true,
+      "evidence": [
+        {
+          "label": "macOS: serviços 36/39, DTO 133, lifetime 15 e consumidor 40/43",
+          "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+        }
+      ]
     },
     {
       "id": "HUD-5",
@@ -2303,6 +2914,923 @@
   ],
   "activity": [
     {
+      "id": "pointer-document-up-refs-local-verified-20261005",
+      "at": "2026-10-05T12:34:53.407187+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Document Up refs/remount: 2709 headless/oito lanes e 535 viewport/90 pixels. Retirada com contato ativo: 1 TouchCancel, nenhum Up para listeners retidos, B preservado. Root novo: retidos inertes (manual ainda positivo), release obsoleto descartado, Document novo qualifica. Down 2723/contracts 255+13/static passam; CI pendente. Nenhum GF/checkpoint/denominador fechado."
+    },
+    {
+      "id": "pointer-document-up-lifecycle-public-pages-verified-37308701669",
+      "at": "2026-10-05T12:20:34.242841+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages 37308701669 concluiu build/deploy com renderer do main e dados bd4ccd6. JSON público completo e API local iguais ao commit; publicado o recibo da CI lifecycle 37246479501 (2143 checks). Nenhum GF/checkpoint/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37308701669"
+    },
+    {
+      "id": "pointer-document-up-lifecycle-hosted-ci-37246479501",
+      "at": "2026-10-05T12:18:46.080012+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI Contracts 37246479501 em fc52215 passou 5 jobs. Artefato auditado: 2143 checks nas oito lanes, IDs/bundles/23 estágios lifecycle iguais aos locais (exceto timestamps, Node patch e host do runner); checkout 3eaf9c2 com 71 blobs iguais a a3e6c6b. Viewport 414/62 pixels segue local. Nenhum GF/checkpoint/peso/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37246479501"
+    },
+    {
+      "id": "pointer-document-up-lifecycle-source-pins-a3e6c6b",
+      "at": "2026-10-05T00:09:33.651263+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "71inputs únicos executados em245ccce/dirty conferidos por git show/SHA-256 na implementaçãoa3e6c6b.2143headless/414viewport/62pixels/5frames eDown2723/contracts255Node13Python preservados. Evidência acrescentada aos checkpoints slice já completos; semnovo done/peso/denominador. CI lifecycle e nova publicação pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168"
+    },
+    {
+      "id": "pointer-document-up-lifecycle-local-verified-20261005",
+      "at": "2026-10-05T00:02:46.433371+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Once/pre-aborted/abort-after-first em Document bubble:2143checks/oito lanes e414viewport/5frames/62pixels. Sinal original estado/identidade, first/secondnativeUp e manualoriginalSDK discriminantes; Down2723/contracts255Node13Python/static/scan passam. CI baseline8421371/5jobs/71pins auditada, semcertificar nova lifecycleCI. NativeSDK unchanged; pinimplementação/publicação pendentes, nenhum novo fechamento ou denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "pointer-document-up-public-pages-verified-37244579332",
+      "at": "2026-10-04T23:43:38.611130+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37244579332 concluiu build/deploy com renderer do main/dataf7696b3. JSON público completo eAPI local iguais ao commit. Publicados1371/243/20pixels e71pins DocUp sem merge; sua CI específica continua separada. Nenhum novo fechamentoGF/checkpoint/denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37244579332"
+    },
+    {
+      "id": "pointer-document-up-source-pins-verified-84270fb",
+      "at": "2026-10-04T23:36:31.883541+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "71inputs únicos de código/configuração conferidos por git show/SHA-256 contra84270fb. Mantidos base0a2f01e/dirty,1371headless/243viewport/20pixels,Down2723 eView62com8negativos anteriores. Prova adicionada aos checkpoints de fatia já concluídos; nenhum novo checkpoint/denominador. CI específica e publicaçãoDocUp pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/84270fbeadd21df728592e3d4cea23b0be09eec9"
+    },
+    {
+      "id": "pointer-document-up-four-flags-local-verified-20261004",
+      "at": "2026-10-04T23:26:48.291688+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Document/documentElement Up passou1371checks em oito SDK/flaglanes e243viewport/20pixels. Event=== entre fases, tags/ownroot originais, capture-only, Anegativo/Bheld, remove/Cancel/stop provados; Down2723/contracts255Node13Python/static passaram. Capturas nativas/documentação incluídas. Native/SDK produção f7unchanged; pin implementação e CI específica pendentes. Nenhum novo fechamento/checkpoint ou denominador. ViewUp62/62 e controle anterior54/62/oito negativos no mesmo SDK atual preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "pointer-up-hosted-pages-verified-37242930291",
+      "at": "2026-10-04T23:13:58.019758+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37242930291 concluiu build/deploy com renderer do main/data0a2f01e; JSON público completo e API local conferidos contra commit. Publicada auditoriaCI ViewUp041/62+3400checks. DocumentoUp local ainda não consta nessa publicação. Sem fechamentoGF/checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37242930291"
+    },
+    {
+      "id": "pointer-up-hosted-artifacts-verified-37241023275",
+      "at": "2026-10-04T23:11:31.339284+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI de Up em041688c passou cinco jobs. Cinco artifacts nativos/13reports reproduzem62Up+3400checks anteriores;16produtores verificados no checkout5250225, mesmo bundle/IDs deUp local. Binário CI declarado, controle antigo/capturas locais; Document Up/flags ainda em validação. Sem novo GF/checkpoint/peso/denominador concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37241023275"
+    },
+    {
+      "id": "pointer-up-positive-pages-verified-37241041419",
+      "at": "2026-10-04T22:45:13.934314+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages 37241041419 passou build/deploy no main renderer usando data041688c da branch. JSON público completo (somente publication gerado removido) e API local iguais ao arquivo commitado. Up62/90,SDK/regressões e81pins publicados sem merge. Hosted Up CI ainda em execução; nenhum GF/checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37241041419"
+    },
+    {
+      "id": "pointer-up-source-pins-verified-f7c2cf6",
+      "at": "2026-10-04T22:41:58.173596+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação f7c2cf6: 81 inputs únicos de código/configuração conferidos por git show, mantendo base de execução 3ca4174/sourceDirty true. Provas Up62/90,24pixels,8negativos e16comandos de regressão/SDK adicionadas aos checkpoints de fatia já concluídos. Hosted Up CI e publicação positiva pendentes; nenhum checkpoint, item, peso ou denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b/docs/evidence/pointer-up/README.md"
+    },
+    {
+      "id": "pointer-up-view-regressions-and-sdk-20261004",
+      "at": "2026-10-04T22:39:06.634151+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Up View 62/62 e viewport 90/90 com 24 pixels; 16 comandos de regressão passaram: contracts 255 Node/13 Python, Document 2723, interest 193/233, query/getter 186/65, integrated 181/206, examples 22/2250, consumer 30/40, SDK pack/verify, loader 89/21 e 13 adapters/213. Controles anteriores query/getter seguem com 12/3 negativos no SDK atual, sem retry Down ou query Cancel. CI de Up e publicação positiva pendentes; sem novo fechamento GF/checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "pointer-up-view-native-current-and-capture-20261004",
+      "at": "2026-10-04T22:19:29.515529+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Local Up View/both flags:62/62 headless e90/90 macOS,24pixels+2counter+2save; A/BtouchStarts0→1/1,Up0→1/0 apósbubble/Bterminal. Controleoldnativea6 comCURRENTSDKbundleigual mantém54/62 e8falhas;18RN e16producers sóCPP+nativeoverlay diferem. Hostcorrigidod855;capture36false→37true;B8queriesfalse;Up/Raw/oneReactcommit/priorityobservada/Cancel/stop passam. Regressões/SDK/CI/publicação positiva ainda pendentes; não há checkpoint/GF novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "pointer-up-view-gap-native-reproduced-20261004",
+      "at": "2026-10-04T22:07:17.914519+00:00",
+      "taskIds": [
+        "GF-13"
+      ],
+      "message": "Up View/both flags reproduzido no host nativo a6ae:54/62, oito falhas normativas específicas bubble/capture-only. Manual original Up positivo; Up nativo SDK0, sem callback/Raw/commit. TouchStart/TouchEnd/Raw touch, B enquanto A held, Cancel e stop passam. 16 produtores e 18 fontes RN pinados; nenhuma correção/aceite GF ainda certificado. Getter CI anterior e Pages cfca02b conferidos separadamente.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "resolver-getter-ci-534d455-audited",
+      "at": "2026-10-04T22:00:21.713763+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI 37236875765: cinco jobs sucesso, checkout nativo real 8ce9a862 com pais main adad606 e head 534d455. 23 pins e 65 IDs/full bundle conferidos; 12 reports/3.400 checks nos quatro artifacts auditados. TouchStart/Raw/React/um commit, diagnóstico retido e stop passam. Binário/capturas/controle antigo ausentes; mobile reference é prova separada. Pages anterior 37237426598: JSON público/local igual 11dfb3c. Nenhum status, done, peso, releaseRequired ou denominador alterado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765"
+    },
+    {
+      "id": "resolver-getter-pages-534d455-confirmed",
+      "at": "2026-10-04T21:46:13.385922+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37236872732SUCCESSbuild/deploy;renderer mainadad606/dados534d455fora main. JSONpúblicocompletoigualgitshow534d455 removendo somente publication;APIlocal4318igual. Inclui getter65/85,3negativos,23pins e15gates. CI37236875765 emprogressocomcontracts sucesso; native/mobile/artifact pendentes. Nenhumcheckpoint/GF/peso/denominador novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236872732"
+    },
+    {
+      "id": "resolver-getter-source-pin-b3920e1",
+      "at": "2026-10-04T21:37:48.868082+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "23pins executados e fontesdoSDKfresco conferidos via gitshow emb3920e1. Local65/85,3negativos anteriores e15gates completos;executionBaseb2e4655/sourceDirtytrue preservados. Links imutáveis,CI/publicação próprios pendentes. Nenhum novo checkpoint/GF completo/peso/denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8"
+    },
+    {
+      "id": "resolver-getter-batch-local-20261004",
+      "at": "2026-10-04T21:28:02.009203+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Um getter realcanonical.publicInstance restaura descriptorantesthrow. Controle anterior62/65 com3falhas visíveis TouchStart/Raw/React; corrigido65/65,85viewport/16pixels+2counter+2save.A0B0→A2B0incluihealthybaseline+faultTouchStartumcommit.65IDs/bundle/18RNiguais,17producersonlyC++.SDK0noinstantefault/7falseafter,diagnóstico único/CancelA/BhealthywhileAheld/nextgesture/stopzero passam.23pins locais. 15gatesregressãopassaram250/13,2723Doc,193/233,186,181/206,22examples2250,consumer30/40,loader89/21,13adapters213,portables2+2. SDKnewigualhosta6ae; CI/publicaçãopendentes;semaceiteGF/checkpoint/peso/denominador novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8/docs/evidence/pointer-resolver-faults/README.md"
+    },
+    {
+      "id": "document-ci-pages-b2e4655-confirmed",
+      "at": "2026-10-04T21:28:02.009203+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37235105858 concluiu build/deploy e JSON público completo igual ao commitb2e4655 removendo sópublication;APIlocal4318igual. Renderer mainadad606,dadosbranchfora main. Publicação inclui DocumentCIe65auditada, anterior à nova fatia getter local.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37235105858"
+    },
+    {
+      "id": "document-ci-audit-e65b7ba",
+      "at": "2026-10-04T21:06:55.621072+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI37233393202 passou cinco jobs em e65b7ba; checkout nativo a1d8a980. Artifacts11314866986/11315021189/11315360516:2.723 Document em oito lanes,interest193/233,fault186. IDs/bundles/14produtores/18RN e25pins conferidos. Capture-only34false→35true e Aneg/Bpositivo observados; rootthrow34 único. Host CI declarado5feb2117 sem binário noartifact;385viewport/142 antigos permanecem locais. Jobs móveis são core reference; nenhum GF/checkpoint/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233393202"
+    },
+    {
+      "id": "document-pages-b7b6c29-confirmed",
+      "at": "2026-10-04T21:06:55.621072+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37233943579 concluiu build/deploy. JSON público integral igual ao git show b7b6c29 removendo somente publication; API local4318 igual. Renderer mainadad606/dadosbranchfora main. Publicação anterior à auditoria CI posterior; próximo deploy levará essa auditoria. Nenhum aceite novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233943579"
+    },
+    {
+      "id": "document-pages-e65b7ba-confirmed",
+      "at": "2026-10-04T20:54:43.596173+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37233421454 passou build/deploy no renderer main adad606, dados e65b7ba fora do main. JSON público completo igual ao git show e65b7ba removendo só publication; API local4318 igual. Inclui matriz Document2.723,385viewport/20pixels, controle antigo142falhas e25pins. CI e65b7ba em progresso: contracts e Android passaram; nova prova native/iOS e artifact audit pendentes. Nenhum novo GF/checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37233421454"
+    },
+    {
+      "id": "document-source-pin-00bd804",
+      "at": "2026-10-04T20:45:49.122099+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "25 fontes executadas conferidas byte a byte via git show no commit00bd804. Receipts/SDK preservam base original73d33da/sourceDirty true da execução. Oito lanes2.723, viewport385/20pixels e142negativos permanecem locais; fontes/RN/bundles/host e capturas auditados. Nenhum novo GF/checkpoint:19/156 preservados. Nova CI e Pages pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/00bd80454384cbfbffc1b703df0864674bf11f99"
+    },
+    {
+      "id": "document-root-flags-local-20261004",
+      "at": "2026-10-04T20:39:52.284914+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Document/root por família atual com gates RN originais passou 2.723 checks em oito lanes e 385 no viewport/20 pixels; A=0/B=0→A=2/B=0 em um commit. Capture-only: 34 false antes de 35 true; A-none/B-doc isolado. Antigo: 142 falhas normativas; só C++ difere entre 14 produtores, RN18/bundles iguais. Root throw34 preserva TouchStart/Raw/React; slot no-ref null na query, sem contador lazy instrumentado. Regressões 250/13, 22 exemplos/2.250, consumer30/40, SDK fresh/13 adapters213, interest193/233, fault186 e integration181/206 passaram. 19/156 checkpoints; nenhum GF completo. Pin, nova CI e publicação pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/00bd80454384cbfbffc1b703df0864674bf11f99/docs/evidence/pointer-documents/README.md"
+    },
+    {
+      "id": "fault-ci-pages-73d33da-verified",
+      "at": "2026-10-04T20:39:52.284914+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages 37231095632 passou build/deploy com renderer main adad606 e dados 73d33da. JSON público integral igual ao git show 73d33da removendo somente publication; API local4318 igual. Publicação contém auditoria da fault CI b88708c com cinco jobs; ainda não inclui a nova Document slice local.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37231095632"
+    },
+    {
+      "id": "query-fault-ci-audit-b88708c",
+      "at": "2026-10-04T20:10:18.132573+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI37229423491 passou5jobs. Artifacts186faultchecks/22sourcepins/15RN e193/230interest IDs exatos conferidos em1286b1b,b88708c echeckoutmerge472e7ce3.4diagnósticos visíveis,RawTouchStart/React ecleanups passam. Hostdeclarado363af433 entre3reports sembinário noartifact. Antigo12negative e204viewport continuam locais. NovaDocroot não coberta. Nenhum GF/checkpoint/peso/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491"
+    },
+    {
+      "id": "query-fault-pages-b88708c",
+      "at": "2026-10-04T20:10:18.132573+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37229427417SUCCESS build/deploy; JSON público b88708c integral comparado ao commit removendoapenaspublication,local4318APIigual. Renderer mainadad606,dadosbranchfora main. Publicação contémlookupfaultlocal; auditoriaCIposterior terápublicação própria.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229427417"
+    },
+    {
+      "id": "query-fault-source-pin-1286b1b",
+      "at": "2026-10-04T19:43:08.555823+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "22fontes executadas conferidas via gitshow no commit1286b1b; captures/receipts preservam origem. SDK mantém sourceCommitab0dc44/sourceDirtytrue da execução.19/156 checkpoints; nenhum GF completo. CI e nova publicação pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13"
+    },
+    {
+      "id": "query-fault-local-20261004",
+      "at": "2026-10-04T19:41:55.418495+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Antigo174/186 com12 falhas normativas; mesmo fixture/bundle corrigido186/186headless e204/204viewport/16pixels/two saves. Quatro throw/nonboolean34/35 preservam TouchStart/Raw/React e diagnóstico; Up/Cancel/retirement/remount/stop separados. Getters/reentrância,documents/flags/outros tipos/mobile abertos.250/13contratos,22examples2250,consumer30/40,13adapters213 passam. Sem checkpoint/GF completo/peso/denominador novo. Implementação1286b1b confere22pins; CI própria pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13/docs/evidence/pointer-query-faults/README.md"
+    },
+    {
+      "id": "pointer-interest-ci-rerun-ab0dc44",
+      "at": "2026-10-04T19:41:55.418495+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI37226934414 @ab0dc44: attempt1 iOS simctl list60s timeout antes da app; attempt2 mesmohead passou iOS/parity, reutilizando contracts/native/Android. Artefato nativo193/230 auditado,21pins do commit/13RNinputs, mesmosIDs e bundles; host declarado sem binário no artifact. Mobile jobs são core reference, não Godot pointer-query. Não cobre nova correção C++.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226934414"
+    },
+    {
+      "id": "pointer-interest-pages-ab0dc44",
+      "at": "2026-10-04T19:41:55.418495+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37226931469 concluiu build/deploy; JSON público comparado integralmente ao commitab0dc44 removendo somente publication. API local4318 igual. Renderer mainadad606, dados da branch fora do main. Publicação não certifica RN completo nem a correção local posterior.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226931469"
+    },
+    {
+      "id": "view-pointerdown-source-pin-ae9d4ed",
+      "at": "2026-10-04T19:05:12.898511+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Os21pins executados foram comparados via gitshow com o commit ae9d4ed. Capturas e receipts locais têm origem exata; consumidor/SDK conservam sourceCommit0478499/sourceDirtytrue da execução. Links da fatia fixados no commit. Sem novo checkpoint ou conclusão completa; CI/Pages desta fatia pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/ae9d4ed77ff5eccb8825ef47283d13abf81d5910"
+    },
+    {
+      "id": "view-pointerdown-interest-native-local-20261004",
+      "at": "2026-10-04T19:01:36.106363+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Fatia View/pointerdown:193original/230currentheadless e260viewport incluem28pixels/twosaves. Query lê Map original;abort/once/removal/dedupe/flat,mixed,rerrender,replacement e Bheld durante Aunmount passam. SDK/consumer30/40,13adapters213,22examples2250 e250/13contratos passam. Document-only nativezero continua aberto;queryfaults/flags/outros tipos/mobile não certificados. Nenhum checkpoint adicional/wholeGF/decisão;denominador e pesos preservados. Implementaçãoae9d4ed fixa21pins; CI/publicação desta fatia pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ae9d4ed77ff5eccb8825ef47283d13abf81d5910/docs/evidence/pointer-interest/README.md"
+    },
+    {
+      "id": "native-integration-hosted-0478499-audit",
+      "at": "2026-10-04T19:01:36.106363+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Run37223152112/head0478499 concluiu cinco jobs com sucesso. Artefato11310948529/ZIP digest auditado:181/206IDs iguais,16pins22770b4/0478499,13RN inputs e bundles conferidos. Duas falhas deliberadas por variante,semregistrywarnings/crash/leak. Headless e mobilecore são escopos separados; não cobre a query nova.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112"
+    },
+    {
+      "id": "integration-pages-0478499-confirmed",
+      "at": "2026-10-04T19:01:36.106363+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages37223202417 passou build/deploy com renderer mainadad606 e data_ref branch0478499. JSON público completo corresponde ao commit removendo apenas publication; APIlocal4318 lê mesmo arquivo. Confirma publicação anterior19checkpoints, não a query ainda local.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223202417"
+    },
+    {
+      "id": "event-target-integrated-source-pin-22770b4",
+      "at": "2026-10-04T18:06:55.312Z",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Os 16 pins de código/configuração executados foram confrontados com o commit 22770b4. Evidências locais e capturas estão fixadas em links imutáveis; consumidor e SDK conservam a identidade da árvore executada antes do commit. A nova CI e a publicação Pages ainda aguardam execução.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e"
+    },
+    {
+      "id": "event-target-integrated-native-local-20261004",
+      "at": "2026-10-04T18:01:42.451528+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "181/206headless e236viewport/28pixels comprovam input EventTarget dentro do batch original. Dois updates funcionais geram um commit. Controle anterior falha no registro e intermediário crasha em Remove; fixes passam e preservam resize/free17. Contratos235/13, consumidor30/40,22examples2250 e13adapters213 passam. GF-06 inicia; somente sua primeira fatia host-validada conclui checkpoint. Pesos/denominador preservados; nenhum GF completo, nova CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/22770b4b7ec81c1c0f2d787d53ba0b58d8fb773e/docs/evidence/event-dispatch-integrated/README.md"
+    },
+    {
+      "id": "touch-tag-hosted-897b127-audit",
+      "at": "2026-10-04T18:01:42.451528+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Run37218513221/head897b127 passou os cinco jobs. Artefato11309119887/ZIP digest verificado:647 IDs iguais,17 pins de7a05e4a/897b127, original645/647 exatamente dois negativos, corrected647/647. Esse CI não cobre o novo dispatcher integrado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37218513221"
+    },
+    {
+      "id": "native-touch-tag-resolution-pinned-7a05e4a",
+      "at": "2026-10-04T16:54:39.696104+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação 7a05e4a fixa 17 fontes públicas executadas. Controle original falha em dois de 647 checks normativos; corrigido passa todos. SDK fresco e default têm mesmos bytes e fontes; antigo íntegro recusado antes de saída. CI ainda pendente; quatro gaps do dispatcher permanecem abertos. Nenhum aceite completo muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/7a05e4afdfcc018a34e0eb4b6dc6e74433def234"
+    },
+    {
+      "id": "native-touch-tag-resolution-local-20261004",
+      "at": "2026-10-04T16:47:03.564080+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "647 checks idênticos por variante: original falha em dois checks normativos de retenção; corrigido passa todos. Pressable 47, consumidor 30/40, 22 exemplos/2250 e contratos 227/13 passaram. SDK fresco passa; SDK antigo válido é rejeitado antes de criar saída. Quatro gaps do dispatcher novo e CI desta fatia seguem abertos; nenhum checkpoint ou denominador muda. Hashes executados serão fixados no commit."
+    },
+    {
+      "id": "event-target-ancestry-hosted-artifact-91e5219",
+      "at": "2026-10-04T15:57:32.757855+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Artefato11307389088 confirma102checks em cada variante original/corrigida, mesmosIDs locais,10pinscontra91e5219 e RN inputs preservados. Mesmohostentrevariantes; NodeCI22.23.2/local22.23.3. Cincojobs passaram. Não certifica integração/interesse nativo, responder/hardware/mobile/performance; nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37213942166"
+    },
+    {
+      "id": "event-target-current-ancestry-receipt-links-dfdaee7",
+      "at": "2026-10-04T15:41:13.041942+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Link fixado no recibo pós-pin dfdaee7, que identifica implementação53eae43 e10hashes executados. Mantém18checkpoints/156 e todos os GF completos pendentes; transporte nativo e CI desta correção continuam abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dfdaee72a8c9b2aff64d43b52ba051bff5a659bf/docs/evidence/event-target-ancestry/README.md"
+    },
+    {
+      "id": "event-target-current-ancestry-pinned-53eae43",
+      "at": "2026-10-04T15:40:14.285899+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação 53eae43 fixa10fontes públicas verificados contra hashes executados.102checks em cada variante original/corrigida com host igual; guardas do overlay e consumidor confirmados. Sem habilitar EventTarget público/transporte. CI da correção ainda pendente; nenhum GF/checkpoint fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/53eae437c2a2ad8c7af3dab9e3614dd3a9e193d4"
+    },
+    {
+      "id": "event-target-current-ancestry-local-20261004",
+      "at": "2026-10-04T15:37:57.119074+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Corrigido cache permanente no bundler compartilhado:102checks em cada variante original/corrigida, fontes/host idênticos; refs retiradas locais e path atual preservado. Listeners pré-reorder e remount reais validados. Consumer30/40, contracts204/13Python,22examples/2246headless passaram. Flags off; transporte/responder e CI da correção abertos. Sem novo checkpoint/GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "event-target-original-hosted-515d0d7",
+      "at": "2026-10-04T15:14:45.624086+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "CI 515d0d7 passou todos os cinco jobs; artefato nativo auditado confirma119 IDs idênticos,33manual por raiz e três gaps. Fontes do probe/produção conferem com o run; Node CI22.23.2 registrado. Pages37211402478 sucesso e JSON515d0d7 integral conferido. Native delivery/cache seguem abertos; nenhum checkpoint/GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37211406382"
+    },
+    {
+      "id": "event-target-original-receipt-links-e2e14ea",
+      "at": "2026-10-04T15:00:45.199189+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Links fixados no recibo pós-pin e2e14ea, que identifica implementação2db8e39 e hashes executados. Sem novo checkpoint fechado;119original-ref não certifica entrega nativa nem corrige cache.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/e2e14ea8da43252b1abc369fa422c0fa514e1ff8/docs/evidence/event-target/README.md"
+    },
+    {
+      "id": "event-target-original-pinned-2db8e39",
+      "at": "2026-10-04T14:59:20.007308+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Implementação2db8e39 fixa5fontes do probe/4deprodução verificadas com os hashes executados.119checks incluem33manual por raiz; controles exatos dos três gaps. Contracts199Node/13Python,static/publication/dashboard passaram. Native delivery e correção de ancestralidade continuam pendentes; nenhum item fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/2db8e391eff4de26caab0231be878f4ee807e799"
+    },
+    {
+      "id": "event-target-original-baseline-20261004",
+      "at": "2026-10-04T14:56:23.869563+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Probe original executado119/119 headless, incluindo33manual por raiz;4runtimes/5surfaces,3gaps reproduzidos e1erro público deliberado com cleanupzero. Registro manual funcional separado da entrega nativa ausente. Nenhum GF/checkpoint completo nem defaults públicos alterados; CI desta fatia ainda pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "captured-pointer-geometry-hosted-f90206f",
+      "at": "2026-10-04T14:22:21.043675+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "CI f90206f passou contracts/native/iOS/Android/comparison; artefato confirma original108/108, binding378 e headless631/34inputs/99samples, hashes conferidos. Pages37202857849 passou build/deploy, JSON integral f90206f e servidor local iguais. Referências mobile são core UI; coalescing/captura mobile e aceite completo seguem abertos. Nenhum GF/checkpoint fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447"
+    },
+    {
+      "id": "captured-pointer-geometry-receipt-links-94fd628",
+      "at": "2026-10-04T12:39:25.477414+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Links de evidência fixados no recibo pós-pin94fd628, que identifica implementação d0ef5ac e22fontes públicas verificadas. Mantém status, pesos, checkpoints e aceite completos pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+    },
+    {
+      "id": "captured-pointer-geometry-source-pin-d0ef5ac",
+      "at": "2026-10-04T12:38:21.541454+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "22 hashes públicos conferidos contra implementaçãod0ef5ac. Receipt fixa commit, versões, modos, baseline, SDK e limites. Preserva18checkpoints concluídos e156obrigatórios, sem GF fechado; publicação/CI desta fatia ainda pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+    },
+    {
+      "id": "captured-pointer-geometry-local-20261004",
+      "at": "2026-10-04T12:35:10.737470+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Fatia local comprovada: captura631/648,14pixels/3capturas,55falhas na fixture idêntica sobre host anterior, original108/108 e binding378. Transform/root/local/density/flattened/singular/hidden têm contratos separados; corrige limitação numérica RN explícita. Regressões e SDK novo passaram; CI e Pages desta implementação pendentes. Preserva18checkpoints concluídos/156 obrigatórios; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/94fd6287c583603270d7fb0bbbee9f72a947b89f/docs/evidence/pointer-geometry/README.md"
+    },
+    {
+      "id": "pointer-hosted-artifact-and-pages-a15fde4",
+      "at": "2026-10-04T11:19:04.112687+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13",
+        "GF-31"
+      ],
+      "message": "Artefato CI a15fde4 comprovou 144 assertions C++, 43 checks JSX, seis erros esperados/stop síncrono, dois SIGSEGV originais e fontes conferidas. CI a15fde4 concluiu com sucesso os cinco jobs: contracts, native-cold-start, reference-ios, reference-android e parity-comparison. Pages 37197499767 passou build/deploy e JSON público a15fde4 foi comparado integralmente ao commit da branch fora do main. Sem alterar estados de checkpoint, pesos, denominador ou concluir GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37197503396"
+    },
+    {
+      "id": "pointer-source-pinned-788739d",
+      "at": "2026-10-04T11:04:47.266489+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13",
+        "GF-31"
+      ],
+      "message": "Fontes executadas verificadas contra788739d; exemplos132/146,144nativo,43JSX,tipos e SDK independente17/318. Recibo remove duplicação de checks/traces entre modos; nenhuma evidência ou aceite foi removido/fechado. CI e publicação desta entrega serão observadas separadamente.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/788739dbf7c5184839c5c92bf072c9dca16a01f7"
+    },
+    {
+      "id": "pointer-lifetime-verified-20261004",
+      "at": "2026-10-04T10:54:48.085025+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-13",
+        "GF-31"
+      ],
+      "message": "Captura e transporte públicos 132/146,144 assertions nativas,43 checks JSX (seis erros preservados/stop real) e 12 pixels comprovados; dois controles RN originais SIGSEGV.213 Node/13 Python,21 exemplos/1615,11 testes nativos,SDK/adapter 17/318 passaram. Pesos,39 itens obrigatórios,156 checkpoints,decisões e aceites completos preservados; publicado só após workflow/data conferidos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/788739dbf7c5184839c5c92bf072c9dca16a01f7/docs/evidence/pointers/README.md"
+    },
+    {
+      "id": "coordinates-ci-green-f40831e-b1732fb",
+      "at": "2026-10-04T02:01:53.222939+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "CI de coordenadas f40831e e metadata b1732fb passou contracts, native cold start, referência iOS, referência Android e comparação do oráculo atual. Falha simctl precedente permanece no recibo. Isto não certifica mobile Godot, full parity ou transforms em implementação.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37168351703"
+    },
+    {
+      "id": "coordinates-ci-observed-20261004",
+      "at": "2026-10-04T01:39:37.824546+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Pages 37168385389 passou build/deploy; JSON público conferido em f40831e. CI anterior 0e05abe passou contracts/native/Android, mas simctl excedeu 60 s antes da app iOS; comparação skipped. CI f40831e registrada separadamente, sem concluir aceites.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/coordinates/ci.json"
+    },
+    {
+      "id": "coordinates-source-48e4253",
+      "at": "2026-10-04T01:32:45.633609+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Fontes e fixtures do commit 48e4253 conferidas por SHA-256 contra o SDK e os relatórios executados. Links da fatia agora usam o commit imutável; CI desta fatia permanece pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+    },
+    {
+      "id": "coordinates-verified-20261004",
+      "at": "2026-10-04T01:26:35.138797+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-09",
+        "GF-13"
+      ],
+      "message": "Coordenadas e gestos comprovados: 238 headless / 247 native, 6 pixels e 3 capturas. Controle anterior: 121 falhas por lane; cache intermediário: 1/238; final: zero. Regressões: 202 Node / 13 Python, 10 nativos, 17 exemplos / 910 e adapters 17/318. Primeira slice GF-13 done; nenhum GF completo, decisão, peso ou denominador muda. Próximo: transforms e HostInstance.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/48e425345b0ecb7665a7a447c9c14453c8e4ece0/docs/evidence/coordinates/README.md"
+    },
+    {
+      "id": "view-ci-b5df4d6",
+      "at": "2026-10-04T01:07:26.708452+00:00",
+      "taskIds": [
+        "GF-10"
+      ],
+      "message": "CI da fatia View b5df4d6 passou nos cinco jobs: contracts, native-cold-start, reference-ios, reference-android e parity-comparison. Isso certifica os contratos atuais do workflow, sem fechar View completo ou ports mobile. Nenhum checkpoint/status/denominador adicional mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395"
+    },
+    {
+      "id": "view-source-6e9f2f3",
+      "at": "2026-10-04T00:54:23.409333+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Commit 6e9f2f3 verificado contra todos os hashes nativos e fixtures executados. Evidências fixadas por SHA, source pinado e JSON incluído na mesma branch de implementação. GF-10 permanece parcial; próximo gap é alinhar coordenadas de input e refs.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+    },
+    {
+      "id": "view-foundation-verified-20261004",
+      "at": "2026-10-04T00:52:53.079525+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Primeira fatia GF-10 comprovada: 67 headless/107 native, 36 pixels e controle negativo9/24; 16 exemplos/672, NativeWind58, adapters17/318, 202 Node/13 Python e 10 nativos. Uma checkpoint slice concluída; nenhum GF completo, aceite/dependência/decisão/peso/denominador alterado. Próximo gap: espaço de coordenadas de eventos e refs.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e9f2f305e5981f49b9b2fd1be23ae723ba43363/docs/evidence/view/README.md"
+    },
+    {
+      "id": "root-retirement-source-47432df",
+      "at": "2026-10-03T23:48:44.654828+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Commit 47432df corresponde a todas as fontes nativas, do consumer e do harness realmente executadas; evidências fixadas por SHA. Regressões 199 Node/13 Python, 10 nativos e 15 exemplos/605 checks passaram. GF completos, dependências e decisões permanecem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+    },
+    {
+      "id": "root-retirement-local-v2",
+      "at": "2026-10-03T23:45:51.177113+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "17 execuções Godot/318 checks comprovam retirement independente, remount, host free, owner switch, origem do core sinal e font ownership externa. Capturas verificam pixels. CI anterior 80729da verde em cinco jobs; CI nova pendente. Sem item/checkpoint adicional fechado nem alteração de peso/denominador. Próxima fundação GF-10 coordenada com medidas/input.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/47432df8b76816a44cf72af2184ab4794c6c5338/docs/evidence/root-retirement/README.md"
+    },
+    {
+      "id": "alias-scopes-verified-20261003",
+      "at": "2026-10-03T22:46:45.315700+00:00",
+      "taskIds": [
+        "GF-03",
+        "GF-28"
+      ],
+      "message": "Implementação fe056fa conferida pelos hashes executados. Tipos e runtime isolam aliases do app, lib e SDK; consumidor30/40/43 e Codegen35/37+8/9/9 passaram. 199 Node/13 Python e 10 nativos; Metro13 registra duas diferenças. CI precedente f2eb57f verde; nenhuma conclusão GF/checkpoint/denominador mudou.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/fe056fa98801ad737d2f7a48338338d0f0b10083/docs/evidence/alias-scopes/README.md"
+    },
+    {
+      "id": "gf03-project-resolution-local",
+      "at": "2026-10-03T22:04:11.238720+00:00",
+      "taskIds": [
+        "GF-03",
+        "GF-28"
+      ],
+      "message": "Aliases herdados e dependências sem hoisting executados no addon: 27/40/43, aliases40/43, nested40; adapter35/37+8/9/9 e 46 testes. Perfis não suportados falham; nenhum aceite GF/dependência/denominador fechado. Evidência local com fontes exatas; CI desta fatia pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/dde5485591b818def8d0b03443494d60c101389f/docs/evidence/project-resolution/README.md"
+    },
+    {
+      "id": "bundle-determinism-hosted-success-9c75031",
+      "at": "2026-10-03T22:04:11.238720+00:00",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "CI37154927839 completou cinco jobs em 9c75031 para a entrega anterior de TSConfig explícito. Certifica aquele commit; não certifica o resolver novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839"
+    },
+    {
+      "id": "bundle-tsconfig-determinism-20261003",
+      "at": "2026-10-03T21:16:57.404683Z",
+      "taskIds": [
+        "GF-03",
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Corrigida inferência dependente da ordem:18 processos diagnóstico, cinco testes causais, consumer 18/40, adapter 35/37+8/9/9, seis rebuilds 154 inputs idênticos. Shutdown CI 9317b46 cinco jobs verdes. Aliases locais e suffixes divergentes reproduzidos, pendentes GF03. Nenhum GF/checkpoint/denominador fechado. Nova CI builder pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/371e7ec2e5179beb7bd369426093d937d7fd0260/docs/evidence/bundle-determinism/README.md"
+    },
+    {
+      "id": "native-stop-reentrancy-20261003",
+      "at": "2026-10-03T21:00:19.977979Z",
+      "taskIds": [
+        "GF-07",
+        "GF-26",
+        "GF-28"
+      ],
+      "message": "Falha Control freed inside signal reproduzida. Novo host passou resize/RAF/timer 8/9/9, consumidor 35/37 e suites 2/4/2/2 em série. CI anterior passou 89/207 mas reproduziu hash divergente do consumidor. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/9d14553b1cdf46e5d213685c754ab603d2fb6871/docs/evidence/adapter-shutdown/README.md"
+    },
+    {
+      "id": "native-adapter-runtime-20261003",
+      "at": "2026-10-03T20:28:31.322985Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "Prova local: loader 21 casos/89 checks, registry 207, consumidor Codegen 35 headless/37 gráficos e capturas. CI nova configurada ainda sem sucesso confirmado; divergência observada de hash no consumidor antigo permanece investigada após replay verde. Checkpoints/denominador preservados; nenhum GF fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/fbd045385ba2ef33d16f21fdd5b9bf193296fa19/docs/evidence/native-adapters/README.md"
+    },
+    {
+      "id": "native-sdk-ci-37147754831",
+      "at": "2026-10-03T19:36:12.501460Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "CI completa passou os cinco jobs em 7a67f96. Artefato original do SDK confirma 207 checks, fontes nativas idênticas e cliente relocado linkado. Node real 22.23.2 distinto do local; paridade completa, montagem de adapter e Godot ports permanecem abertos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37147754831"
+    },
+    {
+      "id": "native-sdk-registry-207",
+      "at": "2026-10-03T19:22:18.776792Z",
+      "taskIds": [
+        "GF-26",
+        "GF-28",
+        "GF-31"
+      ],
+      "message": "SDK/receipt/preflight verificados: 36 testes Node, cliente C++ relocado com 207 checks. Regressões Godot e consumidor passaram no host reconstruído. Evidência ampliada no checkpoint existente, sem alterar denominador/aceite completo. Nenhuma montagem externa, VM ou ABI completa certificada.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/41cb8883869540524d425e85def17aaafee22cfe/docs/evidence/native-sdk/README.md"
+    },
+    {
+      "id": "codegen-ci-37145700599",
+      "at": "2026-10-03T19:06:46.695413Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "CI corrigida passou os cinco jobs em 5d46bba. Artefato original confirma 6/6 unidades C++; Node real 22.23.2 e compiler/SDK registrados. Sem prova de link/load/runtime de adapter externo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37145700599"
+    },
+    {
+      "id": "codegen-ci-node-selection-correction",
+      "at": "2026-10-03T18:44:17.962892Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "CI nativa falhou antes de compilar: Node privado não provisionado. Runner aceita Node explícito, workflow seleciona seu executável e preserva default do addon. Três testes e nova compilação 6/6 passaram localmente; CI corrigida ainda pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d28a02476fd682e66a357e83789f5e8e4b049fa7/docs/evidence/codegen/ci-node-selection.json"
+    },
+    {
+      "id": "codegen-original-20-compile-6",
+      "at": "2026-10-03T18:21:12.038377Z",
+      "taskIds": [
+        "GF-26"
+      ],
+      "message": "Primeira fatia GF-26 comprovada: parsers/generadores originais TS/Flow, 20 testes e 6 unidades C++ compiladas. Manifesto conserva runtime/ABI falsos. Provider/view externo e export pendentes; pesos e denominador preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/689c93985ed746a21d8aca3d056070e5d9c8382d/docs/evidence/codegen/README.md"
+    },
+    {
+      "id": "dashboard-unmerged-data-ref-adad606",
+      "at": "2026-10-03T18:21:12.038377Z",
+      "taskIds": [],
+      "message": "main adad606 integrado sem perda; novo fluxo permite publicar JSON da branch com workflow do main e data_ref após commit/push. Publicação ainda pendente de execução bem-sucedida.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/16"
+    },
+    {
+      "id": "game-services-consumer-969a95d",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [
+        "GF-03",
+        "GF-04",
+        "GF-07",
+        "GF-08",
+        "GF-09",
+        "GF-25",
+        "GF-28"
+      ],
+      "message": "Registro das fatias já executadas: serviços GDScript/React, DTO 133 e lifetime 15; consumidor 40/43 mais 18 tooling. HUD-3/HUD-4 comprovados; HUD-5/6 completos e restart seguem pendentes. Não fecha aceite GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/969a95d6ebcc7211d70606fd399fda0624450034/docs/evidence/game-services/README.md"
+    },
+    {
+      "id": "ios-consumer-93f5bb3",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [
+        "GF-28",
+        "GF-31",
+        "GF-35"
+      ],
+      "message": "Três builds/dois XCFrameworks, device arm64 unsigned export/link e 22/22 no x86_64/Rosetta. GF-35 inicia fatia; template arm64, device físico, Debug e interação/AT permanecem abertos. Denominadores e pesos preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/93f5bb3a89c08bc5edfc061d2e2f429f3d74ac41/docs/IOS_BUILD.md"
+    },
+    {
+      "id": "dashboard-main-ba61ac6",
+      "at": "2026-10-03T17:52:05.800860Z",
+      "taskIds": [],
+      "message": "main ba61ac6 integrado preservando trabalho; painel desta implementação observa seu JSON em 127.0.0.1:4318. Site público depende de merge em main e workflow de deploy aprovado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
       "id": "native-foundation",
       "at": "2026-10-03T15:24:02Z",
       "taskIds": [
@@ -2334,6 +3862,186 @@
       ],
       "message": "HUD/Inventory compartilham aplicação com props, estado e cleanup. Fatia 2A documentada; registro pela data da evidência.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/ca9e557/docs/evidence/shared-roots/README.md"
+    },
+    {
+      "id": "transforms-local-proof-20261004",
+      "at": "2026-10-04T02:35:27.787597+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Comprovados transforms2D309/345+33pixels, math40932, rejeições61 e input25; controles anteriores65/68 e intermediário9/25. Último binário compilado com guards de inversa/consumo e teardown de Create rejeitado. Regressão final e commit/publicação em preparação, sem novos checkpoints done.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/14"
+    },
+    {
+      "id": "transforms-final-validation-20261004",
+      "at": "2026-10-04T02:39:50.421120+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Fonte/host final42ee5c7 conferidos: transforms309/345+33pixels, math40932, rejeições61/input25, controles65/68/9. Regressões205Node/13Python,10nativos,18exemplos/1219 e17adapters/318. Evidências/fotos e roadmap registrados; commit/push/deploy seguem na mesma PR14. Todos os aceites completos/diferenciais/alvos continuam pendentes.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/transforms/README.md"
+    },
+    {
+      "id": "transforms-source-pin-20261004",
+      "at": "2026-10-04T02:43:28.310088+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Commit de implementação6e5db7b corresponde exatamente às fontes nativas/fixtures executadas e SDK42ee5c7; provas e três fotos publicáveis fixadas em URL imutável. CI de transforms e deploy seguem etapas separadas, sem conclusão integral dos GF.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/6e5db7b5cb6a4bce567c7c648240c8637a3b944f/docs/evidence/transforms/README.md"
+    },
+    {
+      "id": "transforms-pages-observed-20261004",
+      "at": "2026-10-04T02:47:17.886674+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "Deploy manual37171971971 concluiu build/deploy e JSON público5885331 foi comparado ao commit, fonte6e5db7b fora do main. CI37171931529: contracts passou, outras lanes em andamento/comparação pendente; receipt preserva snapshot sem declarar aceites integrais.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171971971"
+    },
+    {
+      "id": "transforms-ci-complete-20261004",
+      "at": "2026-10-04T02:59:46.504092+00:00",
+      "taskIds": [
+        "GF-07",
+        "GF-08",
+        "GF-10",
+        "GF-13"
+      ],
+      "message": "CI5885331: contracts, native-cold-start, reference-ios, reference-android e parity-comparison passaram no run37171931529. Esta é evidência hospedada da fatia; o oráculo limitado não fecha a paridade completa ou os ports Godot mobile. Próximo avanço: métodos de HostInstance e comandos nativos públicos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37171931529"
+    },
+    {
+      "id": "tree-local-proof-20261004",
+      "at": "2026-10-04T03:42:35.828149+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Árvore/IDs com RN original passou 89/99; quatro frames independentes e oito pixels fixos comprovam a ordem visual. Controle anterior falha 25/89 com o mesmo host. Regressões 206Node/13Python,10nativos,19exemplos/1308,17adapters/318; timeout gráfico inicial preservado e fixture de captura preparado antes do novo sucesso. Próximos: foco/TextInputState e comandos. Sem novo checkpoint concluído ou aceite fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+    },
+    {
+      "id": "tree-source-pin-20261004",
+      "at": "2026-10-04T03:45:51.675526+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Commit31d08ac corresponde às 12 fontes executadas e às 47 fontes do host nativo inalterado. Provas, limites e duas capturas fixados em URL imutável. Publicação do JSON e CI seguem passos separados; nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/31d08ac37d1fb61a80c233aada6a3cfc3549bfcc/docs/evidence/tree/README.md"
+    },
+    {
+      "id": "tree-pages-observed-20261004",
+      "at": "2026-10-04T03:49:27.081644+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-10"
+      ],
+      "message": "Pagesmanual37175019378 concluiu build/deploy; JSON públicoa012f9e foi comparado ao commit, fonte31d08ac fora do main. CI37175002603: contracts passou, outras lanes em andamento no snapshot. Prova local e publicação não fecham a paridade completa ou alvos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175019378"
+    },
+    {
+      "id": "focus-local-proof-20261004",
+      "at": "2026-10-04T04:40:00.173589+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Foco original RN + LineEdit real passou175/189,12pixels/duas capturas, com lifetimes e reentrância. Mesmo fixture falha23/160 no host anterior e11/175 sem elegibilidade nativa. Regressões207Node/13Python,10nativos,20exemplos/1483,17adapters/318. Não adiciona checkpoints: denominador156 e18 checkpoints concluídos preservados; GF-08/GF-12 seguem abertos. Pin e publicação seguem passos separados.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+    },
+    {
+      "id": "focus-source-pin-20261004",
+      "at": "2026-10-04T04:41:23.855941+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Commit3b09b37 corresponde às13 fontes JS/fixture executadas,47 entradas nativas e duas capturas. Host6abafb9, comandos originais e foco real comprovados; publicação e CI são passos separados. Nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/3b09b37acf735664301d3ddaf9ab275519893267/docs/evidence/focus/README.md"
+    },
+    {
+      "id": "focus-pages-observed-20261004",
+      "at": "2026-10-04T04:43:02.613088+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Pagesmanual37177743564 concluiu build/deploy; JSON público0d7c731 comparado ao commit com fonte3b09b37 fora do main. CI da nova fatia permanece no snapshot registrado; CI anteriora608d07 passou cinco lanes. Foco local e publicação não fecham o aceite integral, mobile ou hardware/IME.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177743564"
+    },
+    {
+      "id": "focus-ci-complete-20261004",
+      "at": "2026-10-04T04:54:34.303777+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "CI37177820811 em1699e5c passou os cinco jobs: contracts,native-cold-start,reference-ios,reference-android,parity-comparison. Snapshot pendente anterior preservado; referências limitadas não fecham foco mobile, ports Godot ou aceite integral. Nenhum checkpoint/peso/denominador alterado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37177820811"
+    },
+    {
+      "id": "focus-command-guards-local-20261004",
+      "at": "2026-10-04T04:58:20.144403+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Complemento nativo112checks/40owners passou:8args inválidos preservam foco/State/eventos e comandos válidos recuperam; duas raízes+app independente,readonly/refs antigas e nove registros limpos. CI configurada; resultado hospedado separado. Captura documentada como investigação de fonte,sem nova decisão/checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-guards-source-pin-20261004",
+      "at": "2026-10-04T05:01:00.195143+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Complemento877c529 corresponde às9 fontes/fixtures/configs registradas; fontes do runtime e do exemplo de foco inalteradas.112checks/40owners e207Node/13Python executados; CI nova e publicação permanecem passos separados. Nenhum novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/877c52914fc56eefeacd367678f27124d7991ebe/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-guards-pages-observed-20261004",
+      "at": "2026-10-04T05:03:09.984744+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Pagesmanual37178662152 concluiu build/deploy; JSON públicoffcc027 comparado ao commit com complemento877c529 fora do main. CI nova registrada em snapshot; sucesso de publicação não fecha paridade/runtime completo.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178662152"
+    },
+    {
+      "id": "focus-pinned-receipt-links-20261004",
+      "at": "2026-10-04T05:05:28.189094+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Links de checkpoint fixados nos recibos pós-pin0d7c731/ffcc027, que registram a comparação dos hashes com implementações3b09b37/877c529. Preserva provas, estados e denominador; nenhuma conclusão adicionada.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ffcc0276760177cfa865dc32a9b0c19c63d527d7/docs/evidence/focus/commands.json"
+    },
+    {
+      "id": "focus-command-hosted-artifact-and-ios-recovery-9564076",
+      "at": "2026-10-04T05:17:34.490023+00:00",
+      "taskIds": [
+        "GF-08",
+        "GF-12"
+      ],
+      "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
     }
   ]
 }

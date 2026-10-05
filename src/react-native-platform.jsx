@@ -2,8 +2,8 @@
 // native features fail where invoked, instead of becoming inert no-op shims.
 import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
+import OriginalView from "react-native/Libraries/Components/View/View";
 import {
-  View as GodotView,
   Pressable as GodotPressable,
   Button as GodotButton,
   controlViewConfig,
@@ -14,8 +14,16 @@ import {
   useTextAncestor,
 } from "./text";
 import { PublicInput } from "./public-input";
+import TextInputState from "./text-input-state";
 import { validateButton, validateInput } from "./control-contracts.mjs";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
+export { default as NativeModules } from "./native-modules";
+export { default as NativeEventEmitter } from "react-native/Libraries/EventEmitter/NativeEventEmitter";
+export * as TurboModuleRegistry from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+export { default as codegenNativeComponent } from "react-native/Libraries/Utilities/codegenNativeComponent";
+export { default as codegenNativeCommands } from "react-native/Libraries/Utilities/codegenNativeCommands";
+export { findNodeHandle } from "./renderer-proxy";
+export { UIManager } from "./private-interface";
 export { AppRegistry, RootTagContext } from "./app-registry";
 export {
   Dimensions,
@@ -102,7 +110,7 @@ export function View({
   // Browser text selection is irrelevant to native Controls. Accessibility
   // metadata remains explicitly unsupported, documented in the laboratory.
   const { userSelect, ...layout } = flat;
-  return <GodotView {...props} style={nativeStyle(layout, "View")} />;
+  return <OriginalView {...props} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
 }
 export function Text({ style, ...props }) {
   const flat = nativeStyle(style, "Text");
@@ -164,6 +172,12 @@ export function TextInput(props) {
     throw new Error("Godot TextInput color requires a valid static color string");
   return <PublicInput {...props} style={{ minHeight: 44, ...style }} />;
 }
+TextInput.State = {
+  currentlyFocusedInput: TextInputState.currentlyFocusedInput,
+  currentlyFocusedField: TextInputState.currentlyFocusedField,
+  focusTextInput: TextInputState.focusTextInput,
+  blurTextInput: TextInputState.blurTextInput,
+};
 export function ScrollView(props) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");

@@ -1,0 +1,813 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-up-view-interest",
+  "status": "verified-local-runtime-regressions-and-hosted-artifacts",
+  "executionBaseCommit": "3ca4174667367c66a914a31c677df4ff221e1ceb",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
+  "environment": {
+    "reactNative": "0.87.1",
+    "godot": "4.7.2-stable (official)",
+    "node": "v22.23.3",
+    "nativePlatform": "macos",
+    "nativeArchitecture": "arm64",
+    "headedCaptureDisplayServer": "macOS",
+    "react": "19.2.3",
+    "configuration": "Release"
+  },
+  "scope": {
+    "actualNativeInput": true,
+    "documentInterestCertified": false,
+    "experimentalNativeDispatch": true,
+    "hardwareCertified": false,
+    "listenerRegistryMirrored": false,
+    "originalFlagsEnabled": true,
+    "pointerUpOnlyViewScope": true,
+    "publicAPIAdded": false,
+    "publicDefaultEnabled": false,
+    "realSDKQueryWrappedOnlyForTest": true,
+    "nativeInputProvenance": "Godot InputEventScreenTouch through the native PointerAdapter and original RN dispatcher.",
+    "manualDispatchProvenance": "Original public View ref dispatchEvent used only as a separate untrusted listener-installation control.",
+    "captureOnlyMeaning": "An EventTarget capture listener on the own View, observed at AT_TARGET (phase 2); no pointer-capture ownership operation."
+  },
+  "lanes": [
+    {
+      "lane": "original",
+      "meaning": "Saved previous native host replaying the current SDK bundle; expected negative control, not original pointerInterestMode.",
+      "report": "build/pointer-up-original-report.json",
+      "reportSha256": "08df9cacf1aafe4e84a8714056e841c1b054f1208a345a0e954b7e62e446fcfd",
+      "displayServer": "headless",
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 62,
+      "passed": 54,
+      "failed": 8,
+      "failedIds": [
+        "case/bubble/Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
+        "case/bubble/Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
+        "case/bubble/Physical Up commits exactly one functional React increment and native counter width",
+        "case/bubble/Physical Up uses actual original SDK offsets and the sole registered phase Map",
+        "case/capture-only/Physical Up delivers exactly one trusted original imperative callback before TouchEnd",
+        "case/capture-only/Physical Up delivers typed and star Raw exactly once with the same actual callback payload",
+        "case/capture-only/Physical Up commits exactly one functional React increment and native counter width",
+        "case/capture-only/Physical Up uses actual original SDK offsets and the sole registered phase Map"
+      ],
+      "uniqueCheckIds": true,
+      "allCurrentAssertionsPassed": false,
+      "originalNegativeObserved": true
+    },
+    {
+      "lane": "current",
+      "meaning": "Corrected native host with the same current SDK bundle.",
+      "report": "build/pointer-up-current-report.json",
+      "reportSha256": "40a45fd95e1c6b82826014ff4eb1803c95aa7b2fe92b211514b28da503889f84",
+      "displayServer": "headless",
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 62,
+      "passed": 62,
+      "failed": 0,
+      "failedIds": [],
+      "uniqueCheckIds": true,
+      "allCurrentAssertionsPassed": true,
+      "originalNegativeObserved": false
+    },
+    {
+      "lane": "capture",
+      "meaning": "Corrected native host with the same current SDK bundle and actual macOS viewport readbacks.",
+      "report": "build/pointer-up-capture-report.json",
+      "reportSha256": "e70843f27a958e8dd2cedd5646409dcc899cacc581f46ddf9db83c960f27e2ef",
+      "displayServer": "macOS",
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 90,
+      "passed": 90,
+      "failed": 0,
+      "failedIds": [],
+      "uniqueCheckIds": true,
+      "allCurrentAssertionsPassed": true,
+      "originalNegativeObserved": false
+    }
+  ],
+  "causalComparison": {
+    "sameCurrentSdkBundleAllThree": true,
+    "currentSdkBundleSha256": "78706764cd276b37029fd3229262a378182ae4988268c9948970fecb947731a3",
+    "same62BaseCheckIds": true,
+    "baseCheckIdDigestSha256": "ec5a7a57032bc9c23f426102cd835805740d77c81cb2884d4c7a3a77550b3387",
+    "originalReactNativeInputCount": 18,
+    "sameOriginalReactNativeSourcesAllThree": true,
+    "producerCount": 16,
+    "differentProducersBetweenHosts": [
+      "native/application_runtime.cpp",
+      "scripts/rn-pointer-overlay.mjs"
+    ],
+    "nativeDeltaSourcePins": {
+      "native/application_runtime.cpp": {
+        "previous": "4d931cdf6082051fa7872e33a719dcc01e71db8fba10fd66c1bac67c4882c765",
+        "current": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "previous": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4",
+        "current": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+      }
+    },
+    "currentAndCaptureProducersSameAndMatchFilesAtAudit": true,
+    "nativeHosts": {
+      "previous": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "current": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "currentSameAsCapture": true,
+      "savedPreviousBinaryAndTwoSourceBytesMatch": true,
+      "nativeBuildReceiptsMatchHostAndChangedInputs": true
+    },
+    "recordedPublicBaselineBundleSha256": "8e98679831d4891c8985f61e9753d0f97d6fc0ecbe78a26f938179a1c19d6bb3",
+    "bundleModes": {
+      "parentMode": "current",
+      "rendererTagMode": "current",
+      "nativeDispatchMode": "experimental",
+      "pointerInterestMode": "current"
+    }
+  },
+  "nativeBuildReceipts": [
+    {
+      "lane": "previous",
+      "file": "build/pointer-up-previous-host/native-sdk-build.json",
+      "sha256": "8c9901cecfb72a8cf1b52f0e0fe69c91eccc157868ee5c241ef5dd628de35278",
+      "format": "godot-fabric.experimental-native-sdk-build/v1",
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "nativeHostBuildRecorded": true,
+      "target": {
+        "architecture": "arm64",
+        "configuration": "Release",
+        "minimumOS": "13.0",
+        "platform": "macos"
+      },
+      "changedSourcePins": {
+        "native/application_runtime.cpp": "4d931cdf6082051fa7872e33a719dcc01e71db8fba10fd66c1bac67c4882c765",
+        "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4"
+      },
+      "abiCertified": false,
+      "receiptAloneCertifiesRuntime": false
+    },
+    {
+      "lane": "current",
+      "file": ".deps/build/native-sdk-build.json",
+      "sha256": "17f9fa65bca6c93d29a1f648e129985318b65fb19e3c3ab68f3df7b45427e3e3",
+      "format": "godot-fabric.experimental-native-sdk-build/v1",
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "nativeHostBuildRecorded": true,
+      "target": {
+        "architecture": "arm64",
+        "configuration": "Release",
+        "minimumOS": "13.0",
+        "platform": "macos"
+      },
+      "changedSourcePins": {
+        "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+        "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+      },
+      "abiCertified": false,
+      "receiptAloneCertifiesRuntime": false
+    }
+  ],
+  "executedObservations": {
+    "cases": [
+      {
+        "case": "bubble",
+        "pointerId": 1,
+        "queries": [
+          [
+            2,
+            36,
+            true
+          ]
+        ],
+        "counterBeforeAfter": [
+          0,
+          1
+        ],
+        "nativeCommitsBeforeAfter": [
+          2,
+          3
+        ],
+        "nativeCounterWidth": 24,
+        "trustedPhase": 2,
+        "observedDiscretePriority": 1,
+        "oneTypedAndStarUp": true,
+        "payloadTimestampPointerIdentityMatches": true,
+        "TouchEndAndCleanupPassed": true,
+        "callbackType": "pointerup",
+        "callbackCount": 1,
+        "trusted": true,
+        "nativeValues": {
+          "pointerType": "touch",
+          "buttons": 0,
+          "pressure": 0
+        },
+        "actualPayloadIdentityMatch": true,
+        "actualTimestampMatch": true,
+        "actualPointerIdMatch": true,
+        "typedRawCount": 1,
+        "starRawCount": 1,
+        "restoredCurrentPriority": 0,
+        "defaultPriority": 0,
+        "eventContextsRestored": true
+      },
+      {
+        "case": "capture-only",
+        "pointerId": 3,
+        "queries": [
+          [
+            2,
+            36,
+            false
+          ],
+          [
+            2,
+            37,
+            true
+          ]
+        ],
+        "counterBeforeAfter": [
+          1,
+          2
+        ],
+        "nativeCommitsBeforeAfter": [
+          4,
+          5
+        ],
+        "nativeCounterWidth": 28,
+        "trustedPhase": 2,
+        "observedDiscretePriority": 1,
+        "oneTypedAndStarUp": true,
+        "payloadTimestampPointerIdentityMatches": true,
+        "TouchEndAndCleanupPassed": true,
+        "callbackType": "pointerup",
+        "callbackCount": 1,
+        "trusted": true,
+        "nativeValues": {
+          "pointerType": "touch",
+          "buttons": 0,
+          "pressure": 0
+        },
+        "actualPayloadIdentityMatch": true,
+        "actualTimestampMatch": true,
+        "actualPointerIdMatch": true,
+        "typedRawCount": 1,
+        "starRawCount": 1,
+        "restoredCurrentPriority": 0,
+        "defaultPriority": 0,
+        "eventContextsRestored": true
+      }
+    ],
+    "physicalDown": {
+      "pointerDownListenerRegistered": false,
+      "nativePointerDownCallbackAndRawAbsent": true,
+      "normalTouchStartAndRawDelivered": true,
+      "functionalReactTouchStartIncrementAndNativeCommitObserved": true,
+      "activeContactBeforeTerminalIsLegitimate": true
+    },
+    "siblingNegative": {
+      "actualOwnOffsets": [
+        [
+          36,
+          false
+        ],
+        [
+          37,
+          false
+        ]
+      ],
+      "totalFalseQueries": 8,
+      "TouchEndOnly": true,
+      "noCommit": true,
+      "AContactStillHeld": true,
+      "noCrossRootQualificationObserved": true,
+      "actualSDKQueries": [
+        [
+          12,
+          36,
+          false
+        ],
+        [
+          12,
+          37,
+          false
+        ],
+        [
+          18,
+          36,
+          false
+        ],
+        [
+          18,
+          37,
+          false
+        ],
+        [
+          20,
+          36,
+          false
+        ],
+        [
+          20,
+          37,
+          false
+        ],
+        [
+          null,
+          36,
+          false
+        ],
+        [
+          null,
+          37,
+          false
+        ]
+      ],
+      "actualSDKQueryColumns": [
+        "targetTag",
+        "offset",
+        "result"
+      ]
+    },
+    "cancel": {
+      "noUpCallbackNoUpRawNoUpQueryAndTerminalCleanup": true,
+      "normalTouchCancelAndRawDelivered": true
+    },
+    "manualControls": {
+      "listenerInstalledForBothPhases": true,
+      "untrustedOriginalEvents": true,
+      "noNativeRawFromManualDispatch": true,
+      "separateFromNativeDelivery": true
+    },
+    "allTransientEventContextsRestored": true,
+    "allStoppedRootsControlsContactsAndQueryBalanced": true,
+    "afterStop": {
+      "stopped": true,
+      "errors": [],
+      "rootCount": 0,
+      "pointerListenerQueryInstalled": false,
+      "pendingRootRetirements": 0,
+      "pendingTimers": 0,
+      "pendingWork": 0,
+      "pendingAnimationFrames": 0,
+      "pointerProcessor": {
+        "active": 0,
+        "activeCapture": 0,
+        "hover": 0,
+        "pendingCapture": 0
+      },
+      "pointerRouting": {
+        "active": 0,
+        "contacts": 0,
+        "hoverPointers": 0,
+        "stored": 0,
+        "suppressed": 0
+      },
+      "roots": [
+        {
+          "surfaceId": 1,
+          "state": "unmounted",
+          "creates": 5,
+          "deletes": 5,
+          "nativeTags": 0,
+          "retiringTags": 0,
+          "errors": []
+        },
+        {
+          "surfaceId": 11,
+          "state": "unmounted",
+          "creates": 5,
+          "deletes": 5,
+          "nativeTags": 0,
+          "retiringTags": 0,
+          "errors": []
+        }
+      ]
+    }
+  },
+  "captures": {
+    "actualViewport": {
+      "width": 680,
+      "height": 160
+    },
+    "stage": "Initial before native input; updated after the first bubble Up while both TouchStart counters are 1, A Up is 1 and B Up is 0.",
+    "bars": {
+      "yellow": "React TouchStart count",
+      "green": "React pointerup count"
+    },
+    "images": [
+      {
+        "file": "docs/evidence/pointer-up/initial.png",
+        "sha256": "af28b45e5cf7660cc83f5a30ea52505d7bf1462527e68d9dc67b4828b8e0f2bb",
+        "width": 680,
+        "height": 160,
+        "independentlyDecodedPixels": 12,
+        "allPixelsMatchDeclaredExpected": true,
+        "reactCounters": {
+          "A": {
+            "starts": 0,
+            "ups": 0
+          },
+          "B": {
+            "starts": 0,
+            "ups": 0
+          }
+        },
+        "sourceFile": "build/pointer-up-initial.png",
+        "copiedSourceBytesIdentical": true
+      },
+      {
+        "file": "docs/evidence/pointer-up/updated.png",
+        "sha256": "5cfdbfba394afcb436dc0d38413d3676dd4d9aaec069ef3f608732c5f27bf591",
+        "width": 680,
+        "height": 160,
+        "independentlyDecodedPixels": 12,
+        "allPixelsMatchDeclaredExpected": true,
+        "reactCounters": {
+          "A": {
+            "starts": 1,
+            "ups": 1
+          },
+          "B": {
+            "starts": 1,
+            "ups": 0
+          }
+        },
+        "sourceFile": "build/pointer-up-updated.png",
+        "copiedSourceBytesIdentical": true
+      }
+    ],
+    "additionalChecks": {
+      "pixels": 24,
+      "reactCounterChecks": 2,
+      "saveAndDimensionChecks": 2
+    },
+    "additionalCheckCount": 28,
+    "independentLosslessPNGPixelDecode": true
+  },
+  "independentAudit": {
+    "file": "build/pointer-up-independent-audit.json",
+    "sha256": "78f5c532192cd15d4d0c117e636111066d56a98bd4f77d7013156413b2422136",
+    "auditedAt": "2026-10-04T22:19:34.884760+00:00",
+    "status": "verified-local-executed-evidence",
+    "findings": []
+  },
+  "logs": [
+    {
+      "file": "build/pointer-up-original.log",
+      "sha256": "4bf1d9b1681e70d00972e98777a23ed6995da38f6c14adc9b5d40884a22447b3",
+      "expectedCheckErrorCount": 8,
+      "preexistingGlogInitializationWarning": true,
+      "unexpectedScriptRegistryCrash": 0
+    },
+    {
+      "file": "build/pointer-up-current.log",
+      "sha256": "dc637225ed9d0d3c7d036adcb4d93a1d518e19d4b91a46ffe531948f12208cb7",
+      "expectedCheckErrorCount": 0,
+      "preexistingGlogInitializationWarning": true,
+      "unexpectedScriptRegistryCrash": 0
+    },
+    {
+      "file": "build/pointer-up-capture.log",
+      "sha256": "49de7730cbb69dda9a103245c63691985ed8b36a97420ed83bcc5c87a7b9f8c7",
+      "expectedCheckErrorCount": 0,
+      "preexistingGlogInitializationWarning": true,
+      "unexpectedScriptRegistryCrash": 0
+    }
+  ],
+  "historicalInitialNegative": {
+    "file": "docs/evidence/pointer-up/negative.json",
+    "sha256": "43ff04140b8cd17fdab2d27e184e8f82e5d80afa16673b4b3b75a60494ad87dc",
+    "meaning": "Preserved initial old-SDK diagnostic history. The final causal replay is the original lane above using the current SDK bundle.",
+    "isFinalCurrentSdkReplay": false
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "fbcdee479ce1d4d2d7486dc51acdb96da96158987b62cf5cab839e47119465a9",
+    "tests/pointer-query-fault-fixture.jsx": "723b45dbd0310fd6acf093fd70a554757e76056e747bc936fb142f2c77cd4714",
+    "tests/pointer-query-fault-probe.gd": "c5cf2bca5f1c41f59ae93efc5b0a88e0e3fbdda07abb3f9d88e57f873ebe7916",
+    "tests/pointer-up-fixture.jsx": "3976fc7041540fe2f96e1cd7718ad67ae22fb39a6bd5984864dcf250cb0799eb",
+    "tests/pointer-up-probe.gd": "a3912dd65bbe9823fb5d55310a62c8d3b470b9ba8037e3ca7e3d45c26c160647",
+    "tests/pointer-up-native.test.mjs": "cf5e0d8b22856683212b407e7a03ee65d4c09d028061b1b70815ddb013447859",
+    "scripts/event-target-bundle.mjs": "864ae542dc092de083edb9080721e6aa5e4c3ecc1d6c9ad552f17943bf425a22",
+    "sdk/toolchain/platform-plugin.mjs": "e2b98c7ad95a47286bc2250eac7b347805462d953b734827594c4bfbcc8f4605",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "d5a91d13b68df9d7de04c344ec3435643131b5123467d9cdea97d907f4e27f99",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b"
+  },
+  "followupValidation": {
+    "regressions": {
+      "status": "passed-local",
+      "commands": {
+        "contracts": {
+          "command": "npm run test:contracts",
+          "exitCode": 0,
+          "logSha256": "a2e8520f8177a27ba60760dfe3a8e6d7d7f2cc4ba3a8194de4dd7f0c488b11ad",
+          "executedSeparatelyBeforeSerialRegression": true
+        },
+        "static": {
+          "command": "npm run check:static",
+          "exitCode": 0,
+          "logSha256": "95a48338b023101260485fe508fe82ca458531a95fb91234c68779239881bdf8",
+          "elapsedSeconds": 0.45
+        },
+        "publication": {
+          "command": "npm run check:publication",
+          "exitCode": 0,
+          "logSha256": "8b195fe9415505c214ef537102ab146e66e5bba06c725eb4ae4489b98e369053",
+          "elapsedSeconds": 0.293
+        },
+        "sdk-pack": {
+          "command": "npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk-pointer-up",
+          "exitCode": 0,
+          "logSha256": "665eeb248c53294f96debe0531080e8518dda90ddb1928cb16c14081e88fcce7",
+          "elapsedSeconds": 2.267
+        },
+        "sdk-verify": {
+          "command": "npm run sdk:native:verify -- --sdk build/native-sdk-pointer-up",
+          "exitCode": 0,
+          "logSha256": "ccaecd4c7728f388ce2cdf65bce89287944fddf75ff02dd62b453988ea11ad39",
+          "elapsedSeconds": 0.223
+        },
+        "documents": {
+          "command": "npm run test:pointers:documents",
+          "exitCode": 0,
+          "logSha256": "9fa5191006b332a410edc3be28713cf2f495334cad53db66f26439ab47b9a0f8",
+          "elapsedSeconds": 34.022
+        },
+        "interest": {
+          "command": "npm run test:pointers:interest",
+          "exitCode": 0,
+          "logSha256": "7dabfeef4c874fa55f44f643876f63e53e618f8f789ec955e222406d36b52a35",
+          "elapsedSeconds": 9.39
+        },
+        "query-faults": {
+          "command": "npm run test:pointers:query-faults",
+          "exitCode": 0,
+          "logSha256": "88d925239bc93a1063ba6c782520a4b8c6d42978223a10cb590aafec0b8cf60b",
+          "elapsedSeconds": 5.006
+        },
+        "resolver-faults": {
+          "command": "npm run test:pointers:resolver-faults",
+          "exitCode": 0,
+          "logSha256": "f54a741e2b670b4bfdc3662323850c07c7d38faf838aec9a7526b92564c73b1b",
+          "elapsedSeconds": 2.675
+        },
+        "integrated": {
+          "command": "npm run test:events:integrated",
+          "exitCode": 0,
+          "logSha256": "4e4160a0c2b727b9bb6f68824769adbffd8062e2b73c24ef0d691b67694e73d5",
+          "elapsedSeconds": 10.25
+        },
+        "examples": {
+          "command": "npm run test:examples",
+          "exitCode": 0,
+          "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
+          "elapsedSeconds": 110.072
+        },
+        "consumer": {
+          "command": "npm run test:consumer",
+          "exitCode": 0,
+          "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81",
+          "elapsedSeconds": 88.957
+        },
+        "adapter-loader": {
+          "command": "npm run test:adapters:loader -- --sdk build/native-sdk-pointer-up --out build/pointer-up-adapter-loader",
+          "exitCode": 0,
+          "logSha256": "6347460ceb61f01100069066dd16c48cc98b66ddf7b07f94ed4788c538ff5251",
+          "elapsedSeconds": 18.084
+        },
+        "adapter-runtime": {
+          "command": "npm run test:adapters:runtime -- --sdk build/native-sdk-pointer-up --out build/pointer-up-adapter-runtime",
+          "exitCode": 0,
+          "logSha256": "ea2589b7228f5d817dcf034b1627be112a30498fb8310b6cf3dbb7155b1fe0fe",
+          "elapsedSeconds": 34.999
+        },
+        "processor": {
+          "command": "npm run test:pointers:processor",
+          "exitCode": 0,
+          "logSha256": "31241f4d02c7893a828dc365d11ceac06ea45e5f0c1848ed70fe9201e4030c16",
+          "elapsedSeconds": 9.017
+        },
+        "geometry": {
+          "command": "npm run test:pointers:geometry",
+          "exitCode": 0,
+          "logSha256": "5e0d14ef4a6fac65edec03685f5e7bf2d14430caeafa0282decf6381b47d9943",
+          "elapsedSeconds": 2.083
+        }
+      },
+      "resultCounts": {
+        "nodeContracts": 255,
+        "pythonContracts": 13,
+        "documentNative": 2723,
+        "interestOriginal": 193,
+        "interestCurrent": 233,
+        "queryFaults": 186,
+        "resolverFaults": 65,
+        "integratedOriginal": 181,
+        "integratedCurrent": 206,
+        "interactiveExamples": 22,
+        "exampleNativeChecks": 2250,
+        "consumerBuildOwnershipChecks": 30,
+        "consumerNativeChecks": 40,
+        "adapterLoaderChecks": 89,
+        "adapterLoaderCases": 21,
+        "actualAdapterRuns": 13,
+        "actualAdapterChecks": 213,
+        "portableProcessorTests": 2,
+        "portableGeometryTests": 2
+      },
+      "terminalNegativeQueries": {
+        "documentsFalseUpPairs": 156,
+        "queryFaultFalseUpPairs": 44,
+        "getterFalseUpPairs": 12,
+        "noDownRetry": true,
+        "cancelNoQuery": true,
+        "endEmptyAllowedForPrecedingHosts": true,
+        "mapVisitationProvedByActualTraces": true,
+        "documentAndInterestRawObserverDownTopicsOnly": true,
+        "noRawUpOwnedByDedicatedUpProbe": true
+      }
+    },
+    "sdkPackAndConsumer": {
+      "status": "passed-local",
+      "hostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "buildReceiptSha256": "17f9fa65bca6c93d29a1f648e129985318b65fb19e3c3ab68f3df7b45427e3e3",
+      "sdkReceiptSha256": "34cbbf52da96f2e3b8e4d6f2f9bb7a260c9b5eb1dfc810cbcee7e21f59ab8d57",
+      "sdkManifestSha256": "66441cfbaf5448331b2321aacbcb737bc20cb32da39493fc1bdbe8f781abddcf",
+      "sourcePinsMatchedAtExecution": 55,
+      "packAndVerify": true,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "loaderReportSha256": "9e68589930ad23c7a27e56fe6673e5db427664eaf54945937c721856c2405fb9",
+      "loaderChecks": 89,
+      "loaderCases": 21,
+      "loaderGodotEngineStarted": false,
+      "adapterRuntimeReportSha256": "04d462d44282a1029d4b085dd596d583fe28e23e50218c0e8e969d64864fafe7",
+      "actualAdapterRuns": 13,
+      "actualAdapterChecks": 213,
+      "actualGodotEngineStarted": true,
+      "abiCertified": false,
+      "packReceiptAloneDoesNotCertifyRuntime": true
+    },
+    "hostedCI": {
+      "status": "verified-hosted-artifacts",
+      "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37241023275",
+      "headCommit": "041688ca37d8dde73b58bae3888ba80298c32c8d",
+      "actualNativeCheckout": "5250225103ec2f10be52ffae2c9a9e5765d99457",
+      "allFiveJobsPassed": true,
+      "upChecks": 62,
+      "precedingNativeRegressionChecks": 3400,
+      "nativeReports": 13,
+      "sourcePinsVerified": 16,
+      "sameUpCheckIdsAndBundleAsLocal": true,
+      "nativeBinaryIndependentlyIncluded": false,
+      "controlAndCapturesLocalOnly": true,
+      "receipt": "docs/evidence/pointer-up/hosted-ci.json"
+    },
+    "dashboardPublication": {
+      "status": "verified-branch-data-publication",
+      "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37242930291",
+      "dataCommit": "0a2f01e09f6132c8bae7a24c5ba5415bd3d94a00",
+      "rendererCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "buildAndDeployPassed": true,
+      "completePublicJSONEqualsCommittedData": true,
+      "localLiveAPIEqualsCommittedData": true,
+      "implementationStillOutsideMain": true,
+      "receipt": "docs/evidence/pointer-up/publication.json"
+    }
+  },
+  "limits": [
+    "The Up probe alone does not certify SDK packaging; the separately executed fresh SDK, consumer and adapter proofs are recorded in followupValidation. ABI certification remains false.",
+    "Capture-only means EventTarget capture phase at the View; pointer capture lifecycle, Document interest, flag matrix, once/removal and capture routing are not certified.",
+    "PointerId identity is certified between the Up callback and its actual typed/star Raw payloads; no Down-to-Up ID equality claim because Down pointer delivery is deliberately filtered.",
+    "Actual Discrete priority and restored default context are certified in this run; both priority-mapping flag branches are not certified.",
+    "Original-control labels denote the saved previous native host with current SDK bundle, not original pointerInterestMode.",
+    "Native build receipts associate source/input hashes with binaries; they are not full RN ABI or export/mobile/hardware/performance certification.",
+    "Down terminal regressions and fresh SDK validation passed separately as recorded in followupValidation; their Down-scoped Raw observers do not certify no-RawUp.",
+    "Retired-ref Up delivery, captured/no-hit/null-target Up, got/lost pointer capture, Up-specific query/getter faults, reentrant lifecycle and development renderer are outside this bounded probe.",
+    "The two enabled flags were fixed before original RN imports; the four-flag matrix and Document/documentElement pointerup interest are not certified."
+  ],
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+    "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+    "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+    "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "ac811e6ecabfda7a4ce0ce0695e715c0dd023248534f9768a23949b975e1b187",
+    "package.json": "2cace823572912991f45914448447b9e4f1a46057d6d9f98ee6b86c71d6bb08c",
+    ".fallowrc.json": "74b891b8df91838f547e186ce3d8e935b726b284300df0d4465e50b5c1cf24c7",
+    "tests/rn-pointer-overlay.test.mjs": "8ad62462651f1fc8ba2f228ae1502e2f8494ee6459483119d52a04eec9e01825",
+    "tests/rn-pointer-interest-overlay.test.mjs": "d3a26dae9e6320792b03ff36515158186978dfd9921a09ec0d3ed80055ba2514",
+    "tests/pointer-terminal-query-assertions.mjs": "25cad6a0ea98c74170c84dabe857b138e6df2fbd96d0de4de90b02ee1bb33682",
+    "tests/pointer-document-native.test.mjs": "e19609f93b33a8ca4abf6a9920e7442e817c1445a5a10d49f401d38530ab4713",
+    "tests/pointer-document-probe.gd": "b9300c4df90f7c7212354f7b533d31acfc2d143018be570dd190798a58d74cec",
+    "tests/pointer-interest-native.test.mjs": "96b86ad70105663f2d0b27d5af3cdc2d77b900ebb2879720a266a356e3e05153",
+    "tests/pointer-interest-probe.gd": "3d4eaab766ac8fe66efc93df4b929ff5f091e9e787c53ccf748fab6efc8e5989",
+    "tests/pointer-query-fault-native.test.mjs": "7bf5f6150fccfa58c06a1efa0c705c78959cdf210a958e5e4965992dfa1ad10f",
+    "tests/pointer-resolver-fault-native.test.mjs": "bfcba267cc6a9816a06323b5e6c9dd62fc969850be8b408cb28814e5502669d6"
+  },
+  "precedingFaultControls": {
+    "status": "both_exact_original_negatives_retained",
+    "historicalRawPreserved": true,
+    "receiptSha256": "c22add34e9c4e561c2185f3aa33575a65944e6e8be003f9eb71ced170c283d37",
+    "failures": {
+      "pointer-query-fault": 12,
+      "pointer-resolver-fault": 3
+    },
+    "currentFourFilesRestoredByteExactly": true,
+    "sameCurrentSDKBundleAndOriginalRNPinsRequired": true,
+    "onlyTwoNativeProducersDiffer": [
+      "native/application_runtime.cpp",
+      "scripts/rn-pointer-overlay.mjs"
+    ],
+    "comparisonReportSha256": {
+      "pointer-query-fault": "e51dea365bf08b242d9dc35a3c5401bc6673c5c34d63d26f506c8bac9481a74a",
+      "pointer-resolver-fault": "9e12faf024838f38561e51c6b2c33b64a9ded5e5d1a542e7118f7e5e45be99a3"
+    }
+  },
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 81,
+    "caseProducers": 16,
+    "nativeInputs": 55,
+    "verificationInputs": 12,
+    "command": "git show <implementationCommit>:<repo-relative source>",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b"
+}

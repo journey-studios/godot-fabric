@@ -1,0 +1,20 @@
+config_version=5
+[application]
+config/name="Godot Fabric iOS Smoke"
+config/icon="res://icon.svg"
+run/main_scene="res://main.tscn"
+run/disable_stdout=false
+run/disable_stderr=false
+run/flush_stdout_on_print=true
+[debug]
+file_logging/enable_file_logging=true
+file_logging/enable_file_logging.mobile=true
+file_logging/log_path="user://logs/ios-smoke.log"
+[display]
+window/size/viewport_width=720
+window/size/viewport_height=1280
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0.035, 0.047, 0.075, 1)

@@ -1,0 +1,2259 @@
+{
+  "schemaVersion": 1,
+  "scenario": "original-EventTarget-pointerdown-interest",
+  "implementation": {
+    "commit": "ae9d4ed77ff5eccb8825ef47283d13abf81d5910",
+    "executedBeforeCommit": true,
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourcePinCount": 21,
+    "executionBaseCommit": "04784991eafadd4e4b3ad3be6df951b2651f0b1e",
+    "executionSourceDirty": true
+  },
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable official",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "macOS native viewport"
+    ]
+  },
+  "commands": [
+    "cmake --build .deps/build --parallel 4",
+    "npm run test:pointers:interest",
+    "node tests/pointer-interest-native.test.mjs --capture"
+  ],
+  "scope": {
+    "actualNativeInput": true,
+    "documentInterestResolved": false,
+    "experimentalNativeDispatch": true,
+    "hardwareCertified": false,
+    "interestType": "View-pointerdown",
+    "listenerRegistryMirrored": false,
+    "originalFlagsEnabled": true,
+    "otherPointerTypesResolved": false,
+    "publicDefaultEnabled": false
+  },
+  "comparison": {
+    "sameFixtureSources": true,
+    "producerSourcePinCount": 13,
+    "sameOriginalRNInputs": true,
+    "originalRNInputCount": 13,
+    "sameNativeHost": true,
+    "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+    "publicBundlePreservedWithinIsolatedRuns": true,
+    "publicBundleSha256DuringIsolatedRuns": "a033727ff93813a7220a0a2f0b63cfd9ce0ec1b985c080b1f454e68a1a451418",
+    "currentHeadlessIdsSubsetOfGraphical": true,
+    "fullOriginalAndCurrentIdsIdentical": false,
+    "reason": "Current checks additionally observe exact original Map membership; callback counts differ causally"
+  },
+  "variants": {
+    "original": {
+      "displayServer": "headless",
+      "checks": 193,
+      "checkIdsSha256": "83d2764111dbe7771873b49f07518531ab4966d9d085d26ceb523fb165717053",
+      "checkIdDigestFormat": "UTF-8 newline-joined check names, no terminal newline",
+      "rawReportSha256": "e56b36a759e313e0b976eb0b6e5c045afbd49787b3ec20d4463d9ac8b04fc349",
+      "bundleSha256": "46aa23be5a34265b31451ac75c854233c25e1cef49b0ba515e16daef25d07360",
+      "pointerInterestOverlay": {
+        "module": "src/private/webapis/dom/events/EventTarget.js",
+        "originalSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+        "generatedSourceSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53"
+      },
+      "cases": {
+        "abort-after": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "abort-after"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "abort-after",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "abort-pre": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "abort-pre",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "both": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "capture",
+              "bubble"
+            ],
+            "imperativeCallbacks": 2,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "both",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "bubble": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "bubble"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "bubble",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "capture": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "capture"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "capture",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "document": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "document-only"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "document",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "duplicate": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "duplicate"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "duplicate",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "flat": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "flat-capture",
+              "flat-bubble"
+            ],
+            "imperativeCallbacks": 2,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "flat",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "mixed": {
+          "native": {
+            "order": [
+              "jsx",
+              "mixed-imperative"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 1,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2,
+              2
+            ]
+          },
+          "manual": {
+            "order": [
+              "jsx",
+              "mixed-imperative"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 1,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "mixed",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "none": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "kind": "none",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "once": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [],
+            "queryDuringCallbacks": []
+          },
+          "manual": {
+            "order": [
+              "once"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "once",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "remove-final": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "remove-final"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "remove-final",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "remove-peer": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [],
+            "queryDuringCallbacks": []
+          },
+          "manual": {
+            "order": [
+              "remove-peer"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "remove-peer",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        },
+        "wrong-type": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "wrong-type"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "flatQueries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            },
+            "kind": "wrong-type",
+            "queries": {
+              "available": false,
+              "bubble": null,
+              "capture": null
+            }
+          }
+        }
+      },
+      "lifecycle": {
+        "mixedAfterRemoval": {
+          "order": [
+            "jsx"
+          ],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 1,
+          "typedRaw": 1,
+          "starRaw": 1,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "rerenderNative": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "replacementNative": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "heldSurvivor": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "survivor": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "remountNative": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "beforeStopReact": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        }
+      },
+      "rerender": {
+        "query": {
+          "available": false,
+          "bubble": null,
+          "capture": null
+        },
+        "sameRef": true,
+        "sameTag": true
+      },
+      "retiredRef": {
+        "connected": false,
+        "key": "replacement",
+        "nativeLookupNull": true,
+        "nativeMetricsNull": true,
+        "parentNull": true,
+        "query": {
+          "available": false,
+          "bubble": null,
+          "capture": null
+        },
+        "sameAsCurrent": false,
+        "tag": 10
+      },
+      "retiredRootRef": {
+        "connected": false,
+        "key": "root",
+        "nativeLookupNull": true,
+        "nativeMetricsNull": true,
+        "parentNull": true,
+        "query": {
+          "available": false,
+          "bubble": null,
+          "capture": null
+        },
+        "sameAsCurrent": false,
+        "tag": 2
+      },
+      "remountedRoot": {
+        "connected": false,
+        "key": "root",
+        "nativeLookupNull": true,
+        "nativeMetricsNull": true,
+        "parentNull": true,
+        "query": {
+          "available": false,
+          "bubble": null,
+          "capture": null
+        },
+        "sameAsCurrent": false,
+        "tag": 2
+      },
+      "beforeStop": {
+        "rootCount": 2,
+        "pointerListenerQueryInstalled": false,
+        "pointerProcessor": {
+          "active": 1,
+          "activeCapture": 0,
+          "hover": 1,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 1,
+          "contacts": 1,
+          "hoverPointers": 0,
+          "nextId": 24,
+          "stored": 1,
+          "suppressed": 0
+        }
+      },
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pointerListenerQueryInstalled": false,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 24,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "errors": []
+      }
+    },
+    "current": {
+      "displayServer": "headless",
+      "checks": 230,
+      "checkIdsSha256": "1d3f0d4482730c19cb12ea41e8c4cd74006d2ecafa9d5cbe4fb558c6ba00a767",
+      "checkIdDigestFormat": "UTF-8 newline-joined check names, no terminal newline",
+      "rawReportSha256": "4291ee18f83bdbafc931864d0468f5176e852cf37fb65a4911bdf2c7cb06b448",
+      "bundleSha256": "e30f11ed9a8463efcbf40a093d8c5077ff8e3f041f34c57056aee576e7a6dac3",
+      "pointerInterestOverlay": {
+        "module": "src/private/webapis/dom/events/EventTarget.js",
+        "originalSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+        "generatedSourceSha256": "299fd273b30c35e34858d1984ea58b5760aaae6e082d64611fc5aef97fb45c01"
+      },
+      "cases": {
+        "abort-after": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "abort-after"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "abort-after",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            }
+          }
+        },
+        "abort-pre": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "abort-pre",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            }
+          }
+        },
+        "both": {
+          "native": {
+            "order": [
+              "capture",
+              "bubble"
+            ],
+            "imperativeCallbacks": 2,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2,
+              2
+            ]
+          },
+          "manual": {
+            "order": [
+              "capture",
+              "bubble"
+            ],
+            "imperativeCallbacks": 2,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "both",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": true
+            }
+          }
+        },
+        "bubble": {
+          "native": {
+            "order": [
+              "bubble"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2
+            ]
+          },
+          "manual": {
+            "order": [
+              "bubble"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "bubble",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            }
+          }
+        },
+        "capture": {
+          "native": {
+            "order": [
+              "capture"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2
+            ]
+          },
+          "manual": {
+            "order": [
+              "capture"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "capture",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": true
+            }
+          }
+        },
+        "document": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "document-only"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "document",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            }
+          }
+        },
+        "duplicate": {
+          "native": {
+            "order": [
+              "duplicate"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2
+            ]
+          },
+          "manual": {
+            "order": [
+              "duplicate"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "duplicate",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            }
+          }
+        },
+        "flat": {
+          "native": {
+            "order": [
+              "flat-capture",
+              "flat-bubble"
+            ],
+            "imperativeCallbacks": 2,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              1,
+              3
+            ]
+          },
+          "manual": {
+            "order": [
+              "flat-capture",
+              "flat-bubble"
+            ],
+            "imperativeCallbacks": 2,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": true,
+              "capture": true
+            },
+            "kind": "flat",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            }
+          }
+        },
+        "mixed": {
+          "native": {
+            "order": [
+              "jsx",
+              "mixed-imperative"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 1,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2,
+              2
+            ]
+          },
+          "manual": {
+            "order": [
+              "jsx",
+              "mixed-imperative"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 1,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "mixed",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            }
+          }
+        },
+        "none": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "kind": "none",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            }
+          }
+        },
+        "once": {
+          "native": {
+            "order": [
+              "once"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2
+            ],
+            "queryDuringCallbacks": [
+              {
+                "before": {
+                  "available": true,
+                  "bubble": false,
+                  "capture": false
+                },
+                "after": {
+                  "available": true,
+                  "bubble": false,
+                  "capture": false
+                }
+              }
+            ]
+          },
+          "manual": {
+            "order": [
+              "once"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "once",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            }
+          }
+        },
+        "remove-final": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "remove-final"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "remove-final",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            }
+          }
+        },
+        "remove-peer": {
+          "native": {
+            "order": [
+              "remove-peer"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 1,
+            "starRaw": 1,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": [
+              2
+            ],
+            "queryDuringCallbacks": [
+              {
+                "before": {
+                  "available": true,
+                  "bubble": true,
+                  "capture": false
+                },
+                "after": {
+                  "available": true,
+                  "bubble": false,
+                  "capture": false
+                }
+              }
+            ]
+          },
+          "manual": {
+            "order": [
+              "remove-peer"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "remove-peer",
+            "queries": {
+              "available": true,
+              "bubble": true,
+              "capture": false
+            }
+          }
+        },
+        "wrong-type": {
+          "native": {
+            "order": [],
+            "imperativeCallbacks": 0,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsTrusted": true,
+            "originalEventAndTargetIdentity": true,
+            "phases": []
+          },
+          "manual": {
+            "order": [
+              "wrong-type"
+            ],
+            "imperativeCallbacks": 1,
+            "jsxCallbacks": 0,
+            "typedRaw": 0,
+            "starRaw": 0,
+            "eventStateReleased": true,
+            "allEventsUntrusted": true
+          },
+          "nativeDownsDelta": 1,
+          "nativeActivePointersAfter": 1,
+          "queryConfiguration": {
+            "documentQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "flatQueries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            },
+            "kind": "wrong-type",
+            "queries": {
+              "available": true,
+              "bubble": false,
+              "capture": false
+            }
+          }
+        }
+      },
+      "lifecycle": {
+        "mixedAfterRemoval": {
+          "order": [
+            "jsx"
+          ],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 1,
+          "typedRaw": 1,
+          "starRaw": 1,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "rerenderNative": {
+          "order": [
+            "bubble"
+          ],
+          "imperativeCallbacks": 1,
+          "jsxCallbacks": 0,
+          "typedRaw": 1,
+          "starRaw": 1,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "replacementNative": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "heldSurvivor": {
+          "order": [
+            "bubble"
+          ],
+          "imperativeCallbacks": 1,
+          "jsxCallbacks": 0,
+          "typedRaw": 1,
+          "starRaw": 1,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "survivor": {
+          "order": [
+            "bubble"
+          ],
+          "imperativeCallbacks": 1,
+          "jsxCallbacks": 0,
+          "typedRaw": 1,
+          "starRaw": 1,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "remountNative": {
+          "order": [],
+          "imperativeCallbacks": 0,
+          "jsxCallbacks": 0,
+          "typedRaw": 0,
+          "starRaw": 0,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        },
+        "beforeStopReact": {
+          "order": [
+            "bubble"
+          ],
+          "imperativeCallbacks": 1,
+          "jsxCallbacks": 0,
+          "typedRaw": 1,
+          "starRaw": 1,
+          "eventStateReleased": true,
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true
+        }
+      },
+      "rerender": {
+        "query": {
+          "available": true,
+          "bubble": true,
+          "capture": false
+        },
+        "sameRef": true,
+        "sameTag": true
+      },
+      "retiredRef": {
+        "connected": false,
+        "key": "replacement",
+        "nativeLookupNull": true,
+        "nativeMetricsNull": true,
+        "parentNull": true,
+        "query": {
+          "available": true,
+          "bubble": true,
+          "capture": false
+        },
+        "sameAsCurrent": false,
+        "tag": 10
+      },
+      "retiredRootRef": {
+        "connected": false,
+        "key": "root",
+        "nativeLookupNull": true,
+        "nativeMetricsNull": true,
+        "parentNull": true,
+        "query": {
+          "available": true,
+          "bubble": true,
+          "capture": false
+        },
+        "sameAsCurrent": false,
+        "tag": 2
+      },
+      "remountedRoot": {
+        "connected": false,
+        "key": "root",
+        "nativeLookupNull": true,
+        "nativeMetricsNull": true,
+        "parentNull": true,
+        "query": {
+          "available": true,
+          "bubble": true,
+          "capture": false
+        },
+        "sameAsCurrent": false,
+        "tag": 2
+      },
+      "beforeStop": {
+        "rootCount": 2,
+        "pointerListenerQueryInstalled": true,
+        "pointerProcessor": {
+          "active": 1,
+          "activeCapture": 0,
+          "hover": 1,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 1,
+          "contacts": 1,
+          "hoverPointers": 0,
+          "nextId": 24,
+          "stored": 1,
+          "suppressed": 0
+        }
+      },
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pointerListenerQueryInstalled": false,
+        "pendingRootRetirements": 0,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 24,
+          "stored": 0,
+          "suppressed": 0
+        },
+        "errors": []
+      }
+    }
+  },
+  "graphical": {
+    "mode": "current",
+    "displayServer": "macOS",
+    "checks": 260,
+    "rawReportSha256": "7fefc250a5d0afb8c4c1683bccb3fa2870a5b1d87e188c4e3ba0048d1ba89b9a",
+    "checkIdsSha256": "2ce36cd50443c154a973fdfffa9a06a1af9cde84b553d5f721dcd740d4277b54",
+    "pixelAssertions": 28,
+    "captureSaveAssertions": 2,
+    "captures": [
+      {
+        "path": "initial.png",
+        "sha256": "de7f79a653d884164a66a2fd9cef1dadbf384288392f3849930aa273dfd9a241",
+        "width": 820,
+        "height": 280,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "7c3aedff",
+            "expected": "7c3aedff",
+            "point": [
+              70,
+              155
+            ]
+          },
+          {
+            "color": "d97706ff",
+            "expected": "d97706ff",
+            "point": [
+              260,
+              155
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              230
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              60,
+              230
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              425,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              495,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              680,
+              55
+            ]
+          },
+          {
+            "color": "7c3aedff",
+            "expected": "7c3aedff",
+            "point": [
+              490,
+              155
+            ]
+          },
+          {
+            "color": "d97706ff",
+            "expected": "d97706ff",
+            "point": [
+              680,
+              155
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              230
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              480,
+              230
+            ]
+          }
+        ]
+      },
+      {
+        "path": "updated.png",
+        "sha256": "6fda0d33e7594684bbed272c19fa07aff3b19f0866c61cf164f141e17f35aed9",
+        "width": 820,
+        "height": 280,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "7c3aedff",
+            "expected": "7c3aedff",
+            "point": [
+              70,
+              155
+            ]
+          },
+          {
+            "color": "d97706ff",
+            "expected": "d97706ff",
+            "point": [
+              260,
+              155
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              230
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              60,
+              230
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              425,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              495,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              680,
+              55
+            ]
+          },
+          {
+            "color": "7c3aedff",
+            "expected": "7c3aedff",
+            "point": [
+              490,
+              155
+            ]
+          },
+          {
+            "color": "d97706ff",
+            "expected": "d97706ff",
+            "point": [
+              680,
+              155
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              230
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              480,
+              230
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-interest-fixture.jsx": "e102f07edec878e2158a071bd7fcdf4b4b3fa5ab5861f34356d535cf980e3893",
+    "tests/pointer-interest-probe.gd": "47f2829a8aa5ed9a8d2bbaf7e777bfcf048151792d4d794917cc85790fe4742a",
+    "tests/pointer-interest-native.test.mjs": "3ee216d80a09b885bfea93d68546ea8a82b26ea583d9aab2ed011061e0f02e17",
+    "scripts/event-target-bundle.mjs": "e1dcffc12a81d6a25f556f452162e6abec810e7efe6ca3549fc84a7b460e4be3",
+    "sdk/toolchain/platform-plugin.mjs": "403fb104aca8e7b816d0dd5759cd2689b54f36fdc9e53728c7bd32ff86b36ec4",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f420bb0627b60a9af2df6dfb940bf43652f7eb762aabeec2af70297d1cf0c69c",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "6c17b583c1ae41fe823e7efc897a7c10cd7c57a948167832c814406c089d8d9b",
+    "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4",
+    "tests/rn-pointer-interest-overlay.test.mjs": "e9fe4236cb5d6d9c8599b2928263e28702f257e34c4b02de3e46b15004624b90",
+    "tests/rn-pointer-overlay.test.mjs": "56faa9426889d8adf53c35a1e1a96abccf183a44f5b27be5cb4e69070c8f4381",
+    "package.json": "0e2aed9e4318aeb2a96f21d5ccd2a280574ac7f7f70d2bfe06bbd66178e2a7e3",
+    ".fallowrc.json": "1d1970602c90ecf5140755d6d82eaa410029705f64acb200491b3ae75ae5b7ec",
+    ".github/workflows/contracts.yml": "1f57c84f4636e3204f58c646115001365bbe8ca216aec52385352e5991b3ff5e",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91"
+  },
+  "generatedOverlays": {
+    "pointerInterestOverlay": {
+      "module": "src/private/webapis/dom/events/EventTarget.js",
+      "originalSha256": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "generatedSourceSha256": "299fd273b30c35e34858d1984ea58b5760aaae6e082d64611fc5aef97fb45c01"
+    },
+    "parentOverlay": {
+      "module": "src/private/webapis/dom/events/internals/EventTargetInternals.js",
+      "originalSha256": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "generatedSourceSha256": "9cf100ef91a7dca21ceb850aef0a7a33344050e6fb738f80bf96ce2d02b6d640"
+    },
+    "rendererTagOverlay": {
+      "module": "Libraries/Renderer/implementations/ReactFabric-prod.js",
+      "originalSha256": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+      "generatedSourceSha256": "a521cd4d8c5aadd16b7e2d4eb5a42a7087e5ccf66fec2bd0e54468e74f751bbc"
+    }
+  },
+  "nativeBuild": {
+    "host": {
+      "sha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "source": "addons/fabric_godot.dylib"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "buildRecordSha256": "42e430d5e25f1c10992fa07dbfb5394db8a7aff9f3f35073496682edbd6806e5",
+    "sourcePins": {
+      "native/application_runtime.cpp": "6c17b583c1ae41fe823e7efc897a7c10cd7c57a948167832c814406c089d8d9b",
+      "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4"
+    },
+    "nativeHostBuildRecorded": true,
+    "abiCertified": false
+  },
+  "regressions": {
+    "contracts": {
+      "node": 250,
+      "python": 13,
+      "logSha256": "62b5fc66eb5665dae857096b002fce84227ca82717d99f53bc63cc0652d21ced"
+    },
+    "overlayGuards": {
+      "pureQueryAndSDK": 15,
+      "nativeProcessor": 6
+    },
+    "consumer": {
+      "currentNativeHost": true,
+      "buildOwnershipChecks": 30,
+      "nativeChecks": 40,
+      "sourceCommit": "04784991eafadd4e4b3ad3be6df951b2651f0b1e",
+      "sourceDirty": true,
+      "verifiedSourceFiles": [
+        "native/application_runtime.cpp",
+        "sdk/toolchain/platform-plugin.mjs",
+        "sdk/toolchain/rn-pointer-interest-overlay.mjs",
+        "src/private-interface.js",
+        "src/pointer-listener-query.js"
+      ],
+      "sdkManifestSha256": "d0162055b3dc4d8597e8b1eed40fb18abc0b593e5c00855c0f2678abbc40f011",
+      "reportSha256": "422fba39e04fbea95c14cf8501ddce662f4490796fdb64dc2eb752c8bf6c55fc"
+    },
+    "nativeSDK": {
+      "packAndVerifyPassed": true,
+      "manifestSha256": "b07e5e4dfbd7b9394bc0a9c09b53e698a406d017232098e406c5661af6630fe9",
+      "abiCertified": false
+    },
+    "adapterLoader": {
+      "cases": 21,
+      "checks": 89,
+      "nativeVMExecuted": false,
+      "reportSha256": "0ccc3473372e9f3edd369179d1b3bf1de83845bd65ba141ae4cb7409f53ed6bc"
+    },
+    "adapterRuntime": {
+      "runs": 13,
+      "checks": 213,
+      "cases": {
+        "headless": 35,
+        "external-appearance": 5,
+        "reentrant-stop": 8,
+        "reentrant-raf": 9,
+        "reentrant-timer": 9,
+        "root-unmount-resize": 17,
+        "root-unmount-pressed": 17,
+        "root-unmount-raf": 18,
+        "root-unmount-timer": 18,
+        "root-remount-resize": 21,
+        "root-free-resize": 17,
+        "root-owner-switch-resize": 18,
+        "root-stale-core-owner-switch-resize": 21
+      },
+      "abiCertified": false,
+      "reportSha256": "5f7760e77d94b9518828f1ad7c829b57a691827e3eabe35672c3ea761f4e48a3"
+    },
+    "examples": {
+      "count": 22,
+      "checks": 2250,
+      "displayServer": "headless",
+      "currentNativeHost": true,
+      "reports": {
+        "chart": {
+          "checks": 34,
+          "sha256": "ce948f5c932195b9e12d56770486539e00b05eec52c0e28ac1d4d8af9cf66f01"
+        },
+        "coordinates": {
+          "checks": 238,
+          "sha256": "0bf93d1b1d6806d5af74ab98c6064794f52a67c5e32524e9e70e9c70083716f9"
+        },
+        "counter": {
+          "checks": 19,
+          "sha256": "8cdcaea4421ef6d8cc446101f71408d3805c5d8f7484e8be34166e01da501791"
+        },
+        "focus": {
+          "checks": 175,
+          "sha256": "5c7174dc903e31b903e1e338360bfd874c3373cd09cc3c789bcd479250b30a59"
+        },
+        "form": {
+          "checks": 39,
+          "sha256": "b3406d3d34dc8d6b1bd9b5a9110ca116e1ace78a31a16d9959611bbb00b4f7a2"
+        },
+        "input": {
+          "checks": 45,
+          "sha256": "d1e265988091cdfcfc6d7be121298c5e547450f35792bef4879a6c84755a34ce"
+        },
+        "layout": {
+          "checks": 47,
+          "sha256": "50b0548307c132a5f87b450787c72099d52e2a18a0b8ec12d951ac5d3ad717ce"
+        },
+        "metrics": {
+          "checks": 64,
+          "sha256": "9b50bdafccf81471aea58f7d1e51fbb093240701ebf35e2453b9b9295d40127c"
+        },
+        "nativewind": {
+          "checks": 49,
+          "sha256": "1822c45204aa7e31029086355d400345b7938383990892d015d6bcbbdd58d004"
+        },
+        "pointer-geometry": {
+          "checks": 631,
+          "sha256": "c71c0728c2512a80c392dde7a6704b92da39f0c5db09465463fb51ce8e5cdace"
+        },
+        "pointers": {
+          "checks": 132,
+          "sha256": "98045cce4fa9865aa495ebe31a8a765a0052138335b918790d63a8e85e89a26e"
+        },
+        "pressable": {
+          "checks": 47,
+          "sha256": "167cbb4ac8c3f5c82db400d02c43024b1bf724caae0dc4e65b33227122ad3eac"
+        },
+        "react": {
+          "checks": 36,
+          "sha256": "4bd629defea5ae783e992ed2ac5323d3882e9546e0b25b6bc391a13041b5c98b"
+        },
+        "refs": {
+          "checks": 23,
+          "sha256": "fe8a902e91ebf217f066dfb735a7eaba74996b79a2ac1cae8b431afd38286ec0"
+        },
+        "runtime": {
+          "checks": 23,
+          "sha256": "2310cfe5a194f8c7c70c4a249652d422170b8597e851123492c97298ea9273e4"
+        },
+        "scroll": {
+          "checks": 62,
+          "sha256": "dc66dc1016f9df0599dfb1a9a8a6cb8b7e56dfebbb91c458d0ac5165bc765ea3"
+        },
+        "services": {
+          "checks": 36,
+          "sha256": "f32518a3f13943dc121f970da521292b07f8566f7c0bcd268af86416f4ad2d67"
+        },
+        "shared": {
+          "checks": 35,
+          "sha256": "7eb8366c8ec50c39f7f218d4ce2fd3280ee9ef23416f4e94410a2c1835d24bee"
+        },
+        "transforms": {
+          "checks": 309,
+          "sha256": "0c06488ca202c33bf4c8f0e233bf62524db2714131bbc58f3c10e77fb36f62ac"
+        },
+        "tree": {
+          "checks": 89,
+          "sha256": "462aebc1d6e88eceac0cfada9a90b73e856c448d9949b9f563cd3643a136824b"
+        },
+        "typography": {
+          "checks": 50,
+          "sha256": "8dc4d0a9ca4ec61f9705ce3452a4ed0a8d59afb64196f3ebe43b5133a26569aa"
+        },
+        "view": {
+          "checks": 67,
+          "sha256": "08ee953c70d00851ef0ea874649ce5f0f916be2b10f21aca0be73694aacd5b49"
+        }
+      }
+    },
+    "nativeEventTargetIntegration": {
+      "originalChecks": 181,
+      "integratedChecks": 206,
+      "currentNativeHost": true,
+      "logSha256": "9af9f709df5f8b727cca336113d85ad74a7bf42c034ece218331169c9384aa94"
+    },
+    "pointerProcessor": {
+      "tests": 2,
+      "passed": true,
+      "logSha256": "a549df14011d7f2fdcbd6bb849c4dba637feec45deb402f9c9af7466af842ec9"
+    },
+    "pointerGeometry": {
+      "tests": 2,
+      "passed": true,
+      "logSha256": "748c5ab8f3dcdb84de6aef65a30d93e91b47c72836ddde1cf61f856c566588d1"
+    },
+    "static": {
+      "passed": true,
+      "logSha256": "35fd5ab925e37a50f619523bba7e3cfb257f892c95a31751bc455264ac694271"
+    }
+  },
+  "previousIntegrationHosted": {
+    "status": "passed-and-artifact-audited",
+    "headSha": "04784991eafadd4e4b3ad3be6df951b2651f0b1e",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37223152112",
+    "originalChecks": 181,
+    "integratedChecks": 206,
+    "coversCurrentPointerQuery": false
+  },
+  "hosted": {
+    "status": "audited",
+    "run": {
+      "id": 37226934414,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37226934414",
+      "headSha": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+      "attempt": 2,
+      "status": "completed",
+      "conclusion": "success",
+      "checkoutCommit": "bd10f9a4f8a69a9fd57aac23c094534e351c5035",
+      "checkoutParents": [
+        "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+        "ab0dc44b54f713db6bc49c49e9ae10fbd438885b"
+      ]
+    },
+    "record": "hosted-ci.json",
+    "checks": {
+      "original": 193,
+      "current": 230
+    },
+    "sourcePinsVerified": 21,
+    "producerPins": 13,
+    "reactNativeInputPins": 13,
+    "coreParityChecks": 13,
+    "completeParity": false,
+    "nativeArtifactId": 11312810473,
+    "binaryRehashedFromArtifact": false,
+    "newCaptures": 0,
+    "notes": "Attempt1 iOS simulator discovery timed out before build; same-head attempt2 passed iOS and core parity. Contracts/native/Android were reused. No later fault fix or Godot mobile export certified."
+  },
+  "limitations": [
+    "Internal opt-in only: public imperative/native EventTarget flags remain disabled",
+    "Only View-path pointerdown capture and bubble interest is implemented; original dispatch/batching owns callbacks",
+    "Document-only listeners have a manual positive and native zero-Raw negative; document interest remains open",
+    "Pointer move/up/hover/click/capture/cancel listener interest and complete flag combinations remain open",
+    "Stop proves query hook removed/released; no post-stop query invocation is certified",
+    "Arbitrary query exception/non-boolean cleanup is not certified; pure pinned query ordinarily returns only boolean",
+    "No hardware input, mobile Godot export, complete PanResponder/responder, dev renderer or performance certification",
+    "Native filter behavior is specific to the compiled C++ lane; pinned Android Down/Up/Cancel/Click filters differ",
+    "All SDK/native adapter ABI acceptance remains experimental; source/binary packaging proof is not ABI certification"
+  ]
+}

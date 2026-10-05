@@ -6,7 +6,7 @@ import { examples, exampleOptions } from "../scripts/examples-catalog.mjs";
 test("catalog routes every example to a real documented source and scene", () => {
   assert.equal(new Set(examples.map(({ id }) => id)).size, examples.length);
   for (const entry of examples) {
-    assert.match(entry.id, /^[a-z]+$/);
+    assert.match(entry.id, /^[a-z]+(?:-[a-z]+)*$/);
     assert.ok(["public", "internal", "mixed"].includes(entry.api));
     for (const path of [entry.source, entry.scene, `examples/${entry.id}/README.md`])
       assert.ok(existsSync(new URL(`../${path}`, import.meta.url)), path);

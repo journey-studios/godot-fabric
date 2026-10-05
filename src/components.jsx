@@ -8,152 +8,13 @@ import React, {
 import { register } from "react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry";
 
 import usePressability from "react-native/Libraries/Pressability/usePressability";
-import { normalizeRect } from "react-native/Libraries/StyleSheet/Rect";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
+import { getInternalInstanceHandleFromPublicInstance } from "react-native/Libraries/ReactNative/ReactFabricPublicInstance/ReactFabricPublicInstance";
+import TextInputState from "./text-input-state";
 
-const style = Object.fromEntries(
-  [
-    "width",
-    "height",
-    "minWidth",
-    "minHeight",
-    "maxWidth",
-    "maxHeight",
-    "flex",
-    "flexGrow",
-    "flexShrink",
-    "flexBasis",
-    "flexDirection",
-    "flexWrap",
-    "justifyContent",
-    "alignItems",
-    "alignSelf",
-    "alignContent",
-    "gap",
-    "rowGap",
-    "columnGap",
-    "padding",
-    "paddingHorizontal",
-    "paddingVertical",
-    "paddingLeft",
-    "paddingRight",
-    "paddingTop",
-    "paddingBottom",
-    "margin",
-    "marginHorizontal",
-    "marginVertical",
-    "marginLeft",
-    "marginRight",
-    "marginTop",
-    "marginBottom",
-    "position",
-    "top",
-    "left",
-    "bottom",
-    "right",
-    "display",
-    "opacity",
-    "zIndex",
-    "overflow",
-  ].map((name) => [name, true]),
-);
-for (const name of ["backgroundColor", "borderColor", "color"])
-  style[name] = { process: processColor };
-for (const name of [
-  "borderWidth",
-  "borderTopWidth",
-  "borderRightWidth",
-  "borderBottomWidth",
-  "borderLeftWidth",
-  "borderRadius",
-  "borderTopLeftRadius",
-  "borderTopRightRadius",
-  "borderBottomLeftRadius",
-  "borderBottomRightRadius",
-  "borderStyle",
-  "fontSize",
-])
-  style[name] = true;
-export const controlViewConfig = {
-  uiViewClassName: "GodotControl",
-  validAttributes: {
-    ...Object.fromEntries(
-      [
-        "onStartShouldSetResponder",
-        "onStartShouldSetResponderCapture",
-        "onMoveShouldSetResponder",
-        "onMoveShouldSetResponderCapture",
-        "onResponderGrant",
-        "onResponderReject",
-        "onResponderStart",
-        "onResponderEnd",
-        "onResponderMove",
-        "onResponderRelease",
-        "onResponderTerminate",
-        "onResponderTerminationRequest",
-        "onTouchStart",
-        "onTouchStartCapture",
-        "onTouchMove",
-        "onTouchMoveCapture",
-        "onTouchEnd",
-        "onTouchEndCapture",
-        "onTouchCancel",
-        "onTouchCancelCapture",
-      ].map((name) => [name, true]),
-    ),
-    pointerEvents: true,
-    hitSlop: { process: normalizeRect },
-    kind: true,
-    svg: true,
-    text: true,
-    fontSize: true,
-    color: { process: processColor },
-    disabled: true,
-    placeholder: true,
-    submitBehavior: true,
-    testID: true,
-    onActivate: true,
-    onActivateCapture: true,
-    onChange: true,
-    onFocus: true,
-    onBlur: true,
-    onEndEditing: true,
-    onSubmitEditing: true,
-    onSelectionChange: true,
-    onKeyPress: true,
-    onLayout: true,
-    style,
-  },
-  bubblingEventTypes: {
-    ...Object.fromEntries(
-      ["Start", "Move", "End", "Cancel"].map((phase) => [
-        `topTouch${phase}`,
-        {
-          phasedRegistrationNames: {
-            bubbled: `onTouch${phase}`,
-            captured: `onTouch${phase}Capture`,
-          },
-        },
-      ]),
-    ),
-    topActivate: {
-      phasedRegistrationNames: {
-        bubbled: "onActivate",
-        captured: "onActivateCapture",
-      },
-    },
-  },
-  directEventTypes: {
-    topChange: { registrationName: "onChange" },
-    topFocus: { registrationName: "onFocus" },
-    topBlur: { registrationName: "onBlur" },
-    topEndEditing: { registrationName: "onEndEditing" },
-    topSubmitEditing: { registrationName: "onSubmitEditing" },
-    topSelectionChange: { registrationName: "onSelectionChange" },
-    topKeyPress: { registrationName: "onKeyPress" },
-    topLayout: { registrationName: "onLayout" },
-  },
-};
+import { controlViewConfig } from "./base-view-config";
+export { controlViewConfig };
+
 export const NativeControl = register("GodotControl", () => controlViewConfig);
 export function View(props) {
   return <NativeControl {...props} kind="view" />;
@@ -190,6 +51,8 @@ export function TextInput({
   onChange,
   onChangeText,
   onSelectionChange,
+  onFocus,
+  onBlur,
   ...props
 }) {
   if (value !== undefined && text !== undefined)
@@ -216,11 +79,34 @@ export function TextInput({
     throw new Error("TextInput selection uses nonnegative UTF-16 offsets");
   const initial = useRef(controlled ?? defaultValue);
   const native = useRef(null);
+  const ownedInput = useRef(null);
   const [eventCount, acknowledge] = useState(0);
   const [nativeSelection, observeSelection] = useState(null);
   const attach = useCallback(
     (instance) => {
       native.current = instance;
+      if (instance && ownedInput.current !== instance) {
+        if (ownedInput.current) {
+          TextInputState.blurInput(ownedInput.current);
+          TextInputState.unregisterInput(ownedInput.current);
+        }
+        ownedInput.current = instance;
+        Object.defineProperty(instance, "currentProps", {
+          configurable: true,
+          get() {
+            const handle = getInternalInstanceHandleFromPublicInstance(instance);
+            const props = handle?.stateNode?.canonical?.currentProps ?? {};
+            const metrics = instance.getNativeMetrics();
+            // RN's canonical props can be updated during a speculative render.
+            // Eligibility follows the committed native editability/lifetime;
+            // a retired or temporarily detached input cannot claim focus.
+            return { ...props, editable: instance.isConnected &&
+              metrics?.insideTree === true && metrics.editable === true };
+          },
+        });
+        instance.isFocused = () => TextInputState.currentlyFocusedInput() === instance;
+        TextInputState.registerInput(instance);
+      }
       let cleanup;
       if (typeof ref === "function") cleanup = ref(instance);
       else if (ref) ref.current = instance;
@@ -233,6 +119,13 @@ export function TextInput({
     },
     [ref],
   );
+  useLayoutEffect(() => () => {
+    if (ownedInput.current) {
+      TextInputState.blurInput(ownedInput.current);
+      TextInputState.unregisterInput(ownedInput.current);
+      ownedInput.current = null;
+    }
+  }, []);
   useLayoutEffect(() => {
     if (controlled === undefined && selection === undefined) return;
     native.current?.setTextAndSelection(
@@ -258,6 +151,14 @@ export function TextInput({
       disabled={disabled || !editable}
       placeholder={placeholder}
       submitBehavior={submitBehavior}
+      onFocus={(event) => {
+        TextInputState.focusInput(native.current);
+        onFocus?.(event);
+      }}
+      onBlur={(event) => {
+        TextInputState.blurInput(native.current);
+        onBlur?.(event);
+      }}
       onSelectionChange={(event) => {
         onSelectionChange?.(event);
         observeSelection(event.nativeEvent.selection);

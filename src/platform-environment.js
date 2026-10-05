@@ -1,6 +1,8 @@
-import { subscribeWindow, windowSnapshot } from "./window-dimensions";
+import NativeDimensions from "react-native/Libraries/Utilities/Dimensions";
+import { subscribeDimensions, disposeWindowSubscriptions, windowSnapshot } from "./window-dimensions";
+export { default as PixelRatio } from "react-native/Libraries/Utilities/PixelRatio";
 
-// Políticas explícitas desta surface: tema manual, texto LTR e escala lógica.
+// Políticas explícitas desta surface: tema manual e texto LTR.
 // Não são sondas de acessibilidade, tema ou estado de um sistema móvel.
 let scheme = "light";
 const appearanceListeners = new Set();
@@ -16,19 +18,13 @@ function requireEvent(actual, supported) {
     throw new Error(`Godot platform does not implement event ${actual}`);
 }
 export const Dimensions = {
-  get(name) {
-    if (name !== "window")
-      throw new Error("Godot Dimensions supports the surface window only");
-    return windowSnapshot();
-  },
+  get: (name) => NativeDimensions.get(name),
+  set: (dimensions) => NativeDimensions.set(dimensions),
   addEventListener(event, listener) {
-    requireEvent(event, "change");
-    const unsubscribe = subscribeWindow(() =>
-      listener({ window: windowSnapshot() }),
-    );
+    const native = subscribeDimensions(event, listener);
     const remove = () => {
-      unsubscribe();
-      dimensionSubscriptions.delete(remove);
+      if (!dimensionSubscriptions.delete(remove)) return;
+      native.remove();
     };
     dimensionSubscriptions.add(remove);
     return { remove };
@@ -63,14 +59,6 @@ export const AccessibilityInfo = {
   },
 };
 export const I18nManager = { isRTL: false };
-export const PixelRatio = {
-  get: () => windowSnapshot().scale,
-  getFontScale: () => windowSnapshot().fontScale,
-  getPixelSizeForLayoutSize: (size) =>
-    Math.round(size * windowSnapshot().scale),
-  roundToNearestPixel: (size) =>
-    Math.round(size * windowSnapshot().scale) / windowSnapshot().scale,
-};
 export function environmentStats() {
   return {
     theme: scheme,
@@ -84,12 +72,16 @@ export function environmentStats() {
 }
 export function disposeEnvironment() {
   AppState.currentState = "inactive";
-  stateListeners.forEach((listener) => listener("inactive"));
-  for (const remove of dimensionSubscriptions) remove();
-  for (const listeners of [
-    appearanceListeners,
-    stateListeners,
-    motionListeners,
-  ])
-    listeners.clear();
+  try {
+    stateListeners.forEach((listener) => listener("inactive"));
+  } finally {
+    for (const remove of dimensionSubscriptions) remove();
+    disposeWindowSubscriptions();
+    for (const listeners of [
+      appearanceListeners,
+      stateListeners,
+      motionListeners,
+    ])
+      listeners.clear();
+  }
 }

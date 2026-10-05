@@ -1,0 +1,3520 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-document-up-refs-remount-four-flags",
+  "status": "verified-local-headless-and-native-captures",
+  "at": "2026-10-05T12:33:26.292774+00:00",
+  "executionBaseCommit": "3b74ae8b6cc35ba79b4bc8ec2fd01af447a20884",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "mode": "Release",
+    "hostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+    "nativeBuildReceiptSha256": "17f9fa65bca6c93d29a1f648e129985318b65fb19e3c3ab68f3df7b45427e3e3"
+  },
+  "commands": [
+    "npm run test:pointers:documents:up",
+    "node tests/pointer-document-up-native.test.mjs --interest=current --flag=enabled --capture"
+  ],
+  "headlessChecks": 2709,
+  "previousLifecycleHeadlessChecks": 2143,
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-document-bootstrap.js": "0b390630f7b7a37e581cc9949c38964b6a8692e2606fe83e1ed3d7e9a1a9f07c",
+    "tests/pointer-document-fixture.jsx": "bef4aab3f588e18535ddac31bffda11a54d850f7961c85872940e0e0398ef203",
+    "tests/pointer-document-up-fixture.jsx": "766ebef1d2cc9be3d9b5cf51694ce6d53ddf151faa59413f96af334ca7f9c2e9",
+    "tests/pointer-document-up-probe.gd": "9ba578fb79b0db99cf8ffe7cd31d29ba8d2c4a33ebe2cf1315e293c173923a93",
+    "tests/pointer-document-up-native.test.mjs": "373255e7b24245fcae68e2c86cfb128a65b89c7dc6bdf53dfff2dfaf32b0ab46",
+    "scripts/event-target-bundle.mjs": "bedb3c8998b9643398e5ce23c75e62a9be48cbf43165e78fc338a369ec205df3",
+    "sdk/toolchain/platform-plugin.mjs": "e2b98c7ad95a47286bc2250eac7b347805462d953b734827594c4bfbcc8f4605",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "d5a91d13b68df9d7de04c344ec3435643131b5123467d9cdea97d907f4e27f99",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+    "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+    "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+    "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "3122db48d30865c64f6129f6e5d4fcc797a1c6ff8b748cb12709a1a7148af752",
+    ".fallowrc.json": "4fa36fdc1f0faf157a49871c4ddce38ae9ead22f7ed28c15722ceff8d4848cd8",
+    "package.json": "164dd063544d89be6be8254bc44c40dc6c554487abbbd7c939cf3feec477f548"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "src/private/webapis/dom/abort-api/AbortController.js": "03082ec42dfbb3de1fc5270b3c6fe7addf7be85ba595f877a0d5f3768c84963a",
+    "src/private/webapis/dom/abort-api/AbortSignal.js": "c0791a70fa3dd97652736b74b789b2bc162709822815405624155c0bb48b8d3e",
+    "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+    "src/private/webapis/dom/nodes/internals/NodeInternals.js": "2e8d491275a6c818e9acc3b7d4d49a76d90b1fb96b9c82a75ae18033f9a908ac",
+    "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js": "2420fa1425c70cd7d4c707f655dd8562024c0a3956a7cbebd760ab9ac01ccbda",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp": "b0f33a89e1c812112e1457076667863226b4f42247aa35c2b367e577195dd6b7",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+  },
+  "lanes": [
+    {
+      "interestMode": "original",
+      "flagMode": "disabled",
+      "checks": 303,
+      "passed": 303,
+      "previousLifecycleChecksPreservedInOrder": 239,
+      "addedChecks": 64,
+      "reportSha256": "6ff0f37c58c4ff954fc7072c0569544e0fb18d191d6e6db7c543e8781e606acd",
+      "logSha256": "ed0f061d547c47d067b1ef99a6d6189c030c95663faee75dd3a91551440504f2",
+      "checkIdDigestSha256": "2032fc939a97caf482e45d31275b57e679acbcb328b2c1c019a22865e4566ae0",
+      "bundleSha256": "280d862de7bd2dad6244e694c103b5cdb2ccf1cb8eb10ba8adbc0404eb4f824f",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstallations": 0,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "undefined",
+          "undefined",
+          "undefined"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": false,
+        "noPrototypeBorrow": true
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            null
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "original",
+      "flagMode": "imperative-only",
+      "checks": 303,
+      "passed": 303,
+      "previousLifecycleChecksPreservedInOrder": 239,
+      "addedChecks": 64,
+      "reportSha256": "9a5c83176299c44ae5bebce233b025e47084363ed456a35c2b539d55a9f2e826",
+      "logSha256": "12c969390a8a2b42d0a25e73cb51462ae0956818ec7b7ea5625279d1aca566ab",
+      "checkIdDigestSha256": "2032fc939a97caf482e45d31275b57e679acbcb328b2c1c019a22865e4566ae0",
+      "bundleSha256": "6c4a16a176016bda7c4758a745d830f48b0daa403399984fd3555b91f0e9492c",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstallations": 0,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "undefined",
+          "undefined",
+          "undefined"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": false,
+        "noPrototypeBorrow": true
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            null
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "original",
+      "flagMode": "internal-only",
+      "checks": 311,
+      "passed": 311,
+      "previousLifecycleChecksPreservedInOrder": 247,
+      "addedChecks": 64,
+      "reportSha256": "32a9a6b030744271b0f271d62f069daea098a617dd6137ac0f8b1db086c7015e",
+      "logSha256": "3a9dc9cdfcb0ee84272a1058615a47826c081feb1b28905ba406cbc9e9810d21",
+      "checkIdDigestSha256": "45df47ce0d7afa2c977bf7941dcee2280e94847111cef2c0838814b6a395e753",
+      "bundleSha256": "224b34e7e1c2492aaf97857a2806c7ec0934545716ab76847c33cf4cbf99abf9",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstallations": 0,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "function",
+          "function",
+          "function"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": true,
+        "cleaned": true,
+        "noPrototypeBorrow": true,
+        "returned": true,
+        "targetMatches": true,
+        "trusted": false
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            null
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [
+            "OldDoc"
+          ],
+          "phases": [
+            2
+          ],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 1,
+            "sameObject": true,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "original",
+      "flagMode": "enabled",
+      "checks": 313,
+      "passed": 313,
+      "previousLifecycleChecksPreservedInOrder": 249,
+      "addedChecks": 64,
+      "reportSha256": "6856255f33738b11200c28dc4e26388f6101a6b93cec8cf893c063527b584444",
+      "logSha256": "0a625c7b87b010cf07fc848ed1cad265cd569828cd5eaa5666ba1ad443270c76",
+      "checkIdDigestSha256": "7a9baf63cdd3a561cfbb12bdc55914d35589517f5828bd1beae4c4522ccbb53a",
+      "bundleSha256": "7e76eb82e38d3f84ea6e14c1f8a476bf6f6d00434fbbf55d229a6dbe708f3010",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstallations": 0,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "function",
+          "function",
+          "function"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": true,
+        "cleaned": true,
+        "noPrototypeBorrow": true,
+        "returned": true,
+        "targetMatches": true,
+        "trusted": false
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            null
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [
+            "OldDoc"
+          ],
+          "phases": [
+            2
+          ],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 1,
+            "sameObject": true,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "current",
+      "flagMode": "disabled",
+      "checks": 303,
+      "passed": 303,
+      "previousLifecycleChecksPreservedInOrder": 239,
+      "addedChecks": 64,
+      "reportSha256": "d2e01d68f663f3ca87b713c03337480202819f393691453c5de49376150e1462",
+      "logSha256": "dbaa8848eb3c3254c657301c76d8aecb6fc3a494b77619d9f3c0abb2af17d22c",
+      "checkIdDigestSha256": "2032fc939a97caf482e45d31275b57e679acbcb328b2c1c019a22865e4566ae0",
+      "bundleSha256": "a762d2961cbe4e90a45a3158b3c0a547dd3ac947e47aeb0171ee7a149006c22c",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstallations": 0,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "undefined",
+          "undefined",
+          "undefined"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": false,
+        "noPrototypeBorrow": true
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            null
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "current",
+      "flagMode": "imperative-only",
+      "checks": 303,
+      "passed": 303,
+      "previousLifecycleChecksPreservedInOrder": 239,
+      "addedChecks": 64,
+      "reportSha256": "cdcdb322a6df6b50694eaa3e7d4133f430330ee5a809bdb70980dde8b4e3cf1e",
+      "logSha256": "072bdb0b7092b0d698f403d1cedc15c0b5ef3d4b37f0eaf5e3ed24dc34ee92f6",
+      "checkIdDigestSha256": "2032fc939a97caf482e45d31275b57e679acbcb328b2c1c019a22865e4566ae0",
+      "bundleSha256": "4ba6760e43870812dbbccd9c33c7b640e59b14620615cade93c1f64f407bca31",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstallations": 0,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "undefined",
+          "undefined",
+          "undefined"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": false,
+        "noPrototypeBorrow": true
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            null
+          ],
+          "commitsBeforeAfter": [
+            2,
+            2
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "current",
+      "flagMode": "internal-only",
+      "checks": 435,
+      "passed": 435,
+      "previousLifecycleChecksPreservedInOrder": 344,
+      "addedChecks": 91,
+      "reportSha256": "7b54af7d52cd14073f148fd91ee9c85ccb97fbcc39c9e35246f87c70bfc7d04e",
+      "logSha256": "3e3194c2603189f379f33d13b4715653f51995bc3b8e7f36ac6f53753afd5bed",
+      "checkIdDigestSha256": "cff1027c9e7bca0f40eb54c5101a8d5bf38647ade1f2ce9a1e2fed80b4d99dd6",
+      "bundleSha256": "2d481a44da75586e5b7b2364feeb9e5e9f0790bd31d3c14d9ce751e6261459c4",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstallations": 1,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "function",
+          "function",
+          "function"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": true,
+        "cleaned": true,
+        "noPrototypeBorrow": true,
+        "returned": true,
+        "targetMatches": true,
+        "trusted": false
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "rootQueries": [
+            {
+              "tag": 1,
+              "offset": 36,
+              "result": true
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            9,
+            11
+          ],
+          "commitsBeforeAfter": [
+            8,
+            9
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            11,
+            null
+          ],
+          "commitsBeforeAfter": [
+            9,
+            9
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "rootQueries": [
+            {
+              "tag": 11,
+              "offset": 36,
+              "result": true
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            2,
+            4
+          ],
+          "commitsBeforeAfter": [
+            2,
+            3
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [
+            {
+              "tag": 21,
+              "offset": 36,
+              "result": false
+            },
+            {
+              "tag": 21,
+              "offset": 37,
+              "result": false
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [
+            "OldDoc"
+          ],
+          "phases": [
+            2
+          ],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 1,
+            "sameObject": true,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "rootQueries": [
+            {
+              "tag": 21,
+              "offset": 36,
+              "result": true
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            2
+          ],
+          "commitsBeforeAfter": [
+            1,
+            2
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    },
+    {
+      "interestMode": "current",
+      "flagMode": "enabled",
+      "checks": 438,
+      "passed": 438,
+      "previousLifecycleChecksPreservedInOrder": 347,
+      "addedChecks": 91,
+      "reportSha256": "b477e8cf3491f1cb1e87a436b6c73df70f23ff21cf46c365f6c40c223ddc240b",
+      "logSha256": "9bf4d24de4c4d29dd20a921a9990fe51196f89aad0c729ab9f7b10989fbf797e",
+      "checkIdDigestSha256": "6b91b28b30d19c1e4790fe563e3e218a1c4f636183785b7e0f9477bac8b8ac3f",
+      "bundleSha256": "dc117b99924b30db0abf830d1847a1d321862ad8a12eeb18feb914fac111203a",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstallations": 1,
+      "rerenderIdentity": {
+        "docSame": true,
+        "elementSame": true,
+        "getterSame": true,
+        "refSame": true,
+        "revision": 1
+      },
+      "retainedIdentities": {
+        "currentDocFresh": true,
+        "currentElementFresh": true,
+        "docConnected": false,
+        "elementConnected": false,
+        "methods": [
+          "function",
+          "function",
+          "function"
+        ],
+        "oldRootGetterNull": true,
+        "originalDoc": true
+      },
+      "retiredSurfaceId": 1,
+      "replacementSurfaceId": 21,
+      "retainedManual": {
+        "available": true,
+        "cleaned": true,
+        "noPrototypeBorrow": true,
+        "returned": true,
+        "targetMatches": true,
+        "trusted": false
+      },
+      "cases": {
+        "refs/rerender/up": {
+          "callbacks": [
+            "DocC",
+            "RootC",
+            "RootB",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            1,
+            3,
+            3
+          ],
+          "rootQueries": [
+            {
+              "tag": 1,
+              "offset": 36,
+              "result": true
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            14,
+            18
+          ],
+          "commitsBeforeAfter": [
+            10,
+            11
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 4,
+            "sameObject": true,
+            "touchEndDistinct": true
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 18,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/unmount": {
+          "callbacks": [
+            "TouchCancel"
+          ],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            18,
+            null
+          ],
+          "commitsBeforeAfter": [
+            11,
+            11
+          ],
+          "rawTypes": [
+            "topTouchCancel",
+            "topTouchCancel"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 1,
+            "activeCapture": 0,
+            "hover": 1,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 1,
+            "contacts": 1,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 1,
+            "suppressed": 0
+          }
+        },
+        "refs/retire/B-positive/up": {
+          "callbacks": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "rootQueries": [
+            {
+              "tag": 11,
+              "offset": 36,
+              "result": true
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            2,
+            4
+          ],
+          "commitsBeforeAfter": [
+            2,
+            3
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 20,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-inert/up": {
+          "callbacks": [
+            "TouchEnd"
+          ],
+          "phases": [],
+          "rootQueries": [
+            {
+              "tag": 21,
+              "offset": 36,
+              "result": false
+            },
+            {
+              "tag": 21,
+              "offset": 37,
+              "result": false
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/retained-manual": {
+          "callbacks": [
+            "OldDoc"
+          ],
+          "phases": [
+            2
+          ],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": null,
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 1,
+            "sameObject": true,
+            "touchEndDistinct": null
+          },
+          "processorAfter": null,
+          "routingAfter": null
+        },
+        "refs/remount/stale-release": {
+          "callbacks": [],
+          "phases": [],
+          "rootQueries": [],
+          "componentQueries": 0,
+          "counterBeforeAfter": [
+            0,
+            0
+          ],
+          "commitsBeforeAfter": [
+            1,
+            1
+          ],
+          "rawTypes": [],
+          "eventIdentity": {
+            "callbackCount": 0,
+            "sameObject": null,
+            "touchEndDistinct": null
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 21,
+            "stored": 0,
+            "suppressed": 0
+          }
+        },
+        "refs/remount/fresh-document/up": {
+          "callbacks": [
+            "DocC",
+            "DocB",
+            "TouchEnd"
+          ],
+          "phases": [
+            1,
+            3
+          ],
+          "rootQueries": [
+            {
+              "tag": 21,
+              "offset": 36,
+              "result": true
+            }
+          ],
+          "componentQueries": 6,
+          "counterBeforeAfter": [
+            0,
+            2
+          ],
+          "commitsBeforeAfter": [
+            1,
+            2
+          ],
+          "rawTypes": [
+            "topPointerUp",
+            "topPointerUp",
+            "topTouchEnd",
+            "topTouchEnd"
+          ],
+          "eventIdentity": {
+            "callbackCount": 2,
+            "sameObject": true,
+            "touchEndDistinct": true
+          },
+          "processorAfter": {
+            "active": 0,
+            "activeCapture": 0,
+            "hover": 0,
+            "pendingCapture": 0
+          },
+          "routingAfter": {
+            "active": 0,
+            "contacts": 0,
+            "hoverPointers": 0,
+            "nextId": 22,
+            "stored": 0,
+            "suppressed": 0
+          }
+        }
+      }
+    }
+  ],
+  "capture": {
+    "checks": 535,
+    "pixelChecks": 90,
+    "counterAndSaveChecks": 7,
+    "headlessCheckIdsUnchanged": true,
+    "independentNodePNGByteDecode": true,
+    "retiredRootClearColor": "0b1019ff",
+    "reportSha256": "507e0c5afd86db6f71c2388de744bac6a9a85bb8dacb95400c8ae31c60ca3145",
+    "logSha256": "20faab5e569958ff66dd8f473f8d706396450309704eb0125ec22bced32263f7",
+    "frames": [
+      {
+        "file": "pointer-document-up-initial.png",
+        "committed": false,
+        "sha256": "77debf03541c201f97667106a380b58b326f7e6eafad408a799682bbd8718ce4",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              445,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 0,
+          "B": 0
+        }
+      },
+      {
+        "file": "pointer-document-up-updated.png",
+        "committed": false,
+        "sha256": "7cd2069ed1c57082c2c2c1b22f90758d0bcbaa6e06786f9dfbdae25e91ef23bb",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              445,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 2,
+          "B": 0
+        }
+      },
+      {
+        "file": "pointer-document-up-once-before.png",
+        "committed": false,
+        "sha256": "b805bda86733505f707a07bf8eb4f74901d4c3925e712b3dcc06d36537079afc",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              90,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              94,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              447,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              449,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 12,
+          "B": 2
+        }
+      },
+      {
+        "file": "pointer-document-up-once-first.png",
+        "committed": false,
+        "sha256": "b6d20b639c566fd8e2024687a2e54c024bebe5e67f9e04014652cc40c7fe0ea1",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              90,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              94,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              447,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              449,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 13,
+          "B": 2
+        }
+      },
+      {
+        "file": "pointer-document-up-once-second.png",
+        "committed": false,
+        "sha256": "b6d20b639c566fd8e2024687a2e54c024bebe5e67f9e04014652cc40c7fe0ea1",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              90,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              94,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              447,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              449,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 13,
+          "B": 2
+        }
+      },
+      {
+        "file": "retired.png",
+        "committed": true,
+        "sha256": "ced6f22e485d80510839c7825e1dccd40304a0c9d91149b147f45f596a333a2c",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              35,
+              175
+            ]
+          },
+          {
+            "color": "0b1019ff",
+            "expected": "0b1019ff",
+            "point": [
+              37,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              447,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              449,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "B": 2
+        }
+      },
+      {
+        "file": "remounted.png",
+        "committed": true,
+        "sha256": "3d79efacf72a2137f32d4ed5677f2c5b7b4ff3ce913a58825440828b1fffece1",
+        "width": 760,
+        "height": 220,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              260,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              45,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              47,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              49,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              405,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              475,
+              55
+            ]
+          },
+          {
+            "color": "0f766eff",
+            "expected": "0f766eff",
+            "point": [
+              660,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              425,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              445,
+              175
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              455,
+              175
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              457,
+              175
+            ]
+          }
+        ],
+        "counters": {
+          "A": 2,
+          "B": 4
+        }
+      }
+    ]
+  },
+  "regressions": {
+    "downChecks": 2723,
+    "downLanes": [
+      {
+        "interest": "original",
+        "flagMode": "disabled",
+        "checks": 336,
+        "reportSha256": "d66544c7d7aad6d673ee05cc86b1eeb998cef6d788462f934743be592dbb51f9"
+      },
+      {
+        "interest": "original",
+        "flagMode": "imperative-only",
+        "checks": 336,
+        "reportSha256": "43290b79637cc82e2afd5b0a1129747d8d94dcf7cf3a8074391ad71c1ae54088"
+      },
+      {
+        "interest": "original",
+        "flagMode": "internal-only",
+        "checks": 338,
+        "reportSha256": "3ee4c99d77a62c17de979b6a9719d5aeda732dda820ab0fe2ce74c7142479d0e"
+      },
+      {
+        "interest": "original",
+        "flagMode": "enabled",
+        "checks": 338,
+        "reportSha256": "3427a3b7db46c0925554e31a87d1e28abfbbb71821ee59b1b4aa41c2af11b306"
+      },
+      {
+        "interest": "current",
+        "flagMode": "disabled",
+        "checks": 336,
+        "reportSha256": "d5c3781be37dc641e4d42f32d2597b8f577e0c6986a5cf4ee0b4d8b9b685ec29"
+      },
+      {
+        "interest": "current",
+        "flagMode": "imperative-only",
+        "checks": 336,
+        "reportSha256": "c02e3526d00569243d4cf69e9b9289527cc882cc99fcec5d3e50aae23c33c4df"
+      },
+      {
+        "interest": "current",
+        "flagMode": "internal-only",
+        "checks": 340,
+        "reportSha256": "45ee2988aa2978bfebce665eaee9904ec521717815ffc5b4666df6c7a08e7d67"
+      },
+      {
+        "interest": "current",
+        "flagMode": "enabled",
+        "checks": 363,
+        "reportSha256": "b531f64a5b21df4fc0b0c2aa1cc8af7a48cc8f0c70d599abea80d8daab33c997"
+      }
+    ],
+    "downLogSha256": "89a551fe1d4b2819cbd9aa5f79a90bbd42ab16fe302e4b170805d8a66adbd8da",
+    "nativeAndSDKProductionFilesUnchanged": true,
+    "changedFilesSinceExecutionBase": [
+      "tests/pointer-document-fixture.jsx",
+      "tests/pointer-document-up-fixture.jsx",
+      "tests/pointer-document-up-native.test.mjs",
+      "tests/pointer-document-up-probe.gd"
+    ],
+    "newSDKRuntimeCertificationClaimed": false,
+    "nodeContractChecks": 255,
+    "pythonContractChecks": 13,
+    "contractsLogSha256": "8374f31c823306bf7593d873458196ac5475816505b48890625a16035602d66f",
+    "staticCheckPassed": true,
+    "publicationScanPassed": true
+  },
+  "hostedCI": {
+    "status": "pending-refs-slice",
+    "previousLifecycleAudit": "../pointer-document-up-lifecycle/hosted-ci.json"
+  },
+  "limits": [
+    "Document and documentElement bubble listeners across rerender, held-root retirement and one replacement root generation; capture-phase and View/element lifecycle across retirement are not certified.",
+    "Retirement is FabricSurface.unmount on the same application; application stop, Hermes restart, hot reload and React key remount of the whole tree are separate.",
+    "The stale release is a ScreenTouch release for the index cancelled by retirement; it is not a general Down/Up pointerId pairing proof across devices or hardware.",
+    "Retained listeners stay registered on disconnected original objects; the slice proves they receive no native Up, not that they are garbage collected.",
+    "Dispatch-time mutation, abort inside native dispatch, once reentry, Up query/resolver faults, captured/no-hit/null-target Up and full RN parity remain open.",
+    "Original/current are SDK interest-mode controls on the same native binary, not old/new native host controls.",
+    "The executed tree was dirty after 3b74ae8; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "sourceVerification": {
+    "method": "git show IMPLEMENTATION:path and SHA-256 against executed raw reports",
+    "uniqueTrackedInputCount": 71,
+    "allExecutedCodeAndConfigurationInputsMatchImplementationCommit": true,
+    "executionBaseAndDirtyStatePreserved": true
+  }
+}

@@ -1,4 +1,5 @@
 """Build Fabric's portable C++ core and a GDExtension; never rebuild Godot."""
+import argparse
 import hashlib
 import json
 import platform
@@ -6,6 +7,7 @@ import shutil
 import subprocess
 import tarfile
 import tempfile
+import sys
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -39,7 +41,7 @@ def source(name):
     return destination
 
 
-def main():
+def main(target="macos", configuration="Release"):
     from extension_startup import prepare_extension_startup
     if (platform.system(), platform.machine()) != ("Darwin", "arm64"):
         raise RuntimeError("This validation currently builds on macOS arm64 only")
@@ -59,8 +61,13 @@ def main():
     run("npm", "ci", "--workspaces=false", "--ignore-scripts")
     (PROJECT / "node_modules/.gdignore").touch()
     run("npm", "run", "bundle")
+    if target != "macos":
+        run(sys.executable, PROJECT / "scripts/ios-build.py", "--target", target,
+            "--configuration", configuration)
+        return
     run(cmake, "-S", PROJECT / "native", "-B", DEPS / "build",
-        "-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_OSX_ARCHITECTURES=arm64")
+        f"-DCMAKE_BUILD_TYPE={configuration}", "-DCMAKE_OSX_ARCHITECTURES=arm64",
+        "-DGODOTCPP_TARGET=" + ("template_release" if configuration == "Release" else "template_debug"))
     print("Compiling upstream Fabric and Godot bindings; output in .deps/compile.log", flush=True)
     with (DEPS / "compile.log").open("w") as log:
         result = subprocess.run([str(cmake), "--build", str(DEPS / "build"), "--parallel", "4"], stdout=log, stderr=subprocess.STDOUT)
@@ -86,4 +93,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--target", choices=("macos", "ios-simulator", "ios-device"), default="macos")
+    parser.add_argument("--configuration", choices=("Debug", "Release"), default="Release")
+    options = parser.parse_args()
+    main(options.target, options.configuration)

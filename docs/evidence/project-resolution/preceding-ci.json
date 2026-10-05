@@ -1,0 +1,41 @@
+{
+  "format": "godot-fabric.preceding-builder-ci/v1",
+  "checkedAt": "2026-10-03T21:59:40.475931+00:00",
+  "headSha": "9c75031eaab462dad830be9d58119a826f228505",
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839/job/111296260918"
+    },
+    {
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839/job/111296261091"
+    },
+    {
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839/job/111296261095"
+    },
+    {
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839/job/111296261150"
+    },
+    {
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37154927839/job/111297807816"
+    }
+  ],
+  "scope": "Preceding explicit-TSConfig builder delivery; does not certify the newer project-resolution implementation."
+}

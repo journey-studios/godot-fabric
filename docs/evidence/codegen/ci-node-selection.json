@@ -1,0 +1,181 @@
+{
+  "format": "godot-fabric.experimental-codegen-native-compile/v1",
+  "checkedAt": "2026-10-03T18:33:51.267257+00:00",
+  "target": {
+    "platform": "macos",
+    "architecture": "arm64",
+    "configuration": "Release",
+    "minimumOS": "13.0"
+  },
+  "declaredVersions": {
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "godot": "4.7.2",
+    "node": "22.23.3"
+  },
+  "nativeCompiled": true,
+  "nativeLinked": false,
+  "nativeLoaded": false,
+  "runtimeExecuted": false,
+  "abiCertified": false,
+  "declarationAttested": false,
+  "nativeHeaderInputsVerified": false,
+  "passed": true,
+  "listedInputsMatchWorkingTree": true,
+  "stages": [
+    {
+      "stage": "compiler-version",
+      "log": "logs/compiler-version.log",
+      "exitCode": 0,
+      "logSha256": "e370fa18f18966b9b9ee8442eb1d0b179d0d4a5cb12ad7c009088f87dc8801b0"
+    },
+    {
+      "stage": "node-version",
+      "log": "logs/node-version.log",
+      "exitCode": 0,
+      "logSha256": "dcf62794cddc8d3455b70b4fb471667003c38c06352dd4dc95b35be482fe8bd2"
+    },
+    {
+      "stage": "generate",
+      "log": "logs/generate.log",
+      "exitCode": 0,
+      "logSha256": "30cc0660d3025d0f40276a89fb9efb4654222137c7a02ce19c0f214eff9bd087"
+    },
+    {
+      "stage": "verify-before-compile",
+      "log": "logs/verify-before-compile.log",
+      "exitCode": 0,
+      "logSha256": "6c982e3b990654391fcc03529c5a3061376d06c0a445cb941bb153c9c67b0b59"
+    },
+    {
+      "stage": "compile-1-ComponentDescriptors",
+      "log": "logs/compile-1-ComponentDescriptors.log",
+      "exitCode": 0,
+      "logSha256": "7ea097adba9f3670e2fd703271d94eb7ed2505622a9781e8db7f5d4143385449"
+    },
+    {
+      "stage": "compile-2-EventEmitters",
+      "log": "logs/compile-2-EventEmitters.log",
+      "exitCode": 0,
+      "logSha256": "cada35ce3f0ad05680fb9985a91dc70ac74e789e99a4e414a15d7d435a620eb8"
+    },
+    {
+      "stage": "compile-3-Props",
+      "log": "logs/compile-3-Props.log",
+      "exitCode": 0,
+      "logSha256": "cbe5b97794692a4d1a4dd7e635efce5b6d8613c85e6be25951930b60d4253969"
+    },
+    {
+      "stage": "compile-4-ShadowNodes",
+      "log": "logs/compile-4-ShadowNodes.log",
+      "exitCode": 0,
+      "logSha256": "430d01bcad037e83f8cf41346ca517d4ae72f72d35c5987d2e6fad371d28a139"
+    },
+    {
+      "stage": "compile-5-States",
+      "log": "logs/compile-5-States.log",
+      "exitCode": 0,
+      "logSha256": "7499711bd56f9bfe2ad06d3247bea9859f4e603293a2725fdaf7b3f36273b341"
+    },
+    {
+      "stage": "compile-6-native_compile",
+      "log": "logs/compile-6-native_compile.log",
+      "exitCode": 0,
+      "logSha256": "b4be74ee80afa93b203d4e48a9a47965bcd763b3543fa73cfdfbbc4fee3a3f30"
+    },
+    {
+      "stage": "verify-after-compile",
+      "log": "logs/verify-after-compile.log",
+      "exitCode": 0,
+      "logSha256": "6c982e3b990654391fcc03529c5a3061376d06c0a445cb941bb153c9c67b0b59"
+    }
+  ],
+  "translationUnits": [
+    {
+      "source": "generated/cpp/react/renderer/components/CodegenFixture/ComponentDescriptors.cpp",
+      "sourceSha256": "fa7ad1285ea4a6d21fdcd64240faf1a3b2f41ea8690fdcead9f74785efbffaab",
+      "object": "objects/ComponentDescriptors.o",
+      "exitCode": 0,
+      "objectSha256": "457d8ef7878d051865f93976d00f365acb42ff77b8b3d376f661890d3d26c057"
+    },
+    {
+      "source": "generated/cpp/react/renderer/components/CodegenFixture/EventEmitters.cpp",
+      "sourceSha256": "bd8a759010d9b7b4dd52bcea458e3963be2e3d93e2ab3e403fa0112f09bb24f1",
+      "object": "objects/EventEmitters.o",
+      "exitCode": 0,
+      "objectSha256": "eb6689630a74f553f0506163a1ea4b6b37d69ffa638597d7426d6cadb0cc34f9"
+    },
+    {
+      "source": "generated/cpp/react/renderer/components/CodegenFixture/Props.cpp",
+      "sourceSha256": "c3169131d1d9084e5f4ac0bee02958fe1c6daf0258291cb16ead2058a106f060",
+      "object": "objects/Props.o",
+      "exitCode": 0,
+      "objectSha256": "84a0415c2f4961b6821f9163481fb2b5d8c37d833dc83d08893d35a75f1b945a"
+    },
+    {
+      "source": "generated/cpp/react/renderer/components/CodegenFixture/ShadowNodes.cpp",
+      "sourceSha256": "52031b768ee903b0074e047eba8fa8677643119a1b85b7f6addefba8938cce5f",
+      "object": "objects/ShadowNodes.o",
+      "exitCode": 0,
+      "objectSha256": "0384802f5c68188e9bcaa733b5ca6e69393de140c6a1dd4fc3f556e6b626ec01"
+    },
+    {
+      "source": "generated/cpp/react/renderer/components/CodegenFixture/States.cpp",
+      "sourceSha256": "7fed0142c9dc56554b98b74c0ac7b5b83789f093cb764a440dab6af7ee0288c4",
+      "object": "objects/States.o",
+      "exitCode": 0,
+      "objectSha256": "e92aeaccedf53228f96d2de70e30a8acd4fc3754e4ecfdbb968aa4c13103638e"
+    },
+    {
+      "source": "harness/native_compile.cpp",
+      "sourceSha256": "92a11ba5ec9879b5fb24cfbbfa00beb40fb0d0f3674bb495f6643735660f7738",
+      "object": "objects/native_compile.o",
+      "exitCode": 0,
+      "objectSha256": "f4f847a614f4553f0d7e0304ea21c92e9411b40d51a44d2ea07f1cd88582dba9"
+    }
+  ],
+  "inputSha256": {
+    ".deps/build/CMakeFiles/fabric_godot.dir/flags.make": "af023acc19fe93ad7c3f7edc8b1670af5400655c38ecf47dba4b026c4409ff2f",
+    ".deps/build/CMakeCache.txt": "6e07b91077a4b215f9b35f25363ea2a11f6f1a4f6176bb93b49943e00abb34be",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "package-lock.json": "7c19d95a91da6a8aab8e1c5ac818e16a679d9f365b4fb9eaec88b7fcfd69c7fa",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/codegen-native-compile.py": "a6a6f738cf051b4357c81b74580317e3946b8b38e3e89b52720328fc14ea4fca",
+    "tests/codegen/native_compile.cpp": "92a11ba5ec9879b5fb24cfbbfa00beb40fb0d0f3674bb495f6643735660f7738",
+    "tests/codegen/native-combination.json": "81b8398be923baa41a64f00a9410d7ca16b24ee043bb1754224eca34bdc96b47",
+    "tests/codegen/NativeCodegenProbe.ts": "643777e7b7f0b4d62e11bc8690faef352e695798020cd6f80e857bf4c2c80b42",
+    "tests/codegen/BadgeNativeComponent.ts": "db601756ca4380e9007f2f90e8a75bf2859ff29b7859dac54110f52525ddbd6a"
+  },
+  "schemaSha256": "e854eda364375ffd95b91a642bd96e4a3ce32b5a61858521df97f243df40d442",
+  "sourceManifestSha256": "838a848fc094812d2bdf8db863ae85d58566cad5f13e436a47d5372bd0758a39",
+  "node": {
+    "version": "v22.23.3",
+    "executableSha256": "68f4d07ca49e0500cc135c7e0a445093e228e42e126ac22306d045f0a8c2636b",
+    "selection": "explicit"
+  },
+  "compiler": {
+    "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)",
+    "sdk": "MacOSX26.2.sdk",
+    "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59"
+  },
+  "rawReportSha256": "970c306d9bb36cd49ff8f5a16ff81f55e6c31d80086ea66a6d65986e3e16b7b0",
+  "nodeSelectionTests": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0
+  },
+  "hostedFailure": {
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37143997861",
+    "job": "native-cold-start",
+    "stage": "test:codegen:native",
+    "cause": "Runner assumed an addon-private Node executable not provisioned by CI setup. No compilation ran.",
+    "fixedHostedRun": "pending"
+  },
+  "sourceSha256": {
+    "scripts/codegen-native-compile.py": "a6a6f738cf051b4357c81b74580317e3946b8b38e3e89b52720328fc14ea4fca",
+    "tests/codegen_native_compile_test.py": "352e827e4ed603845fe565c09bfec72addb674a16e33dc8f433e0dfa1c8fb115",
+    ".github/workflows/contracts.yml": "b8ce3d5b3f5ef4bb9365a5238626227bf753d65c759c281ec7f7de9ef49ac961"
+  }
+}

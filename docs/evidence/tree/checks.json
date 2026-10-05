@@ -1,0 +1,5691 @@
+{
+  "format": "godot-fabric.tree-checks/v1",
+  "hostSha256": "42ee5c75a70e8fc7fdee9d6144c810248abe6aa1a2f0100abd2f3383e18eac79",
+  "modes": {
+    "headless": {
+      "displayServer": "headless",
+      "checks": [
+        {
+          "name": "AppRegistry mounts two original public TreePanel roots",
+          "passed": true
+        },
+        {
+          "name": "Two logical documents share one Hermes application and one bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "A initial: Original pinned element, document, documentElement and RawText classes",
+          "passed": true
+        },
+        {
+          "name": "A initial: Document node properties and root identity",
+          "passed": true
+        },
+        {
+          "name": "A initial: One connected documentElement and original document traversal",
+          "passed": true
+        },
+        {
+          "name": "A initial: Root traversal and nativeID lookup share the correct document",
+          "passed": true
+        },
+        {
+          "name": "A initial: Original View resolves JSX id before nativeID",
+          "passed": true
+        },
+        {
+          "name": "A initial: Native IDs, paragraph lookup and null for absent IDs",
+          "passed": true
+        },
+        {
+          "name": "A initial: Logical tree preserves the anonymous flattened wrapper",
+          "passed": true
+        },
+        {
+          "name": "A initial: Declared child order, sibling directions and boundary nulls",
+          "passed": true
+        },
+        {
+          "name": "A initial: Sibling comparison is bidirectional and self position is zero",
+          "passed": true
+        },
+        {
+          "name": "A initial: Ancestor masks and contains follow original RN direction semantics",
+          "passed": true
+        },
+        {
+          "name": "A initial: Document comparisons work in both directions",
+          "passed": true
+        },
+        {
+          "name": "A initial: Composed Text exposes RawText nodes and element-filtered traversal",
+          "passed": true
+        },
+        {
+          "name": "A initial: ReadOnlyText Unicode data, UTF-16 length and original substringData",
+          "passed": true
+        },
+        {
+          "name": "A initial: Original collection classes, item bounds and namedItem null",
+          "passed": true
+        },
+        {
+          "name": "A initial: Collection iterators and forEach retain values, indices and thisArg",
+          "passed": true
+        },
+        {
+          "name": "A initial: Collection getters return new snapshots with read-only index descriptors",
+          "passed": true
+        },
+        {
+          "name": "A initial: Retained nodes, child boundaries and nativeID-only logical view",
+          "passed": true
+        },
+        {
+          "name": "A initial: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "A: Logical wrapper has an original public tag and no concrete native Control",
+          "passed": true
+        },
+        {
+          "name": "A: Declared nativeID makes its otherwise invisible View concrete",
+          "passed": true
+        },
+        {
+          "name": "B initial: Original pinned element, document, documentElement and RawText classes",
+          "passed": true
+        },
+        {
+          "name": "B initial: Document node properties and root identity",
+          "passed": true
+        },
+        {
+          "name": "B initial: One connected documentElement and original document traversal",
+          "passed": true
+        },
+        {
+          "name": "B initial: Root traversal and nativeID lookup share the correct document",
+          "passed": true
+        },
+        {
+          "name": "B initial: Original View resolves JSX id before nativeID",
+          "passed": true
+        },
+        {
+          "name": "B initial: Native IDs, paragraph lookup and null for absent IDs",
+          "passed": true
+        },
+        {
+          "name": "B initial: Logical tree preserves the anonymous flattened wrapper",
+          "passed": true
+        },
+        {
+          "name": "B initial: Declared child order, sibling directions and boundary nulls",
+          "passed": true
+        },
+        {
+          "name": "B initial: Sibling comparison is bidirectional and self position is zero",
+          "passed": true
+        },
+        {
+          "name": "B initial: Ancestor masks and contains follow original RN direction semantics",
+          "passed": true
+        },
+        {
+          "name": "B initial: Document comparisons work in both directions",
+          "passed": true
+        },
+        {
+          "name": "B initial: Composed Text exposes RawText nodes and element-filtered traversal",
+          "passed": true
+        },
+        {
+          "name": "B initial: ReadOnlyText Unicode data, UTF-16 length and original substringData",
+          "passed": true
+        },
+        {
+          "name": "B initial: Original collection classes, item bounds and namedItem null",
+          "passed": true
+        },
+        {
+          "name": "B initial: Collection iterators and forEach retain values, indices and thisArg",
+          "passed": true
+        },
+        {
+          "name": "B initial: Collection getters return new snapshots with read-only index descriptors",
+          "passed": true
+        },
+        {
+          "name": "B initial: Retained nodes, child boundaries and nativeID-only logical view",
+          "passed": true
+        },
+        {
+          "name": "B initial: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "B: Logical wrapper has an original public tag and no concrete native Control",
+          "passed": true
+        },
+        {
+          "name": "B: Declared nativeID makes its otherwise invisible View concrete",
+          "passed": true
+        },
+        {
+          "name": "Duplicate IDs are independently scoped to two original RN documents",
+          "passed": true
+        },
+        {
+          "name": "Cross-root element and document comparisons are disconnected both ways",
+          "passed": true
+        },
+        {
+          "name": "A duplicate-initial: Same-root duplicate IDs use current pre-order while public props stay declarative",
+          "passed": true
+        },
+        {
+          "name": "A updated: Keyed reorder changes both position directions and preserves refs",
+          "passed": true
+        },
+        {
+          "name": "A updated: Declarative ID update changes lookup and canonical public getter",
+          "passed": true
+        },
+        {
+          "name": "A updated: Changed strings replace RawText while unchanged spans retain their original public node",
+          "passed": true
+        },
+        {
+          "name": "A updated: Retained snapshots keep original order while fresh getters see updates",
+          "passed": true
+        },
+        {
+          "name": "A updated: Removing nativeID preserves the logical view and mounted React state",
+          "passed": true
+        },
+        {
+          "name": "A updated: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "A: Removing nativeID flattens its View and preserves the real child Control",
+          "passed": true
+        },
+        {
+          "name": "Updating root A leaves root B React state and host authority intact",
+          "passed": true
+        },
+        {
+          "name": "B updated: Keyed reorder changes both position directions and preserves refs",
+          "passed": true
+        },
+        {
+          "name": "B updated: Declarative ID update changes lookup and canonical public getter",
+          "passed": true
+        },
+        {
+          "name": "B updated: Changed strings replace RawText while unchanged spans retain their original public node",
+          "passed": true
+        },
+        {
+          "name": "B updated: Retained snapshots keep original order while fresh getters see updates",
+          "passed": true
+        },
+        {
+          "name": "B updated: Removing nativeID preserves the logical view and mounted React state",
+          "passed": true
+        },
+        {
+          "name": "B updated: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "B: Removing nativeID flattens its View and preserves the real child Control",
+          "passed": true
+        },
+        {
+          "name": "A duplicate-updated: Same-root duplicate IDs use current pre-order while public props stay declarative",
+          "passed": true
+        },
+        {
+          "name": "A replaced: Key replacement creates a new original public ref and lookup authority",
+          "passed": true
+        },
+        {
+          "name": "A replaced: Replaced retained element disconnects in both comparison directions",
+          "passed": true
+        },
+        {
+          "name": "A removed: Removed item disconnects while old collection snapshots stay intact",
+          "passed": true
+        },
+        {
+          "name": "A removed: Fresh traversal reflects removal and updated sibling boundaries",
+          "passed": true
+        },
+        {
+          "name": "A fallback: Removing JSX id restores the nativeID fallback",
+          "passed": true
+        },
+        {
+          "name": "A imperative: Imperative native ID lookup differs from canonical props",
+          "passed": true
+        },
+        {
+          "name": "A rerender: Pinned upstream children-only commit restores declarative native ID",
+          "passed": true
+        },
+        {
+          "name": "A declared: Changed React props overwrite the imperative native ID",
+          "passed": true
+        },
+        {
+          "name": "B replaced: Key replacement creates a new original public ref and lookup authority",
+          "passed": true
+        },
+        {
+          "name": "B replaced: Replaced retained element disconnects in both comparison directions",
+          "passed": true
+        },
+        {
+          "name": "B removed: Removed item disconnects while old collection snapshots stay intact",
+          "passed": true
+        },
+        {
+          "name": "B removed: Fresh traversal reflects removal and updated sibling boundaries",
+          "passed": true
+        },
+        {
+          "name": "B fallback: Removing JSX id restores the nativeID fallback",
+          "passed": true
+        },
+        {
+          "name": "B imperative: Imperative native ID lookup differs from canonical props",
+          "passed": true
+        },
+        {
+          "name": "B rerender: Pinned upstream children-only commit restores declarative native ID",
+          "passed": true
+        },
+        {
+          "name": "B declared: Changed React props overwrite the imperative native ID",
+          "passed": true
+        },
+        {
+          "name": "A retired: Retired document disconnects while original documentElement getters remain cached",
+          "passed": true
+        },
+        {
+          "name": "A retired: Initial, updated and unchanged RawText objects all obey disconnected RN semantics",
+          "passed": true
+        },
+        {
+          "name": "A retired: Surviving root compares safely against the retired document in both directions",
+          "passed": true
+        },
+        {
+          "name": "Retiring one document cleans only its React root and preserves the second mounted tree",
+          "passed": true
+        },
+        {
+          "name": "Partial root retirement releases native Controls, tags and responders",
+          "passed": true
+        },
+        {
+          "name": "B retired: Retired document disconnects while original documentElement getters remain cached",
+          "passed": true
+        },
+        {
+          "name": "B retired: Initial, updated and unchanged RawText objects all obey disconnected RN semantics",
+          "passed": true
+        },
+        {
+          "name": "Tree mutations retain one mounted React panel and one cleanup per root",
+          "passed": true
+        },
+        {
+          "name": "Key replacement and removal preserve exactly one mount and cleanup per real item component",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native Control, node and input authority in root A",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native Control, node and input authority in root B",
+          "passed": true
+        },
+        {
+          "name": "Original tree navigation and mutation leave no host error or scheduler resources",
+          "passed": true
+        }
+      ],
+      "stages": {
+        "A-declared": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-declared",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-declared",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "A-duplicate-initial": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-jsx",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "A-jsx",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "A-jsx",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 60.0,
+            "right": 205.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 60.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Hello ",
+            "type": 3.0,
+            "value": "Hello "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Hello ",
+              "type": 3.0,
+              "value": "Hello "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": true,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "first",
+              "second"
+            ],
+            "phase": "initial",
+            "publicId": "A-jsx",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "A-duplicate-updated": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 215.0,
+            "right": 360.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 215.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "A-fallback": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-fallback",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-fallback",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-imperative": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-fallback",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-fallback",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-initial": {
+          "document": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "identityTag": 58.0,
+          "items": [
+            {
+              "connected": true,
+              "id": "A-jsx",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "message": [
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Hello ",
+              "type": 3.0,
+              "value": "Hello "
+            },
+            {
+              "connected": true,
+              "id": "A-span-id",
+              "name": "RN:Text",
+              "tag": 42.0,
+              "text": "world 🌍",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": " from A",
+              "type": 3.0,
+              "value": " from A"
+            }
+          ],
+          "wrapperTag": 54.0
+        },
+        "A-layout-initial": {
+          "first": {
+            "expectedPosition": [
+              60.0,
+              196.0
+            ],
+            "position": [
+              60.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              215.0,
+              196.0
+            ],
+            "position": [
+              215.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "A-layout-updated": {
+          "first": {
+            "expectedPosition": [
+              215.0,
+              196.0
+            ],
+            "position": [
+              215.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              60.0,
+              196.0
+            ],
+            "position": [
+              60.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "A-removed": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-replaced": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-rerender": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-fallback",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-fallback",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "A-retired": {
+          "cachedChildren": 1.0,
+          "childNodes": 0.0,
+          "document": {
+            "connected": false,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "containsSelf": true,
+            "length": 0.0,
+            "ownerDocumentNull": true,
+            "parent": null,
+            "rootIsSelf": true,
+            "sameOwnerDocument": false,
+            "selfPosition": 0.0
+          },
+          "retainedTextNodes": [
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            }
+          ],
+          "root": {
+            "connected": false,
+            "id": "",
+            "name": "RN:RootView",
+            "tag": 1.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          }
+        },
+        "A-updated": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 215.0,
+            "right": 360.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 215.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "B-declared": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-declared",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-declared",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "B-fallback": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-fallback",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-fallback",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-imperative": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-fallback",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-fallback",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-initial": {
+          "document": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "identityTag": 134.0,
+          "items": [
+            {
+              "connected": true,
+              "id": "B-jsx",
+              "name": "RN:View",
+              "tag": 104.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "message": [
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Hello ",
+              "type": 3.0,
+              "value": "Hello "
+            },
+            {
+              "connected": true,
+              "id": "B-span-id",
+              "name": "RN:Text",
+              "tag": 118.0,
+              "text": "world 🌍",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": " from B",
+              "type": 3.0,
+              "value": " from B"
+            }
+          ],
+          "wrapperTag": 130.0
+        },
+        "B-layout-initial": {
+          "first": {
+            "expectedPosition": [
+              490.0,
+              196.0
+            ],
+            "position": [
+              490.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              645.0,
+              196.0
+            ],
+            "position": [
+              645.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "B-layout-updated": {
+          "first": {
+            "expectedPosition": [
+              645.0,
+              196.0
+            ],
+            "position": [
+              645.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              490.0,
+              196.0
+            ],
+            "position": [
+              490.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "B-removed": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-replaced": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 110.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "B-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-rerender": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-fallback",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-fallback",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "B-retired": {
+          "cachedChildren": 1.0,
+          "childNodes": 0.0,
+          "document": {
+            "connected": false,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "containsSelf": true,
+            "length": 0.0,
+            "ownerDocumentNull": true,
+            "parent": null,
+            "rootIsSelf": true,
+            "sameOwnerDocument": false,
+            "selfPosition": 0.0
+          },
+          "retainedTextNodes": [
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            }
+          ],
+          "root": {
+            "connected": false,
+            "id": "",
+            "name": "RN:RootView",
+            "tag": 11.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          }
+        },
+        "B-updated": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 104.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 104.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 104.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 104.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 645.0,
+            "right": 790.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 645.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 110.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "B-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-jsx-updated",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "cross-root": {
+          "aDocument": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "bDocument": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          }
+        },
+        "partial-retirement": {
+          "A": {
+            "surfaceId": 1.0,
+            "runtimeId": 26877101521.0,
+            "state": "unmounted",
+            "creates": 19.0,
+            "deletes": 19.0,
+            "commits": 10.0,
+            "nativeTags": 0.0,
+            "errors": [],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 0.0,
+              "grants": 0.0,
+              "moves": 0.0,
+              "releases": 0.0,
+              "responder": 0.0,
+              "starts": 0.0
+            }
+          },
+          "B": {
+            "surfaceId": 11.0,
+            "runtimeId": 26877101521.0,
+            "state": "mounted",
+            "creates": 19.0,
+            "deletes": 5.0,
+            "commits": 8.0,
+            "nativeTags": 14.0,
+            "errors": [],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 0.0,
+              "grants": 0.0,
+              "moves": 0.0,
+              "releases": 0.0,
+              "responder": 0.0,
+              "starts": 0.0
+            }
+          },
+          "react": {
+            "cleanups": {
+              "A": 1.0
+            },
+            "mounts": {
+              "A": 1.0,
+              "B": 1.0
+            },
+            "rows": {
+              "A/first/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "A/first/1": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "A/second/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "B/first/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "B/first/1": {
+                "cleanups": 0.0,
+                "mounts": 1.0
+              },
+              "B/second/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              }
+            },
+            "states": {
+              "A": {
+                "alive": false,
+                "nativeId": "A-fallback",
+                "order": [
+                  "second",
+                  "first"
+                ],
+                "phase": "updated",
+                "publicId": "A-declared",
+                "revision": 1.0,
+                "tick": 1.0
+              },
+              "B": {
+                "alive": false,
+                "nativeId": "B-fallback",
+                "order": [
+                  "second",
+                  "first"
+                ],
+                "phase": "updated",
+                "publicId": "B-declared",
+                "revision": 1.0,
+                "tick": 1.0
+              }
+            }
+          }
+        }
+      },
+      "pixels": [],
+      "reactState": {
+        "cleanups": {
+          "A": 1.0,
+          "B": 1.0
+        },
+        "mounts": {
+          "A": 1.0,
+          "B": 1.0
+        },
+        "rows": {
+          "A/first/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "A/first/1": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "A/second/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "B/first/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "B/first/1": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "B/second/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          }
+        },
+        "states": {
+          "A": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          },
+          "B": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        }
+      },
+      "afterStop": {
+        "A": {
+          "surfaceId": 1.0,
+          "runtimeId": 26877101521.0,
+          "state": "unmounted",
+          "creates": 19.0,
+          "deletes": 19.0,
+          "commits": 10.0,
+          "nativeTags": 0.0,
+          "errors": [],
+          "pointer": {
+            "activeTouches": 0.0,
+            "blockNative": false,
+            "cancels": 0.0,
+            "ends": 0.0,
+            "grants": 0.0,
+            "moves": 0.0,
+            "releases": 0.0,
+            "responder": 0.0,
+            "starts": 0.0
+          }
+        },
+        "B": {
+          "surfaceId": 11.0,
+          "runtimeId": 26877101521.0,
+          "state": "unmounted",
+          "creates": 19.0,
+          "deletes": 19.0,
+          "commits": 8.0,
+          "nativeTags": 0.0,
+          "errors": [],
+          "pointer": {
+            "activeTouches": 0.0,
+            "blockNative": false,
+            "cancels": 0.0,
+            "ends": 0.0,
+            "grants": 0.0,
+            "moves": 0.0,
+            "releases": 0.0,
+            "responder": 0.0,
+            "starts": 0.0
+          }
+        }
+      },
+      "applicationStopped": {
+        "runtimeId": 26877101521.0,
+        "stopped": true,
+        "rootCount": 0.0,
+        "bundleEvaluations": 1.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingWork": 0.0,
+        "errors": []
+      }
+    },
+    "native": {
+      "displayServer": "macOS",
+      "checks": [
+        {
+          "name": "AppRegistry mounts two original public TreePanel roots",
+          "passed": true
+        },
+        {
+          "name": "Two logical documents share one Hermes application and one bundle evaluation",
+          "passed": true
+        },
+        {
+          "name": "A initial: Original pinned element, document, documentElement and RawText classes",
+          "passed": true
+        },
+        {
+          "name": "A initial: Document node properties and root identity",
+          "passed": true
+        },
+        {
+          "name": "A initial: One connected documentElement and original document traversal",
+          "passed": true
+        },
+        {
+          "name": "A initial: Root traversal and nativeID lookup share the correct document",
+          "passed": true
+        },
+        {
+          "name": "A initial: Original View resolves JSX id before nativeID",
+          "passed": true
+        },
+        {
+          "name": "A initial: Native IDs, paragraph lookup and null for absent IDs",
+          "passed": true
+        },
+        {
+          "name": "A initial: Logical tree preserves the anonymous flattened wrapper",
+          "passed": true
+        },
+        {
+          "name": "A initial: Declared child order, sibling directions and boundary nulls",
+          "passed": true
+        },
+        {
+          "name": "A initial: Sibling comparison is bidirectional and self position is zero",
+          "passed": true
+        },
+        {
+          "name": "A initial: Ancestor masks and contains follow original RN direction semantics",
+          "passed": true
+        },
+        {
+          "name": "A initial: Document comparisons work in both directions",
+          "passed": true
+        },
+        {
+          "name": "A initial: Composed Text exposes RawText nodes and element-filtered traversal",
+          "passed": true
+        },
+        {
+          "name": "A initial: ReadOnlyText Unicode data, UTF-16 length and original substringData",
+          "passed": true
+        },
+        {
+          "name": "A initial: Original collection classes, item bounds and namedItem null",
+          "passed": true
+        },
+        {
+          "name": "A initial: Collection iterators and forEach retain values, indices and thisArg",
+          "passed": true
+        },
+        {
+          "name": "A initial: Collection getters return new snapshots with read-only index descriptors",
+          "passed": true
+        },
+        {
+          "name": "A initial: Retained nodes, child boundaries and nativeID-only logical view",
+          "passed": true
+        },
+        {
+          "name": "A initial: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "A: Logical wrapper has an original public tag and no concrete native Control",
+          "passed": true
+        },
+        {
+          "name": "A: Declared nativeID makes its otherwise invisible View concrete",
+          "passed": true
+        },
+        {
+          "name": "B initial: Original pinned element, document, documentElement and RawText classes",
+          "passed": true
+        },
+        {
+          "name": "B initial: Document node properties and root identity",
+          "passed": true
+        },
+        {
+          "name": "B initial: One connected documentElement and original document traversal",
+          "passed": true
+        },
+        {
+          "name": "B initial: Root traversal and nativeID lookup share the correct document",
+          "passed": true
+        },
+        {
+          "name": "B initial: Original View resolves JSX id before nativeID",
+          "passed": true
+        },
+        {
+          "name": "B initial: Native IDs, paragraph lookup and null for absent IDs",
+          "passed": true
+        },
+        {
+          "name": "B initial: Logical tree preserves the anonymous flattened wrapper",
+          "passed": true
+        },
+        {
+          "name": "B initial: Declared child order, sibling directions and boundary nulls",
+          "passed": true
+        },
+        {
+          "name": "B initial: Sibling comparison is bidirectional and self position is zero",
+          "passed": true
+        },
+        {
+          "name": "B initial: Ancestor masks and contains follow original RN direction semantics",
+          "passed": true
+        },
+        {
+          "name": "B initial: Document comparisons work in both directions",
+          "passed": true
+        },
+        {
+          "name": "B initial: Composed Text exposes RawText nodes and element-filtered traversal",
+          "passed": true
+        },
+        {
+          "name": "B initial: ReadOnlyText Unicode data, UTF-16 length and original substringData",
+          "passed": true
+        },
+        {
+          "name": "B initial: Original collection classes, item bounds and namedItem null",
+          "passed": true
+        },
+        {
+          "name": "B initial: Collection iterators and forEach retain values, indices and thisArg",
+          "passed": true
+        },
+        {
+          "name": "B initial: Collection getters return new snapshots with read-only index descriptors",
+          "passed": true
+        },
+        {
+          "name": "B initial: Retained nodes, child boundaries and nativeID-only logical view",
+          "passed": true
+        },
+        {
+          "name": "B initial: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "B: Logical wrapper has an original public tag and no concrete native Control",
+          "passed": true
+        },
+        {
+          "name": "B: Declared nativeID makes its otherwise invisible View concrete",
+          "passed": true
+        },
+        {
+          "name": "Duplicate IDs are independently scoped to two original RN documents",
+          "passed": true
+        },
+        {
+          "name": "Cross-root element and document comparisons are disconnected both ways",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: initial A first",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: initial A second",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: initial B first",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: initial B second",
+          "passed": true
+        },
+        {
+          "name": "Native tree capture saved: initial",
+          "passed": true
+        },
+        {
+          "name": "A duplicate-initial: Same-root duplicate IDs use current pre-order while public props stay declarative",
+          "passed": true
+        },
+        {
+          "name": "A updated: Keyed reorder changes both position directions and preserves refs",
+          "passed": true
+        },
+        {
+          "name": "A updated: Declarative ID update changes lookup and canonical public getter",
+          "passed": true
+        },
+        {
+          "name": "A updated: Changed strings replace RawText while unchanged spans retain their original public node",
+          "passed": true
+        },
+        {
+          "name": "A updated: Retained snapshots keep original order while fresh getters see updates",
+          "passed": true
+        },
+        {
+          "name": "A updated: Removing nativeID preserves the logical view and mounted React state",
+          "passed": true
+        },
+        {
+          "name": "A updated: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "A: Removing nativeID flattens its View and preserves the real child Control",
+          "passed": true
+        },
+        {
+          "name": "Updating root A leaves root B React state and host authority intact",
+          "passed": true
+        },
+        {
+          "name": "B updated: Keyed reorder changes both position directions and preserves refs",
+          "passed": true
+        },
+        {
+          "name": "B updated: Declarative ID update changes lookup and canonical public getter",
+          "passed": true
+        },
+        {
+          "name": "B updated: Changed strings replace RawText while unchanged spans retain their original public node",
+          "passed": true
+        },
+        {
+          "name": "B updated: Retained snapshots keep original order while fresh getters see updates",
+          "passed": true
+        },
+        {
+          "name": "B updated: Removing nativeID preserves the logical view and mounted React state",
+          "passed": true
+        },
+        {
+          "name": "B updated: Native item order and frames match independent declared layout",
+          "passed": true
+        },
+        {
+          "name": "B: Removing nativeID flattens its View and preserves the real child Control",
+          "passed": true
+        },
+        {
+          "name": "A duplicate-updated: Same-root duplicate IDs use current pre-order while public props stay declarative",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: updated A first",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: updated A second",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: updated B first",
+          "passed": true
+        },
+        {
+          "name": "Native pixels retain the correct item after public tree updates: updated B second",
+          "passed": true
+        },
+        {
+          "name": "Native tree capture saved: updated",
+          "passed": true
+        },
+        {
+          "name": "A replaced: Key replacement creates a new original public ref and lookup authority",
+          "passed": true
+        },
+        {
+          "name": "A replaced: Replaced retained element disconnects in both comparison directions",
+          "passed": true
+        },
+        {
+          "name": "A removed: Removed item disconnects while old collection snapshots stay intact",
+          "passed": true
+        },
+        {
+          "name": "A removed: Fresh traversal reflects removal and updated sibling boundaries",
+          "passed": true
+        },
+        {
+          "name": "A fallback: Removing JSX id restores the nativeID fallback",
+          "passed": true
+        },
+        {
+          "name": "A imperative: Imperative native ID lookup differs from canonical props",
+          "passed": true
+        },
+        {
+          "name": "A rerender: Pinned upstream children-only commit restores declarative native ID",
+          "passed": true
+        },
+        {
+          "name": "A declared: Changed React props overwrite the imperative native ID",
+          "passed": true
+        },
+        {
+          "name": "B replaced: Key replacement creates a new original public ref and lookup authority",
+          "passed": true
+        },
+        {
+          "name": "B replaced: Replaced retained element disconnects in both comparison directions",
+          "passed": true
+        },
+        {
+          "name": "B removed: Removed item disconnects while old collection snapshots stay intact",
+          "passed": true
+        },
+        {
+          "name": "B removed: Fresh traversal reflects removal and updated sibling boundaries",
+          "passed": true
+        },
+        {
+          "name": "B fallback: Removing JSX id restores the nativeID fallback",
+          "passed": true
+        },
+        {
+          "name": "B imperative: Imperative native ID lookup differs from canonical props",
+          "passed": true
+        },
+        {
+          "name": "B rerender: Pinned upstream children-only commit restores declarative native ID",
+          "passed": true
+        },
+        {
+          "name": "B declared: Changed React props overwrite the imperative native ID",
+          "passed": true
+        },
+        {
+          "name": "A retired: Retired document disconnects while original documentElement getters remain cached",
+          "passed": true
+        },
+        {
+          "name": "A retired: Initial, updated and unchanged RawText objects all obey disconnected RN semantics",
+          "passed": true
+        },
+        {
+          "name": "A retired: Surviving root compares safely against the retired document in both directions",
+          "passed": true
+        },
+        {
+          "name": "Retiring one document cleans only its React root and preserves the second mounted tree",
+          "passed": true
+        },
+        {
+          "name": "Partial root retirement releases native Controls, tags and responders",
+          "passed": true
+        },
+        {
+          "name": "B retired: Retired document disconnects while original documentElement getters remain cached",
+          "passed": true
+        },
+        {
+          "name": "B retired: Initial, updated and unchanged RawText objects all obey disconnected RN semantics",
+          "passed": true
+        },
+        {
+          "name": "Tree mutations retain one mounted React panel and one cleanup per root",
+          "passed": true
+        },
+        {
+          "name": "Key replacement and removal preserve exactly one mount and cleanup per real item component",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native Control, node and input authority in root A",
+          "passed": true
+        },
+        {
+          "name": "Final stop retires every native Control, node and input authority in root B",
+          "passed": true
+        },
+        {
+          "name": "Original tree navigation and mutation leave no host error or scheduler resources",
+          "passed": true
+        }
+      ],
+      "stages": {
+        "A-declared": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-declared",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-declared",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "A-duplicate-initial": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-jsx",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "A-jsx",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "A-jsx",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 60.0,
+            "right": 205.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 60.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Hello ",
+            "type": 3.0,
+            "value": "Hello "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Hello ",
+              "type": 3.0,
+              "value": "Hello "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": true,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "first",
+              "second"
+            ],
+            "phase": "initial",
+            "publicId": "A-jsx",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "A-duplicate-updated": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 215.0,
+            "right": 360.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 215.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "A-fallback": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-fallback",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-fallback",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-imperative": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-fallback",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-fallback",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-initial": {
+          "document": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "identityTag": 58.0,
+          "items": [
+            {
+              "connected": true,
+              "id": "A-jsx",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "message": [
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Hello ",
+              "type": 3.0,
+              "value": "Hello "
+            },
+            {
+              "connected": true,
+              "id": "A-span-id",
+              "name": "RN:Text",
+              "tag": 42.0,
+              "text": "world 🌍",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": " from A",
+              "type": 3.0,
+              "value": " from A"
+            }
+          ],
+          "wrapperTag": 54.0
+        },
+        "A-layout-initial": {
+          "first": {
+            "expectedPosition": [
+              60.0,
+              196.0
+            ],
+            "position": [
+              60.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              215.0,
+              196.0
+            ],
+            "position": [
+              215.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "A-layout-updated": {
+          "first": {
+            "expectedPosition": [
+              215.0,
+              196.0
+            ],
+            "position": [
+              215.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              60.0,
+              196.0
+            ],
+            "position": [
+              60.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "A-removed": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-replaced": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "A-rerender": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-fallback",
+            "name": "RN:View",
+            "tag": 166.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "A-fallback",
+              "name": "RN:View",
+              "tag": 166.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 28.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 34.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 28.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 34.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "A-retired": {
+          "cachedChildren": 1.0,
+          "childNodes": 0.0,
+          "document": {
+            "connected": false,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "containsSelf": true,
+            "length": 0.0,
+            "ownerDocumentNull": true,
+            "parent": null,
+            "rootIsSelf": true,
+            "sameOwnerDocument": false,
+            "selfPosition": 0.0
+          },
+          "retainedTextNodes": [
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            }
+          ],
+          "root": {
+            "connected": false,
+            "id": "",
+            "name": "RN:RootView",
+            "tag": 1.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          }
+        },
+        "A-updated": {
+          "currentFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 58.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "A-jsx-updated",
+              "name": "RN:View",
+              "tag": 28.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 34.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "A-jsx-updated",
+            "name": "RN:View",
+            "tag": 28.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 215.0,
+            "right": 360.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 215.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 34.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "A-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-jsx-updated",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "B-declared": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-declared",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-declared",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "B-fallback": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-fallback",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-fallback",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-imperative": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-fallback",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-fallback",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-initial": {
+          "document": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "identityTag": 134.0,
+          "items": [
+            {
+              "connected": true,
+              "id": "B-jsx",
+              "name": "RN:View",
+              "tag": 104.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "message": [
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Hello ",
+              "type": 3.0,
+              "value": "Hello "
+            },
+            {
+              "connected": true,
+              "id": "B-span-id",
+              "name": "RN:Text",
+              "tag": 118.0,
+              "text": "world 🌍",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": " from B",
+              "type": 3.0,
+              "value": " from B"
+            }
+          ],
+          "wrapperTag": 130.0
+        },
+        "B-layout-initial": {
+          "first": {
+            "expectedPosition": [
+              490.0,
+              196.0
+            ],
+            "position": [
+              490.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              645.0,
+              196.0
+            ],
+            "position": [
+              645.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "B-layout-updated": {
+          "first": {
+            "expectedPosition": [
+              645.0,
+              196.0
+            ],
+            "position": [
+              645.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          },
+          "second": {
+            "expectedPosition": [
+              490.0,
+              196.0
+            ],
+            "position": [
+              490.0,
+              196.0
+            ],
+            "size": [
+              145.0,
+              90.0
+            ]
+          }
+        },
+        "B-removed": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-replaced": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 110.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "B-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-jsx-updated",
+            "revision": 1.0,
+            "tick": 0.0
+          }
+        },
+        "B-rerender": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-fallback",
+            "name": "RN:View",
+            "tag": 174.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "B-fallback",
+              "name": "RN:View",
+              "tag": 174.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 104.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": false,
+              "id": "",
+              "name": "",
+              "tag": 110.0,
+              "text": "",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 104.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 0.0,
+            "height": 0.0,
+            "left": 0.0,
+            "right": 0.0,
+            "top": 0.0,
+            "width": 0.0,
+            "x": 0.0,
+            "y": 0.0
+          },
+          "oldSecond": {
+            "connected": false,
+            "id": "",
+            "name": "",
+            "tag": 110.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": true,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "Updated ",
+            "type": 3.0,
+            "value": "Updated "
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": null,
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        },
+        "B-retired": {
+          "cachedChildren": 1.0,
+          "childNodes": 0.0,
+          "document": {
+            "connected": false,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "containsSelf": true,
+            "length": 0.0,
+            "ownerDocumentNull": true,
+            "parent": null,
+            "rootIsSelf": true,
+            "sameOwnerDocument": false,
+            "selfPosition": 0.0
+          },
+          "retainedTextNodes": [
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            },
+            {
+              "connected": false,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "",
+              "type": 3.0,
+              "value": ""
+            }
+          ],
+          "root": {
+            "connected": false,
+            "id": "",
+            "name": "RN:RootView",
+            "tag": 11.0,
+            "text": "",
+            "type": 1.0,
+            "value": null
+          }
+        },
+        "B-updated": {
+          "currentFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 104.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "currentOrder": [
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 104.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "identityTag": 134.0,
+          "oldCollection": [
+            {
+              "connected": true,
+              "id": "B-jsx-updated",
+              "name": "RN:View",
+              "tag": 104.0,
+              "text": "First item",
+              "type": 1.0,
+              "value": null
+            },
+            {
+              "connected": true,
+              "id": "shared-item",
+              "name": "RN:View",
+              "tag": 110.0,
+              "text": "Second item",
+              "type": 1.0,
+              "value": null
+            }
+          ],
+          "oldFirst": {
+            "connected": true,
+            "id": "B-jsx-updated",
+            "name": "RN:View",
+            "tag": 104.0,
+            "text": "First item",
+            "type": 1.0,
+            "value": null
+          },
+          "oldFirstRect": {
+            "bottom": 286.0,
+            "height": 90.0,
+            "left": 645.0,
+            "right": 790.0,
+            "top": 196.0,
+            "width": 145.0,
+            "x": 645.0,
+            "y": 196.0
+          },
+          "oldSecond": {
+            "connected": true,
+            "id": "shared-item",
+            "name": "RN:View",
+            "tag": 110.0,
+            "text": "Second item",
+            "type": 1.0,
+            "value": null
+          },
+          "prefix": {
+            "connected": false,
+            "id": null,
+            "name": "#text",
+            "tag": null,
+            "text": "",
+            "type": 3.0,
+            "value": ""
+          },
+          "rawTextDiagnostics": {
+            "currentOwnerDocumentNull": true,
+            "currentPrefix": {
+              "connected": true,
+              "id": null,
+              "name": "#text",
+              "tag": null,
+              "text": "Updated ",
+              "type": 3.0,
+              "value": "Updated "
+            },
+            "oldOwnerDocumentNull": true,
+            "samePrefix": false,
+            "sameSpanText": true
+          },
+          "state": {
+            "alive": true,
+            "nativeId": "B-native",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-jsx-updated",
+            "revision": 0.0,
+            "tick": 0.0
+          }
+        },
+        "cross-root": {
+          "aDocument": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          },
+          "bDocument": {
+            "connected": true,
+            "id": null,
+            "name": "#document",
+            "tag": null,
+            "text": null,
+            "type": 9.0,
+            "value": null
+          }
+        },
+        "partial-retirement": {
+          "A": {
+            "surfaceId": 1.0,
+            "runtimeId": 27296531923.0,
+            "state": "unmounted",
+            "creates": 19.0,
+            "deletes": 19.0,
+            "commits": 10.0,
+            "nativeTags": 0.0,
+            "errors": [],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 0.0,
+              "grants": 0.0,
+              "moves": 0.0,
+              "releases": 0.0,
+              "responder": 0.0,
+              "starts": 0.0
+            }
+          },
+          "B": {
+            "surfaceId": 11.0,
+            "runtimeId": 27296531923.0,
+            "state": "mounted",
+            "creates": 19.0,
+            "deletes": 5.0,
+            "commits": 8.0,
+            "nativeTags": 14.0,
+            "errors": [],
+            "pointer": {
+              "activeTouches": 0.0,
+              "blockNative": false,
+              "cancels": 0.0,
+              "ends": 0.0,
+              "grants": 0.0,
+              "moves": 0.0,
+              "releases": 0.0,
+              "responder": 0.0,
+              "starts": 0.0
+            }
+          },
+          "react": {
+            "cleanups": {
+              "A": 1.0
+            },
+            "mounts": {
+              "A": 1.0,
+              "B": 1.0
+            },
+            "rows": {
+              "A/first/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "A/first/1": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "A/second/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "B/first/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              },
+              "B/first/1": {
+                "cleanups": 0.0,
+                "mounts": 1.0
+              },
+              "B/second/0": {
+                "cleanups": 1.0,
+                "mounts": 1.0
+              }
+            },
+            "states": {
+              "A": {
+                "alive": false,
+                "nativeId": "A-fallback",
+                "order": [
+                  "second",
+                  "first"
+                ],
+                "phase": "updated",
+                "publicId": "A-declared",
+                "revision": 1.0,
+                "tick": 1.0
+              },
+              "B": {
+                "alive": false,
+                "nativeId": "B-fallback",
+                "order": [
+                  "second",
+                  "first"
+                ],
+                "phase": "updated",
+                "publicId": "B-declared",
+                "revision": 1.0,
+                "tick": 1.0
+              }
+            }
+          }
+        }
+      },
+      "pixels": [
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "expected": "#0284c7",
+          "id": "first",
+          "passed": true,
+          "point": [
+            160,
+            261
+          ],
+          "root": "A",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "expected": "#0f766e",
+          "id": "second",
+          "passed": true,
+          "point": [
+            315,
+            261
+          ],
+          "root": "A",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "expected": "#0284c7",
+          "id": "first",
+          "passed": true,
+          "point": [
+            590,
+            261
+          ],
+          "root": "B",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "expected": "#0f766e",
+          "id": "second",
+          "passed": true,
+          "point": [
+            745,
+            261
+          ],
+          "root": "B",
+          "stage": "initial"
+        },
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "expected": "#0284c7",
+          "id": "first",
+          "passed": true,
+          "point": [
+            315,
+            261
+          ],
+          "root": "A",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "expected": "#0f766e",
+          "id": "second",
+          "passed": true,
+          "point": [
+            160,
+            261
+          ],
+          "root": "A",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.00784313771873713,
+            0.517647087574005,
+            0.780392169952393,
+            1.0
+          ],
+          "expected": "#0284c7",
+          "id": "first",
+          "passed": true,
+          "point": [
+            745,
+            261
+          ],
+          "root": "B",
+          "stage": "updated"
+        },
+        {
+          "actual": [
+            0.0588235296308994,
+            0.462745100259781,
+            0.431372553110123,
+            1.0
+          ],
+          "expected": "#0f766e",
+          "id": "second",
+          "passed": true,
+          "point": [
+            590,
+            261
+          ],
+          "root": "B",
+          "stage": "updated"
+        }
+      ],
+      "reactState": {
+        "cleanups": {
+          "A": 1.0,
+          "B": 1.0
+        },
+        "mounts": {
+          "A": 1.0,
+          "B": 1.0
+        },
+        "rows": {
+          "A/first/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "A/first/1": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "A/second/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "B/first/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "B/first/1": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          },
+          "B/second/0": {
+            "cleanups": 1.0,
+            "mounts": 1.0
+          }
+        },
+        "states": {
+          "A": {
+            "alive": false,
+            "nativeId": "A-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "A-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          },
+          "B": {
+            "alive": false,
+            "nativeId": "B-fallback",
+            "order": [
+              "second",
+              "first"
+            ],
+            "phase": "updated",
+            "publicId": "B-declared",
+            "revision": 1.0,
+            "tick": 1.0
+          }
+        }
+      },
+      "afterStop": {
+        "A": {
+          "surfaceId": 1.0,
+          "runtimeId": 27296531923.0,
+          "state": "unmounted",
+          "creates": 19.0,
+          "deletes": 19.0,
+          "commits": 10.0,
+          "nativeTags": 0.0,
+          "errors": [],
+          "pointer": {
+            "activeTouches": 0.0,
+            "blockNative": false,
+            "cancels": 0.0,
+            "ends": 0.0,
+            "grants": 0.0,
+            "moves": 0.0,
+            "releases": 0.0,
+            "responder": 0.0,
+            "starts": 0.0
+          }
+        },
+        "B": {
+          "surfaceId": 11.0,
+          "runtimeId": 27296531923.0,
+          "state": "unmounted",
+          "creates": 19.0,
+          "deletes": 19.0,
+          "commits": 8.0,
+          "nativeTags": 0.0,
+          "errors": [],
+          "pointer": {
+            "activeTouches": 0.0,
+            "blockNative": false,
+            "cancels": 0.0,
+            "ends": 0.0,
+            "grants": 0.0,
+            "moves": 0.0,
+            "releases": 0.0,
+            "responder": 0.0,
+            "starts": 0.0
+          }
+        }
+      },
+      "applicationStopped": {
+        "runtimeId": 27296531923.0,
+        "stopped": true,
+        "rootCount": 0.0,
+        "bundleEvaluations": 1.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingRootRetirements": 0.0,
+        "pendingTimers": 0.0,
+        "pendingWork": 0.0,
+        "errors": []
+      }
+    }
+  }
+}

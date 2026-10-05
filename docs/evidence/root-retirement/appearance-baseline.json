@@ -1,0 +1,11 @@
+{
+  "nativeHostSha256": "56a8c1ef1c21311e6ee7b22c89bf97548676b06de949f8f6bfa44278e1cc8e33",
+  "fixtureSha256": "af35c6cce50803bc88afb658ae26142e672450bb8558067a7b585954714a219f",
+  "exitCode": 1,
+  "failedChecks": [
+    "Generic ViewProps updates preserve the external adapter's font color",
+    "Original prop defaults and layout changes preserve external font ownership"
+  ],
+  "checks": 5,
+  "logSha256": "b763850e856b309a4571601b97693520e80fa36ff7249a7312c984d253893756"
+}

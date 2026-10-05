@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "audit": "native resolver getter CI evidence",
+  "auditedAt": "2026-10-04T21:58:45.588958+00:00",
+  "auditStatus": "verified-artifacts",
+  "run": {
+    "id": 37236875765,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765",
+    "headSha": "534d455851bdca0f03e5ad53b9090242d04e2855",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 111537645736,
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      },
+      {
+        "id": 111537645863,
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      },
+      {
+        "id": 111537645915,
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      },
+      {
+        "id": 111537645931,
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      },
+      {
+        "id": 111540743792,
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      }
+    ]
+  },
+  "implementationCommit": "b3920e190e8d3e0f3b4f6c0fac39cbd2e753a2d8",
+  "nativeCheckout": {
+    "expectedCommit": "8ce9a8622aef2ab462d753efb409d1423571f415",
+    "confirmedFromNativeJobLog": true,
+    "actualCommit": "8ce9a8622aef2ab462d753efb409d1423571f415",
+    "parents": [
+      "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "534d455851bdca0f03e5ad53b9090242d04e2855"
+    ]
+  },
+  "sourcePinsVerified": {
+    "count": 23,
+    "againstImplementationGitHubTree": true,
+    "againstHeadGitHubTree": true,
+    "againstExpectedCheckoutGitHubTree": true,
+    "actualNativeCheckoutLogPending": false,
+    "sourcePins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/pointer-query-fault-bootstrap.js": "fbcdee479ce1d4d2d7486dc51acdb96da96158987b62cf5cab839e47119465a9",
+      "tests/pointer-query-fault-fixture.jsx": "42d1db8c731bbb25198eace464130f6e10164098ce2eecf008ff25adc2042c5c",
+      "tests/pointer-query-fault-probe.gd": "32259515c4fa297caf67ad6360771cbc8627541227d7f23b583fa9c88fd19db8",
+      "tests/pointer-resolver-fault-bootstrap.js": "eb412ee0910380e97a05665021d3d9e0f611f04123c2d58adcfd0536999c31d1",
+      "tests/pointer-resolver-fault-fixture.jsx": "7f21af3e7db8bb2381d06ea856f9cd7a23474e055241d9789c7eaee672e1fc0b",
+      "tests/pointer-resolver-fault-probe.gd": "7d6c978073abf78b5fe31ff30c49a87564170b0058ea74a616d28417ccb66da8",
+      "tests/pointer-resolver-fault-native.test.mjs": "8a1d62f372c511b7d7d347d775584b2e2730b65f1fc71192b88f5e63cd3d845f",
+      "scripts/event-target-bundle.mjs": "599175272605d3adfa44249685b1f311756ec830097c83d55b0823db4ad7ba00",
+      "sdk/toolchain/platform-plugin.mjs": "34129e1a2ece65fa5a48a31c637476ded97fe5718e681c1c6a58287eb6c8018d",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f420bb0627b60a9af2df6dfb940bf43652f7eb762aabeec2af70297d1cf0c69c",
+      "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "native/application_runtime.cpp": "4d931cdf6082051fa7872e33a719dcc01e71db8fba10fd66c1bac67c4882c765",
+      "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4",
+      "package.json": "76d3f94b841e1dce34d540d623acc48905dd511d26d26b3bcf3953af6ca02ece",
+      ".fallowrc.json": "874842a6aaa8ec2edcdfa7b7289331b5dd8f67aed03f1811f4f9043aa5a83e97",
+      ".github/workflows/contracts.yml": "5762b068bf70afa256bc3a962b43ae1fe4cb2b5529afcc8d8825529fdba618df",
+      "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+      "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87",
+      "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68"
+    },
+    "againstActualCheckoutGitHubTree": true,
+    "sourcePinsMatchCurrentFiles": true
+  },
+  "getterAcceptance": {
+    "checks": 65,
+    "passed": 65,
+    "same65UniqueCheckIdsAsLocal": true,
+    "sameBundleAsLocal": true,
+    "same18OriginalRNInputsAsLocal": true,
+    "producerPinCount": 17,
+    "originalRNInputCount": 18,
+    "realCanonicalConfiguration": {
+      "actualCanonical": true,
+      "actualFiber": true,
+      "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+      "connected": true,
+      "descriptorConfigurable": true,
+      "descriptorOwnData": true,
+      "originalRef": true,
+      "remaining": 1,
+      "targetTag": 2,
+      "valueTagMatches": true
+    },
+    "oneGetterAttempt": {
+      "cause": "GF pointer resolver deliberate fault: canonical.publicInstance",
+      "descriptorRestoredBeforeThrow": true,
+      "ownerMatches": true,
+      "remaining": 0,
+      "sdkEntriesBeforeThrow": 0
+    },
+    "exactDescriptorRestored": true,
+    "SDKEntriesAtThrow": 0,
+    "followingHealthySDKFalseQueries": 7,
+    "followingQueriesAllDelegateBooleanFalse": true,
+    "failedTargetOffset34NeverEntersSDK": true,
+    "TouchStart": [
+      [
+        "A",
+        "touchstart",
+        true,
+        2
+      ]
+    ],
+    "Raw": [
+      {
+        "channel": "typed",
+        "type": "topTouchStart"
+      },
+      {
+        "channel": "star",
+        "type": "topTouchStart"
+      }
+    ],
+    "functionalStateBeforeAfter": [
+      1,
+      2
+    ],
+    "faultCommitsBeforeAfter": [
+      2,
+      3
+    ],
+    "oneActualFaultCommit": true,
+    "retainedErrorCount": 1,
+    "retainedError": "E_POINTER_LISTENER_QUERY: GF pointer resolver deliberate fault: canonical.publicInstance\n\nError: GF pointer resolver deliberate fault: canonical.publicInstance\n    at getter (res://build/pointer-resolver-fault-enabled.js:2:549411)",
+    "diagnosticUnchangedThroughStop": true,
+    "BWhileAHeldCancelAndNextGestureChecksPassed": true,
+    "stopped": true,
+    "queryInstalledAfterStop": false,
+    "pendingAfterStop": {
+      "rootCount": 0,
+      "pendingWork": 0,
+      "pendingTimers": 0,
+      "pendingAnimationFrames": 0,
+      "pendingRootRetirements": 0,
+      "pointerProcessor": {
+        "active": 0,
+        "activeCapture": 0,
+        "hover": 0,
+        "pendingCapture": 0
+      },
+      "pointerRouting": {
+        "active": 0,
+        "contacts": 0,
+        "hoverPointers": 0,
+        "nextId": 5,
+        "stored": 0,
+        "suppressed": 0
+      }
+    },
+    "captureCount": 0,
+    "originalHostControlPresent": false,
+    "genericReportMatchesCanonicalWithoutProvenance": true,
+    "comparisonCurrentMatchesCanonical": true
+  },
+  "regressionTotals": {
+    "interest": [
+      193,
+      233
+    ],
+    "document": 2723,
+    "queryFault": 186
+  },
+  "sameDeclaredHostAcrossAll12Reports": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+  "artifacts": [
+    {
+      "id": 11315902571,
+      "name": "native-pointer-resolver-faults",
+      "zipSha256": "be843b6e2d1269a0de586c931ad627fd83d35aae87e55ba39a07394fe215555d",
+      "zipBytes": 30797,
+      "reports": [
+        {
+          "artifactMember": "pointer-resolver-fault-current-report.json",
+          "rawReportSha256": "c5347a5016b6e9a8156513b6508d8e24330bd1f2ac43982928d002b6a05abcf8",
+          "logSha256": "877a7b044997427cd420645e192a84d74df249d5974bb8137a5bef844b885b51",
+          "checks": 65,
+          "passed": 65,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "04315342fec966417af410f2bf7240ffce6f352311bdbf98eb38670cacf5e917",
+          "producerPinCount": 17,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 1,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        }
+      ]
+    },
+    {
+      "id": 11315928586,
+      "name": "native-pointer-interest",
+      "zipSha256": "46c87c3570d597c1b28ae0d4c00e5b160900a2cfafe618b5cd490ae1ee77b580",
+      "zipBytes": 75122,
+      "reports": [
+        {
+          "artifactMember": "pointer-interest-current-report.json",
+          "rawReportSha256": "9ad921ea0551fc43aefb41db0cf98aea11f8163e80885510deabe37382eaa517",
+          "logSha256": "6cd37a241e40d00f2954e54d65a71a006f8525154a2dce921e4cc824cdfbe663",
+          "checks": 233,
+          "passed": 233,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "3d37ac6213ec42da4a7d92d8c9c96d7b3964aed57dcee8c1c77ba5515a2170ec",
+          "producerPinCount": 13,
+          "originalRNInputCount": 13,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-interest-original-report.json",
+          "rawReportSha256": "4eb622c78135da67b2e0c1a9962ca5dfbc142923efadd8319c34ed60c13338fa",
+          "logSha256": "96d80b5d4a2a83eb7a274285eecfd35fdf72dcb8b36d52f427cdc705d802ab8f",
+          "checks": 193,
+          "passed": 193,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "83d2764111dbe7771873b49f07518531ab4966d9d085d26ceb523fb165717053",
+          "producerPinCount": 13,
+          "originalRNInputCount": 13,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        }
+      ]
+    },
+    {
+      "id": 11315658185,
+      "name": "native-pointer-documents",
+      "zipSha256": "924152057ee06e40127ce5a54d3f288e704541e65df2486a4a286e416c76e3be",
+      "zipBytes": 598833,
+      "reports": [
+        {
+          "artifactMember": "pointer-document-current-disabled-report.json",
+          "rawReportSha256": "1c312a0d1a759c7043318ff8e4d3b69af4ec253b2ee3f8051d93e2881f49f99a",
+          "logSha256": "13afb714823920941788f245d9a80fa9b2ab0e2074e65246d4d761bd92663b39",
+          "checks": 336,
+          "passed": 336,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-current-enabled-report.json",
+          "rawReportSha256": "3700b124de3bd6693be671b1a6e7b7e0ef478e01c043e76c7280bc5a8212b745",
+          "logSha256": "9df89b221c2b1e0d928b313457b171f4cd60b05675f449d544a60ab182db103e",
+          "checks": 363,
+          "passed": 363,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "9850e15e8878f1b8bd25bb7a5c5c3cc5c263e980a4c31a684246ac95fa411179",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 1,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-current-imperative-only-report.json",
+          "rawReportSha256": "d4a1ce7e5d04013f8d9308250ec79e09397489b9f9895b15a3c3dc6ac6c57496",
+          "logSha256": "4a5771fa42c7e920887e010bedf3e43209db071fd54ec323515d2caa32ba8631",
+          "checks": 336,
+          "passed": 336,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-current-internal-only-report.json",
+          "rawReportSha256": "ca2306a62cbebdeaa3edfc573914e517365d420c25a078b0bf7d3f19afb1d908",
+          "logSha256": "0a40cf176bc13b67bb49decac3ea6dcb80d146aa9e896b0552d6cc5d1953ed9f",
+          "checks": 340,
+          "passed": 340,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "37ae174c47393d062de25ecbe8b5d066782830e638931ec31cabf1bf16469aae",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-original-disabled-report.json",
+          "rawReportSha256": "c9da9f170a401b42902011b1d26f77be3e1c2f4f1a1bc90f1687d73481c8e435",
+          "logSha256": "713b204af82b03cdc2b0d476af96b44f304ef0e4cc6538b8bbbf259d898f39f3",
+          "checks": 336,
+          "passed": 336,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-original-enabled-report.json",
+          "rawReportSha256": "bb854716e9c735d0f02a2e15b5729d8927eb77c3d14ccca820b07961b8cf7e3f",
+          "logSha256": "b3b3e92d4e5fc8c8b08d9e9d9479e7789994cb43792b2cdcc5d349c3b11ef827",
+          "checks": 338,
+          "passed": 338,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-original-imperative-only-report.json",
+          "rawReportSha256": "efa0132e0d584d95ff2fdcbd81ca58867d2ab7a038ed962913cc2e7c0e76673f",
+          "logSha256": "3c6317d62811d0267521f4950477948896dd8dd315458a5143a8cd8d9f7739ac",
+          "checks": 336,
+          "passed": 336,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        },
+        {
+          "artifactMember": "pointer-document-original-internal-only-report.json",
+          "rawReportSha256": "409a3b9c1cd902f7ae6149ec1bfa8301eb70934dfdc8a20e743244ac3aa4663c",
+          "logSha256": "279461e11907c00a578b2813be31d8a01ab9fe0ccd49f2e9ed092a9fa78337d5",
+          "checks": 338,
+          "passed": 338,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+          "producerPinCount": 14,
+          "originalRNInputCount": 18,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 0,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        }
+      ]
+    },
+    {
+      "id": 11315573518,
+      "name": "native-pointer-query-faults",
+      "zipSha256": "7682dd65520954f6ea3411eb009b511c13e7d30794c879eab391b6a52bf97761",
+      "zipBytes": 49570,
+      "reports": [
+        {
+          "artifactMember": "pointer-query-fault-current-report.json",
+          "rawReportSha256": "212a3fec07b8017fd2c79887e82b8fae34fb979211fb8d6f7d2a3f54e6e52f22",
+          "logSha256": "4a8478e04482b2df04389b960fe0e9fa0f20ab069e8dfee6a978e38c0bfb5b68",
+          "checks": 186,
+          "passed": 186,
+          "checkIdsUnique": true,
+          "checkIdsSha256": "0ff35e214c7cbd5acd875d135eee1cf41dd04320c9c8861121a0ea73760a01ce",
+          "producerPinCount": 14,
+          "originalRNInputCount": 15,
+          "nativeHostSha256": "7244040a8ed4d5a8461c63867e7a3e0373bbfc8ac4894f2000bcd41d0fd98dbf",
+          "sourcePinsMatchCurrentFiles": true,
+          "originalRNPinsMatchInstalledPinnedFiles": true,
+          "retainedErrorCount": 4,
+          "unsafeProbeLogLines": [],
+          "captureCount": 0
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "All five workflow jobs completed successfully. This audit verifies the four named native artifacts and actual native checkout; mobile core-reference outputs and their parity artifacts are separate and were not audited here.",
+    "This execution covers head534d455851bdca0f03e5ad53b9090242d04e2855. Subsequent metadata/Pages commits are not a new native run.",
+    "Artifact reports declare a common CI host; no native binary is included for independent hashing and its hash need not equal the local build.",
+    "The local85viewportchecks/16pixels/2PNGs and old-host3normativefailures are separate; CI has no images or old native control.",
+    "One own canonical.publicInstance getter throw with both flags is certified; arbitrary getters, reentrancy, stopping inside query, hardware/mobile/development/performance/full ABI and complete RN event parity remain open.",
+    "Mobile core-reference jobs and Pages publication are separate evidence; their artifacts/publication were not audited here."
+  ],
+  "nativeJobLog": {
+    "jobId": 111537645915,
+    "jobUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37236875765/job/111537645915",
+    "path": "build/resolver-hosted-534d455/native-job.log",
+    "sha256": "5d35f0e06a4c5ed464000bb0d812f52db4ec8fb815574b139d50915c4c4ecdf9",
+    "bytes": 220460,
+    "unexpectedScriptRegistryCrashMatches": 0,
+    "rawLogExcludedFromPublication": true
+  }
+}

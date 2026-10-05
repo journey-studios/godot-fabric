@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "recordedDate": "2026-10-03",
+  "scope": "native_build_link_and_xcframework_packaging",
+  "builds": [
+    {
+      "target": "ios-simulator",
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumIOS": "15.1",
+      "sourceCommit": "ca9e557c847c20ffbc2ad273601933db035a647f",
+      "sourceDirty": true,
+      "sourceSHA256": {
+        "native/CMakeLists.txt": "b1f5d5c7e0b20c73a85f4da67698ceb6f91e2b814e421baa644c2464d19f38e0",
+        "scripts/setup.py": "db2304da8dc8f1e29d6297846ed431f502bc14ce981f5614223525c622f626b6",
+        "scripts/ios-build.py": "3053b9d49b5b61a1718e024a18aeb61aac980e12027b4930557b63e6ee1d7801",
+        "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "native/appearance_adapter.cpp": "acadea1a98ed9191974ad8f3124d4f414cd737f42a8121a85947d1308aaef37c",
+        "native/application_runtime.cpp": "b0e77b99c15af2fab6334482c8994a6fc8da8ca6fd9d3a6a7f986aad70d808cf",
+        "native/fabric_application.cpp": "d1e7773f16b98c802ab0bfb0897604bb6bd891c408e1a0bdf91e2f345f4ec549",
+        "native/fabric_surface.cpp": "037db73a8160f87e8b410bafb611902ab0b1b5eab115a5cc162cb62bcfb4bd49",
+        "native/godot_dom.cpp": "54188de4aa60a663573d2ce1f9f9c621e223ab9332d0681bb5290f66dad5f296",
+        "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "native/pointer_adapter.cpp": "9c0f9fed40fb63925fce9a3f7a1f1355c064d171dcf253b567d44e5734c6029c",
+        "native/register.cpp": "3cbd813c56aa7764c377de97518ccced7647953ec30a98fc4c869b618b5c3b49",
+        "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+        "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "native/turbo_module_registry.cpp": "b607e62746a60457de183348de4fb1d95062c1f12f755d8a802bdb57a365a8a1",
+        "native/appearance_adapter.h": "76dfc6b40309c8314cb7c8ec43939caaafb22eb000125356bda0981bf3f04a3c",
+        "native/application_runtime.h": "b6ff7cca6070b370448c0f325bba77d24766240cacf1c955e7f5a7cf388380d1",
+        "native/fabric_application.h": "d40d8963259cc77ff605a448fad2a9cc7c7a3da526180492d46d67310af15e20",
+        "native/fabric_surface.h": "1fef412a3171b00e44665362ec6a842b51f38d2d1501c0696f1677e4a8aafac8",
+        "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "native/godot_dom.h": "9d2cd34bd38d903129e1fabcddf072ea696daa22df4ba311997552e371bda936",
+        "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "native/pointer_adapter.h": "339b08f3ed176ff1fc3120fadf8b839e1ec5717d37aa7f0021965fd8d5fdbaea",
+        "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+        "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "native/turbo_module_registry.h": "789f31e383082987f6159e3eefd513d05c2c84eb3a590c24e2f66a0c73e52ff2",
+        "native/godot-profile.json": "47807122dec3641325452bbc17c2ddd4e19836591897a5bf211774f86597c228"
+      },
+      "versions": {
+        "reactNative": "0.87.1",
+        "react": "19.2.3",
+        "hermes": "250829098.0.17",
+        "godot": "4.7.2",
+        "godotCpp": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+        "cmake": "3.31.6"
+      },
+      "archiveSHA256": "ff549a999e7c72e7cfbc95001ecb5764bfa2e2575b318745607495e814756ccb",
+      "linkWitnessSHA256": "443d79c88498bbf23e7f43df25d85945b41f9abb1eea0ac3e2bbb2dd99b3541a",
+      "pinnedArchiveSHA256": {
+        "react-native": "f686b91e4c59ba8010be1b4abfde0adc24f7f5aea95a6a28cf4d4ad2cc494bd8",
+        "hermes": "2967ee51b41bd433b3027dda875e96194354e2b4d715f9f186fd0c04ccef309d",
+        "rn-dependencies": "d5f4e5476c69bcbbd9ccf09166a047f798507fe957645fdfcaa81c804927406e",
+        "godot-cpp": "35d16951cc1395d2fb13ed02db4d67f6fd0f492b8c92b4dfeee36849fac343b7"
+      },
+      "dependencyLibrarySHA256": {
+        ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64_x86_64-simulator/hermesvm.framework/hermesvm": "956af81e233d1ec4310a65d87c298d842093d18a053ffc6061ab1d32aa25a1a5",
+        ".deps/rndeps/packages/react-native/third-party/ReactNativeDependencies.xcframework/ios-arm64_x86_64-simulator/ReactNativeDependencies.framework/ReactNativeDependencies": "8e58d70fc8f35d8d3ae5c11ec354ec1d2ba7cde624182e33953792ab77f0313f"
+      },
+      "entrySymbolRetained": true,
+      "godotRebuilt": false,
+      "runtimeExecuted": false,
+      "consumerExported": false,
+      "toolchain": {
+        "xcodeVersion": "26.2",
+        "xcodeBuild": "17C52",
+        "sdk": "iphonesimulator",
+        "sdkVersion": "26.2",
+        "cmakeVersion": "3.31.6"
+      },
+      "buildVersionParsed": {
+        "platform": "IOSSIMULATOR",
+        "minos": "15.1",
+        "sdk": "26.2",
+        "command": "LC_BUILD_VERSION",
+        "linker": {
+          "tool": "LD",
+          "version": "1230.1"
+        }
+      },
+      "dynamicDependencies": [
+        "hermesvm.framework",
+        "ReactNativeDependencies.framework"
+      ]
+    },
+    {
+      "target": "ios-device",
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumIOS": "15.1",
+      "sourceCommit": "ca9e557c847c20ffbc2ad273601933db035a647f",
+      "sourceDirty": true,
+      "sourceSHA256": {
+        "native/CMakeLists.txt": "b1f5d5c7e0b20c73a85f4da67698ceb6f91e2b814e421baa644c2464d19f38e0",
+        "scripts/setup.py": "db2304da8dc8f1e29d6297846ed431f502bc14ce981f5614223525c622f626b6",
+        "scripts/ios-build.py": "3053b9d49b5b61a1718e024a18aeb61aac980e12027b4930557b63e6ee1d7801",
+        "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "native/appearance_adapter.cpp": "acadea1a98ed9191974ad8f3124d4f414cd737f42a8121a85947d1308aaef37c",
+        "native/application_runtime.cpp": "b0e77b99c15af2fab6334482c8994a6fc8da8ca6fd9d3a6a7f986aad70d808cf",
+        "native/fabric_application.cpp": "d1e7773f16b98c802ab0bfb0897604bb6bd891c408e1a0bdf91e2f345f4ec549",
+        "native/fabric_surface.cpp": "037db73a8160f87e8b410bafb611902ab0b1b5eab115a5cc162cb62bcfb4bd49",
+        "native/godot_dom.cpp": "54188de4aa60a663573d2ce1f9f9c621e223ab9332d0681bb5290f66dad5f296",
+        "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "native/pointer_adapter.cpp": "9c0f9fed40fb63925fce9a3f7a1f1355c064d171dcf253b567d44e5734c6029c",
+        "native/register.cpp": "3cbd813c56aa7764c377de97518ccced7647953ec30a98fc4c869b618b5c3b49",
+        "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+        "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "native/turbo_module_registry.cpp": "b607e62746a60457de183348de4fb1d95062c1f12f755d8a802bdb57a365a8a1",
+        "native/appearance_adapter.h": "76dfc6b40309c8314cb7c8ec43939caaafb22eb000125356bda0981bf3f04a3c",
+        "native/application_runtime.h": "b6ff7cca6070b370448c0f325bba77d24766240cacf1c955e7f5a7cf388380d1",
+        "native/fabric_application.h": "d40d8963259cc77ff605a448fad2a9cc7c7a3da526180492d46d67310af15e20",
+        "native/fabric_surface.h": "1fef412a3171b00e44665362ec6a842b51f38d2d1501c0696f1677e4a8aafac8",
+        "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "native/godot_dom.h": "9d2cd34bd38d903129e1fabcddf072ea696daa22df4ba311997552e371bda936",
+        "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "native/pointer_adapter.h": "339b08f3ed176ff1fc3120fadf8b839e1ec5717d37aa7f0021965fd8d5fdbaea",
+        "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+        "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "native/turbo_module_registry.h": "789f31e383082987f6159e3eefd513d05c2c84eb3a590c24e2f66a0c73e52ff2",
+        "native/godot-profile.json": "47807122dec3641325452bbc17c2ddd4e19836591897a5bf211774f86597c228"
+      },
+      "versions": {
+        "reactNative": "0.87.1",
+        "react": "19.2.3",
+        "hermes": "250829098.0.17",
+        "godot": "4.7.2",
+        "godotCpp": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+        "cmake": "3.31.6"
+      },
+      "archiveSHA256": "8520ae5f5c1973e3dc9d2dbbe92880986b31b0dae7c1d621315e94d2d2133c8b",
+      "linkWitnessSHA256": "c97e576b9184c1adedfc98e53ec38e744367c3f47bb509bd49339f1fdc44f9f8",
+      "pinnedArchiveSHA256": {
+        "react-native": "f686b91e4c59ba8010be1b4abfde0adc24f7f5aea95a6a28cf4d4ad2cc494bd8",
+        "hermes": "2967ee51b41bd433b3027dda875e96194354e2b4d715f9f186fd0c04ccef309d",
+        "rn-dependencies": "d5f4e5476c69bcbbd9ccf09166a047f798507fe957645fdfcaa81c804927406e",
+        "godot-cpp": "35d16951cc1395d2fb13ed02db4d67f6fd0f492b8c92b4dfeee36849fac343b7"
+      },
+      "dependencyLibrarySHA256": {
+        ".deps/hermes/destroot/Library/Frameworks/universal/hermesvm.xcframework/ios-arm64/hermesvm.framework/hermesvm": "bebc621e2ffe13346307726780a2fd2dea603aa7815b42e4b7c455f66759daf1",
+        ".deps/rndeps/packages/react-native/third-party/ReactNativeDependencies.xcframework/ios-arm64/ReactNativeDependencies.framework/ReactNativeDependencies": "23f8e28b1ac6edecdc87709c45cd995f9604b1bc69be5875414720be5292742d"
+      },
+      "entrySymbolRetained": true,
+      "godotRebuilt": false,
+      "runtimeExecuted": false,
+      "consumerExported": false,
+      "toolchain": {
+        "xcodeVersion": "26.2",
+        "xcodeBuild": "17C52",
+        "sdk": "iphoneos",
+        "sdkVersion": "26.2",
+        "cmakeVersion": "3.31.6"
+      },
+      "buildVersionParsed": {
+        "platform": "IOS",
+        "minos": "15.1",
+        "sdk": "26.2",
+        "command": "LC_BUILD_VERSION",
+        "linker": {
+          "tool": "LD",
+          "version": "1230.1"
+        }
+      },
+      "dynamicDependencies": [
+        "hermesvm.framework",
+        "ReactNativeDependencies.framework"
+      ]
+    }
+  ],
+  "xcframework": {
+    "formatVersion": "1.0",
+    "infoPlistSHA256": "d93c54132a1ed026ce606a231328d056d5e27b0b5d4f0b8841895055c5dfd508",
+    "libraries": [
+      {
+        "identifier": "ios-arm64-simulator",
+        "platform": "ios",
+        "platformVariant": "simulator",
+        "architectures": [
+          "arm64"
+        ],
+        "archiveSHA256": "ff549a999e7c72e7cfbc95001ecb5764bfa2e2575b318745607495e814756ccb"
+      },
+      {
+        "identifier": "ios-arm64",
+        "platform": "ios",
+        "platformVariant": "device",
+        "architectures": [
+          "arm64"
+        ],
+        "archiveSHA256": "8520ae5f5c1973e3dc9d2dbbe92880986b31b0dae7c1d621315e94d2d2133c8b"
+      }
+    ],
+    "sourceInputsIdentical": true,
+    "archiveHashesVerified": true
+  },
+  "limitations": [
+    "Build and link witnesses only; no exported Godot iOS application or runtime acceptance",
+    "Only arm64 Release device and simulator builds validated",
+    "Hermes and ReactNativeDependencies remain dynamic frameworks requiring app embedding and signing",
+    "Physical-device execution remains pending; no device was attached for this checkpoint"
+  ]
+}

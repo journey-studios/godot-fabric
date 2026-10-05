@@ -1,0 +1,265 @@
+{
+  "format": "godot-fabric.pointer-geometry-hosted-evidence/v1",
+  "observedAt": "2026-10-04T14:22:21.035941+00:00",
+  "implementationCommit": "d0ef5acb86b88ac4cb193e0e2ac7b5fe1687d17e",
+  "runHead": "f90206f09fae01a10ec29428092ac7ff3a73426e",
+  "workflowRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "databaseId": 111437936679,
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T12:39:36Z",
+      "completedAt": "2026-10-04T12:44:48Z",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447/job/111437936679"
+    },
+    {
+      "databaseId": 111437936759,
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T12:39:40Z",
+      "completedAt": "2026-10-04T12:45:11Z",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447/job/111437936759"
+    },
+    {
+      "databaseId": 111437936774,
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T12:39:41Z",
+      "completedAt": "2026-10-04T12:53:47Z",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447/job/111437936774"
+    },
+    {
+      "databaseId": 111437936803,
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T12:39:36Z",
+      "completedAt": "2026-10-04T12:40:09Z",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447/job/111437936803"
+    },
+    {
+      "databaseId": 111440380904,
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "startedAt": "2026-10-04T12:53:50Z",
+      "completedAt": "2026-10-04T12:54:04Z",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37202859447/job/111440380904"
+    }
+  ],
+  "artifacts": [
+    {
+      "expired": false,
+      "id": 11304260317,
+      "name": "native-examples-headless",
+      "size_in_bytes": 262510
+    },
+    {
+      "expired": false,
+      "id": 11304130446,
+      "name": "native-pointer-geometry",
+      "size_in_bytes": 17715
+    }
+  ],
+  "audit": {
+    "artifactFileSha256": {
+      "pointer_geometry_original_test.log": "040b68666120a3be64fc05005d561cc1c631458f91bbd4d768418c53fcf7228f",
+      "pointer-geometry-report.json": "c43e319484154c48024ca9fa5fada3b1570e9084f90b16bc9888f72ad5c049bd",
+      "pointer-geometry-original-build.log": "96a85136fded01c8fb82caf386a0202dfb799a30855570bbb74525714dfe31a5",
+      "pointer-projection-report.json": "f6ca653d561d5d965cbbbf0ce8862c438a39140a48600d8283a2dcb25ee8d456",
+      "pointer_geometry_test.log": "46838b0c55db3e8c49a2641c6949d03a9659547c20717be7c197ae3bfe372b39",
+      "pointer-projection.log": "3fdf28a1ebd5b2b12d3f89426cd466afde8ee688d63fb3320278e55053a8e94c"
+    },
+    "sources": {
+      "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+      "tests/pointer-geometry-native.test.mjs": "34e33c61b60ecd13c3eb664b506caa1c438190f101e8b88c8cca067137bc98e5",
+      "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591",
+      "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+      ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+      ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+      ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": "ba15a64f6954e887856c8c143295ec899d5d16be4d9cb39191f6a54046f655b4",
+      ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+      ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": "d3d61b35bae12af75f174017d59cab152aeaf0b3a0a10d3a391321b12bf3ad1e",
+      "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+      "tests/pointer-projection-native.test.mjs": "ae2f4ec18cc3352274e3e4bcfcc5cf4334b126ae4efd21866d08ebff9d37b865",
+      "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+      ".deps/package/ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+      ".deps/package/ReactCommon/react/renderer/core/EventTarget.cpp": "b2f550880a6dc57997166968d63771016e06dea1c62d1030135b6b9ddb91856f"
+    },
+    "publicSourcesVerifiedAgainstRunHead": [
+      "native/pointer_geometry_test.cpp",
+      "tests/pointer-geometry-native.test.mjs",
+      "scripts/rn-pointer-overlay.mjs",
+      "native/CMakeLists.txt",
+      "native/pointer_projection_test.cpp",
+      "tests/pointer-projection-native.test.mjs",
+      "native/pointer_geometry_history.h"
+    ],
+    "pinnedGeneratedSourcesEqualLocalReceipt": true,
+    "node": "v22.23.2",
+    "platform": "darwin",
+    "architecture": "arm64",
+    "original": {
+      "checks": 108,
+      "sameUnprojectedCasesAndCheckIds": true,
+      "provenance": {
+        "node": "v22.23.2",
+        "sources": {
+          "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+          "tests/pointer-geometry-native.test.mjs": "34e33c61b60ecd13c3eb664b506caa1c438190f101e8b88c8cca067137bc98e5",
+          "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591",
+          "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+          ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+          ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+          ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": "ba15a64f6954e887856c8c143295ec899d5d16be4d9cb39191f6a54046f655b4",
+          ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": "d3d61b35bae12af75f174017d59cab152aeaf0b3a0a10d3a391321b12bf3ad1e"
+        },
+        "overlaidBinarySha256": "90a07621b028be7adbc394080e870efcf0b8a417242d8abf31f48713f6c3c3ca",
+        "originalBinarySha256": "4d3ea5465dd1254acf379bbcf5fecc94392642e1acabc4ba8b5ad5399b6b1556"
+      }
+    },
+    "binding": {
+      "checks": 378,
+      "unique": true,
+      "nativeFaultObserved": true,
+      "jsFaultObserved": true,
+      "retargetedCopySeen": true,
+      "fixMappingOfEventPrioritiesBetweenFabricAndReact": false,
+      "historyChecks": [
+        "history/first: exact family and native point recover the delivered offset",
+        "history/newest: advancing sample clears earlier geometry",
+        "history/reordered: older delivered sample cannot overwrite newest fallback",
+        "history/reordered: fallback denies a different native point",
+        "history/terminal: advances serial while preserving last valid fallback",
+        "history/older normal: cannot overwrite a newer terminal projection",
+        "history/post-terminal: newer normal sample clears terminal geometry",
+        "history/older terminal: cannot overwrite a newer normal projection",
+        "history/family: same tag with a new family cannot borrow prior geometry",
+        "history/contact: independent contact has no fallback from another contact",
+        "history/retirement: stored geometry does not retain its target family",
+        "history/retirement: expired family cannot authorize a later target",
+        "history/new contact: reset history denies reused pointer identity"
+      ],
+      "provenance": {
+        "node": "v22.23.2",
+        "binarySha256": "ecf42cc5e3dfcf7facf0c8b896e718b347b314e1a4af14b0c4c541e8344ccdb5",
+        "sources": {
+          "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+          "tests/pointer-projection-native.test.mjs": "ae2f4ec18cc3352274e3e4bcfcc5cf4334b126ae4efd21866d08ebff9d37b865",
+          "scripts/rn-pointer-overlay.mjs": "bf4fde922057753d2429e061b2eb60a24d01aeb6b42676349bc32e67f5991591",
+          "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+          "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+          ".deps/package/ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+          ".deps/package/ReactCommon/react/renderer/core/EventTarget.cpp": "b2f550880a6dc57997166968d63771016e06dea1c62d1030135b6b9ddb91856f",
+          ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h": "cb69637eefea59c313a2d22f84acc0ccddc949a6f5cebee8263e6044c6ab007d",
+          ".deps/package/ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp": "9695c230f4e0d2b88651080f15a264cfbd43f6c60345c66956694f00d5530c86",
+          ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.h": "8fb51ebce77ff24658cd722e2f9c700aaaf9aeb8ae25dddf0047ad1b79b9524b",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.h": "ba15a64f6954e887856c8c143295ec899d5d16be4d9cb39191f6a54046f655b4",
+          ".deps/package/ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+          ".deps/build/rn-pointer-overlay/react/renderer/uimanager/UIManagerBinding.cpp": "d3d61b35bae12af75f174017d59cab152aeaf0b3a0a10d3a391321b12bf3ad1e"
+        }
+      }
+    },
+    "publicGeometry": {
+      "mode": "headless",
+      "checks": 631,
+      "allPassed": true,
+      "sameCheckIdsAsLocal": true,
+      "injections": 34,
+      "samples": 99,
+      "reportSha256": "bbe8d88bc941911d75074c303ad3b98d6d8ddf824c1d682694c4d78ce3ab6b2c",
+      "afterStop": {
+        "errors": [],
+        "rootCount": 0.0,
+        "pendingTimers": 0.0,
+        "pendingAnimationFrames": 0.0,
+        "pendingWork": 0.0,
+        "pointerProcessor": {
+          "active": 0.0,
+          "activeCapture": 0.0,
+          "hover": 0.0,
+          "pendingCapture": 0.0
+        },
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 8.0,
+          "stored": 0.0,
+          "suppressed": 0.0
+        }
+      },
+      "versions": {
+        "godot": "4.7.2-stable (official)",
+        "react": "19.2.3",
+        "reactNative": "0.87.1"
+      }
+    },
+    "examples": {
+      "mode": "headless",
+      "checks": {
+        "metrics": 64,
+        "runtime": 23,
+        "focus": 175,
+        "scroll": 62,
+        "pointers": 132,
+        "services": 36,
+        "input": 45,
+        "refs": 23,
+        "view": 67,
+        "typography": 50,
+        "coordinates": 238,
+        "counter": 19,
+        "shared": 35,
+        "chart": 34,
+        "react": 36,
+        "transforms": 309,
+        "pressable": 43,
+        "layout": 47,
+        "pointer-geometry": 631,
+        "form": 39,
+        "tree": 89,
+        "nativewind": 49
+      },
+      "count": 22,
+      "totalChecks": 2246
+    }
+  },
+  "pagesObserved": {
+    "at": "2026-10-04T12:42:06.116255+00:00",
+    "workflowRun": "https://github.com/journey-studios/godot-fabric/actions/runs/37202857849",
+    "workflowMainCommit": "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+    "dataCommit": "f90206f09fae01a10ec29428092ac7ff3a73426e",
+    "publication": {
+      "ref": "codex/react-native-parity-roadmap",
+      "commit": "f90206f09fae01a10ec29428092ac7ff3a73426e",
+      "inMain": false,
+      "at": "2026-10-04T12:39:43.561Z"
+    },
+    "publicJSONEqualAfterRemovingOnlyPublication": true,
+    "localAPIEqual": true,
+    "comparedURL": "https://journey-studios.github.io/godot-fabric/migration.json"
+  },
+  "limits": [
+    "Local native PNGs/pixels remain separate from hosted headless examples.",
+    "The 108-check portable witnesses compile matching binding units/headers but do not instantiate Hermes/binding.",
+    "Actual native enqueue/coalescing and typed JSI exception RTTI are uncertified.",
+    "Original mobile core reference jobs passed but contain no captured-pointer oracle and do not certify Godot mobile ports.",
+    "No complete GF, release gate, architecture approval or denominator changed."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "format": "godot-fabric.executed-preceding-hosted-ci/v1",
+  "checkedAt": "2026-10-03T22:32:30.082971+00:00",
+  "headCommit": "f2eb57f14dcc6f0c25750ff6284f9244d4b3e617",
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37157491445",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "contracts",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37157491445/job/111303820105"
+    },
+    {
+      "name": "reference-android",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37157491445/job/111303820257"
+    },
+    {
+      "name": "reference-ios",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37157491445/job/111303820460"
+    },
+    {
+      "name": "native-cold-start",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37157491445/job/111303820496"
+    },
+    {
+      "name": "parity-comparison",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37157491445/job/111305281875"
+    }
+  ],
+  "sourceReportSha256": "760cbfbe5ab9c683c2df0331e05862ee9f0c52bcf2f6563c5a3df33a231458fc",
+  "scope": "Preceding project-resolution delivery only; this CI run predates the alias-scopes implementation."
+}

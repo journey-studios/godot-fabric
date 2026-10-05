@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://examples/pointers/validation.gd" id="1"]
+
+[node name="PointersExample" type="Node"]
+script = ExtResource("1")
+
+[node name="Application" type="FabricApplication" parent="."]
+metadata/scenario = "pointers"
+
+[node name="A" type="FabricSurface" parent="."]
+offset_left = 20.0
+offset_top = 30.0
+offset_right = 380.0
+offset_bottom = 530.0
+application_path = NodePath("../Application")
+component_name = "PointerPanel"
+initial_props = {"name": "A"}
+
+[node name="B" type="FabricSurface" parent="."]
+offset_left = 420.0
+offset_top = 30.0
+offset_right = 780.0
+offset_bottom = 530.0
+application_path = NodePath("../Application")
+component_name = "PointerPanel"
+initial_props = {"name": "B"}
+
+; Validation constructs an independent application C with the same bundle.

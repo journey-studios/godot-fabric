@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Pressable, Appearance } from "react-native";
+import { View, Text, Pressable, Appearance, findNodeHandle } from "react-native";
 import { vars } from "nativewind";
 import "../../build/nativewind-compiled";
 import { disposeEnvironment, environmentStats } from "../../src/platform-environment";
 import { windowSubscriptionCount } from "../../src/window-dimensions";
 
 const stats = { mounts: 0, cleanups: 0, renders: 0, errors: [] };
+const layoutRefs = new Map();
+const layoutAttachments = Object.fromEntries(
+  ["nw-root", "nw-title", "nw-row", "nw-card", "nw-theme"].map(id => [id,
+    instance => { if (instance) layoutRefs.set(id, instance); else layoutRefs.delete(id); }]),
+);
 let actions = {};
 class Boundary extends React.Component {
   state = { failed: false };
@@ -50,6 +55,7 @@ export function NativeWindApp() {
   }, []);
   return (
     <View
+      ref={layoutAttachments["nw-root"]}
       testID="nw-root"
       className="w-full h-full p-6 gap-4 bg-slate-950"
       style={vars({ "--accent": changed ? "#34d399" : "#fbbf24" })}
@@ -58,6 +64,7 @@ export function NativeWindApp() {
         LABORATÓRIO / UI NATIVA
       </Text>
       <Text
+        ref={layoutAttachments["nw-title"]}
         testID="nw-title"
         className={
           changed ? "text-white text-[32px]" : "text-white text-[28px]"
@@ -68,8 +75,9 @@ export function NativeWindApp() {
       <Text className="text-slate-300 text-[16px]">
         Tailwind e interop originais executando sobre Hermes, Yoga e Controls.
       </Text>
-      <View testID="nw-row" className="h-[300px] flex-col lg:flex-row gap-4">
+      <View ref={layoutAttachments["nw-row"]} testID="nw-row" className="h-[300px] flex-col lg:flex-row gap-4">
         <View
+          ref={layoutAttachments["nw-card"]}
           testID="nw-card"
           className={
             changed
@@ -87,6 +95,7 @@ export function NativeWindApp() {
           />
         </View>
         <View
+          ref={layoutAttachments["nw-theme"]}
           testID="nw-theme"
           className="flex-1 p-5 gap-3 bg-slate-100 dark:bg-slate-800 rounded-[16px]"
         >
@@ -169,8 +178,21 @@ export function runNativeWind(name, ...args) {
   actions[name](...args);
 }
 export function nativewindStats() {
+  const layout = {};
+  for (const [id, instance] of layoutRefs) {
+    const parent = layoutRefs.get(id === "nw-card" || id === "nw-theme" ? "nw-row" : "nw-root");
+    const measured = { connected: instance.isConnected, tag: findNodeHandle(instance),
+      rect: instance.getBoundingClientRect().toJSON() };
+    instance.measureInWindow((...values) => { measured.window = values; });
+    if (id !== "nw-root" && parent) {
+      instance.measureLayout(parent, (...values) => { measured.relative = values; },
+        () => { measured.relativeFailed = true; });
+    }
+    layout[id] = measured;
+  }
   return {
     ...stats,
+    layout,
     environment: environmentStats(),
     subscribers: windowSubscriptionCount(),
   };

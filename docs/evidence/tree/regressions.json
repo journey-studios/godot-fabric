@@ -1,0 +1,289 @@
+{
+  "format": "godot-fabric.tree-regressions/v1",
+  "at": "2026-10-04T03:41:16.636073+00:00",
+  "contracts": {
+    "nodeTests": 206,
+    "pythonTests": 13,
+    "passed": true,
+    "command": "npm run test:contracts",
+    "logSha256": "85b808a0fd362466bd87134e9c8500a5a1001464630a34056a4e564b4b2862de"
+  },
+  "native": {
+    "tests": 10,
+    "passed": true,
+    "command": "node --test --test-concurrency=1 tests/runtime-native.test.mjs tests/shared-application-native.test.mjs tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs tests/services-boundaries-native.test.mjs tests/services-lifetime-native.test.mjs",
+    "logSha256": "bdf457e2e3f7b02a19927df6b187f88ed4d3b9b4074f8b208e8becf2ed227855"
+  },
+  "examples": {
+    "lanes": {
+      "chart": {
+        "checks": 34,
+        "reportSha256": "c2f946a6c47ad078a8809e65be90c3f700d134d8de044f3d5419ec0b91dc36a0"
+      },
+      "coordinates": {
+        "checks": 238,
+        "reportSha256": "0d12bcf41eaefebc314efce9fcfae880ce6892bc0ab55e84a3f1e56a7dd6d89d"
+      },
+      "counter": {
+        "checks": 19,
+        "reportSha256": "7463a840074d76a841eac11d067315e2ffd6ad69c48e8873c1de30d7313fedd4"
+      },
+      "form": {
+        "checks": 39,
+        "reportSha256": "648b9beb2c589df5752ab660ca4f1f0a760f909616270f990a82830eb8419b34"
+      },
+      "input": {
+        "checks": 45,
+        "reportSha256": "f35a6d083800837cebd57030ebabcfa55d0699e093d847500b679575716a9140"
+      },
+      "layout": {
+        "checks": 47,
+        "reportSha256": "19f27f14c27a705d3807f072498064389bc9c23582a2496c4a9f6dd72ab2a7ce"
+      },
+      "metrics": {
+        "checks": 64,
+        "reportSha256": "7ad40265ba701e7023d8c22fe31d574869023e23ef2d8c756bb01e3dd3e09ff8"
+      },
+      "nativewind": {
+        "checks": 49,
+        "reportSha256": "9ac4d5ed2b31cd03ca2df9f2ef8645ae4460cbd504df3cab517f44d062663e53"
+      },
+      "pressable": {
+        "checks": 43,
+        "reportSha256": "26af09b33d289f60895f5b06429b42edad5cf3d52872e7012212aece5c373554"
+      },
+      "react": {
+        "checks": 36,
+        "reportSha256": "1accf69ec09e6174cca7fa96a96713b3ed92bb8965477cd2adbb7a618bb43ead"
+      },
+      "refs": {
+        "checks": 23,
+        "reportSha256": "bdc7bfd898b654bacf8a00317e20aeb469f1ca653def2d97b706288d473df7ef"
+      },
+      "runtime": {
+        "checks": 23,
+        "reportSha256": "1cb3992f387a30b18bee9bc2fe78bc19b2286a52955968eb1386758d884bf2a3"
+      },
+      "scroll": {
+        "checks": 62,
+        "reportSha256": "b61bf3ca286275b8a41c4944576444cd2bc0f2661455daa03615a7fb115f8b56"
+      },
+      "services": {
+        "checks": 36,
+        "reportSha256": "52df49fcfb52c2bc8b640bfa07b34c0989f205e58928bfb0afd1f50d7c2d7004"
+      },
+      "shared": {
+        "checks": 35,
+        "reportSha256": "72c75c92d0a80f1f31eb5d6aa4b9dc0913fde255024a9f2ce28ef9a844a40746"
+      },
+      "transforms": {
+        "checks": 309,
+        "reportSha256": "2e5cce78ff56b967ef409f2e8210f738b1c85537764b72a245b13f5e90b1b7b1"
+      },
+      "tree": {
+        "checks": 89,
+        "reportSha256": "f4a7db6d1fb17c5d469e99570b24c9f5cedbcc03a6436249065f189e31255885"
+      },
+      "typography": {
+        "checks": 50,
+        "reportSha256": "dc53a8980899a303199b943a3eb4381dfad3144928aa1e43526f29035e40701b"
+      },
+      "view": {
+        "checks": 67,
+        "reportSha256": "bb4a3d0bbf2a718151d03633f9a73ebfe0243ae4bc139c7fd8bf605d919a462b"
+      }
+    },
+    "totalChecks": 1308,
+    "commands": [
+      "npm run test:examples",
+      "node scripts/check.mjs --tree --headless"
+    ],
+    "scope": "Full suite passed 1304 checks, then the final strengthened tree oracle passed 89 instead of 85; the other 18 fixtures are unchanged."
+  },
+  "externalAdapter": {
+    "command": "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-transforms-v6-20261004 --out build/adapter-runtime-tree-final-20261004 --capture",
+    "passed": true,
+    "runs": {
+      "graphical": {
+        "checks": 37,
+        "displayServer": "macOS",
+        "reportSha256": "b74edd43516d64b20b84e4b7070f9197a8392df03616c10ec3455861e9e0b03b"
+      },
+      "root-unmount-raf": {
+        "checks": 18,
+        "displayServer": "headless",
+        "reportSha256": "724ed40707fa60ab2de580dea22eaa7802c63f944a52f99c306dc5bb0ac58a7b"
+      },
+      "root-free-resize": {
+        "checks": 17,
+        "displayServer": "headless",
+        "reportSha256": "ad7db7fe4bbc2370abbb6d979b9ef91ca4355d7a38f81208d643113d04abda85"
+      },
+      "reentrant-stop": {
+        "checks": 8,
+        "displayServer": "headless",
+        "reportSha256": "2e2a850ae204c16b49c2c8558ae71a88732bb0f9e7235237550a8b023ac8c155"
+      },
+      "root-unmount-timer": {
+        "checks": 18,
+        "displayServer": "headless",
+        "reportSha256": "4f6570fce4a566c259a7628cacd8ea98908d2b526de3dad5d7f8079267b7efb1"
+      },
+      "root-owner-switch-graphical": {
+        "checks": 22,
+        "displayServer": "macOS",
+        "reportSha256": "5295d03b6eca289cdaee5d9c8f2636577138c6820fe8e287cd1438d29d6dbe70"
+      },
+      "root-remount-graphical": {
+        "checks": 25,
+        "displayServer": "macOS",
+        "reportSha256": "be46924b1ed1cec8de57754b5e9adb64d82e13cdd880abeaba24d9f4f62107e0"
+      },
+      "reentrant-raf": {
+        "checks": 9,
+        "displayServer": "headless",
+        "reportSha256": "b913e96b7a5a746e7ae824778c3d5d7ac0b3ff32f63d33976035fa6091466596"
+      },
+      "external-appearance": {
+        "checks": 5,
+        "displayServer": "headless",
+        "reportSha256": "227e4d3dd485daeb3b0d0da64c4aa861f2eb7d7510add078cb12068d481888aa"
+      },
+      "root-unmount-graphical": {
+        "checks": 21,
+        "displayServer": "macOS",
+        "reportSha256": "6e0edfcc59d37d9ad8d854718cddf3371698458c510ce2082d248c874be2b182"
+      },
+      "root-unmount-resize": {
+        "checks": 17,
+        "displayServer": "headless",
+        "reportSha256": "391e410b298232053f7415c08953ab7f967d36633f9b132ec37c84f593ed09fc"
+      },
+      "reentrant-timer": {
+        "checks": 9,
+        "displayServer": "headless",
+        "reportSha256": "26c94bbdde7aa2739f460b1a5f1f57cec6e2b612d0f88c749dc0579883da6d2e"
+      },
+      "root-unmount-pressed": {
+        "checks": 17,
+        "displayServer": "headless",
+        "reportSha256": "2c4be2db82cf5c5970e92437e8c5d13f18cfa79c6620c35164aa4855e34e0b31"
+      },
+      "headless": {
+        "checks": 35,
+        "displayServer": "headless",
+        "reportSha256": "0dc3323724456084677b603dc78b0d110481bfa109b204f0368ff55faa16bc8b"
+      },
+      "root-owner-switch-resize": {
+        "checks": 18,
+        "displayServer": "headless",
+        "reportSha256": "f5b23364b0a1e583b8cd4f555f40f63c66cddbebdf746e7ce04dddc78340247c"
+      },
+      "root-stale-core-owner-switch-resize": {
+        "checks": 21,
+        "displayServer": "headless",
+        "reportSha256": "489858f57e3aceb9c493f569a3a518e2cd7a6e68641cc96e4220f9f33eea4574"
+      },
+      "root-remount-resize": {
+        "checks": 21,
+        "displayServer": "headless",
+        "reportSha256": "66c2e68a55af6c1c907da039679fa5d1a56400680be74b67edda1fd793eaf1b6"
+      }
+    },
+    "totalChecks": 318,
+    "nativeHostSha256": "42ee5c75a70e8fc7fdee9d6144c810248abe6aa1a2f0100abd2f3383e18eac79",
+    "loadedHostIdentityVerified": true,
+    "reportSha256": "e150d5f30959004b5f30fa827a2899f5342f3de2b1ed2e30fbdc0b94bd181b9b",
+    "firstAttempt": {
+      "completedLanesBeforeFailure": {
+        "headless": {
+          "checks": 35,
+          "sha256": "0dc3323724456084677b603dc78b0d110481bfa109b204f0368ff55faa16bc8b",
+          "displayServer": "headless"
+        },
+        "external-appearance": {
+          "checks": 5,
+          "sha256": "227e4d3dd485daeb3b0d0da64c4aa861f2eb7d7510add078cb12068d481888aa",
+          "displayServer": "headless"
+        },
+        "reentrant-stop": {
+          "checks": 8,
+          "sha256": "2e2a850ae204c16b49c2c8558ae71a88732bb0f9e7235237550a8b023ac8c155",
+          "displayServer": "headless"
+        },
+        "reentrant-raf": {
+          "checks": 9,
+          "sha256": "b913e96b7a5a746e7ae824778c3d5d7ac0b3ff32f63d33976035fa6091466596",
+          "displayServer": "headless"
+        },
+        "reentrant-timer": {
+          "checks": 9,
+          "sha256": "26c94bbdde7aa2739f460b1a5f1f57cec6e2b612d0f88c749dc0579883da6d2e",
+          "displayServer": "headless"
+        },
+        "root-unmount-resize": {
+          "checks": 17,
+          "sha256": "391e410b298232053f7415c08953ab7f967d36633f9b132ec37c84f593ed09fc",
+          "displayServer": "headless"
+        },
+        "root-unmount-pressed": {
+          "checks": 17,
+          "sha256": "2c4be2db82cf5c5970e92437e8c5d13f18cfa79c6620c35164aa4855e34e0b31",
+          "displayServer": "headless"
+        },
+        "root-unmount-raf": {
+          "checks": 18,
+          "sha256": "724ed40707fa60ab2de580dea22eaa7802c63f944a52f99c306dc5bb0ac58a7b",
+          "displayServer": "headless"
+        },
+        "root-unmount-timer": {
+          "checks": 18,
+          "sha256": "4f6570fce4a566c259a7628cacd8ea98908d2b526de3dad5d7f8079267b7efb1",
+          "displayServer": "headless"
+        },
+        "root-remount-resize": {
+          "checks": 21,
+          "sha256": "66c2e68a55af6c1c907da039679fa5d1a56400680be74b67edda1fd793eaf1b6",
+          "displayServer": "headless"
+        },
+        "root-free-resize": {
+          "checks": 17,
+          "sha256": "ad7db7fe4bbc2370abbb6d979b9ef91ca4355d7a38f81208d643113d04abda85",
+          "displayServer": "headless"
+        },
+        "root-owner-switch-resize": {
+          "checks": 18,
+          "sha256": "f5b23364b0a1e583b8cd4f555f40f63c66cddbebdf746e7ce04dddc78340247c",
+          "displayServer": "headless"
+        },
+        "root-stale-core-owner-switch-resize": {
+          "checks": 21,
+          "sha256": "489858f57e3aceb9c493f569a3a518e2cd7a6e68641cc96e4220f9f33eea4574",
+          "displayServer": "headless"
+        },
+        "graphical": {
+          "checks": 37,
+          "sha256": "12e0e17ef83b10a6b72a16b23ce2b1be9c58126f51cfe47d6a266c7c31508c30",
+          "displayServer": "macOS"
+        },
+        "root-unmount-graphical": {
+          "checks": 21,
+          "sha256": "420f3d7c67b65350f370c0d16685d77919c1bb25f0bbb7172ef0148aacf089d1",
+          "displayServer": "macOS"
+        }
+      },
+      "failedLane": "godot-root-remount-graphical",
+      "exitCode": null,
+      "timeoutMs": 180000,
+      "logSha256": "9ae05e9682ee506ea902c0b0c7234031d7f923cee493394ef73173d559fc96c9",
+      "scriptOrNativeErrorObserved": false,
+      "scope": "No completed report for the timed-out lane. Capture focus preparation was added; the final fresh consumer passed all 17 lanes without retrying failed commands. The timeout cause was not conclusively attributed."
+    }
+  },
+  "hostedCI": {
+    "status": "in_progress",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37175002603",
+    "headCommit": "a012f9ed0943f4996553ff78ab543317d8ed46f0",
+    "scope": "Snapshot is retained in ci.json. Contracts passed; other jobs were in progress. No mobile tree differential is certified."
+  }
+}

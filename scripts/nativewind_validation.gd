@@ -20,7 +20,7 @@ func _ready() -> void:
   verify(node("nw-title").nativeFontSize == 28 and node("nw-title").appearance.textColor == "ffffffff", "Classe de texto chega ao font_size e font_color do Label")
   verify(node("nw-card").appearance.borderWidths == [2.0, 2.0, 2.0, 2.0] and node("nw-card").appearance.borderColor == "a5b4fcff", "Fabric e StyleBoxFlat aplicam bordas reais")
   verify(node("nw-card").appearance.cornerRadii == [16.0, 16.0, 16.0, 16.0], "rounded define os quatro cantos do StyleBoxFlat")
-  verify(node("nw-title").x == 21 and node("nw-card").y == 0 and node("nw-theme").y > 0, "p-6 usa rem 14 do NativeWind e layout inicial em coluna")
+  verify(logical_layout("initial-column", false), "p-6 usa rem 14 do NativeWind e layout inicial em coluna")
   verify(node("nw-variable").appearance.background == "fbbf24ff", "vars e contexto originais resolvem variável herdada")
   verify(node("nw-inline").appearance.background == "2563ebff" and node("nw-important").appearance.background == "10b981ff", "Precedência original: inline e !important")
   verify(node("nw-clear").opacity == 0.5, "opacity-50 altera o modulate do Control")
@@ -54,12 +54,12 @@ func _ready() -> void:
   await frames(5)
   verify(node("nw-theme").appearance.background == "1e293bff", "dark: reage ao tema manual publicado por Appearance")
   await resize_window(Vector2i(1200, 800))
-  verify(node("nw-card").y == 0 and node("nw-theme").y == 0 and node("nw-theme").x > node("nw-card").x, "lg: troca coluna por linha na dimensão real da surface")
+  verify(logical_layout("wide-row", true), "lg: troca coluna por linha na dimensão real da surface")
   verify(node("nw-card").id == card.id and data().creates == creates and react().count == 1, "Resize responsivo preserva estado React e Controls")
   verify_geometry("wide")
   await capture("wide-dark-changed")
   await resize_window(Vector2i(700, 760))
-  verify(node("nw-theme").y > node("nw-card").y and node("nw-theme").x == 0, "Diminuir viewport restaura a coluna sem media query presa")
+  verify(logical_layout("narrow-column", false), "Diminuir viewport restaura a coluna sem media query presa")
   verify_geometry("narrow")
   await capture("narrow")
 
@@ -88,6 +88,50 @@ func _ready() -> void:
   surface.free()
   save_report("nativewind", before_stop, stopped, state, {"nativeWind": "4.2.7", "cssInterop": "0.2.7", "tailwind": "3.4.17", "states": states})
 
+func close_values(actual: Array, expected: Array) -> bool:
+  if actual.size() != expected.size():
+    return false
+  for index in range(actual.size()):
+    if absf(float(actual[index]) - float(expected[index])) > 0.01:
+      return false
+  return true
+
+func logical_layout(stage: String, horizontal: bool) -> bool:
+  var layout: Dictionary = react().get("layout", {})
+  var title: Array = layout.get("nw-title", {}).get("relative", [])
+  var row: Array = layout.get("nw-row", {}).get("relative", [])
+  var card: Array = layout.get("nw-card", {}).get("relative", [])
+  var theme: Array = layout.get("nw-theme", {}).get("relative", [])
+  var valid: bool = title.size() == 4 and row.size() == 4 and card.size() == 4 and theme.size() == 4
+  if valid:
+    valid = is_equal_approx(float(title[0]), 21) and is_equal_approx(float(row[0]), 21) and \
+      close_values([card[0], card[1]], [0, 0])
+    if horizontal:
+      valid = valid and close_values([theme[0], theme[1]], [float(card[2]) + 14, 0])
+    else:
+      valid = valid and close_values([theme[0], theme[1]], [0, float(card[3]) + 14])
+  var native_rects: Dictionary = {}
+  # The row can be flattened by the original Fabric mounting algorithm. Its
+  # public measureLayout remains relative to the logical parent; materialized
+  # elements independently agree with real Control geometry in window space.
+  for id in ["nw-root", "nw-title", "nw-card", "nw-theme"]:
+    var actual: Control = surface.find_child(id, true, false)
+    var measured: Dictionary = layout.get(id, {})
+    if actual == null:
+      valid = false
+      continue
+    var rect := actual.get_global_rect()
+    var expected := [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+    var public_rect: Dictionary = measured.get("rect", {})
+    native_rects[id] = expected
+    valid = valid and measured.get("connected", false) and not measured.get("relativeFailed", false) and \
+      int(measured.get("tag", -1)) == int(node(id).get("tag", -2)) and \
+      close_values(measured.get("window", []), expected) and \
+      close_values([public_rect.get("x", -1), public_rect.get("y", -1), public_rect.get("width", -1), public_rect.get("height", -1)], expected)
+  valid = valid and layout.get("nw-row", {}).get("connected", false) and not layout.get("nw-row", {}).get("relativeFailed", false)
+  states[stage] = {"publicLayout": layout, "nativeWindowRects": native_rects, "horizontal": horizontal}
+  return valid
+
 func verify_geometry(stage: String) -> void:
   var matches := true
   var visible := true
@@ -105,7 +149,9 @@ func wait_color(id: String, expected: String) -> void:
   verify(node(id).appearance.background == expected, "Cor nativa após PressOut: " + id)
 
 func capture(stage: String) -> void:
-  states[stage] = data()
+  var observed := data()
+  observed.merge(states.get(stage, {}))
+  states[stage] = observed
   if not OS.get_cmdline_user_args().has("--capture"):
     return
   await RenderingServer.frame_post_draw

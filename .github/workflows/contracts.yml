@@ -42,10 +42,231 @@ jobs:
           ditto -x -k .deps/godot.zip .deps/godot
           echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
       - run: npm run setup
+      - name: Reconstruct affine matrices and reject unsupported transforms
+        run: .deps/build/affine_transform_test
+      - run: npm run test:codegen:native -- --node "$(command -v node)"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: codegen-native-compile
+          path: |
+            build/codegen-native-compile/report.json
+            build/codegen-native-compile/generated/manifest.json
+            build/codegen-native-compile/generated/schema.json
+            build/codegen-native-compile/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run sdk:native:pack -- --build-dir .deps/build --out build/native-sdk
+      - run: npm run sdk:native:verify -- --sdk build/native-sdk
+      - run: npm run test:adapters:native -- --sdk build/native-sdk --out build/adapter-registry
+      - run: npm run test:adapters:loader -- --sdk build/native-sdk --out build/adapter-loader
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: adapter-registry-sdk
+          path: |
+            .deps/build/native-sdk-build.json
+            build/native-sdk/manifest.json
+            build/native-sdk/receipt.json
+            build/native-sdk/native-combination.json
+            build/adapter-registry/report.json
+            build/adapter-registry/generated/manifest.json
+            build/adapter-registry/logs/*.log
+            build/adapter-loader/report.json
+            build/adapter-loader/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:examples
+      - run: npm run test:transforms:guards
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-transform-guards
+          path: |
+            build/transforms-guards.json
+            build/transforms-guards.log
+            build/transforms-input-guards.json
+            build/transforms-input-guards.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:runtime
       - run: npm run test:application
+      - run: npm run test:modules
+      - run: npm run test:focus:commands
+      - run: npm run test:pointers:processor
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-pointer-processor
+          path: |
+            build/pointer-processor-report.json
+            build/pointer-processor.log
+            build/pointer-processor-original-negative.log
+            build/pointer-processor-original-listener-negative.log
+            build/pointer-processor-negative-build.log
+            build/pointer-errors-report.json
+            build/pointer-errors.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:geometry
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-pointer-geometry
+          path: |
+            build/pointer-geometry-report.json
+            build/pointer_geometry_test.log
+            build/pointer_geometry_original_test.log
+            build/pointer-geometry-original-build.log
+            build/pointer-projection-report.json
+            build/pointer-projection.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:events:original
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-event-target-original
+          path: |
+            build/event-target-report.json
+            build/event-target-bundles.json
+            build/event-target.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:events:ancestry
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-event-target-ancestry
+          path: |
+            build/event-target-ancestry-original-report.json
+            build/event-target-ancestry-current-report.json
+            build/event-target-ancestry-comparison.json
+            build/event-target-ancestry-original.log
+            build/event-target-ancestry-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:events:dispatch
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-event-dispatch-original
+          path: |
+            build/event-dispatch-original-report.json
+            build/event-dispatch-current-report.json
+            build/event-dispatch-comparison.json
+            build/event-dispatch-original.log
+            build/event-dispatch-current.log
+          if-no-files-found: error
+      - run: npm run test:events:integrated
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-event-dispatch-integrated
+          path: |
+            build/event-dispatch-integrated-original-report.json
+            build/event-dispatch-integrated-integrated-report.json
+            build/event-dispatch-integrated-comparison.json
+            build/event-dispatch-integrated-original.log
+            build/event-dispatch-integrated-integrated.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:services
+      - run: npm run test:pointers:interest
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-interest
+          path: |
+            build/pointer-interest-original-report.json
+            build/pointer-interest-current-report.json
+            build/pointer-interest-comparison.json
+            build/pointer-interest-original.log
+            build/pointer-interest-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:documents
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-documents
+          path: |
+            build/pointer-document-original-*-report.json
+            build/pointer-document-current-*-report.json
+            build/pointer-document-comparison.json
+            build/pointer-document-original-*.log
+            build/pointer-document-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:query-faults
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-query-faults
+          path: |
+            build/pointer-query-fault-report.json
+            build/pointer-query-fault-current-report.json
+            build/pointer-query-fault-comparison.json
+            build/pointer-query-fault-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:resolver-faults
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-resolver-faults
+          path: |
+            build/pointer-resolver-fault-report.json
+            build/pointer-resolver-fault-current-report.json
+            build/pointer-resolver-fault-comparison.json
+            build/pointer-resolver-fault-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:documents:up
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-document-up
+          path: |
+            build/pointer-document-up-original-*-report.json
+            build/pointer-document-up-current-*-report.json
+            build/pointer-document-up-comparison.json
+            build/pointer-document-up-original-*.log
+            build/pointer-document-up-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:up
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-up
+          path: |
+            build/pointer-up-report.json
+            build/pointer-up-current-report.json
+            build/pointer-up-comparison.json
+            build/pointer-up-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-modules
+          path: |
+            build/native-modules-report.json
+            build/native-modules.log
+            build/metrics-errors-report.json
+            build/metrics-errors.log
+            build/focus-commands-report.json
+            build/focus-commands.log
+            build/services-boundaries-report.json
+            build/services-boundaries.log
+            build/services-lifetime-report.json
+            build/services-lifetime.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:consumer
+      - name: Original Codegen adapter in a provisioned independent consumer
+        run: |
+          ADAPTER_TOOL_NODE=".deps/node-v$(node -p "require('./dependencies.json').node.version")-darwin-arm64/bin/node"
+          "$ADAPTER_TOOL_NODE" scripts/adapter-runtime-check.mjs --sdk build/native-sdk --out build/adapter-runtime
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-adapter-runtime
+          path: |
+            build/adapter-runtime/report.json
+            build/adapter-runtime/headless.json
+            build/adapter-runtime/reentrant-stop.json
+            build/adapter-runtime/reentrant-raf.json
+            build/adapter-runtime/reentrant-timer.json
+            build/adapter-runtime/root-*.json
+            build/adapter-runtime/external-appearance.json
+            build/adapter-runtime/logs/*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -53,6 +274,7 @@ jobs:
           path: |
             build/consumer/*.json
             build/consumer/*.log
+            build/consumer/*-bundle.js
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

@@ -1,0 +1,41 @@
+{
+  "format": "godot-fabric.preceding-ci/v1",
+  "verifiedAt": "2026-10-04T00:52:53.079525+00:00",
+  "scope": "Preceding root-retirement source; does not certify the later View implementation",
+  "headSha": "b5dafc8ebd374a63edc2d9774387177ab15f2032",
+  "status": "completed",
+  "conclusion": "success",
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37163024271",
+  "jobs": [
+    {
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37163024271/job/111320220072"
+    },
+    {
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37163024271/job/111320220154"
+    },
+    {
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37163024271/job/111320220236"
+    },
+    {
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37163024271/job/111320221019"
+    },
+    {
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37163024271/job/111321443218"
+    }
+  ]
+}

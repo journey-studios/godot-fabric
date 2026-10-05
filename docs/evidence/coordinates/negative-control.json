@@ -1,0 +1,1474 @@
+{
+  "format": "godot-fabric.coordinate-negative-controls/v1",
+  "scope": "Same final JS bundle and validation fixture; expected failures retained without retries",
+  "fixtureSha256": "45f945c089ca1fc0eee15cc9d68fb097f2b8562d7507a4fcf7bf8534ff6df3ff",
+  "bundleSha256": "17902e542d77aaea7b6f1003f3ee85c957766f256d7bf66fc6f29813ddd62619",
+  "priorHostSha256": "f933426b0774f9445f89bfceeb38752e7edc4cfee78127f4e97f5da5b393186b",
+  "priorHostImplementationCommit": "6e9f2f305e5981f49b9b2fd1be23ae723ba43363",
+  "cachedDensityHostSha256": "054e9b4f489c3df1af2ae72426b53ee72db1c36b11da4bc48cf7261e3b5c73e4",
+  "cachedDensitySourceSha256": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "c0c55be0805fd032f648f4272dec9cd9a3668722b847406d131dbc0a961afce9",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "0773fb88c5a3507048596465a4a8bc1b2291e6b398b2e5457cda1713f43c3f14",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "54188de4aa60a663573d2ce1f9f9c621e223ab9332d0681bb5290f66dad5f296",
+    "native/godot_dom.h": "9d2cd34bd38d903129e1fabcddf072ea696daa22df4ba311997552e371bda936",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "9c7155e1e7113f2d4309a5235aeafa4aafe6d9ab9497ccf41c94795c91839ce2",
+    "native/pointer_adapter.h": "d25b92c2a4ee21dbfa3f0cd9b6f9a8805ea66f56bbf6fe4c52f59b30a79ef2da",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "46a89009a339b73540ace307eb1fc7cab52104adf7878d804a360346b4dd586f"
+  },
+  "controls": {
+    "priorHeadless": {
+      "checks": 238,
+      "failedChecks": 121,
+      "expectedExit": 1,
+      "reportSha256": "5bd5cf849fa66d8359d1cc4ba104bbcc8c4a678a95f58ba9c96249a9a8710429",
+      "failures": [
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: offset mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: offset mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: offset mouse",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: offset touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: offset touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: offset touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: offset-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: offset-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: offset-B",
+          "passed": false
+        },
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: release-outside A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: release-outside A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: release-outside A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: release-outside A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: release-outside A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: release-outside A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: move-surface-active A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: move-surface-active A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: move-surface-active A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: move-surface-active A touch move",
+          "passed": false
+        },
+        {
+          "name": "A real move after moving the Godot surface keeps the unchanged RN retention region active",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: move-surface-active A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: move-surface-active A touch end",
+          "passed": false
+        },
+        {
+          "name": "Repositioning a held surface preserves one original Pressability press",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: moved-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: moved-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: moved-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: moved-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: moved-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: moved-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: moved-B",
+          "passed": false
+        },
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: scaled mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: scaled mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: scaled mouse",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: scaled touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: scaled touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: scaled touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: scaled-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: scaled-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: scaled-B",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: scaled-capture-held A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-capture-held A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: scaled-capture-held A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-capture-held A touch end",
+          "passed": false
+        },
+        {
+          "name": "START immediately after a density change samples current Godot screen units before a frame refresh",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: density-immediate B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-immediate B touch end",
+          "passed": false
+        },
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch end",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: density-two-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: density-two-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: density-two-B",
+          "passed": false
+        }
+      ],
+      "immediateDensity": {
+        "currentGodotDensity": 2.0,
+        "expectedLocal": [
+          130.0,
+          75.0
+        ],
+        "expectedPage": [
+          185.0,
+          249.0
+        ],
+        "expectedScreen": [
+          495.0,
+          284.0
+        ],
+        "inputSuppliedPoint": [
+          990.0,
+          568.0
+        ],
+        "inputViewportPoint": [
+          495.0,
+          284.0
+        ],
+        "metricsAfterDispatch": {
+          "pixelRatio": 2.0,
+          "window": {
+            "fontScale": 1.0,
+            "height": 480.0,
+            "scale": 2.0,
+            "width": 640.0
+          }
+        },
+        "rootName": "B"
+      },
+      "immediateEvents": [
+        {
+          "type": "PressIn",
+          "id": 3.0,
+          "target": 64.0,
+          "page": [
+            495.0,
+            284.0
+          ],
+          "local": [
+            130.0,
+            75.0
+          ],
+          "screen": [
+            495.0,
+            284.0
+          ],
+          "touches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ],
+          "changedTouches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ]
+        },
+        {
+          "type": "TouchStart",
+          "id": 3.0,
+          "target": 64.0,
+          "page": [
+            495.0,
+            284.0
+          ],
+          "local": [
+            130.0,
+            75.0
+          ],
+          "screen": [
+            495.0,
+            284.0
+          ],
+          "touches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ],
+          "changedTouches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "priorNative": {
+      "checks": 247,
+      "failedChecks": 121,
+      "expectedExit": 1,
+      "reportSha256": "bd7c33050f857877cba92ff53d1896a4859643af96e60bbd214748b5ca4b13c6",
+      "failures": [
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: offset mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: offset mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: offset mouse",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: offset touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: offset touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: offset A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset A touch end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: offset touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: offset-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: offset-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: offset-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: offset-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: offset-B",
+          "passed": false
+        },
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: release-outside A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: release-outside A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: release-outside A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: release-outside A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: release-outside A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: release-outside A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: move-surface-active A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: move-surface-active A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: move-surface-active A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: move-surface-active A touch move",
+          "passed": false
+        },
+        {
+          "name": "A real move after moving the Godot surface keeps the unchanged RN retention region active",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: move-surface-active A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: move-surface-active A touch end",
+          "passed": false
+        },
+        {
+          "name": "Repositioning a held surface preserves one original Pressability press",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: moved-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: moved-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: moved-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: moved-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: moved-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: moved-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: moved-B",
+          "passed": false
+        },
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: scaled mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: scaled mouse",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: scaled mouse",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch move",
+          "passed": false
+        },
+        {
+          "name": "Moving inside the root-space retention region keeps Pressability active: scaled touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch move",
+          "passed": false
+        },
+        {
+          "name": "Returning inside retention reactivates through original Pressability: scaled touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: scaled A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled A touch end",
+          "passed": false
+        },
+        {
+          "name": "Returning and releasing completes exactly one public press: scaled touch",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: scaled-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: scaled-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: scaled-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: scaled-B",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: scaled-capture-held A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-capture-held A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: scaled-capture-held A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: scaled-capture-held A touch end",
+          "passed": false
+        },
+        {
+          "name": "START immediately after a density change samples current Godot screen units before a frame refresh",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: density-immediate B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-immediate B touch end",
+          "passed": false
+        },
+        {
+          "name": "Real mouse start carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse start",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse move",
+          "passed": false
+        },
+        {
+          "name": "Real mouse end carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A mouse end",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: density-two A",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two A touch end",
+          "passed": false
+        },
+        {
+          "name": "Real touch start carries root page, target local and density-normalized screen points: density-two-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two-B B touch start",
+          "passed": false
+        },
+        {
+          "name": "Real touch move carries root page, target local and density-normalized screen points: density-two-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two-B B touch move",
+          "passed": false
+        },
+        {
+          "name": "Real touch end carries root page, target local and density-normalized screen points: density-two-B B",
+          "passed": false
+        },
+        {
+          "name": "Original contact arrays retain identity and the same coordinate spaces: density-two-B B touch end",
+          "passed": false
+        },
+        {
+          "name": "The second root receives only its own callback and state after an embedding change: density-two-B",
+          "passed": false
+        }
+      ],
+      "immediateDensity": {
+        "currentGodotDensity": 2.0,
+        "expectedLocal": [
+          130.0,
+          75.0
+        ],
+        "expectedPage": [
+          185.0,
+          249.0
+        ],
+        "expectedScreen": [
+          1026.0,
+          581.0
+        ],
+        "inputSuppliedPoint": [
+          990.0,
+          568.0
+        ],
+        "inputViewportPoint": [
+          495.0,
+          284.0
+        ],
+        "metricsAfterDispatch": {
+          "pixelRatio": 2.0,
+          "window": {
+            "fontScale": 1.0,
+            "height": 480.0,
+            "scale": 2.0,
+            "width": 640.0
+          }
+        },
+        "rootName": "B"
+      },
+      "immediateEvents": [
+        {
+          "type": "PressIn",
+          "id": 3.0,
+          "target": 64.0,
+          "page": [
+            495.0,
+            284.0
+          ],
+          "local": [
+            130.0,
+            75.0
+          ],
+          "screen": [
+            495.0,
+            284.0
+          ],
+          "touches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ],
+          "changedTouches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ]
+        },
+        {
+          "type": "TouchStart",
+          "id": 3.0,
+          "target": 64.0,
+          "page": [
+            495.0,
+            284.0
+          ],
+          "local": [
+            130.0,
+            75.0
+          ],
+          "screen": [
+            495.0,
+            284.0
+          ],
+          "touches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ],
+          "changedTouches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                495.0,
+                284.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                495.0,
+                284.0
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "cachedDensity": {
+      "checks": 238,
+      "failedChecks": 1,
+      "expectedExit": 1,
+      "reportSha256": "929dd31674e995958e88db51c65142f5e5d1b4dc623404f038d27caf5e82eb33",
+      "failures": [
+        {
+          "name": "START immediately after a density change samples current Godot screen units before a frame refresh",
+          "passed": false
+        }
+      ],
+      "immediateDensity": {
+        "currentGodotDensity": 2.0,
+        "expectedLocal": [
+          130.0,
+          75.0
+        ],
+        "expectedPage": [
+          185.0,
+          249.0
+        ],
+        "expectedScreen": [
+          495.0,
+          284.0
+        ],
+        "inputSuppliedPoint": [
+          990.0,
+          568.0
+        ],
+        "inputViewportPoint": [
+          495.0,
+          284.0
+        ],
+        "metricsAfterDispatch": {
+          "pixelRatio": 2.0,
+          "window": {
+            "fontScale": 1.0,
+            "height": 480.0,
+            "scale": 2.0,
+            "width": 640.0
+          }
+        },
+        "rootName": "B"
+      },
+      "immediateEvents": [
+        {
+          "type": "PressIn",
+          "id": 3.0,
+          "target": 64.0,
+          "page": [
+            185.0,
+            249.0
+          ],
+          "local": [
+            130.0,
+            75.0
+          ],
+          "screen": [
+            990.0,
+            568.0
+          ],
+          "touches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                185.0,
+                249.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                990.0,
+                568.0
+              ]
+            }
+          ],
+          "changedTouches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                185.0,
+                249.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                990.0,
+                568.0
+              ]
+            }
+          ]
+        },
+        {
+          "type": "TouchStart",
+          "id": 3.0,
+          "target": 64.0,
+          "page": [
+            185.0,
+            249.0
+          ],
+          "local": [
+            130.0,
+            75.0
+          ],
+          "screen": [
+            990.0,
+            568.0
+          ],
+          "touches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                185.0,
+                249.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                990.0,
+                568.0
+              ]
+            }
+          ],
+          "changedTouches": [
+            {
+              "id": 3.0,
+              "target": 64.0,
+              "page": [
+                185.0,
+                249.0
+              ],
+              "local": [
+                130.0,
+                75.0
+              ],
+              "screen": [
+                990.0,
+                568.0
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

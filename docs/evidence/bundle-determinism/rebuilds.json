@@ -1,0 +1,54 @@
+{
+  "format": "godot-fabric.experimental-project-rebuilds/v1",
+  "checkedAt": "2026-10-03T21:09:28.459Z",
+  "platform": "macOS arm64",
+  "node": "22.23.3",
+  "sameProject": true,
+  "unchangedInputs": true,
+  "builderSha256": "17a886bbf9f1cd9090cf32a5e15795bbbd911403f6e78ebc9440e317ba0c0d72",
+  "baseline": {
+    "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+    "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a"
+  },
+  "executions": [
+    {
+      "iteration": 0,
+      "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+      "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+      "exitCode": 0
+    },
+    {
+      "iteration": 1,
+      "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+      "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+      "exitCode": 0
+    },
+    {
+      "iteration": 2,
+      "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+      "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+      "exitCode": 0
+    },
+    {
+      "iteration": 3,
+      "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+      "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+      "exitCode": 0
+    },
+    {
+      "iteration": 4,
+      "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+      "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+      "exitCode": 0
+    },
+    {
+      "iteration": 5,
+      "bundle": "8a919089575d1ed347fca0d6e2c9be6b871a8f64d0310bdc4b422c98fb80aecd",
+      "selection": "184754cb2d00b30725b1108ba560525ce5bbe8da94b59ca62497c673c9859c5a",
+      "exitCode": 0
+    }
+  ],
+  "passed": true,
+  "inputCount": 154,
+  "inputHash": "f5b1028cfccdd676c1edf050de5a5d3cc2d0012073fe0d9e75e9a469ade6911a"
+}

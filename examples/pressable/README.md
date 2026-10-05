@@ -31,6 +31,15 @@ The native checks additionally require the acceptance marker and reject script
 errors, runtime errors, crashes and timeouts. Generated reports are local and
 are overwritten by another individual check.
 
+The two-contact case starts both contacts inside the same Pressable. Its first
+contact ending must preserve the responder and pressed render state without
+`onPress` or `onPressOut`. A subsequent drag of the remaining contact verifies
+its unchanged identifier and the one-contact native payload. The last contact
+ending must release the responder and produce exactly one callback each for
+`onPressIn`, `onPress` and `onPressOut`, with no remaining touches in the
+final press payload. Upstream Pressability triggers `onPress` from responder
+release; the renderer must retain that owner while a descendant contact remains.
+
 ## Renderer captures
 
 These are Godot Viewport readbacks from the [current validation record](../../docs/evidence/public-controls/README.md).

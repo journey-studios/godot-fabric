@@ -1,0 +1,41 @@
+{
+  "format": "godot-fabric.view-hosted-ci/v1",
+  "verifiedAt": "2026-10-04T01:07:26.708452+00:00",
+  "headSha": "b5df4d6c93ccc0ca915ed940c07699742c541bb1",
+  "status": "completed",
+  "conclusion": "success",
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395",
+  "scope": "Contracts, native cold start/examples and bounded original RN reference comparison; not full View/mobile/roadmap certification",
+  "jobs": [
+    {
+      "name": "contracts",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395/job/111330060192"
+    },
+    {
+      "name": "reference-android",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395/job/111330060228"
+    },
+    {
+      "name": "reference-ios",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395/job/111330060249"
+    },
+    {
+      "name": "native-cold-start",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395/job/111330060299"
+    },
+    {
+      "name": "parity-comparison",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37166394395/job/111331353121"
+    }
+  ]
+}

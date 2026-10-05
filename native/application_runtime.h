@@ -8,12 +8,22 @@
 
 class FabricSurface;
 namespace fabric_godot {
+class GameServiceRegistry;
+class AdapterRegistry;
+struct WindowMetrics {
+  godot::Vector2 size;
+  godot::Vector2 screen;
+  double scale{1};
+  uint64_t window_instance_id{};
+};
 class ApplicationRuntime {
  public:
-  ApplicationRuntime(FabricSurface &theme_source, std::function<godot::Vector2()> window_size,
-      const std::string &scenario, uint64_t runtime_id);
+  ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
+      const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> game_services,
+      std::shared_ptr<AdapterRegistry> adapters = {});
   ~ApplicationRuntime();
-  void load_bundle(const std::string &source);
+  void load_bundle(const std::string &source, const std::string &source_url);
+  void invoke_callable(const std::string &name, const std::string &method, const std::string &args_json);
   int mount(FabricSurface &host, const std::string &component, const std::string &props_json);
   void update_props(int surface_id, const std::string &props_json);
   void unmount(int surface_id);
@@ -33,6 +43,6 @@ class ApplicationRuntime {
   void key(int surface_id, const godot::Ref<godot::InputEvent> &event, int tag);
  private:
   struct Impl;
-  std::unique_ptr<Impl> impl;
+  std::shared_ptr<Impl> impl;
 };
 }

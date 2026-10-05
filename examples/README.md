@@ -25,7 +25,17 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | --- | --- | --- | --- |
 | [shared](shared/README.md) | Two AppRegistry roots, props and independent lifetimes | Public | [App](shared/App.jsx) · [scene](shared/scene.tscn) |
 | [counter](counter/README.md) | Minimal React state and public Pressable | Public | [App](counter/App.jsx) · [scene](counter/scene.tscn) |
+| [view](view/README.md) | Fabric stacking, rectangular overflow, public geometry and four solid border colors | Public | [App](view/App.jsx) · [scene](view/scene.tscn) |
+| [coordinates](coordinates/README.md) | Root/local/screen points, genuine move-out/return and content density | Public | [App](coordinates/App.jsx) · [scene](coordinates/scene.tscn) |
+| [transforms](transforms/README.md) | Original RN affine styles, percentage origins, flattening, public measures and transformed input | Public | [App](transforms/App.jsx) · [scene](transforms/scene.tscn) |
 | [runtime](runtime/README.md) | Intervals, microtasks, task order and cancellable frames | Public | [App](runtime/App.jsx) · [scene](runtime/scene.tscn) |
+| [refs](refs/README.md) | Original RN refs, affine measures and imperative props | Public | [App](refs/App.jsx) · [scene](refs/scene.tscn) |
+| [tree](tree/README.md) | Native IDs, original documents, logical traversal, RawText and retained collection snapshots | Public | [App](tree/App.jsx) · [scene](tree/scene.tscn) |
+| [focus](focus/README.md) | Original TextInput.State, real LineEdit focus, ref replacement and reentrant retirement | Public | [App](focus/App.jsx) · [scene](focus/scene.tscn) |
+| [pointers](pointers/README.md) | Original pointer transport, public View capture and selective multi-root lifetime | Public | [App](pointers/App.jsx) · [scene](pointers/scene.tscn) |
+| [pointer-geometry](pointer-geometry/README.md) | Transformed/cross-root capture, logical refs, density and terminal geometry | Public | [App](pointer-geometry/App.jsx) · [scene](pointer-geometry/scene.tscn) |
+| [metrics](metrics/README.md) | Original Dimensions, uniform content density and subscription lifetime | Public | [App](metrics/App.jsx) · [scene](metrics/scene.tscn) |
+| [services](services/README.md) | Typed GDScript calls/signals, consistent state and shared Zustand data | Public | [App](services/App.jsx) · [scene](services/scene.tscn) |
 | [form](form/README.md) | Typed public Button/TextInput with native editing and focus | Public | [App](form/App.tsx) · [scene](form/scene.tscn) |
 | [react](react/README.md) | State, keyed reconciliation, effects, Suspense and errors | Internal | [App](react/App.jsx) · [scene](react/scene.tscn) |
 | [layout](layout/README.md) | Intrinsic text measurement and responsive layout | Internal | [App](layout/App.jsx) · [scene](layout/scene.tscn) |
@@ -47,17 +57,134 @@ and [parity baseline](../docs/compatibility/BASELINE.md).
 
 ## Gallery
 
+The [isolated EventTarget validation](event-target/README.md) uses its own
+fixture/driver and commands. It compares original versus integrated native
+delivery, batching, faults and retirement, with two actual captures. It is
+outside the ordinary launcher catalog while public EventTarget flags remain off.
+
+The separate [pointer-interest validation](pointer-interest/README.md) compares
+original/current native View `pointerdown` interest using original listener maps.
+It has its own fixture and `npm run test:pointers:interest` command, outside the
+launcher catalog. Its [receipt](../docs/evidence/pointer-interest/README.md)
+records 193/230 headless and 260 current viewport checks; public flags stay off
+and that snapshot leaves document-only/other pointer categories open. The later
+Document probe below extends root interest with its own receipt.
+
+| Pointerdown interest: initial | After listener-driven React updates |
+| --- | --- |
+| [![Original refs in the native pointerdown interest fixture](../docs/evidence/pointer-interest/initial.png)](pointer-interest/README.md) | [![Native pointerdown fixture after listener-driven React updates](../docs/evidence/pointer-interest/updated.png)](pointer-interest/README.md) |
+
+The [query-fault probe](pointer-query-fault/README.md) is another isolated
+validation outside the launcher. `npm run test:pointers:query-faults` preserves
+same-batch TouchStart/Raw/React delivery after four deliberately failed interest
+lookups. The [receipt](../docs/evidence/pointer-query-faults/README.md) records
+174/186 on the previous host, 186/186 corrected headless and 204/204 viewport
+with visible diagnostics and explicit getter/reentrancy limits.
+
+| Before query faults | TouchStart updates React after lookup failure |
+| --- | --- |
+| [![Native query fault fixture before input](../docs/evidence/pointer-query-faults/initial.png)](pointer-query-fault/README.md) | [![Native query fault fixture after recovered React updates](../docs/evidence/pointer-query-faults/updated.png)](pointer-query-fault/README.md) |
+
+The [Document/root probe](pointer-document/README.md) is also outside the
+launcher catalog. `npm run test:pointers:documents` exercises eight independent
+original/current flag configurations. Original Document and documentElement
+Maps qualify native input through their current root family, with separate
+manual, Raw, React, membership, retirement and fault observations.
+
+| Before Document input | After one Document gesture |
+| --- | --- |
+| [![Native roots before Document-only interest](../docs/evidence/pointer-documents/initial.png)](pointer-document/README.md) | [![Document capture and bubble commit A=2 while B=0](../docs/evidence/pointer-documents/updated.png)](pointer-document/README.md) |
+
+These are actual 760×220 Godot readbacks with 20 pixel assertions. The
+[receipt](../docs/evidence/pointer-documents/README.md) distinguishes the captured
+A=0/B=0 → A=2/B=0 gesture from later controls and remaining event gaps.
+
+The [ref-getter probe](pointer-resolver-fault/README.md) isolates a throwing
+`canonical.publicInstance` read before the SDK query. It reuses the two-surface
+scene and actual original refs; `npm run test:pointers:resolver-faults` is outside
+the launcher catalog. Its [receipt](../docs/evidence/pointer-resolver-faults/README.md)
+records 62/65 on the preceding native host with three normative failures,
+65/65 corrected headless and 85/85 viewport checks. Actual 680×160 captures
+show A=0/B=0 → A=2/B=0 before B's later gesture and A's Cancel. Only the
+self-restoring `publicInstance` getter was faulted; wider resolver and mobile
+acceptance remain open and public flags stay off.
+
+The [pointerup probe](pointer-up/README.md) uses ordinary original View ref
+listeners in its isolated opt-in configuration. `npm run test:pointers:up`
+is outside the launcher catalog. It verifies bubble/capture-only qualification,
+one trusted Up/Raw/React commit, original TouchEnd, B's false interest while A
+is held, Cancel and balanced stop. Its
+[receipt](../docs/evidence/pointer-up/README.md) records 62/62 headless, 90/90
+viewport checks and eight visible old-host failures with the same current SDK
+bundle. Document Up, other flags and full event/lifecycle acceptance remain
+open; regression, SDK and hosted CI acceptance for this slice are pending.
+
+| Before native Up input | After the first bubble case |
+| --- | --- |
+| [![Native targets with zero TouchStart and Up counters](../docs/evidence/pointer-up/initial.png)](pointer-up/README.md) | [![Both yellow TouchStart bars advance; only A's green Up bar advances](../docs/evidence/pointer-up/updated.png)](pointer-up/README.md) |
+
+Both actual 680×160 frames have 12 fixed pixel assertions and matching React
+counters, with saved PNG pixels decoded independently. The updated stage is
+starts A1/B1 and ups A1/B0, before later capture-only and Cancel controls.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
 
 Every interactive example's README has its own renderer capture.
 
+![Original RN focused input after callback ref replacement](../docs/evidence/focus/focus-updated.png)
+
+The [focus example](focus/README.md) compares the original input singleton with
+the actual Viewport owner and LineEdit signals. It exercises two roots,
+editability, retained refs, reparenting and reentrant retirement. Hardware
+keyboard/IME and mobile differentials remain separate acceptance requirements.
+
+![Public View ordering, clipping and border colors](../docs/evidence/view/view-initial.png)
+
+The [View example](view/README.md) compares injected input targets, public/native
+geometry and actual renderer RGBA samples, including keyed reorder and border
+removal. Its [checkpoint](../docs/evidence/view/README.md) preserves the previous
+host's expected failures and the offset-root input/measurement gap discovered
+in that checkpoint. The later [coordinate example](coordinates/README.md)
+addresses it through genuine movement gestures and independent public measures.
+
+![Scaled root A stays held while root B remains ready](../docs/evidence/coordinates/coordinate-scaled.png)
+
+Its [evidence](../docs/evidence/coordinates/README.md) records root/target/screen
+coordinates, surface movement and scaling, raw window pixels at density two,
+and the first contact before cached metrics refresh.
+
+![Original RN percentage origins, ordered transforms and mirrored/sheared Views](../docs/evidence/transforms/transform-initial.png)
+
+The [transform gallery](transforms/README.md) compares independent analytical
+matrices/corners with actual Controls, original public measurements, mouse/touch
+events and renderer pixels. Resize and removal preserve refs and React state
+while an anonymous wrapper materializes and flattens again. Its
+[evidence](../docs/evidence/transforms/README.md) keeps the previous host's
+expected failures, explicit unsupported-transform cases and invalid-embedding
+input cancellation separate.
+
+![Original RN documents and keyed traversal](../docs/evidence/tree/tree-updated.png)
+
+The [read-only tree example](tree/README.md) uses original RN documents and
+collections to check IDs, root isolation, keyed reorder/replacement, text updates
+and retirement. It records pinned collection snapshots and RawText quirks;
+its [evidence](../docs/evidence/tree/README.md) includes the same fixture failing
+against the previous JS configuration with the unchanged native host.
+
 ![Two registered roots share one application](../docs/evidence/shared-roots/updated.png)
 
 The [shared application](shared/README.md) adds explicit native application and
 surface properties. Its controls use public RN imports; final resource/SDK
 authoring and multi-root mobile reference certification remain open.
+
+![Game state reaches both roots through typed services](../docs/evidence/game-services/services-remounted.png)
+
+The [services example](services/README.md) adds GDScript methods/signals, a
+consistent initial snapshot, shared Zustand state, pause and accepted-job
+lifetime. Its images and positive/negative assertions have a separate
+[evidence record](../docs/evidence/game-services/README.md).
 
 ## Validation and images
 
@@ -82,7 +209,9 @@ are in [validation evidence](../docs/evidence/README.md).
 
 The parity case always runs automatically; it has no manual gallery mode or
 capture flag. Its reference runners launch original RN on iOS/Android. They
-do not establish Godot support on either OS. Godot builds remain macOS arm64.
+do not establish Godot support on either OS. The separate
+[iOS consumer experiment](../docs/IOS_BUILD.md) records its narrower export and
+runtime proof; the interactive catalog remains a macOS arm64 laboratory.
 
 ## Organization
 
@@ -95,3 +224,34 @@ the Godot, iOS and Android oracles use the same source.
 The root `main.tscn`, `layout.tscn` and other original scene paths delegate to
 these scenes for compatibility. Godot's main scene remains the React lifecycle
 demo. Each example scene also opens directly in the root Godot editor after setup.
+
+## Public pointer capture
+
+![Original RN pointer roots after React key replacement](../docs/evidence/pointers/pointers-updated.png)
+
+The [pointer laboratory](pointers/README.md) tests pending queries, next-event
+got/lost, shared-root contact IDs, selective cancellation, removal and app
+retirement. It passes 132/146 headless/native checks with 12 pixels; the isolated
+exception/real-focus stop fixture passes 43. See [curated evidence](../docs/evidence/pointers/README.md)
+for 144 native assertions, two unchanged-source crash controls and remaining
+hardware/mobile boundaries.
+
+![Captured target geometry after React updates](../docs/evidence/pointer-geometry/pointer-geometry-updated.png)
+
+The [geometry example](pointer-geometry/README.md) adds rotation/skew/reflection,
+shared embedded roots, flattened capture refs, immediate density changes,
+singular cancel and connected hidden capture. Its separate
+[evidence](../docs/evidence/pointer-geometry/README.md) records 631/648 checks,
+14 pixels, three captures and 55 expected failures on the previous host.
+
+The [Document pointerup matrix](pointer-document-up/README.md) runs eight
+original/current SDK and flag lanes: 1,371 headless checks and 243 native viewport
+checks with 20 pixels. Ordinary original Document/element listeners qualify Up
+without a leaf JSX pointer helper. Event identity, root ownership, capture-only,
+negative A while B held, final removal, Cancel and stop have executed checks.
+[The receipt](../docs/evidence/pointer-document-up/README.md) distinguishes the
+captured Document-only stage from later cases and pending hosted CI.
+
+| Native initial frame | Document Up commits A2/B0 |
+| --- | --- |
+| [![Native counters before Up](../docs/evidence/pointer-document-up/initial.png)](pointer-document-up/README.md) | [![Actual Document callbacks update only A](../docs/evidence/pointer-document-up/updated.png)](pointer-document-up/README.md) |

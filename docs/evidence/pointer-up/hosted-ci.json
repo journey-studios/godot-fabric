@@ -1,0 +1,347 @@
+{
+  "schemaVersion": 1,
+  "audit": "native-pointer-up-hosted",
+  "auditedAt": "2026-10-04T23:02:03.185809+00:00",
+  "status": "verified-hosted-artifacts",
+  "run": {
+    "id": 37241023275,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37241023275",
+    "headSha": "041688ca37d8dde73b58bae3888ba80298c32c8d",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 111549598611,
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 111549598688,
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 111549598707,
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 111549598727,
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 111552188304,
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "implementationCommit": "f7c2cf6bbae4d1ef167ceb94050ee3eb5bf4d01b",
+  "nativeCheckout": {
+    "expectedCommit": "5250225103ec2f10be52ffae2c9a9e5765d99457",
+    "confirmedFromNativeJobLog": true,
+    "actualCommit": "5250225103ec2f10be52ffae2c9a9e5765d99457",
+    "parents": [
+      "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+      "041688ca37d8dde73b58bae3888ba80298c32c8d"
+    ]
+  },
+  "upAcceptance": {
+    "file": "native-pointer-up/pointer-up-current-report.json",
+    "sha256": "1b206c572c63ae246a774b94f646d9e7baf6470048eb597956c3ad381b604f7f",
+    "checks": 62,
+    "passed": 62,
+    "checkIdDigestSha256": "ec5a7a57032bc9c23f426102cd835805740d77c81cb2884d4c7a3a77550b3387",
+    "sameCheckIdsAndBundleAsLocal": true,
+    "bundleSha256": "78706764cd276b37029fd3229262a378182ae4988268c9948970fecb947731a3",
+    "producerPinCount": 16,
+    "originalRNInputCount": 18,
+    "sameProducerAndRNInputsAsLocal": true,
+    "declaredNativeHostSha256": "30e96ef56fb17680d911b270e4f8b3ae90c97280915bae9b57b598cc94106b10",
+    "captureCount": 0,
+    "originalControlPresent": false,
+    "genericAndComparisonMatchCanonical": true
+  },
+  "regressions": {
+    "checks": 3400,
+    "reportCount": 12,
+    "interest": [
+      193,
+      233
+    ],
+    "queryFault": 186,
+    "resolverFault": 65,
+    "documents": 2723,
+    "terminalFalseUpPairs": {
+      "documents": 156,
+      "queryFault": 44,
+      "resolverFault": 12
+    },
+    "CancelAndUninstalledQueriesEmpty": true,
+    "noDownRetryOrConsumedFault": true,
+    "reports": [
+      {
+        "file": "native-pointer-resolver-faults/pointer-resolver-fault-current-report.json",
+        "sha256": "99461fc030e54fd9cfad4e52463ba9a6283559e9dfef4f2e2f60fd02755287c5",
+        "checks": 65,
+        "passed": 65,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "04315342fec966417af410f2bf7240ffce6f352311bdbf98eb38670cacf5e917",
+        "producerPinCount": 18,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 12,
+        "cancelCasesNoQuery": 1
+      },
+      {
+        "file": "native-pointer-query-faults/pointer-query-fault-current-report.json",
+        "sha256": "410b4496a4ba4eb6fdf1f42ffe37c95e12b6dca4780daf66bb192cc0602131d1",
+        "checks": 186,
+        "passed": 186,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "0ff35e214c7cbd5acd875d135eee1cf41dd04320c9c8861121a0ea73760a01ce",
+        "producerPinCount": 15,
+        "originalRNInputCount": 15,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 44,
+        "cancelCasesNoQuery": 1
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-original-enabled-report.json",
+        "sha256": "f53a35979f32f3feb8e3a545543973167ff1af0c8aeb2c51916e47a37a9d460c",
+        "checks": 338,
+        "passed": 338,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-original-disabled-report.json",
+        "sha256": "f9ee2dcbc993ef52c902f103db852bc6d472269018e9301713d549e2bf407ee8",
+        "checks": 336,
+        "passed": 336,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-current-enabled-report.json",
+        "sha256": "c1d2662d54f9c7651b5745ace54d683babe9cc5a7198842f2fbcc7fcfae0b37e",
+        "checks": 363,
+        "passed": 363,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "9850e15e8878f1b8bd25bb7a5c5c3cc5c263e980a4c31a684246ac95fa411179",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 80,
+        "cancelCasesNoQuery": 3
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-original-imperative-only-report.json",
+        "sha256": "b12053ecfbb1ef49ba9cb34e426ddca2dec539e6cd6865b3ec27591a2431f074",
+        "checks": 336,
+        "passed": 336,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-current-internal-only-report.json",
+        "sha256": "72e741b91ac2fd6bbea40886dc771d83be326d1de5a52a1a5b2468026d354fef",
+        "checks": 340,
+        "passed": 340,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "37ae174c47393d062de25ecbe8b5d066782830e638931ec31cabf1bf16469aae",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 76,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-current-imperative-only-report.json",
+        "sha256": "91f24384f4fb784d40a0665c94892d09c21fb43ebd4632d95d049e427ec4cbc5",
+        "checks": 336,
+        "passed": 336,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-current-disabled-report.json",
+        "sha256": "f9914e7e374006a3113de5da349e6014ee1e1977b55213be8afd6abc1685bfd4",
+        "checks": 336,
+        "passed": 336,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "325f5be19566173b075a8423c22d16a891338f7e988ea7938b458162686933ea",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-documents/pointer-document-original-internal-only-report.json",
+        "sha256": "3d6c281c9a99a13339aff5c25056fe41e9ed1379d24105f64095c735758b14f2",
+        "checks": 338,
+        "passed": 338,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "ef7b7306483dc64066209395a42476841577adb06036681b06831a49cbf65d01",
+        "producerPinCount": 15,
+        "originalRNInputCount": 18,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 2
+      },
+      {
+        "file": "native-pointer-interest/pointer-interest-original-report.json",
+        "sha256": "3b629e33640f515fb4d504039007d88b95280a1c159bddadb5ea6e801bcffd28",
+        "checks": 193,
+        "passed": 193,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "83d2764111dbe7771873b49f07518531ab4966d9d085d26ceb523fb165717053",
+        "producerPinCount": 13,
+        "originalRNInputCount": 13,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 0
+      },
+      {
+        "file": "native-pointer-interest/pointer-interest-current-report.json",
+        "sha256": "e3ebd9e6399b773eb28bd3f14df9638594c900fb6b89cd2eca6a27db5b3a3656",
+        "checks": 233,
+        "passed": 233,
+        "uniqueCheckIds": true,
+        "sameCheckIdsAsLocal": true,
+        "checkIdDigestSha256": "3d37ac6213ec42da4a7d92d8c9c96d7b3964aed57dcee8c1c77ba5515a2170ec",
+        "producerPinCount": 13,
+        "originalRNInputCount": 13,
+        "sameProducerAndRNInputsAsLocal": true,
+        "falseUpPairs": 0,
+        "cancelCasesNoQuery": 0
+      }
+    ]
+  },
+  "all13ReportsSameDeclaredNativeHostSha256": "30e96ef56fb17680d911b270e4f8b3ae90c97280915bae9b57b598cc94106b10",
+  "upLog": {
+    "file": "build/pointer-up-hosted-041688/native-pointer-up/pointer-up-current.log",
+    "sha256": "1bbee6ba3ee05cf5746292dc936d186798de08d5dc015c0e96573ceac59193f0",
+    "errors": 0,
+    "registryWarnings": 0,
+    "preexistingGlogInitializationWarning": true
+  },
+  "nativeJobLog": {
+    "file": "build/pointer-up-hosted-041688/native-job.log",
+    "jobId": 111549598688,
+    "jobUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37241023275/job/111549598688",
+    "sha256": "2b8ff1e4f1b9f3b82827521cd6f0f96b67da1e3e19a15003199d44a796c2b098",
+    "bytes": 228415,
+    "checkoutConfirmed": true
+  },
+  "findings": [],
+  "limits": [
+    "All five workflow jobs completed successfully. This audit verifies the five named native artifacts and actual native checkout; mobile core-reference outputs and parity artifacts remain separate and were not audited here.",
+    "This audit covers head041688; subsequent metadata or Pages commits are not a new runtime execution.",
+    "The compiled CI host hash is declared by the runner. No host binary or full JS bundle is included for independent artifact-byte hashing; bundle digest matches the locally executed current bundle.",
+    "CI has no saved previous native control or PNGs; local54/62negative and90/90viewport24pixels are separate evidence.",
+    "Up acceptance is TT/View only: no whole RN parity, Document Up/flag matrix, Down-to-Up ID, pointer capture lifecycle, arbitrary faults, hardware/mobile/development/performance/full ABI claim.",
+    "Mobile core-reference outputs and Pages are separate; their artifacts/publication are not audited here."
+  ],
+  "sourcePinsVerified": {
+    "count": 16,
+    "sourcePins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/pointer-query-fault-bootstrap.js": "fbcdee479ce1d4d2d7486dc51acdb96da96158987b62cf5cab839e47119465a9",
+      "tests/pointer-query-fault-fixture.jsx": "723b45dbd0310fd6acf093fd70a554757e76056e747bc936fb142f2c77cd4714",
+      "tests/pointer-query-fault-probe.gd": "c5cf2bca5f1c41f59ae93efc5b0a88e0e3fbdda07abb3f9d88e57f873ebe7916",
+      "tests/pointer-up-fixture.jsx": "3976fc7041540fe2f96e1cd7718ad67ae22fb39a6bd5984864dcf250cb0799eb",
+      "tests/pointer-up-probe.gd": "a3912dd65bbe9823fb5d55310a62c8d3b470b9ba8037e3ca7e3d45c26c160647",
+      "tests/pointer-up-native.test.mjs": "cf5e0d8b22856683212b407e7a03ee65d4c09d028061b1b70815ddb013447859",
+      "scripts/event-target-bundle.mjs": "864ae542dc092de083edb9080721e6aa5e4c3ecc1d6c9ad552f17943bf425a22",
+      "sdk/toolchain/platform-plugin.mjs": "e2b98c7ad95a47286bc2250eac7b347805462d953b734827594c4bfbcc8f4605",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": "d5a91d13b68df9d7de04c344ec3435643131b5123467d9cdea97d907f4e27f99",
+      "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+      "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+    },
+    "againstActualCheckoutRemoteTree": true,
+    "againstImplementationAndHeadRemoteTrees": true
+  },
+  "artifacts": [
+    {
+      "id": 11317902171,
+      "name": "native-pointer-resolver-faults",
+      "zipBytes": 33183,
+      "zipSha256": "457c8c035697594b5f146cdf17f5d4b5c56c109df04d97b4070ba88a01aa0625"
+    },
+    {
+      "id": 11317513630,
+      "name": "native-pointer-query-faults",
+      "zipBytes": 63130,
+      "zipSha256": "cacfbe12a3ad1cd33a589577f3bf705bbfc5f990ac32a6dd216948be71268f90"
+    },
+    {
+      "id": 11317513616,
+      "name": "native-pointer-documents",
+      "zipBytes": 620072,
+      "zipSha256": "fbe0cd8b3350f15845dc06dfed1da8912a449db71fd83741efc9e20e795b4dd9"
+    },
+    {
+      "id": 11316783523,
+      "name": "native-pointer-interest",
+      "zipBytes": 107070,
+      "zipSha256": "c6e3bc4905f0174e032ebbc5365dee093d44d0c279598ebcb1e8dd2c72c0d19f"
+    },
+    {
+      "id": 11317054417,
+      "name": "native-pointer-up",
+      "zipBytes": 37601,
+      "zipSha256": "e188a44b6b9a869c580c807e034f4a2f37885f928c7251ee97969726e04edf6e",
+      "members": [
+        "pointer-up-report.json",
+        "pointer-up-comparison.json",
+        "pointer-up-current-report.json",
+        "pointer-up-current.log"
+      ]
+    }
+  ],
+  "totalNativeChecks": 3462,
+  "totalNativeReports": 13
+}

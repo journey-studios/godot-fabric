@@ -1,0 +1,1595 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-query-fault-batch-isolation",
+  "implementation": {
+    "commit": "1286b1bc1ff8d8f01a8585c4a8662d6f9916ce13",
+    "executionBaseCommit": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+    "executionSourceDirty": true,
+    "executedBeforeCommit": true,
+    "sourcePinsVerifiedAgainstCommit": true,
+    "verifiedSourcePinCount": 22
+  },
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable official",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "macOS native viewport"
+    ]
+  },
+  "commands": [
+    "node tests/pointer-query-fault-native.test.mjs --allow-original-negative",
+    "cmake --build .deps/build --parallel 4",
+    "npm run test:pointers:query-faults",
+    "node tests/pointer-query-fault-native.test.mjs --capture"
+  ],
+  "scope": {
+    "actualNativeInput": true,
+    "experimentalNativeDispatch": true,
+    "hardwareCertified": false,
+    "heldContactAfterDownIsLegitimate": true,
+    "listenerRegistryMirrored": false,
+    "originalFlagsEnabled": true,
+    "publicAPIAdded": false,
+    "publicDefaultEnabled": false,
+    "realSDKQueryWrappedOnlyForTest": true
+  },
+  "comparison": {
+    "sameHeadlessCheckIds": true,
+    "sameProbeAndSharedToolchainBytes": true,
+    "producerPinCount": 14,
+    "onlyProducerDifference": "native/application_runtime.cpp",
+    "originalRNInputCount": 15,
+    "sameOriginalRNInputs": true,
+    "sameBundleBytes": true,
+    "differentNativeHosts": true,
+    "originalCPPSourceSha256": "6c17b583c1ae41fe823e7efc897a7c10cd7c57a948167832c814406c089d8d9b",
+    "currentCPPSourceSha256": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+    "publicBundlePreservedWithinIsolatedRuns": true,
+    "publicBundleSha256DuringIsolatedRuns": "8e98679831d4891c8985f61e9753d0f97d6fc0ecbe78a26f938179a1c19d6bb3"
+  },
+  "variants": {
+    "original": {
+      "checks": 186,
+      "passed": 174,
+      "failedNames": [
+        "case/throw34/Same-batch TouchStart callback survives query failure",
+        "case/throw34/Same-batch Raw touchstart survives query failure",
+        "case/throw34/Same-batch TouchStart commits functional React state",
+        "case/nonboolean34/Same-batch TouchStart callback survives query failure",
+        "case/nonboolean34/Same-batch Raw touchstart survives query failure",
+        "case/nonboolean34/Same-batch TouchStart commits functional React state",
+        "case/throw35/Same-batch TouchStart callback survives query failure",
+        "case/throw35/Same-batch Raw touchstart survives query failure",
+        "case/throw35/Same-batch TouchStart commits functional React state",
+        "case/nonboolean35/Same-batch TouchStart callback survives query failure",
+        "case/nonboolean35/Same-batch Raw touchstart survives query failure",
+        "case/nonboolean35/Same-batch TouchStart commits functional React state"
+      ],
+      "checkIdsSha256": "0ff35e214c7cbd5acd875d135eee1cf41dd04320c9c8861121a0ea73760a01ce",
+      "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+      "rawReportSha256": "4a16cbbfef9e7ef51a6684826cf7e5e079dbbedf5ed2b1c54c1bf393c45c0d84",
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "bundleSha256": "ec4bf623d111826993f9499dafc1f43b179d44f0326380fb36bd8717254909eb",
+      "cases": {
+        "throw34": {
+          "order": [],
+          "rawOrder": [],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 2,
+          "afterStarts": 2,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "throw",
+              "label": "throw34",
+              "matched": true,
+              "offset": 34,
+              "result": null,
+              "resultKind": "throw",
+              "sequence": 4,
+              "targetTag": 2
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "throw34",
+            "mode": "throw",
+            "offset": 34,
+            "remaining": 1,
+            "targetTag": 2
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "Non-js exception: GF pointer query deliberate fault: throw34",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        },
+        "nonboolean34": {
+          "order": [],
+          "rawOrder": [],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 3,
+          "afterStarts": 3,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "nonboolean",
+              "label": "nonboolean34",
+              "matched": true,
+              "offset": 34,
+              "result": 1,
+              "resultKind": "number",
+              "sequence": 7,
+              "targetTag": 2
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "nonboolean34",
+            "mode": "nonboolean",
+            "offset": 34,
+            "remaining": 1,
+            "targetTag": 2
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "Pointer listener query must return a boolean",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        },
+        "throw35": {
+          "order": [],
+          "rawOrder": [],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 4,
+          "afterStarts": 4,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "throw",
+              "label": "throw35",
+              "matched": true,
+              "offset": 35,
+              "result": null,
+              "resultKind": "throw",
+              "sequence": 11,
+              "targetTag": 2
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "throw35",
+            "mode": "throw",
+            "offset": 35,
+            "remaining": 1,
+            "targetTag": 2
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "Non-js exception: GF pointer query deliberate fault: throw35",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        },
+        "nonboolean35": {
+          "order": [],
+          "rawOrder": [],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 1,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "nonboolean",
+              "label": "nonboolean35",
+              "matched": true,
+              "offset": 35,
+              "result": 1,
+              "resultKind": "number",
+              "sequence": 16,
+              "targetTag": 18
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "nonboolean35",
+            "mode": "nonboolean",
+            "offset": 35,
+            "remaining": 1,
+            "targetTag": 18
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "Pointer listener query must return a boolean",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        }
+      },
+      "healthyAndRecoveryDowns": {
+        "case/nonboolean34/next-gesture/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 3,
+          "afterStarts": 4,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/nonboolean34/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 1,
+          "afterStarts": 2,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/nonboolean35/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 4,
+          "afterStarts": 5,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw34/next-gesture/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 2,
+          "afterStarts": 3,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw34/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 0,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw35/next-gesture/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 0,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw35/survivor-after-retirement/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 3,
+          "afterStarts": 4,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw35/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 2,
+          "afterStarts": 3,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "positive-bubble/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 0,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "positive-capture/down": {
+          "order": [
+            "pointerdown-capture",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 1,
+          "afterStarts": 2,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        }
+      },
+      "retirement": {
+        "rootCount": 1,
+        "queryStillInstalled": true,
+        "rootNativeTags": 0,
+        "nativeNodesBalanced": true,
+        "processor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "routing": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 11,
+          "stored": 0,
+          "suppressed": 0
+        }
+      },
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pointerListenerQueryInstalled": false,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pendingRootRetirements": 0,
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 15,
+          "stored": 0,
+          "suppressed": 0
+        }
+      },
+      "retainedDiagnosticCauses": [
+        "GF pointer query deliberate fault: throw34",
+        "Pointer listener query must return a boolean",
+        "GF pointer query deliberate fault: throw35",
+        "Pointer listener query must return a boolean"
+      ],
+      "retainedDiagnosticCount": 4
+    },
+    "current": {
+      "checks": 186,
+      "passed": 186,
+      "failedNames": [],
+      "checkIdsSha256": "0ff35e214c7cbd5acd875d135eee1cf41dd04320c9c8861121a0ea73760a01ce",
+      "checkIdDigestFormat": "UTF-8 newline-joined names; no final newline",
+      "rawReportSha256": "718f990156ed698f8c0ace7f97fbd460665f0ca3d372d1f17fbaea4d69ed04db",
+      "nativeHostSha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+      "bundleSha256": "ec4bf623d111826993f9499dafc1f43b179d44f0326380fb36bd8717254909eb",
+      "cases": {
+        "throw34": {
+          "order": [
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 2,
+          "afterStarts": 3,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "throw",
+              "label": "throw34",
+              "matched": true,
+              "offset": 34,
+              "result": null,
+              "resultKind": "throw",
+              "sequence": 4,
+              "targetTag": 2
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "throw34",
+            "mode": "throw",
+            "offset": 34,
+            "remaining": 1,
+            "targetTag": 2
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "E_POINTER_LISTENER_QUERY: GF pointer query deliberate fault: throw34",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        },
+        "nonboolean34": {
+          "order": [
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 4,
+          "afterStarts": 5,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "nonboolean",
+              "label": "nonboolean34",
+              "matched": true,
+              "offset": 34,
+              "result": 1,
+              "resultKind": "number",
+              "sequence": 12,
+              "targetTag": 2
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "nonboolean34",
+            "mode": "nonboolean",
+            "offset": 34,
+            "remaining": 1,
+            "targetTag": 2
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "E_POINTER_LISTENER_QUERY: Pointer listener query must return a boolean",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        },
+        "throw35": {
+          "order": [
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 6,
+          "afterStarts": 7,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "throw",
+              "label": "throw35",
+              "matched": true,
+              "offset": 35,
+              "result": null,
+              "resultKind": "throw",
+              "sequence": 21,
+              "targetTag": 2
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "throw35",
+            "mode": "throw",
+            "offset": 35,
+            "remaining": 1,
+            "targetTag": 2
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "E_POINTER_LISTENER_QUERY: GF pointer query deliberate fault: throw35",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        },
+        "nonboolean35": {
+          "order": [
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 1,
+          "afterStarts": 2,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [
+            {
+              "action": "nonboolean",
+              "label": "nonboolean35",
+              "matched": true,
+              "offset": 35,
+              "result": 1,
+              "resultKind": "number",
+              "sequence": 30,
+              "targetTag": 18
+            }
+          ],
+          "queryInstallations": 1,
+          "configuredFault": {
+            "label": "nonboolean35",
+            "mode": "nonboolean",
+            "offset": 35,
+            "remaining": 1,
+            "targetTag": 18
+          },
+          "diagnosticCountDelta": 1,
+          "diagnostic": "E_POINTER_LISTENER_QUERY: Pointer listener query must return a boolean",
+          "nativePointerDownsDelta": 1,
+          "physicalContacts": 1,
+          "processorActive": 1
+        }
+      },
+      "healthyAndRecoveryDowns": {
+        "case/nonboolean34/next-gesture/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 5,
+          "afterStarts": 6,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/nonboolean34/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 1,
+          "afterStarts": 2,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/nonboolean35/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 4,
+          "afterStarts": 5,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw34/next-gesture/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 3,
+          "afterStarts": 4,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw34/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 0,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw35/next-gesture/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 0,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw35/survivor-after-retirement/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 3,
+          "afterStarts": 4,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "case/throw35/survivor-held/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 2,
+          "afterStarts": 3,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "positive-bubble/down": {
+          "order": [
+            "pointerdown-bubble",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 0,
+          "afterStarts": 1,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        },
+        "positive-capture/down": {
+          "order": [
+            "pointerdown-capture",
+            "touchstart"
+          ],
+          "rawOrder": [
+            [
+              "typed",
+              "topPointerDown"
+            ],
+            [
+              "star",
+              "topPointerDown"
+            ],
+            [
+              "typed",
+              "topTouchStart"
+            ],
+            [
+              "star",
+              "topTouchStart"
+            ]
+          ],
+          "allEventsTrusted": true,
+          "originalEventAndTargetIdentity": true,
+          "beforeStarts": 1,
+          "afterStarts": 2,
+          "contextRestored": true,
+          "eventFieldsReleased": true,
+          "matchedQueryAttempts": [],
+          "queryInstallations": 1
+        }
+      },
+      "retirement": {
+        "rootCount": 1,
+        "queryStillInstalled": true,
+        "rootNativeTags": 0,
+        "nativeNodesBalanced": true,
+        "processor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "routing": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 11,
+          "stored": 0,
+          "suppressed": 0
+        }
+      },
+      "afterStop": {
+        "stopped": true,
+        "rootCount": 0,
+        "pointerListenerQueryInstalled": false,
+        "pendingWork": 0,
+        "pendingTimers": 0,
+        "pendingAnimationFrames": 0,
+        "pendingRootRetirements": 0,
+        "pointerProcessor": {
+          "active": 0,
+          "activeCapture": 0,
+          "hover": 0,
+          "pendingCapture": 0
+        },
+        "pointerRouting": {
+          "active": 0,
+          "contacts": 0,
+          "hoverPointers": 0,
+          "nextId": 15,
+          "stored": 0,
+          "suppressed": 0
+        }
+      },
+      "retainedDiagnosticCauses": [
+        "GF pointer query deliberate fault: throw34",
+        "Pointer listener query must return a boolean",
+        "GF pointer query deliberate fault: throw35",
+        "Pointer listener query must return a boolean"
+      ],
+      "retainedDiagnosticCount": 4
+    }
+  },
+  "graphical": {
+    "checks": 204,
+    "passed": 204,
+    "rawReportSha256": "3069b3c067ce972d396989e8b16c5f78058e417a6cde303be1ffa6f63f611fa0",
+    "pixelAssertions": 16,
+    "captureSaveAssertions": 2,
+    "captures": [
+      {
+        "path": "initial.png",
+        "sha256": "8b10afd5b8b59d2407ea034dc3d61fff0d05e4404c246a9648d17269856485f2",
+        "width": 680,
+        "height": 160,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              127
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              50,
+              127
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              345,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              415,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              365,
+              127
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              383,
+              127
+            ]
+          }
+        ],
+        "reactCounters": {
+          "A": {
+            "starts": 0,
+            "tag": 2
+          },
+          "B": {
+            "starts": 0,
+            "tag": 10
+          }
+        }
+      },
+      {
+        "path": "updated.png",
+        "sha256": "a0cba86b0c3c9e55332f7e1b8d5a51ccd458b8428b732bad002e9a46bef28df4",
+        "width": 680,
+        "height": 160,
+        "pixels": [
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              5,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              75,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              25,
+              127
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              50,
+              127
+            ]
+          },
+          {
+            "color": "0f172aff",
+            "expected": "0f172aff",
+            "point": [
+              345,
+              5
+            ]
+          },
+          {
+            "color": "2563ebff",
+            "expected": "2563ebff",
+            "point": [
+              415,
+              55
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              365,
+              127
+            ]
+          },
+          {
+            "color": "fde047ff",
+            "expected": "fde047ff",
+            "point": [
+              383,
+              127
+            ]
+          }
+        ],
+        "reactCounters": {
+          "A": {
+            "starts": 3,
+            "tag": 2
+          },
+          "B": {
+            "starts": 1,
+            "tag": 10
+          }
+        }
+      }
+    ]
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "360d4c0b470e43b1b4d32180842e718f82d60c203f27cf8f3d3714d869dc56b4",
+    "tests/pointer-query-fault-fixture.jsx": "42d1db8c731bbb25198eace464130f6e10164098ce2eecf008ff25adc2042c5c",
+    "tests/pointer-query-fault-probe.gd": "32259515c4fa297caf67ad6360771cbc8627541227d7f23b583fa9c88fd19db8",
+    "tests/pointer-query-fault-native.test.mjs": "ca434cfeb73fbf309473397ed0593e888cb084454c64655fc9343d080651d784",
+    "scripts/event-target-bundle.mjs": "24690ae15a31c1a8c4538eb1b7b69508a27a4846ee783587c70bde2079b8482a",
+    "sdk/toolchain/platform-plugin.mjs": "403fb104aca8e7b816d0dd5759cd2689b54f36fdc9e53728c7bd32ff86b36ec4",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f420bb0627b60a9af2df6dfb940bf43652f7eb762aabeec2af70297d1cf0c69c",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+    "scripts/rn-pointer-overlay.mjs": "052e3a1a765bf0bff35db82a476189dd2e574062f2cb1ecc0716d68f6bb52ba4",
+    "tests/rn-pointer-interest-overlay.test.mjs": "e9fe4236cb5d6d9c8599b2928263e28702f257e34c4b02de3e46b15004624b90",
+    "tests/rn-pointer-overlay.test.mjs": "56faa9426889d8adf53c35a1e1a96abccf183a44f5b27be5cb4e69070c8f4381",
+    "package.json": "44d1ad321e8f0d8d51557aa22dbff3deba9cb9dfe0c3a964e9b6be2d219c24d8",
+    ".fallowrc.json": "63a71645c9a46246cdfcba2eee2f1b24d225a72b1ef439dd99199ad12d204c0d",
+    ".github/workflows/contracts.yml": "15904c1c589ddd7cd2eed71b4c39c398347d8db9485489d871180ff64f05f27e",
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "package-lock.json": "643d790d6874383b0c3d5bbf46b4189d3f79be480a3b0484261e4e7d4fd08c87",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+  },
+  "nativeBuild": {
+    "host": {
+      "sha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+      "source": "addons/fabric_godot.dylib"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "buildRecordSha256": "ef8db4515fc397e458440aaed211b8844b7ef2ae6a4d8bcc853def80d0d86979",
+    "sourcePin": "364e74712673f825f493ae445b6e9890aac1f62e1e65b0b1af5865945b2285c5",
+    "abiCertified": false
+  },
+  "regressions": {
+    "contracts": {
+      "node": 250,
+      "python": 13,
+      "logSha256": "090aac135c569359e2b22c89ab541394ee29ae115dc52bb9d34ebfe098e2c014"
+    },
+    "static": {
+      "passed": true,
+      "logSha256": "66cb5c5cb90383e2efb228a11fd6d2ac9f6746c2cbf9ce397c0c67684494451f"
+    },
+    "consumer": {
+      "buildOwnershipChecks": 30,
+      "nativeChecks": 40,
+      "sourceCommit": "ab0dc44b54f713db6bc49c49e9ae10fbd438885b",
+      "sourceDirty": true,
+      "nativeHostSha256": "5f424c7d6bf5555aef8b4ca6ac4e3696a60e887ac221f1a1b0a9527a2c10ebdc",
+      "nativeCPPSourceVerified": true,
+      "sdkManifestSha256": "a281f4c0b6fcb6a45caf284f53f0c2953135a272f7b7710db242eed49293faf2",
+      "reportSha256": "422fba39e04fbea95c14cf8501ddce662f4490796fdb64dc2eb752c8bf6c55fc"
+    },
+    "nativeSDK": {
+      "packAndVerifyPassed": true,
+      "manifestSha256": "f41eabaeb8186fac697eb517f32947ace307162a1c4a578b491bf571430bc975",
+      "abiCertified": false
+    },
+    "adapterLoader": {
+      "checks": 89,
+      "cases": 21,
+      "nativeVMExecuted": false,
+      "reportSha256": "fb6cfefb341a2df721a224aed4bf6d415f5048eb2b894aa5f85383bd234a9a1d"
+    },
+    "adapterRuntime": {
+      "runs": 13,
+      "checks": 213,
+      "cases": {
+        "headless": 35,
+        "external-appearance": 5,
+        "reentrant-stop": 8,
+        "reentrant-raf": 9,
+        "reentrant-timer": 9,
+        "root-unmount-resize": 17,
+        "root-unmount-pressed": 17,
+        "root-unmount-raf": 18,
+        "root-unmount-timer": 18,
+        "root-remount-resize": 21,
+        "root-free-resize": 17,
+        "root-owner-switch-resize": 18,
+        "root-stale-core-owner-switch-resize": 21
+      },
+      "reportSha256": "ddbf11fbe8c9de7a75f93edcbbc3e4acf4729162e3eebb35026838fce3aa2148",
+      "abiCertified": false
+    },
+    "examples": {
+      "count": 22,
+      "checks": 2250,
+      "reports": {
+        "chart": {
+          "checks": 34,
+          "sha256": "aae04e28c91d5e77d09e4bd97501fae9dd4b25dabc02eba8ff06f3b4d495aaf9"
+        },
+        "coordinates": {
+          "checks": 238,
+          "sha256": "d17d03046a343af44b3c459097efb5fdef450095c4665dd24b67129fe9516dd1"
+        },
+        "counter": {
+          "checks": 19,
+          "sha256": "8cdcaea4421ef6d8cc446101f71408d3805c5d8f7484e8be34166e01da501791"
+        },
+        "focus": {
+          "checks": 175,
+          "sha256": "5c7174dc903e31b903e1e338360bfd874c3373cd09cc3c789bcd479250b30a59"
+        },
+        "form": {
+          "checks": 39,
+          "sha256": "b3406d3d34dc8d6b1bd9b5a9110ca116e1ace78a31a16d9959611bbb00b4f7a2"
+        },
+        "input": {
+          "checks": 45,
+          "sha256": "a9fe77b316d172132cc44322f84d2b6290c0091cb84fe71b282ec66f708aab1b"
+        },
+        "layout": {
+          "checks": 47,
+          "sha256": "50b0548307c132a5f87b450787c72099d52e2a18a0b8ec12d951ac5d3ad717ce"
+        },
+        "metrics": {
+          "checks": 64,
+          "sha256": "9b50bdafccf81471aea58f7d1e51fbb093240701ebf35e2453b9b9295d40127c"
+        },
+        "nativewind": {
+          "checks": 49,
+          "sha256": "1822c45204aa7e31029086355d400345b7938383990892d015d6bcbbdd58d004"
+        },
+        "pointer-geometry": {
+          "checks": 631,
+          "sha256": "9e94a855ae834d7178e2abe9a5d12ed25a33474d34abcd2397a74eb9a1b5222f"
+        },
+        "pointers": {
+          "checks": 132,
+          "sha256": "94389e54711e327cc4b0536201beddeac9402dddd9a5b17a96d7abe774ae8e70"
+        },
+        "pressable": {
+          "checks": 47,
+          "sha256": "5a21df3bf4c733671893fcd8fd702df49a5a1f618bb64f51136063b97c8752eb"
+        },
+        "react": {
+          "checks": 36,
+          "sha256": "4bd629defea5ae783e992ed2ac5323d3882e9546e0b25b6bc391a13041b5c98b"
+        },
+        "refs": {
+          "checks": 23,
+          "sha256": "fe8a902e91ebf217f066dfb735a7eaba74996b79a2ac1cae8b431afd38286ec0"
+        },
+        "runtime": {
+          "checks": 23,
+          "sha256": "0a8a05a9e8a1031bee2034a605f1cb7075eed2861e125019cb035beb01fbdac6"
+        },
+        "scroll": {
+          "checks": 62,
+          "sha256": "1315aeb1d56d199ba70068e73b492fc7641304660ecbc34d17a6c0560e2684a0"
+        },
+        "services": {
+          "checks": 36,
+          "sha256": "f32518a3f13943dc121f970da521292b07f8566f7c0bcd268af86416f4ad2d67"
+        },
+        "shared": {
+          "checks": 35,
+          "sha256": "ce2d60ba33b63014adf2a8e34cfb14d9cd635fab4b6bbb0c27dd6f6a5d8fdc48"
+        },
+        "transforms": {
+          "checks": 309,
+          "sha256": "16b149ade6dfe7256131b856a32cca84a452792b5568649063252a1201cdfa27"
+        },
+        "tree": {
+          "checks": 89,
+          "sha256": "462aebc1d6e88eceac0cfada9a90b73e856c448d9949b9f563cd3643a136824b"
+        },
+        "typography": {
+          "checks": 50,
+          "sha256": "8dc4d0a9ca4ec61f9705ce3452a4ed0a8d59afb64196f3ebe43b5133a26569aa"
+        },
+        "view": {
+          "checks": 67,
+          "sha256": "08ee953c70d00851ef0ea874649ce5f0f916be2b10f21aca0be73694aacd5b49"
+        }
+      }
+    },
+    "pointerInterest": {
+      "originalChecks": 193,
+      "currentChecks": 230,
+      "sameNewNativeHost": true,
+      "logSha256": "afc53d753348a469c4d93361a8f130c3c67c32829253a50111617d3faaddc27d"
+    },
+    "nativeDispatch": {
+      "originalChecks": 181,
+      "integratedChecks": 206,
+      "sameNewNativeHost": true,
+      "logSha256": "80370bd9097a9d5d49f2968881c7a5ea2414ae02d8b19bfae0000cfa2cf3f441"
+    },
+    "pointerProcessor": {
+      "passed": true,
+      "tests": 2,
+      "logSha256": "bcce98a50787b96b82b7ec8a11a22509758b70e28c30e3d09578ccb78dd7b96c"
+    },
+    "pointerGeometry": {
+      "passed": true,
+      "tests": 2,
+      "logSha256": "2d795d814e1a990237c60f1b3e1faf5b2320d2514634333d6e63bdd0b5593659"
+    }
+  },
+  "hosted": {
+    "status": "audited",
+    "run": {
+      "id": 37229423491,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37229423491",
+      "headSha": "b88708c5be4b516fea578442a8c4efd3fe111176",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "checkoutCommit": "472e7ce3f1e70036e81db0f22e4f80c0d6d21b70",
+      "checkoutParents": [
+        "adad6067ecb7d1f8eda25c3294fa0a68852addd6",
+        "b88708c5be4b516fea578442a8c4efd3fe111176"
+      ]
+    },
+    "record": "hosted-ci.json",
+    "checks": 186,
+    "committedSourcePinsVerified": 22,
+    "producerPins": 14,
+    "reactNativeInputPins": 15,
+    "artifactId": 11312693815,
+    "oldHostControlHosted": false,
+    "binaryRehashedFromArtifact": false,
+    "newCaptures": 0,
+    "completeParity": false,
+    "newDocumentRootCovered": false
+  },
+  "limitations": [
+    "The catch covers only query call and boolean-result validation; family/handle/stateNode/canonical/publicInstance resolution remains outside it",
+    "The test wraps a single real SDK query installation only for explicit one-shot faults; it does not expose a new public API or mirror listener storage",
+    "A held contact after Down is valid physical state; this proof does not claim a permanent leak in the preceding host",
+    "B completes healthy gestures while A is held and after A retirement; B is already released before A unmount in this fault fixture",
+    "Document/documentElement interest, full flag matrix, other pointer types, arbitrary/reentrant handle failures and full queue-fault certification remain open",
+    "Public flags remain disabled; native adapter ABI, complete React/ref/responder contracts, performance, hardware and Godot mobile exports are not certified",
+    "Exactly four configured native diagnostics remain visible and retained; this is not zero-errors proof and glog initialization warnings may appear"
+  ]
+}

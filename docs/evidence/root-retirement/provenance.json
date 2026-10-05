@@ -1,0 +1,155 @@
+{
+  "format": "godot-fabric.root-retirement-provenance/v1",
+  "at": "2026-10-03T23:42:59.964684+00:00",
+  "parentCommit": "80729da5f7639900d9213c7c686578e2dc1b9419",
+  "sourceDirty": true,
+  "nativeSourceSha256": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "c0c55be0805fd032f648f4272dec9cd9a3668722b847406d131dbc0a961afce9",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/appearance_adapter.cpp": "91958e50dff48b5b7b326c2b3113b94c17780a11a270a599465e41abcb2eb7fc",
+    "native/appearance_adapter.h": "88dbadc214c3effe7c0d31182bafdbdedfcbdbecf6fcb4708e657bfda39f0304",
+    "native/application_runtime.cpp": "87f64df4cf143d6563cd9e8851f4b4ad26f91552a25c968cf904498a696fdc88",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "099abe8bc0669a5655dba2f523f32640973b2a683e23b0a0064e8955443f5532",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "54188de4aa60a663573d2ce1f9f9c621e223ab9332d0681bb5290f66dad5f296",
+    "native/godot_dom.h": "9d2cd34bd38d903129e1fabcddf072ea696daa22df4ba311997552e371bda936",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "9c0f9fed40fb63925fce9a3f7a1f1355c064d171dcf253b567d44e5734c6029c",
+    "native/pointer_adapter.h": "339b08f3ed176ff1fc3120fadf8b839e1ec5717d37aa7f0021965fd8d5fdbaea",
+    "native/register.cpp": "18d2e4aa2000e79b55dc3d89d37f3c34d3f09dcd74dd64a09e2f63389bc2b108",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "46a89009a339b73540ace307eb1fc7cab52104adf7878d804a360346b4dd586f"
+  },
+  "fixtureSourceSha256": {
+    "scripts/adapter-runtime-check.mjs": "d782c48ee5c6af021fd243e0ad94faeb94ef65f1127a6e1db6009f2d371eb02a",
+    "scripts/pack-addon.mjs": "1f7948800d02b62416251ac1b7a88a91a686a3d14d361f1fbd61512fa4617fc9",
+    "sdk/toolchain/build.mjs": "fbbb98dc08ca95e826954d3081a5af3e6344c2eae02337a40200a3b7114bffca",
+    "sdk/toolchain/adapter-plugin.mjs": "9d331d0b71adec8ee51f601a8ea4c2fceb50c62fed5f5f0278caf04d3df2729d",
+    "sdk/toolchain/project-resolution.mjs": "dbfae5774239772f44890419f7c84d880d76cbcb8710dd91c450bcc1ebd93db9",
+    "sdk/toolchain/project-config.mjs": "6057cd12daaf93ee42df9310e87f6a2793ef4356e43ceb82d72265692fd784e2",
+    "sdk/toolchain/project-typecheck.mjs": "f548cd0a3c331dfeb788a18e1bbfbef4cc90692d0f471c68fab501ec5aa92754",
+    "sdk/toolchain/platform-plugin.mjs": "0132f67e02340287228ab2aee610d0590129c556a839242dda52b564f2ce2d24",
+    "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+    "scripts/codegen.mjs": "e30b0157f5270b7d502be3c9103979834419b95907065a8639ba45e367b3ad30",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/adapter-manifest.mjs": "66971f09ff82aeae960bf05a2ced66f503e0cd540f2b7787f9079c228a791326",
+    "tests/adapters/package/BadgeNativeComponent.ts": "743ed87b2d827cbd04b92f2fc79d247942d930e6721b214320fca8ccf5f89d56",
+    "tests/adapters/package/NativeExternalProbe.ts": "652f3488be23ee4ca8bf13671c52185acd556873d418863e89cee1f82ac1dadb",
+    "tests/adapters/package/adapter.cpp": "026e957339e78d19b580cbc7d68e26062ad354babf7dbffb9b5e8001e73afd70",
+    "tests/adapters/package/index.ts": "526a2d064a70a6de1c0575cf551cf089d08375ced1f3e508c86c554968d37212",
+    "tests/adapters/package/package.json": "861c7356296fb60205bc0ac5d7fa1f708e53c15b364cc05b8f9719e374c53667",
+    "tests/adapters/consumer/ui/index.tsx": "bc67d773dc5c325001e8642f03586b529cf43c973b4410f881c6898f0b5a01d3",
+    "tests/adapters/consumer/validation.gd": "af35c6cce50803bc88afb658ae26142e672450bb8558067a7b585954714a219f",
+    "tests/adapters/consumer/main.tscn": "25b848774f99520ca06b7c2bf845e23f7878fd44dd68cc618ed027f616b94aa2",
+    "tests/adapters/consumer/tsconfig.json": "b1f35a3081b7e62d73a4c6212b34e8cfb48ffe711f945613d2ebfb48d7b52683",
+    "sdk/addon/application_node.gd": "2e273a2932c9f03eaf0eb5c42355e89febcc7c902cac67ddfdd20236b4a276a2"
+  },
+  "nativeSourceIdentityVerified": true,
+  "sdkManifestSha256": "2bee2b05a570403bdcd516b2fc5053fabd8c6224e9be100f9bc90dd54523ba9e",
+  "sdkReceiptSha256": "02366459b4c3b346a247779486e6b0e00fd342e7d8541346b7afd1636d7a994a",
+  "nativeHostSha256": "ef8cb2108b86d11ddb643bb02fd7f95db557f2d69ce475a2d20c22e07b1b448d",
+  "nativeCombination": {
+    "format": "godot-fabric.experimental-native-combination/v1",
+    "godotCppRevision": "da26c1732ee8656ef9ccad587cbdd55acf8637c8",
+    "godotVersion": "4.7.2",
+    "hermesRuntimeSha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79",
+    "hermesVersion": "250829098.0.17",
+    "nativeDependencies": [
+      {
+        "name": "fabric_godot",
+        "sha256": "ef8cb2108b86d11ddb643bb02fd7f95db557f2d69ce475a2d20c22e07b1b448d"
+      },
+      {
+        "name": "hermes",
+        "sha256": "edce8546c5161ae18fbc66d7dbda24349c3723a78268f1ead8777726b770ee79"
+      },
+      {
+        "name": "rn-dependencies",
+        "sha256": "4c57a3c6e2f83ff822c196ab9f7febe7dacaa6159b19adf0cc223a5b50759156"
+      }
+    ],
+    "purpose": "build-declaration",
+    "reactNativeHeadersSha256": "68c46e65627907bdcf9f51d0e112565b2d48375081f3fa7245c6a712a1bae8cf",
+    "reactNativeVersion": "0.87.1",
+    "sdkHeadersSha256": "077948465e4ec72a522ae713d32cae1fa881fad5ab8e768b18ddf12207a8669d",
+    "sdkRevision": "7469a07392c97bc0f70c5c1d3fab666eb3232206a807b3e25f370b42a056e5ea",
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    },
+    "toolchain": {
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    }
+  },
+  "node": {
+    "executableSha256": "68f4d07ca49e0500cc135c7e0a445093e228e42e126ac22306d045f0a8c2636b",
+    "version": "v22.23.3"
+  },
+  "compiler": {
+    "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+    "name": "AppleClang",
+    "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+  },
+  "imagesSha256": {
+    "root-initial.png": "9d8f5ac71c072458849a3d7efec62cc275f75ae283c1fd43a4af0ab24a67746f",
+    "root-unmounted.png": "c88725b08ace9d0ee74de0ec49d42eef0087e3920adcf484dd15355507391e3d",
+    "root-remounted.png": "80e58ab6223154d0bca0c99bd34cfa5d6168f4a662d7cb0d779f97f70013102e",
+    "root-owner-switched.png": "80e58ab6223154d0bca0c99bd34cfa5d6168f4a662d7cb0d779f97f70013102e"
+  },
+  "results": {
+    "adapterRuntimeRuns": 17,
+    "adapterRuntimeChecks": 318,
+    "passed": true,
+    "nodeContractTests": 199,
+    "pythonTests": 13,
+    "nativeTests": 10,
+    "examples": 15,
+    "exampleChecks": 605
+  },
+  "limits": [
+    "macOS arm64 Release only",
+    "Other target/export binaries were not rebuilt or executed in this slice",
+    "No arbitrary adapter descendant-ownership violation certified",
+    "No full touch/responder cancellation, pause/resume, overlay/portal or original RN lifecycle differential certification",
+    "NativeDOM original isConnected can remain true until the deferred original React unmount commit; retired host event/ref authority is independently rejected",
+    "No stable ABI certification"
+  ],
+  "commands": [
+    "cmake --build .deps/build --parallel 4",
+    "node scripts/native-sdk.mjs pack --build-dir .deps/build --out build/native-sdk-root-retirement-v2-20261003",
+    "node scripts/native-sdk.mjs verify --sdk build/native-sdk-root-retirement-v2-20261003",
+    "node scripts/adapter-runtime-check.mjs --sdk build/native-sdk-root-retirement-v2-20261003 --out build/adapter-runtime-root-retirement-v2-20261003 --capture"
+  ],
+  "testedImplementationCommit": "47432df8b76816a44cf72af2184ab4794c6c5338",
+  "committedSourceIdentityVerified": true
+}
