@@ -1,0 +1,748 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pan-responder",
+  "status": "verified-local-four-lanes-previous-sdk-sabotage-and-regressions",
+  "at": "2026-10-05T22:15:54.897322+00:00",
+  "executionBaseCommit": "72155bc8ffc785006d70be6e3b74fe3c672f3588",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "b3327e4237b1b7e768b1698194dd5f4f077e5b80",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "nativeHostSha256": "8a5d6e30a23273b1c134e5cb51c6abdddf5e015daafc3168b0031ad11aa27b73",
+    "nativeCodeChanged": false
+  },
+  "commands": [
+    "npm run test:responders:pan",
+    "node tests/pan-responder-native.test.mjs --allow-previous-sdk (preceding SDK file restored for the run)"
+  ],
+  "headlessChecks": 128,
+  "lanes": [
+    {
+      "flagMode": "disabled",
+      "responder": "ResponderEventPlugin",
+      "checks": 32,
+      "passed": 32,
+      "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+      "bundleSha256": "d1ea8d0817162dfb358740cd7f4a36d28ef15259cab9d81fbfb07b673042a0c8",
+      "reportSha256": "11d3039caf74ed6f6ae23c8acac2236ed16c74be093f22d7a54e351676f10958",
+      "logSha256": "5a2683c0a41ef4d38674925447de936e4bfe85589dc430ea26487cf58547b095",
+      "callbacks": {
+        "B/touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "mouse/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/capture": [
+          "T:grant",
+          "T:start",
+          "T:move",
+          "T:end",
+          "T:release"
+        ],
+        "touch/claim": [
+          "K:pressIn",
+          "Q:grant",
+          "K:pressOut",
+          "Q:move",
+          "Q:end",
+          "Q:release"
+        ],
+        "touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/refuse": [
+          "R:grant",
+          "R:start",
+          "Q:grant",
+          "Q:reject",
+          "R:move",
+          "R:end",
+          "R:release"
+        ],
+        "touch/remove": [
+          "M:grant",
+          "M:start",
+          "M:move",
+          "P:grant",
+          "P:start",
+          "P:end",
+          "P:release"
+        ],
+        "touch/tap-pressable": [
+          "K:pressIn",
+          "K:pressOut",
+          "K:press"
+        ],
+        "touch/two-fingers": [
+          "P:grant",
+          "P:start",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:end",
+          "P:release"
+        ]
+      }
+    },
+    {
+      "flagMode": "imperative-only",
+      "responder": "ResponderEventPlugin",
+      "checks": 32,
+      "passed": 32,
+      "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+      "bundleSha256": "96bdb5f6c587572400955dc383a68d9df3bc43d9f5746035c47516b800516c24",
+      "reportSha256": "390b2f25add3e05601ca31c0f254c422966c355a7b180673fcfea2b8fa4c8947",
+      "logSha256": "cf8ff20843e1b438349791677a8ce909b11558889ebc4b966545f3b2e06d388f",
+      "callbacks": {
+        "B/touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "mouse/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/capture": [
+          "T:grant",
+          "T:start",
+          "T:move",
+          "T:end",
+          "T:release"
+        ],
+        "touch/claim": [
+          "K:pressIn",
+          "Q:grant",
+          "K:pressOut",
+          "Q:move",
+          "Q:end",
+          "Q:release"
+        ],
+        "touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/refuse": [
+          "R:grant",
+          "R:start",
+          "Q:grant",
+          "Q:reject",
+          "R:move",
+          "R:end",
+          "R:release"
+        ],
+        "touch/remove": [
+          "M:grant",
+          "M:start",
+          "M:move",
+          "P:grant",
+          "P:start",
+          "P:end",
+          "P:release"
+        ],
+        "touch/tap-pressable": [
+          "K:pressIn",
+          "K:pressOut",
+          "K:press"
+        ],
+        "touch/two-fingers": [
+          "P:grant",
+          "P:start",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:end",
+          "P:release"
+        ]
+      }
+    },
+    {
+      "flagMode": "internal-only",
+      "responder": "ReactNativeResponder",
+      "checks": 32,
+      "passed": 32,
+      "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+      "bundleSha256": "a5a741eb6bf0aa1ccfdc9584282d06d57a3e46c3e81d8139e6b086a373edf24a",
+      "reportSha256": "e8110f37f0958acb2721f3dd5bdd2bf50d1c4b4310a50ff6561228df246e3bce",
+      "logSha256": "4c709ff9c0470e3f207c912061718457654f541ad12528d7ec7084d4b8573f39",
+      "callbacks": {
+        "B/touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "mouse/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/capture": [
+          "T:grant",
+          "T:start",
+          "T:move",
+          "T:end",
+          "T:release"
+        ],
+        "touch/claim": [
+          "K:pressIn",
+          "Q:grant",
+          "K:pressOut",
+          "Q:move",
+          "Q:end",
+          "Q:release"
+        ],
+        "touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/refuse": [
+          "R:grant",
+          "R:start",
+          "Q:grant",
+          "Q:reject",
+          "R:move",
+          "R:end",
+          "R:release"
+        ],
+        "touch/remove": [
+          "M:grant",
+          "M:start",
+          "M:move",
+          "P:grant",
+          "P:start",
+          "P:end",
+          "P:release"
+        ],
+        "touch/tap-pressable": [
+          "K:pressIn",
+          "K:pressOut",
+          "K:press"
+        ],
+        "touch/two-fingers": [
+          "P:grant",
+          "P:start",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:end",
+          "P:release"
+        ]
+      }
+    },
+    {
+      "flagMode": "enabled",
+      "responder": "ReactNativeResponder",
+      "checks": 32,
+      "passed": 32,
+      "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+      "bundleSha256": "76c8517d8879172775dc82e2252d1b43bca71ec46e2cd3b9d70d5dcf0522d1b9",
+      "reportSha256": "7c3da7b65422ebf96945f5b047cb117dd61b2203db6ef091bc8dd2b1520d8ddf",
+      "logSha256": "25c8b0c22cfa1b7419bf67419b56f6f948e793c021e4e16ec529f448ebbdadd8",
+      "callbacks": {
+        "B/touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "mouse/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/capture": [
+          "T:grant",
+          "T:start",
+          "T:move",
+          "T:end",
+          "T:release"
+        ],
+        "touch/claim": [
+          "K:pressIn",
+          "Q:grant",
+          "K:pressOut",
+          "Q:move",
+          "Q:end",
+          "Q:release"
+        ],
+        "touch/drag": [
+          "P:grant",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:release"
+        ],
+        "touch/refuse": [
+          "R:grant",
+          "R:start",
+          "Q:grant",
+          "Q:reject",
+          "R:move",
+          "R:end",
+          "R:release"
+        ],
+        "touch/remove": [
+          "M:grant",
+          "M:start",
+          "M:move",
+          "P:grant",
+          "P:start",
+          "P:end",
+          "P:release"
+        ],
+        "touch/tap-pressable": [
+          "K:pressIn",
+          "K:pressOut",
+          "K:press"
+        ],
+        "touch/two-fingers": [
+          "P:grant",
+          "P:start",
+          "P:start",
+          "P:move",
+          "P:move",
+          "P:end",
+          "P:end",
+          "P:release"
+        ]
+      }
+    }
+  ],
+  "previousSDKControl": {
+    "sdkFile": "src/react-native-platform.jsx at 72155bc",
+    "checks": 4,
+    "failures": [
+      "mount/Two roots render original PanResponder instances in one Hermes application",
+      "cleanup/No dispatch or responder diagnostic was hidden",
+      "cleanup/Stop balances roots, routes and work without diagnostics"
+    ],
+    "stubErrors": 2,
+    "reportSha256": "08e02d4f014d4d219abc9b1d46565a33b819980958b427602b1a3148ec8202e7",
+    "logSha256": "ed783c8205c13fdcb40be42893839154eee0d538c921c2d49b9ac6f080060564",
+    "sdkFileRestoredToPreControlBytes": true
+  },
+  "negativeControl": {
+    "sabotage": "a PanResponder wrapper dropped the capture-phase start and move handlers",
+    "checks": 32,
+    "failed": 6,
+    "failures": [
+      "touch/drag/The original PanResponder delivers exactly RN's callbacks and gesture state",
+      "touch/two-fingers/The original PanResponder delivers exactly RN's callbacks and gesture state",
+      "touch/claim/The original PanResponder delivers exactly RN's callbacks and gesture state",
+      "touch/refuse/The original PanResponder delivers exactly RN's callbacks and gesture state",
+      "touch/capture/The original PanResponder delivers exactly RN's callbacks and gesture state",
+      "pressable/Only the untouched tap presses; the claimed gesture never does"
+    ],
+    "reportSha256": "5ea93ab53b16c47e30928a3b21437c94ef26d8d6245bc46ea8bc792bd03f9fb3",
+    "logSha256": "530bb012d5ee9e1e137bef2bbb9ba86b451e478665d28174d4336c84c063bd4d",
+    "independentNodeOracleRejected": true,
+    "oracleRunBypassedProbeStatusGates": true,
+    "oracleAcceptsFinalReports": true,
+    "oracleLogSha256": "425ecc201750507c5c3d0c299126f464f5f2a5c3eae242b07b42913bad3765c0",
+    "sdkFileRestoredToPreSabotageBytes": true
+  },
+  "refreshedPrecedingHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 63,
+      "normativeFailures": 8,
+      "reportSha256": "b0a4734b24a8c029ab5680bfc067774dd926a9f09e37be6a3aaf765bf98f8615",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 187,
+      "normativeFailures": 12,
+      "reportSha256": "c8e797e0ffe6d9c5da4a5d7f9054ef0fda9442fe37ac79302aa019e7b7ea94ae",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 66,
+      "normativeFailures": 3,
+      "reportSha256": "60f96cd967366f36d34b477dc4fb2b1a4269f7166bca98d1cb33c9bbfc1d7577",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    },
+    "pointer-move": {
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "preservedHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 136,
+      "normativeFailures": 45,
+      "reportSha256": "1b99f64e3f130efaf9232aa69ba40af7c5db7937cf8c9ced6e98b6fa71dd4a44",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    },
+    "pointer-hover": {
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "preservedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 137,
+      "normativeFailures": 32,
+      "reportSha256": "28020332380059d69f39a5d1d5417082a7f9819152b1ee000b4badcff488c136",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    },
+    "pointer-root-path": {
+      "nativeHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "preservedHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "checks": 45,
+      "normativeFailures": 9,
+      "reportSha256": "03a3f5917a372847a32eda6795790ef7e44b1fdbbdeeac5c09a8092a966da29a",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    },
+    "pointer-click": {
+      "nativeHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1",
+      "preservedHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1",
+      "checks": 91,
+      "normativeFailures": 31,
+      "reportSha256": "4785586bd32db1d008326878e1f6cb4159bb40d6892eaa6f1cef47e196342af3",
+      "bundlerPinSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b"
+    }
+  },
+  "clickControlRetry": {
+    "firstAttempt": "SIGKILL from the 120 s lane timeout while the machine was loaded",
+    "retryLogSha256": "af2b6f213255b5172cd9904b96ea745ec897a6839393d048c608c6e168be3453",
+    "clickSuiteRecheckExitCode": 0,
+    "clickSuiteRecheckLogSha256": "c0a4af41d4f58a19ae9e52ff2c1c12e3fce94d63ff6307825da93449706fa73a",
+    "originalControlPresentInRecheck": true
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 191,
+        "logSha256": "086f6465a50b0279e0b64f389830147d3cea1ca38b7d876b262cb918dec1ddf2"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "e8ff867b6c81ef15fc356169052ae239886828cf9b2a39c57c96737c78a84d4c"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "ae617c3a2b21316118ee70d64e0e5b3480253b7ee97ae6ffc4f1187864e77b17"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "6a57ea325b2fc05dd51622e8d925ab7ca2f65157edb8dbe68af9a93c98b72ff1"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 222,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "e9299761aa131c84a9797c662a8d847b7410c6d7fd447a60fd6f6e0e1715d6b7"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "3d82a89d6f4219579cba439e65c54fc755eab2b1adc8d85272aa8df9d6031968"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "8422a7c73159052035577d5040141ef1b3404d681a6c1c7b640a4a6e2ae70be4"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "abc958903376ae0432b6b7d00d488e08cc4b8dae1e1b71fc32a273e0af529031"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "762454ca735d1bd66bfee595e036d857ee0d5e18b5d01087d42c6632fc1ec116"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "10ba2e67452a77eded45c886100e60193b781daad7b53a89fe98f45d54a8332b"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "68a3b3a27fd317bbfdb930897458db5774421a2de670d320879edec820218089"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "4ff5015f27d21f5612f31c60017a9c0c0db083a597048263c4701373b4f531b7"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "3cb7b62e8da8a18bf964220953e10f1ce3c853bb092c89e53a5e7854b6baab73"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "3b76f1b62340b60a5a9d5ad1c177ab451781b5c3c56f9c41162be786dfdf46d6"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "9add2e7d532b2b3ae22dabd5ef24a8fae8f0e2a2700b6971ec0dc8efe612eb7d"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "104dac856206a259cf438e2b6a2e36514e39e765a04603061e207975b576583e"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 45,
+        "logSha256": "4ad39665165caa5522ee96db5635342ad23eb5895a5b6ac81980604409bb7091"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "b5c21097fff23cbb0a3be82ba93f2348192de82b45a84260adec0c58981e75ef"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "8e377c3ed4013e5693a89c1273aef703f49d41dde7488db2e9e2d940b98dfd79"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 66,
+        "logSha256": "8554ef132432de948c34211665d07b22b1792c0416e0735b8dbc8bc5cec6e9c9"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "9e893a8ed738cf237efdec14f0ad440ef9fa690d15108c22c06a9c25cbfd8be4"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "e4c19a9ff1e8018558bc56c5a7a4a0610c0c17d71e4afc91313800eea5b5f302"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 33,
+        "logSha256": "90c640acb7ca5d2256d155ba74eb1ca19a42610f983e93ce7c069696dd2ba160"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "67885da6de18c97d5ee8eb09fb6d9a1b7eb5a170fabc9ba836958247e857f5ea"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "7ab78a926dc2685a32f45d6adb418f0b4231697ec15d7fb9be010d8594005c55"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 63,
+        "logSha256": "79b9ca9122c0e50b8f91d21f68b0b9a1afbef421580ff6b2748ea511a2f4fbd8"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 78,
+        "logSha256": "224af181dd721ee02d60024c332e942e77b4224f6ea2bf611fda3bacd58074ae"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "b5dc1880f7fd29daff27c8a58beae5ce93f09c70c40c18c2687e168c46594ec1"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      },
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "69a4b5100f74c7e69ab7189cba03376487f54b67438951debd2aa520989fcb5f"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "df1c730a26975edfd53f38240e71f72891016f4d6e9e58d155acdef74148e696"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "52a8544f9f7c75cd3c4e315ddb1865bfdc3814878aa8d6a9b146cecf8c35ad16"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 24,
+        "logSha256": "a798a774b851251d25c39f8477aadec1d4e9d3a403504997ae74daa4d2afaccd"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 63,
+        "logSha256": "8e1d8c9f79e11a9d94a729fbfa5affc24ff0ae741d74daf5b9128e1566cb7b28"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 96,
+        "logSha256": "205fbbd4708bb09f45022dd78caf2ff4f5ab65369ae53c81d3273e94ea905d30"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 186,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "cold": {
+        "exitCode": 0,
+        "seconds": 27,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      }
+    },
+    "downChecks": 2731,
+    "documentUpChecks": 6459,
+    "documentMoveChecks": 1940,
+    "documentHoverChecks": 1530,
+    "clickChecks": 728,
+    "panResponderChecksInSequence": 128,
+    "viewUpChecks": 297,
+    "queryFaultChecks": 187,
+    "resolverFaultChecks": 66,
+    "moveChecks": 220,
+    "hoverChecks": 158,
+    "rootPathChecks": 82,
+    "nodeContractChecks": 260,
+    "pythonContractChecks": 13,
+    "examples": 22,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pan-responder-fixture.jsx": "035403b15c09de5434832c2b331442ce81fdae6ab05e0d3f6c829be4f0fe9283",
+    "tests/pan-responder-probe.gd": "9e8b86f5bb8de35a55afa2fbefb0195019186f8d4f60cf269d80c61afbc946c0",
+    "tests/pan-responder-native.test.mjs": "070bc1ddb00a017ebbcfe39157d36bc4cfa4df7fefc98a95a8af1a7a6d367876",
+    "scripts/event-target-bundle.mjs": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "src/react-native-platform.jsx": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+    "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "native/application_runtime.cpp": "dd2b491b36219ec89d7978c0c64063008b87a3e939b13096fcbb27384ca909e8",
+    "native/pointer_adapter.cpp": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "Libraries/Interaction/PanResponder.js": "5d673766984e2b4c27bbf35927ae3cb5a2acd1e8ce6d80c8edea7400ac9f7ec0",
+    "Libraries/Interaction/TouchHistoryMath.js": "8ec88af5a8ba96e6bd87707a6d79a5636adb071d343a6e2ef0ccaa33468f05ec",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "a127ffcdd172f97d64f73c2722adabd3db3a51707aef0b887b5c12084452765c",
+    "package.json": "f890440b65ad69f7ef9724c5454b2b42c6c97ad7b1e2f77786ab5793c5236d49",
+    ".fallowrc.json": "4c8b302aefbb9bba0cbbedc1225ac829fdaa3912094fce680c0a219ab5a2bb8e"
+  },
+  "changedFilesSinceExecutionBase": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "README.md",
+    "ROADMAP.md",
+    "dashboard/migration.json",
+    "docs/evidence/README.md",
+    "docs/evidence/pan-responder/README.md",
+    "docs/evidence/pointer-click/README.md",
+    "docs/evidence/pointer-click/hosted-ci.json",
+    "docs/evidence/pointer-click/publication.json",
+    "docs/research/pan-responder.md",
+    "docs/research/pointer-click.md",
+    "examples/pan-responder/README.md",
+    "package.json",
+    "scripts/event-target-bundle.mjs",
+    "src/react-native-platform.jsx",
+    "tests/pan-responder-fixture.jsx",
+    "tests/pan-responder-native.test.mjs",
+    "tests/pan-responder-probe.gd",
+    "tests/pointer-click-native.test.mjs"
+  ],
+  "hostedCI": {
+    "status": "pending-pan-responder-slice"
+  },
+  "limits": [
+    "Touches and the left mouse button over two roots, four flag lanes on the same host, headless.",
+    "Pinch zoom through chart libraries, InteractionManager handles, hardware velocity, nested scroll views and negotiation with native Godot controls are not exercised.",
+    "The executed tree was dirty on 72155bc; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin",
+    "sourcePins": 11,
+    "verificationSourcePins": 3,
+    "mismatches": [],
+    "postCommitPinIsNotANewRun": true
+  }
+}

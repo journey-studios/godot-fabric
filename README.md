@@ -211,6 +211,11 @@ checks. The preceding host fails exactly 31 of them. Hosted CI repeated the 728
 checks ([receipt](docs/evidence/pointer-click/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-click/README.md).
 
+The [PanResponder example](examples/pan-responder/README.md) runs RN's original
+`PanResponder` on actual Godot touches and mouse drags, including two-finger
+gestures, parent claims, refused termination and removal mid-gesture, in four
+flag lanes: 128 headless checks. [Evidence](docs/evidence/pan-responder/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

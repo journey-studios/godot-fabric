@@ -203,6 +203,13 @@ scroll drag cancels its contact. Its
 [receipt](../docs/evidence/pointer-click/README.md) records 728 headless checks,
 the preceding-host control and two retained negative controls.
 
+The [PanResponder matrix](pan-responder/README.md) drives RN's original
+`PanResponder` with touches and mouse drags over a free pan view, claiming and
+refusing parents, a capture parent and a view removed mid-gesture, in four flag
+lanes: `npm run test:responders:pan`, outside the launcher catalog. Its
+[receipt](../docs/evidence/pan-responder/README.md) records 128 headless checks,
+the preceding-SDK control and a retained sabotage.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

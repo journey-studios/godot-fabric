@@ -225,6 +225,13 @@ host fails exactly 31 normative checks; a host clicking the release target fails
 oracle rejects both controls. Hosted run 37375758262 passed the same 728 checks
 with identical IDs and bundles ([receipt](pointer-click/hosted-ci.json)).
 
+The [PanResponder record](pan-responder/README.md) runs RN's original
+`PanResponder` in four flag lanes, covering the legacy and native-dispatch
+responders: 128 headless checks with identical callbacks and gesture state in
+every lane. The preceding SDK fails at mount when its stub throws, and a
+PanResponder without capture-phase handlers fails 6 checks rejected by the
+independent oracle. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.
