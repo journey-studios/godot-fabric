@@ -222,7 +222,15 @@ deepest mounted view on both hit paths, never a shared root, and a ScrollView
 drag sends its contact one `pointercancel` and then only touches. The preceding
 host fails exactly 31 normative checks; a host clicking the release target fails
 10, an SDK without `topClick` throws in the legacy lane, and the independent
-oracle rejects both controls. Hosted CI pending.
+oracle rejects both controls. Hosted run 37375758262 passed the same 728 checks
+with identical IDs and bundles ([receipt](pointer-click/hosted-ci.json)).
+
+The [PanResponder record](pan-responder/README.md) runs RN's original
+`PanResponder` in four flag lanes, covering the legacy and native-dispatch
+responders: 128 headless checks with identical callbacks and gesture state in
+every lane. The preceding SDK fails at mount when its stub throws, and a
+PanResponder without capture-phase handlers fails 6 checks rejected by the
+independent oracle. Hosted CI pending.
 
 The [AppState record](app-state/README.md) delivers Godot's application focus,
 pause and memory-warning notifications through the running main loop to an actual

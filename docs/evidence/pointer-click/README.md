@@ -99,8 +99,19 @@ ativação por teclado e acessibilidade, caneta, takeover em scroll aninhado ou
 horizontal, seleção de superfície para input na área vazia, responders,
 hardware, exports mobile e performance seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
-ou denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 72155bc (run
+37375758262), com os cinco jobs verdes na primeira tentativa — inclusive o
+`reference-ios`, que agora espera até cinco minutos pela listagem de simuladores, e
+o job nativo, que levou 25,5 minutos dentro do novo limite de 45. O artefato
+`native-pointer-click` repete os **728 checks headless** nas oito lanes com IDs,
+bundles e estágios idênticos aos locais; além de timestamps, da versão patch do
+Node, dos hashes do host e do bundle público do runner e de timers do Pressability
+ainda pendentes conforme a velocidade da máquina, nada difere, e as 28 entradas
+rastreadas batem com 8948a1c na árvore do checkout. O controle do host anterior e os
+controles negativos continuam locais. O [Pages](publication.json) (run 37375758284,
+push da `main` em 72155bc) implantou exatamente os dados commitados, e o JSON
+público e a API local conferem com eles. Nenhum GF, checkpoint, dependência, peso ou
+denominador foi fechado.
 
 As 28 fontes de código/configuração executadas (23 produtoras do bundle e 5 de
 verificação) correspondem à implementação

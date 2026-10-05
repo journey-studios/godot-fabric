@@ -3,7 +3,9 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pointer-click/README.md) owns the
 728 headless checks in eight lanes, the preceding-host control and two retained
-negative controls. Public EventTarget flags remain disabled.
+negative controls. Public EventTarget flags remain disabled. Hosted run
+37375758262 repeated the 728 headless checks with identical IDs and bundles
+([receipt](../evidence/pointer-click/hosted-ci.json)).
 
 ## What RN does on a release
 
