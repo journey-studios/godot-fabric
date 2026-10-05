@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   contracts:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -25,7 +25,8 @@ jobs:
       # GDExtension, graphical rendering or other platform support.
   native-cold-start:
     runs-on: macos-15
-    timeout-minutes: 30
+    # The headless suites take ~21-24 minutes; macOS capacity delays can add more.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -289,6 +290,19 @@ jobs:
             build/pointer-document-hover-original-*.log
             build/pointer-document-hover-current-*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:click
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-click
+          path: |
+            build/pointer-click-original-*-report.json
+            build/pointer-click-current-*-report.json
+            build/pointer-click-comparison.json
+            build/pointer-click-old-host-comparison.json
+            build/pointer-click-original-*.log
+            build/pointer-click-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
@@ -432,7 +446,7 @@ jobs:
           if-no-files-found: error
   parity-comparison:
     needs: [native-cold-start, reference-ios, reference-android]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
