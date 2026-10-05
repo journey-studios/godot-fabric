@@ -10,9 +10,9 @@
   },
   "updatedAt": "2026-10-05T14:34:37.800142+00:00",
   "source": {
-    "commit": "f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24",
-    "scope": "Document Up faults na consulta do root: 6451 checks headless nas oito lanes (5097 anteriores preservados em ordem) e 1179 viewport/10 frames/132 pixels. Faults únicos throw/não booleano no documentElement real nos offsets 36/37, numa segunda aplicação depois do stop da saudável: throw no bubble ainda qualifica pelo capture (36=throw, 37=true) e entrega DocC/DocB num commit; throw no capture ou não booleano sem outro lookup qualificando não entrega Up, mas TouchEnd/Raw e limpeza do contato continuam; cada fault consumido deixa 1 E_POINTER_LISTENER_QUERY retido; fault de capture não é consumido quando o bubble qualifica antes; recuperação e gesto de B saudáveis. Controle negativo retido (fault tratado como true) falha 9 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f",
+    "scope": "Document Up faults na consulta do root: 6451 checks headless nas oito lanes (5097 anteriores preservados em ordem) e 1179 viewport/10 frames/132 pixels. Faults únicos throw/não booleano no documentElement real nos offsets 36/37, numa segunda aplicação depois do stop da saudável: throw no bubble ainda qualifica pelo capture (36=throw, 37=true) e entrega DocC/DocB num commit; throw no capture ou não booleano sem outro lookup qualificando não entrega Up, mas TouchEnd/Raw e limpeza do contato continuam; cada fault consumido deixa 1 E_POINTER_LISTENER_QUERY retido; fault de capture não é consumido quando o bubble qualifica antes; recuperação e gesto de B saudáveis. Controle negativo retido (fault tratado como true) falha 9 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre 3061cf5/dirty; 71 inputs executados conferidos por git show/SHA-256 contra d2ea122; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -329,7 +329,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -456,7 +456,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -607,7 +607,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -810,7 +810,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
@@ -1212,7 +1212,7 @@
             },
             {
               "label": "Document Up faults da consulta do root: 6451 checks, 1179 viewport e 132 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-query-faults/docs/evidence/pointer-document-up-fault/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d2ea122221c6fcdbd55f87ee54fbf86d29d6a09f/docs/evidence/pointer-document-up-fault/README.md"
             }
           ]
         },
