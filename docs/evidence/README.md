@@ -227,10 +227,11 @@ with identical IDs and bundles ([receipt](pointer-click/hosted-ci.json)).
 
 The [PanResponder record](pan-responder/README.md) runs RN's original
 `PanResponder` in four flag lanes, covering the legacy and native-dispatch
-responders: 128 headless checks with identical callbacks and gesture state in
-every lane. The preceding SDK fails at mount when its stub throws, and a
+responders: 128 headless checks with identical callbacks and gesture
+coordinates in every lane. The preceding SDK fails at mount when its stub throws, and a
 PanResponder without capture-phase handlers fails 6 checks rejected by the
-independent oracle. Hosted CI pending.
+independent oracle. Hosted run 37385104730 repeated the 128 checks with identical
+IDs and callbacks ([receipt](pan-responder/hosted-ci.json)).
 
 The [AppState record](app-state/README.md) delivers Godot's application focus,
 pause and memory-warning notifications through the running main loop to an actual
@@ -239,7 +240,8 @@ checks. Focus loss is `inactive`, a pause is `background`, only new states are
 sent, focus changes also send `focus`/`blur`, a paused game tree still delivers
 events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
 checks, and a host whose focus outranks the pause fails 5, which the independent
-oracle rejects. Hosted CI pending.
+oracle rejects. Hosted run 37382633328 repeated the 75 checks with identical IDs
+and bundle ([receipt](app-state/hosted-ci.json)).
 
 The [shared touches record](shared-touches/README.md) lists every root's active
 touches in each TouchEvent, because the roots of one application share RN's one

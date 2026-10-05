@@ -214,13 +214,15 @@ checks ([receipt](docs/evidence/pointer-click/hosted-ci.json)).
 The [PanResponder example](examples/pan-responder/README.md) runs RN's original
 `PanResponder` on actual Godot touches and mouse drags, including two-finger
 gestures, parent claims, refused termination and removal mid-gesture, in four
-flag lanes: 128 headless checks. [Evidence](docs/evidence/pan-responder/README.md).
+flag lanes: 128 headless checks, repeated by hosted CI
+([receipt](docs/evidence/pan-responder/hosted-ci.json)). [Evidence](docs/evidence/pan-responder/README.md).
 
 The [AppState example](examples/app-state/README.md) runs React Native's original
 `AppState` from the public import, fed by the focus, pause and memory-warning
 notifications Godot delivers to the `FabricApplication`, with two roots sharing
 one state: 75 headless checks. The preceding host fails exactly its 62
-lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
+lifecycle checks. Hosted CI repeated the 75 checks
+([receipt](docs/evidence/app-state/hosted-ci.json)). [Evidence](docs/evidence/app-state/README.md).
 
 The [shared touches example](examples/shared-touches/README.md) presses two
 roots of one application at the same time: every TouchEvent lists the whole

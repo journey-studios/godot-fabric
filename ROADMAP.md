@@ -1734,8 +1734,12 @@ same host. Pinch zoom through chart libraries, `InteractionManager` handles,
 hardware velocity, nested scroll views and negotiation with native Godot
 controls remain open. All 14 executed code/configuration inputs match
 implementation b3327e4 via git show/SHA-256 (execution base 72155bc/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+retained). Hosted Contracts run 37385104730 (the push of main 2ec988e) passed all
+five jobs in the first attempt; its [audited artifact](docs/evidence/pan-responder/hosted-ci.json)
+repeats the 128 headless checks with identical IDs and callbacks and the review
+rerun's merged-tree bundles. [Pages 37385104756](docs/evidence/pan-responder/publication.json)
+deployed this record from main 2ec988e and the live public JSON matches it. No
+whole GF, checkpoint, weight or denominator closes.
 
 ### AppState from the Godot application lifecycle (2026-10-05)
 
@@ -1780,8 +1784,13 @@ exports (Android would report a transitional `inactive`, iOS also
 `focus`/`blur`), Appearance/`useColorScheme`, device configuration and resume
 with pending work remain open. All 70 executed code/configuration inputs match
 implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
-executed tree is the implementation's). Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+executed tree is the implementation's). Hosted Contracts run 37382633328 (the push
+of main 8f80fed) passed all five jobs after `reference-android` was rerun for an
+emulator download failure; its [audited artifact](docs/evidence/app-state/hosted-ci.json)
+repeats the 75 headless checks with identical IDs and bundle, and all 70
+tracked inputs match 7087679. [Pages 37382633232](docs/evidence/app-state/publication.json)
+deployed this record from main 8f80fed. No whole GF, checkpoint, weight or
+denominator closes.
 
 ### Touches shared by every root (2026-10-05)
 
