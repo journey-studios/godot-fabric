@@ -143,6 +143,15 @@ and broader event/lifecycle acceptance are open. All 16 proportional regression
 commands and fresh SDK pack/verify passed; its hosted CI is verified in
 [run 37241023275](docs/evidence/pointer-up/hosted-ci.json).
 
+A one-shot throw or non-boolean result in the native interest query for that View
+ref, at the Up offsets, rejects only that lookup with one retained
+`E_POINTER_LISTENER_QUERY`: a capture listener on the same View still qualifies
+after a bubble fault, and an unqualified View hands the lookup to its ancestors and
+root, while the original TouchEnd and contact cleanup survive. The faults run in a
+second application, so the healthy probe stays diagnostic-free: 240 headless and
+268 graphical checks, with the preceding-host controls refreshed.
+[Evidence and limits](docs/evidence/pointer-up-faults/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

@@ -8,6 +8,8 @@ globalThis.PointerUpProbe = {
   capability: base.capability, arm: base.arm,
   configure(name, capture = false) { return base.configure(name, capture, "pointerup"); },
   publicControl(name) { return base.publicControl(name, "pointerup"); },
+  // One-shot faults on the actual View ref at Up offsets 36/37.
+  fault: base.fault, clearFault: base.clearFault,
   snapshot() {
     return {...base.snapshot(), scope: {actualNativeInput: true, realOriginalViewRefs: true,
       originalFlagsEnabled: true, experimentalNativeDispatch: true, realSDKQueryWrappedOnlyForTest: true,

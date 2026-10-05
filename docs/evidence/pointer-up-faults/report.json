@@ -1,0 +1,930 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-up-view-component-query-faults",
+  "status": "verified-local-headless-old-host-controls-and-native-captures",
+  "at": "2026-10-05T15:08:42.792509+00:00",
+  "executionBaseCommit": "988af3c03ee671ac1b1cf75b66c2395dee9ec74a",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": null,
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "hostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae"
+  },
+  "commands": [
+    "node tests/pointer-up-native.test.mjs",
+    "node tests/pointer-up-native.test.mjs --capture",
+    "node tests/pointer-up-native.test.mjs --allow-original-negative (preserved previous host)"
+  ],
+  "headless": {
+    "checks": 240,
+    "baseChecks": 62,
+    "faultChecks": 178,
+    "reportSha256": "5b9ab9fb4425b4e50b7b76de192aac66daf0f500762fc05f91485324c0543dd5",
+    "logSha256": "7a3e4bacb5e103f7fe7cf2b238a5433361ee12fcd7cffecbfc2eee160afad376",
+    "checkIdDigestSha256": "96dd74e7c18c8cca957f432612ad0b13b4d2dcfdd66251be8b7bd48278959fd8",
+    "bundleSha256": "a73bef4fa2dbf9c48fe9431038b90df9844abefb60939f1adfaaa9ab810b9bbb",
+    "faultExpectedErrors": [
+      "GF pointer query deliberate fault: throw36",
+      "GF pointer query deliberate fault: throw36-both",
+      "GF pointer query deliberate fault: throw37",
+      "Pointer listener query must return a boolean",
+      "Pointer listener query must return a boolean"
+    ],
+    "secondApplicationStoppedErrors": 5,
+    "healthyApplicationStoppedErrors": 0
+  },
+  "cases": {
+    "throw36": {
+      "registration": {
+        "capture": false,
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "label": "throw36",
+        "mode": "throw",
+        "offset": 36,
+        "remaining": 1,
+        "targetTag": 2
+      },
+      "up": {
+        "callbacks": [
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "throw",
+            "resultKind": "throw",
+            "result": null
+          },
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          }
+        ],
+        "ancestorAndRootRows": [
+          {
+            "targetTag": 8,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 8,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 37,
+            "result": false
+          }
+        ],
+        "upsBeforeAfter": [
+          0,
+          0
+        ],
+        "commitsBeforeAfter": [
+          2,
+          2
+        ],
+        "rawTypes": [
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": {
+          "label": "throw36",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 0,
+          "targetTag": 2
+        }
+      },
+      "consumed": true,
+      "errorsBeforeAfter": [
+        0,
+        1
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          0,
+          1
+        ],
+        "commitsBeforeAfter": [
+          3,
+          4
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    },
+    "throw36-both": {
+      "registration": {
+        "capture": "both",
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "label": "throw36-both",
+        "mode": "throw",
+        "offset": 36,
+        "remaining": 1,
+        "targetTag": 2
+      },
+      "up": {
+        "callbacks": [
+          "pointerup-capture",
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "throw",
+            "resultKind": "throw",
+            "result": null
+          },
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          1,
+          3
+        ],
+        "commitsBeforeAfter": [
+          5,
+          6
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": {
+          "label": "throw36-both",
+          "mode": "throw",
+          "offset": 36,
+          "remaining": 0,
+          "targetTag": 2
+        }
+      },
+      "consumed": true,
+      "errorsBeforeAfter": [
+        1,
+        2
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-capture",
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          3,
+          5
+        ],
+        "commitsBeforeAfter": [
+          7,
+          8
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    },
+    "throw37": {
+      "registration": {
+        "capture": true,
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "label": "throw37",
+        "mode": "throw",
+        "offset": 37,
+        "remaining": 1,
+        "targetTag": 2
+      },
+      "up": {
+        "callbacks": [
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          },
+          {
+            "offset": 37,
+            "action": "throw",
+            "resultKind": "throw",
+            "result": null
+          }
+        ],
+        "ancestorAndRootRows": [
+          {
+            "targetTag": 8,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 8,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 37,
+            "result": false
+          }
+        ],
+        "upsBeforeAfter": [
+          5,
+          5
+        ],
+        "commitsBeforeAfter": [
+          9,
+          9
+        ],
+        "rawTypes": [
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": {
+          "label": "throw37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 0,
+          "targetTag": 2
+        }
+      },
+      "consumed": true,
+      "errorsBeforeAfter": [
+        2,
+        3
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-capture",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          },
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          5,
+          6
+        ],
+        "commitsBeforeAfter": [
+          10,
+          11
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    },
+    "nonboolean36": {
+      "registration": {
+        "capture": false,
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "label": "nonboolean36",
+        "mode": "nonboolean",
+        "offset": 36,
+        "remaining": 1,
+        "targetTag": 2
+      },
+      "up": {
+        "callbacks": [
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "nonboolean",
+            "resultKind": "number",
+            "result": 1
+          },
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          }
+        ],
+        "ancestorAndRootRows": [
+          {
+            "targetTag": 8,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 8,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 37,
+            "result": false
+          }
+        ],
+        "upsBeforeAfter": [
+          6,
+          6
+        ],
+        "commitsBeforeAfter": [
+          12,
+          12
+        ],
+        "rawTypes": [
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": {
+          "label": "nonboolean36",
+          "mode": "nonboolean",
+          "offset": 36,
+          "remaining": 0,
+          "targetTag": 2
+        }
+      },
+      "consumed": true,
+      "errorsBeforeAfter": [
+        3,
+        4
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          6,
+          7
+        ],
+        "commitsBeforeAfter": [
+          13,
+          14
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    },
+    "nonboolean37": {
+      "registration": {
+        "capture": true,
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "label": "nonboolean37",
+        "mode": "nonboolean",
+        "offset": 37,
+        "remaining": 1,
+        "targetTag": 2
+      },
+      "up": {
+        "callbacks": [
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          },
+          {
+            "offset": 37,
+            "action": "nonboolean",
+            "resultKind": "number",
+            "result": 1
+          }
+        ],
+        "ancestorAndRootRows": [
+          {
+            "targetTag": 8,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 8,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": 10,
+            "offset": 37,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 36,
+            "result": false
+          },
+          {
+            "targetTag": null,
+            "offset": 37,
+            "result": false
+          }
+        ],
+        "upsBeforeAfter": [
+          7,
+          7
+        ],
+        "commitsBeforeAfter": [
+          15,
+          15
+        ],
+        "rawTypes": [
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": {
+          "label": "nonboolean37",
+          "mode": "nonboolean",
+          "offset": 37,
+          "remaining": 0,
+          "targetTag": 2
+        }
+      },
+      "consumed": true,
+      "errorsBeforeAfter": [
+        4,
+        5
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-capture",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": false
+          },
+          {
+            "offset": 37,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          7,
+          8
+        ],
+        "commitsBeforeAfter": [
+          16,
+          17
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    },
+    "armed37": {
+      "registration": {
+        "capture": false,
+        "targetTag": 2,
+        "type": "pointerup"
+      },
+      "armed": {
+        "label": "armed37",
+        "mode": "throw",
+        "offset": 37,
+        "remaining": 1,
+        "targetTag": 2
+      },
+      "up": {
+        "callbacks": [
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          8,
+          9
+        ],
+        "commitsBeforeAfter": [
+          18,
+          19
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": {
+          "label": "armed37",
+          "mode": "throw",
+          "offset": 37,
+          "remaining": 1,
+          "targetTag": 2
+        }
+      },
+      "consumed": false,
+      "errorsBeforeAfter": [
+        5,
+        5
+      ],
+      "recovery": {
+        "callbacks": [
+          "pointerup-bubble",
+          "touchend"
+        ],
+        "targetRows": [
+          {
+            "offset": 36,
+            "action": "delegate",
+            "resultKind": "boolean",
+            "result": true
+          }
+        ],
+        "ancestorAndRootRows": [],
+        "upsBeforeAfter": [
+          9,
+          10
+        ],
+        "commitsBeforeAfter": [
+          20,
+          21
+        ],
+        "rawTypes": [
+          "topPointerUp",
+          "topPointerUp",
+          "topTouchEnd",
+          "topTouchEnd"
+        ],
+        "faultAfterUp": null
+      }
+    }
+  },
+  "oldHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 62,
+      "normativeFailures": 8,
+      "reportSha256": "f8aca4b0cdf6a1b7c2a45e6aa174147b73946fb01b89e467b3d1118410afa5ed",
+      "bundleSha256": "a73bef4fa2dbf9c48fe9431038b90df9844abefb60939f1adfaaa9ab810b9bbb"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 186,
+      "normativeFailures": 12,
+      "reportSha256": "feb809231a88e0c2f2b44dc42a27556010dd5934917b5331f2b5cc0f68c6170b",
+      "bundleSha256": "064e42df899c8c62fe2bd98b9092194bf60d860b830cf0cf7d84865ab3b670ea"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 65,
+      "normativeFailures": 3,
+      "reportSha256": "f26e9be5c87931929dbbec3f4211a655f39150a41a22ba3597d382fbf8aa1676",
+      "bundleSha256": "09cee269a553cf4453a97f62ecdee652c0880c25bdaf96841f48be8225518b4b"
+    }
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "19b9f3d731989554bb7a3752242f20591328032cba641d0837f35fd9a25668ef",
+    "tests/pointer-query-fault-fixture.jsx": "83dec47b13ef1670905e0e03f1c787a058b267decfd9948ccd7c5d1f0ed3e8cf",
+    "tests/pointer-query-fault-probe.gd": "c5cf2bca5f1c41f59ae93efc5b0a88e0e3fbdda07abb3f9d88e57f873ebe7916",
+    "tests/pointer-up-fixture.jsx": "6be5773d32bbfcacff2070a9b6a8a3974e0d269d34f47595b160b76b3260896d",
+    "tests/pointer-up-probe.gd": "d0127c33df9b04456d9686e36b8c6ee23b991df5de5859c24faa754bfc8855f2",
+    "tests/pointer-up-native.test.mjs": "eb3e9bb68db4ae599d237bd69bba43e71b47728eaadb5c6686ee10295c47c899",
+    "scripts/event-target-bundle.mjs": "bedb3c8998b9643398e5ce23c75e62a9be48cbf43165e78fc338a369ec205df3",
+    "sdk/toolchain/platform-plugin.mjs": "e2b98c7ad95a47286bc2250eac7b347805462d953b734827594c4bfbcc8f4605",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "d5a91d13b68df9d7de04c344ec3435643131b5123467d9cdea97d907f4e27f99",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+    "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+    "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+    "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "3122db48d30865c64f6129f6e5d4fcc797a1c6ff8b748cb12709a1a7148af752",
+    "package.json": "164dd063544d89be6be8254bc44c40dc6c554487abbbd7c939cf3feec477f548",
+    ".fallowrc.json": "4fa36fdc1f0faf157a49871c4ddce38ae9ead22f7ed28c15722ceff8d4848cd8",
+    "tests/rn-pointer-overlay.test.mjs": "8ad62462651f1fc8ba2f228ae1502e2f8494ee6459483119d52a04eec9e01825",
+    "tests/rn-pointer-interest-overlay.test.mjs": "d3a26dae9e6320792b03ff36515158186978dfd9921a09ec0d3ed80055ba2514",
+    "tests/pointer-terminal-query-assertions.mjs": "25cad6a0ea98c74170c84dabe857b138e6df2fbd96d0de4de90b02ee1bb33682",
+    "tests/pointer-document-native.test.mjs": "e19609f93b33a8ca4abf6a9920e7442e817c1445a5a10d49f401d38530ab4713",
+    "tests/pointer-document-probe.gd": "b9300c4df90f7c7212354f7b533d31acfc2d143018be570dd190798a58d74cec",
+    "tests/pointer-interest-native.test.mjs": "96b86ad70105663f2d0b27d5af3cdc2d77b900ebb2879720a266a356e3e05153",
+    "tests/pointer-interest-probe.gd": "3d4eaab766ac8fe66efc93df4b929ff5f091e9e787c53ccf748fab6efc8e5989",
+    "tests/pointer-query-fault-native.test.mjs": "7bf5f6150fccfa58c06a1efa0c705c78959cdf210a958e5e4965992dfa1ad10f",
+    "tests/pointer-resolver-fault-native.test.mjs": "bfcba267cc6a9816a06323b5e6c9dd62fc969850be8b408cb28814e5502669d6"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b"
+  },
+  "capture": {
+    "checks": 268,
+    "pixelChecks": 24,
+    "frames": [
+      {
+        "file": "build/pointer-up-initial.png",
+        "sha256": "af28b45e5cf7660cc83f5a30ea52505d7bf1462527e68d9dc67b4828b8e0f2bb"
+      },
+      {
+        "file": "build/pointer-up-updated.png",
+        "sha256": "5cfdbfba394afcb436dc0d38413d3676dd4d9aaec069ef3f608732c5f27bf591"
+      }
+    ],
+    "reportSha256": "8246234d822e317f289f0cf1fbc2637b069159a377a75a33044d8501a8d9f1bb",
+    "headlessCheckIdsIncluded": true
+  },
+  "negativeControl": {
+    "sabotage": "a throw-mode component fault returns true without throwing, as if a failed lookup qualified the Up",
+    "command": "node tests/pointer-up-native.test.mjs",
+    "probeFailures": 15,
+    "failures": [
+      "fault/throw36/up/Native Up delivers exactly the qualified original listeners before the surviving TouchEnd",
+      "fault/throw36/up/Up Raw appears once only when a lookup qualified the Up",
+      "fault/throw36/up/Delivered Up callbacks batch into one commit and a rejected Up adds no React state",
+      "fault/throw36/up/The actual View ref lookups consume the configured fault in exact order and delegate the rest",
+      "fault/throw36/up/Ancestors and root are consulted in 36 then 37 pairs only after an unqualified target and stay false",
+      "fault/throw36/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/throw36-both/up/The actual View ref lookups consume the configured fault in exact order and delegate the rest",
+      "fault/throw36-both/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/throw37/up/Native Up delivers exactly the qualified original listeners before the surviving TouchEnd",
+      "fault/throw37/up/Up Raw appears once only when a lookup qualified the Up",
+      "fault/throw37/up/Delivered Up callbacks batch into one commit and a rejected Up adds no React state",
+      "fault/throw37/up/The actual View ref lookups consume the configured fault in exact order and delegate the rest",
+      "fault/throw37/up/Ancestors and root are consulted in 36 then 37 pairs only after an unqualified target and stay false",
+      "fault/throw37/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed",
+      "fault/stop/Second application clears roots and contacts while retaining exactly the consumed fault diagnostics"
+    ],
+    "nonbooleanAndUnconsumedCasesUnaffected": true,
+    "reportSha256": "079bbb842218201a73679b9e5e8f0aef90a82d245260a6bb013dae6de497b112",
+    "logSha256": "d3250703e558112982d640ae5b3b4bf8436ed1b336aa6d57f0aa7fde20cf35cd",
+    "nodeTestLogSha256": "d58ce5442553f47e1091bfb4ee4089af957d5efec4bd1bf6b2581efd608dd3ef",
+    "oracleLogSha256": "9b28f96b568a5b611d14bdf94de62abea5a09236a2af8859616f93a8a9395c16",
+    "independentNodeOracleRejected": true,
+    "oracleRunBypassedProbeStatusGates": true,
+    "oracleAcceptsFinalReport": true,
+    "bootstrapRestoredToPreSabotageBytes": true
+  },
+  "regressions": {
+    "query-faults": {
+      "checks": 186,
+      "logSha256": "3907cd7f39ee3447dd33771ef3f491dfd786250f1780ca05ac29d6cf899c085d"
+    },
+    "resolver-faults": {
+      "checks": 65,
+      "logSha256": "febd685c9ec7bbcaf097c4971a5b05b5b952d75ea323871b509f746aa497d22e"
+    },
+    "documentUpChecks": 6451,
+    "downChecks": 2723,
+    "nodeContractChecks": 255,
+    "pythonContractChecks": 13,
+    "contractsLogSha256": "1936452b4c295a8638ad42f2638e5ef0b6d8de8dcee3a53e9530554a01749afb",
+    "examplesLogSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
+    "staticCheckPassed": true,
+    "nativeAndSDKProductionFilesUnchanged": true,
+    "changedFilesSinceExecutionBase": [
+      "README.md",
+      "ROADMAP.md",
+      "dashboard/migration.json",
+      "docs/evidence/README.md",
+      "docs/research/pointer-up.md",
+      "examples/pointer-up/README.md",
+      "tests/pointer-query-fault-bootstrap.js",
+      "tests/pointer-query-fault-fixture.jsx",
+      "tests/pointer-up-fixture.jsx",
+      "tests/pointer-up-native.test.mjs",
+      "tests/pointer-up-probe.gd"
+    ]
+  },
+  "hostedCI": {
+    "status": "pending-view-up-fault-slice"
+  },
+  "limits": [
+    "One-shot throw and non-boolean faults on the actual View ref at Up offsets 36/37, in a second application after the healthy View Up probe stopped; the old-host control never runs that phase.",
+    "Only the single enabled-flag current lane of the View Up probe; other flag branches, Document listeners on the same path and multi-View paths are not certified.",
+    "Resolver getter faults on Up, stateNode/canonical faults, repeated faults and faults during retirement or stop remain open.",
+    "Captured/no-hit/null-target Up, Down/Up pointerId pairing, other event categories, hardware/mobile and performance remain open.",
+    "The executed tree was dirty after 988af3c; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ]
+}

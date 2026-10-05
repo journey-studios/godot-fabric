@@ -155,6 +155,141 @@ func capture_frame(filename: String, updated: bool) -> void:
   captures.append({"file": "build/" + filename, "width": image.get_width(), "height": image.get_height(), "pixels": pixels,
     "reactCounters": counters, "expectedReactCounters": expected_counters})
 
+var fault_errors: Array = []
+
+func labels_of(value: Dictionary) -> Array:
+  return value.events.map(func(row: Dictionary) -> String: return row.label)
+
+# Target rows are [offset, action, result] in call order. Every other lookup
+# belongs to an owning-surface ancestor or the root and reads 36 then 37, false.
+func component_fault_query(value: Dictionary, rows: Array, delivered: bool, prefix: String) -> void:
+  var own: Array = value.query.rows.filter(func(row: Dictionary) -> bool: return row.targetTag == value.targetTag)
+  var observed: Array = own.map(func(row: Dictionary) -> Array: return [int(row.offset), row.action, row.result])
+  var expected: Array = rows.map(func(row: Array) -> Array: return [row[0], row[1], 1.0 if row[1] == "nonboolean" else row[2]])
+  check(observed == expected and own.all(func(row: Dictionary) -> bool:
+    return row.matched == (row.action != "delegate") and row.resultKind == ("boolean" if row.action == "delegate" else "throw" if row.action == "throw" else "number")),
+    prefix + "/The actual View ref lookups consume the configured fault in exact order and delegate the rest")
+  var others: Array = value.query.rows.filter(func(row: Dictionary) -> bool: return row.targetTag != value.targetTag)
+  var owner_tags: Array = native(surfaces.A).nodes.map(func(node: Dictionary) -> int: return int(node.tag))
+  # Component rows carry the owning surface's tags; the final pair is the root handle.
+  var pairs: bool = others.size() % 2 == 0 and (not delivered or others.is_empty()) and (delivered or (others.size() >= 2 and others[-1].targetTag == null and others[-2].targetTag == null)) and others.all(func(row: Dictionary) -> bool: return row.targetTag == null or int(row.targetTag) in owner_tags)
+  for index in range(0, others.size() - 1, 2):
+    var first: Dictionary = others[index]
+    var second: Dictionary = others[index + 1]
+    pairs = pairs and first.offset == 36 and second.offset == 37 and first.targetTag == second.targetTag and first.sequence < second.sequence and second.sequence > own[-1].sequence
+  check(pairs and others.all(func(row: Dictionary) -> bool: return row.action == "delegate" and not row.matched and row.resultKind == "boolean" and row.result == false),
+    prefix + "/Ancestors and root are consulted in 36 then 37 pairs only after an unqualified target and stay false")
+
+# One real gesture with a one-shot fault on A's actual View ref, then a healthy
+# recovery gesture with the same listeners. A consumed fault rejects only its
+# own lookup and leaves one retained diagnostic.
+func component_fault_case(id: String, capture_mode: Variant, offset: int, mode: String, expected: Array, rows: Array, recovery_rows: Array) -> void:
+  var prefix := "fault/" + id
+  var consumed: bool = rows.any(func(row: Array) -> bool: return row[1] != "delegate")
+  var registration: Dictionary = js("configure('A',%s)" % JSON.stringify(capture_mode))
+  var armed: Dictionary = js("fault('A',%d,%s,%s)" % [offset, JSON.stringify(mode), JSON.stringify(id)])
+  stages[prefix + "/registration"] = registration
+  stages[prefix + "/fault"] = armed
+  check(registration.type == "pointerup" and armed.targetTag == registration.targetTag and armed.offset == offset and armed.mode == mode and armed.remaining == 1 and armed.label == id,
+    prefix + "/One one-shot fault is armed on the actual registered View ref at the Up offset")
+  await physical_down("A", 0, prefix)
+  js("arm('A',%s)" % JSON.stringify(prefix + "/up"))
+  var before := native(surfaces.A)
+  var errors_before: Array = native(application).errors
+  await inject("A", 0, "end")
+  var value := touch_only("A", prefix + "/up", "touchend", "topTouchEnd")
+  var after := native(surfaces.A)
+  var errors: Array = native(application).errors
+  var delivered := not expected.is_empty()
+  var callbacks: Array = value.events.filter(func(row: Dictionary) -> bool: return row.type == "pointerup")
+  var full := expected.duplicate()
+  full.append("touchend")
+  check(labels_of(value) == full and callbacks.all(func(row: Dictionary) -> bool:
+    return row.name == "A" and row.phase == 2 and row.pointerId > 0 and row.pointerType == "touch" and row.buttons == 0 and row.pressure == 0 and row.currentPriority == value.discretePriority) and trusted_rows({"events": callbacks}),
+    prefix + "/up/Native Up delivers exactly the qualified original listeners before the surviving TouchEnd")
+  check((value.raw.size() == 4 and exact_raw(value, "topPointerUp", expected[0]) and rows_for(value, "topPointerUp").all(func(row: Dictionary) -> bool: return row.pointerId == callbacks[0].pointerId)) if delivered else (value.raw.size() == 2 and rows_for(value, "topPointerUp").is_empty()),
+    prefix + "/up/Up Raw appears once only when a lookup qualified the Up")
+  check(value.panels.A.ups == value.baselineUps + expected.size() and value.panels.A.starts == value.baselineStarts and after.commits == before.commits + (1 if delivered else 0),
+    prefix + "/up/Delivered Up callbacks batch into one commit and a rejected Up adds no React state")
+  component_fault_query(value, rows, delivered, prefix + "/up")
+  var cause := ("GF pointer query deliberate fault: " + id) if mode == "throw" else "Pointer listener query must return a boolean"
+  if consumed:
+    fault_errors.append(cause)
+  check(errors.size() == errors_before.size() + (1 if consumed else 0) and (not consumed or (str(errors[-1]).begins_with("E_POINTER_LISTENER_QUERY: ") and str(errors[-1]).contains(cause))) and value.query.fault != null and value.query.fault.remaining == (0 if consumed else 1),
+    prefix + "/up/A consumed fault leaves one explicit diagnostic while an unconsumed fault stays armed")
+  check(after.pointer.pointerUps == before.pointer.pointerUps + 1 and after.pointer.ends == before.pointer.ends + 1,
+    prefix + "/up/Exactly one native Up and TouchEnd sample completes the physical contact")
+  clean_contact("A", prefix + "/up")
+  stages[prefix + "/up"] = {"react": value, "before": before, "after": after, "application": native(application), "errorsBefore": errors_before, "errorsAfter": errors, "consumed": consumed}
+  stages[prefix + "/cleared"] = js("clearFault()")
+  await physical_down("A", 0, prefix + "/recovery")
+  js("arm('A',%s)" % JSON.stringify(prefix + "/recovery/up"))
+  var recovery_before := native(surfaces.A)
+  await inject("A", 0, "end")
+  var recovery := touch_only("A", prefix + "/recovery/up", "touchend", "topTouchEnd")
+  var recovery_after := native(surfaces.A)
+  var recovery_labels: Array = ["pointerup-capture", "pointerup-bubble"] if capture_mode is String else ["pointerup-capture"] if capture_mode else ["pointerup-bubble"]
+  var recovery_full := recovery_labels.duplicate()
+  recovery_full.append("touchend")
+  var recovery_own: Array = recovery.query.rows.map(func(row: Dictionary) -> Array: return [int(row.offset), row.action, row.result])
+  check(labels_of(recovery) == recovery_full and recovery.panels.A.ups == recovery.baselineUps + recovery_labels.size() and recovery_after.commits == recovery_before.commits + 1 and recovery_own == recovery_rows and recovery.query.rows.all(func(row: Dictionary) -> bool: return row.targetTag == recovery.targetTag) and native(application).errors == errors and recovery.query.fault == null,
+    prefix + "/recovery/Healthy recovery qualifies on the target alone and adds no diagnostic")
+  clean_contact("A", prefix + "/recovery")
+  stages[prefix + "/recovery/up"] = {"react": recovery, "before": recovery_before, "after": recovery_after, "application": native(application)}
+
+# Component query faults at the Up offsets run in a second application after
+# the healthy one has stopped, so its no-diagnostic checks stay unchanged. The
+# old-host control never reaches this phase.
+func component_fault_controls() -> void:
+  application = ClassDB.instantiate("FabricApplication")
+  application.name = "PointerUpApplication"
+  application.set("bundle_path", "res://build/pointer-up-enabled.js")
+  root.add_child(application)
+  mount("A", Vector2.ZERO)
+  mount("B", Vector2(340, 0))
+  await settle()
+  var app := native(application)
+  check(application.name == "PointerUpApplication" and app.rootCount == 2 and app.pointerListenerQueryInstalled and app.errors.is_empty() and native(surfaces.A).runtimeId == native(surfaces.B).runtimeId,
+    "fault/mount/A second application mounts two fresh roots and one SDK query without diagnostics")
+  for name: String in ["A", "B"]:
+    var capability: Dictionary = js("capability(%s)" % JSON.stringify(name))
+    stages["fault/capability" + name] = capability
+    check(capability.original and capability.connected and capability.methods == ["function", "function", "function"] and capability.query.installations == 1 and capability.query.restoredInstaller,
+      "fault/capability/" + name + "/Fresh original refs use the single real SDK installation")
+  await component_fault_case("throw36", false, 36, "throw", [], [[36, "throw", null], [37, "delegate", false]], [[36, "delegate", true]])
+  await component_fault_case("throw36-both", "both", 36, "throw", ["pointerup-capture", "pointerup-bubble"], [[36, "throw", null], [37, "delegate", true]], [[36, "delegate", true]])
+  await component_fault_case("throw37", true, 37, "throw", [], [[36, "delegate", false], [37, "throw", null]], [[36, "delegate", false], [37, "delegate", true]])
+  await component_fault_case("nonboolean36", false, 36, "nonboolean", [], [[36, "nonboolean", null], [37, "delegate", false]], [[36, "delegate", true]])
+  await component_fault_case("nonboolean37", true, 37, "nonboolean", [], [[36, "delegate", false], [37, "nonboolean", null]], [[36, "delegate", false], [37, "delegate", true]])
+  await component_fault_case("armed37", false, 37, "throw", ["pointerup-bubble"], [[36, "delegate", true]], [[36, "delegate", true]])
+  stages["fault/B-registration"] = js("configure('B',false)")
+  await physical_down("B", 1, "fault/B-healthy")
+  js("arm('B','fault/B-healthy/up')")
+  var before_b := native(surfaces.B)
+  await inject("B", 1, "end")
+  var healthy := touch_only("B", "fault/B-healthy/up", "touchend", "topTouchEnd")
+  check(labels_of(healthy) == ["pointerup-bubble", "touchend"] and healthy.panels.B.ups == healthy.baselineUps + 1 and native(surfaces.B).commits == before_b.commits + 1 and healthy.query.rows.map(func(row: Dictionary) -> Array: return [int(row.offset), row.action, row.result]) == [[36, "delegate", true]],
+    "fault/B-healthy/up/Sibling B qualifies its own healthy Up after A's faults")
+  clean_contact("B", "fault/B-healthy/up")
+  stages["fault/B-healthy/up"] = {"react": healthy, "before": before_b, "after": native(surfaces.B), "application": native(application)}
+  stages["fault/beforeStop"] = {"application": native(application), "react": state()}
+  application.call("stop")
+  await settle()
+  var stopped := native(application)
+  stages["fault/stopped"] = stopped
+  var retained: bool = stopped.errors.size() == fault_errors.size()
+  for index in range(mini(stopped.errors.size(), fault_errors.size())):
+    retained = retained and str(stopped.errors[index]).contains(fault_errors[index])
+  check(stopped.stopped and not stopped.pointerListenerQueryInstalled and stopped.rootCount == 0 and stopped.pendingWork == 0 and stopped.pendingTimers == 0 and stopped.pointerProcessor.active == 0 and stopped.pointerRouting.contacts == 0 and stopped.pointerRouting.stored == 0 and retained,
+    "fault/stop/Second application clears roots and contacts while retaining exactly the consumed fault diagnostics")
+  for name: String in ["A", "B"]:
+    var final_root := native(surfaces[name])
+    check(final_root.nativeTags == 0 and final_root.creates == final_root.deletes and final_root.pointer.activePointers == 0 and final_root.pointer.activeTouches == 0,
+      "fault/stop/" + name + "/All actual native Controls and contacts balance")
+    surfaces[name].queue_free()
+  application.queue_free()
+  await settle()
+
 func _initialize() -> void:
   allow_original_negative = OS.get_cmdline_user_args().has("--allow-original-negative")
   capture = OS.get_cmdline_user_args().has("--capture")
@@ -198,6 +333,8 @@ func run_probe() -> void:
     surfaces[name].queue_free()
   application.queue_free()
   await settle()
+  if not allow_original_negative:
+    await component_fault_controls()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()
@@ -206,7 +343,7 @@ func run_probe() -> void:
   var original_negative_observed := allow_original_negative and observed == expected and failures.size() == 8
   var report := {"scenario": "native-pointer-up-view-interest", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
     "displayServer": DisplayServer.get_name(), "captureRequested": capture, "captures": captures,
-    "checks": checks, "stages": stages, "afterStop": stopped,
+    "checks": checks, "stages": stages, "afterStop": stopped, "faultExpectedErrors": fault_errors,
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
     "originalNegativeObserved": original_negative_observed, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"actualNativeInput": true, "originalFlagsEnabled": true, "experimentalNativeDispatch": true,

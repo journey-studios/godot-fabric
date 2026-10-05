@@ -97,9 +97,12 @@ counters are A1/B0. Capture-only, Cancel and stop happen later.
 - General Up membership (once, abort, removal, rerender), retained/retired refs,
   captured/no-hit Up, got/lost capture, coalescing and responder transitions
   remain separate from the tested registration switch and balanced stop.
-- Up-specific query/resolver faults and reentrant lifecycle behavior are not
-  covered by earlier Down-only fault controls. Neither the new offset mapping
-  nor this successful release establishes their recovery contract.
+- Up-specific resolver getter faults and reentrant lifecycle behavior on the
+  View remain uncovered. One-shot component query faults at the Up offsets now
+  have their own [record](../evidence/pointer-up-faults/README.md): the failed
+  lookup alone is rejected with one diagnostic, a same-View capture listener
+  still qualifies after a bubble fault, and an unqualified View hands the lookup
+  to its ancestors and root while TouchEnd and cleanup survive.
 - Down is filtered here, so only Up callback/Raw pointer identity is proved.
   A real qualified Down control is needed to compare a public Down/Up pair.
 - Other priority flag branches, development renderer, hardware, exported Godot

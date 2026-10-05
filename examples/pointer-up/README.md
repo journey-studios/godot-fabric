@@ -100,6 +100,10 @@ native TouchEnd/Raw, B surviving while A is held, actual Cancel and balanced
 stop. Down has no pointer listener and remains filtered: no public Down/Up
 pointer-ID identity is claimed.
 
+Faults in the native query for this View, at the Up offsets, are covered by a
+[separate record](../../docs/evidence/pointer-up-faults/README.md): only the failed
+lookup is rejected, with one diagnostic, and TouchEnd and contact cleanup survive.
+
 Document Up, other flag configurations, full membership/ref lifecycle,
 captured/no-hit Up, got/lost capture, coalescing, complete responders and priority
 mapping require separate acceptance. Development renderer, hardware, Godot
