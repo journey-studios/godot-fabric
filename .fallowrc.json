@@ -38,7 +38,9 @@
     "tests/pointer-hover-fixture.jsx",
     "tests/pointer-root-path-fixture.jsx",
     "tests/pointer-document-hover-fixture.jsx",
-    "tests/pointer-document-up-fixture.jsx"
+    "tests/pointer-document-up-fixture.jsx",
+    "tests/touchables-fixture.jsx",
+    "tests/touchables-animated-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
