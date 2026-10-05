@@ -15,13 +15,17 @@ namespace rn = facebook::react;
 class PointerAdapter {
  public:
   using HitTest = std::function<int(godot::Vector2)>;
+  // Whether a point lies inside the surface's root view. RN resolves an empty
+  // area there to the root; touches still start only on a hit view.
+  using InsideRoot = std::function<bool(godot::Vector2)>;
   using LocalPoint = std::function<godot::Vector2(int, godot::Vector2)>;
   struct Coordinates { godot::Vector2 page, screen; };
   using Project = std::function<Coordinates(godot::Vector2)>;
   using Emit = std::function<void(int, const std::string &, rn::TouchEvent)>;
-  using EmitPointer = std::function<void(int, const std::string &, rn::PointerEvent, godot::Vector2,
+  // Target tag (0 without a hit view) and whether that empty point is inside the root.
+  using EmitPointer = std::function<void(int, bool, const std::string &, rn::PointerEvent, godot::Vector2,
       std::shared_ptr<PointerGeometryHistory>)>;
-  PointerAdapter(HitTest hit, LocalPoint local, Project project, Emit emit, EmitPointer emit_pointer);
+  PointerAdapter(HitTest hit, InsideRoot inside, LocalPoint local, Project project, Emit emit, EmitPointer emit_pointer);
   bool input(const godot::Ref<godot::InputEvent> &event, int pointer_id, bool primary);
   void responder(int tag, bool active, bool block);
   void cancel();
@@ -34,6 +38,7 @@ class PointerAdapter {
   folly::dynamic snapshot() const;
  private:
   HitTest hit_;
+  InsideRoot inside_;
   LocalPoint local_;
   Project project_;
   Emit emit_;
@@ -44,7 +49,7 @@ class PointerAdapter {
     std::shared_ptr<PointerGeometryHistory> geometry{std::make_shared<PointerGeometryHistory>()};
     int target{};
     int touch_id{-1};
-    bool mouse{}, active{};
+    bool mouse{}, active{}, root{};
   };
   std::map<int, PointerSample> pointers_;
   std::map<int, rn::Touch> touches_;

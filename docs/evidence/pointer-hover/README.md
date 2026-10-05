@@ -167,7 +167,10 @@ Algumas partes ficam habilitadas sem certificação:
   Isso é anterior a esta fatia e entra na certificação de hover em Document.
 
   (Correção: a versão anterior deste item dizia que, no RN, listeners de Document
-  receberiam eventos sobre a área vazia. Eles não recebem.)
+  receberiam eventos sobre a área vazia. Eles não recebem.) A
+  [fatia do caminho da raiz](../pointer-root-path/README.md) mantém a raiz no
+  caminho e também corrige um crash: com esse listener capture no Document, este
+  host emitia `enter`/`leave` para a própria raiz e caía no `dispatchEventToJS`.
 
 Com toque, só a colocação no alvo (bubble) foi exercitada; as outras usam o mesmo
 algoritmo e as mesmas consultas certificadas com mouse. Hover com caneta, captura de

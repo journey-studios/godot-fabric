@@ -18,11 +18,15 @@ struct GodotPointerEvent final : facebook::react::PointerEvent {
   const std::shared_ptr<PointerGeometryHistory> history;
   const uint64_t serial;
   const bool terminal;
+  // No view was hit inside the source root: RN resolves that point to the root
+  // view itself, which stays in the hover path but never receives an event.
+  const bool root_target;
   GodotPointerEvent(facebook::react::PointerEvent event, godot::Vector2 point,
       facebook::react::SurfaceId surface, uint64_t window, uint64_t viewport,
-      std::shared_ptr<PointerGeometryHistory> contact, bool ending)
+      std::shared_ptr<PointerGeometryHistory> contact, bool ending, bool root)
       : facebook::react::PointerEvent(std::move(event)), viewport_point(point),
         source_surface(surface), window_id(window), viewport_id(viewport),
-        history(std::move(contact)), serial(++history->submitted), terminal(ending) {}
+        history(std::move(contact)), serial(++history->submitted), terminal(ending),
+        root_target(root) {}
 };
 }

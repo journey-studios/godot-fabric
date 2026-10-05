@@ -1559,6 +1559,52 @@ deployed this record from main 2643d4c, and the live public JSON and local API m
 it. The old-host control stays local. No whole GF, checkpoint, weight or
 denominator closes.
 
+### Root hover path for empty surface points (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[root-path evidence](docs/evidence/pointer-root-path/README.md) resolves an empty
+point inside a surface to the root view, as RN's `TouchTargetHelper` (Android)
+and root component `hitTest` (iOS) do: **82/82 headless checks** with a mouse
+and a touch, View listeners and Document capture listeners. The root stays in
+the processor's hover path between a view and the empty area and leaves it only
+for a point outside the root.
+
+The root is never an event target. RN 0.87.1 creates the root family without an
+event dispatcher and its EventTarget without an instance handle, and `RootProps`
+declares no listener. The host leaked through that boundary: the View hover
+slice let the root qualify its own enter/leave, and with a Document capture
+`pointerenter`/`pointerleave` listener the processor emitted to the root and
+`UIManagerBinding::dispatchEventToJS` dereferenced the missing handle, crashing
+the process (opt-in flags only). Now the adapter flags an empty point inside the
+root, the binding resolves that JS-less sample to the current root node, the
+overlay's path query and enter/leave loops never qualify, read or emit to a root,
+and the binding drops any dispatch to a root before touching its EventTarget. A
+root's capture lookups still propagate enter/leave to the descendants that enter
+or leave with it. A Document capture listener therefore sees container, parent
+and target enter at phase 1 when the pointer arrives from outside the surface and
+leave when it exits, and nothing between a view and the empty area. A touch drag
+into the empty area keeps the root, and its release leaves only the root.
+
+On the View hover host the same bundle fails exactly 9 normative checks in its
+View case (the root's own Maps read and the root leaving and re-entering on each
+transition) and crashes in the first step of its Document case. The hover probe
+now enters and leaves through a point outside every surface and no longer
+expects the root's own lookups; the View Up, query-fault, resolver-fault, Move
+and hover preceding-host controls still reproduce 8/12/3/45/32 failures. Surface
+selection is unchanged: a first empty-area sample still reaches the game. The
+validation-only `inverse()` calls in pointer geometry now go through
+`require_invertible()`, removing the build's `nodiscard` warnings.
+
+On the corrected host the contracts gates (260 Node/13 Python, static analysis,
+publication scan), `test:recovery` and the 24 native suites pass, including Down
+2,731, Document Up 6,459, View Up 297, query 187, resolver 66, Move 220, Document
+Move 1,940, hover 158, root path 82 and 22 examples; codegen, the native SDK
+pack/verify, adapters (loader 89 checks/21 cases, runtime 13 runs/213 checks),
+consumer (30 + 40) and cold start pass too. Document hover across the flag matrix, documentElement listeners,
+surface selection for empty-area input, pen hover, capture while hovering,
+responders and multi-touch remain open. Hosted CI for this slice is pending. No
+whole GF, checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

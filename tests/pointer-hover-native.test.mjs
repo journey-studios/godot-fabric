@@ -26,29 +26,29 @@ const cases = {
     manual: {pointerover: [["pointerover-bubble", 2, "T", "T"]], pointerenter: [["pointerenter-bubble", 2, "T", "T"]],
       pointerout: [["pointerout-bubble", 2, "T", "T"]], pointerleave: [["pointerleave-bubble", 2, "T", "T"]]},
     enter: [["pointerover-bubble", 2, "T", "T"], ["pointerenter-bubble", 2, "T", "T"]],
-    enterRows: "T26t R23 R0 C23 C0 P23 P0 T23 T0t",
+    enterRows: "T26t R23 C23 C0 P23 P0 T23 T0t",
     leave: [["pointerout-bubble", 2, "T", "T"], ["pointerleave-bubble", 2, "T", "T"]],
-    leaveRows: "T27t R24 R2 C24 C2 P24 P2 T24 T2t"},
+    leaveRows: "T27t R24 C24 C2 P24 P2 T24 T2t"},
   "target-capture": {capture: true,
     manual: {pointerover: [["pointerover-capture", 2, "T", "T"]], pointerenter: [["pointerenter-capture", 2, "T", "T"]],
       pointerout: [["pointerout-capture", 2, "T", "T"]], pointerleave: [["pointerleave-capture", 2, "T", "T"]]},
     enter: [["pointerover-capture", 2, "T", "T"], ["pointerenter-capture", 2, "T", "T"]],
-    enterRows: "T26 T28t R23 R0 C23 C0 P23 P0 T23t",
+    enterRows: "T26 T28t R23 C23 C0 P23 P0 T23t",
     leave: [["pointerout-capture", 2, "T", "T"], ["pointerleave-capture", 2, "T", "T"]],
-    leaveRows: "T27 T29t R24 R2 C24 C2 P24 P2 T24t"},
+    leaveRows: "T27 T29t R24 C24 C2 P24 P2 T24t"},
   "parent-bubble": {capture: false,
     manual: {pointerover: [["pointerover-bubble", 3, "T", "P"]], pointerenter: [], pointerout: [["pointerout-bubble", 3, "T", "P"]], pointerleave: []},
     enter: [["pointerover-bubble", 3, "T", "P"], ["pointerenter-bubble", 2, "P", "P"]],
-    enterRows: "T26 T28 P26t R23 R0 C23 C0 P23 P0t T23 T0",
+    enterRows: "T26 T28 P26t R23 C23 C0 P23 P0t T23 T0",
     leave: [["pointerout-bubble", 3, "T", "P"], ["pointerleave-bubble", 2, "P", "P"]],
-    leaveRows: "T27 T29 P27t R24 R2 C24 C2 P24 P2t T24 T2"},
+    leaveRows: "T27 T29 P27t R24 C24 C2 P24 P2t T24 T2"},
   "parent-capture": {capture: true,
     manual: {pointerover: [["pointerover-capture", 1, "T", "P"]], pointerenter: [["pointerenter-capture", 1, "T", "P"]],
       pointerout: [["pointerout-capture", 1, "T", "P"]], pointerleave: [["pointerleave-capture", 1, "T", "P"]]},
     enter: [["pointerover-capture", 1, "T", "P"], ["pointerenter-capture", 2, "P", "P"], ["pointerenter-capture", 1, "T", "P"]],
-    enterRows: "T26 T28 P26 P28t R23 R0 C23 C0 P23t T23",
+    enterRows: "T26 T28 P26 P28t R23 C23 C0 P23t T23",
     leave: [["pointerout-capture", 1, "T", "P"], ["pointerleave-capture", 1, "T", "P"], ["pointerleave-capture", 2, "P", "P"]],
-    leaveRows: "T27 T29 P27 P29t R24 R2 C24 C2 P24t T24"},
+    leaveRows: "T27 T29 P27 P29t R24 C24 C2 P24t T24"},
 };
 // Compact lookup notation: node key, offset and a trailing "t" for true.
 const parseRows = rows => rows.split(" ").filter(Boolean).map(entry => {
@@ -202,9 +202,9 @@ test("original imperative View hover listeners qualify native over/out/enter/lea
   // B never dispatched an event: its container has no public instance, and the
   // query skips it without creating one.
   transition(stages["sibling-no-listeners/start"], "B", [], [], []);
-  const bTags = transition(stages["sibling-no-listeners/enter"], "B", [], delivered ? parseRows("T26 T28 P26 P28 R26 R28 R23 R0 P23 P0 T23 T0") : [], ["T", "P", "R"]);
+  const bTags = transition(stages["sibling-no-listeners/enter"], "B", [], delivered ? parseRows("T26 T28 P26 P28 R26 R28 R23 P23 P0 T23 T0") : [], ["T", "P", "R"]);
   assert.ok(Number.isSafeInteger(bTags.C) && bTags.C > 0);
-  transition(stages["sibling-no-listeners/leave"], "B", [], delivered ? parseRows("T27 T29 P27 P29 R27 R29 R24 R2 P24 P2 T24 T2") : [], []);
+  transition(stages["sibling-no-listeners/leave"], "B", [], delivered ? parseRows("T27 T29 P27 P29 R27 R29 R24 P24 P2 T24 T2") : [], []);
   assert.deepEqual(report.afterStop.errors, []); assert.ok(report.afterStop.stopped && report.afterStop.rootCount === 0);
   assert.equal(report.afterStop.pointerProcessor.hover, 0);
   if (allowOriginalNegative) assert.deepEqual(report.faultExpectedErrors, []);
@@ -212,7 +212,7 @@ test("original imperative View hover listeners qualify native over/out/enter/lea
     // A repeated throwing Over lookup: rejected alone, retained once and then
     // counted; enter qualifies on its own lookups and the recovery delivers.
     assert.deepEqual(report.faultExpectedErrors, ["GF pointer query deliberate fault: over26"]);
-    const faulted = parseRows("T26 T28 P26 P28 C26 C28 R26 R28 R23 R0 C23 C0 P23 P0 T23 T0t");
+    const faulted = parseRows("T26 T28 P26 P28 C26 C28 R26 R28 R23 C23 C0 P23 P0 T23 T0t");
     for (const round of [1, 2]) {
       const stage = stages[`fault/over26/round-${round}/enter`], tags = nodeTags(stage.react, stage.after.nodes, "A");
       assert.deepEqual(stage.react.query.hoverRows.map(row => [row.targetTag, row.offset, row.action, row.result]),

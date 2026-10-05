@@ -36,8 +36,9 @@ void modifiers(rn::PointerEvent &pointer, const InputEventMouse &mouse) {
   pointer.metaKey = mouse.is_meta_pressed();
 }
 }
-PointerAdapter::PointerAdapter(HitTest hit, LocalPoint local, Project project, Emit emit, EmitPointer emit_pointer)
-    : hit_(std::move(hit)), local_(std::move(local)), project_(std::move(project)),
+PointerAdapter::PointerAdapter(HitTest hit, InsideRoot inside, LocalPoint local, Project project, Emit emit,
+    EmitPointer emit_pointer)
+    : hit_(std::move(hit)), inside_(std::move(inside)), local_(std::move(local)), project_(std::move(project)),
       emit_(std::move(emit)), emit_pointer_(std::move(emit_pointer)) {}
 bool PointerAdapter::input(const Ref<InputEvent> &event, int pointer_id, bool primary) {
   invalid_coordinates_ = false;
@@ -123,10 +124,12 @@ bool PointerAdapter::input(const Ref<InputEvent> &event, int pointer_id, bool pr
 PointerAdapter::PointerSample *PointerAdapter::sample(int id, Vector2 position, bool mouse, bool primary) {
   const int target = hit_(position);
   // A missing physical hit is distinct from the touch gesture's origin and
-  // from RN's capture override. The upstream processor receives a null target
+  // from RN's capture override. Inside the root RN resolves it to the root,
+  // which keeps the hover path; outside, the processor receives a null target
   // so it can leave the hover path or route an active capture itself.
-  const auto local = target ? local_(target, position) : Vector2();
+  const bool root = !target && inside_(position);
   const auto projected = project_(position);
+  const auto local = target ? local_(target, position) : root ? projected.page : Vector2();
   if (!local.is_finite() || !projected.page.is_finite() || !projected.screen.is_finite()) {
     invalid_coordinates_ = true;
     cancel_pointer(id);
@@ -135,6 +138,7 @@ PointerAdapter::PointerSample *PointerAdapter::sample(int id, Vector2 position, 
   auto &current = pointers_[id];
   current.viewport_point = position;
   current.target = target;
+  current.root = root;
   current.mouse = mouse;
   auto &event = current.event;
   event.pointerId = id;
@@ -161,7 +165,8 @@ void PointerAdapter::pointer(int id, const std::string &phase) {
   else if (phase == "up") ++pointer_ups_;
   else if (phase == "cancel") ++pointer_cancels_;
   else if (phase == "leave") ++pointer_leaves_;
-  emit_pointer_(found->second.target, phase, found->second.event, found->second.viewport_point, found->second.geometry);
+  emit_pointer_(found->second.target, found->second.root, phase, found->second.event, found->second.viewport_point,
+      found->second.geometry);
 }
 void PointerAdapter::leave_mouse(int id, const Vector2 *position) {
   auto found = pointers_.find(id);
@@ -172,6 +177,7 @@ void PointerAdapter::leave_mouse(int id, const Vector2 *position) {
   found->second.event.pressure = 0;
   found->second.event.timeStamp = rn::HighResTimeStamp::now();
   found->second.target = 0;
+  found->second.root = false;
   pointer(id, "leave");
   pointers_.erase(id);
 }

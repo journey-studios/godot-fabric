@@ -187,6 +187,14 @@ order, phases and Discrete priority, with enter/leave's non-bubbling rule intact
 ([receipt](docs/evidence/pointer-hover/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-hover/README.md).
 
+The [root-path example](examples/pointer-root-path/README.md) resolves an empty
+point inside a surface to the root view, as RN does, so the root stays in the
+hover path between a view and the empty area, and never makes the root an event
+target. That removes a crash of the preceding host with a Document capture
+`pointerenter`/`pointerleave` listener: 82 headless checks, and the same bundle
+fails 9 checks and crashes on the preceding host.
+[Evidence](docs/evidence/pointer-root-path/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

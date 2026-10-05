@@ -175,6 +175,16 @@ sequence is checked. Its [receipt](../docs/evidence/pointer-hover/README.md)
 records 158/158 headless checks and 32 visible old-host failures with the same SDK
 bundle.
 
+The [root-path probe](pointer-root-path/README.md) moves a mouse and a touch between
+a target, the surface's empty area and a point outside every surface:
+`npm run test:pointers:root-path`, outside the launcher catalog. The empty area
+resolves to the root, which stays in the hover path but never receives an event,
+so a Document capture `pointerenter`/`pointerleave` listener sees descendants
+enter and leave only with the root. Its
+[receipt](../docs/evidence/pointer-root-path/README.md) records 82/82 headless
+checks, 9 visible failures on the preceding host and that host's crash in the
+Document case.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

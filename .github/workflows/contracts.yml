@@ -266,6 +266,17 @@ jobs:
             build/pointer-hover-comparison.json
             build/pointer-hover-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:root-path
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-root-path
+          path: |
+            build/pointer-root-path-report.json
+            build/pointer-root-path-current-report.json
+            build/pointer-root-path-comparison.json
+            build/pointer-root-path-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

@@ -101,6 +101,9 @@ cannot pass it vacuously.
   stays within the root. This predates hover and belongs to the Document hover
   certification. (An earlier version of this note claimed that RN delivers
   Down/Up/Move and hover to Document listeners over empty areas; it does not.)
+  The [root-path slice](pointer-root-path.md) keeps the root in the path and also
+  fixes a crash this host had with such a Document capture listener: it emitted
+  enter/leave to the root itself, whose EventTarget has no instance handle.
 - **Document hover.** Document/documentElement hover listeners now qualify through
   the root rule, certified only by the plugin unit tests.
 - **Remaining scope.** Pen hover, touch with other listener placements, pointer

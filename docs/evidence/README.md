@@ -192,6 +192,17 @@ preceding-host controls still reproduce 8/12/3/45 failures. Document hover and
 the empty-area root target remain open. Hosted run 37352693788 passed the same 158
 checks with identical IDs, bundle and fault stages ([receipt](pointer-hover/hosted-ci.json)).
 
+The [root-path record](pointer-root-path/README.md) resolves an empty point inside
+a surface to its root view, as RN's TouchTargetHelper and root hitTest do, so the
+root stays in the processor's hover path: 82/82 headless checks with mouse and
+touch, View listeners and Document capture listeners. The root is never an event
+target, since RN creates its family without an event dispatcher or instance
+handle: the path query, the enter/leave loops and the binding all skip it, while
+its capture lookups still propagate to entering and leaving descendants. On the
+preceding host the same bundle fails exactly 9 View-case checks, and its Document
+case crashes (signal 11 in `dispatchEventToJS`) when enter is emitted to the root.
+Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.
