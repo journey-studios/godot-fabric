@@ -136,7 +136,8 @@ owning-surface ancestors and root, all false, while TouchEnd and contact cleanup
 survive and each consumed fault leaves one diagnostic. A retained control that
 qualifies a failed lookup fails fifteen probe checks and the independent oracle.
 The three preceding-host controls reproduce their 8/12/3 normative failures with
-the new bundles. Hosted CI pending.
+the new bundles. Hosted run 37330669524 passed the same 240 checks with identical
+IDs, bundle and fault stages ([receipt](pointer-up-faults/hosted-ci.json)).
 
 The [View Up resolver record](pointer-up-resolver-faults/README.md) arms a one-shot
 getter on the View's `canonical.publicInstance`, after Down: 296 headless and 324
@@ -144,7 +145,25 @@ viewport checks. The first native read fails before any SDK entry, only that
 lookup is rejected with one diagnostic, and the next lookup reads the restored
 descriptor; with capture and bubble the Up is still delivered. A retained control
 whose getter silently succeeds fails nine probe checks and the independent oracle.
-Hosted CI pending.
+Hosted run 37332057453 passed the same 296 checks with identical IDs, bundle and
+stages ([receipt](pointer-up-resolver-faults/hosted-ci.json)).
+
+The [View pointermove record](pointer-move/README.md) extends the native interest
+query to original View Move Maps at offsets 1/25: 219/219 corrected headless
+(including a Move-fault application) and 243/243 viewport checks, with 20 actual
+pixels in two captures. The same SDK
+bundle, 15 test/SDK producer pins and 19 RN pins retain 45 visible normative
+failures on the preceding host; the two native producers are evidenced by the
+build records, which differ only in the host, those producers and the generated
+`PointerEventsProcessor` tree. Listeners on the target (phase 2) and on its parent
+(phases 1/3) and button-less mouse motion each deliver one trusted move per
+dispatched sample with its typed/star Raw and one commit at the pinned Default
+priority; B without listeners reads its whole path false, in order. The host
+flushes RN's queue after every input event, so per-frame merging comes from
+Godot's input accumulation. A failing Move lookup is retained once per distinct
+cause, up to 16 causes per application, and repeats are counted. The three
+preceding-host controls reproduce 8/12/3 failures with the new bundles. Hosted CI
+pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

@@ -149,3 +149,5 @@ exatamente os diagnósticos esperados da lane. Não houve findings.
 
 A CI certifica apenas as lanes headless. O viewport com 1.179 checks e 132 pixels
 e o controle negativo continuam sendo evidência local; os limites acima não mudam.
+O [Pages](publication.json) (run 37329106287, push da `main` em 988af3c) implantou
+exatamente os dados commitados.

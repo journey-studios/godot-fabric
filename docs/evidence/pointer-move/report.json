@@ -1,0 +1,2728 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-move-view-interest",
+  "status": "verified-local-headless-old-host-native-captures-regressions-and-sdk",
+  "at": "2026-10-05T16:52:12.150093+00:00",
+  "executionBaseCommit": "a0ec86bed2e3703cb1dd5b0fe624fbc9a28e6324",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "configuration": "Release",
+    "headedCaptureDisplayServer": "macOS"
+  },
+  "scope": {
+    "actualNativeInput": true,
+    "ancestorPropagationCertified": true,
+    "documentInterestCertified": false,
+    "experimentalNativeDispatch": true,
+    "hardwareCertified": false,
+    "hoverEventsCertified": false,
+    "listenerRegistryMirrored": false,
+    "mouseHoverMoveCertified": true,
+    "moveQueryFaultsCertified": true,
+    "originalFlagsEnabled": true,
+    "pointerMoveOnlyViewScope": true,
+    "publicAPIAdded": false,
+    "publicDefaultEnabled": false,
+    "realSDKQueryWrappedOnlyForTest": true,
+    "rnQueueCoalescingReachable": false
+  },
+  "commands": [
+    "npm run test:pointers:move",
+    "node tests/pointer-move-native.test.mjs --capture",
+    "node tests/pointer-move-native.test.mjs --allow-original-negative (preserved previous host installed)"
+  ],
+  "lanes": [
+    {
+      "lane": "original",
+      "meaning": "Preserved previous native host replaying the current SDK bundle without the Move-fault application; expected negative control.",
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 135,
+      "passed": 90,
+      "failed": 45,
+      "failedIds": [
+        "case/bubble/move-1/Native move delivers exactly the qualified original pointermove callback",
+        "case/bubble/move-1/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/bubble/move-1/Each delivered move commits one functional React increment",
+        "case/bubble/move-1/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/bubble/move-2/Native move delivers exactly the qualified original pointermove callback",
+        "case/bubble/move-2/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/bubble/move-2/Each delivered move commits one functional React increment",
+        "case/bubble/move-2/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/capture-only/move-1/Native move delivers exactly the qualified original pointermove callback",
+        "case/capture-only/move-1/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/capture-only/move-1/Each delivered move commits one functional React increment",
+        "case/capture-only/move-1/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/capture-only/move-2/Native move delivers exactly the qualified original pointermove callback",
+        "case/capture-only/move-2/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/capture-only/move-2/Each delivered move commits one functional React increment",
+        "case/capture-only/move-2/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/ancestor-bubble/move-1/Native move delivers exactly the qualified original pointermove callback",
+        "case/ancestor-bubble/move-1/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/ancestor-bubble/move-1/Each delivered move commits one functional React increment",
+        "case/ancestor-bubble/move-1/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/ancestor-bubble/move-2/Native move delivers exactly the qualified original pointermove callback",
+        "case/ancestor-bubble/move-2/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/ancestor-bubble/move-2/Each delivered move commits one functional React increment",
+        "case/ancestor-bubble/move-2/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/ancestor-capture/move-1/Native move delivers exactly the qualified original pointermove callback",
+        "case/ancestor-capture/move-1/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/ancestor-capture/move-1/Each delivered move commits one functional React increment",
+        "case/ancestor-capture/move-1/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "case/ancestor-capture/move-2/Native move delivers exactly the qualified original pointermove callback",
+        "case/ancestor-capture/move-2/Pointer move Raw appears once per channel with the exact callback payload",
+        "case/ancestor-capture/move-2/Each delivered move commits one functional React increment",
+        "case/ancestor-capture/move-2/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "sibling-no-listeners/move/B's own Move Maps are consulted false before its parent container and root in path order",
+        "mouse/hover/Native mouse moves deliver trusted pointermove callbacks at the dispatched samples with the unique Continuous priority",
+        "mouse/hover/Pointer move Raw appears once per channel with the exact callback payload",
+        "mouse/hover/Each delivered move commits one functional React increment",
+        "mouse/hover/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "mouse/accumulated/Native mouse moves deliver trusted pointermove callbacks at the dispatched samples with the unique Continuous priority",
+        "mouse/accumulated/Pointer move Raw appears once per channel with the exact callback payload",
+        "mouse/accumulated/Each delivered move commits one functional React increment",
+        "mouse/accumulated/Native move consults the original pointermove Maps at the exact pinned offsets",
+        "mouse/unaccumulated/Native mouse moves deliver trusted pointermove callbacks at the dispatched samples with the unique Continuous priority",
+        "mouse/unaccumulated/Pointer move Raw appears once per channel with the exact callback payload",
+        "mouse/unaccumulated/Each delivered move commits one functional React increment",
+        "mouse/unaccumulated/Native move consults the original pointermove Maps at the exact pinned offsets"
+      ],
+      "originalNegativeObserved": true,
+      "reportSha256": "a5cbf19bd3e71146796532ec4d6c678a05321f9d83a19267b0a3a5081cc83509",
+      "logSha256": "50ca471e23c1b2697ab0d913a0acdab3cde5b390ca89c08cae6d5865d3e95c11"
+    },
+    {
+      "lane": "current",
+      "meaning": "Corrected native host, headless.",
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 219,
+      "passed": 219,
+      "reportSha256": "cf14044a46e32b4c551e7b511c1d3f288abc85f8f683ed3dd1e2553791a7e813",
+      "logSha256": "ce263508fa4af169484f52305ff20b9f1d75ce9a2a5a7e975cce9624588ce6cb",
+      "comparisonSha256": "8be4aa0c5047702302ce5b389884acc8f1a9be1a39a6729bca15f164bde91951"
+    },
+    {
+      "lane": "capture",
+      "meaning": "Corrected native host, actual macOS Viewport.",
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 243,
+      "passed": 243,
+      "reportSha256": "139c8879ee57731ceb15a62288f814a77bc11bc0f405422bbf2ad80d3b23b9ae",
+      "logSha256": "2d155dd1b81eed1bdca0a9a1dcaf7a5e985f6dcfadf314c9d00df69c20467a29"
+    }
+  ],
+  "causalComparison": {
+    "sameSdkBundleAllThree": true,
+    "sdkBundleSha256": "2a76a0e397eb7e40ed30bd3389ba81f0ccb2c72aed5267219e75c7de9dd90d7e",
+    "sameBaseCheckIdsAllThree": true,
+    "checkIdDigestSha256": "52ded7bf815d06c52423e3bd2d5e57f759126607a684b19df1e03f83e2920fae",
+    "testAndSdkProducerCount": 15,
+    "sameTestAndSdkProducerPinsAllThree": true,
+    "nativeProducersEvidencedByBuildRecords": [
+      "native/application_runtime.cpp",
+      "scripts/rn-pointer-overlay.mjs"
+    ],
+    "nativeProducerBundlePinsAreBundleTimeWorkingTreeHashes": true,
+    "originalReactNativeInputCount": 19,
+    "sameOriginalReactNativeSourcesAllThree": true,
+    "nativeHosts": {
+      "previous": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "current": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c"
+    },
+    "nativeBuildRecords": {
+      "previous": {
+        "file": "build/pointer-move-previous-host/native-sdk-build.json",
+        "sha256": "17f9fa65bca6c93d29a1f648e129985318b65fb19e3c3ab68f3df7b45427e3e3"
+      },
+      "current": {
+        "file": ".deps/build/native-sdk-build.json",
+        "sha256": "1d0d39b97183dadb6f6aef22db845aa99b3d78a5c26232b4d450e4264ab6a38a"
+      },
+      "comparedEntries": 6708,
+      "changedEntries": [
+        "/host/sha256",
+        "/inputs/sourceSha256/native/application_runtime.cpp",
+        "/inputs/sourceSha256/scripts/rn-pointer-overlay.mjs",
+        "/inputs/sourceTrees/3/files/0/sha256",
+        "/inputs/sourceTrees/3/manifestSha256"
+      ],
+      "changedProducerPins": {
+        "native/application_runtime.cpp": {
+          "previous": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
+          "current": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f"
+        },
+        "scripts/rn-pointer-overlay.mjs": {
+          "previous": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990",
+          "current": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70"
+        }
+      },
+      "previousProducerBytesMatchMain": "add4486a95c3a02de69501ac224a3401572ef246"
+    }
+  },
+  "executedObservations": {
+    "priority": {
+      "defaultPriority": 0,
+      "discretePriority": 1,
+      "continuousPriority": 2,
+      "priorityMappingFixed": false
+    },
+    "cases": {
+      "bubble": {
+        "registration": {
+          "capture": false,
+          "targetTag": 2,
+          "type": "pointermove"
+        },
+        "samples": [
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-bubble",
+                "phase": 2,
+                "currentTag": 2,
+                "pointerId": 1,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 67,
+                "offsetY": 39
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              0,
+              1
+            ],
+            "commitsBeforeAfter": [
+              2,
+              3
+            ],
+            "nativePointerMovesBeforeAfter": [
+              0,
+              1
+            ]
+          },
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-bubble",
+                "phase": 2,
+                "currentTag": 2,
+                "pointerId": 1,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 79,
+                "offsetY": 44
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              1,
+              2
+            ],
+            "commitsBeforeAfter": [
+              3,
+              4
+            ],
+            "nativePointerMovesBeforeAfter": [
+              1,
+              2
+            ]
+          }
+        ]
+      },
+      "capture-only": {
+        "registration": {
+          "capture": true,
+          "targetTag": 2,
+          "type": "pointermove"
+        },
+        "samples": [
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-capture",
+                "phase": 2,
+                "currentTag": 2,
+                "pointerId": 2,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 67,
+                "offsetY": 39
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                false,
+                false
+              ],
+              [
+                2,
+                25,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              2,
+              3
+            ],
+            "commitsBeforeAfter": [
+              5,
+              6
+            ],
+            "nativePointerMovesBeforeAfter": [
+              2,
+              3
+            ]
+          },
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-capture",
+                "phase": 2,
+                "currentTag": 2,
+                "pointerId": 2,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 79,
+                "offsetY": 44
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                false,
+                false
+              ],
+              [
+                2,
+                25,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              3,
+              4
+            ],
+            "commitsBeforeAfter": [
+              6,
+              7
+            ],
+            "nativePointerMovesBeforeAfter": [
+              3,
+              4
+            ]
+          }
+        ]
+      },
+      "ancestor-bubble": {
+        "registration": {
+          "capture": false,
+          "listenerTag": 8,
+          "targetTag": 2,
+          "type": "pointermove",
+          "where": "parent"
+        },
+        "samples": [
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-bubble",
+                "phase": 3,
+                "currentTag": 8,
+                "pointerId": 3,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 67,
+                "offsetY": 39
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                false,
+                false
+              ],
+              [
+                2,
+                25,
+                false,
+                false
+              ],
+              [
+                8,
+                1,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              4,
+              5
+            ],
+            "commitsBeforeAfter": [
+              8,
+              9
+            ],
+            "nativePointerMovesBeforeAfter": [
+              4,
+              5
+            ]
+          },
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-bubble",
+                "phase": 3,
+                "currentTag": 8,
+                "pointerId": 3,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 79,
+                "offsetY": 44
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                false,
+                false
+              ],
+              [
+                2,
+                25,
+                false,
+                false
+              ],
+              [
+                8,
+                1,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              5,
+              6
+            ],
+            "commitsBeforeAfter": [
+              9,
+              10
+            ],
+            "nativePointerMovesBeforeAfter": [
+              5,
+              6
+            ]
+          }
+        ]
+      },
+      "ancestor-capture": {
+        "registration": {
+          "capture": true,
+          "listenerTag": 8,
+          "targetTag": 2,
+          "type": "pointermove",
+          "where": "parent"
+        },
+        "samples": [
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-capture",
+                "phase": 1,
+                "currentTag": 8,
+                "pointerId": 4,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 67,
+                "offsetY": 39
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                false,
+                false
+              ],
+              [
+                2,
+                25,
+                false,
+                false
+              ],
+              [
+                8,
+                1,
+                false,
+                false
+              ],
+              [
+                8,
+                25,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              6,
+              7
+            ],
+            "commitsBeforeAfter": [
+              11,
+              12
+            ],
+            "nativePointerMovesBeforeAfter": [
+              6,
+              7
+            ]
+          },
+          {
+            "callbacks": [
+              {
+                "label": "pointermove-capture",
+                "phase": 1,
+                "currentTag": 8,
+                "pointerId": 4,
+                "pointerType": "touch",
+                "buttons": 1,
+                "trusted": true,
+                "currentPriority": 0,
+                "offsetX": 79,
+                "offsetY": 44
+              }
+            ],
+            "lookups": [
+              [
+                2,
+                1,
+                false,
+                false
+              ],
+              [
+                2,
+                25,
+                false,
+                false
+              ],
+              [
+                8,
+                1,
+                false,
+                false
+              ],
+              [
+                8,
+                25,
+                true,
+                false
+              ]
+            ],
+            "raw": [
+              [
+                "topPointerMove",
+                "typed"
+              ],
+              [
+                "topPointerMove",
+                "star"
+              ],
+              [
+                "topTouchMove",
+                "typed"
+              ],
+              [
+                "topTouchMove",
+                "star"
+              ]
+            ],
+            "movesBeforeAfter": [
+              7,
+              8
+            ],
+            "commitsBeforeAfter": [
+              12,
+              13
+            ],
+            "nativePointerMovesBeforeAfter": [
+              7,
+              8
+            ]
+          }
+        ]
+      }
+    },
+    "siblingWithoutListeners": {
+      "callbacks": [],
+      "lookups": [
+        [
+          12,
+          1,
+          false,
+          false
+        ],
+        [
+          12,
+          25,
+          false,
+          false
+        ],
+        [
+          18,
+          1,
+          false,
+          false
+        ],
+        [
+          18,
+          25,
+          false,
+          false
+        ],
+        [
+          20,
+          1,
+          false,
+          false
+        ],
+        [
+          20,
+          25,
+          false,
+          false
+        ],
+        [
+          null,
+          1,
+          false,
+          true
+        ],
+        [
+          null,
+          25,
+          false,
+          true
+        ]
+      ],
+      "raw": [
+        [
+          "topTouchMove",
+          "typed"
+        ],
+        [
+          "topTouchMove",
+          "star"
+        ]
+      ],
+      "movesBeforeAfter": [
+        0,
+        0
+      ],
+      "commitsBeforeAfter": [
+        2,
+        2
+      ],
+      "nativePointerMovesBeforeAfter": [
+        0,
+        1
+      ],
+      "expectedChain": [
+        [
+          12,
+          1,
+          false,
+          false
+        ],
+        [
+          12,
+          25,
+          false,
+          false
+        ],
+        [
+          18,
+          1,
+          false,
+          false
+        ],
+        [
+          18,
+          25,
+          false,
+          false
+        ],
+        [
+          20,
+          1,
+          false,
+          false
+        ],
+        [
+          20,
+          25,
+          false,
+          false
+        ],
+        [
+          null,
+          1,
+          false,
+          true
+        ],
+        [
+          null,
+          25,
+          false,
+          true
+        ]
+      ]
+    },
+    "mouse": {
+      "hover": {
+        "callbacks": [
+          {
+            "label": "pointermove-bubble",
+            "phase": 2,
+            "currentTag": 2,
+            "pointerId": 7,
+            "pointerType": "mouse",
+            "buttons": 0,
+            "trusted": true,
+            "currentPriority": 0,
+            "offsetX": 95,
+            "offsetY": 45
+          }
+        ],
+        "lookups": [
+          [
+            2,
+            1,
+            true,
+            false
+          ]
+        ],
+        "raw": [
+          [
+            "topPointerMove",
+            "typed"
+          ],
+          [
+            "topPointerMove",
+            "star"
+          ]
+        ],
+        "movesBeforeAfter": [
+          8,
+          9
+        ],
+        "commitsBeforeAfter": [
+          14,
+          15
+        ],
+        "nativePointerMovesBeforeAfter": [
+          8,
+          9
+        ],
+        "accumulated": true,
+        "samples": [
+          [
+            40,
+            10
+          ]
+        ],
+        "points": [
+          [
+            95,
+            45
+          ]
+        ],
+        "activePointersBefore": 0
+      },
+      "accumulated": {
+        "callbacks": [
+          {
+            "label": "pointermove-bubble",
+            "phase": 2,
+            "currentTag": 2,
+            "pointerId": 7,
+            "pointerType": "mouse",
+            "buttons": 0,
+            "trusted": true,
+            "currentPriority": 0,
+            "offsetX": 105,
+            "offsetY": 50
+          }
+        ],
+        "lookups": [
+          [
+            2,
+            1,
+            true,
+            false
+          ]
+        ],
+        "raw": [
+          [
+            "topPointerMove",
+            "typed"
+          ],
+          [
+            "topPointerMove",
+            "star"
+          ]
+        ],
+        "movesBeforeAfter": [
+          9,
+          10
+        ],
+        "commitsBeforeAfter": [
+          15,
+          16
+        ],
+        "nativePointerMovesBeforeAfter": [
+          9,
+          10
+        ],
+        "accumulated": true,
+        "samples": [
+          [
+            30,
+            -10
+          ],
+          [
+            50,
+            15
+          ]
+        ],
+        "points": [
+          [
+            105,
+            50
+          ]
+        ],
+        "activePointersBefore": 0
+      },
+      "unaccumulated": {
+        "callbacks": [
+          {
+            "label": "pointermove-bubble",
+            "phase": 2,
+            "currentTag": 2,
+            "pointerId": 7,
+            "pointerType": "mouse",
+            "buttons": 0,
+            "trusted": true,
+            "currentPriority": 0,
+            "offsetX": 85,
+            "offsetY": 25
+          },
+          {
+            "label": "pointermove-bubble",
+            "phase": 2,
+            "currentTag": 2,
+            "pointerId": 7,
+            "pointerType": "mouse",
+            "buttons": 0,
+            "trusted": true,
+            "currentPriority": 0,
+            "offsetX": 105,
+            "offsetY": 50
+          }
+        ],
+        "lookups": [
+          [
+            2,
+            1,
+            true,
+            false
+          ],
+          [
+            2,
+            1,
+            true,
+            false
+          ]
+        ],
+        "raw": [
+          [
+            "topPointerMove",
+            "typed"
+          ],
+          [
+            "topPointerMove",
+            "star"
+          ],
+          [
+            "topPointerMove",
+            "typed"
+          ],
+          [
+            "topPointerMove",
+            "star"
+          ]
+        ],
+        "movesBeforeAfter": [
+          10,
+          12
+        ],
+        "commitsBeforeAfter": [
+          16,
+          18
+        ],
+        "nativePointerMovesBeforeAfter": [
+          10,
+          12
+        ],
+        "accumulated": false,
+        "samples": [
+          [
+            30,
+            -10
+          ],
+          [
+            50,
+            15
+          ]
+        ],
+        "points": [
+          [
+            85,
+            25
+          ],
+          [
+            105,
+            50
+          ]
+        ],
+        "activePointersBefore": 0
+      }
+    },
+    "cancel": {
+      "callbacks": [
+        "touchcancel"
+      ],
+      "lookups": [],
+      "discriminatesMoveInterest": false,
+      "reason": "RN's PointerEventsProcessor emits every Cancel regardless of listeners"
+    },
+    "finalMoves": {
+      "A": 12,
+      "B": 0
+    },
+    "stopErrors": [],
+    "moveFaults": {
+      "policy": "Each distinct Move lookup failure cause is retained once as E_POINTER_LISTENER_QUERY, up to 16 per application; repeats and causes past the bound only increment pointerListenerQuerySuppressed. Down/Up keep reporting every failure.",
+      "samples": {
+        "fault/B-healthy/move": {
+          "retained": 0,
+          "counted": 0,
+          "delivered": 1,
+          "lookups": [
+            [
+              12,
+              1,
+              true,
+              false
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-01": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-02": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-03": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-04": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-05": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-06": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-07": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-08": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-09": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-10": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-11": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-12": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-13": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-14": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-15": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-nonboolean25/move-1": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              false,
+              false
+            ],
+            [
+              2,
+              25,
+              1,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-nonboolean25/move-2": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              false,
+              false
+            ],
+            [
+              2,
+              25,
+              1,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-nonboolean25/recovery": {
+          "retained": 0,
+          "counted": 0,
+          "delivered": 1,
+          "lookups": [
+            [
+              2,
+              1,
+              false,
+              false
+            ],
+            [
+              2,
+              25,
+              true,
+              false
+            ]
+          ]
+        },
+        "fault/repeat-throw1/move-1": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-throw1/move-2": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-throw1/move-3": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-throw1/recovery": {
+          "retained": 0,
+          "counted": 0,
+          "delivered": 1,
+          "lookups": [
+            [
+              2,
+              1,
+              true,
+              false
+            ]
+          ]
+        }
+      },
+      "retainedCauses": [
+        "GF pointer query deliberate fault: move1",
+        "Pointer listener query must return a boolean",
+        "GF pointer query deliberate fault: cap-01",
+        "GF pointer query deliberate fault: cap-02",
+        "GF pointer query deliberate fault: cap-03",
+        "GF pointer query deliberate fault: cap-04",
+        "GF pointer query deliberate fault: cap-05",
+        "GF pointer query deliberate fault: cap-06",
+        "GF pointer query deliberate fault: cap-07",
+        "GF pointer query deliberate fault: cap-08",
+        "GF pointer query deliberate fault: cap-09",
+        "GF pointer query deliberate fault: cap-10",
+        "GF pointer query deliberate fault: cap-11",
+        "GF pointer query deliberate fault: cap-12",
+        "GF pointer query deliberate fault: cap-13",
+        "GF pointer query deliberate fault: cap-14"
+      ],
+      "stoppedErrors": 16,
+      "stoppedSuppressed": 4,
+      "originalHostSkipsFaultApplication": true
+    }
+  },
+  "captures": {
+    "actualViewport": {
+      "width": 680,
+      "height": 160
+    },
+    "stage": "Initial before native input; updated after the bubble case: A moves 2 and starts 1, B moves 0 and starts 0.",
+    "bars": {
+      "orange": "React pointermove count: x160 to 179+4*moves, then background at 180+4*moves",
+      "yellow": "React TouchStart count"
+    },
+    "exactWidthPixelsPerRoot": [
+      "last orange x=179+4*moves",
+      "first background x=180+4*moves"
+    ],
+    "images": [
+      {
+        "file": "docs/evidence/pointer-move/initial.png",
+        "sha256": "d77bb1151b8daa0f836a61b1b2662bad5a22ffd44116e218e93a44e43b417172",
+        "sourceFile": "build/pointer-move-initial.png",
+        "copiedSourceBytesIdentical": true,
+        "pixels": 10,
+        "reactCounters": {
+          "A": {
+            "moves": 0,
+            "parentTag": 8,
+            "starts": 0,
+            "tag": 2
+          },
+          "B": {
+            "moves": 0,
+            "parentTag": 18,
+            "starts": 0,
+            "tag": 12
+          }
+        }
+      },
+      {
+        "file": "docs/evidence/pointer-move/updated.png",
+        "sha256": "6569e33b370c0644ff5c166a13668db1825288070f5154e822993f48458c5f90",
+        "sourceFile": "build/pointer-move-updated.png",
+        "copiedSourceBytesIdentical": true,
+        "pixels": 10,
+        "reactCounters": {
+          "A": {
+            "moves": 2,
+            "parentTag": 8,
+            "starts": 1,
+            "tag": 2
+          },
+          "B": {
+            "moves": 0,
+            "parentTag": 18,
+            "starts": 0,
+            "tag": 12
+          }
+        }
+      }
+    ],
+    "additionalChecks": {
+      "pixels": 20,
+      "reactCounterChecks": 2,
+      "saveAndDimensionChecks": 2
+    },
+    "independentLosslessPNGPixelDecode": true
+  },
+  "oldHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 62,
+      "normativeFailures": 8,
+      "reportSha256": "0fc29b3cead560abfd4698396bbc49080f1861f351995dd1a01b7f791bbf4548",
+      "bundleSha256": "dc4c3ffbb939815b4885d6ba25fd93d8048e98bca6890b87997ac370c1d6821f"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 186,
+      "normativeFailures": 12,
+      "reportSha256": "bca9c623db0b28bc295a54d1efe02e6b5fef229dd48546e1d03fb3f6d4a4cc5f",
+      "bundleSha256": "77c355978d7d1d443a5870e894d3cc1afd65990df08d926c3db3693e145f7de1"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 65,
+      "normativeFailures": 3,
+      "reportSha256": "ee8a2cd54115674921957c7d7e60c34cf3c74cb3dc4e8aa9ee52db484be20618",
+      "bundleSha256": "3a231582d3c666449fda9e5bb47521729adb71d9a42b475aef6f7e5a06f26c41"
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "af07438d0caaaacaa21513b12a44234cd7129d963f08dee856236af1829458d9",
+        "ciJob": "contracts"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "211c109ec284fab096bc28995bdc4a49bb635a8e82330c8fd52d081afd95026e",
+        "ciJob": "contracts"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "0e9784d3e517a48ec7e5b0e18e9c8f45dc70c1ab2681d9723e1be7b6ad7caf99",
+        "ciJob": "contracts"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "0035ddf301ed71a75db4eec5d3dcd65d56bc76a601f572f135d642e8ac8dd51d",
+        "ciJob": null
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 118,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
+        "ciJob": "native-cold-start"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e",
+        "ciJob": "native-cold-start"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "b5b21822ddcfc9d372a9b8e9cff3bcbff910a2db244bf68d76a382187eea498b",
+        "ciJob": "native-cold-start"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "24768e1d930e0ecd577e24e2f166b88457f3315a74edca1569ba77709ef87a21",
+        "ciJob": "native-cold-start"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "4baec3967b66a5ce32d1c5c8edabf01c9aaf365ce4a301c9b1b816764be74661",
+        "ciJob": "native-cold-start"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "560156530b43d86570090a982f03034adaaba625b496f3b2b6b4ac9cafedccff",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "9e6bb1e3713f3397cd80670c83a8109d098a73fe5bf73d0e2945ffc5039d437a",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "d0debfc97e1243e399c3c096c3272e6ee17551ec21fdf9f55d9311c262cfd1b0",
+        "ciJob": "native-cold-start"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "e9333483895716c684d4199b726bc55c8db4d3e0b26543b437f16fe0a414d2f8",
+        "ciJob": "native-cold-start"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "c6a6f19d3604795aaf5c6f816ea1d7e77c94c0928d825e68a9da164ca4e78709",
+        "ciJob": "native-cold-start"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "2617cd34a34eced712bae006069ff2b920cc9869b65bbf88a8a2f82033b86589",
+        "ciJob": "native-cold-start"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "e59c896a77b3244a43925d9f3f9b83aa10816ca352294e261b54859c45845b28",
+        "ciJob": "native-cold-start"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "5b14318817ec50d08cdf7bc0bb4eebc5a8183a799a2b92cf47119ba0b2a4e490",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "312c982bd4e797d8e06995eacaa17ad6ba71bdc0e8e6005235b7c0a067c04d12",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "7e2b34bb19993afeb0ac04c7f41f6fda82827fdce67d82aafcfe287ddd38ba3a",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "5b1fd3b77a71ab00be414e9a36ab09ef3080c415b9124d15c535675f627ea708",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "601d0a54115d4f9d8604771836cc8ea07828b638624ffd7f5d5dc179296ae902",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 61,
+        "logSha256": "ff9824a3e756e2bcfb84c4f7cd42107591c486af8e7b6478084da3c6b30b79eb",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "308ae83cea843c32c2860cb96776ef3a09a24ac03763cb282df5a773bfe5e463",
+        "ciJob": "native-cold-start"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "76d67a8e1ccfe774e357f5c2bee5135893ef26c09a1879821b4881acd6fcaa35",
+        "ciJob": "native-cold-start"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf",
+        "ciJob": "native-cold-start"
+      }
+    },
+    "downChecks": 2723,
+    "documentUpChecks": 6451,
+    "viewUpChecks": 296,
+    "queryFaultChecks": 186,
+    "resolverFaultChecks": 65,
+    "pointerInterestChecks": 233,
+    "moveChecksInSequence": 219,
+    "nodeContractChecks": 257,
+    "pythonContractChecks": 13,
+    "examples": 22,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "69a4b5100f74c7e69ab7189cba03376487f54b67438951debd2aa520989fcb5f"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "63cb485599f83927eb24cc2343e0f14b70d0e07245731d6fa5b4274fcbce90f4"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "7398f1fcf0517f1eea20a3f337eab80aab085f7ec3afa99030b2da5cc118630c"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "1fdda924c754d6bda4294136066bd2630d1689572b7946f93dadfd07f5a57a80"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "427a8d123b2db135fb28be7973190266b842fa0feae6008fcd2121cae4b16c3a"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "252102056fd2303112526dff1a15aa9665652d7f0edfc7c2272f4e4bb3cf9fbe"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 88,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "cold": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      }
+    },
+    "sdkDirectory": "build/native-sdk-pointer-move",
+    "receiptSha256": "4ae28cbe28842e1cc660d312139b500481933a6b68fe91576c3cd4553716e2b9",
+    "manifestSha256": "a1502261bf990bd549b486b04955da6f87f2924bece498db3673618bebe9a7c3",
+    "packedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+    "loaderReportSha256": "a357e12aefcb287f2cb1a466e8bf07d26b8dc0ae7b96180a7f7fde9b392e0bec",
+    "adapterRuntimeReportSha256": "20c1799d3103cd7141ef7457d7f29a03bbf62458111458e11d49efd5d5edf2f6",
+    "registryReportSha256": "e704278a0b1759d2f19cfc95313e6bceea332711920d8d1a404c92c6b2ec6909"
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "7640c60a7d1ace8219a18f8d0fdd595216902de30d3c2c0f41d78280250bad42",
+    "tests/pointer-query-fault-fixture.jsx": "4d78785255b503fd01e23dccb8e85cffc2d2cea5dde123aac71952dc9e79f803",
+    "tests/pointer-query-fault-probe.gd": "c5cf2bca5f1c41f59ae93efc5b0a88e0e3fbdda07abb3f9d88e57f873ebe7916",
+    "tests/pointer-move-fixture.jsx": "b71bcd1429b0fe250837659486e3d7e5b74a508ec303dde90c1eaf2a09f394b5",
+    "tests/pointer-move-probe.gd": "4f839e3907d417a9ae507b0958fde0816246e6a441cbda7c4a9d12d822ba6531",
+    "tests/pointer-move-native.test.mjs": "e489acd61ace53c7515470bd65a7d6d77853e696dbe74ff74bd1f2158a97032a",
+    "tests/native-png.mjs": "57e57e03a3aa5474f0704009c8be0231ec9ba35a62cf191cf468e51536a8db2a",
+    "scripts/event-target-bundle.mjs": "5b3a76548eb07a1caef5a5a304b36ce865bffd3cb6884310f6e45d41b447f3e8",
+    "sdk/toolchain/platform-plugin.mjs": "51ca46dc14d2f527e012b5748ceaf73dfc0688e4fba677cdd4a2f9a594e70f23",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f1829a07208383868be94b1b5ddc5a00eb0bfd6fafd5e073ccb37dd66d51b044",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f",
+    "scripts/rn-pointer-overlay.mjs": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+    "ReactCommon/react/renderer/core/EventEmitter.cpp": "892993afa65eb62554792517f027491144861984b1a6406f00c876beafc17b78",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "d319b80d0f7b1a5b3c8dd11a4b58e29703f6c2369ea7968b654407c93574bdff",
+    "native/pointer_adapter.h": "214f86acd1f8fdadde5f52baad7224dd3b69f8aff208a194ce90d7ad669f6ed4",
+    "native/pointer_event.h": "675254e07b6e095e5dd1b94952cbf3bbd6e0c513873f2c551fd6237e68470900",
+    "native/pointer_geometry.cpp": "335874aa93e8a8ca9a7930b3e221e580daf7cc7a3a4801512c37593cfb09b851",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "673e75663d18ab15ada66332faa7489903473022c688d492fabdd9211fe3f9f8",
+    "package.json": "46fd9797b20ceb023da5b93daf87b0e00c761a5ba069edd3ded0254a9fd2ae0f",
+    ".fallowrc.json": "529dee52a146db8e352987c76d8b0f2d317ebf851dad95bbf4a2655fd9f31953",
+    "tests/rn-pointer-overlay.test.mjs": "5db49d3b82e7e23968ee01e04355c343062c8fa01e70487735d4c1db67767674",
+    "tests/rn-pointer-interest-overlay.test.mjs": "70e2ceb320a0e3ae407ac9963228c13d8b48b252041a7275fc75448483366d1d",
+    "tests/pointer-up-native.test.mjs": "de028677bbf8abc05d9751ba5021fdec7cd3fe8f6895b1f34033828ed1246cc5",
+    "tests/pointer-document-up-native.test.mjs": "4147bf3e8f1bfcbfbe28bb721432820f58680be3dbaa637f29985e9ae733100c"
+  },
+  "changedFilesSinceExecutionBase": [
+    "README.md",
+    "ROADMAP.md",
+    "dashboard/migration.json",
+    "docs/evidence/README.md",
+    "docs/evidence/pointer-move/README.md",
+    "docs/research/pointer-move.md",
+    "examples/README.md",
+    "examples/pointer-move/README.md",
+    "native/application_runtime.cpp",
+    "tests/pointer-move-fixture.jsx",
+    "tests/pointer-move-native.test.mjs",
+    "tests/pointer-move-probe.gd",
+    "tests/pointer-query-fault-bootstrap.js",
+    "tests/pointer-query-fault-fixture.jsx"
+  ],
+  "hostedCI": {
+    "status": "pending-view-pointermove-slice"
+  },
+  "limits": [
+    "View pointermove listeners only (hit target and its parent), with both original EventTarget flags enabled, under touch drags and button-less mouse motion.",
+    "Admitted but uncertified: through the shared root path a Document/documentElement pointermove listener now qualifies any move in its surface; the flag matrix is untested.",
+    "The bounded Move diagnostic policy is per application and Move-only; resolver getter faults during Move lookups and Document/documentElement Move faults are not exercised.",
+    "When no prop qualifies, each move makes two JSI lookups per path node, each resolving the newest clone; the per-move cost is unmeasured.",
+    "The host flushes RN's event queue after every input event, so RN's unique-move coalescing is unreachable; per-frame merging comes from Godot input accumulation.",
+    "Moves that hit no View, captured ones included, are enqueued as non-unique Unspecified events (Discrete without a ContinuousStart), unlike RN; this predates the slice.",
+    "Hover events, pointer capture, captured/no-hit moves, pointerrawupdate, responders/PanResponder, multi-touch, the fixed priority mapping, hardware, mobile exports and performance remain open.",
+    "The executed tree was dirty on a0ec86b; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T16:52:43.757835+00:00",
+    "meaning": "Contracts-job gates rerun after every doc, dashboard, example and the receipt body above were final; this field was appended afterwards.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "30848ce96856a1b85031db1fef31596f9537bed4c4bd7d7bc8f88e04912b7aa5"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "d5663d6e991c110805bb925a34ca39961eedd44e603461216fa34f23feac0b43"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "0e9784d3e517a48ec7e5b0e18e9c8f45dc70c1ab2681d9723e1be7b6ad7caf99"
+      }
+    }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/f9f9817e47e20ef7e4e6b44bfed764bb6cc087ad",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 77,
+    "pinSetCounts": {
+      "sourcePins": 17,
+      "nativeSourcePins": 55,
+      "verificationSourcePins": 7
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
+  }
+}

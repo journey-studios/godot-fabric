@@ -256,6 +256,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   int viewport_updates{};
   std::string metrics_error;
   std::vector<std::string> errors;
+  // Down/Up lookups run once per gesture and report every failure. Move lookups
+  // run on every sample, hover included: each distinct Move failure is retained
+  // once, and repeats or distinct failures past the bound are only counted.
+  static constexpr std::size_t max_reported_move_query_failures = 16;
+  std::set<std::string> reported_move_query_failures;
+  uint64_t suppressed_move_query_failures{};
 
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
       const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
@@ -664,14 +670,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (pointer_listener_query) throw jsi::JSError(rt, "Pointer listener query is already installed");
       pointer_listener_query.emplace(args[0].asObject(rt).asFunction(rt));
       pointer_processor().setListenerInterestForGodot([this](const rn::ShadowNode &node, std::size_t offset) {
-        // Only Down/Up are opted in. Other native filter categories retain
-        // their preceding behavior until separately verified.
+        // Only Down/Up/Move are opted in. Other native filter categories
+        // (hover, click, capture notifications) retain their preceding
+        // behavior until separately verified.
         if (inactive() || !pointer_listener_query) return false;
         using Offset = rn::ViewEvents::Offset;
         if (offset != static_cast<std::size_t>(Offset::PointerDown) &&
             offset != static_cast<std::size_t>(Offset::PointerDownCapture) &&
             offset != static_cast<std::size_t>(Offset::PointerUp) &&
-            offset != static_cast<std::size_t>(Offset::PointerUpCapture)) return false;
+            offset != static_cast<std::size_t>(Offset::PointerUpCapture) &&
+            offset != static_cast<std::size_t>(Offset::PointerMove) &&
+            offset != static_cast<std::size_t>(Offset::PointerMoveCapture)) return false;
         auto root = roots.find(node.getSurfaceId());
         if (root == roots.end() || root->second->stopping) return false;
         auto current = ui->getNewestCloneOfShadowNode(node);
@@ -710,7 +719,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           // Reject only this interest lookup, with an explicit diagnostic.
           // Escaping here discards the remaining EventQueue batch, including
           // TouchStart. Its physical contact stays live until Up/Cancel/retire.
-          fail(std::string("E_POINTER_LISTENER_QUERY: ") + error.what());
+          auto message = std::string("E_POINTER_LISTENER_QUERY: ") + error.what();
+          const bool move = offset == static_cast<std::size_t>(Offset::PointerMove) ||
+              offset == static_cast<std::size_t>(Offset::PointerMoveCapture);
+          if (move && (reported_move_query_failures.contains(message) ||
+              reported_move_query_failures.size() >= max_reported_move_query_failures)) {
+            ++suppressed_move_query_failures;
+          } else {
+            if (move) reported_move_query_failures.insert(message);
+            fail(message);
+          }
           return false;
         }
       });
@@ -1672,6 +1690,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("rootCount", roots.size())("bundleEvaluations", bundle_evaluations)("stopped", stopped)
         ("pendingTimers", timer_registry->size())("pendingWork", work.size())
         ("pointerListenerQueryInstalled", pointer_listener_query.has_value())
+        ("pointerListenerQuerySuppressed", static_cast<int64_t>(suppressed_move_query_failures))
         ("timerEngine", "react-native/TimerManager")("windowListener", window_listener.has_value())
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())

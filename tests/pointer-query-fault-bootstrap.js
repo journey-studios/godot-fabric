@@ -9,7 +9,7 @@ const interceptedInstaller = function(query) {
   if (installations !== 0 || typeof query !== "function") throw Error("Query-fault probe expects exactly one SDK installation");
   const result = installer(function(target, offset, isRootHandle) {
     const matched = fault != null && target === fault.targetref && offset === fault.offset && fault.remaining > 0;
-    const row = {sequence: ++sequence, targetTag: target?.tag ?? null, offset, matched,
+    const row = {sequence: ++sequence, targetTag: target?.tag ?? null, rootHandle: isRootHandle === true, offset, matched,
       action: matched ? fault.mode : "delegate", label: matched ? fault.label : null, resultKind: null, result: null};
     rows.push(row);
     if (matched) {
@@ -35,10 +35,12 @@ globalThis.godotInstallPointerListenerQuery = interceptedInstaller;
 
 export const queryFaultControl = {
   setFault({targetref, offset, mode, remaining = 1, label}) {
-    // Down interest uses offsets 34/35 and Up interest 36/37 (bubble/capture).
+    // Move interest uses offsets 1/25, Down 34/35 and Up 36/37 (bubble/capture).
+    // A Move fault may repeat across a few samples to exercise repeated reports.
     if (targetref == null || typeof targetref.addEventListener !== "function" ||
-      ![34, 35, 36, 37].includes(offset) || !["throw", "nonboolean"].includes(mode) || remaining !== 1 || typeof label !== "string")
-      throw Error("Query-fault configuration requires a real ref, a native pointer offset and one explicit failure");
+      ![1, 25, 34, 35, 36, 37].includes(offset) || !["throw", "nonboolean"].includes(mode) || typeof label !== "string" ||
+      !Number.isInteger(remaining) || remaining < 1 || remaining > ([1, 25].includes(offset) ? 4 : 1))
+      throw Error("Query-fault configuration requires a real ref, a native pointer offset and explicit failures");
     fault = {targetref, offset, mode, remaining, label};
     return {targetTag: targetref.tag, offset, mode, remaining, label};
   },

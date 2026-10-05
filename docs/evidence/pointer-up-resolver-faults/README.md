@@ -84,8 +84,18 @@ durante retirada/stop, outras combinações de flags nem caminhos com listeners 
 Document. Up capturado/sem hit/sem alvo, pareamento Down/Up por pointerId, outras
 categorias de evento, mobile/exports, hardware e performance continuam abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
-ou denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37332057453, no head b02ab93 (checkout de merge 3265374). O artefato
+`native-pointer-up` repete os **296 checks headless** com IDs, bundle e estágios
+idênticos aos locais; além de timestamps, da versão patch do Node e do hash do host
+do runner, só os identificadores de alocação da segunda aplicação diferem, aceitos
+apenas como renomeação um-para-um (616). O log retém exatamente os sete
+diagnósticos esperados, e as 82 entradas rastreadas, incluindo o bootstrap do
+resolver, batem com 6b3554c na árvore do checkout. A captura, os controles de host
+anterior e o controle negativo continuam locais. O [Pages](publication.json) (run
+37333111502, push da `main` em add4486) implantou exatamente os dados commitados, e
+o JSON público e a API local conferem com eles. Nenhum GF, checkpoint, dependência,
+peso ou denominador foi fechado.
 
 As 82 fontes de código/configuração executadas, incluindo o bootstrap do
 resolver, correspondem à implementação `6b3554c4218a1605d94acd3cd4a81c0c20c9a984` por

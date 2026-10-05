@@ -178,7 +178,7 @@ export async function bundlePointerUpProbe() {
     nativeDispatchMode: "experimental", pointerInterestMode: "current",
     sources: ["tests/event-target-bootstrap.js", "tests/pointer-query-fault-bootstrap.js",
       "tests/pointer-query-fault-fixture.jsx", "tests/pointer-query-fault-probe.gd",
-      "tests/pointer-up-fixture.jsx", "tests/pointer-up-probe.gd", "tests/pointer-up-native.test.mjs",
+      "tests/pointer-up-fixture.jsx", "tests/pointer-up-probe.gd", "tests/pointer-up-native.test.mjs", "tests/native-png.mjs",
       "scripts/event-target-bundle.mjs", "sdk/toolchain/platform-plugin.mjs",
       "sdk/toolchain/rn-event-target-overlay.mjs", "sdk/toolchain/rn-renderer-tag-overlay.mjs",
       "sdk/toolchain/rn-pointer-interest-overlay.mjs", "src/private-interface.js",
@@ -187,6 +187,24 @@ export async function bundlePointerUpProbe() {
       "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js",
       "ReactCommon/react/renderer/components/view/primitives.h", "ReactCommon/react/renderer/core/EventQueue.cpp",
       "ReactCommon/react/renderer/core/EventQueueProcessor.cpp",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp", "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h"]});
+}
+
+export async function bundlePointerMoveProbe() {
+  return bundleProbe({entryPoint: "tests/pointer-move-fixture.jsx", modes: ["enabled"],
+    prefix: "pointer-move", parentMode: "current", rendererTagMode: "current",
+    nativeDispatchMode: "experimental", pointerInterestMode: "current",
+    sources: ["tests/event-target-bootstrap.js", "tests/pointer-query-fault-bootstrap.js",
+      "tests/pointer-query-fault-fixture.jsx", "tests/pointer-query-fault-probe.gd",
+      "tests/pointer-move-fixture.jsx", "tests/pointer-move-probe.gd", "tests/pointer-move-native.test.mjs", "tests/native-png.mjs",
+      "scripts/event-target-bundle.mjs", "sdk/toolchain/platform-plugin.mjs",
+      "sdk/toolchain/rn-event-target-overlay.mjs", "sdk/toolchain/rn-renderer-tag-overlay.mjs",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs", "src/private-interface.js",
+      "src/pointer-listener-query.js", "native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"],
+    extraUpstreamFiles: ["src/private/renderer/events/dispatchNativeEvent.js",
+      "src/private/renderer/events/ReactNativeResponder.js", "src/private/renderer/events/LegacySyntheticEvent.js",
+      "ReactCommon/react/renderer/components/view/primitives.h", "ReactCommon/react/renderer/core/EventQueue.cpp",
+      "ReactCommon/react/renderer/core/EventQueueProcessor.cpp", "ReactCommon/react/renderer/core/EventEmitter.cpp",
       "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp", "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h"]});
 }
 
@@ -220,7 +238,7 @@ export async function bundlePointerDocumentUpProbe({interestMode = "current"} = 
     defines: {__POINTER_DOCUMENT_INTEREST_MODE__: JSON.stringify(interestMode)},
     sources: ["tests/event-target-bootstrap.js", "tests/pointer-document-bootstrap.js",
       "tests/pointer-document-fixture.jsx", "tests/pointer-document-up-fixture.jsx",
-      "tests/pointer-document-up-probe.gd", "tests/pointer-document-up-native.test.mjs", "scripts/event-target-bundle.mjs",
+      "tests/pointer-document-up-probe.gd", "tests/pointer-document-up-native.test.mjs", "tests/native-png.mjs", "scripts/event-target-bundle.mjs",
       "sdk/toolchain/platform-plugin.mjs", "sdk/toolchain/rn-event-target-overlay.mjs",
       "sdk/toolchain/rn-renderer-tag-overlay.mjs", "sdk/toolchain/rn-pointer-interest-overlay.mjs",
       "src/private-interface.js", "src/pointer-listener-query.js", "native/application_runtime.cpp", "scripts/rn-pointer-overlay.mjs"],

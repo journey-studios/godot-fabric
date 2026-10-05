@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-05T15:51:26.723099+00:00",
+  "run": 37333111502,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37333111502",
+  "event": "push",
+  "branch": "main",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/23",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "dataCommit": "add4486a95c3a02de69501ac224a3401572ef246",
+  "rendererCommit": "add4486a95c3a02de69501ac224a3401572ef246",
+  "inMain": true,
+  "deployedArtifact": {
+    "name": "github-pages",
+    "zipSha256": "7b5080c4d8c43e783b2beee96396ae4f66ea68fbf1179bb2c4f19ee03dd3c69a",
+    "migrationJsonSha256": "be2fa8ec939f12ded73002d4f6e1843507ac342f89f3ed7720a33f054693f31d",
+    "publicationMetadataPresent": false
+  },
+  "deployedJSONEqualsCommittedData": true,
+  "deployedRendererEqualsCommittedDashboard": true,
+  "livePublicSite": {
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "publicBytesSha256": "be2fa8ec939f12ded73002d4f6e1843507ac342f89f3ed7720a33f054693f31d",
+    "fullPublicJSONEqualsCommittedData": true,
+    "localLiveAPIEqualsCommittedData": true
+  }
+}

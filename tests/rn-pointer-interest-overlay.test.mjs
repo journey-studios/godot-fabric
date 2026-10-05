@@ -25,6 +25,7 @@ const originalStorageFunction = `function getListenersForPhase(
 }`;
 const exportOpening = "export function hasPointerDownListenerForGodot(target, capture) {";
 const upExportOpening = "export function hasPointerUpListenerForGodot(target, capture) {";
+const moveExportOpening = "export function hasPointerMoveListenerForGodot(target, capture) {";
 
 // Execute only the generated queries against supplied original-shaped storage.
 // This does not certify RN registration, NativeDOM, or native input transport.
@@ -33,11 +34,14 @@ function queriesWithStorage(getListenersForPhase) {
   const appended = generated.slice(source.length + 1);
   assert.equal(appended.split(exportOpening).length, 2);
   assert.equal(appended.split(upExportOpening).length, 2);
+  assert.equal(appended.split(moveExportOpening).length, 2);
   return new Function("getListenersForPhase", appended.replace(/^export /gm, "") +
-    "\nreturn {down: hasPointerDownListenerForGodot, up: hasPointerUpListenerForGodot};")(getListenersForPhase);
+    "\nreturn {down: hasPointerDownListenerForGodot, up: hasPointerUpListenerForGodot, " +
+    "move: hasPointerMoveListenerForGodot};")(getListenersForPhase);
 }
 function queryWithStorage(getListenersForPhase) { return queriesWithStorage(getListenersForPhase).down; }
 function upQueryWithStorage(getListenersForPhase) { return queriesWithStorage(getListenersForPhase).up; }
+function moveQueryWithStorage(getListenersForPhase) { return queriesWithStorage(getListenersForPhase).move; }
 
 test("default and original controls retain the exact pinned EventTarget bytes", () => {
   assert.equal(createHash("sha256").update(source).digest("hex"),
@@ -47,18 +51,21 @@ test("default and original controls retain the exact pinned EventTarget bytes", 
   assert.equal(renderPointerInterestOverlay(source, "original"), source);
   assert.ok(!source.includes(exportOpening));
   assert.ok(!source.includes(upExportOpening));
+  assert.ok(!source.includes(moveExportOpening));
 });
 
-test("current mode only appends shared Down/Up queries and preserves every original method byte", () => {
+test("current mode only appends shared Down/Up/Move queries and preserves every original method byte", () => {
   const generated = renderPointerInterestOverlay(source, "current");
   assert.equal(generated.slice(0, source.length), source);
   assert.equal(generated[source.length], "\n");
   assert.equal(generated.split(exportOpening).length, 2);
   assert.equal(generated.split(upExportOpening).length, 2);
+  assert.equal(generated.split(moveExportOpening).length, 2);
   assert.equal(generated.split("function hasPointerListenerForGodot(target, capture, type) {").length, 2);
   assert.equal(generated.split(originalStorageFunction).length, 2);
   assert.ok(generated.indexOf(exportOpening) > source.length);
   assert.ok(generated.indexOf(upExportOpening) > source.length);
+  assert.ok(generated.indexOf(moveExportOpening) > source.length);
   assert.equal(renderPointerInterestOverlay(source, "current"), generated);
 });
 
@@ -206,7 +213,7 @@ test("the default SDK helper bundles without an RN query or native installer", a
     plugins: [platformPlugin(platformRoot, sdkResolver)]});
   const output = result.outputFiles[0].text;
   assert.match(output, /function installPointerListenerQuery\(\)\s*\{\s*\}/);
-  assert.doesNotMatch(output, /godotInstallPointerListenerQuery|hasPointer(?:Down|Up)ListenerForGodot/);
+  assert.doesNotMatch(output, /godotInstallPointerListenerQuery|hasPointer(?:Down|Up|Move)ListenerForGodot/);
   assert.deepEqual(absoluteInputs(result, directory).map(([filename]) => filename), [helper]);
   assert.equal(await readFile(helper, "utf8"), originalHelper, "the generated toolchain must not edit its input helper");
 });
@@ -227,7 +234,8 @@ test("the relocated opt-in helper uses exact SDK EventTarget and flags while pre
   const neighborRoot = path.join(directory, "addon", "node_modules", "react-native");
   for (const [relative, contents] of [[eventTargetRelative,
     'export function hasPointerDownListenerForGodot() { return "neighbor-stole-pointer-query"; }\n' +
-      'export function hasPointerUpListenerForGodot() { return "neighbor-stole-pointer-query"; }'],
+      'export function hasPointerUpListenerForGodot() { return "neighbor-stole-pointer-query"; }\n' +
+      'export function hasPointerMoveListenerForGodot() { return "neighbor-stole-pointer-query"; }'],
     [flagsRelative, 'export function enableImperativeEvents() { return "neighbor-stole-flags"; }\n' +
       'export function enableNativeEventTargetEventDispatching() { return true; }'],
     [ownerRelative, 'export function getOwnerDocument() { throw Error("neighbor-stole-owner"); }'],
@@ -282,6 +290,7 @@ test("the relocated opt-in helper uses exact SDK EventTarget and flags while pre
   assert.match(output, /godotInstallPointerListenerQuery/);
   assert.match(output, /hasPointerDownListenerForGodot/);
   assert.match(output, /hasPointerUpListenerForGodot/);
+  assert.match(output, /hasPointerMoveListenerForGodot/);
   assert.match(output, /project-owned-pointer-interest-dependency/);
   assert.doesNotMatch(output, /neighbor-stole|sdk-stole-pointer-interest-dependency/);
   assert.equal(await readFile(eventTarget, "utf8"), sourceBefore, "the pinned RN input must remain unchanged");
@@ -302,7 +311,7 @@ test("a project's matching helper filename remains project-owned even in current
   const inputs = absoluteInputs(result, directory).map(([filename]) => filename);
   assert.deepEqual(new Set(inputs), new Set([path.join(directory, "App.js"), projectHelper]));
   assert.match(result.outputFiles[0].text, /project-owned-pointer-listener-query/);
-  assert.doesNotMatch(result.outputFiles[0].text, /godotInstallPointerListenerQuery|hasPointer(?:Down|Up)ListenerForGodot/);
+  assert.doesNotMatch(result.outputFiles[0].text, /godotInstallPointerListenerQuery|hasPointer(?:Down|Up|Move)ListenerForGodot/);
 });
 
 
@@ -356,6 +365,58 @@ test("Up interest is read-only and rejects missing storage without consuming onc
   assert.equal(onceListeners.size, 1); assert.equal(onceListeners.get(callback), once);
 });
 
+test("the pure Move query selects only pointermove registrations in the requested phase", () => {
+  const target = {}, moveBubble = {removed: true}, moveCapture = {removed: false};
+  const bubble = new Map([["pointerdown", new Map([[() => {}, {removed: false}]])],
+    ["pointerup", new Map([[() => {}, {removed: false}]])],
+    ["pointermove", new Map([[() => {}, moveBubble]])]]);
+  const capture = new Map([["pointermove", new Map([[() => {}, moveCapture]])]]);
+  const calls = [];
+  const queries = queriesWithStorage((value, isCapture) => {
+    calls.push([value, isCapture]); return isCapture ? capture : bubble;
+  });
+  assert.equal(queries.move(target, false), false, "a removed bubble Move entry is not interest");
+  assert.equal(queries.move(target, true), true);
+  assert.deepEqual(calls, [[target, false], [target, true]]);
+  moveBubble.removed = false;
+  assert.equal(queries.move(target, false), true);
+  bubble.delete("pointermove");
+  assert.equal(queries.move(target, false), false);
+  assert.equal(queries.down(target, false), true, "Move removal cannot erase Down interest");
+  assert.equal(queries.up(target, false), true, "Move removal cannot erase Up interest");
+  assert.equal(queries.down(target, true), false, "capture Move cannot satisfy Down");
+  assert.equal(queries.up(target, true), false, "capture Move cannot satisfy Up");
+  moveCapture.removed = true;
+  assert.equal(queries.move(target, true), false);
+  capture.get("pointermove").set(() => {}, {removed: false});
+  assert.equal(queries.move(target, true), true, "a removed Move entry cannot hide a later live entry");
+  for (const type of ["pointerdown", "pointerup", "pointerover", "pointerenter", "pointerrawupdate",
+    "pointerMove", "touchmove", "mousemove"])
+    assert.equal(moveQueryWithStorage(() => new Map([[type, new Map([[() => {}, {removed: false}]])]]))(target, false), false);
+});
+
+test("Move interest is read-only and rejects missing storage without consuming once listeners", () => {
+  const noTarget = moveQueryWithStorage(() => { throw Error("null Move target inspected storage"); });
+  assert.equal(noTarget(null, false), false);
+  assert.equal(noTarget(undefined, true), false);
+  for (const storage of [null, undefined, new Map(), new Map([["pointermove", new Map()]])])
+    assert.equal(moveQueryWithStorage(() => storage)({}, false), false);
+  const callback = () => { throw Error("Move interest invoked a listener"); };
+  const registration = {removed: false};
+  for (const key of ["callback", "once", "signal", "passive", "capture"])
+    Object.defineProperty(registration, key, {get() { throw Error("Move interest inspected " + key); }});
+  Object.freeze(registration);
+  const listeners = new Map([[callback, registration]]), storage = new Map([["pointermove", listeners]]);
+  const entries = [...listeners], query = moveQueryWithStorage(() => storage);
+  assert.equal(query({}, true), true); assert.equal(query({}, true), true);
+  assert.equal(storage.get("pointermove"), listeners); assert.deepEqual([...listeners], entries);
+  const once = Object.freeze({removed: false, once: true, callback});
+  const onceListeners = new Map([[callback, once]]);
+  const onceQuery = moveQueryWithStorage(() => new Map([["pointermove", onceListeners]]));
+  assert.equal(onceQuery({}, false), true); assert.equal(onceQuery({}, false), true);
+  assert.equal(onceListeners.size, 1); assert.equal(onceListeners.get(callback), once);
+});
+
 // Compile the actual generated SDK helper with narrow module fixtures. Storage
 // queries come from the real appended overlay; handles/flags are original-shaped
 // mocks. This certifies its strict offset table, not RN instances or native input.
@@ -390,17 +451,18 @@ async function compiledInstaller(t) {
   };
 }
 
-test("the compiled SDK installer gates installation and maps exactly Down/Up bubble/capture offsets", async t => {
+test("the compiled SDK installer gates installation and maps exactly Down/Up/Move bubble/capture offsets", async t => {
   const create = await compiledInstaller(t), disabled = create(false);
   disabled.install(); assert.deepEqual(disabled.installed, [], "native dispatch off must install no callback");
   const {install, installed, storageReads} = create(true); install();
   assert.equal(installed.length, 1);
   const query = installed[0], upBubble = {removed: true};
   const target = {bubble: new Map([["pointerdown", new Map([[() => {}, {removed: false}]])],
-    ["pointerup", new Map([[() => {}, upBubble]])]]),
+    ["pointerup", new Map([[() => {}, upBubble]])], ["pointermove", new Map([[() => {}, {removed: false}]])]]),
     capture: new Map([["pointerdown", new Map([[() => {}, {removed: true}]])],
-      ["pointerup", new Map([[() => {}, {removed: false}]])]])};
-  for (const [offset, capture, expected] of [[34, false, true], [35, true, false], [36, false, false], [37, true, true]]) {
+      ["pointerup", new Map([[() => {}, {removed: false}]])], ["pointermove", new Map([[() => {}, {removed: true}]])]])};
+  for (const [offset, capture, expected] of [[1, false, true], [25, true, false],
+    [34, false, true], [35, true, false], [36, false, false], [37, true, true]]) {
     storageReads.length = 0;
     assert.equal(query(target, offset), expected);
     assert.equal(storageReads.length, 1); assert.equal(storageReads[0][0], target); assert.equal(storageReads[0][1], capture);
@@ -408,8 +470,12 @@ test("the compiled SDK installer gates installation and maps exactly Down/Up bub
   upBubble.removed = false; assert.equal(query(target, 36), true);
   target.bubble.delete("pointerup"); assert.equal(query(target, 36), false);
   assert.equal(query(target, 34), true, "Down remains live after Up removal");
+  target.capture.get("pointermove").set(() => {}, {removed: false}); assert.equal(query(target, 25), true);
+  target.bubble.delete("pointermove"); assert.equal(query(target, 1), false);
+  assert.equal(query(target, 25), true, "capture Move remains live after bubble Move removal");
+  // Hover, enter/leave, click and capture notifications stay outside the opt-in.
   const poisoned = new Proxy({}, {get() { throw Error("unsupported offset resolved a candidate"); }});
-  for (const offset of [0, 1, 2, 19, 25, 32, 33, 38, -1, Infinity, NaN, "36", null, undefined]) {
+  for (const offset of [0, 2, 19, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 38, -1, Infinity, NaN, "1", "36", null, undefined]) {
     storageReads.length = 0;
     assert.equal(query(poisoned, offset, true), false); assert.deepEqual(storageReads, []);
   }
@@ -424,6 +490,10 @@ test("the compiled root callback reads only the chosen original-shaped element o
   assert.equal(query(handle, 36, true), false);
   assert.equal(query(handle, 37, true), true);
   assert.equal(query(handle, 34, true), false); assert.equal(query(handle, 35, true), false);
+  assert.equal(query(handle, 1, true), false); assert.equal(query(handle, 25, true), false);
+  doc.bubble.set("pointermove", new Map([[() => {}, {removed: false}]]));
+  assert.equal(query(handle, 1, true), true, "the owner Document bubble Move Map is consulted");
+  assert.equal(query(handle, 25, true), false);
   storageReads.length = 0;
   assert.equal(query({rootHandle: false}, 37, true), false); assert.deepEqual(storageReads, []);
   assert.equal(query({rootHandle: true, publicInstance: null}, 37, true), false); assert.deepEqual(storageReads, []);

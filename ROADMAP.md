@@ -1305,8 +1305,9 @@ retained). Hosted Contracts run 37328158081 passed all five jobs at 6f9e10c
 repeats the 6,451 headless checks with identical IDs, bundles and fault stages,
 the second application's Godot allocation ids differing only by a one-to-one
 renaming, and all 71 tracked inputs match eda1bf2 in the checkout tree. The
-viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
-weight or denominator closes.
+viewport/pixel proof and negative control stay local. [Pages 37329106287](docs/evidence/pointer-document-up-fault/publication.json)
+deployed this record from main 988af3c with the committed data. No whole GF,
+checkpoint, weight or denominator closes.
 
 
 ### View Up component query faults (2026-10-05)
@@ -1341,8 +1342,13 @@ static analysis pass; native/SDK bytes are unchanged. Resolver getter faults on
 Up, repeated faults or faults during retirement/stop, other flag branches and
 mixed Document/View paths remain open. All 81 executed code/configuration inputs
 match implementation f9a3b25 via git show/SHA-256 (execution base 988af3c/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
-denominator closes.
+retained). Hosted Contracts run 37330669524 passed all five jobs at 01d3add (merge
+checkout fa37a92); its [audited artifact](docs/evidence/pointer-up-faults/hosted-ci.json)
+repeats the 240 headless checks with identical IDs, bundle and fault stages, the
+second application's allocation ids differing only by a one-to-one renaming, and
+all 81 tracked inputs match f9a3b25 in the checkout tree. [Pages 37331641273](docs/evidence/pointer-up-faults/publication.json)
+deployed this record from main 84a95ab. The viewport, old-host and negative
+controls stay local. No whole GF, checkpoint, weight or denominator closes.
 
 
 ### View Up resolver getter faults (2026-10-05)
@@ -1376,8 +1382,67 @@ and static analysis pass; native/SDK bytes are unchanged. stateNode/canonical an
 root-handle resolver faults, repeated faults and faults during retirement/stop
 remain open. All 82 executed code/configuration inputs, including the resolver
 bootstrap, match implementation 6b3554c via git show/SHA-256 (execution base
-01d3add/dirty retained). Hosted CI for this slice is pending. No whole GF,
+01d3add/dirty retained). Hosted Contracts run 37332057453 passed all five jobs at
+b02ab93 (merge checkout 3265374); its [audited artifact](docs/evidence/pointer-up-resolver-faults/hosted-ci.json)
+repeats the 296 headless checks with identical IDs, bundle and stages, allocation
+ids differing only by a one-to-one renaming, and all 82 tracked inputs match
+6b3554c in the checkout tree. [Pages 37333111502](docs/evidence/pointer-up-resolver-faults/publication.json)
+deployed this record from main add4486, and the live public JSON and local API
+match it. The viewport, old-host and negative controls stay local. No whole GF,
 checkpoint, weight or denominator closes.
+
+
+### View pointermove native interest (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[Move evidence](docs/evidence/pointer-move/README.md) lets original imperative
+View `pointermove` listeners qualify native emission: **219/219 headless**
+(135 healthy plus 84 in a Move-fault application) and **243/243 graphical checks**
+with 20 actual pixels, while the preceding host replaying the same SDK bundle keeps
+exactly **45 normative failures**.
+
+RN's PointerEventsProcessor emits `topPointerMove` only when the target path
+declares PointerMove/PointerMoveCapture ViewProps; an imperative listener sets no
+bit, so real moves were dropped before the JS dispatcher. The four Down/Up
+interest boundaries now admit Move: the EventTarget overlay query, SDK offsets 1
+and 25 (not adjacent), the native callback whitelist and the generated overlay
+clause, OR'd after the original ViewProps check. Listeners on the hit View
+qualify with 1=true (bubble) or 1=false then 25=true (capture-only) and run at
+phase 2; on its parent View the target's empty pair is read first and the
+callbacks run at phase 3 or 1. Touch drags and button-less mouse motion each
+deliver one trusted callback per dispatched sample with its typed/star Raw and one
+functional commit, at the Default priority that the pinned, unfixed mapping gives
+the host's unique Continuous moves; with no ContinuousStart outstanding, a plain
+Unspecified move would run at Discrete. A View without Move listeners reads its
+whole path false in order (itself, parent, AppRegistry container, root handle) and
+emits no pointer move; stop is balanced. The host flushes RN's event queue after
+every input event, so RN's unique-move coalescing never has a pending move; Godot's
+input accumulation merges samples per frame. Because Move lookups run on every
+sample, hover included, the host retains each distinct Move lookup failure once as
+E_POINTER_LISTENER_QUERY, up to 16 causes per application, and only counts repeats
+in pointerListenerQuerySuppressed; Down/Up still report every failure. Repeated
+throw and non-boolean faults on A's own Move lookups leave one diagnostic each and
+count the repeats, recoveries deliver, and fifteen distinct causes fill the bound
+and count the last.
+
+The two native build records differ in 5 of 6,708 entries: the host hash,
+application_runtime.cpp, rn-pointer-overlay.mjs and the generated
+PointerEventsProcessor tree. The View Up, query-fault and resolver-fault
+preceding-host controls reproduce 8/12/3 failures with the new bundles.
+On the new host, the three contracts-job gates (contracts 257 Node/13 Python,
+static and publication), test:recovery (outside CI) and all 21 native-job suites
+pass, including Down 2,723, Document Up 6,451, View Up 296, query faults 186,
+resolver faults 65, Move 219, 22 examples and parity:godot; so do native codegen,
+fresh SDK pack/verify, adapter registry, loader (89 checks/21 cases) and runtime
+(13 runs/213 checks), consumer (30 + 40 checks) and cold start. The native PNG decoder shared by the View Up, Document Up and Move
+oracles moved to tests/native-png.mjs. This slice also admits behavior it does not
+certify: a Document/documentElement `pointermove` listener now qualifies any move
+in its surface through the shared root path. Document pointermove and its flag
+matrix, resolver faults during Move lookups, hover events, the per-move query
+cost, captured/no-hit moves (non-unique Unspecified in the host, unlike RN),
+responders and multi-touch remain open. All 77 executed
+code/configuration inputs match implementation f9f9817 via git show/SHA-256
+(execution base a0ec86b/dirty retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

@@ -173,7 +173,10 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
             {ViewEvents::Offset::PointerDown, ViewEvents::Offset::PointerDownCapture})) ||
         (type == "topPointerUp" && hasPointerInterestForGodot(
             *targetNode, uiManager, godotListenerInterest_,
-            {ViewEvents::Offset::PointerUp, ViewEvents::Offset::PointerUpCapture})))) {`);
+            {ViewEvents::Offset::PointerUp, ViewEvents::Offset::PointerUpCapture})) ||
+        (type == "topPointerMove" && hasPointerInterestForGodot(
+            *targetNode, uiManager, godotListenerInterest_,
+            {ViewEvents::Offset::PointerMove, ViewEvents::Offset::PointerMoveCapture})))) {`);
   source = replaceOnce(source,
     '    unregisterActivePointer(pointerEvent);\n  }\n}',
     `    unregisterActivePointer(pointerEvent);
