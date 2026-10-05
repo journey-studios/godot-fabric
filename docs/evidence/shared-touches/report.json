@@ -631,5 +631,29 @@
     "method": "git show <implementationCommit>:<path> | sha256",
     "sources": 16,
     "allMatch": true
-  }
+  },
+  "reviewReruns": [
+    {
+      "reason": "CodeRabbit review on PR 34: the integrated probe's report scope still said root-local",
+      "commit": "a906ab6",
+      "command": "npm run test:events:integrated",
+      "changedSource": {
+        "tests/event-dispatch-integrated-probe.gd": "25a60526b07d3d84e3cff6389331818b0aa2abda42fa8dcba9d86484041ef2bb"
+      },
+      "nativeHostSha256": "bf3d88c9f77816d19d6e279d5950309afb61d6aa53341abe151614ddafcfa2d2",
+      "lanes": {
+        "original": {
+          "checks": 181,
+          "reportSha256": "4f08603b076c2ae99de3743408c9e592049ac337a7a82bb5438df2c5ce08ba27"
+        },
+        "integrated": {
+          "checks": 206,
+          "reportSha256": "668ca2da09c5b0636406a8941c0acc88e06e1dc2c39b0641a928a4faa184478c"
+        }
+      },
+      "nativeTouchScope": "application-wide",
+      "exitCode": 0,
+      "runnerLogSha256": "af769c75aa70bb0195ff851be84a92ca3f305a8adcff7ab5b71a3bf18ac08fb3"
+    }
+  ]
 }

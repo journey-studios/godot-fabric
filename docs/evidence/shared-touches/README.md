@@ -87,7 +87,9 @@ ainda liste o contato de B e que o dono do responder siga a regra de cada
 implementação (o oráculo global explícito dele já mostrava o
 `ReactNativeResponder` segurando até o último contato), e o exemplo
 pointer-geometry espera que um TouchCancel em A ainda liste o contato
-sobrevivente de B.
+sobrevivente de B. Na revisão, o escopo declarado no relatório do probe integrado
+passou de `root-local` para `application-wide` (`a906ab6`), e as duas lanes dele
+(181 e 206 checks) passaram de novo no mesmo host (`reviewReruns` no recibo).
 
 ## Regressões
 
