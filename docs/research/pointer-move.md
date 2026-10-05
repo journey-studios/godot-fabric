@@ -1,9 +1,10 @@
 # Letting original View pointermove listeners qualify native emission
 
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
-Godot 4.7.2. The [evidence](../evidence/pointer-move/README.md) owns the 135
-headless checks, 159 graphical checks and the 45-failure native control. Public
-EventTarget flags remain disabled. Hosted CI for this slice is pending.
+Godot 4.7.2. The [evidence](../evidence/pointer-move/README.md) owns the 219
+headless checks (135 healthy and 84 in a Move-fault application), 243 graphical
+checks and the 45-failure native control. Public EventTarget flags remain
+disabled. Hosted CI for this slice is pending.
 
 ## The filter is upstream, the gap is imperative registration
 
@@ -65,6 +66,25 @@ order. Moves that hit no View, captured ones included, take a separate host path
 as non-unique `Unspecified` events; that divergence predates this slice and
 belongs to the capture work.
 
+## Move lookup failures are reported once per cause
+
+Down and Up lookups run once per gesture, and the fault slices certified that
+each failing lookup leaves one retained `E_POINTER_LISTENER_QUERY`. Move lookups
+run on every sample, hover included, so the same policy would grow the error list
+and the engine log without limit. The host keeps the rejection, a failing lookup
+still returns false and the rest of the path decides, but it retains each
+distinct Move failure cause once, up to 16 distinct causes per application, and
+only counts repeats and causes past that bound in `pointerListenerQuerySuppressed`.
+Down and Up reporting is unchanged.
+
+A second application exercises it with faults injected into A's own Move lookups.
+A throwing bubble lookup over three samples leaves one diagnostic and counts two;
+a non-boolean capture lookup over two samples leaves one and counts one; each
+recovery sample delivers once the fault is spent. Fifteen distinct causes in a
+row fill the bound with fourteen more diagnostics and count the fifteenth. B's
+move stays healthy, and stop retains exactly the 16 diagnostics in order with four
+counted failures.
+
 ## Why the probe is discriminating
 
 The [wrapper](../../tests/pointer-move-fixture.jsx) reuses the actual two-root
@@ -96,10 +116,8 @@ ScreenDrag and button-less MouseMotion events through the native queue.
 - Document/documentElement `pointermove` across the four original flag
   configurations. The shared root path already answers offsets 1/25, so a
   Document listener now qualifies any move in its surface without certification.
-- Move lookup faults. The fault bootstraps only accept offsets 34 to 37, and a
-  persistently throwing Move lookup would add one diagnostic per sample, hover
-  included, to an unbounded list. Faults and a bounded diagnostic policy belong
-  together.
+- Resolver getter faults during Move lookups and Document/documentElement Move
+  faults, which share the bounded path but are not exercised here.
 - Hover: `pointerover/out` and the enter/leave semantics with the processor's
   hover tracking.
 - The per-move cost of the path query when no prop qualifies: two JSI calls per

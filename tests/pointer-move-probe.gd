@@ -260,6 +260,103 @@ func mouse_cases() -> void:
       "samples": samples.map(func(offset: Vector2) -> Array: return [offset.x, offset.y]), "points": points}
   Input.use_accumulated_input = accumulated
 
+var fault_errors: Array = []
+
+func container_tag(name: String) -> Variant:
+  var container: Array = native(surfaces[name]).nodes.filter(func(node: Dictionary) -> bool: return node.testID == "")
+  return container[0].tag if container.size() == 1 else -1.0
+
+# One drag sample in the fault application. own lists the target's lookups as
+# [offset, action, result]; an undelivered sample then reads the parent, the
+# AppRegistry container and the root, each 1 then 25 and false. A retained
+# cause adds one diagnostic; otherwise the failure is only counted.
+func move_fault_sample(name: String, index: int, prefix: String, offset: Vector2, own: Array, delivered: bool, retained_cause: String, suppressed_delta: int) -> void:
+  var errors_before: Array = native(application).errors
+  var suppressed_before: int = int(native(application).pointerListenerQuerySuppressed)
+  js("arm(%s,%s)" % [JSON.stringify(name), JSON.stringify(prefix)])
+  var before := native(surfaces[name])
+  await drag(name, index, offset)
+  var value := state()
+  var after := native(surfaces[name])
+  var app := native(application)
+  var expected: Array = own.map(func(entry: Array) -> Array: return [value.targetTag, entry[0], entry[1], 1.0 if entry[1] == "nonboolean" else entry[2], false])
+  if not delivered:
+    for tag: Variant in [value.panels[name].parentTag, container_tag(name)]:
+      expected.append_array([[tag, 1, "delegate", false, false], [tag, 25, "delegate", false, false]])
+    expected.append_array([[null, 1, "delegate", false, true], [null, 25, "delegate", false, true]])
+  var rows: Array = value.query.rows.map(func(row: Dictionary) -> Array: return [row.targetTag, int(row.offset), row.action, row.result, row.rootHandle])
+  var moves := 1 if delivered else 0
+  check(rows == expected and value.events.size() == moves and value.panels[name].moves == value.baselineMoves + moves and after.commits == before.commits + moves and rows_for(value, "topPointerMove").size() == 2 * moves and rows_for(value, "topTouchMove").size() == 2 and context_clean(value),
+    prefix + "/A Move lookup fault rejects only its own lookup and the remaining path decides delivery")
+  var errors_after: Array = app.errors
+  var retained: bool = errors_after.size() == errors_before.size() + (0 if retained_cause.is_empty() else 1)
+  if not retained_cause.is_empty():
+    retained = retained and str(errors_after[-1]).begins_with("E_POINTER_LISTENER_QUERY: ") and str(errors_after[-1]).contains(retained_cause)
+    fault_errors.append(retained_cause)
+  check(retained and int(app.pointerListenerQuerySuppressed) == suppressed_before + suppressed_delta,
+    prefix + "/Repeated Move failures retain one diagnostic per distinct cause and only count the rest")
+  stages[prefix] = {"react": value, "before": before, "after": after, "errorsBefore": errors_before.size(), "errorsAfter": errors_after.size(),
+    "suppressedBefore": suppressed_before, "suppressedAfter": int(app.pointerListenerQuerySuppressed)}
+
+# A second application keeps the healthy probe above diagnostic-free. Move
+# lookups run on every sample, so a failing lookup must not report every time.
+func move_fault_controls() -> void:
+  application = ClassDB.instantiate("FabricApplication")
+  application.name = "PointerMoveApplication"
+  application.set("bundle_path", "res://build/pointer-move-enabled.js")
+  root.add_child(application)
+  mount("A", Vector2.ZERO)
+  mount("B", Vector2(340, 0))
+  await settle()
+  var app := native(application)
+  check(app.rootCount == 2 and app.pointerListenerQueryInstalled and app.errors.is_empty() and int(app.pointerListenerQuerySuppressed) == 0 and native(surfaces.A).runtimeId == native(surfaces.B).runtimeId,
+    "fault/mount/A second application mounts two fresh roots and one SDK query without diagnostics")
+  var cause := "GF pointer query deliberate fault: "
+  # One throwing bubble lookup repeated over three samples, then recovery.
+  js("configure('A',false)")
+  stages["fault/repeat-throw1/fault"] = js("fault('A',1,'throw','move1',3)")
+  await physical_down("A", 0, "fault/repeat-throw1")
+  for index in range(3):
+    await move_fault_sample("A", 0, "fault/repeat-throw1/move-" + str(index + 1), OFFSETS[index % 2], [[1, "throw", null], [25, "delegate", false]], false, cause + "move1" if index == 0 else "", 0 if index == 0 else 1)
+  await move_fault_sample("A", 0, "fault/repeat-throw1/recovery", OFFSETS[1], [[1, "delegate", true]], true, "", 0)
+  await release("A", 0, "fault/repeat-throw1")
+  # A capture-only listener whose capture lookup returns a non-boolean twice.
+  js("configure('A',true)")
+  stages["fault/repeat-nonboolean25/fault"] = js("fault('A',25,'nonboolean','move25',2)")
+  await physical_down("A", 0, "fault/repeat-nonboolean25")
+  for index in range(2):
+    await move_fault_sample("A", 0, "fault/repeat-nonboolean25/move-" + str(index + 1), OFFSETS[index], [[1, "delegate", false], [25, "nonboolean", null]], false, "Pointer listener query must return a boolean" if index == 0 else "", 0 if index == 0 else 1)
+  await move_fault_sample("A", 0, "fault/repeat-nonboolean25/recovery", OFFSETS[0], [[1, "delegate", false], [25, "delegate", true]], true, "", 0)
+  await release("A", 0, "fault/repeat-nonboolean25")
+  # Distinct causes are retained until 16 distinct Move failures are held.
+  js("configure('A',false)")
+  await physical_down("A", 0, "fault/distinct-cap")
+  for index in range(15):
+    var label := "cap-%02d" % (index + 1)
+    stages["fault/distinct-cap/" + label + "/fault"] = js("fault('A',1,'throw',%s,1)" % JSON.stringify(label))
+    var kept := index < 14
+    await move_fault_sample("A", 0, "fault/distinct-cap/" + label, OFFSETS[index % 2], [[1, "throw", null], [25, "delegate", false]], false, cause + label if kept else "", 0 if kept else 1)
+  stages["fault/cleared"] = js("clearFault()")
+  await release("A", 0, "fault/distinct-cap")
+  js("configure('B',false)")
+  await physical_down("B", 1, "fault/B-healthy")
+  await move_fault_sample("B", 1, "fault/B-healthy/move", OFFSETS[0], [[1, "delegate", true]], true, "", 0)
+  await release("B", 1, "fault/B-healthy")
+  stages["fault/beforeStop"] = {"application": native(application), "react": state()}
+  application.call("stop")
+  await settle()
+  var stopped := native(application)
+  stages["fault/stopped"] = stopped
+  var retained: bool = stopped.errors.size() == fault_errors.size() and fault_errors.size() == 16
+  for index in range(mini(stopped.errors.size(), fault_errors.size())):
+    retained = retained and str(stopped.errors[index]).contains(fault_errors[index])
+  check(stopped.stopped and not stopped.pointerListenerQueryInstalled and stopped.rootCount == 0 and stopped.pendingWork == 0 and stopped.pointerProcessor.active == 0 and stopped.pointerRouting.contacts == 0 and stopped.pointerRouting.stored == 0 and retained and int(stopped.pointerListenerQuerySuppressed) == 4,
+    "fault/stop/The second application retains one diagnostic per distinct Move failure up to the bound and counts four repeats")
+  for name: String in ["A", "B"]:
+    surfaces[name].queue_free()
+  application.queue_free()
+  await settle()
+
 # The orange Move bar starts at x160 and spans 20px plus 4px per delivered move,
 # so its last orange and first background pixels pin the exact count.
 func capture_frame(filename: String, updated: bool) -> void:
@@ -332,6 +429,9 @@ func run_probe() -> void:
     surfaces[name].queue_free()
   application.queue_free()
   await settle()
+  # The preceding host never consults Move Maps, so its fault phase is moot.
+  if not allow_original_negative:
+    await move_fault_controls()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()
@@ -342,11 +442,12 @@ func run_probe() -> void:
     "displayServer": DisplayServer.get_name(), "captureRequested": capture, "captures": captures,
     "checks": checks, "stages": stages, "afterStop": stopped,
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
+    "faultExpectedErrors": fault_errors,
     "originalNegativeObserved": original_negative_observed, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"actualNativeInput": true, "originalFlagsEnabled": true, "experimentalNativeDispatch": true,
       "realSDKQueryWrappedOnlyForTest": true, "listenerRegistryMirrored": false, "pointerMoveOnlyViewScope": true,
       "ancestorPropagationCertified": true, "mouseHoverMoveCertified": true, "rnQueueCoalescingReachable": false,
-      "documentInterestCertified": false, "hoverEventsCertified": false, "moveQueryFaultsCertified": false,
+      "documentInterestCertified": false, "hoverEventsCertified": false, "moveQueryFaultsCertified": not allow_original_negative,
       "publicAPIAdded": false, "publicDefaultEnabled": false, "hardwareCertified": false}}
   var output := FileAccess.open("res://build/pointer-move-report.json", FileAccess.WRITE)
   if not check(output != null, "report/PointerMove report is saved with visible normative failures"):

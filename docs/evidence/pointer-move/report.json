@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "scenario": "native-pointer-move-view-interest",
   "status": "verified-local-headless-old-host-native-captures-regressions-and-sdk",
-  "at": "2026-10-05T16:27:38.877290+00:00",
-  "executionBaseCommit": "69bd3b61d2b34a89a7e823b69b3cb9b0277d1ffb",
+  "at": "2026-10-05T16:52:12.150093+00:00",
+  "executionBaseCommit": "a0ec86bed2e3703cb1dd5b0fe624fbc9a28e6324",
   "sourceDirtyDuringExecution": true,
-  "implementationCommit": "63c50137786b4b9789bd1019a381efd43f31a944",
+  "implementationCommit": null,
   "environment": {
     "godot": "4.7.2-stable (official)",
     "reactNative": "0.87.1",
@@ -24,7 +24,7 @@
     "hoverEventsCertified": false,
     "listenerRegistryMirrored": false,
     "mouseHoverMoveCertified": true,
-    "moveQueryFaultsCertified": false,
+    "moveQueryFaultsCertified": true,
     "originalFlagsEnabled": true,
     "pointerMoveOnlyViewScope": true,
     "publicAPIAdded": false,
@@ -40,7 +40,7 @@
   "lanes": [
     {
       "lane": "original",
-      "meaning": "Preserved previous native host replaying the current SDK bundle; expected negative control.",
+      "meaning": "Preserved previous native host replaying the current SDK bundle without the Move-fault application; expected negative control.",
       "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
       "checks": 135,
       "passed": 90,
@@ -93,34 +93,34 @@
         "mouse/unaccumulated/Native move consults the original pointermove Maps at the exact pinned offsets"
       ],
       "originalNegativeObserved": true,
-      "reportSha256": "37cc946c8363442d5923635174bf7a85c05f8b7ca28ee0e06910d5943d2604bd",
-      "logSha256": "e53e04fdd00ef5de84775649944d5ea79387bd44c2cd395be8e9cce3c81d2999"
+      "reportSha256": "a5cbf19bd3e71146796532ec4d6c678a05321f9d83a19267b0a3a5081cc83509",
+      "logSha256": "50ca471e23c1b2697ab0d913a0acdab3cde5b390ca89c08cae6d5865d3e95c11"
     },
     {
       "lane": "current",
       "meaning": "Corrected native host, headless.",
-      "nativeHostSha256": "732a02a29f499c2be9d0799800d4efc8fb694088758b0e5171811a06245ca083",
-      "checks": 135,
-      "passed": 135,
-      "reportSha256": "16f35c915ed8be59abd57092c5040ee0051c74f7f16dfe7181d5ba85134eb513",
-      "logSha256": "7fbb4c56386e63bccae078baf5caf5fd7ef99bf37ade40d3f2de15230776e56b",
-      "comparisonSha256": "eab2845255dae17b2a05a16c63194f54dc561234ce1ba8d74334610b318c9529"
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 219,
+      "passed": 219,
+      "reportSha256": "cf14044a46e32b4c551e7b511c1d3f288abc85f8f683ed3dd1e2553791a7e813",
+      "logSha256": "ce263508fa4af169484f52305ff20b9f1d75ce9a2a5a7e975cce9624588ce6cb",
+      "comparisonSha256": "8be4aa0c5047702302ce5b389884acc8f1a9be1a39a6729bca15f164bde91951"
     },
     {
       "lane": "capture",
       "meaning": "Corrected native host, actual macOS Viewport.",
-      "nativeHostSha256": "732a02a29f499c2be9d0799800d4efc8fb694088758b0e5171811a06245ca083",
-      "checks": 159,
-      "passed": 159,
-      "reportSha256": "ddecbe183cce8dc5b8d0975cb174206cf21c51f80c5cae2011666ca25fff2cdb",
-      "logSha256": "a769166311fc0885147ce6a549eea4478469b01b2035e6c0aede03019f0cb539"
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 243,
+      "passed": 243,
+      "reportSha256": "139c8879ee57731ceb15a62288f814a77bc11bc0f405422bbf2ad80d3b23b9ae",
+      "logSha256": "2d155dd1b81eed1bdca0a9a1dcaf7a5e985f6dcfadf314c9d00df69c20467a29"
     }
   ],
   "causalComparison": {
     "sameSdkBundleAllThree": true,
-    "sdkBundleSha256": "c9c5e6635997abbc68025b3c8d4e3b278f0ab41a41dac9752b4b0cdf081bdd46",
+    "sdkBundleSha256": "2a76a0e397eb7e40ed30bd3389ba81f0ccb2c72aed5267219e75c7de9dd90d7e",
     "sameBaseCheckIdsAllThree": true,
-    "checkIdDigestSha256": "aff857ba155777e7d0bfa45f242b9882c2e27838bc79509619e25d1ecbfeefd7",
+    "checkIdDigestSha256": "52ded7bf815d06c52423e3bd2d5e57f759126607a684b19df1e03f83e2920fae",
     "testAndSdkProducerCount": 15,
     "sameTestAndSdkProducerPinsAllThree": true,
     "nativeProducersEvidencedByBuildRecords": [
@@ -132,7 +132,7 @@
     "sameOriginalReactNativeSourcesAllThree": true,
     "nativeHosts": {
       "previous": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
-      "current": "732a02a29f499c2be9d0799800d4efc8fb694088758b0e5171811a06245ca083"
+      "current": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c"
     },
     "nativeBuildRecords": {
       "previous": {
@@ -141,7 +141,7 @@
       },
       "current": {
         "file": ".deps/build/native-sdk-build.json",
-        "sha256": "a1cab40eeea8390f9f5ee49b9dd8d8e50bb04b5447a472788dbbc3ef5bf18b25"
+        "sha256": "1d0d39b97183dadb6f6aef22db845aa99b3d78a5c26232b4d450e4264ab6a38a"
       },
       "comparedEntries": 6708,
       "changedEntries": [
@@ -154,14 +154,14 @@
       "changedProducerPins": {
         "native/application_runtime.cpp": {
           "previous": "0573fffd5b711211735e6a35c15374f6dd6a4d467669c2a45cf0c49fc68a889c",
-          "current": "6cb5a104d70bd67b6f24c8df6b0b01d2b351331c3a0add6cc8ae6780be54812c"
+          "current": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f"
         },
         "scripts/rn-pointer-overlay.mjs": {
           "previous": "ad0e291e2aef498534a18fb47a879a6ba46a95fc568b56165b4bce297275b990",
           "current": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70"
         }
       },
-      "previousProducerBytesMatchExecutionBase": true
+      "previousProducerBytesMatchMain": "add4486a95c3a02de69501ac224a3401572ef246"
     }
   },
   "executedObservations": {
@@ -1074,7 +1074,1178 @@
       "A": 12,
       "B": 0
     },
-    "stopErrors": []
+    "stopErrors": [],
+    "moveFaults": {
+      "policy": "Each distinct Move lookup failure cause is retained once as E_POINTER_LISTENER_QUERY, up to 16 per application; repeats and causes past the bound only increment pointerListenerQuerySuppressed. Down/Up keep reporting every failure.",
+      "samples": {
+        "fault/B-healthy/move": {
+          "retained": 0,
+          "counted": 0,
+          "delivered": 1,
+          "lookups": [
+            [
+              12,
+              1,
+              true,
+              false
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-01": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-02": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-03": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-04": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-05": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-06": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-07": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-08": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-09": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-10": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-11": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-12": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-13": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-14": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/distinct-cap/cap-15": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-nonboolean25/move-1": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              false,
+              false
+            ],
+            [
+              2,
+              25,
+              1,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-nonboolean25/move-2": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              false,
+              false
+            ],
+            [
+              2,
+              25,
+              1,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-nonboolean25/recovery": {
+          "retained": 0,
+          "counted": 0,
+          "delivered": 1,
+          "lookups": [
+            [
+              2,
+              1,
+              false,
+              false
+            ],
+            [
+              2,
+              25,
+              true,
+              false
+            ]
+          ]
+        },
+        "fault/repeat-throw1/move-1": {
+          "retained": 1,
+          "counted": 0,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-throw1/move-2": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-throw1/move-3": {
+          "retained": 0,
+          "counted": 1,
+          "delivered": 0,
+          "lookups": [
+            [
+              2,
+              1,
+              null,
+              false
+            ],
+            [
+              2,
+              25,
+              false,
+              false
+            ],
+            [
+              8,
+              1,
+              false,
+              false
+            ],
+            [
+              8,
+              25,
+              false,
+              false
+            ],
+            [
+              10,
+              1,
+              false,
+              false
+            ],
+            [
+              10,
+              25,
+              false,
+              false
+            ],
+            [
+              null,
+              1,
+              false,
+              true
+            ],
+            [
+              null,
+              25,
+              false,
+              true
+            ]
+          ]
+        },
+        "fault/repeat-throw1/recovery": {
+          "retained": 0,
+          "counted": 0,
+          "delivered": 1,
+          "lookups": [
+            [
+              2,
+              1,
+              true,
+              false
+            ]
+          ]
+        }
+      },
+      "retainedCauses": [
+        "GF pointer query deliberate fault: move1",
+        "Pointer listener query must return a boolean",
+        "GF pointer query deliberate fault: cap-01",
+        "GF pointer query deliberate fault: cap-02",
+        "GF pointer query deliberate fault: cap-03",
+        "GF pointer query deliberate fault: cap-04",
+        "GF pointer query deliberate fault: cap-05",
+        "GF pointer query deliberate fault: cap-06",
+        "GF pointer query deliberate fault: cap-07",
+        "GF pointer query deliberate fault: cap-08",
+        "GF pointer query deliberate fault: cap-09",
+        "GF pointer query deliberate fault: cap-10",
+        "GF pointer query deliberate fault: cap-11",
+        "GF pointer query deliberate fault: cap-12",
+        "GF pointer query deliberate fault: cap-13",
+        "GF pointer query deliberate fault: cap-14"
+      ],
+      "stoppedErrors": 16,
+      "stoppedSuppressed": 4,
+      "originalHostSkipsFaultApplication": true
+    }
   },
   "captures": {
     "actualViewport": {
@@ -1147,24 +2318,24 @@
       "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
       "checks": 62,
       "normativeFailures": 8,
-      "reportSha256": "e2737cfd871f83aa7e8b0da536d1e33411197f41ba0a1ce0277823fca5af9ee3",
-      "bundleSha256": "c94dd2d4cba6c2756808de2e4551dadda987f149e2f42ead441c896953f64081"
+      "reportSha256": "0fc29b3cead560abfd4698396bbc49080f1861f351995dd1a01b7f791bbf4548",
+      "bundleSha256": "dc4c3ffbb939815b4885d6ba25fd93d8048e98bca6890b87997ac370c1d6821f"
     },
     "pointer-query-fault": {
       "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
       "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
       "checks": 186,
       "normativeFailures": 12,
-      "reportSha256": "7303d3319e39ba4e1e43afad90a49e00f1c777e99e0d3052fd541659a2a2c80a",
-      "bundleSha256": "bd9327abc7355bd0f272118dac569d47aad663c9b550d2d40935050b38858580"
+      "reportSha256": "bca9c623db0b28bc295a54d1efe02e6b5fef229dd48546e1d03fb3f6d4a4cc5f",
+      "bundleSha256": "77c355978d7d1d443a5870e894d3cc1afd65990df08d926c3db3693e145f7de1"
     },
     "pointer-resolver-fault": {
       "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
       "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
       "checks": 65,
       "normativeFailures": 3,
-      "reportSha256": "7018c2581f6a1ab354efd1a19bab9006f338ca315a84262003a90d54e644f1c2",
-      "bundleSha256": "e7c78c96aa50b8965f70e460b88f7fc060893c788256a6ca413dc445d7309d79"
+      "reportSha256": "ee8a2cd54115674921957c7d7e60c34cf3c74cb3dc4e8aa9ee52db484be20618",
+      "bundleSha256": "3a231582d3c666449fda9e5bb47521729adb71d9a42b475aef6f7e5a06f26c41"
     }
   },
   "regressions": {
@@ -1172,150 +2343,150 @@
       "test:contracts": {
         "exitCode": 0,
         "seconds": 14,
-        "logSha256": "dce8c6073907f87644ae7347582a4732ff0ba0149e782cbad67f7a34201d073d",
+        "logSha256": "af07438d0caaaacaa21513b12a44234cd7129d963f08dee856236af1829458d9",
         "ciJob": "contracts"
       },
       "check:static": {
         "exitCode": 0,
-        "seconds": 0,
-        "logSha256": "dd859c4a167e26df8c06910ba4c33ee62957e4d6b96cd1b563d94743b6b8322a",
+        "seconds": 1,
+        "logSha256": "211c109ec284fab096bc28995bdc4a49bb635a8e82330c8fd52d081afd95026e",
         "ciJob": "contracts"
       },
       "check:publication": {
         "exitCode": 0,
-        "seconds": 1,
+        "seconds": 0,
         "logSha256": "0e9784d3e517a48ec7e5b0e18e9c8f45dc70c1ab2681d9723e1be7b6ad7caf99",
         "ciJob": "contracts"
       },
       "test:recovery": {
         "exitCode": 0,
         "seconds": 3,
-        "logSha256": "80035b32588dbfba91c8b831219ff70c2c65d85deb13eadb522d396d8509ffcc",
+        "logSha256": "0035ddf301ed71a75db4eec5d3dcd65d56bc76a601f572f135d642e8ac8dd51d",
         "ciJob": null
       },
       "test:examples": {
         "exitCode": 0,
-        "seconds": 120,
+        "seconds": 118,
         "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
         "ciJob": "native-cold-start"
       },
       "test:transforms:guards": {
         "exitCode": 0,
-        "seconds": 4,
+        "seconds": 5,
         "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e",
         "ciJob": "native-cold-start"
       },
       "test:runtime": {
         "exitCode": 0,
-        "seconds": 4,
-        "logSha256": "d518fc23d852fb87bce3a44aa9ce9aa60bc4b863249750e14a7e25b09b2f694c",
+        "seconds": 3,
+        "logSha256": "b5b21822ddcfc9d372a9b8e9cff3bcbff910a2db244bf68d76a382187eea498b",
         "ciJob": "native-cold-start"
       },
       "test:application": {
         "exitCode": 0,
-        "seconds": 6,
-        "logSha256": "9b278338d0b4b88a3821c611a5b9c6b766423e43140488e1ec8f88270c980f78",
+        "seconds": 7,
+        "logSha256": "24768e1d930e0ecd577e24e2f166b88457f3315a74edca1569ba77709ef87a21",
         "ciJob": "native-cold-start"
       },
       "test:modules": {
         "exitCode": 0,
         "seconds": 5,
-        "logSha256": "75dd4dc47f9b09b6176d910641da60586bb0bcb6812d3f782d74e6fac37947b2",
+        "logSha256": "4baec3967b66a5ce32d1c5c8edabf01c9aaf365ce4a301c9b1b816764be74661",
         "ciJob": "native-cold-start"
       },
       "test:focus:commands": {
         "exitCode": 0,
         "seconds": 5,
-        "logSha256": "082c20d9c62592834295d9bde6cd5d7e76760d490b1b6c3dc72cf13183c54682",
+        "logSha256": "560156530b43d86570090a982f03034adaaba625b496f3b2b6b4ac9cafedccff",
         "ciJob": "native-cold-start"
       },
       "test:pointers:processor": {
         "exitCode": 0,
         "seconds": 6,
-        "logSha256": "5ca89df9f53bf26eecf8d4a312b65042ec081af38739c920d0b5afab466e6321",
+        "logSha256": "9e6bb1e3713f3397cd80670c83a8109d098a73fe5bf73d0e2945ffc5039d437a",
         "ciJob": "native-cold-start"
       },
       "test:pointers:geometry": {
         "exitCode": 0,
-        "seconds": 2,
-        "logSha256": "d32c84be83d91ef6d078dbc655de3f229062cbfd702296fea826ba159fbd9753",
+        "seconds": 1,
+        "logSha256": "d0debfc97e1243e399c3c096c3272e6ee17551ec21fdf9f55d9311c262cfd1b0",
         "ciJob": "native-cold-start"
       },
       "test:events:original": {
         "exitCode": 0,
-        "seconds": 5,
-        "logSha256": "1cee69a8f1c1356f55c718c7f33c3ea9386a61afe61d22326e310009cd4046af",
+        "seconds": 6,
+        "logSha256": "e9333483895716c684d4199b726bc55c8db4d3e0b26543b437f16fe0a414d2f8",
         "ciJob": "native-cold-start"
       },
       "test:events:ancestry": {
         "exitCode": 0,
         "seconds": 4,
-        "logSha256": "fff3830459e2cd029ee1b7968fe2c842a2628c4d05c840556859d078069aeb5c",
+        "logSha256": "c6a6f19d3604795aaf5c6f816ea1d7e77c94c0928d825e68a9da164ca4e78709",
         "ciJob": "native-cold-start"
       },
       "test:events:dispatch": {
         "exitCode": 0,
         "seconds": 9,
-        "logSha256": "d911f7153af5232c5b9a7aa64f338f2a442b519a9a0ae27e9d743be4beeacee4",
+        "logSha256": "2617cd34a34eced712bae006069ff2b920cc9869b65bbf88a8a2f82033b86589",
         "ciJob": "native-cold-start"
       },
       "test:events:integrated": {
         "exitCode": 0,
         "seconds": 10,
-        "logSha256": "21db885841b48f96cdd63b0f405e66a24b71e5fc2aadf6c1b236dbb44d11f439",
+        "logSha256": "e59c896a77b3244a43925d9f3f9b83aa10816ca352294e261b54859c45845b28",
         "ciJob": "native-cold-start"
       },
       "test:services": {
         "exitCode": 0,
         "seconds": 4,
-        "logSha256": "1f3620ab4c9028be7384bdcea9e85d1dae965e5dd5f5636c8560ec61557b6892",
+        "logSha256": "5b14318817ec50d08cdf7bc0bb4eebc5a8183a799a2b92cf47119ba0b2a4e490",
         "ciJob": "native-cold-start"
       },
       "test:pointers:interest": {
         "exitCode": 0,
         "seconds": 9,
-        "logSha256": "3e069612107b071cf4ac54c883097f5c9d7bf92ebd3fbbf645c202ea81baf90d",
+        "logSha256": "312c982bd4e797d8e06995eacaa17ad6ba71bdc0e8e6005235b7c0a067c04d12",
         "ciJob": "native-cold-start"
       },
       "test:pointers:documents": {
         "exitCode": 0,
-        "seconds": 35,
-        "logSha256": "9723c286c36bd0e5b00b2ac81c01b2370c93238669311faff05a57ef927c87fe",
+        "seconds": 34,
+        "logSha256": "7e2b34bb19993afeb0ac04c7f41f6fda82827fdce67d82aafcfe287ddd38ba3a",
         "ciJob": "native-cold-start"
       },
       "test:pointers:query-faults": {
         "exitCode": 0,
-        "seconds": 3,
-        "logSha256": "34f957b75f79f4924d06c32e13cd1ad28d98f759c660444681f388e6215a519d",
+        "seconds": 4,
+        "logSha256": "5b1fd3b77a71ab00be414e9a36ab09ef3080c415b9124d15c535675f627ea708",
         "ciJob": "native-cold-start"
       },
       "test:pointers:resolver-faults": {
         "exitCode": 0,
         "seconds": 3,
-        "logSha256": "1b9d20b99a604aa04122c0bdc07871eb76f22f04e9d6b00adbc4d35a419cbffe",
+        "logSha256": "601d0a54115d4f9d8604771836cc8ea07828b638624ffd7f5d5dc179296ae902",
         "ciJob": "native-cold-start"
       },
       "test:pointers:documents:up": {
         "exitCode": 0,
-        "seconds": 60,
-        "logSha256": "ab8a39afa131af6efa88800c8452c94fe6da92571f20c7c2f212d3656ce9b006",
+        "seconds": 61,
+        "logSha256": "ff9824a3e756e2bcfb84c4f7cd42107591c486af8e7b6478084da3c6b30b79eb",
         "ciJob": "native-cold-start"
       },
       "test:pointers:up": {
         "exitCode": 0,
-        "seconds": 5,
-        "logSha256": "723adbef5e0ef094d2a01a05c63d4e02a2bb6f507659d35c202d00a1f6a1077b",
+        "seconds": 4,
+        "logSha256": "308ae83cea843c32c2860cb96776ef3a09a24ac03763cb282df5a773bfe5e463",
         "ciJob": "native-cold-start"
       },
       "test:pointers:move": {
         "exitCode": 0,
-        "seconds": 3,
-        "logSha256": "64eb5d8699e4591b05b67c838d4fe5fd7db080036ee2916aa9190c3eb36e6605",
+        "seconds": 6,
+        "logSha256": "76d67a8e1ccfe774e357f5c2bee5135893ef26c09a1879821b4881acd6fcaa35",
         "ciJob": "native-cold-start"
       },
       "parity:godot": {
         "exitCode": 0,
-        "seconds": 7,
+        "seconds": 6,
         "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf",
         "ciJob": "native-cold-start"
       }
@@ -1326,7 +2497,7 @@
     "queryFaultChecks": 186,
     "resolverFaultChecks": 65,
     "pointerInterestChecks": 233,
-    "moveChecksInSequence": 135,
+    "moveChecksInSequence": 219,
     "nodeContractChecks": 257,
     "pythonContractChecks": 13,
     "examples": 22,
@@ -1337,7 +2508,7 @@
     "steps": {
       "affine": {
         "exitCode": 0,
-        "seconds": 1,
+        "seconds": 0,
         "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
       },
       "codegen-native": {
@@ -1362,42 +2533,41 @@
       },
       "adapters-loader": {
         "exitCode": 0,
-        "seconds": 14,
+        "seconds": 15,
         "logSha256": "427a8d123b2db135fb28be7973190266b842fa0feae6008fcd2121cae4b16c3a"
       },
       "adapters-runtime": {
         "exitCode": 0,
         "seconds": 34,
-        "logSha256": "c1180e3ec07a8006f6f9537d4a8d033cc29cc7efba1b65ad588ae7120834dc72"
+        "logSha256": "252102056fd2303112526dff1a15aa9665652d7f0edfc7c2272f4e4bb3cf9fbe"
       },
       "consumer": {
         "exitCode": 0,
-        "seconds": 89,
+        "seconds": 88,
         "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
       },
       "cold": {
         "exitCode": 0,
-        "seconds": 18,
+        "seconds": 19,
         "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
       }
     },
-    "note": "The final batch's first native codegen attempt refused the output directory left by the initial batch (exit 2 before compiling); that attempt was preserved and the rerun into a fresh directory passed.",
     "sdkDirectory": "build/native-sdk-pointer-move",
-    "receiptSha256": "a15d52f182a142b76eb13fff101affe314693a7e6b6f57f5432cc32460235ec4",
-    "manifestSha256": "0e45633427584350e409b35b6811ecdff5be370e40919d45e340a1494f7051f9",
-    "packedHostSha256": "732a02a29f499c2be9d0799800d4efc8fb694088758b0e5171811a06245ca083",
-    "loaderReportSha256": "eb1118d0c0a0142bda80b22bf2b1b9b91dda4be78ffd9b3e6f5d055bdcfdfaae",
-    "adapterRuntimeReportSha256": "7ec679182ebb9511e167a11cbf78f1d21d3f26765854238b95776a8963b4da4d",
-    "registryReportSha256": "446e0a8710a7a5d4ee95c238008db7ac55d24d80275136a2ae038b5430495ddf"
+    "receiptSha256": "4ae28cbe28842e1cc660d312139b500481933a6b68fe91576c3cd4553716e2b9",
+    "manifestSha256": "a1502261bf990bd549b486b04955da6f87f2924bece498db3673618bebe9a7c3",
+    "packedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+    "loaderReportSha256": "a357e12aefcb287f2cb1a466e8bf07d26b8dc0ae7b96180a7f7fde9b392e0bec",
+    "adapterRuntimeReportSha256": "20c1799d3103cd7141ef7457d7f29a03bbf62458111458e11d49efd5d5edf2f6",
+    "registryReportSha256": "e704278a0b1759d2f19cfc95313e6bceea332711920d8d1a404c92c6b2ec6909"
   },
   "sourcePins": {
     "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
-    "tests/pointer-query-fault-bootstrap.js": "b327440fedd1eb3bee0d715f52aea1946d635ce0dfd7a8e69508f5aa61f6c871",
-    "tests/pointer-query-fault-fixture.jsx": "3ded7fa54bafe21ec08c063eb77c82889d78ef3f4e94822643a6983339215d01",
+    "tests/pointer-query-fault-bootstrap.js": "7640c60a7d1ace8219a18f8d0fdd595216902de30d3c2c0f41d78280250bad42",
+    "tests/pointer-query-fault-fixture.jsx": "4d78785255b503fd01e23dccb8e85cffc2d2cea5dde123aac71952dc9e79f803",
     "tests/pointer-query-fault-probe.gd": "c5cf2bca5f1c41f59ae93efc5b0a88e0e3fbdda07abb3f9d88e57f873ebe7916",
-    "tests/pointer-move-fixture.jsx": "aeb0780305df47f536ad8aa41f86c1170b2fba5a895a6f9827e2640ff36aaf5d",
-    "tests/pointer-move-probe.gd": "de07d543c68e39db7849a186c0c56e5e8d88e553f6825995fd60c4d02a372cd5",
-    "tests/pointer-move-native.test.mjs": "bc690d74d45f1fba780226d726ede0bfd2ea5e6edb7a14fd4821115f15035482",
+    "tests/pointer-move-fixture.jsx": "b71bcd1429b0fe250837659486e3d7e5b74a508ec303dde90c1eaf2a09f394b5",
+    "tests/pointer-move-probe.gd": "4f839e3907d417a9ae507b0958fde0816246e6a441cbda7c4a9d12d822ba6531",
+    "tests/pointer-move-native.test.mjs": "e489acd61ace53c7515470bd65a7d6d77853e696dbe74ff74bd1f2158a97032a",
     "tests/native-png.mjs": "57e57e03a3aa5474f0704009c8be0231ec9ba35a62cf191cf468e51536a8db2a",
     "scripts/event-target-bundle.mjs": "5b3a76548eb07a1caef5a5a304b36ce865bffd3cb6884310f6e45d41b447f3e8",
     "sdk/toolchain/platform-plugin.mjs": "51ca46dc14d2f527e012b5748ceaf73dfc0688e4fba677cdd4a2f9a594e70f23",
@@ -1406,7 +2576,7 @@
     "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f1829a07208383868be94b1b5ddc5a00eb0bfd6fafd5e073ccb37dd66d51b044",
     "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
     "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
-    "native/application_runtime.cpp": "6cb5a104d70bd67b6f24c8df6b0b01d2b351331c3a0add6cc8ae6780be54812c",
+    "native/application_runtime.cpp": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f",
     "scripts/rn-pointer-overlay.mjs": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70"
   },
   "originalReactNativeSources": {
@@ -1441,7 +2611,7 @@
     "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
     "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
     "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
-    "native/application_runtime.cpp": "6cb5a104d70bd67b6f24c8df6b0b01d2b351331c3a0add6cc8ae6780be54812c",
+    "native/application_runtime.cpp": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f",
     "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
     "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
     "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
@@ -1497,40 +2667,20 @@
     "tests/pointer-document-up-native.test.mjs": "4147bf3e8f1bfcbfbe28bb721432820f58680be3dbaa637f29985e9ae733100c"
   },
   "changedFilesSinceExecutionBase": [
-    ".fallowrc.json",
-    ".github/workflows/contracts.yml",
     "README.md",
     "ROADMAP.md",
     "dashboard/migration.json",
     "docs/evidence/README.md",
-    "docs/evidence/pointer-document-up-fault/publication.json",
     "docs/evidence/pointer-move/README.md",
-    "docs/evidence/pointer-move/initial.png",
-    "docs/evidence/pointer-move/report.json",
-    "docs/evidence/pointer-move/updated.png",
-    "docs/evidence/pointer-up-faults/hosted-ci.json",
-    "docs/evidence/pointer-up-faults/publication.json",
-    "docs/evidence/pointer-up-resolver-faults/hosted-ci.json",
-    "docs/evidence/pointer-up-resolver-faults/publication.json",
     "docs/research/pointer-move.md",
     "examples/README.md",
     "examples/pointer-move/README.md",
     "native/application_runtime.cpp",
-    "package.json",
-    "scripts/event-target-bundle.mjs",
-    "scripts/rn-pointer-overlay.mjs",
-    "sdk/toolchain/platform-plugin.mjs",
-    "sdk/toolchain/rn-pointer-interest-overlay.mjs",
-    "tests/native-png.mjs",
-    "tests/pointer-document-up-native.test.mjs",
     "tests/pointer-move-fixture.jsx",
     "tests/pointer-move-native.test.mjs",
     "tests/pointer-move-probe.gd",
     "tests/pointer-query-fault-bootstrap.js",
-    "tests/pointer-query-fault-fixture.jsx",
-    "tests/pointer-up-native.test.mjs",
-    "tests/rn-pointer-interest-overlay.test.mjs",
-    "tests/rn-pointer-overlay.test.mjs"
+    "tests/pointer-query-fault-fixture.jsx"
   ],
   "hostedCI": {
     "status": "pending-view-pointermove-slice"
@@ -1538,20 +2688,20 @@
   "limits": [
     "View pointermove listeners only (hit target and its parent), with both original EventTarget flags enabled, under touch drags and button-less mouse motion.",
     "Admitted but uncertified: through the shared root path a Document/documentElement pointermove listener now qualifies any move in its surface; the flag matrix is untested.",
-    "Move lookup faults cannot be injected (fault bootstraps accept offsets 34-37 only); the diagnostic boundary holds for 1/25 by construction, and a throwing Move lookup would add one diagnostic per sample, hover included, to an unbounded list.",
+    "The bounded Move diagnostic policy is per application and Move-only; resolver getter faults during Move lookups and Document/documentElement Move faults are not exercised.",
     "When no prop qualifies, each move makes two JSI lookups per path node, each resolving the newest clone; the per-move cost is unmeasured.",
     "The host flushes RN's event queue after every input event, so RN's unique-move coalescing is unreachable; per-frame merging comes from Godot input accumulation.",
     "Moves that hit no View, captured ones included, are enqueued as non-unique Unspecified events (Discrete without a ContinuousStart), unlike RN; this predates the slice.",
     "Hover events, pointer capture, captured/no-hit moves, pointerrawupdate, responders/PanResponder, multi-touch, the fixed priority mapping, hardware, mobile exports and performance remain open.",
-    "The executed tree was dirty on 69bd3b6; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+    "The executed tree was dirty on a0ec86b; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
   ],
   "finalTreeGates": {
-    "ranAt": "2026-10-05T16:28:26.809683+00:00",
+    "ranAt": "2026-10-05T16:52:43.757835+00:00",
     "meaning": "Contracts-job gates rerun after every doc, dashboard, example and the receipt body above were final; this field was appended afterwards.",
     "steps": {
       "test:contracts": {
         "exitCode": 0,
-        "logSha256": "5af2d993b530a635b50c26ac85d9aeb47a43ef45e26af41eed8f25091217b1a8"
+        "logSha256": "30848ce96856a1b85031db1fef31596f9537bed4c4bd7d7bc8f88e04912b7aa5"
       },
       "check:static": {
         "exitCode": 0,
@@ -1562,17 +2712,5 @@
         "logSha256": "0e9784d3e517a48ec7e5b0e18e9c8f45dc70c1ab2681d9723e1be7b6ad7caf99"
       }
     }
-  },
-  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/63c50137786b4b9789bd1019a381efd43f31a944",
-  "sourcePinsVerifiedAgainstCommit": {
-    "uniqueCodeAndConfigurationInputs": 77,
-    "pinSetCounts": {
-      "sourcePins": 17,
-      "nativeSourcePins": 55,
-      "verificationSourcePins": 7
-    },
-    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
-    "allMatchExecutedBytes": true,
-    "executionBaseAndDirtyStatePreserved": true
   }
 }

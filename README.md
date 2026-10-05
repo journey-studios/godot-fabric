@@ -164,10 +164,11 @@ same native interest to original View Move Maps. Real drags and button-less mous
 motion reach listeners on the target and on its parent as trusted moves, one React
 commit each, at the Default priority that RN's pinned mapping gives unique
 Continuous moves; a View without Move listeners still gets its original TouchMove.
-Its [evidence](docs/evidence/pointer-move/README.md) records 135 headless / 159
+Its [evidence](docs/evidence/pointer-move/README.md) records 219 headless / 243
 viewport checks, 20 actual pixels and the preceding host's 45 failures with the
-same SDK bundle. Document pointermove, hover events, Move lookup faults and
-pointer capture remain open; hosted CI is pending.
+same SDK bundle. A failing Move lookup is retained once per distinct cause and its
+repeats are counted, so hover cannot flood diagnostics. Document pointermove, hover
+events and pointer capture remain open; hosted CI is pending.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

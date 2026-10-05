@@ -6,9 +6,10 @@ Hermes application and the original EventTarget listener Maps. Its own fixture
 and commands are outside the interactive launcher catalog; public imperative
 and native-dispatch flags remain disabled.
 
-The [evidence](../../docs/evidence/pointer-move/README.md) records **135/135
-headless**, **159/159 actual Viewport checks** and the preceding host's **45
-visible failures in 135 checks** with the same SDK bundle. The graphical lane
+The [evidence](../../docs/evidence/pointer-move/README.md) records **219/219
+headless** (including a Move-fault application), **243/243 actual Viewport checks**
+and the preceding host's **45 visible failures in 135 checks** with the same SDK
+bundle. The graphical lane
 adds 20 actual pixels, two React-counter checks and two saves/dimension checks.
 Hosted CI for this slice is pending.
 
@@ -89,9 +90,11 @@ independently decoded PNG pixels.
 
 ## Limits
 
+A failing Move lookup is retained once per distinct cause, up to 16 causes per
+application, and repeats are only counted, so hover cannot flood diagnostics.
 Document/documentElement `pointermove` (which the shared root path now admits
 without certification), other flag configurations, hover events
-(over/out/enter/leave), Move lookup faults, pointer capture, captured/no-hit
-moves, responders, multi-touch, hardware, Godot mobile exports and performance
-require separate acceptance. See the
+(over/out/enter/leave), pointer capture, captured/no-hit moves, responders,
+multi-touch, hardware, Godot mobile exports and performance require separate
+acceptance. See the
 [research and next boundaries](../../docs/research/pointer-move.md).

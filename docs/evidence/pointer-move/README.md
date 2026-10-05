@@ -8,9 +8,9 @@ públicos continuam off. O [recibo](report.json) fixa fontes, hashes e resultado
 
 | Lane executada | Checks | Observação |
 | --- | ---: | --- |
-| Host anterior `d8553d9`, bundle atual do SDK | 90/135 | Exatamente 45 falhas normativas; nenhuma consulta de Move entra no SDK, TouchMove e limpeza saudáveis |
-| Host corrigido, headless | 135/135 | Listener no alvo e no pai, toque e mouse qualificam cada move entregue |
-| Host corrigido, viewport macOS | 159/159 | Os mesmos 135 checks, 20 pixels reais, dois contadores e dois saves/dimensões |
+| Host anterior `d8553d9`, bundle atual do SDK | 90/135 | Exatamente 45 falhas normativas; nenhuma consulta de Move entra no SDK, TouchMove e limpeza saudáveis; a fase de faults não roda |
+| Host corrigido, headless | 219/219 | 135 checks da aplicação saudável e 84 da aplicação de faults de Move |
+| Host corrigido, viewport macOS | 243/243 | Os mesmos 219 checks, 20 pixels reais, dois contadores e dois saves/dimensões |
 
 As três lanes executam o mesmo bundle (`c9c5e663…`), com as mesmas 15 fontes
 produtoras de teste e SDK e os mesmos 19 pins originais do RN. Os outros dois
@@ -105,10 +105,38 @@ interesse de Move, porque o RN emite todo Cancel independentemente de listeners;
 guarda a limpeza. O stop termina sem diagnósticos, com roots, Controls, contatos e
 hover balanceados e contadores finais A=12/B=0.
 
+## Falhas na consulta de Move
+
+Lookups de Down e Up rodam uma vez por gesto e reportam toda falha, como as fatias
+de faults certificaram. Lookups de Move rodam a cada amostra, hover incluído, e
+reportar cada falha encheria a lista de erros sem limite. O host agora retém cada
+causa distinta de falha de Move uma única vez como `E_POINTER_LISTENER_QUERY`, até
+16 causas distintas por aplicação. Repetições e causas além desse limite são só
+contadas em `pointerListenerQuerySuppressed`. O lookup que falhou continua
+retornando `false`, então o resto do caminho decide a entrega.
+
+Uma segunda aplicação, iniciada depois do stop da saudável, exercita isso com
+faults injetados no próprio lookup de Move da View A:
+
+| Caso | Fault | Amostras | Diagnósticos | Contadas | Entrega |
+| --- | --- | --- | --- | --- | --- |
+| repeat-throw1 | throw no lookup bubble (1), listener bubble | 3 com fault, 1 de recuperação | 1 | 2 | só na recuperação |
+| repeat-nonboolean25 | resultado não booleano no lookup capture (25), listener capture-only | 2 com fault, 1 de recuperação | 1 | 1 | só na recuperação |
+| distinct-cap | 15 causas distintas seguidas no lookup bubble | 15 | 14 | 1 | nenhuma |
+
+Em cada amostra com fault, o lookup falho é rejeitado sozinho: o outro lookup da
+View, o pai, o container do AppRegistry e o handle da raiz são consultados e
+retornam `false`, e o TouchMove original segue. Depois do terceiro caso a aplicação
+tem 16 causas retidas, então a décima quinta causa distinta só é contada. Um move de
+B continua saudável no fim, e o stop retém exatamente os 16 diagnósticos, na
+ordem, com 4 falhas contadas. O log do engine traz uma linha
+`FABRIC_ERROR` por diagnóstico retido e nenhuma outra.
+
 ## Controle com o host anterior
 
 O host da `main` antes da correção foi preservado e roda o mesmo bundle com
-`--allow-original-negative`. Ele falha exatamente as 45 checagens normativas
+`--allow-original-negative`, sem a fase de faults, que depende de lookups de Move.
+Ele falha exatamente as 45 checagens normativas
 esperadas: as quatro de cada uma das oito amostras de toque, a cadeia de consultas
 de B e as quatro de cada caso de mouse. Nenhuma linha de consulta de Move chega ao
 SDK, não há `topPointerMove`, e contadores e commits ficam parados. TouchMove, Down,
@@ -141,8 +169,9 @@ virou [`tests/native-png.mjs`](../../../tests/native-png.mjs) e é usado também
 Move; ele entra na lista de fontes pinadas desses bundles. O fixture compartilhado
 ganhou uma ref na View pai, um contador de moves opcional (`probePointerMove`), o
 tipo `pointermove` e os Raw `topPointerMove`/`topTouchMove`; o observador da
-consulta marca `rootHandle`. Os outros probes não passam a prop nem leem esses
-campos.
+consulta marca `rootHandle` e aceita faults nos offsets de Move, repetidos em até
+quatro lookups. Os outros probes não passam a prop nem leem esses campos, e os
+faults de Down/Up continuam de um lookup só.
 
 ## Regressões
 
@@ -152,11 +181,11 @@ No host corrigido passaram os três gates do job `contracts` da CI (contracts co
 transform, runtime, aplicação, módulos, foco, processador, geometria, os quatro
 probes de eventos, serviços, interesse de Down (233), Document Down (2.723 nas oito
 lanes), query faults (186), resolver faults (65), Document Up (6.451), View Up
-(296), o próprio Move (135) e o `parity:godot`. Como o binário mudou, também
+(296), o próprio Move (219) e o `parity:godot`. Como o binário mudou, também
 passaram o teste afim, o codegen nativo, o pack/verify de um SDK nativo novo, o
 registro de adapters, o loader (89 checks/21 casos), o runtime de adapters (13
 execuções/213 checks), o consumidor (30 checks de build/ownership e 40 nativos) e o
-cold start. Todas as execuções conferem o mesmo host `732a02a2…` antes e depois.
+cold start. Todas as execuções conferem o mesmo host `ab0b783d…` antes e depois.
 
 ## Limites
 
@@ -168,11 +197,9 @@ certifica:
   em `document` ou `documentElement` agora qualifica qualquer move da superfície,
   mas Document/documentElement e a matriz de flags não foram testados aqui.
 - Os eventos de hover (over/out/enter/leave) continuam filtrados por ViewProps.
-- Faults nas consultas de Move não podem ser injetados: os bootstraps de fault
-  aceitam só os offsets 34 a 37. A fronteira de diagnóstico vale para 1/25 por
-  construção (o código é o mesmo), não por teste. E, diferente de Down/Up, uma
-  consulta que lança passaria a gerar um diagnóstico por amostra de move,
-  inclusive a cada movimento de hover do mouse, numa lista de erros sem limite.
+- O limite de diagnósticos vale por aplicação e só para Move. Faults no resolver
+  da ref (getter) durante lookups de Move passam pelo mesmo caminho, mas não
+  foram exercitados, e Document/documentElement Move não tem faults aqui.
 - Quando nenhum prop qualifica, cada move faz duas chamadas JSI por nó do caminho,
   e cada uma resolve o clone mais novo do nó. O custo é proporcional ao quadrado da
   profundidade por move e não foi medido.
@@ -185,9 +212,3 @@ certifica:
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
-
-As 77 fontes de código/configuração executadas (17 produtoras do bundle, 55 entradas
-do build nativo e 7 de verificação, com sobreposição) correspondem à implementação
-`63c50137786b4b9789bd1019a381efd43f31a944` por `git show`/SHA-256. O recibo preserva
-a base 69bd3b6 e a árvore dirty da execução; este pin pós-commit não é uma nova
-corrida.

@@ -149,8 +149,9 @@ Hosted run 37332057453 passed the same 296 checks with identical IDs, bundle and
 stages ([receipt](pointer-up-resolver-faults/hosted-ci.json)).
 
 The [View pointermove record](pointer-move/README.md) extends the native interest
-query to original View Move Maps at offsets 1/25: 135/135 corrected headless and
-159/159 viewport checks, with 20 actual pixels in two captures. The same SDK
+query to original View Move Maps at offsets 1/25: 219/219 corrected headless
+(including a Move-fault application) and 243/243 viewport checks, with 20 actual
+pixels in two captures. The same SDK
 bundle, 15 test/SDK producer pins and 19 RN pins retain 45 visible normative
 failures on the preceding host; the two native producers are evidenced by the
 build records, which differ only in the host, those producers and the generated
@@ -159,8 +160,10 @@ build records, which differ only in the host, those producers and the generated
 dispatched sample with its typed/star Raw and one commit at the pinned Default
 priority; B without listeners reads its whole path false, in order. The host
 flushes RN's queue after every input event, so per-frame merging comes from
-Godot's input accumulation. The three preceding-host controls reproduce 8/12/3
-failures with the new bundles. Hosted CI pending.
+Godot's input accumulation. A failing Move lookup is retained once per distinct
+cause, up to 16 causes per application, and repeats are counted. The three
+preceding-host controls reproduce 8/12/3 failures with the new bundles. Hosted CI
+pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

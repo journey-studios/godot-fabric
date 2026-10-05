@@ -82,6 +82,60 @@ function healthyLookups(value) {
     assert.ok(value.query.rows[index - 1].sequence < value.query.rows[index].sequence);
 }
 
+// Move lookups run on every sample: a failing one is retained once per distinct
+// cause, up to 16 distinct causes, and otherwise only counted. The preceding
+// host never consults Move Maps, so the fault application runs only on the
+// corrected host.
+function moveFaults(report) {
+  if (allowOriginalNegative) { assert.deepEqual(report.faultExpectedErrors, []); return; }
+  const stages = report.stages, cause = "GF pointer query deliberate fault: ";
+  const caps = Array.from({length: 15}, (_, index) => "cap-" + String(index + 1).padStart(2, "0"));
+  const expectedCauses = [cause + "move1", "Pointer listener query must return a boolean", ...caps.slice(0, 14).map(label => cause + label)];
+  assert.deepEqual(report.faultExpectedErrors, expectedCauses);
+  assert.deepEqual(Object.fromEntries(["offset", "mode", "remaining", "label"].map(key => [key, stages["fault/repeat-throw1/fault"][key]])),
+    {offset: 1, mode: "throw", remaining: 3, label: "move1"});
+  assert.deepEqual(Object.fromEntries(["offset", "mode", "remaining", "label"].map(key => [key, stages["fault/repeat-nonboolean25/fault"][key]])),
+    {offset: 25, mode: "nonboolean", remaining: 2, label: "move25"});
+  const failing = (key, own) => {
+    const value = stages[key].react, rows = value.query.rows;
+    assert.deepEqual(rows.slice(0, 2).map(row => [row.targetTag, row.offset, row.action]), own.map(([offset, action]) => [value.targetTag, offset, action]));
+    assert.deepEqual(rows.slice(2).map(row => [row.offset, row.action, row.result]), [1, 25, 1, 25, 1, 25].map(offset => [offset, "delegate", false]));
+    assert.deepEqual(rows.slice(2).map(row => row.rootHandle), [false, false, false, false, true, true]);
+    assert.deepEqual(value.events, []); assert.deepEqual(value.raw.filter(row => row.type === "topPointerMove"), []);
+    assert.equal(value.panels[value.name].moves, value.baselineMoves);
+  };
+  const delivered = (key, own) => {
+    const value = stages[key].react;
+    assert.deepEqual(value.query.rows.map(row => [row.targetTag, row.offset, row.action, row.result]), own.map(([offset, result]) => [value.targetTag, offset, "delegate", result]));
+    assert.equal(value.events.length, 1); assert.equal(value.events[0].type, "pointermove"); assert.ok(value.events[0].trusted);
+    assert.equal(value.panels[value.name].moves, value.baselineMoves + 1);
+  };
+  const counted = [];
+  for (const sample of [1, 2, 3]) {
+    failing(`fault/repeat-throw1/move-${sample}`, [[1, "throw"], [25, "delegate"]]);
+    counted.push([`fault/repeat-throw1/move-${sample}`, sample === 1 ? 1 : 0, sample === 1 ? 0 : 1]);
+  }
+  delivered("fault/repeat-throw1/recovery", [[1, true]]); counted.push(["fault/repeat-throw1/recovery", 0, 0]);
+  for (const sample of [1, 2]) {
+    failing(`fault/repeat-nonboolean25/move-${sample}`, [[1, "delegate"], [25, "nonboolean"]]);
+    counted.push([`fault/repeat-nonboolean25/move-${sample}`, sample === 1 ? 1 : 0, sample === 1 ? 0 : 1]);
+  }
+  delivered("fault/repeat-nonboolean25/recovery", [[1, false], [25, true]]); counted.push(["fault/repeat-nonboolean25/recovery", 0, 0]);
+  for (const [index, label] of caps.entries()) {
+    failing("fault/distinct-cap/" + label, [[1, "throw"], [25, "delegate"]]);
+    counted.push(["fault/distinct-cap/" + label, index < 14 ? 1 : 0, index < 14 ? 0 : 1]);
+  }
+  delivered("fault/B-healthy/move", [[1, true]]); counted.push(["fault/B-healthy/move", 0, 0]);
+  for (const [key, retained, suppressed] of counted) {
+    assert.equal(stages[key].errorsAfter - stages[key].errorsBefore, retained, key);
+    assert.equal(stages[key].suppressedAfter - stages[key].suppressedBefore, suppressed, key);
+  }
+  const stopped = stages["fault/stopped"];
+  assert.ok(stopped.stopped && !stopped.pointerListenerQueryInstalled && stopped.rootCount === 0);
+  assert.equal(stopped.errors.length, 16); assert.equal(stopped.pointerListenerQuerySuppressed, 4);
+  stopped.errors.forEach((line, index) => assert.ok(line.startsWith("E_POINTER_LISTENER_QUERY: ") && line.includes(expectedCauses[index])));
+}
+
 test("original imperative View pointermove qualifies native interest while original touch moves and cleanup survive", async () => {
   const before = await publicHash(), bundles = await bundlePointerMoveProbe();
   await rm(path.join(root, "build/pointer-move-report.json"), {force: true});
@@ -123,7 +177,8 @@ test("original imperative View pointermove qualifies native interest while origi
       assert.equal(image.color(...row.point), row.expected, "Independently decoded saved PNG agrees with the actual pixel report");
     }
   }
-  const base = row => !row.name.startsWith("move-capture/");
+  // Captures and the corrected-host fault application add separate checks.
+  const base = row => !row.name.startsWith("move-capture/") && !row.name.startsWith("fault/");
   assert.equal(report.checks.filter(row => row.name.startsWith("move-capture/")).length, capture ? 24 : 0, "Ten actual pixels plus counters and save/dimensions per native frame");
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   assert.deepEqual([...report.expectedOriginalFailures].sort(), [...expectedFailures].sort());
@@ -131,7 +186,11 @@ test("original imperative View pointermove qualifies native interest while origi
   assert.deepEqual([...failures].sort(), allowOriginalNegative ? [...expectedFailures].sort() : [], "Only the normative Move failures qualify as the old-host control");
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...failures].sort());
-  assert.equal([...log.matchAll(/^ERROR:/gm)].length, checkErrors.length, "No diagnostic or unrelated error is hidden");
+  // Only the fault application's retained Move diagnostics print natively.
+  const nativeErrors = [...log.matchAll(/^ERROR: FABRIC_ERROR: (.+)$/gm)].map(match => match[1]);
+  assert.equal([...log.matchAll(/^ERROR:/gm)].length, checkErrors.length + nativeErrors.length, "No script or engine error is hidden");
+  assert.equal(nativeErrors.length, report.faultExpectedErrors.length);
+  nativeErrors.forEach((line, index) => assert.ok(line.startsWith("E_POINTER_LISTENER_QUERY: ") && line.includes(report.faultExpectedErrors[index])));
   assert.match(log, allowOriginalNegative ? new RegExp(`POINTER_MOVE_ORIGINAL_NEGATIVE: ${expectedFailures.length}`) : /POINTER_MOVE_PASSED: \d+/);
   assert.equal(bundles.nativeDispatchMode, "experimental"); assert.equal(bundles.pointerInterestMode, "current");
   for (const file of ["tests/pointer-move-fixture.jsx", "tests/pointer-move-probe.gd", "tests/pointer-move-native.test.mjs", "tests/native-png.mjs",
@@ -255,12 +314,13 @@ test("original imperative View pointermove qualifies native interest while origi
     const owner = report.stages["stoppedRoot" + name];
     assert.equal(owner.nativeTags, 0); assert.equal(owner.creates, owner.deletes); assert.equal(owner.pointer.activePointers, 0); assert.equal(owner.pointer.activeTouches, 0);
   }
+  moveFaults(report);
   assert.equal(await publicHash(), before);
   if (!allowOriginalNegative) {
     const originalBytes = await optionalFile("build/pointer-move-original-report.json"), original = originalBytes == null ? null : JSON.parse(originalBytes);
     if (original != null) {
       assert.ok(original.originalNegativeObserved);
-      assert.deepEqual(original.checks.filter(base).map(row => row.name), report.checks.filter(base).map(row => row.name), "Native capture only adds separate optional checks");
+      assert.deepEqual(original.checks.map(row => row.name), report.checks.filter(base).map(row => row.name), "Captures and the fault application only add separate checks");
       assert.deepEqual(original.provenance.bundles.originalReactNativeSources, bundles.originalReactNativeSources);
       // The causal control executes the same final SDK bundle on the preserved
       // host. Its two native producers are compiled into that host, so their

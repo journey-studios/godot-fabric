@@ -135,10 +135,10 @@ or 1 after the target's empty pair); button-less mouse motion qualifies too. Eac
 move is one trusted callback with its typed/star Raw and one React commit, at the
 Default priority the pinned mapping gives RN's unique Continuous moves. B without
 listeners reads its whole path false, in order, and emits no pointer move. Its
-[receipt](../docs/evidence/pointer-move/README.md) records 135/135 headless,
-159/159 viewport checks and 45 visible old-host failures with the same SDK bundle.
-Document pointermove, hover events, Move lookup faults and capture remain open;
-hosted CI is pending.
+[receipt](../docs/evidence/pointer-move/README.md) records 219/219 headless,
+243/243 viewport checks and 45 visible old-host failures with the same SDK bundle;
+failing Move lookups are retained once per distinct cause and repeats are counted.
+Document pointermove, hover events and capture remain open; hosted CI is pending.
 
 | Before any move | After the bubble case |
 | --- | --- |

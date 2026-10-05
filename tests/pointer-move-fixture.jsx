@@ -6,7 +6,7 @@ import * as Flags from "../node_modules/react-native/src/private/featureflags/Re
 const base = globalThis.QueryFaultProbe;
 if (base == null) throw Error("PointerMove probe requires the real query-fault scene");
 globalThis.PointerMoveProbe = {
-  capability: base.capability, arm: base.arm,
+  capability: base.capability, arm: base.arm, fault: base.fault, clearFault: base.clearFault,
   configure(name, capture = false, where = "only") { return base.configure(name, capture, "pointermove", where); },
   publicControl(name) { return base.publicControl(name, "pointermove"); },
   snapshot() {

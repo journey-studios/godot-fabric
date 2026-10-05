@@ -1396,9 +1396,10 @@ checkpoint, weight or denominator closes.
 
 GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
 [Move evidence](docs/evidence/pointer-move/README.md) lets original imperative
-View `pointermove` listeners qualify native emission: **135/135 headless** and
-**159/159 graphical checks** with 20 actual pixels, while the preceding host
-replaying the same SDK bundle keeps exactly **45 normative failures**.
+View `pointermove` listeners qualify native emission: **219/219 headless**
+(135 healthy plus 84 in a Move-fault application) and **243/243 graphical checks**
+with 20 actual pixels, while the preceding host replaying the same SDK bundle keeps
+exactly **45 normative failures**.
 
 RN's PointerEventsProcessor emits `topPointerMove` only when the target path
 declares PointerMove/PointerMoveCapture ViewProps; an imperative listener sets no
@@ -1416,7 +1417,13 @@ Unspecified move would run at Discrete. A View without Move listeners reads its
 whole path false in order (itself, parent, AppRegistry container, root handle) and
 emits no pointer move; stop is balanced. The host flushes RN's event queue after
 every input event, so RN's unique-move coalescing never has a pending move; Godot's
-input accumulation merges samples per frame.
+input accumulation merges samples per frame. Because Move lookups run on every
+sample, hover included, the host retains each distinct Move lookup failure once as
+E_POINTER_LISTENER_QUERY, up to 16 causes per application, and only counts repeats
+in pointerListenerQuerySuppressed; Down/Up still report every failure. Repeated
+throw and non-boolean faults on A's own Move lookups leave one diagnostic each and
+count the repeats, recoveries deliver, and fifteen distinct causes fill the bound
+and count the last.
 
 The two native build records differ in 5 of 6,708 entries: the host hash,
 application_runtime.cpp, rn-pointer-overlay.mjs and the generated
@@ -1425,18 +1432,15 @@ preceding-host controls reproduce 8/12/3 failures with the new bundles.
 On the new host, the three contracts-job gates (contracts 257 Node/13 Python,
 static and publication), test:recovery (outside CI) and all 21 native-job suites
 pass, including Down 2,723, Document Up 6,451, View Up 296, query faults 186,
-resolver faults 65, Move 135, 22 examples and parity:godot; so do native codegen,
+resolver faults 65, Move 219, 22 examples and parity:godot; so do native codegen,
 fresh SDK pack/verify, adapter registry, loader (89 checks/21 cases) and runtime
 (13 runs/213 checks), consumer (30 + 40 checks) and cold start. The native PNG decoder shared by the View Up, Document Up and Move
 oracles moved to tests/native-png.mjs. This slice also admits behavior it does not
 certify: a Document/documentElement `pointermove` listener now qualifies any move
-in its surface through the shared root path, and a throwing Move lookup would add
-one diagnostic per sample, hover included, to an unbounded list. Document
-pointermove and its flag matrix, Move lookup faults with a bounded diagnostic
-policy, hover events, the per-move query cost, captured/no-hit moves (non-unique
-Unspecified in the host, unlike RN), responders and multi-touch remain open. All 77
-executed code/configuration inputs match implementation 63c5013 via git
-show/SHA-256 (execution base 69bd3b6/dirty retained). Hosted CI for this slice is
+in its surface through the shared root path. Document pointermove and its flag
+matrix, resolver faults during Move lookups, hover events, the per-move query
+cost, captured/no-hit moves (non-unique Unspecified in the host, unlike RN),
+responders and multi-touch remain open. Hosted CI for this slice is
 pending. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree

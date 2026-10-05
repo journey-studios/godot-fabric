@@ -118,5 +118,5 @@ function snapshot() {
       manualDispatchIsOnlyInstallationControl: true, publicDefaultEnabled: false, hardwareCertified: false}};
 }
 globalThis.QueryFaultProbe = {capability, configure, arm, publicControl, snapshot,
-  fault(name, offset, mode, label) { return queryFaultControl.setFault({targetref: panels.get(name).refs.only, offset, mode, remaining: 1, label}); },
+  fault(name, offset, mode, label, remaining = 1) { return queryFaultControl.setFault({targetref: panels.get(name).refs.only, offset, mode, remaining, label}); },
   clearFault() { return queryFaultControl.clearFault(); }};
