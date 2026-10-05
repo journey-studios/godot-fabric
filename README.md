@@ -207,8 +207,14 @@ Hosted CI repeated the 1,530 checks ([receipt](docs/evidence/pointer-document-ho
 The [click example](examples/pointer-click/README.md) certifies `click` on a
 primary release, targeted at the deepest view the press and the release share,
 and the ScrollView drag that cancels its contact, in eight lanes: 728 headless
-checks. The preceding host fails exactly 31 of them.
+checks. The preceding host fails exactly 31 of them. Hosted CI repeated the 728
+checks ([receipt](docs/evidence/pointer-click/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-click/README.md).
+
+The [PanResponder example](examples/pan-responder/README.md) runs RN's original
+`PanResponder` on actual Godot touches and mouse drags, including two-finger
+gestures, parent claims, refused termination and removal mid-gesture, in four
+flag lanes: 128 headless checks. [Evidence](docs/evidence/pan-responder/README.md).
 
 The [AppState example](examples/app-state/README.md) runs React Native's original
 `AppState` from the public import, fed by the focus, pause and memory-warning
