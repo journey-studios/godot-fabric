@@ -138,7 +138,8 @@ listeners reads its whole path false, in order, and emits no pointer move. Its
 [receipt](../docs/evidence/pointer-move/README.md) records 219/219 headless,
 243/243 viewport checks and 45 visible old-host failures with the same SDK bundle;
 failing Move lookups are retained once per distinct cause and repeats are counted.
-Document pointermove, hover events and capture remain open; hosted CI is pending.
+Hover events and capture remain open. Hosted run 37345287351 repeated the 219
+headless checks ([receipt](../docs/evidence/pointer-move/hosted-ci.json)).
 
 | Before any move | After the bubble case |
 | --- | --- |
@@ -156,7 +157,8 @@ the imperative flag. Capture listeners run at phase 1 and bubble at phase 3, the
 root query reads `1=true` or `1=false`/`25=true` after the target's and ancestors'
 false pairs, and button-less mouse motion qualifies too. Its
 [receipt](../docs/evidence/pointer-document-move/README.md) includes a retained
-control that drops the owner Document from the root query.
+control that drops the owner Document from the root query. Hosted CI for this
+matrix is pending.
 
 | Before Document Move | After two samples reach DocC and DocB |
 | --- | --- |

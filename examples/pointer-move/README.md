@@ -92,9 +92,9 @@ independently decoded PNG pixels.
 
 A failing Move lookup is retained once per distinct cause, up to 16 causes per
 application, and repeats are only counted, so hover cannot flood diagnostics.
-Document/documentElement `pointermove` (which the shared root path now admits
-without certification), other flag configurations, hover events
-(over/out/enter/leave), pointer capture, captured/no-hit moves, responders,
-multi-touch, hardware, Godot mobile exports and performance require separate
-acceptance. See the
+Document/documentElement `pointermove` and the other flag configurations are
+covered by the [Document pointermove matrix](../pointer-document-move/README.md).
+Hover events (over/out/enter/leave), pointer capture, captured/no-hit moves,
+responders, multi-touch, hardware, Godot mobile exports and performance require
+separate acceptance. See the
 [research and next boundaries](../../docs/research/pointer-move.md).
