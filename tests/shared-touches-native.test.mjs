@@ -60,6 +60,8 @@ function verify({report, result, log, flagMode}) {
   assert.ok(report != null, log);
   assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);
   assert.equal(report.scenario, "native-shared-touches"); assert.equal(report.flagMode, flagMode); assert.equal(report.displayServer, "headless");
+  // Both hosts state all 20 checks: the five cases, mount and cleanup.
+  assert.equal(report.checks.length, 20);
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...report.failures].sort());
