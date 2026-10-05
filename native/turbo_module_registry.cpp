@@ -1,4 +1,5 @@
 #include "turbo_module_registry.h"
+#include "app_lifecycle.h"
 #include "game_service_registry.h"
 
 #include <ReactCommon/TurboModuleBinding.h>
@@ -23,8 +24,12 @@ using DevicePhysicalMetrics = rn::NativeDeviceInfoDisplayMetricsAndroid<double, 
 using DeviceDimensions = rn::NativeDeviceInfoDimensionsPayload<std::optional<DeviceDisplayMetrics>,
     std::optional<DeviceDisplayMetrics>, std::optional<DevicePhysicalMetrics>, std::optional<DevicePhysicalMetrics>>;
 using DeviceConstants = rn::NativeDeviceInfoDeviceInfoConstants<DeviceDimensions, std::optional<bool>, std::optional<bool>>;
+using AppStatePayload = rn::NativeAppStateAppState<std::string>;
+using AppStateConstants = rn::NativeAppStateAppStateConstants<std::string>;
 }
 namespace facebook::react {
+template <> struct Bridging<fabric_godot::AppStatePayload>
+    : NativeAppStateAppStateBridging<fabric_godot::AppStatePayload> {};
 template <> struct Bridging<fabric_godot::DeviceDisplayMetrics>
     : NativeDeviceInfoDisplayMetricsBridging<fabric_godot::DeviceDisplayMetrics> {};
 template <> struct Bridging<fabric_godot::DevicePhysicalMetrics>
@@ -124,6 +129,76 @@ class NativeDeviceInfo final : public rn::NativeDeviceInfoCxxSpec<NativeDeviceIn
     if (!value || value->isNull()) return {};
     if (!value->isBool()) throw jsi::JSError(runtime, std::string("E_DEVICE_INFO: ") + name + " must be boolean");
     return value->asBool();
+  }
+};
+
+struct AppStateModuleState {
+  bool active{true};
+  std::shared_ptr<AppLifecycle> lifecycle;
+  void stop() {
+    if (!active) return;
+    active = false;
+    lifecycle->release();
+  }
+};
+
+// AppState is a platform module: its generated C++ contract, payloads and the
+// RCTDeviceEventEmitter delivery are original RN, while the state comes from
+// the Godot lifecycle notifications of the owning application.
+class NativeAppState final : public rn::NativeAppStateCxxSpec<NativeAppState> {
+ public:
+  NativeAppState(const std::shared_ptr<rn::CallInvoker> &invoker,
+      std::shared_ptr<AppStateModuleState> state)
+      : rn::NativeAppStateCxxSpec<NativeAppState>(invoker), state_(std::move(state)),
+        // As in RCTAppState's initialize, the constant is the state at creation.
+        initial_(state_->lifecycle->state()) {
+    // Like AnimatedModule, events capture only copied values; delivery is
+    // queued through RN's emitDeviceEvent and never re-enters this object.
+    state_->lifecycle->observe([this](AppLifecycle::Event event, const std::string &app_state, bool focused) {
+      emit(event, app_state, focused);
+    });
+  }
+  ~NativeAppState() override { state_->stop(); }
+  jsi::Object getConstants(jsi::Runtime &runtime) {
+    live(runtime);
+    return rn::NativeAppStateAppStateConstantsBridging<AppStateConstants>::toJs(
+        runtime, AppStateConstants{initial_}, jsInvoker_);
+  }
+  // iOS and Android answer asynchronously with the current state; neither
+  // platform ever calls the error callback.
+  void getCurrentAppState(jsi::Runtime &runtime, rn::AsyncCallback<AppStatePayload> success, jsi::Function) {
+    live(runtime);
+    success(AppStatePayload{state_->lifecycle->state()});
+  }
+  // AppState.js hands this module to NativeEventEmitter on iOS only, so these
+  // are the no-ops of Android's AppStateModule.
+  void addListener(jsi::Runtime &, jsi::String) {}
+  void removeListeners(jsi::Runtime &, double) {}
+
+ private:
+  std::shared_ptr<AppStateModuleState> state_;
+  std::string initial_;
+  void live(jsi::Runtime &runtime) const {
+    if (!state_->active) throw jsi::JSError(runtime, "E_MODULE_DISPOSED: AppState");
+  }
+  void emit(AppLifecycle::Event event, const std::string &app_state, bool focused) {
+    switch (event) {
+      case AppLifecycle::Event::State:
+        emitDeviceEvent("appStateDidChange", [app_state, invoker = jsInvoker_](
+            jsi::Runtime &runtime, std::vector<jsi::Value> &args) {
+          args.emplace_back(rn::Bridging<AppStatePayload>::toJs(runtime, AppStatePayload{app_state}, invoker));
+        });
+        break;
+      case AppLifecycle::Event::Focus:
+        emitDeviceEvent("appStateFocusChange", [focused](jsi::Runtime &, std::vector<jsi::Value> &args) {
+          args.emplace_back(focused);
+        });
+        break;
+      case AppLifecycle::Event::MemoryWarning:
+        // RCTAppState sends memoryWarning without a body.
+        emitDeviceEvent("memoryWarning");
+        break;
+    }
   }
 };
 
@@ -385,6 +460,15 @@ void TurboModuleRegistry::add_device_info(std::function<folly::dynamic()> consta
       [device](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
         return std::make_shared<NativeDeviceInfo>(invoker, device);
       }, [device] { device->stop(); });
+}
+void TurboModuleRegistry::add_app_state(const std::shared_ptr<AppLifecycle> &lifecycle) {
+  if (!lifecycle) throw std::invalid_argument("AppState requires the application's lifecycle");
+  auto app_state = std::make_shared<AppStateModuleState>();
+  app_state->lifecycle = lifecycle;
+  add(std::string(NativeAppState::kModuleName),
+      [app_state](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+        return std::make_shared<NativeAppState>(invoker, app_state);
+      }, [app_state] { app_state->stop(); });
 }
 void TurboModuleRegistry::add_feature_flags() {
   add(std::string(rn::NativeReactNativeFeatureFlags::kModuleName),

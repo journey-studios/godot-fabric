@@ -9,6 +9,7 @@
 #include <string>
 
 namespace fabric_godot {
+class AppLifecycle;
 class GameServiceRegistry;
 // The platform owns providers and lifetime. The JSI binding, TurboModule
 // HostObjects, property cache, promises and typed event emitters remain RN's.
@@ -29,6 +30,9 @@ class TurboModuleRegistry {
   // Returns original DeviceInfo constants from real host window/screen metrics.
   // Physical pixel metrics follow RN's schema, including densityDpi.
   void add_device_info(std::function<folly::dynamic()> constants);
+  // Original AppState contract fed by the application's Godot lifecycle. The
+  // module observes it from its creation until disposal; it never emits after.
+  void add_app_state(const std::shared_ptr<AppLifecycle> &lifecycle);
   void add_feature_flags();
   void add_game_services(const std::shared_ptr<GameServiceRegistry> &services);
   void add_fixture();
