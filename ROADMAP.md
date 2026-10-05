@@ -1653,8 +1653,14 @@ Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
 match implementation b880b9b via git show/SHA-256 (execution base 3264107/dirty
 retained). Viewport capture, root query
 faults at hover offsets, once/AbortSignal, refs, mutation and reentry during
-Document hover, pen hover and capture while hovering remain open. Hosted CI for
-this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+Document hover, pen hover and capture while hovering remain open. Hosted
+Contracts run 37364101069 (the push of main 15e1dda) passed all five jobs, three of
+them in attempts 2-4 after the hosted pool did not run them; its
+[audited artifact](docs/evidence/pointer-document-hover/hosted-ci.json) repeats
+the 1,530 headless checks with identical IDs, bundles and stages, and all
+22 tracked inputs match b880b9b. [Pages 37364101010](docs/evidence/pointer-document-hover/publication.json)
+deployed this record from main 15e1dda, and the live public JSON and local API
+match it. No whole GF, checkpoint, weight or denominator closes.
 
 ### Click on release and scroll takeover (2026-10-05)
 

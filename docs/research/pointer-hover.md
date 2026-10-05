@@ -120,7 +120,8 @@ runs Document and documentElement over/out/enter/leave listeners in eight lanes
 (original/current interest × four flag configurations): 1,530 headless checks.
 Document listeners exist with native dispatch alone; documentElement listeners
 also need imperative events; only the current interest with native dispatch
-installs the query.
+installs the query. Hosted run 37364101069 repeated the 1,530 headless checks with
+identical IDs and bundles ([receipt](../evidence/pointer-document-hover/hosted-ci.json)).
 
 At the root, the query plays the role RN's ViewProps play for an ancestor:
 - **Over/out.** The path query reads the root last, bubble first and capture only

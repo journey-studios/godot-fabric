@@ -212,7 +212,9 @@ the installed current query delivers. Over/out reach them at phases 1 and 3;
 enter/leave reach only capture listeners at phase 1, for the nodes entering or
 leaving with the root; bubble enter/leave listeners on the root never run. A
 retained control that ignores the owner Document for hover offsets fails 34/22
-probe checks, and the independent oracle rejects it. Hosted CI pending.
+probe checks, and the independent oracle rejects it. Hosted run 37364101069 passed
+the same 1,530 checks with identical IDs and bundles
+([receipt](pointer-document-hover/hosted-ci.json)).
 
 The [click record](pointer-click/README.md) runs click synthesis and the scroll
 takeover in eight lanes: 728 headless checks. A primary release clicks the
