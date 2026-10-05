@@ -506,3 +506,14 @@ capture Map. [Evidence and limits](docs/evidence/pointer-document-up-mutation/RE
 | Before an Up whose query saw only capture | After that Up |
 | --- | --- |
 | ![A9/B4](docs/evidence/pointer-document-up-mutation/before.png) | ![A12/B4](docs/evidence/pointer-document-up-mutation/added.png) |
+
+### Reentrant dispatch from a native Document Up
+
+A listener delivered by an actual native Up can dispatch a new `pointerup` on its
+own or another root's Document before returning. The nested dispatch runs to
+completion untrusted at target, at the Up's Discrete priority, without native
+query or React update; the native Up then resumes trusted with its phase,
+currentTarget, target, path and `globalThis.event` intact. Re-dispatching the
+native Up itself throws `The event is already being dispatched.` The eight-lane
+matrix passes 5,097 headless checks and the graphical lane 946 checks.
+[Evidence and limits](docs/evidence/pointer-document-up-reentry/README.md).

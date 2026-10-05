@@ -195,10 +195,26 @@ gesture, which then qualifies. A deliberate wrong-phase removal fails eight prob
 checks, and the independent oracle rejects that retained report on its own. The graphical lane passes 835 checks with 118
 pixels; native/SDK bytes are unchanged.
 
+## Reentrant dispatch from native callbacks
+
+The [reentry evidence](../evidence/pointer-document-up-reentry/README.md) starts a
+nested dispatch from delivered native Up callbacks, for **5,097 headless
+checks**. A capture or bubble Document listener that dispatches a new
+`pointerup` on its own Document gets all three Document listeners called at
+phase 2, untrusted, on one Event object distinct from the Up and still at
+Discrete priority; the nested Event is clean when `dispatchEvent` returns. The
+native Up keeps its trust, phase, currentTarget, target, five-target path and
+global binding, and the remaining outer listeners run trusted. Re-dispatching
+the native Up itself throws before changing it. A nested dispatch on another
+root's Document reaches that root's listeners without native query, Raw, state,
+commit or contact change. A retained control that leaks the nested Event into
+`globalThis.event` fails three probe checks, and the oracle rejects it on its own.
+
 ## Boundaries still open
 
-This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle
-or dispatch, View/element listener mutation, mutation combined with
+This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle,
+nested dispatch on elements or with preventDefault/stopPropagation/errors,
+View/element listener mutation, mutation combined with
 stopPropagation, capture-phase or View listeners across root
 retirement, application stop/restart or keyed remount of the whole tree,
 captured/no-hit/null-target Up, got/lost capture, coalescing

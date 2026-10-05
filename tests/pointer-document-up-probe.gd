@@ -443,6 +443,8 @@ func remount_control(retained: Dictionary) -> void:
 func timeline(value: Dictionary) -> Array:
   var rows: Array = value.events.map(func(row: Dictionary) -> Array: return [row.sequence, row.label])
   rows.append_array(value.mutations.map(func(row: Dictionary) -> Array: return [row.sequence, row.action + ":" + row.target]))
+  rows.append_array(value.nested.map(func(row: Dictionary) -> Array: return [row.sequence, "nested:" + row.name + "." + row.label]))
+  rows.append_array(value.reentries.map(func(row: Dictionary) -> Array: return [row.sequence, "reenter:" + ("returned" if row.threw == null else "threw")]))
   rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
   return rows.map(func(row: Array) -> String: return row[1])
 
@@ -544,6 +546,86 @@ func mutation_controls() -> void:
   await mutation_up("B", 1, prefix + "/B", ["XDoc"] if on else [], docs if on else [36, 37], hit if on else [false, false])
   mutation_manual("B", prefix + "/B-after", ["XDoc"] if on else [])
   js("resetAll()")
+
+# A nested dispatch started inside a delivered native callback is untrusted, at
+# target on its Document, at the current Discrete priority and on its own Event
+# object. When it returns, the outer native Event keeps its trust, phase,
+# currentTarget, target, path and global binding, and the remaining outer
+# listeners run trusted.
+func nested_rows_clean(value: Dictionary) -> bool:
+  var identity: Dictionary = value.nestedEventIdentity
+  var count: int = value.nested.size()
+  return identity.count == count and identity.sameObject == (true if count > 0 else null) and identity.distinctFromOuter == (true if count > 0 else null) and value.nested.all(func(row: Dictionary) -> bool:
+    return row.type == "pointerup" and not row.trusted and row.phase == 2 and row.targetMatches and row.currentMatches and row.thisMatches and row.originalEvent and not row.originalSynthetic and row.globalEventMatches and row.currentPriority == value.discretePriority)
+
+func reentry_rows_clean(value: Dictionary, phase: int) -> bool:
+  return value.reentries.all(func(row: Dictionary) -> bool:
+    var outcome: bool = (row.sameEvent and row.returned == null and row.threw is String and row.threw.contains("already being dispatched") and row.nestedTrusted and row.nestedCleaned == null) if row.threw != null else (not row.sameEvent and row.returned == true and not row.nestedTrusted and row.nestedCleaned == true)
+    return outcome and row.outerTrusted and row.outerPhase == phase and row.outerCurrentMatches and row.outerTargetSame and row.outerPathLength > 0 and row.outerGlobalEventMatches and value.events.any(func(event: Dictionary) -> bool: return event.label == row.by and event.sequence < row.sequence))
+
+func reentry_up(name: String, index: int, prefix: String, entries: Array, phase: int) -> void:
+  await physical_down(name, index, prefix)
+  await finish_up(name, index, prefix, callbacks_of(entries), phases_of(entries), doc_offsets(), doc_results())
+  var value: Dictionary = stages[prefix + "/up"].react
+  var expected := entries.duplicate()
+  expected.append("TouchEnd")
+  check(timeline(value) == expected and value.mutations.is_empty() and value.reentries.size() == entries.filter(func(entry: String) -> bool: return entry.begins_with("reenter:")).size(),
+    prefix + "/up/Native callbacks nested dispatch and reentry outcome follow the exact original timeline")
+  check(nested_rows_clean(value) and reentry_rows_clean(value, phase),
+    prefix + "/up/Nested dispatch is untrusted at target and the outer native Event resumes intact")
+
+func flat_manual(name: String, prefix: String, labels_expected: Array) -> void:
+  manual(name, prefix, false, labels_expected)
+  var value: Dictionary = stages[prefix + "/manual"].react
+  check(value.nested.is_empty() and value.reentries.is_empty() and value.nestedEventIdentity.count == 0,
+    prefix + "/manual/Untrusted manual Up never re-enters dispatch")
+
+# Reentrant dispatch from actual native Up callbacks. Each listener re-enters
+# only for the trusted native Event, so nested events cannot recurse.
+func reentry_controls() -> void:
+  var on := installed()
+  var all_doc := ["DocC", "DocB1", "DocB2"] if native_dispatch else []
+  var nested_a := ["nested:A.DocC", "nested:A.DocB1", "nested:A.DocB2", "reenter:returned"]
+  js("resetAll()")
+
+  var prefix := "reentry/nested-capture"
+  stages[prefix + "/configuration"] = js("configure('A','re-nested-capture')")
+  var entries: Array = ["DocC"] + nested_a + ["DocB1", "DocB2"] if on else []
+  await reentry_up("A", 0, prefix, entries, 1)
+  flat_manual("A", prefix + "/after", all_doc)
+
+  prefix = "reentry/nested-bubble"
+  stages[prefix + "/configuration"] = js("configure('A','re-nested-bubble')")
+  entries = ["DocC", "DocB1"] + nested_a + ["DocB2"] if on else []
+  await reentry_up("A", 0, prefix, entries, 3)
+  flat_manual("A", prefix + "/after", all_doc)
+
+  # Re-dispatching the native Event itself is rejected before its trust flag
+  # changes; the remaining outer listener still observes a trusted Event.
+  prefix = "reentry/same-event"
+  stages[prefix + "/configuration"] = js("configure('A','re-same-event')")
+  await reentry_up("A", 0, prefix, ["DocB1", "reenter:threw", "DocB2"] if on else [], 3)
+  flat_manual("A", prefix + "/after", ["DocB1", "DocB2"] if native_dispatch else [])
+
+  # A's native callback dispatches on B's Document: B's listeners observe the
+  # untrusted nested Event without native query, Raw, state, commit or contact.
+  prefix = "reentry/cross-root"
+  stages[prefix + "/B-configuration"] = js("configure('B','doc')")
+  stages[prefix + "/configuration"] = js("configure('A','re-cross-root')")
+  var before_b := native(surfaces.B)
+  var count_b: Variant = state().panels.B.count
+  await reentry_up("A", 0, prefix + "/A", ["DocB", "nested:B.DocC", "nested:B.DocB", "reenter:returned"] if on else [], 3)
+  var after_b := native(surfaces.B)
+  stages[prefix + "/B-unchanged"] = {"before": before_b, "after": after_b, "beforeCount": count_b, "afterCount": state().panels.B.count}
+  check(after_b.commits == before_b.commits and after_b.pointer == before_b.pointer and state().panels.B.count == count_b,
+    prefix + "/A/Nested dispatch on B's Document changes no B state commit or contact")
+  var expected := expectation("doc")
+  await finish_up_after_down("B", 1, prefix + "/B", expected)
+  js("resetAll()")
+
+func finish_up_after_down(name: String, index: int, prefix: String, expected: Array) -> void:
+  await physical_down(name, index, prefix)
+  await finish_up(name, index, prefix, expected, [1, 3] if not expected.is_empty() else [], doc_offsets(), doc_results())
 
 func capture_frame(filename: String, expected_a: int, expected_b: int, lifecycle: bool = false) -> void:
   if not capture or DisplayServer.get_name() == "headless":
@@ -656,6 +738,7 @@ func run_probe() -> void:
   var retained: Dictionary = await retirement_control()
   await remount_control(retained)
   await mutation_controls()
+  await reentry_controls()
   # Independent JSX sentinel proves native Up transport in every flag lane. Its
   # sibling prop cannot qualify any preceding blue-leaf Up.
   js("resetAll()")

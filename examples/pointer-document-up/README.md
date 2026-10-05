@@ -205,12 +205,33 @@ doc.addEventListener('pointerup', second);
 | --- | --- |
 | ![A9/B4](../../docs/evidence/pointer-document-up-mutation/before.png) | ![A12/B4](../../docs/evidence/pointer-document-up-mutation/added.png) |
 
+## Dispatch reentrante
+
+A [evidência de reentrância](../../docs/evidence/pointer-document-up-reentry/README.md)
+amplia a matriz para **5.097 checks** headless. Um listener chamado pelo Up
+nativo pode emitir outro `pointerup` antes de retornar: o dispatch aninhado roda
+inteiro, untrusted e em fase 2, e o Up nativo continua depois com trust, fase,
+target, caminho e `globalThis.event` intactos. Re-despachar o próprio Up lança
+`The event is already being dispatched.`
+
+```js
+const doc = viewRef.current.ownerDocument;
+doc.addEventListener('pointerup', event => {
+  if (event.isTrusted) {
+    doc.dispatchEvent(new Event('pointerup', {bubbles: true})); // runs to completion here
+  }
+  // event is still the trusted native Up, at the same phase and target
+});
+```
+
 ## Limits
 
 This matrix certifies the listed healthy Document/element Up cases, including
-Document/documentElement rerender, held-root retirement, one replacement root and
-listener removal, addition and abort inside delivered Document Up callbacks.
-It does not certify Up-specific faults, reentrant dispatch, View/element listener
+Document/documentElement rerender, held-root retirement, one replacement root,
+listener removal, addition and abort inside delivered Document Up callbacks, and
+nested Document dispatch from those callbacks.
+It does not certify Up-specific faults, nested dispatch on elements or with
+preventDefault/stopPropagation/errors, View/element listener
 mutation, mutation combined with stopPropagation, capture-phase or
 View listeners across retirement, explicit pointer capture, coalescing, full responders, development
 renderer, hardware/mobile exports or performance. Down is filtered here; no
@@ -218,5 +239,5 @@ public Down/Up pointer-ID equality is claimed. The final Down regression passes 
 Native/SDK production bytes are unchanged from the separately proven View Up
 slice. Hosted baseline 84270fb passed 1,371 checks in five successful jobs and
 lifecycle run 37246479501 passed 2,143 and refs run 37310815360 passed 2,709; the
-mutation slice's hosted run is pending. The
+mutation and reentry slices' hosted runs are pending. The
 [research](../../docs/research/pointer-document-up.md) explains the boundaries.

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Document Up mutação durante dispatch validada; próximos: CI da fatia e reentrância"
+    "focusTitle": "Document Up reentrância validada; próximos: CIs das fatias e faults do Up"
   },
-  "updatedAt": "2026-10-05T13:45:35.438794+00:00",
+  "updatedAt": "2026-10-05T14:03:21.125803+00:00",
   "source": {
     "commit": "4342db0677731d1ba474ff4e32659b2828ab1831",
     "url": "https://github.com/journey-studios/godot-fabric/commit/4342db0677731d1ba474ff4e32659b2828ab1831",
-    "scope": "Document Up mutação durante dispatch: 4401 checks headless nas oito lanes (2709 anteriores preservados em ordem) e 835 viewport/9 frames/118 pixels. Mutações dentro de callbacks Up nativos reais: capture remove bubble → só DocC no mesmo Up e o gesto seguinte consulta 36=false/37=true; remove/abort de irmão pendente no Map em iteração é pulado (removed); add no mesmo Map espera o próximo gesto (re-add duplicado no-op); capture que adiciona RootB (I) e DocB entrega os dois no mesmo Up embora a consulta do root só visse capture; add no Document de B não altera B até o gesto de B. Controle negativo (remoção na fase errada) falha 8 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre de89fb2/dirty; 71 inputs executados conferidos por git show/SHA-256 contra 4342db0; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "scope": "Document Up dispatch reentrante: 5097 checks headless nas oito lanes (4401 anteriores preservados em ordem) e 946 viewport/9 frames/118 pixels. Callback capture ou bubble do Up nativo emite pointerup novo no próprio Document: os três listeners rodam em fase 2, untrusted, num Event distinto e ainda na prioridade Discrete; ao retornar, o Up nativo segue trusted com fase, currentTarget, target, caminho de 5 alvos e globalThis.event intactos, e os listeners restantes rodam trusted num commit. Re-despachar o próprio Up lança 'already being dispatched' sem alterá-lo. Dispatch aninhado no Document de B não consulta o nativo nem muda estado/commit/contato de B. Controle negativo retido (vazamento de globalThis.event) falha 3 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -362,7 +362,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "DocumentUp lifecycle:2143/oito lanes e414viewport/62pixels. Once primeiroUp→1update/1commit; segundo→0. Abort original false→true semstate/commit; pre-aborted inerte. Down2723/contracts255Node13Python/static passaram. CI baseline 842 1371 verificada; CI lifecycle 37246479501 repetiu 2143 checks em fc52215. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. StrictMode/dev/transitions/Suspense/Activity/stores/prioridades completas e paridade ampla abertos. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente.",
+      "note": "DocumentUp lifecycle:2143/oito lanes e414viewport/62pixels. Once primeiroUp→1update/1commit; segundo→0. Abort original false→true semstate/commit; pre-aborted inerte. Down2723/contracts255Node13Python/static passaram. CI baseline 842 1371 verificada; CI lifecycle 37246479501 repetiu 2143 checks em fc52215. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. StrictMode/dev/transitions/Suspense/Activity/stores/prioridades completas e paridade ampla abertos. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente. Reentrância DocUp: dispatch aninhado num callback nativo roda untrusted em fase 2 e Discrete, o Up retoma trusted com estado intacto, re-despachar o próprio Up lança; 5097 headless/946 viewport locais, CI pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -437,6 +437,10 @@
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
+            },
+            {
+              "label": "Document Up dispatch reentrante: 5097 checks e 946 viewport",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-reentrant-dispatch/docs/evidence/pointer-document-up-reentry/README.md"
             }
           ]
         },
@@ -473,7 +477,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Documents originais/duas roots e cleanup nativo mantidos nas oito lanes2143. Once consome apenas primeiroUp; abort-after-first remove interesse semownership/state; sinais originais observados. Retirada com contato ativo, remount com Document novo e listeners retidos inertes validados localmente (2709 checks); reentrância, stop/restart e demais lifetimes abertos. CI baseline 842 1371 passou 5 jobs; CI lifecycle 37246479501 passou 5 jobs/2143 checks; CI refs 37310815360 passou 5 jobs/2709 checks. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente.",
+      "note": "Documents originais/duas roots e cleanup nativo mantidos nas oito lanes2143. Once consome apenas primeiroUp; abort-after-first remove interesse semownership/state; sinais originais observados. Retirada com contato ativo, remount com Document novo e listeners retidos inertes validados localmente (2709 checks); reentrância, stop/restart e demais lifetimes abertos. CI baseline 842 1371 passou 5 jobs; CI lifecycle 37246479501 passou 5 jobs/2143 checks; CI refs 37310815360 passou 5 jobs/2709 checks. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente. Reentrância DocUp: dispatch aninhado num callback nativo roda untrusted em fase 2 e Discrete, o Up retoma trusted com estado intacto, re-despachar o próprio Up lança; 5097 headless/946 viewport locais, CI pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -572,6 +576,10 @@
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
+            },
+            {
+              "label": "Document Up dispatch reentrante: 5097 checks e 946 viewport",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-reentrant-dispatch/docs/evidence/pointer-document-up-reentry/README.md"
             }
           ]
         },
@@ -608,7 +616,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Maps RN originais36/37 sem nova produção nativa/SDK. DocumentD-only/elementI-and-D e quatroflags preservados; bubbleonce e AbortSignal originais retiram qualificação real do segundoUp.2143/414local,71codepins/24RN executados; pinimplementaçãoa3e6c6bconferido. CI baseline 842 1371/71 pins verificada; CI lifecycle 37246479501 2143 checks/71 blobs no checkout 3eaf9c2. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. Types/commands/getters/reentrância/hardware/mobile/performance abertos; defaults off. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente.",
+      "note": "Maps RN originais36/37 sem nova produção nativa/SDK. DocumentD-only/elementI-and-D e quatroflags preservados; bubbleonce e AbortSignal originais retiram qualificação real do segundoUp.2143/414local,71codepins/24RN executados; pinimplementaçãoa3e6c6bconferido. CI baseline 842 1371/71 pins verificada; CI lifecycle 37246479501 2143 checks/71 blobs no checkout 3eaf9c2. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. Types/commands/getters/reentrância/hardware/mobile/performance abertos; defaults off. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente. Reentrância DocUp: dispatch aninhado num callback nativo roda untrusted em fase 2 e Discrete, o Up retoma trusted com estado intacto, re-despachar o próprio Up lança; 5097 headless/946 viewport locais, CI pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -759,6 +767,10 @@
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
+            },
+            {
+              "label": "Document Up dispatch reentrante: 5097 checks e 946 viewport",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-reentrant-dispatch/docs/evidence/pointer-document-up-reentry/README.md"
             }
           ]
         },
@@ -1026,7 +1038,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "DocumentUp once/pre-aborted/abort-after-first passaram2143/oito SDK-flaglanes e414viewport/62pixels. Once A12/B2→A13/B2→A13/B2:1commit primeiro,zero segundo;36/37negativos/semRawUp,TouchEnd/cleanup reais. Sinal originalfalse→true, manualpré/pósabort e controle originalSDKonce passam. Down2723/contracts255Node13Python/static. CI baseline 842 1371/5 jobs verificada; CI lifecycle 37246479501 5 jobs/2143 checks auditada. View/element/outrasfases lifecycle,dispatchmutation/capturedUp/DownUpID/move/hover/responders/mobile/dev/performance abertos. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente.",
+      "note": "DocumentUp once/pre-aborted/abort-after-first passaram2143/oito SDK-flaglanes e414viewport/62pixels. Once A12/B2→A13/B2→A13/B2:1commit primeiro,zero segundo;36/37negativos/semRawUp,TouchEnd/cleanup reais. Sinal originalfalse→true, manualpré/pósabort e controle originalSDKonce passam. Down2723/contracts255Node13Python/static. CI baseline 842 1371/5 jobs verificada; CI lifecycle 37246479501 5 jobs/2143 checks auditada. View/element/outrasfases lifecycle,dispatchmutation/capturedUp/DownUpID/move/hover/responders/mobile/dev/performance abertos. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais, CI pendente. Reentrância DocUp: dispatch aninhado num callback nativo roda untrusted em fase 2 e Discrete, o Up retoma trusted com estado intacto, re-despachar o próprio Up lança; 5097 headless/946 viewport locais, CI pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1145,6 +1157,10 @@
             {
               "label": "Document Up mutação durante dispatch: 4401 checks, 835 viewport e 118 pixels",
               "url": "https://github.com/journey-studios/godot-fabric/blob/4342db0677731d1ba474ff4e32659b2828ab1831/docs/evidence/pointer-document-up-mutation/README.md"
+            },
+            {
+              "label": "Document Up dispatch reentrante: 5097 checks e 946 viewport",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/test/document-up-reentrant-dispatch/docs/evidence/pointer-document-up-reentry/README.md"
             }
           ]
         },
@@ -2945,6 +2961,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-reentry-local-verified-20261005",
+      "at": "2026-10-05T14:03:21.125803+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Document Up dispatch reentrante: 5097 headless/oito lanes e 946 viewport. Dispatch aninhado em callback capture/bubble do Up nativo roda untrusted em fase 2 e Discrete; o Up retoma trusted com fase/target/caminho/global intactos; re-despachar o Up lança; aninhado em B não muda B. Controle negativo retido falha 3 checks. Down 2723/contracts 255+13/exemplos/static passam; CI pendente. Nenhum GF/checkpoint/denominador fechado."
+    },
     {
       "id": "pointer-document-up-mutation-local-verified-20261005",
       "at": "2026-10-05T13:45:35.438794+00:00",
