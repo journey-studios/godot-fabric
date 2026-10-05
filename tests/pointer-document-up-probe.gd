@@ -438,6 +438,113 @@ func remount_control(retained: Dictionary) -> void:
   await finish_up("A", 0, prefix + "/fresh-document", expected, [1, 3] if not expected.is_empty() else [], doc_offsets(), doc_results())
   await capture_refs("pointer-document-up-refs-remounted.png", 2, 4)
 
+# Callbacks and the mutations they perform share one sequence. "action:target"
+# entries mark a mutation between the delivered callbacks around it.
+func timeline(value: Dictionary) -> Array:
+  var rows: Array = value.events.map(func(row: Dictionary) -> Array: return [row.sequence, row.label])
+  rows.append_array(value.mutations.map(func(row: Dictionary) -> Array: return [row.sequence, row.action + ":" + row.target]))
+  rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0])
+  return rows.map(func(row: Array) -> String: return row[1])
+
+func callbacks_of(entries: Array) -> Array:
+  return entries.filter(func(entry: String) -> bool: return not entry.contains(":"))
+
+func phases_of(entries: Array) -> Array:
+  return callbacks_of(entries).map(func(label: String) -> int: return 1 if label.ends_with("C") else 3)
+
+func mutation_rows_inside(value: Dictionary, phase: int) -> bool:
+  return value.mutations.all(func(row: Dictionary) -> bool:
+    return row.phase == phase and row.currentMatches and row.globalEventMatches and value.events.any(func(event: Dictionary) -> bool: return event.label == row.by and event.sequence < row.sequence))
+
+# One real gesture whose delivered callbacks mutate the original Maps. The
+# root query is recorded before dispatch, so it reflects Map membership before
+# any mutation performed by this same gesture.
+func mutation_up(name: String, index: int, prefix: String, entries: Array, offsets: Array, results: Array) -> void:
+  await physical_down(name, index, prefix)
+  await finish_up(name, index, prefix, callbacks_of(entries), phases_of(entries), offsets, results)
+  var value: Dictionary = stages[prefix + "/up"].react
+  var expected := entries.duplicate()
+  expected.append("TouchEnd")
+  check(timeline(value) == expected and value.mutations.size() == entries.size() - callbacks_of(entries).size(),
+    prefix + "/up/Native callbacks and their dispatch-time mutations follow the exact original timeline")
+  check(mutation_rows_inside(value, 1 if entries.size() > 0 and entries[0].ends_with("C") else 3),
+    prefix + "/up/Every mutation runs inside its own trusted callback with the current event and phase")
+
+func mutation_manual(name: String, prefix: String, entries: Array) -> void:
+  manual(name, prefix, false, callbacks_of(entries))
+  var value: Dictionary = stages[prefix + "/manual"].react
+  check(timeline(value) == entries and mutation_rows_inside(value, 2),
+    prefix + "/manual/Original manual Up applies the same mutation semantics at target")
+
+func signal_state(prefix: String, aborted: Variant) -> void:
+  stages[prefix] = js("signal('A')")
+  check(stages[prefix] == {"available": native_dispatch, "originalSignal": true if native_dispatch else null, "aborted": aborted if native_dispatch else null},
+    prefix + "/Actual original signal state matches the callbacks that really ran")
+
+# Listener mutation during actual native Up dispatch. The original dispatcher
+# snapshots each target/phase Map when it reaches it: removal or abort marks a
+# pending registration removed, an add to the same Map waits for the next
+# event, and an add to a later target or phase runs in the same dispatch.
+func mutation_controls() -> void:
+  var on := installed()
+  var docs := doc_offsets()
+  var hit := doc_results()
+  js("resetAll()")
+
+  var prefix := "mutation/remove-later"
+  stages[prefix + "/configuration"] = js("configure('A','mut-remove-later')")
+  await mutation_up("A", 0, prefix + "/first", ["DocC", "remove:DocB"] if on else [], docs, hit)
+  await mutation_up("A", 0, prefix + "/second", ["DocC", "remove:DocB"] if on else [], [36, 37], [false, on])
+  mutation_manual("A", prefix + "/after", ["DocC", "remove:DocB"] if native_dispatch else [])
+
+  prefix = "mutation/remove-sibling"
+  stages[prefix + "/configuration"] = js("configure('A','mut-remove-sibling')")
+  await mutation_up("A", 0, prefix + "/first", ["DocB1", "remove:DocB2"] if on else [], docs, hit)
+  await mutation_up("A", 0, prefix + "/second", ["DocB1", "remove:DocB2"] if on else [], docs, hit)
+  mutation_manual("A", prefix + "/after", ["DocB1", "remove:DocB2"] if native_dispatch else [])
+
+  prefix = "mutation/add-same"
+  stages[prefix + "/configuration"] = js("configure('A','mut-add-same')")
+  await mutation_up("A", 0, prefix + "/first", ["DocB1", "add:DocB2"] if on else [], docs, hit)
+  await mutation_up("A", 0, prefix + "/second", ["DocB1", "add:DocB2", "DocB2"] if on else [], docs, hit)
+  # Without native delivery the manual dispatch is the first add.
+  mutation_manual("A", prefix + "/after", (["DocB1", "add:DocB2", "DocB2"] if on else ["DocB1", "add:DocB2"]) if native_dispatch else [])
+
+  prefix = "mutation/add-later"
+  stages[prefix + "/configuration"] = js("configure('A','mut-add-later')")
+  var later_entries := (["DocC", "add:RootB", "add:DocB", "RootB", "DocB"] if imperative else ["DocC", "add:DocB", "DocB"]) if on else []
+  # Before the first gesture only the capture Map is populated. The graphical
+  # lane frames A=9 (remount 2, remove-later 2, remove-sibling 2, add-same 3)
+  # and B=4 around one Up that delivers three callbacks.
+  await capture_refs("pointer-document-up-mutation-before.png", 9, 4)
+  await mutation_up("A", 0, prefix + "/first", later_entries, [36, 37], [false, on])
+  await capture_refs("pointer-document-up-mutation-added.png", 12, 4)
+  await mutation_up("A", 0, prefix + "/second", later_entries, docs, hit)
+  # The manual Document path has no documentElement, so RootB stays silent.
+  mutation_manual("A", prefix + "/after", (["DocC", "add:RootB", "add:DocB", "DocB"] if imperative else ["DocC", "add:DocB", "DocB"]) if native_dispatch else [])
+
+  prefix = "mutation/abort-sibling"
+  stages[prefix + "/configuration"] = js("configure('A','mut-abort-sibling')")
+  signal_state(prefix + "/signal-before", false)
+  await mutation_up("A", 0, prefix + "/first", ["DocB1", "abort:DocB2"] if on else [], docs, hit)
+  await mutation_up("A", 0, prefix + "/second", ["DocB1", "abort:DocB2"] if on else [], docs, hit)
+  signal_state(prefix + "/signal-after-native", on)
+  mutation_manual("A", prefix + "/after", ["DocB1", "abort:DocB2"] if native_dispatch else [])
+  signal_state(prefix + "/signal-after-manual", true)
+
+  prefix = "mutation/cross-root"
+  js("configure('B','none')")
+  stages[prefix + "/configuration"] = js("configure('A','mut-cross-root')")
+  var before_b := native(surfaces.B)
+  var count_b: Variant = state().panels.B.count
+  await mutation_up("A", 0, prefix + "/A", ["DocB", "add:XDoc"] if on else [], docs, hit)
+  var after_b := native(surfaces.B)
+  check(after_b.commits == before_b.commits and after_b.pointer == before_b.pointer and state().panels.B.count == count_b,
+    prefix + "/A/Adding to B's Document during A's dispatch changes no B state commit or contact")
+  await mutation_up("B", 1, prefix + "/B", ["XDoc"] if on else [], docs if on else [36, 37], hit if on else [false, false])
+  mutation_manual("B", prefix + "/B-after", ["XDoc"] if on else [])
+  js("resetAll()")
+
 func capture_frame(filename: String, expected_a: int, expected_b: int, lifecycle: bool = false) -> void:
   if not capture or DisplayServer.get_name() == "headless":
     return
@@ -548,6 +655,7 @@ func run_probe() -> void:
   await rerender_control()
   var retained: Dictionary = await retirement_control()
   await remount_control(retained)
+  await mutation_controls()
   # Independent JSX sentinel proves native Up transport in every flag lane. Its
   # sibling prop cannot qualify any preceding blue-leaf Up.
   js("resetAll()")
