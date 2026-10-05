@@ -4,7 +4,8 @@ Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pointer-root-path/README.md) owns the
 82 headless checks and the two-part control on the View hover host: its View
 case fails exactly 9 normative checks, and its Document case crashes. Public
-EventTarget flags remain disabled.
+EventTarget flags remain disabled. Hosted run 37359026197 repeated the 82 headless
+checks with identical IDs and bundle ([receipt](../evidence/pointer-root-path/hosted-ci.json)).
 
 ## What RN does with an empty point
 

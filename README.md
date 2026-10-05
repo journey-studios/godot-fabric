@@ -192,7 +192,8 @@ point inside a surface to the root view, as RN does, so the root stays in the
 hover path between a view and the empty area, and never makes the root an event
 target. That removes a crash of the preceding host with a Document capture
 `pointerenter`/`pointerleave` listener: 82 headless checks, and the same bundle
-fails 9 checks and crashes on the preceding host.
+fails 9 checks and crashes on the preceding host. Hosted CI repeated the 82
+checks ([receipt](docs/evidence/pointer-root-path/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-root-path/README.md).
 
 The [Document hover example](examples/pointer-document-hover/README.md)

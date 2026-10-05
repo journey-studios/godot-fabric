@@ -201,7 +201,8 @@ handle: the path query, the enter/leave loops and the binding all skip it, while
 its capture lookups still propagate to entering and leaving descendants. On the
 preceding host the same bundle fails exactly 9 View-case checks, and its Document
 case crashes (signal 11 in `dispatchEventToJS`) when enter is emitted to the root.
-Hosted CI pending.
+Hosted run 37359026197 passed the same 82 checks with identical IDs and bundle
+([receipt](pointer-root-path/hosted-ci.json)).
 
 The [Document hover record](pointer-document-hover/README.md) runs Document and
 documentElement over/out/enter/leave listeners in eight lanes (original/current

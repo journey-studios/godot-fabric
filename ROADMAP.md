@@ -1604,8 +1604,13 @@ consumer (30 + 40) and cold start pass too. All 76 executed code/configuration
 inputs match implementation 71a64c2 via git show/SHA-256 (execution base
 1302d51/dirty retained; ea091a0 only records hover receipts). Document hover across the flag matrix, documentElement listeners,
 surface selection for empty-area input, pen hover, capture while hovering,
-responders and multi-touch remain open. Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+responders and multi-touch remain open. Hosted Contracts run 37359026197 passed all
+five jobs at a478778 (merge checkout 0523b27); its [audited artifact](docs/evidence/pointer-root-path/hosted-ci.json)
+repeats the 82 headless checks with identical IDs, bundle and stages, and all
+76 tracked inputs match 71a64c2 in the checkout tree. [Pages 37360227776](docs/evidence/pointer-root-path/publication.json)
+deployed this record from main 3264107, and the live public JSON and local API match
+it. The two-part preceding-host control stays local. No whole GF, checkpoint,
+weight or denominator closes.
 
 
 ### Document hover across four original flags (2026-10-05)
