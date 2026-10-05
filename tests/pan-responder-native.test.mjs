@@ -119,11 +119,13 @@ test("the original PanResponder negotiates and tracks gestures from actual Godot
   }
   for (const result of results) verify(result);
   if (allowPreviousSDK || modes.length !== eventTargetProbeModes.length) return;
-  // Both responder implementations (legacy plugin and native dispatch) agree.
+  // Both responder implementations (legacy plugin and native dispatch) agree on
+  // every callback and gesture coordinate; velocity is checked per lane above.
+  const trace = row => [row.view, row.callback, row.x0, row.y0, row.moveX, row.moveY, row.dx, row.dy, row.numberActiveTouches];
   for (const id of Object.keys(cases)) {
-    const reference = reports.disabled.stages[id].react.events.map(row => [row.view, row.callback, row.dx, row.dy, row.numberActiveTouches]);
+    const reference = reports.disabled.stages[id].react.events.map(trace);
     for (const mode of eventTargetProbeModes)
-      assert.deepEqual(reports[mode].stages[id].react.events.map(row => [row.view, row.callback, row.dx, row.dy, row.numberActiveTouches]), reference, `${mode} ${id}`);
+      assert.deepEqual(reports[mode].stages[id].react.events.map(trace), reference, `${mode} ${id}`);
   }
   await writeFile(path.join(root, "build/pan-responder-comparison.json"), JSON.stringify({scenario: "native-pan-responder", modes,
     nativeHostSha256, reports, scope: {actualNativeInput: true, publicDefaultEnabled: false, hardwareCertified: false}}, null, 2) + "\n");
