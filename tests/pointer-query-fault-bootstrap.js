@@ -35,11 +35,12 @@ globalThis.godotInstallPointerListenerQuery = interceptedInstaller;
 
 export const queryFaultControl = {
   setFault({targetref, offset, mode, remaining = 1, label}) {
-    // Move interest uses offsets 1/25, Down 34/35 and Up 36/37 (bubble/capture).
-    // A Move fault may repeat across a few samples to exercise repeated reports.
+    // Down uses offsets 34/35 and Up 36/37 (bubble/capture); Move 1/25 and
+    // hover 0/23, 2/24, 26/28, 27/29. A fault outside Down/Up may repeat across
+    // a few lookups to exercise repeated reports.
     if (targetref == null || typeof targetref.addEventListener !== "function" ||
-      ![1, 25, 34, 35, 36, 37].includes(offset) || !["throw", "nonboolean"].includes(mode) || typeof label !== "string" ||
-      !Number.isInteger(remaining) || remaining < 1 || remaining > ([1, 25].includes(offset) ? 4 : 1))
+      ![0, 1, 2, 23, 24, 25, 26, 27, 28, 29, 34, 35, 36, 37].includes(offset) || !["throw", "nonboolean"].includes(mode) || typeof label !== "string" ||
+      !Number.isInteger(remaining) || remaining < 1 || remaining > ([34, 35, 36, 37].includes(offset) ? 1 : 4))
       throw Error("Query-fault configuration requires a real ref, a native pointer offset and explicit failures");
     fault = {targetref, offset, mode, remaining, label};
     return {targetTag: targetref.tag, offset, mode, remaining, label};

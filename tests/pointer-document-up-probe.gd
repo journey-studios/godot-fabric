@@ -33,7 +33,32 @@ func js(expression: String) -> Variant:
 
 func state() -> Dictionary:
   var value: Variant = js("snapshot()")
-  return value if value is Dictionary else {}
+  return split_hover_rows(value) if value is Dictionary else {}
+
+# RN's hover tracker runs before each Down/Move emission and after a touch's Up
+# or Cancel, so hover lookups (enter 0/23, leave 2/24, over 26/28, out 27/29)
+# interleave with the category each check certifies. state() keeps that
+# category in query.rows and moves hover lookups to query.hoverRows.
+const HOVER_OFFSETS := [0, 2, 23, 24, 26, 27, 28, 29]
+var unhealthy_hover_lookups: Dictionary = {}
+
+func split_hover_rows(value: Dictionary) -> Dictionary:
+  var query: Variant = value.get("query")
+  if not query is Dictionary or not query.has("rows"):
+    return value
+  var rows: Array = query.rows
+  query.rows = rows.filter(func(row: Dictionary) -> bool: return not int(row.offset) in HOVER_OFFSETS)
+  query.hoverRows = rows.filter(func(row: Dictionary) -> bool: return int(row.offset) in HOVER_OFFSETS)
+  for row: Dictionary in query.hoverRows:
+    if row.action != "delegate" or row.resultKind != "boolean" or row.result:
+      unhealthy_hover_lookups[int(row.sequence)] = row
+  return value
+
+# No Document fixture registers a hover listener, so every hover lookup a lane
+# observed must be a healthy false delegate to the original SDK query.
+func check_hover_lookups() -> void:
+  stages.hoverLookups = {"unhealthy": unhealthy_hover_lookups.values()}
+  check(unhealthy_hover_lookups.is_empty(), "hover/Gestures without hover listeners read hover Maps only as healthy false lookups")
 
 func mount(name: String, position: Vector2) -> void:
   var surface: Control = ClassDB.instantiate("FabricSurface")
@@ -871,6 +896,7 @@ func run_probe() -> void:
   application.queue_free()
   await settle()
   await fault_controls()
+  check_hover_lookups()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var report := {"scenario": "native-pointer-document-up-four-flags", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
     "displayServer": DisplayServer.get_name(), "flagMode": flag_mode, "interestMode": interest_mode, "captureRequested": capture,

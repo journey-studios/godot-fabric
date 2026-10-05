@@ -114,11 +114,24 @@ test("one native canonical.publicInstance resolver fault cannot discard the foll
   const configuration = report.stages[prefix + "/configuration"];
   assert.ok(configuration.actualFiber && configuration.actualCanonical && configuration.descriptorOwnData && configuration.descriptorConfigurable &&
     configuration.originalRef && configuration.connected && configuration.valueTagMatches);
+  // A touch Down reads the target's over pair and enter pair before its Down
+  // lookup (RN's hover tracker runs first). The getter lets exactly those reads
+  // through and fails the Down lookup's own read, before any of its SDK entries.
+  const healthy = report.stages["positive-before-getter/down"];
+  const passThrough = healthy.query.hoverRows.filter(row => row.targetTag === healthy.targetTag).length;
+  assert.equal(passThrough, allowOriginalNegative ? 0 : 4);
+  assert.equal(configuration.passThrough, passThrough);
   const stage = report.stages[prefix + "/down"], value = stage.react, resolver = value.resolver;
-  assert.equal(resolver.attempts.length, 1);
-  assert.ok(resolver.attempts[0].ownerMatches && resolver.attempts[0].descriptorRestoredBeforeThrow);
-  assert.equal(resolver.attempts[0].sdkEntriesBeforeThrow, 0);
-  assert.equal(resolver.attempts[0].remaining, 0); assert.equal(resolver.remaining, 0);
+  assert.deepEqual(value.query.hoverRows.filter(row => row.targetTag === value.targetTag).map(row => row.offset),
+    allowOriginalNegative ? [] : [26, 28, 23, 0]);
+  assert.ok(value.query.hoverRows.every(row => row.action === "delegate" && row.resultKind === "boolean" && row.result === false &&
+    value.query.rows.every(other => row.sequence < other.sequence)), "Hover lookups precede the Down lookups and stay false");
+  assert.equal(resolver.attempts.length, passThrough + 1);
+  assert.ok(resolver.attempts.slice(0, passThrough).every(attempt => attempt.passedThrough && attempt.ownerMatches));
+  const thrown = resolver.attempts.at(-1);
+  assert.ok(!thrown.passedThrough && thrown.ownerMatches && thrown.descriptorRestoredBeforeThrow);
+  assert.equal(thrown.sdkEntriesBeforeThrow, value.query.hoverRows.length);
+  assert.equal(thrown.remaining, 0); assert.equal(resolver.remaining, 0);
   assert.ok(!resolver.armed && resolver.descriptorRestored);
   assert.deepEqual(resolver.descriptor, {kind: "data", valueMatches: true, writableMatches: true, enumerableMatches: true, configurableMatches: true});
   assert.ok(value.query.rows.every(row => row.targetTag !== value.targetTag || row.offset !== 34),
@@ -151,14 +164,15 @@ test("one native canonical.publicInstance resolver fault cannot discard the foll
     const manual = report.stages[id + "/manual"];
     assert.deepEqual(labels(manual.react), ["pointerdown-bubble"]);
     assert.ok(manual.result.returned && manual.result.cleaned && manual.result.targetMatches && !manual.result.trusted);
-    assert.deepEqual(manual.react.raw, []); assert.deepEqual(manual.react.query.rows, []); clean(manual.react);
+    assert.deepEqual(manual.react.raw, []); assert.deepEqual(manual.react.query.rows, []);
+    assert.deepEqual(manual.react.query.hoverRows, []); clean(manual.react);
   }
   const cancelled = report.stages[prefix + "/terminal"];
   assert.deepEqual(labels(cancelled), ["touchcancel"]); event(cancelled, "touchcancel", "topTouchCancel"); clean(cancelled);
   assert.deepEqual(cancelled.query.rows, []);
   const survivor = report.stages["survivor-while-held/down"];
-  assert.ok(survivor.resolver.descriptorRestored && survivor.resolver.attempts.length === 1);
-  assert.ok(report.stages.beforeStop.react.resolver.descriptorRestored && report.stages.beforeStop.react.resolver.attempts.length === 1);
+  assert.ok(survivor.resolver.descriptorRestored && survivor.resolver.attempts.length === passThrough + 1);
+  assert.ok(report.stages.beforeStop.react.resolver.descriptorRestored && report.stages.beforeStop.react.resolver.attempts.length === passThrough + 1);
   assert.ok(report.afterStop.stopped && !report.afterStop.pointerListenerQueryInstalled && report.afterStop.rootCount === 0);
   for (const field of ["pendingWork", "pendingTimers", "pendingAnimationFrames", "pendingRootRetirements"]) assert.equal(report.afterStop[field], 0);
   assert.deepEqual(report.afterStop.pointerProcessor, {active: 0, pendingCapture: 0, activeCapture: 0, hover: 0});

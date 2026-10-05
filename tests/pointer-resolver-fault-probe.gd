@@ -74,9 +74,14 @@ func run_probe() -> void:
   js("configure('A',false)")
   public_control("A", prefix, false)
   js("arm('A',%s)" % JSON.stringify(prefix + "/down"))
-  var configuration: Dictionary = js("armResolverFault('A')")
+  # A touch Down enters the hover path first: RN reads the target's over and
+  # enter Maps before its Down lookup. The getter lets the target reads of the
+  # identical healthy gesture pass through and fails the Down lookup's own read.
+  var healthy_down: Dictionary = stages["positive-before-getter/down"]
+  var pass_through: int = healthy_down.query.hoverRows.filter(func(row: Dictionary) -> bool: return row.targetTag == healthy_down.targetTag).size()
+  var configuration: Dictionary = js("armResolverFault('A',%d)" % pass_through)
   stages[prefix + "/configuration"] = configuration
-  check(configuration.actualFiber and configuration.actualCanonical and configuration.descriptorOwnData and configuration.descriptorConfigurable and configuration.originalRef and configuration.connected and configuration.valueTagMatches and configuration.remaining == 1,
+  check(configuration.actualFiber and configuration.actualCanonical and configuration.descriptorOwnData and configuration.descriptorConfigurable and configuration.originalRef and configuration.connected and configuration.valueTagMatches and configuration.remaining == 1 and configuration.passThrough == pass_through,
     prefix + "/Getter is installed on the actual newest native-tag Fiber canonical and original own ref descriptor")
   var before := native(surfaces.A)
   var errors_before: Array = native(application).errors
@@ -89,8 +94,10 @@ func run_probe() -> void:
   check(app.errors.size() == errors_before.size() + 1 and str(app.errors[-1]).contains(cause),
     prefix + "/Exactly one real native diagnostic preserves the deliberate resolver cause")
   var attempts: Array = value.resolver.attempts
-  check(attempts.size() == 1 and attempts[0].ownerMatches and attempts[0].remaining == 0 and attempts[0].descriptorRestoredBeforeThrow and attempts[0].sdkEntriesBeforeThrow == 0 and value.resolver.remaining == 0,
-    prefix + "/The one actual getter access restores its descriptor before throwing without entering SDK query")
+  var thrown: Dictionary = attempts[-1] if not attempts.is_empty() else {}
+  var hover_first: bool = value.query.hoverRows.all(func(row: Dictionary) -> bool: return value.query.rows.all(func(other: Dictionary) -> bool: return row.sequence < other.sequence))
+  check(attempts.size() == pass_through + 1 and attempts.slice(0, pass_through).all(func(attempt: Dictionary) -> bool: return attempt.passedThrough and attempt.ownerMatches) and not thrown.passedThrough and thrown.ownerMatches and thrown.remaining == 0 and thrown.descriptorRestoredBeforeThrow and thrown.sdkEntriesBeforeThrow == value.query.hoverRows.size() and hover_first and value.resolver.remaining == 0,
+    prefix + "/Only the Down lookup's getter access throws, after the target's hover reads, restoring its descriptor before any SDK entry")
   check(not value.resolver.armed and value.resolver.descriptorRestored and value.resolver.descriptor.kind == "data" and value.resolver.descriptor.valueMatches and value.resolver.descriptor.writableMatches and value.resolver.descriptor.enumerableMatches and value.resolver.descriptor.configurableMatches,
     prefix + "/Original data descriptor value and all flags are restored before subsequent work")
   check(value.query.rows.all(func(row: Dictionary) -> bool: return row.targetTag != value.targetTag or row.offset != 34),
@@ -118,14 +125,14 @@ func run_probe() -> void:
   await capture_frame("pointer-resolver-fault-updated.png", true)
 
   await healthy_gesture("B", 1, "survivor-while-held", false, 1)
-  check(state().resolver.attempts.size() == 1 and state().resolver.descriptorRestored and native(surfaces.A).pointer.activePointers == 1,
+  check(state().resolver.attempts.size() == pass_through + 1 and state().resolver.descriptorRestored and native(surfaces.A).pointer.activePointers == 1,
     "survivor-while-held/Independent B Up preserves the restored descriptor and legitimate held A contact")
   js("arm('A',%s)" % JSON.stringify(prefix + "/terminal"))
   var terminal_before := native(surfaces.A)
   await inject("A", 0, "cancel")
   stages[prefix + "/terminal"] = verify_terminal("A", terminal_before, "cancel", prefix + "/fault-contact")
   await healthy_gesture("A", 0, "next-gesture")
-  check(state().resolver.attempts.size() == 1 and state().resolver.descriptorRestored and state().resolver.remaining == 0,
+  check(state().resolver.attempts.size() == pass_through + 1 and state().resolver.descriptorRestored and state().resolver.remaining == 0,
     "next-gesture/Restored descriptor supports the next actual A gesture without another resolver fault")
   check(native(application).errors.size() == 1, "errors/Recovery and independent roots neither duplicate nor clear the one native diagnostic")
   stages.beforeStop = {"application": native(application), "react": state()}
@@ -142,6 +149,7 @@ func run_probe() -> void:
     surfaces[name].queue_free()
   application.queue_free()
   await settle()
+  check_hover_lookups()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()

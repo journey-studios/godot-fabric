@@ -12,7 +12,7 @@ const listenerStorageSpan = `function getListenersForPhase(
     : // $FlowExpectedError[prop-missing]
       eventTarget[BUBBLING_LISTENERS_KEY];
 }`;
-const pointerQueries = `// Godot: inspect original Down/Up/Move registrations without invoking listeners.
+const pointerQueries = `// Godot: inspect original Down/Up/Move/hover registrations without invoking listeners.
 function hasPointerListenerForGodot(target, capture, type) {
   if (target == null) return false;
   const listeners = getListenersForPhase(target, capture)?.get(type);
@@ -30,6 +30,18 @@ export function hasPointerUpListenerForGodot(target, capture) {
 }
 export function hasPointerMoveListenerForGodot(target, capture) {
   return hasPointerListenerForGodot(target, capture, 'pointermove');
+}
+export function hasPointerEnterListenerForGodot(target, capture) {
+  return hasPointerListenerForGodot(target, capture, 'pointerenter');
+}
+export function hasPointerLeaveListenerForGodot(target, capture) {
+  return hasPointerListenerForGodot(target, capture, 'pointerleave');
+}
+export function hasPointerOverListenerForGodot(target, capture) {
+  return hasPointerListenerForGodot(target, capture, 'pointerover');
+}
+export function hasPointerOutListenerForGodot(target, capture) {
+  return hasPointerListenerForGodot(target, capture, 'pointerout');
 }
 `;
 

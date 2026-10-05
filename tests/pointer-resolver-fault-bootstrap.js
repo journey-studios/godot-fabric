@@ -12,7 +12,9 @@ function exactDescriptor(actual, expected) {
     actual.enumerable === expected.enumerable && actual.configurable === expected.configurable;
 }
 export const resolverFaultControl = {
-  arm(tag) {
+  // passThrough lets that many earlier reads see the original value: on a touch
+  // Down, RN reads the target's hover Maps before its own Down lookup.
+  arm(tag, passThrough = 0) {
     // One getter at a time: a later fault may replace only a consumed one whose
     // original descriptor is already restored.
     if (fault != null && (fault.remaining > 0 ||
@@ -24,13 +26,20 @@ export const resolverFaultControl = {
       !(descriptor.value instanceof OriginalEventTarget) || !(descriptor.value instanceof ReactNativeElement) ||
       descriptor.value.tag !== tag || !descriptor.value.isConnected)
       throw Error("Resolver fault needs the actual connected Fiber canonical's configurable original public ref descriptor");
-    fault = {tag, canonical, descriptor, remaining: 1, attempts: []};
+    if (!Number.isInteger(passThrough) || passThrough < 0)
+      throw Error("Resolver fault pass-through must be a non-negative read count");
+    fault = {tag, canonical, descriptor, remaining: 1, passThrough, attempts: []};
     const getter = function() {
+      if (fault.passThrough > 0) {
+        --fault.passThrough;
+        fault.attempts.push({ownerMatches: this === canonical, passedThrough: true, sdkEntriesBefore: queryFaultControl.snapshot().rows.length});
+        return descriptor.value;
+      }
       // Restore BEFORE throwing so following TouchStart/terminal/React work can
       // read the exact original descriptor. No native API or listener runs here.
       --fault.remaining;
       Object.defineProperty(canonical, "publicInstance", descriptor);
-      fault.attempts.push({ownerMatches: this === canonical, remaining: fault.remaining,
+      fault.attempts.push({ownerMatches: this === canonical, passedThrough: false, remaining: fault.remaining,
         descriptorRestoredBeforeThrow: exactDescriptor(Object.getOwnPropertyDescriptor(canonical, "publicInstance"), descriptor),
         sdkEntriesBeforeThrow: queryFaultControl.snapshot().rows.length, cause});
       throw Error(cause);
@@ -40,7 +49,7 @@ export const resolverFaultControl = {
       actualCanonical: canonical === handle.stateNode.canonical, descriptorOwnData: true,
       originalRef: descriptor.value instanceof OriginalEventTarget && descriptor.value instanceof ReactNativeElement,
       connected: descriptor.value.isConnected, valueTagMatches: descriptor.value.tag === tag,
-      descriptorConfigurable: descriptor.configurable, cause, remaining: 1};
+      descriptorConfigurable: descriptor.configurable, cause, remaining: 1, passThrough};
   },
   snapshot() {
     if (fault == null) return {armed: false, remaining: null, attempts: [], descriptorRestored: null};

@@ -178,6 +178,12 @@ Only the installed current query delivers, at phase 1 for capture and 3 for
 bubble, and a retained control that drops the owner Document fails.
 [Evidence](docs/evidence/pointer-document-move/README.md).
 
+The [hover example](examples/pointer-hover/README.md) lets original View
+`pointerover/out/enter/leave` listeners qualify real mouse and touch hover in RN's
+order, phases and Discrete priority, with enter/leave's non-bubbling rule intact:
+158 headless checks and 32 old-host failures.
+[Evidence](docs/evidence/pointer-hover/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

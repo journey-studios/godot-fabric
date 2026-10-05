@@ -255,6 +255,17 @@ jobs:
             build/pointer-document-move-original-*.log
             build/pointer-document-move-current-*.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:hover
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-hover
+          path: |
+            build/pointer-hover-report.json
+            build/pointer-hover-current-report.json
+            build/pointer-hover-comparison.json
+            build/pointer-hover-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

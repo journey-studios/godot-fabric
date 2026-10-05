@@ -26,9 +26,10 @@ function record(name, label, receiver, event) {
     pointerType: native?.pointerType ?? null, touchIdentifier: native?.changedTouches?.[0]?.identifier ?? null,
     timeStamp: event.timeStamp, nativeTimeStamp: native?.timeStamp ?? native?.timestamp ?? null,
     currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority(),
-    // Move cases also listen on the parent and compare coalesced coordinates.
+    // Move and hover cases also listen on the parent and compare coordinates.
     ...(panels.get(name)?.probePointerMove ? {currentTag: event.currentTarget?.tag ?? null,
-      offsetX: native?.offsetX ?? null, offsetY: native?.offsetY ?? null} : {})});
+      offsetX: native?.offsetX ?? null, offsetY: native?.offsetY ?? null} : {}),
+    ...(panels.get(name)?.probePointerHover ? {targetTag: event.target?.tag ?? null} : {})});
   active.eventRefs.push(event);
   if (event.isTrusted && label === "touchstart" && panels.has(name)) panels.get(name).setStarts(value => value + 1);
   if (event.isTrusted && event.type === "pointerup" && panels.get(name)?.probePointerUp) panels.get(name).setUps(value => value + 1);
@@ -38,12 +39,12 @@ function reset(name) {
   const panel = panels.get(name);
   for (const binding of panel.bindings.splice(0)) binding.ref.removeEventListener(binding.type ?? "pointerdown", binding.callback, binding.capture);
 }
-function Fixture({name, probePointerUp = false, probePointerMove = false}) {
+function Fixture({name, probePointerUp = false, probePointerMove = false, probePointerHover = false}) {
   const refs = useRef({}).current, bindings = useRef([]).current;
   const [starts, setStarts] = useState(0);
   const [ups, setUps] = useState(0);
   const [moves, setMoves] = useState(0);
-  panels.set(name, {refs, bindings, starts, setStarts, ups, setUps, probePointerUp, moves, setMoves, probePointerMove});
+  panels.set(name, {refs, bindings, starts, setStarts, ups, setUps, probePointerUp, moves, setMoves, probePointerMove, probePointerHover});
   useEffect(() => {
     mounts[name] = (mounts[name] ?? 0) + 1;
     return () => { reset(name); cleanups[name] = (cleanups[name] ?? 0) + 1; panels.delete(name); };
@@ -60,7 +61,9 @@ function Fixture({name, probePointerUp = false, probePointerMove = false}) {
   </View>;
 }
 AppRegistry.registerComponent("PointerQueryFaultProbe", () => Fixture);
-const rawTypes = ["topPointerDown", "topPointerUp", "topPointerMove", "topTouchStart", "topTouchMove", "topTouchEnd", "topTouchCancel"];
+const rawTypes = ["topPointerDown", "topPointerUp", "topPointerMove", "topTouchStart", "topTouchMove", "topTouchEnd", "topTouchCancel",
+  "topPointerEnter", "topPointerLeave", "topPointerOver", "topPointerOut"];
+const probeTypes = ["pointerdown", "pointerup", "pointermove", "pointerenter", "pointerleave", "pointerover", "pointerout"];
 function raw(channel, value) {
   if (!active || !rawTypes.includes(value.eventName)) return;
   active.raw.push({sequence: ++sequence, channel, type: value.eventName, payloadId: payloadId(value.nativeEvent),
@@ -76,15 +79,19 @@ function capability(name) {
     targetTag: ref.tag, connected: ref.isConnected, point: [75, 55], query: queryFaultControl.snapshot()};
 }
 // capture is true, false or "both" (one capture and one bubble listener). The
-// listener sits on the hit target ("only") or on its original parent View.
+// listener sits on the hit target ("only") or on its original parent View. A
+// list of types registers each type with the same phase and place.
 function configure(name, capture = false, type = "pointerdown", where = "only") {
-  if (!["pointerdown", "pointerup", "pointermove"].includes(type)) throw Error("Probe supports only declared pointerdown/pointerup/pointermove types");
+  const types = Array.isArray(type) ? type : [type];
+  if (types.length === 0 || types.some(entry => !probeTypes.includes(entry))) throw Error("Probe supports only declared pointer types");
   if (!["only", "parent"].includes(where)) throw Error("Probe listeners sit on the hit target or its parent View");
   reset(name); const panel = panels.get(name), ref = panel.refs[where];
-  for (const phase of capture === "both" ? [true, false] : [capture]) {
-    const callback = function(event) { record(name, type + (phase ? "-capture" : "-bubble"), this, event); };
-    ref.addEventListener(type, callback, phase);
-    panel.bindings.push({ref, callback, capture: phase, type});
+  for (const entry of types) {
+    for (const phase of capture === "both" ? [true, false] : [capture]) {
+      const callback = function(event) { record(name, entry + (phase ? "-capture" : "-bubble"), this, event); };
+      ref.addEventListener(entry, callback, phase);
+      panel.bindings.push({ref, callback, capture: phase, type: entry});
+    }
   }
   return {targetTag: panel.refs.only.tag, capture, type, ...(where === "parent" ? {where, listenerTag: ref.tag} : {})};
 }
@@ -96,8 +103,9 @@ function arm(name, caseId) {
   return {targetTag: active.target.tag, baselineStarts: active.baselineStarts};
 }
 function publicControl(name, type = "pointerdown") {
-  if (!["pointerdown", "pointerup", "pointermove"].includes(type)) throw Error("Public control requires a declared pointer type");
-  const ref = panels.get(name).refs.only, event = new OriginalEvent(type, {bubbles: true});
+  if (!probeTypes.includes(type)) throw Error("Public control requires a declared pointer type");
+  // pointerenter/pointerleave never bubble; every other pointer event does.
+  const ref = panels.get(name).refs.only, event = new OriginalEvent(type, {bubbles: !["pointerenter", "pointerleave"].includes(type)});
   const returned = ref.dispatchEvent(event);
   return {returned, trusted: event.isTrusted, targetMatches: event.target === ref,
     cleaned: event.currentTarget === null && event.eventPhase === OriginalEvent.NONE && event.composedPath().length === 0};

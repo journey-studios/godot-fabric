@@ -363,6 +363,7 @@ func run_probe() -> void:
   await settle()
   if not allow_original_negative:
     await component_fault_controls()
+  check_hover_lookups()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()

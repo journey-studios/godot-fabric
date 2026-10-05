@@ -177,6 +177,19 @@ control that drops the owner Document from the root query fails 52/40 probe
 checks in the two delivering lanes, and the independent oracle rejects it. Hosted
 CI pending.
 
+The [View hover record](pointer-hover/README.md) extends the native interest query
+to `pointerover/out/enter/leave` (offsets 0/23, 2/24, 26/28, 27/29) for mouse and
+touch: 158/158 headless checks, 32 visible normative failures on the preceding
+host with the same SDK bundle. Out/over consult the whole path; enter/leave keep
+RN's per-node rule, including a capture ancestor emitting to its descendants.
+Callbacks match RN's order, phase, target and Discrete priority; a touch enters
+its path in the Down and leaves it after the Up. A repeated Over lookup fault is
+retained once and then counted, and ancestors without a public instance are
+skipped without being created. The older pointer probes now separate the hover
+lookups every touch and move makes and require them false, and the four
+preceding-host controls still reproduce 8/12/3/45 failures. Document hover and
+the empty-area root target remain open. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

@@ -1485,6 +1485,62 @@ inputs match implementation c2ad8f5 via git show/SHA-256 (execution base
 2d57c9b/dirty retained). Hosted CI for this slice is pending. No whole GF,
 checkpoint, weight or denominator closes.
 
+### View hover native interest (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[hover evidence](docs/evidence/pointer-hover/README.md) lets original imperative
+View `pointerover`, `pointerout`, `pointerenter` and `pointerleave` listeners
+qualify native mouse and touch hover: **158/158 headless checks** (137 healthy
+plus 21 in a hover-fault application), while the preceding host replaying the
+same SDK bundle keeps exactly **32 normative failures** and never consults a hover
+Map.
+
+RN's `handleIncomingPointerEventOnNode` filters hover by ViewProps: out/over when
+any node of the previous/current path listens, and leave/enter per node when the
+node listens or a leaving/entering capture ancestor does. The overlay ORs the
+original-Map query after each check: the path query for out/over and one query
+per node for the capture and own offsets of leave/enter, so RN's propagation and
+short-circuits are unchanged. The SDK maps offsets 0/23, 2/24, 26/28 and 27/29;
+at the root, the Document's bubble listener never qualifies the non-bubbling
+enter/leave, only its capture listener and the documentElement do. Hover lookups
+share Move's bounded diagnostics. A button-less mouse entering and leaving A's
+target with listeners on the target or its parent, bubble or capture, receives
+exactly RN's callbacks: out then leave from the target, over then enter towards
+it, phases 2, 3 or 1, and a parent capture listener running for the parent and
+the target, all at Discrete priority with one Raw pair per dispatched event. A
+touch enters its path in the Down, before the Down emission and TouchStart
+(`buttons` 1), and leaves it right after the Up emission, before TouchEnd
+(`buttons` 0). Manual dispatches keep enter/leave non-bubbling, moving inside the
+target emits no hover, B without listeners reads false everywhere, and ancestors
+without a public instance are skipped without being created. A repeated throwing
+Over lookup is retained once and counted afterwards while enter still qualifies.
+
+Because RN's hover tracker runs before every Down and Move and after a touch's Up
+or Cancel, every older pointer probe now observes hover lookups. Their snapshots
+keep the certified category in `query.rows` and the hover rows in
+`query.hoverRows`, and a final check requires those hover lookups to be healthy
+false delegates. The Down resolver fault now lets the target's four hover reads
+(26, 28, 23, 0) through and still fails the Down lookup's own read. The View Up,
+query-fault, resolver-fault and Move preceding-host controls still reproduce
+8/12/3/45 failures with the new bundles. On the corrected host the contracts
+gates (258 Node/13 Python, static analysis, publication scan), `test:recovery`
+and the 23 native suites pass, including Down 2,731, Document Up 6,459, View Up
+297, query 187, resolver 66, Move 220, Document Move 1,940 and 22 examples, each
+older probe count including its final hover check; codegen, the native SDK
+pack/verify, adapters (loader 89 checks/21 cases, runtime 13 runs/213 checks),
+consumer (30 + 40) and cold start pass too.
+
+This slice exposes a divergence that predates it: the empty
+surface area has no hit target here, while RN Android falls back to the root
+view, so Document listeners miss Down/Up/Move and hover over empty areas and the
+root enters and leaves the hover path on every transition. That root fallback is
+the next delivery. Document hover, pen hover, touch with other listener
+placements, capture while hovering, responders and multi-touch remain open. All
+76 executed code/configuration inputs match implementation 5560798 via git
+show/SHA-256 (execution base f868160/dirty retained; main a6af188 differs only in
+docs and the dashboard). Hosted CI for this slice is pending. No
+whole GF, checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

@@ -181,7 +181,7 @@ test("original imperative View pointerup qualifies native interest while origina
   }
 
   const base = row => !row.name.startsWith("up-capture/") && !row.name.startsWith("fault/");
-  assert.equal(report.checks.filter(base).length, 62, "All executed base check IDs remain present");
+  assert.equal(report.checks.filter(base).length, 63, "All executed base check IDs remain present");
   assert.equal(report.checks.filter(row => row.name.startsWith("fault/")).length, allowOriginalNegative ? 0 : FAULT_CHECKS, "The old-host control never reaches the second-application fault phase");
   assert.equal(report.checks.filter(row => row.name.startsWith("up-capture/")).length, capture ? 28 : 0, "Twelve actual pixels plus counters and save/dimensions per native frame");
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
