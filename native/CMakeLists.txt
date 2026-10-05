@@ -84,6 +84,10 @@ file(GLOB_RECURSE YOGA CONFIGURE_DEPENDS "${RN}/yoga/yoga/*.cpp")
 list(FILTER YOGA EXCLUDE REGEX "/tests/")
 list(APPEND SOURCES ${MOUNT_INTERNAL} ${YOGA})
 list(APPEND SOURCES "${RN}/react/renderer/textlayoutmanager/platform/cxx/react/renderer/textlayoutmanager/TextLayoutManager.cpp")
+# RN's generated core-component Props/EventEmitters (the package's codegen
+# output). The host registers only the shared non-Android Switch descriptor.
+set(RN_SPECS "${RN}/../React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec")
+list(APPEND SOURCES "${RN_SPECS}/Props.cpp" "${RN_SPECS}/EventEmitters.cpp")
 list(APPEND SOURCES
   "${RN}/jsinspector-modern/ConsoleTaskOrchestrator.cpp"
   "${RN}/jsinspector-modern/ConsoleTaskContext.cpp"
@@ -106,6 +110,7 @@ target_include_directories(fabric_core PUBLIC
   "${RN}/react/renderer/components/view/platform/cxx"
   "${RN}/react/renderer/components/scrollview/platform/cxx"
   "${RN}/react/renderer/components/text/platform/cxx"
+  "${RN}/react/renderer/components/switch/iosswitch"
   "${RN}/react/renderer/textlayoutmanager/platform/cxx"
   "${RN}/react/renderer/graphics/platform/cxx"
   "${RN}/react/utils/platform/cxx"
@@ -156,7 +161,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
 if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # Retain the binding objects for the pinned Godot class profile as SDK exports,
   # including classes only an external adapter uses. This is one archive in one

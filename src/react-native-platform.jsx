@@ -3,6 +3,7 @@
 import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
 import OriginalView from "react-native/Libraries/Components/View/View";
+import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import {
   Pressable as GodotPressable,
   Button as GodotButton,
@@ -143,7 +144,14 @@ function unavailable(name) {
   };
 }
 export const Image = unavailable("Image");
-export const Switch = unavailable("Switch");
+// RN's original Switch.js takes its non-Android path: the generated
+// SwitchNativeComponent ViewConfig, its onChange event and setValue command.
+export function Switch({ style, ...props }) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalSwitch {...props} style={nativeStyle(style, "Switch")} />;
+}
 export const TouchableHighlight = unavailable("TouchableHighlight");
 export const TouchableOpacity = unavailable("TouchableOpacity");
 export const TouchableWithoutFeedback = unavailable("TouchableWithoutFeedback");

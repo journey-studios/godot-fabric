@@ -1,0 +1,1199 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-switch",
+  "status": "verified-local-headless-old-host-control-sabotage-regressions-and-sdk",
+  "at": "2026-10-05T22:15:00.145466+00:00",
+  "executionBaseCommit": "3e2dc2d122d53d6d2375aec179e71427e345c472",
+  "sourceDirtyDuringExecution": true,
+  "amendedFiles": [
+    ".fallowrc.json",
+    "tests/switch-oracle.mjs",
+    "tests/switch-probe.gd",
+    "tests/types/consumer.tsx"
+  ],
+  "rerunOnImplementationCommit": [
+    "test:switch",
+    "test:contracts",
+    "check:static",
+    "check:publication"
+  ],
+  "executionNote": "The battery ran from executionBaseCommit. The amend changed only the listed test/config files; the steps that read them were rerun on implementationCommit, and no other step reads them.",
+  "implementationCommit": "a10b19ef42ded706235d6b9d8bc401a66bd796c6",
+  "dependsOn": "Public Button through GodotControl and the shared Fabric application (GF-17 slice)",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64"
+  },
+  "commands": [
+    "npm run test:switch",
+    "node tests/switch-native.test.mjs --allow-original-negative (preserved preceding host installed)",
+    "native/switch_view.cpp with a no-op setValue rebuilt, npm run test:switch, then tests/switch-oracle.mjs alone on its report; source restored with git checkout and rebuilt"
+  ],
+  "lanes": [
+    {
+      "lane": "original",
+      "meaning": "Preserved preceding host replaying the current SDK bundle; expected negative control.",
+      "nativeHostSha256": "cb0486ebe098ec98c9d7250062205402c9213352d34dbaf3fbe32793329fa83b",
+      "checks": 6,
+      "passed": 4,
+      "failed": 2,
+      "failedIds": [
+        "mount/Each root mounts one native Switch for each of its seven RCTSwitch elements",
+        "mount/The application reports no host or runtime error"
+      ],
+      "reportSha256": "6dfa86b1d1256af7220417b93262f9a4122ecbd0443e87b51bab0398895c8473",
+      "logSha256": "9d2ad942ef39c2d69c317f45c5c739ecec25b708f57ecd039e0bd60f0bf00920",
+      "errors": [
+        "Exception in HostFunction: Unsupported GodotControl kind: Switch",
+        "Exception in HostFunction: map::at:  key not found",
+        "Exception in HostFunction: Unsupported GodotControl kind: Switch",
+        "Exception in HostFunction: map::at:  key not found"
+      ]
+    },
+    {
+      "lane": "sabotage",
+      "meaning": "Retained sabotage: the native setValue command leaves the value unchanged.",
+      "nativeHostSha256": "aa15bb4060e56a00aa7d2987cf404823faddd6641a32b04c17f6ffc99fa20176",
+      "checks": 108,
+      "passed": 95,
+      "failed": 13,
+      "failedIds": [
+        "fixed/mouse/The native Switch toggles once from the mouse",
+        "fixed/mouse/Switch.js restores the unchanged value prop with exactly one setValue command",
+        "fixed/touch/RN receives TouchStart, TouchEnd and then one Change targeting the Switch",
+        "fixed/touch/The Change payload carries the new native value",
+        "fixed/touch/Capture, onChange, onValueChange and bubble run once in RN order",
+        "fixed/touch/onChange receives {target, value} with the Switch tag as target and RN's timeStamp",
+        "fixed/touch/The bubbling Change reaches the parent View in both phases",
+        "fixed/touch/The native Switch toggles once from the touch",
+        "fixed/touch/Switch.js restores the unchanged value prop with exactly one setValue command",
+        "plain/mouse/The native Switch toggles once from the mouse",
+        "plain/mouse/Switch.js restores the unchanged value prop with exactly one setValue command",
+        "colors/A Switch without colors draws the default off track and thumb",
+        "commands/RN's generated setValue command sets the native value both ways"
+      ],
+      "reportSha256": "7dc5995bdc17e40784dff0c2d49754bd24df5b308d9068c823544a24293aa216",
+      "logSha256": "218ac1a7de697f5cef1db82b3f406cee51d8b123d6dc6c495bc00e5f26bba59f",
+      "oracle": {
+        "accepted": false,
+        "rejectedAt": "fixed/mouse"
+      },
+      "restoredByteForByte": true,
+      "sabotagedSourceSha256": {
+        "native/switch_view.cpp": "a00ccf0489c8513064e4b4505e8687da3431555ee2f6c5a12ca6fd27a9c5b0ce"
+      },
+      "restoredHostSha256": "3e316fb642c9e6b0c2831bc5c4565c72fcd539c6e72e546ffee0c615a4bfb2bf"
+    },
+    {
+      "lane": "current",
+      "meaning": "Native Switch host, headless.",
+      "nativeHostSha256": "3e316fb642c9e6b0c2831bc5c4565c72fcd539c6e72e546ffee0c615a4bfb2bf",
+      "checks": 108,
+      "passed": 108,
+      "failed": 0,
+      "failedIds": [],
+      "reportSha256": "4c2971a64a2d874079750ac2635778e36218cb0279020f3785405ff540313cfa",
+      "logSha256": "efd8aa95d70a3321b362183008e357d521155e57e942dcce7d9dd0a0403357d2",
+      "comparisonSha256": "c0cee4c63ef8414e1f1a4c94200eb1ba1f25b7625d3b888ccbfc9d7c76d91695"
+    }
+  ],
+  "causalComparison": {
+    "sameSdkBundle": true,
+    "sdkBundleSha256": "004e46f317f77f07456db422df58d74bca9402c76896fcb82df999a5ff2d3e85",
+    "bundleInputs": 172,
+    "sameTestAndSdkProducerPins": true,
+    "nativeHosts": {
+      "previous": "cb0486ebe098ec98c9d7250062205402c9213352d34dbaf3fbe32793329fa83b",
+      "sabotage": "aa15bb4060e56a00aa7d2987cf404823faddd6641a32b04c17f6ffc99fa20176",
+      "current": "3e316fb642c9e6b0c2831bc5c4565c72fcd539c6e72e546ffee0c615a4bfb2bf"
+    },
+    "originalReactNativeSources": 9,
+    "originalNativeSources": 9
+  },
+  "executedObservations": {
+    "controlled/mouse": {
+      "tag": 2,
+      "device": "mouse",
+      "raw": [
+        [
+          "topTouchStart",
+          2,
+          null
+        ],
+        [
+          "topTouchEnd",
+          2,
+          null
+        ],
+        [
+          "topChange",
+          2,
+          true
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          true
+        ],
+        [
+          "switch-change",
+          true
+        ],
+        [
+          "value-change",
+          true
+        ],
+        [
+          "parent-bubble",
+          true
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": true
+        }
+      ],
+      "finalValue": true,
+      "commands": 0,
+      "ignoredEmulated": 0,
+      "pressedResponder": 2,
+      "pressedBlockNative": false
+    },
+    "controlled/touch": {
+      "tag": 2,
+      "device": "touch",
+      "raw": [
+        [
+          "topTouchStart",
+          2,
+          null
+        ],
+        [
+          "topTouchEnd",
+          2,
+          null
+        ],
+        [
+          "topChange",
+          2,
+          false
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          false
+        ],
+        [
+          "switch-change",
+          false
+        ],
+        [
+          "value-change",
+          false
+        ],
+        [
+          "parent-bubble",
+          false
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": false
+        }
+      ],
+      "finalValue": false,
+      "commands": 0,
+      "ignoredEmulated": 2,
+      "pressedResponder": 2,
+      "pressedBlockNative": false
+    },
+    "fixed/mouse": {
+      "tag": 6,
+      "device": "mouse",
+      "raw": [
+        [
+          "topTouchStart",
+          6,
+          null
+        ],
+        [
+          "topTouchEnd",
+          6,
+          null
+        ],
+        [
+          "topChange",
+          6,
+          true
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          true
+        ],
+        [
+          "switch-change",
+          true
+        ],
+        [
+          "value-change",
+          true
+        ],
+        [
+          "parent-bubble",
+          true
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": true
+        },
+        {
+          "cause": "command",
+          "value": false
+        }
+      ],
+      "finalValue": false,
+      "commands": 1,
+      "ignoredEmulated": 0
+    },
+    "fixed/touch": {
+      "tag": 6,
+      "device": "touch",
+      "raw": [
+        [
+          "topTouchStart",
+          6,
+          null
+        ],
+        [
+          "topTouchEnd",
+          6,
+          null
+        ],
+        [
+          "topChange",
+          6,
+          true
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          true
+        ],
+        [
+          "switch-change",
+          true
+        ],
+        [
+          "value-change",
+          true
+        ],
+        [
+          "parent-bubble",
+          true
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": true
+        },
+        {
+          "cause": "command",
+          "value": false
+        }
+      ],
+      "finalValue": false,
+      "commands": 1,
+      "ignoredEmulated": 2
+    },
+    "plain/mouse": {
+      "tag": 18,
+      "device": "mouse",
+      "raw": [
+        [
+          "topTouchStart",
+          18,
+          null
+        ],
+        [
+          "topTouchEnd",
+          18,
+          null
+        ],
+        [
+          "topChange",
+          18,
+          true
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          true
+        ],
+        [
+          "switch-change",
+          true
+        ],
+        [
+          "parent-bubble",
+          true
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": true
+        },
+        {
+          "cause": "command",
+          "value": false
+        }
+      ],
+      "finalValue": false,
+      "commands": 1,
+      "ignoredEmulated": 0
+    },
+    "colors/toggle": {
+      "tag": 14,
+      "device": "mouse",
+      "raw": [
+        [
+          "topTouchStart",
+          14,
+          null
+        ],
+        [
+          "topTouchEnd",
+          14,
+          null
+        ],
+        [
+          "topChange",
+          14,
+          true
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          true
+        ],
+        [
+          "switch-change",
+          true
+        ],
+        [
+          "value-change",
+          true
+        ],
+        [
+          "parent-bubble",
+          true
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": true
+        }
+      ],
+      "finalValue": true,
+      "commands": 0,
+      "ignoredEmulated": 0
+    },
+    "two-roots/B": {
+      "tag": 38,
+      "device": "mouse",
+      "raw": [
+        [
+          "topTouchStart",
+          38,
+          null
+        ],
+        [
+          "topTouchEnd",
+          38,
+          null
+        ],
+        [
+          "topChange",
+          38,
+          true
+        ]
+      ],
+      "handlers": [
+        [
+          "parent-capture",
+          true
+        ],
+        [
+          "switch-change",
+          true
+        ],
+        [
+          "value-change",
+          true
+        ],
+        [
+          "parent-bubble",
+          true
+        ]
+      ],
+      "transitions": [
+        {
+          "cause": "input",
+          "value": true
+        }
+      ],
+      "finalValue": true,
+      "commands": 0,
+      "ignoredEmulated": 0
+    },
+    "disabled/mouse": {
+      "tag": 10,
+      "raw": [
+        [
+          "topTouchStart",
+          10
+        ],
+        [
+          "topTouchEnd",
+          10
+        ]
+      ],
+      "handlers": [],
+      "toggles": 0
+    },
+    "disabled/touch": {
+      "tag": 10,
+      "raw": [
+        [
+          "topTouchStart",
+          10
+        ],
+        [
+          "topTouchEnd",
+          10
+        ]
+      ],
+      "handlers": [],
+      "toggles": 0
+    },
+    "colors": {
+      "initial": {
+        "tintColor": "ff3b30ff",
+        "onTintColor": "5856d6ff",
+        "thumbTintColor": "ffcc00ff",
+        "trackColor": "ff3b30ff",
+        "thumbColor": "ffcc00ff",
+        "drawn": {
+          "height": 28,
+          "thumb": "ffcc00ff",
+          "thumbRadius": 12,
+          "thumbX": 14,
+          "thumbY": 14,
+          "track": "ff3b30ff",
+          "value": false,
+          "width": 63
+        },
+        "background": "1c1c1eff",
+        "cornerRadii": [
+          14,
+          14,
+          14,
+          14
+        ]
+      },
+      "on": {
+        "height": 28,
+        "thumb": "ffcc00ff",
+        "thumbRadius": 12,
+        "thumbX": 49,
+        "thumbY": 14,
+        "track": "5856d6ff",
+        "value": true,
+        "width": 63
+      },
+      "second": {
+        "height": 28,
+        "thumb": "007affff",
+        "thumbRadius": 12,
+        "thumbX": 49,
+        "thumbY": 14,
+        "track": "30b0c7ff",
+        "value": true,
+        "width": 63
+      },
+      "secondBackground": "3a3a3cff",
+      "defaults": {
+        "height": 28,
+        "thumb": "ffffffff",
+        "thumbRadius": 12,
+        "thumbX": 49,
+        "thumbY": 14,
+        "track": "34c759ff",
+        "value": true,
+        "width": 63
+      },
+      "defaultsBackground": "00000000",
+      "plain": {
+        "height": 28,
+        "thumb": "ffffffff",
+        "thumbRadius": 12,
+        "thumbX": 14,
+        "thumbY": 14,
+        "track": "e9e9eaff",
+        "value": false,
+        "width": 63
+      }
+    },
+    "layout": {
+      "plain": [
+        63,
+        28,
+        63,
+        28
+      ],
+      "sized": [
+        80,
+        40
+      ],
+      "cellWidth": 166,
+      "offsetInCell": 6
+    },
+    "commands": {
+      "transitions": [
+        {
+          "cause": "command",
+          "value": false
+        },
+        {
+          "cause": "command",
+          "value": true
+        }
+      ],
+      "errors": [
+        "setValue requires [boolean]",
+        "setValue requires [boolean]"
+      ]
+    },
+    "removal": {
+      "tag": 26,
+      "pressedResponder": 26,
+      "raw": [
+        [
+          "topTouchStart",
+          26
+        ],
+        [
+          "topTouchCancel",
+          36
+        ]
+      ],
+      "stale": {
+        "connected": false,
+        "tag": 26
+      },
+      "restoredTag": 74
+    },
+    "registry": {
+      "bubbling": {
+        "bubbled": "onChange",
+        "captured": "onChangeCapture"
+      },
+      "direct": {
+        "registrationName": "onChange"
+      }
+    },
+    "input": [
+      [
+        "parent-capture",
+        "x"
+      ],
+      [
+        "input-change",
+        "x"
+      ],
+      [
+        "parent-bubble",
+        "x"
+      ]
+    ]
+  },
+  "uiSwitchMeasurements": {
+    "command": "xcrun -sdk iphonesimulator swiftc -target arm64-apple-ios17.0-simulator main.swift; xcrun simctl spawn <device> <binary>",
+    "call": "[UISwitch new].intrinsicContentSize, as RCTSwitchSize() in React/Base/RCTUtils.mm; RN adds 2 points of width (IOSSwitchShadowNode.mm)",
+    "xcode": "Xcode 26.2 (17C52), iphonesimulator SDK 26.2",
+    "probeSourceSha256": "926d1f534a85fe1e871bab5f5723e2007fc44434a8841e9b77e2119ff2ae27bd",
+    "runs": [
+      {
+        "runtime": "iOS 18.4",
+        "device": "iPhone 16 Pro",
+        "uiSwitch": [
+          49,
+          31
+        ],
+        "rnFrame": [
+          51,
+          31
+        ]
+      },
+      {
+        "runtime": "iOS 26.3.1",
+        "device": "iPhone 17 Pro",
+        "uiSwitch": [
+          61,
+          28
+        ],
+        "rnFrame": [
+          63,
+          28
+        ]
+      }
+    ],
+    "godotFrame": [
+      63,
+      28
+    ],
+    "choice": "Godot reports RN's frame on the newest iOS runtime, which the repo's iOS reference lane selects."
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 31,
+        "logSha256": "916984994cf842a479e4a7a0195a9f13fb829cb0e2cba7cf580eaf88882b7d47",
+        "at": "2026-10-05T22:13:44.240Z"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "85d23e2b0abb649ac76ac17cee4c8d1994d680633172251b3d4c9a12019a1ef0",
+        "at": "2026-10-05T22:13:44.849Z"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "a6d62e3d742d2b819688459065b5076046865194c39419d6490db175aed42eaf",
+        "at": "2026-10-05T22:13:45.496Z"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "e8a0863a61f63f58f02600d6797af6bd72826183b7f1872c48c269e6ab5e2c5d",
+        "at": "2026-10-05T21:53:19.926Z"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "4b01ed23cc4c8e62fec734a29e3960a5514f7b538c3b0635c775e58de10f16eb",
+        "at": "2026-10-05T22:13:13.665Z"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 175,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408",
+        "at": "2026-10-05T21:57:17.163Z"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e",
+        "at": "2026-10-05T21:57:27.069Z"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "ebe34a48b139a5bc0bd200cadc5507355f44bb87151f73f585605e6ecc7f5196",
+        "at": "2026-10-05T21:57:35.293Z"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "c1f2a96b544b8702fe525f7eb8858a5d101fc1dbff62d217c940e7fa57d5ebbf",
+        "at": "2026-10-05T21:57:47.920Z"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "2199c261d76e8ec806b2cc32955e3e09582fa26d7417b33320c384a7ec2c1dfc",
+        "at": "2026-10-05T21:58:01.811Z"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "8ec1d4812845e431adeda3416022347f3ee3c1932dbbb42e7fd7642712e735a1",
+        "at": "2026-10-05T21:58:13.309Z"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "d842a9bf28182bfc3e5b22ec47198658f7685433b7c5a494221868199d45b2c2",
+        "at": "2026-10-05T21:58:29.781Z"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "51824caca8d80b62c428b497f584137acb67367f4c2570a2abd64984a9154e5b",
+        "at": "2026-10-05T21:58:38.560Z"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "a2ef5d053b5d2fe16ebb93fad12735fef37858b624ebb20b6647e5098b8a3826",
+        "at": "2026-10-05T21:58:46.258Z"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "84192762aaf608ed31ef94fef8f8af43f7875c5650fb9a4e18091f238e9fdbd2",
+        "at": "2026-10-05T21:58:52.485Z"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "2241c6d5b8d644c08a9b88bf136897dd5e26c3998b61e5dc1088f18174d5f96b",
+        "at": "2026-10-05T21:59:03.271Z"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "47c9d7ac811007f94d007792ce7dd85fd0d8390cf8ce2df60eee4482cebeb79c",
+        "at": "2026-10-05T21:59:15.890Z"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "4566512615a1c27d0da91efa6ddc3e879f6aa40dc780d55ebf8b3a8849bb014a",
+        "at": "2026-10-05T21:59:22.154Z"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "90068503c8da7e731a62c379c8c33693482480d9418b071c46dcd144649fc974",
+        "at": "2026-10-05T21:59:33.403Z"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 88,
+        "logSha256": "bfc135219288970195025d72ed4fcc386a2429b155b23c10ea972a75918adccf",
+        "at": "2026-10-05T22:01:01.440Z"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "bb59a875e7ea8b05d6de7056565c9e46ac35711f344145af0031c8944743d92b",
+        "at": "2026-10-05T22:01:10.290Z"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "aa1b62b70f3b6892fde79ea5e8c2ed161b7616628513d37e5199fb4f25b005fd",
+        "at": "2026-10-05T22:01:14.050Z"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 94,
+        "logSha256": "ea31c514a37b5fb369e0e51e3fa553543a6c3be11eec741bec09127901551be6",
+        "at": "2026-10-05T22:02:47.688Z"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "b8fb0d9f25cda9dc52fca6bd0e383ae73a95a6b8fd2cabd73ed877138c7bdfa8",
+        "at": "2026-10-05T22:02:57.622Z"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "2a112fa1b0874cf08713fa12d57a78ae58fb43bee10d45712ba258e8f4515f75",
+        "at": "2026-10-05T22:03:04.969Z"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 44,
+        "logSha256": "9aa9e52dca921251e8040a974c83dbcf7a3d59cb6686667bdcede45dae1ed4c9",
+        "at": "2026-10-05T22:03:48.500Z"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "2f9db1462ff3e709016d3fcb327c5af671ec9f51e4f0b04ccc5f619318842629",
+        "at": "2026-10-05T22:03:54.920Z"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "7dc7a402e3af97d2d27456c5dbb2bf41489b1551cfc4d2c0668960fa2c8e7ac5",
+        "at": "2026-10-05T22:03:59.885Z"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 45,
+        "logSha256": "7b0d62ad6b819675850eb490a7c86d61124c7b5f79d24bc04417107fb6a252bf",
+        "at": "2026-10-05T22:04:44.393Z"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf",
+        "at": "2026-10-05T22:08:57.089Z"
+      }
+    }
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989",
+        "at": "2026-10-05T21:53:26.602Z"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "5106aed35042ddc02f723776e1a5e7d014acd1361298d597aa0a07c46d9d1776",
+        "at": "2026-10-05T21:53:39.728Z"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "99155c3b029fdf75b8a8e7bd722cfe573ea16ccf03fe951f7ff75919c60aaa53",
+        "at": "2026-10-05T21:53:43.565Z"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "dece29394b74d49f870c2bec5433b38b1c50f3fe4c49e05a9b55e666766a8b36",
+        "at": "2026-10-05T21:53:44.101Z"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "ff7c71883b0d5e1564996a874656f634364dc2f700fcfc228db64e7c71b0b3a8",
+        "at": "2026-10-05T21:53:59.750Z"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 23,
+        "logSha256": "13df95669ba4907dd99313223700dc9151d07737c8edf29b1b59c4e3668a8641",
+        "at": "2026-10-05T21:54:22.422Z"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 45,
+        "logSha256": "e30257e817e92d0111b98aa6ad6a6591e9fcb2e6b4b3f59697377614b7d12b45",
+        "at": "2026-10-05T22:08:04.747Z"
+      },
+      "test:consumer": {
+        "exitCode": 0,
+        "seconds": 155,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81",
+        "at": "2026-10-05T22:07:19.574Z"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 43,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753",
+        "at": "2026-10-05T22:08:47.262Z"
+      }
+    }
+  },
+  "sourcePins": {
+    "tests/switch-fixture.jsx": "bfb97615a966c8513a4369c907b33b10aa27d1e1eb0fd24d9ab2a3705e38404e",
+    "tests/switch-probe.gd": "89740137f27d05aacfc150167bfcfa7e9959ae476fdd8a6a2c06d49d874c6310",
+    "tests/switch-native.test.mjs": "f3e860d20b5ffc902e881bca5344e077a2b5826178f63c0f9fddd62413aa02a3",
+    "tests/switch-oracle.mjs": "9366d7425620e4e35ecc8869b0716172821654824e03b5bb13c4c9095156294a",
+    "src/react-native-platform.jsx": "00f5bc3b7779bca01e277870329b66c34f40cefd3c0c0da8c887dfc4d995bb1c",
+    "src/base-view-config.js": "4b86f3f81ad0e06f935897d13a9ba446c814b0cdc6913831684ddf773fd165d9",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/renderer-proxy.js": "862c448204ea1ea25c7857c0210e8490962e685df93ed8cf077ab16b82b0e760",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/application_runtime.cpp": "57e9a74bff63ee3ee1bc7dcc279adf779f6bb45fec9be15ae442e0d6d392f149",
+    "native/register.cpp": "94185b27d461845cda6031df85dbb8119a042c3cb118854bde313b060a422e8f",
+    "native/CMakeLists.txt": "b2de59a6464d049511eb1b4846c13f5026a62b4e96acd5ef0945452055a8ff0b"
+  },
+  "originalReactNativeSources": {
+    "react-native/Libraries/Components/Switch/Switch.js": "abf2284d7190bc7f262e720e32606d8c4a2afa2941c87368c45005fe43f1c89d",
+    "react-native/Libraries/Components/Switch/SwitchNativeComponent.js": "34ba3665cc033788cdea03522ced99e7a9947157605c0578766971c77fe1c9c5",
+    "react-native/src/private/components/switch/specs/SwitchNativeComponent.js": "e6e197072a5f88a5ce23406f1c0a23042f8ff2a1f9aabfabf2eacbfc1e2270de",
+    "react-native/Libraries/NativeComponent/NativeComponentRegistry.js": "814b755cfa308d019de15944f5179d32a70d75b8c26289b65714be589ef46742",
+    "react-native/Libraries/NativeComponent/ViewConfig.js": "f787ff3b8de7a056a6a00965e322356c34bc089c0df84d4a7a8f440b2c9e47a2",
+    "react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js": "816494cf365fbb7318c274e5406856df41e96426efaad5a74141fc863372331b",
+    "react-native/Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "@react-native/babel-plugin-codegen/index.js": "2f85a5d56d1c5596930768d28bd0db445abff3c75325a1bad291f4dec60aa3df",
+    "@react-native/codegen/lib/generators/components/GenerateViewConfigJs.js": "f26da34d19949c296f0909766d3655b603048e95ca494b2e242bf32059dbef93"
+  },
+  "originalNativeSources": {
+    "ReactCommon/react/renderer/components/switch/iosswitch/react/renderer/components/switch/AppleSwitchShadowNode.h": "b2441d125cbedbe58f29810fc7fced5591f692a4fb167ce919cc08db42f5e2bc",
+    "ReactCommon/react/renderer/components/switch/iosswitch/react/renderer/components/switch/AppleSwitchComponentDescriptor.h": "531aa77c3187186033740d2dc0449c514c7e35329c21be7e6200bb753b3f50a8",
+    "ReactCommon/react/renderer/componentregistry/componentNameByReactViewName.cpp": "c9e50a6db4f18b59eced75643164ddc0bf5c62afdcd9d9276c3031624a4ad201",
+    "ReactCommon/react/renderer/componentregistry/ComponentDescriptorRegistry.cpp": "2f82c858fd52e637721040399da651b0ce770921fdad852f7bc8d0966ef835da",
+    "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/Props.h": "b521a3d93189b3cd8acdab33222d9200fc01f5991b39ed6de862649561502bc1",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/Props.cpp": "c9a855abb5e9b60dcab0f69dc84964664b5a33b9e0cb489e3a4a64df928203b7",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/EventEmitters.h": "fcff8489eba5d21f6a126a6f026917525326dd68b42533af42cd5355ee284fd9",
+    "React/FBReactNativeSpec/react/renderer/components/FBReactNativeSpec/EventEmitters.cpp": "6a87b26874b7a29d252638367d8214baaffbfddd0c127f14eb9e3330c20fd150"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "b2de59a6464d049511eb1b4846c13f5026a62b4e96acd5ef0945452055a8ff0b",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "57e9a74bff63ee3ee1bc7dcc279adf779f6bb45fec9be15ae442e0d6d392f149",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "19dc59f7b4fc4734a2c731d031d73025090d763f3429372fbf2cff1344d941e5",
+    "native/pointer_adapter.h": "3df6ab12f9d12a6297a47d6e836f1fea210501103057d92d0b4549bbfe979647",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "94185b27d461845cda6031df85dbb8119a042c3cb118854bde313b060a422e8f",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "nativeSourceTrees": {
+    "react-native": 475,
+    "react-native-specs": 5,
+    "godot-cpp": 32,
+    "godot-cpp-generated": 71,
+    "react-native-pointer-overlay": 2
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "f0e12629a1ab8ab1830878ccabb3fb702df54a653679aece507bf4cf46554165",
+    "package.json": "96fae702f580362fcf8f467517a07e4e1ae86bd5768e99b1c885cda6c4bf3e4f",
+    ".fallowrc.json": "42578eb682b6aebddc049b16e24baafd37939cd4f9f394e19057fec867094d81",
+    "tests/platform-seams.test.mjs": "d621b99be3669c782d21608a34c8ca5c8be7a5d70715f15a70123a06fd2d9b02",
+    "tests/types/consumer.tsx": "b95aa7ba746ddd9a2d5455eae8351660dd986075948256459e6d3556333e5e78",
+    "types/react-native.ts": "a65c96d0437096fc1a1dc3ff266287661f73f96ce442059b1b5279e1e4352ca5"
+  },
+  "implementationChangedFiles": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "native/CMakeLists.txt",
+    "native/application_runtime.cpp",
+    "native/register.cpp",
+    "native/switch_view.cpp",
+    "native/switch_view.h",
+    "package.json",
+    "scripts/native-sdk.mjs",
+    "src/react-native-platform.jsx",
+    "tests/platform-seams.test.mjs",
+    "tests/switch-fixture.jsx",
+    "tests/switch-native.test.mjs",
+    "tests/switch-oracle.mjs",
+    "tests/switch-probe.gd",
+    "tests/types/consumer.tsx",
+    "types/react-native.ts"
+  ],
+  "hostedCI": {
+    "status": "pending-switch-slice"
+  },
+  "limits": [
+    "Mouse left-button clicks and touch taps through Godot's GUI; keyboard activation, focus and accessibility are not implemented.",
+    "The track and thumb are custom-drawn without animation or thumb dragging; defaults are fixed light gray/green/white and a disabled switch is drawn at half opacity.",
+    "The 63x28 default frame follows RN on iOS 26.3.1 (iOS 18.4 gives 51x31); Android's AndroidSwitch path and per-target defaults are not used.",
+    "After a Switch renders, RN's global registry makes topChange bubble for GodotControl TextInput too, as RN's own TextInput configs do.",
+    "Headless macOS only; the iOS static build, hardware input, mobile exports and performance remain open. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/a10b19ef42ded706235d6b9d8bc401a66bd796c6",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 72,
+    "pinSetCounts": {
+      "sourcePins": 14,
+      "nativeSourcePins": 57,
+      "verificationSourcePins": 6
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true
+  },
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T22:16:43.908Z",
+    "meaning": "Contracts-job gates rerun after every doc, dashboard, example and the receipt body above were final; this field was appended afterwards.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "a24c67c4968609e2dd02b9bae50db4da6589a55000aa2b1c05aabd4654f060aa"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "da11315df30c8cf130dc743ca52de916df82c3c5ab76d8cf0c10bf8d43306dc2"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "8c377915dc6fd05cce39570219867b16aaffaa77933cdd9c3cd56cd5c859d095"
+      }
+    }
+  },
+  "mergeReverifications": [
+    {
+      "reason": "main moved to 8f80fed (click #29 and AppState #31) after the slice was executed; merged without rebase so a10b19e stays reachable",
+      "mergeCommit": "16cf38c",
+      "mainCommit": "8f80fed",
+      "nativeHostSha256": "5e21fd4075d46464f7977696847819599ac43fad4206ccc4463f39c91b8058b2",
+      "switchChecks": 108,
+      "switchBundleSha256": "6e30128b1f16684856ece1760f6d1da5490a34bc46845b7b91c263d88c693323",
+      "switchReportSha256": "4182aa88ebd67a6eac7fa5a8563a3e5346d418c362ffb92970ce1c069b591da2",
+      "precedingHostControl": {
+        "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
+        "source": "main 8f80fed native sources (built from 24869f9, whose native tree equals 8f80fed's)",
+        "checks": 6,
+        "normativeFailures": [
+          "mount/Each root mounts one native Switch for each of its seven RCTSwitch elements",
+          "mount/The application reports no host or runtime error"
+        ],
+        "reportSha256": "179354223400e3d1d7a267c5b1e42f5c92969b4a082d1645ba2a9cc86151a012",
+        "runnerLogSha256": "5397ea3102b3acddb8b47e2d28b9780d778697a0ba34db08598eaa8bb780ae34",
+        "sameBundleAsCurrent": true,
+        "comparisonSha256": "7d5e45c6f84cf7c37f1b47136d112a7ed768aed12e7159784536f2be0b4ff7b5",
+        "replacesPrecedingHost": "cb0486ebe098ec98c9d7250062205402c9213352d34dbaf3fbe32793329fa83b"
+      },
+      "steps": {
+        "test:contracts": {
+          "exitCode": 0,
+          "seconds": 23,
+          "logSha256": "721d52b1351c63820ac8451df17aafaf1cdaf8dcc0a3eb5f018ce5168d010349"
+        },
+        "check:static": {
+          "exitCode": 0,
+          "seconds": 1,
+          "logSha256": "3838a47820b5169e91215ef3aadc23419d9f60f8fa767b47bc2e5091afb7f1ed"
+        },
+        "check:publication": {
+          "exitCode": 0,
+          "seconds": 0,
+          "logSha256": "a5797a916a6deb948c754e472d8b21659e4278bca5ab15f3f022d92c8abacfa9"
+        },
+        "test:switch": {
+          "exitCode": 0,
+          "seconds": 5,
+          "logSha256": "36fa7c98e2be4d06e39627cbee1eb159d00b47660d7538ea958b88e4a7b89f5d"
+        },
+        "test:pointers:click": {
+          "exitCode": 0,
+          "seconds": 57,
+          "logSha256": "404089fcc0108f8606a9f110cbe479ba774bc69337e8286fd4278a6cbf759020"
+        },
+        "test:app-state": {
+          "exitCode": 0,
+          "seconds": 5,
+          "logSha256": "9b1a581110869d69c84da6d4caec975fc3d0efdf3871b22a80c782104f9fcc3b"
+        },
+        "test:examples": {
+          "exitCode": 0,
+          "seconds": 136,
+          "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+        },
+        "test:recovery": {
+          "exitCode": 0,
+          "seconds": 5,
+          "logSha256": "69f361e8418b19eef5975e89aec1cd6c13b6295c6f18450f823d8b44b467883e"
+        }
+      },
+      "nodeContractChecks": 261,
+      "clickChecks": 728,
+      "examples": 22
+    },
+    {
+      "reason": "main moved to 2ec988e (PanResponder #32, SDK and tests only); merged again without rebase",
+      "mergeCommit": "049002d",
+      "mainCommit": "2ec988e",
+      "nativeHostSha256": "5e21fd4075d46464f7977696847819599ac43fad4206ccc4463f39c91b8058b2",
+      "nativeSourcesChanged": false,
+      "switchChecks": 108,
+      "switchBundleSha256": "0910fdb56ab67d98eff2e415368b4cb0138b7407227d73a5e91d24b7f27d3840",
+      "switchReportSha256": "b138efe3bbc0bf3a179d4c3319bf324848987f13d5be0db574aa02bd4c3bdb82",
+      "precedingHostControl": {
+        "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
+        "checks": 6,
+        "normativeFailures": [
+          "mount/Each root mounts one native Switch for each of its seven RCTSwitch elements",
+          "mount/The application reports no host or runtime error"
+        ],
+        "reportSha256": "3a7bfe017bb1b4bd2d534e3091c578f040bbf046ec84ccfc6e6f11427116fcaa",
+        "runnerLogSha256": "281e080d1f1c323ac0daa0819e7d928851ee1ab7557195e581c4a0eb92e49cb4",
+        "sameBundleAsCurrent": true,
+        "comparisonSha256": "3829dc9a1f050f7648f65394bf4e7bf8a82a7d17575824eb0caea873f2cd0bd2",
+        "refreshedBecause": "the SDK bundle changed with the PanResponder export"
+      },
+      "steps": {
+        "test:contracts": {
+          "exitCode": 0,
+          "logSha256": "103c804131e05dc94dd15e9dea80b0888db6900964f440e809dfbb76a6e28866"
+        },
+        "check:static": {
+          "exitCode": 0,
+          "logSha256": "7a444d1abe62374440df0a94bf0c4e512eccf6a3371a5c81218efe8a9b40f0da"
+        },
+        "check:publication": {
+          "exitCode": 0,
+          "logSha256": "9e4e3bd1b8c99b5b357a27b35ab1d3394fe7651af6e4bd40553300c6871a3a2f"
+        },
+        "test:switch": {
+          "exitCode": 0,
+          "logSha256": "959b4c748673833240504079fd78c8acc19c118ba3c4272f747a1f80b4d4ac83"
+        },
+        "test:responders:pan": {
+          "exitCode": 0,
+          "logSha256": "f4c4ab0db2bbde8e053d242f9f61f2dd95add3178db53830400c0b7e5edd33df"
+        }
+      }
+    }
+  ]
+}

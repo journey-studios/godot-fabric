@@ -241,6 +241,15 @@ events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
 checks, and a host whose focus outranks the pause fails 5, which the independent
 oracle rejects. Hosted CI pending.
 
+The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's
+shared iOS/macOS Switch descriptor and a custom-drawn Godot switch: 108/108
+headless checks with actual mouse and touch input in two roots. Controlled and
+fixed values, disabled input, colors, the 63×28 default frame (RN's iOS 26 size),
+`setValue`, removal mid-press and the bubbling `topChange` registry are covered.
+The preceding host fails exactly the 2 mount checks; a retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
+CI pending.
+
 The [Appearance record](appearance/README.md) runs RN's original `Appearance` and
 `useColorScheme` in two roots of one application, fed through the Callable the
 module registers with Godot's `DisplayServer` for system theme changes: 67
