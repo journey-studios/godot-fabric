@@ -1196,9 +1196,11 @@ No whole GF, checkpoint, weight or denominator closes.
 ### Document Up listener mutation during dispatch (2026-10-05)
 
 GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
-[mutation evidence](docs/evidence/pointer-document-up-mutation/README.md) runs
-listener mutations from inside delivered native Up callbacks in all eight lanes:
-**4,401 headless checks**, with the previous 2,709 check IDs preserved in order.
+[mutation evidence](docs/evidence/pointer-document-up-mutation/README.md) adds
+dispatch-time mutation stages to all eight lanes: **4,401 headless checks**, with
+the previous 2,709 check IDs preserved in order. Mutations run inside native Up
+callbacks in the two current lanes with D, only through manual dispatch in the
+original lanes with D, and the lanes without D confirm that nothing registers.
 The graphical current/enabled lane passes **835 checks**, including 118 pixels in
 nine native frames.
 
@@ -1212,7 +1214,7 @@ documentElement (I) and Document bubble listeners gets both delivered in the sam
 Up although the pre-dispatch root query saw only capture membership. An add to
 B's Document from A's callback leaves B's state, commits and contact unchanged
 until B's own gesture qualifies. A deliberate wrong-phase removal fails eight
-probe checks and the independent oracle.
+probe checks, and the independent oracle rejects that retained report on its own.
 
 Only tests changed: the shared fixture gains `mut-*` kinds (Down unchanged, 2,723
 checks) and the Up probe/oracle gain the stages. Contracts 255 Node/13 Python,

@@ -48,8 +48,10 @@ um listener adicionado a um alvo ou fase posterior roda no mesmo dispatch.
 
 ## O que foi verificado
 
-Linhas do tempo nas lanes current com D (as outras lanes não recebem Up nativo
-de Document e não executam nenhuma mutação):
+Linhas do tempo nas lanes current com D. Nas outras lanes nenhum Up nativo chega
+aos listeners de Document, então nenhuma mutação roda durante um Up nativo; as
+lanes original com D executam as mutações só pela emissão manual descrita abaixo,
+e as lanes sem D apenas confirmam que nada é registrado nem executado:
 
 | Caso | Gesto | Consulta do root | Linha do tempo |
 | --- | --- | --- | --- |
@@ -84,8 +86,8 @@ os dois rodam no mesmo dispatch, em fase 3. O Up nativo não é filtrado por fas
 termina `true` depois dos Ups nativos e continua `true` depois do manual.
 
 **Outro root.** O callback de A adiciona `XDoc` ao Document de B. O gesto de A
-não muda contador, commits nem contato de B; o gesto seguinte de B consulta
-`36=true` e entrega `XDoc`.
+não muda contador, commits nem contato de B (o probe confere os três; o oráculo
+Node confere o contador); o gesto seguinte de B consulta `36=true` e entrega `XDoc`.
 
 Depois dos gestos, uma emissão manual untrusted no Document aplica a mesma
 semântica em fase 2. Nas lanes original com D, que não entregam Up nativo de
@@ -97,9 +99,12 @@ registrado.
 
 Como controle negativo, a remoção de `remove-sibling` foi trocada
 temporariamente para a fase capture, deixando `DocB2` registrado. Na lane
-current/enabled o probe falhou em exatamente oito checks, todos desse caso, e o
-oráculo Node independente rejeitou o relatório. A fixture foi restaurada byte a
-byte antes da execução final.
+current/enabled o probe falhou em exatamente oito checks, todos desse caso. O
+oráculo `mutation()` do Node rodou direto sobre esse relatório, sem os gates de
+status do probe, e o rejeitou pela linha do tempo (`DocB2` a mais); o mesmo
+oráculo aceita o relatório final. O relatório, o log e a saída do oráculo
+ficam retidos, com hashes no [recibo](report.json). A fixture foi restaurada sem
+diferença em relação ao commit.
 
 ## Capturas nativas verificadas
 

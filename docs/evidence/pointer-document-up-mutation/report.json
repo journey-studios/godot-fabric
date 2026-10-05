@@ -5849,10 +5849,27 @@
   "negativeControl": {
     "sabotage": "remove-sibling removal issued for the capture phase instead of bubble, leaving DocB2 registered",
     "lane": "current/enabled",
+    "command": "node tests/pointer-document-up-native.test.mjs --interest=current --flag=enabled",
     "probeFailures": 8,
+    "failures": [
+      "mutation/remove-sibling/first/Actual native Up callbacks have exact flag-dependent propagation order and phases",
+      "mutation/remove-sibling/first/Every functional Up update batches into exactly one React commit while TouchEnd adds no state update",
+      "mutation/remove-sibling/first/up/Native callbacks and their dispatch-time mutations follow the exact original timeline",
+      "mutation/remove-sibling/second/Actual native Up callbacks have exact flag-dependent propagation order and phases",
+      "mutation/remove-sibling/second/Every functional Up update batches into exactly one React commit while TouchEnd adds no state update",
+      "mutation/remove-sibling/second/up/Native callbacks and their dispatch-time mutations follow the exact original timeline",
+      "mutation/remove-sibling/after/Original public manual Up proves listener installation or the exact method gate without prototype borrowing",
+      "mutation/remove-sibling/after/manual/Original manual Up applies the same mutation semantics at target"
+    ],
     "allFailuresInSabotagedCase": true,
+    "reportSha256": "67eafb30adc710fb0b64d6f336879fb341a1cbbf10122c1ec6fbadba5c80cab1",
+    "logSha256": "db4c5eef12034962b400ef7a23fd811d37ccd5febf58b346adda2b5038785e95",
+    "nodeTestLogSha256": "e2d3fb43dbbf5171076825ff6951f8e537395e6dcf4503304d2f2b322deed47e",
     "independentNodeOracleRejected": true,
-    "fixtureRestoredByteForByte": true
+    "oracleRunBypassedProbeStatusGates": true,
+    "oracleAcceptsFinalCurrentEnabledReport": true,
+    "oracleLogSha256": "90c29df540293929d19b1de3b6ff263770964301bd56b75de60b255c71bcaa09",
+    "fixtureRestoredWithoutDiffAgainstCommit": true
   },
   "regressions": {
     "downChecks": 2723,
