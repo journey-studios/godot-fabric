@@ -207,7 +207,8 @@ Hosted CI repeated the 1,530 checks ([receipt](docs/evidence/pointer-document-ho
 The [click example](examples/pointer-click/README.md) certifies `click` on a
 primary release, targeted at the deepest view the press and the release share,
 and the ScrollView drag that cancels its contact, in eight lanes: 728 headless
-checks. The preceding host fails exactly 31 of them.
+checks. The preceding host fails exactly 31 of them. Hosted CI repeated the 728
+checks ([receipt](docs/evidence/pointer-click/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-click/README.md).
 
 This does not promise compatibility with every React Native library.

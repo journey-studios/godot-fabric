@@ -222,7 +222,8 @@ deepest mounted view on both hit paths, never a shared root, and a ScrollView
 drag sends its contact one `pointercancel` and then only touches. The preceding
 host fails exactly 31 normative checks; a host clicking the release target fails
 10, an SDK without `topClick` throws in the legacy lane, and the independent
-oracle rejects both controls. Hosted CI pending.
+oracle rejects both controls. Hosted run 37375758262 passed the same 728 checks
+with identical IDs and bundles ([receipt](pointer-click/hosted-ci.json)).
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

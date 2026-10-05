@@ -1698,8 +1698,13 @@ the 26 native suites and the native SDK batch pass on the same host. Captured
 clicks, `auxclick`/`contextmenu`, keyboard and accessibility activation, pen,
 nested or horizontal scroll takeover and surface selection for empty-area input
 remain open. All 28 executed code/configuration inputs match implementation
-8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted CI
-for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted
+Contracts run 37375758262 (the push of main 72155bc) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/pointer-click/hosted-ci.json)
+repeats the 728 headless checks with identical IDs, bundles and stages, and all
+28 tracked inputs match 8948a1c. [Pages 37375758284](docs/evidence/pointer-click/publication.json)
+deployed this record from main 72155bc, and the live public JSON and local API
+match it. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
