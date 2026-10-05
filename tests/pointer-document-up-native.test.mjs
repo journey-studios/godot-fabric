@@ -205,6 +205,81 @@ function refs(report, I, D, installed) {
   assert.deepEqual(stale.application.pointerRouting, stale.applicationBefore.pointerRouting); clean(stale.react, D);
   terminal(stages["refs/remount/fresh-document/up"], docExpected, installed ? [1, 3] : [], "A", D, installed, docOffsets, docResults);
 }
+// Callbacks and the mutations they perform share one sequence; "action:target"
+// marks a mutation between the callbacks around it.
+const timeline = value => [...value.events.map(row => [row.sequence, row.label]),
+  ...value.mutations.map(row => [row.sequence, row.action + ":" + row.target])].sort((a, b) => a[0] - b[0]).map(row => row[1]);
+// Listener mutation inside actual native Up callbacks. The original dispatcher
+// snapshots each target/phase Map when it reaches it; the root query happens
+// before dispatch and reflects membership before this gesture's mutations.
+function mutation(report, I, D, installed) {
+  const stages = report.stages, docOffsets = installed ? [36] : [36, 37], docResults = installed ? [true] : [false, false];
+  const callbacks = entries => entries.filter(entry => !entry.includes(":"));
+  function rows(value, entries, phase) {
+    assert.equal(value.mutations.length, entries.length - callbacks(entries).length);
+    for (const row of value.mutations) {
+      assert.equal(row.phase, phase); assert.ok(row.currentMatches && row.globalEventMatches);
+      assert.ok(value.events.some(event => event.label === row.by && event.sequence < row.sequence));
+      assert.equal(row.result, row.action === "abort" ? true : null);
+    }
+  }
+  function up(id, name, entries, offsets = docOffsets, results = docResults) {
+    const stage = stages["mutation/" + id + "/up"];
+    terminal(stage, callbacks(entries), callbacks(entries).map(label => label.endsWith("C") ? 1 : 3), name, D, installed, offsets, results);
+    assert.deepEqual(timeline(stage.react), [...entries, "TouchEnd"]);
+    rows(stage.react, entries, entries[0]?.endsWith("C") ? 1 : 3);
+  }
+  function manual(id, name, entries) {
+    const stage = stages["mutation/" + id + "/manual"], value = stage.react;
+    assert.equal(stage.result.available, D); assert.ok(stage.result.noPrototypeBorrow);
+    if (D) assert.ok(stage.result.returned && !stage.result.trusted && stage.result.targetMatches && stage.result.cleaned);
+    assert.deepEqual(timeline(value), entries); rows(value, entries, 2);
+    assert.ok(value.events.every(row => row.type === "pointerup" && !row.trusted && row.phase === 2 &&
+      row.targetMatches && row.currentMatches && row.thisMatches && row.originalEvent && !row.originalSynthetic));
+    assert.deepEqual(value.raw, []); assert.deepEqual(value.query.rows, []);
+    assert.equal(value.panels[name].count, value.baselineCount); clean(value, D);
+  }
+  const configured = {"remove-later": ["DocC", "DocB"], "remove-sibling": ["DocB1", "DocB2"], "add-same": ["DocB1"],
+    "add-later": ["DocC"], "abort-sibling": ["DocB1", "DocB2"], "cross-root": ["DocB"]};
+  for (const [id, labels] of Object.entries(configured)) {
+    const configuration = stages["mutation/" + id + "/configuration"];
+    assert.equal(configuration.kind, "mut-" + id); assert.equal(configuration.eventType, "pointerup");
+    assert.ok(configuration.noPrototypeBorrow); assert.deepEqual(configuration.installed, D ? labels : []);
+  }
+  const on = entries => installed ? entries : [];
+  // Removal from a later phase and from the same Map both suppress delivery.
+  up("remove-later/first", "A", on(["DocC", "remove:DocB"]));
+  up("remove-later/second", "A", on(["DocC", "remove:DocB"]), [36, 37], [false, installed]);
+  manual("remove-later/after", "A", D ? ["DocC", "remove:DocB"] : []);
+  up("remove-sibling/first", "A", on(["DocB1", "remove:DocB2"]));
+  up("remove-sibling/second", "A", on(["DocB1", "remove:DocB2"]));
+  manual("remove-sibling/after", "A", D ? ["DocB1", "remove:DocB2"] : []);
+  // An add to the Map being iterated waits for the next event.
+  up("add-same/first", "A", on(["DocB1", "add:DocB2"]));
+  up("add-same/second", "A", on(["DocB1", "add:DocB2", "DocB2"]));
+  manual("add-same/after", "A", !D ? [] : installed ? ["DocB1", "add:DocB2", "DocB2"] : ["DocB1", "add:DocB2"]);
+  // Bubble Maps populated during capture run in the same native dispatch, even
+  // though the pre-dispatch root query saw only the capture listener.
+  const later = on(I ? ["DocC", "add:RootB", "add:DocB", "RootB", "DocB"] : ["DocC", "add:DocB", "DocB"]);
+  up("add-later/first", "A", later, [36, 37], [false, installed]);
+  up("add-later/second", "A", later);
+  manual("add-later/after", "A", !D ? [] : I ? ["DocC", "add:RootB", "add:DocB", "DocB"] : ["DocC", "add:DocB", "DocB"]);
+  const signal = aborted => ({available: D, originalSignal: D ? true : null, aborted: D ? aborted : null});
+  assert.deepEqual(stages["mutation/abort-sibling/signal-before"], signal(false));
+  up("abort-sibling/first", "A", on(["DocB1", "abort:DocB2"]));
+  up("abort-sibling/second", "A", on(["DocB1", "abort:DocB2"]));
+  assert.deepEqual(stages["mutation/abort-sibling/signal-after-native"], signal(installed));
+  manual("abort-sibling/after", "A", D ? ["DocB1", "abort:DocB2"] : []);
+  assert.deepEqual(stages["mutation/abort-sibling/signal-after-manual"], signal(true));
+  // A's callback populates B's Document: B's state is untouched until B's own
+  // gesture, whose root query and delivery then see the new listener.
+  up("cross-root/A", "A", on(["DocB", "add:XDoc"]));
+  const countB = stages["mutation/cross-root/A/down"].react.panels.B.count;
+  assert.equal(stages["mutation/cross-root/A/up"].react.panels.B.count, countB);
+  assert.equal(stages["mutation/cross-root/B/down"].react.baselineCount, countB);
+  up("cross-root/B", "B", on(["XDoc"]));
+  manual("cross-root/B-after", "B", installed ? ["XDoc"] : []);
+}
 function verify({report, result, log, interestMode, flagMode, bundles, headed}) {
   assert.equal(result.error, undefined, log); assert.equal(result.signal, null, log); assert.equal(result.status, 0, log);
   assert.ok(report != null, log);
@@ -297,6 +372,7 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
     }
   }
   refs(report, I, D, installed);
+  mutation(report, I, D, installed);
   const canceled = report.stages["cancel/terminal"], cancel = canceled.react;
   assert.deepEqual(cancel.events.map(row => row.label), ["TouchCancel"]); assert.deepEqual(rawRows(cancel, "topPointerUp"), []);
   raw(cancel, "topTouchCancel", cancel.events); assert.deepEqual(cancel.query.rows, []);
@@ -312,12 +388,13 @@ function verify({report, result, log, interestMode, flagMode, bundles, headed}) 
   for (const key of ["active", "contacts", "stored"]) assert.equal(stopped.pointerRouting[key], 0);
   assert.deepEqual(stopped.errors, []);
   for (const name of ["A", "B"]) { const owner = report.stages["stoppedRoot" + name]; assert.equal(owner.nativeTags, 0); assert.equal(owner.creates, owner.deletes); assert.equal(owner.pointer.activePointers, 0); assert.equal(owner.pointer.activeTouches, 0); }
-  assert.equal(report.captures.length, headed ? 7 : 0);
+  assert.equal(report.captures.length, headed ? 9 : 0);
   // A null A counter is the retired root generation: its region is clear color.
   const captureStages = [
     ["initial", 0, 0, 10], ["updated", 2, 0, 10],
     ["once-before", 12, 2, 14], ["once-first", 13, 2, 14], ["once-second", 13, 2, 14],
     ["refs-retired", null, 2, 14], ["refs-remounted", 2, 4, 14],
+    ["mutation-before", 9, 4, 14], ["mutation-added", 12, 4, 14],
   ];
   for (const [index, frame] of report.captures.entries()) {
     const [stage, counterA, counterB, pixels] = captureStages[index];

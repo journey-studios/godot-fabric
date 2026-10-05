@@ -178,10 +178,28 @@ or SDK file changed; the graphical lane passes 535 checks with 90 pixels.
 Hosted run 37310815360 repeated the 2,709 headless checks
 ([receipt](../evidence/pointer-document-up-refs/hosted-ci.json)).
 
+## Listener mutation during native dispatch
+
+The [mutation evidence](../evidence/pointer-document-up-mutation/README.md) runs
+mutations from inside delivered native Up callbacks, for **4,401 headless
+checks**. The original dispatcher snapshots each target/phase Map when it reaches
+it, and native delivery preserves that: a capture listener removing the bubble
+listener suppresses it in the same Up, and the next gesture queries
+`36=false, 37=true`; removal or AbortSignal abort of a pending sibling in the Map
+being iterated skips it through the `removed` mark; an add to that same Map waits
+for the next gesture. A capture listener that adds documentElement and Document
+bubble listeners gets both delivered in the same Up, although the pre-dispatch
+root query saw only the capture Map: native delivery is not filtered by phase.
+An add to another root's Document leaves that root unchanged until its own
+gesture, which then qualifies. A deliberate wrong-phase removal fails eight probe
+checks and the independent oracle. The graphical lane passes 835 checks with 118
+pixels; native/SDK bytes are unchanged.
+
 ## Boundaries still open
 
-This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle,
-listener mutation during delivery, capture-phase or View listeners across root
+This healthy matrix does not execute Up query/resolver faults, reentrant lifecycle
+or dispatch, View/element listener mutation, mutation combined with
+stopPropagation, capture-phase or View listeners across root
 retirement, application stop/restart or keyed remount of the whole tree,
 captured/no-hit/null-target Up, got/lost capture, coalescing
 or full responder negotiation. Down is deliberately filtered here, so no public

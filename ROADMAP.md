@@ -1192,6 +1192,37 @@ local. [Pages 37317251249](docs/evidence/pointer-document-up-refs/publication.js
 published this record (data 2c00f1e, main renderer); full public/local JSON matched.
 No whole GF, checkpoint, weight or denominator closes.
 
+
+### Document Up listener mutation during dispatch (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[mutation evidence](docs/evidence/pointer-document-up-mutation/README.md) runs
+listener mutations from inside delivered native Up callbacks in all eight lanes:
+**4,401 headless checks**, with the previous 2,709 check IDs preserved in order.
+The graphical current/enabled lane passes **835 checks**, including 118 pixels in
+nine native frames.
+
+The original dispatcher snapshots each target/phase Map when it reaches it, and
+native delivery keeps that contract. A capture listener removing the bubble
+listener suppresses it in the same Up; the next gesture queries 36=false/37=true.
+Removing or aborting (original AbortSignal) a pending sibling in the Map being
+iterated skips it through the `removed` mark. An add to that Map waits for the
+next gesture, where the duplicate re-add is a no-op. A capture listener adding
+documentElement (I) and Document bubble listeners gets both delivered in the same
+Up although the pre-dispatch root query saw only capture membership. An add to
+B's Document from A's callback leaves B's state, commits and contact unchanged
+until B's own gesture qualifies. A deliberate wrong-phase removal fails eight
+probe checks and the independent oracle.
+
+Only tests changed: the shared fixture gains `mut-*` kinds (Down unchanged, 2,723
+checks) and the Up probe/oracle gain the stages. Contracts 255 Node/13 Python,
+22 examples and static analysis pass; native/SDK bytes are unchanged. Reentrant
+dispatch, View/element listener mutation, stopPropagation with mutation, listener
+errors during mutation, Up faults and captured/no-hit routing remain open.
+All 71 executed code/configuration inputs match implementation 4342db0 via git
+show/SHA-256 (execution base de89fb2/dirty retained). Hosted CI for this slice is
+pending. No whole GF, checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

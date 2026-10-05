@@ -492,3 +492,16 @@ only the fresh Document's listeners receive the next gesture.
 | A retired, B holding | A remounted after a fresh gesture |
 | --- | --- |
 | ![A retired, B2](docs/evidence/pointer-document-up-refs/retired.png) | ![A2/B4](docs/evidence/pointer-document-up-refs/remounted.png) |
+
+### Document Up listener mutation during dispatch
+
+Listeners delivered by an actual native Up now remove, add and abort original
+Document listeners mid-dispatch: 4,401 headless checks and 835 graphical checks
+with 118 pixels. A pending removal or abort is skipped in the same Up, an add to
+the Map being iterated waits for the next gesture, and bubble listeners added by
+a capture listener run in the same Up even though the root query saw only the
+capture Map. [Evidence and limits](docs/evidence/pointer-document-up-mutation/README.md).
+
+| Before an Up whose query saw only capture | After that Up |
+| --- | --- |
+| ![A9/B4](docs/evidence/pointer-document-up-mutation/before.png) | ![A12/B4](docs/evidence/pointer-document-up-mutation/added.png) |

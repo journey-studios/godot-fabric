@@ -121,10 +121,63 @@ function capability(name) {
     surfaceId: panel.surfaceId, leafTag: panel.leafTag, sentinelTag: panel.sentinelTag,
     noRef: noRefSnapshot(name), query: documentQueryControl.snapshot()};
 }
-function add(panel, ref, label, capture = false, options = {}, keep = false) {
-  const callback = function(event) { record(panel.name, label, ref, this, event); };
+function add(panel, ref, label, capture = false, options = {}, keep = false, action = null) {
+  const callback = function(event) { record(panel.name, label, ref, this, event); action?.(event, ref); };
   ref.addEventListener(panel.eventType, callback, {...options, capture});
   panel.bindings.push({ref, callback, capture, keep, label, eventType: panel.eventType});
+  return callback;
+}
+// A listener registered only from inside another callback. Its identity is
+// stable across gestures, so a repeated add is the original Map's duplicate no-op.
+function later(panel, ref, label, capture = false) {
+  const callback = function(event) { record(panel.name, label, ref, this, event); };
+  const binding = {ref, callback, capture, keep: false, label, eventType: panel.eventType};
+  return () => {
+    ref.addEventListener(panel.eventType, callback, {capture});
+    if (!panel.bindings.includes(binding)) panel.bindings.push(binding);
+  };
+}
+// Dispatch-time mutation runs inside an actual listener and shares the event
+// sequence, so its position between delivered callbacks is observable.
+function mutate(event, recipient, by, action, target, perform) {
+  const result = perform();
+  active?.mutations.push({sequence: ++sequence, by, action, target, phase: event.eventPhase ?? null,
+    currentMatches: event.currentTarget === recipient, globalEventMatches: globalThis.event === event,
+    result: result ?? null});
+}
+// Each kind mutates the original Maps from inside a delivered Up callback.
+function configureMutation(panel, kind, I) {
+  const doc = panel.doc, element = panel.element, type = panel.eventType;
+  if (kind === "mut-remove-later") {
+    let docB = null;
+    add(panel, doc, "DocC", true, {}, false, (event, ref) =>
+      mutate(event, ref, "DocC", "remove", "DocB", () => doc.removeEventListener(type, docB, false)));
+    docB = add(panel, doc, "DocB");
+  } else if (kind === "mut-remove-sibling") {
+    let second = null;
+    add(panel, doc, "DocB1", false, {}, false, (event, ref) =>
+      mutate(event, ref, "DocB1", "remove", "DocB2", () => doc.removeEventListener(type, second, false)));
+    second = add(panel, doc, "DocB2");
+  } else if (kind === "mut-add-same") {
+    const addSecond = later(panel, doc, "DocB2");
+    add(panel, doc, "DocB1", false, {}, false, (event, ref) => mutate(event, ref, "DocB1", "add", "DocB2", addSecond));
+  } else if (kind === "mut-add-later") {
+    // Document methods need only D; documentElement methods also need I.
+    const addRoot = I ? later(panel, element, "RootB") : null, addDoc = later(panel, doc, "DocB");
+    add(panel, doc, "DocC", true, {}, false, (event, ref) => {
+      if (addRoot != null) mutate(event, ref, "DocC", "add", "RootB", addRoot);
+      mutate(event, ref, "DocC", "add", "DocB", addDoc);
+    });
+  } else if (kind === "mut-abort-sibling") {
+    panel.controller = new AbortController();
+    const controller = panel.controller;
+    add(panel, doc, "DocB1", false, {}, false, (event, ref) =>
+      mutate(event, ref, "DocB1", "abort", "DocB2", () => { controller.abort(); return controller.signal.aborted; }));
+    add(panel, doc, "DocB2", false, {signal: controller.signal});
+  } else if (kind === "mut-cross-root") {
+    const other = panels.get(panel.name === "A" ? "B" : "A"), addOther = later(other, other.doc, "XDoc");
+    add(panel, doc, "DocB", false, {}, false, (event, ref) => mutate(event, ref, "DocB", "add", "XDoc", addOther));
+  } else throw Error("Unknown document mutation: " + kind);
 }
 function configure(name, kind, eventType = "pointerdown") {
   if (!["pointerdown", "pointerup"].includes(eventType)) throw Error("Unsupported document probe event type");
@@ -155,6 +208,8 @@ function configure(name, kind, eventType = "pointerdown") {
       if (kind === "doc-abort-pre") panel.controller.abort();
       add(panel, doc, "DocB", false, {signal: panel.controller.signal});
     }
+  } else if (kind.startsWith("mut-")) {
+    if (D) configureMutation(panel, kind, I);
   } else if (kind !== "none") throw Error("Unknown document configuration: " + kind);
   return {name, kind, installed: panel.bindings.map(binding => binding.label), noPrototypeBorrow: true,
     ...(eventType === "pointerup" ? {eventType} : {})};
@@ -162,7 +217,7 @@ function configure(name, kind, eventType = "pointerdown") {
 function arm(name, caseId, target = "leaf", kind = "normal") {
   const panel = panels.get(name);
   active = {name, caseId, kind, eventType: panel.eventType, targetTag: target === "sentinel" ? panel.sentinelTag : panel.leafTag,
-    manualTarget: null, baselineCount: panel.count, events: [], eventRefs: [], raw: [], payloads: new Map()};
+    manualTarget: null, baselineCount: panel.count, events: [], eventRefs: [], raw: [], payloads: new Map(), mutations: []};
   documentQueryControl.clearObservations();
   return {targetTag: active.targetTag, baselineCount: active.baselineCount};
 }
@@ -222,7 +277,7 @@ function snapshot() {
     mounts: {...mounts}, cleanups: {...cleanups}, query: documentQueryControl.snapshot(),
     currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority(), defaultPriority: nativeFabricUIManager.unstable_DefaultEventPriority,
     globalEventRestored: globalThis.event == null,
-    ...(active?.eventType === "pointerup" ? {eventType: active.eventType,
+    ...(active?.eventType === "pointerup" ? {eventType: active.eventType, mutations: [...active.mutations],
       discretePriority: nativeFabricUIManager.unstable_DiscreteEventPriority,
       upEventIdentity: {callbackCount: upRefs.length,
         sameObject: upRefs.length > 0 ? upRefs.every(event => event === upRefs[0]) : null,
