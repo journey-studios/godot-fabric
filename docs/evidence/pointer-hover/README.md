@@ -148,24 +148,47 @@ start.
 
 ## Limites
 
-A prova cobre listeners de hover em Views, com as duas flags habilitadas, com mouse.
+A prova cobre listeners de hover em Views, com as duas flags habilitadas, com mouse
+e toque.
 Algumas partes ficam habilitadas sem certificação:
 - Pelo caminho da raiz, listeners de hover em Document/documentElement agora
   qualificam (com a regra de não borbulhar para `enter`/`leave`), mas não foram
   testados nativamente; só os testes unitários do plugin cobrem essa regra.
-- Neste host, a área vazia da superfície não tem alvo, enquanto no RN Android o alvo
-  de fallback é a view raiz (o `TouchTargetHelper` parte do id da raiz e a busca de
-  pointer events devolve a própria raiz). Por isso a raiz e o container entram e saem do hover a
-  cada transição, e listeners de Document em toques ou hover sobre área vazia não
-  recebem nada. Essa divergência é anterior a esta fatia e vira a próxima entrega.
+- Neste host, a área vazia da superfície não tem alvo de hit, enquanto o RN resolve o
+  alvo para a view raiz (o `TouchTargetHelper` no Android e o `hitTest` da
+  `RCTRootComponentView` no iOS). No RN 0.87.1 a família raiz nasce sem dispatcher
+  de eventos e com o `EventTarget` sem instance handle, então nenhum evento com alvo
+  na raiz chega ao JS: listeners de Document não recebem toques, moves nem hover
+  sobre a área vazia em nenhum dos dois. A diferença observável é o caminho de
+  hover: aqui a raiz sai dele a cada transição para a área vazia, enquanto o
+  processador C++ do RN a mantém. Com um listener capture de `pointerenter` ou
+  `pointerleave` no Document, essa saída propaga `leave` (e a volta propaga `enter`)
+  para cada nó do caminho, o que o RN não faz enquanto o ponteiro segue na raiz.
+  Isso é anterior a esta fatia e entra na certificação de hover em Document.
+
+  (Correção: a versão anterior deste item dizia que, no RN, listeners de Document
+  receberiam eventos sobre a área vazia. Eles não recebem.) A
+  [fatia do caminho da raiz](../pointer-root-path/README.md) mantém a raiz no
+  caminho e também corrige um crash: com esse listener capture no Document, este
+  host emitia `enter`/`leave` para a própria raiz e caía no `dispatchEventToJS`.
 
 Com toque, só a colocação no alvo (bubble) foi exercitada; as outras usam o mesmo
 algoritmo e as mesmas consultas certificadas com mouse. Hover com caneta, captura de
 ponteiro durante hover, retirada de root com hover ativo, responders, hardware,
 exports mobile e performance seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37352693788, no head fcaae01 (checkout de merge 5d216dd). O artefato
+`native-pointer-hover` repete os **158 checks headless** com IDs, bundle e estágios
+idênticos aos locais, incluindo o caso de toque e os estágios `fault/*`; além de
+timestamps, da versão patch do Node e do hash do host do runner, só os
+identificadores de alocação do Godot da segunda aplicação diferem, aceitos apenas
+como renomeação um-para-um (88). O log retém exatamente o diagnóstico esperado,
+e as 76 entradas rastreadas batem com 5560798 na árvore do checkout. O controle
+de host anterior continua local. O [Pages](publication.json) (run 37354496135, push da
+`main` em 2643d4c) implantou exatamente os dados commitados, e o JSON público e a API
+local conferem com eles. Nenhum GF, checkpoint, dependência, peso ou denominador
+foi fechado.
 
 As 76 fontes de código/configuração executadas (18 produtoras do bundle,
 55 entradas do build nativo e 5 de verificação, com sobreposição)

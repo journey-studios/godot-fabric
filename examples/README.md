@@ -157,8 +157,9 @@ the imperative flag. Capture listeners run at phase 1 and bubble at phase 3, the
 root query reads `1=true` or `1=false`/`25=true` after the target's and ancestors'
 false pairs, and button-less mouse motion qualifies too. Its
 [receipt](../docs/evidence/pointer-document-move/README.md) includes a retained
-control that drops the owner Document from the root query. Hosted CI for this
-matrix is pending.
+control that drops the owner Document from the root query. Hosted run 37351245158
+repeated the 1,932 headless checks
+([receipt](../docs/evidence/pointer-document-move/hosted-ci.json)).
 
 | Before Document Move | After two samples reach DocC and DocB |
 | --- | --- |
@@ -173,6 +174,16 @@ touch enters its path in the Down and leaves it after the Up, and the full looku
 sequence is checked. Its [receipt](../docs/evidence/pointer-hover/README.md)
 records 158/158 headless checks and 32 visible old-host failures with the same SDK
 bundle.
+
+The [root-path probe](pointer-root-path/README.md) moves a mouse and a touch between
+a target, the surface's empty area and a point outside every surface:
+`npm run test:pointers:root-path`, outside the launcher catalog. The empty area
+resolves to the root, which stays in the hover path but never receives an event,
+so a Document capture `pointerenter`/`pointerleave` listener sees descendants
+enter and leave only with the root. Its
+[receipt](../docs/evidence/pointer-root-path/README.md) records 82/82 headless
+checks, 9 visible failures on the preceding host and that host's crash in the
+Document case.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

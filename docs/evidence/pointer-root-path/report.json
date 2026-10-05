@@ -1,0 +1,1451 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-root-path",
+  "status": "verified-local-headless-two-part-old-host-control-regressions-and-sdk",
+  "at": "2026-10-05T18:49:14.980828+00:00",
+  "executionBaseCommit": "1302d51295e654484e0f06fdcd0d4407f392972f",
+  "docsOnlyCommitsSinceExecutionBase": [
+    "ea091a01e2bfbd9bca164c7eaa5dbb1e096fb7c6"
+  ],
+  "docsOnlyCommitsTouchNoExecutedInput": true,
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "71a64c2d00b2607e29665190a461bf6197fe31c7",
+  "dependsOn": "View hover native interest (journey-studios/godot-fabric#26)",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "platform": "macOS arm64"
+  },
+  "commands": [
+    "npm run test:pointers:root-path",
+    "node tests/pointer-root-path-native.test.mjs --allow-original-negative (preserved View hover host installed; View case, then Document case)"
+  ],
+  "lanes": [
+    {
+      "lane": "original-view",
+      "meaning": "Preserved View hover host replaying the current SDK bundle, View case only; expected negative control.",
+      "nativeHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "checks": 45,
+      "passed": 36,
+      "failed": 9,
+      "failedIds": [
+        "view-bubble/enter/Native hover consults the root and path Maps exactly as RN's root-resolved path requires",
+        "view-bubble/empty/Native hover consults the root and path Maps exactly as RN's root-resolved path requires",
+        "view-bubble/empty/The processor holds the hover path RN resolves for this point",
+        "view-bubble/back/Native hover consults the root and path Maps exactly as RN's root-resolved path requires",
+        "view-bubble/exit/Native hover consults the root and path Maps exactly as RN's root-resolved path requires",
+        "view-bubble/empty-in/Native hover consults the root and path Maps exactly as RN's root-resolved path requires",
+        "view-bubble/empty-in/The processor holds the hover path RN resolves for this point",
+        "view-bubble/empty-out/Native hover consults the root and path Maps exactly as RN's root-resolved path requires",
+        "hover/A root's own enter and leave Maps are never read; only its capture Maps propagate"
+      ],
+      "reportSha256": "e66e00a1c3323d001f76bb463359edab85914077efc1ddeeb1955c524f45f3a2",
+      "logSha256": "8f4309013150e55b67ceb8b78d658bbbfd1d630e55ad26cea5747609ec68f487"
+    },
+    {
+      "lane": "original-document",
+      "meaning": "Preserved View hover host, Document case only: it emits enter to the root and crashes before any check.",
+      "nativeHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "crashed": true,
+      "signal": 11,
+      "crashStep": "document-capture/enter",
+      "crashFrames": [
+        "UIManagerBinding::dispatchEventToJS",
+        "PointerEventsProcessor::handleIncomingPointerEventOnNode"
+      ],
+      "reportWritten": false,
+      "logSha256": "21ac22fe13ab70ad42675b3732fc6dbdd8a9e45c09b3f3a21d33572ca3744abc"
+    },
+    {
+      "lane": "current",
+      "meaning": "Corrected native host, headless.",
+      "nativeHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1",
+      "checks": 82,
+      "passed": 82,
+      "reportSha256": "5926e0c021d92871dfc80dea480d2ff0e7a881bdd161398094ad7feb7173ef95",
+      "logSha256": "7a3529dfc052fcea649266e04514e36f99b429f6a7e686cfc7157ed62eb8c161",
+      "comparisonSha256": "3a9793c5fa609376d884cf8120b9a98a97e1136630bb35160f84111836575bc8"
+    }
+  ],
+  "causalComparison": {
+    "sameSdkBundle": true,
+    "sdkBundleSha256": "cd4e7034d29661263ceccc8844bafcec258d8ec802b805288ea376e1d9519da5",
+    "testAndSdkProducerCount": 16,
+    "sameTestAndSdkProducerPins": true,
+    "nativeProducersEvidencedByBuildRecords": [
+      "native/application_runtime.cpp",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "scripts/rn-pointer-overlay.mjs",
+      "native/pointer_geometry.cpp"
+    ],
+    "originalReactNativeInputCount": 24,
+    "nativeHosts": {
+      "previous": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "current": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1"
+    },
+    "nativeBuildRecords": {
+      "comparedEntries": 6708,
+      "changedEntries": [
+        "/host/sha256",
+        "/inputs/sourceSha256/native/application_runtime.cpp",
+        "/inputs/sourceSha256/native/pointer_adapter.cpp",
+        "/inputs/sourceSha256/native/pointer_adapter.h",
+        "/inputs/sourceSha256/native/pointer_event.h",
+        "/inputs/sourceSha256/native/pointer_geometry.cpp",
+        "/inputs/sourceSha256/scripts/rn-pointer-overlay.mjs",
+        "/inputs/sourceTrees/3/files/0/sha256",
+        "/inputs/sourceTrees/3/files/1/sha256",
+        "/inputs/sourceTrees/3/manifestSha256",
+        "/inputs/trees/1/files/1/sha256"
+      ],
+      "previousSha256": "2c36c0ac3385839c12aa791d9924f68744aa89976aab187982e8ab110d313e9d",
+      "currentSha256": "2ed16ed54080f084087e7789eddaff15389f4e740ffba6ec281d70350ef9daab"
+    }
+  },
+  "executedObservations": {
+    "document-capture/back": {
+      "callbacks": [],
+      "hoverLookups": [
+        [
+          2,
+          26,
+          false,
+          false
+        ],
+        [
+          2,
+          28,
+          false,
+          false
+        ],
+        [
+          8,
+          26,
+          false,
+          false
+        ],
+        [
+          8,
+          28,
+          false,
+          false
+        ],
+        [
+          10,
+          26,
+          false,
+          false
+        ],
+        [
+          10,
+          28,
+          false,
+          false
+        ],
+        [
+          null,
+          26,
+          false,
+          true
+        ],
+        [
+          null,
+          28,
+          false,
+          true
+        ],
+        [
+          10,
+          23,
+          false,
+          false
+        ],
+        [
+          10,
+          0,
+          false,
+          false
+        ],
+        [
+          8,
+          23,
+          false,
+          false
+        ],
+        [
+          8,
+          0,
+          false,
+          false
+        ],
+        [
+          2,
+          23,
+          false,
+          false
+        ],
+        [
+          2,
+          0,
+          false,
+          false
+        ]
+      ],
+      "raw": [],
+      "processorHoverPaths": 1
+    },
+    "document-capture/empty": {
+      "callbacks": [],
+      "hoverLookups": [
+        [
+          2,
+          27,
+          false,
+          false
+        ],
+        [
+          2,
+          29,
+          false,
+          false
+        ],
+        [
+          8,
+          27,
+          false,
+          false
+        ],
+        [
+          8,
+          29,
+          false,
+          false
+        ],
+        [
+          10,
+          27,
+          false,
+          false
+        ],
+        [
+          10,
+          29,
+          false,
+          false
+        ],
+        [
+          null,
+          27,
+          false,
+          true
+        ],
+        [
+          null,
+          29,
+          false,
+          true
+        ],
+        [
+          10,
+          24,
+          false,
+          false
+        ],
+        [
+          10,
+          2,
+          false,
+          false
+        ],
+        [
+          8,
+          24,
+          false,
+          false
+        ],
+        [
+          8,
+          2,
+          false,
+          false
+        ],
+        [
+          2,
+          24,
+          false,
+          false
+        ],
+        [
+          2,
+          2,
+          false,
+          false
+        ]
+      ],
+      "raw": [],
+      "processorHoverPaths": 1
+    },
+    "document-capture/enter": {
+      "callbacks": [
+        [
+          "pointerenter-capture",
+          1,
+          10,
+          "document"
+        ],
+        [
+          "pointerenter-capture",
+          1,
+          8,
+          "document"
+        ],
+        [
+          "pointerenter-capture",
+          1,
+          2,
+          "document"
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          26,
+          false,
+          false
+        ],
+        [
+          2,
+          28,
+          false,
+          false
+        ],
+        [
+          8,
+          26,
+          false,
+          false
+        ],
+        [
+          8,
+          28,
+          false,
+          false
+        ],
+        [
+          10,
+          26,
+          false,
+          false
+        ],
+        [
+          10,
+          28,
+          false,
+          false
+        ],
+        [
+          null,
+          26,
+          false,
+          true
+        ],
+        [
+          null,
+          28,
+          false,
+          true
+        ],
+        [
+          null,
+          23,
+          true,
+          true
+        ],
+        [
+          10,
+          23,
+          false,
+          false
+        ],
+        [
+          8,
+          23,
+          false,
+          false
+        ],
+        [
+          2,
+          23,
+          false,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerEnter",
+        "topPointerEnter",
+        "topPointerEnter"
+      ],
+      "processorHoverPaths": 1
+    },
+    "document-capture/exit": {
+      "callbacks": [
+        [
+          "pointerleave-capture",
+          1,
+          2,
+          "document"
+        ],
+        [
+          "pointerleave-capture",
+          1,
+          8,
+          "document"
+        ],
+        [
+          "pointerleave-capture",
+          1,
+          10,
+          "document"
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          27,
+          false,
+          false
+        ],
+        [
+          2,
+          29,
+          false,
+          false
+        ],
+        [
+          8,
+          27,
+          false,
+          false
+        ],
+        [
+          8,
+          29,
+          false,
+          false
+        ],
+        [
+          10,
+          27,
+          false,
+          false
+        ],
+        [
+          10,
+          29,
+          false,
+          false
+        ],
+        [
+          null,
+          27,
+          false,
+          true
+        ],
+        [
+          null,
+          29,
+          false,
+          true
+        ],
+        [
+          null,
+          24,
+          true,
+          true
+        ],
+        [
+          10,
+          24,
+          false,
+          false
+        ],
+        [
+          8,
+          24,
+          false,
+          false
+        ],
+        [
+          2,
+          24,
+          false,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerLeave",
+        "topPointerLeave",
+        "topPointerLeave"
+      ],
+      "processorHoverPaths": 0
+    },
+    "document-capture/touch/down": {
+      "callbacks": [
+        [
+          "pointerenter-capture",
+          1,
+          10,
+          "document"
+        ],
+        [
+          "pointerenter-capture",
+          1,
+          8,
+          "document"
+        ],
+        [
+          "pointerenter-capture",
+          1,
+          2,
+          "document"
+        ],
+        [
+          "touchstart",
+          2,
+          2,
+          2
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          26,
+          false,
+          false
+        ],
+        [
+          2,
+          28,
+          false,
+          false
+        ],
+        [
+          8,
+          26,
+          false,
+          false
+        ],
+        [
+          8,
+          28,
+          false,
+          false
+        ],
+        [
+          10,
+          26,
+          false,
+          false
+        ],
+        [
+          10,
+          28,
+          false,
+          false
+        ],
+        [
+          null,
+          26,
+          false,
+          true
+        ],
+        [
+          null,
+          28,
+          false,
+          true
+        ],
+        [
+          null,
+          23,
+          true,
+          true
+        ],
+        [
+          10,
+          23,
+          false,
+          false
+        ],
+        [
+          8,
+          23,
+          false,
+          false
+        ],
+        [
+          2,
+          23,
+          false,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerEnter",
+        "topPointerEnter",
+        "topPointerEnter",
+        "topTouchStart"
+      ],
+      "processorHoverPaths": 1
+    },
+    "document-capture/touch/drag-empty": {
+      "callbacks": [],
+      "hoverLookups": [
+        [
+          2,
+          27,
+          false,
+          false
+        ],
+        [
+          2,
+          29,
+          false,
+          false
+        ],
+        [
+          8,
+          27,
+          false,
+          false
+        ],
+        [
+          8,
+          29,
+          false,
+          false
+        ],
+        [
+          10,
+          27,
+          false,
+          false
+        ],
+        [
+          10,
+          29,
+          false,
+          false
+        ],
+        [
+          null,
+          27,
+          false,
+          true
+        ],
+        [
+          null,
+          29,
+          false,
+          true
+        ],
+        [
+          10,
+          24,
+          false,
+          false
+        ],
+        [
+          10,
+          2,
+          false,
+          false
+        ],
+        [
+          8,
+          24,
+          false,
+          false
+        ],
+        [
+          8,
+          2,
+          false,
+          false
+        ],
+        [
+          2,
+          24,
+          false,
+          false
+        ],
+        [
+          2,
+          2,
+          false,
+          false
+        ]
+      ],
+      "raw": [
+        "topTouchMove"
+      ],
+      "processorHoverPaths": 1
+    },
+    "document-capture/touch/up-empty": {
+      "callbacks": [
+        [
+          "touchend",
+          2,
+          2,
+          2
+        ]
+      ],
+      "hoverLookups": [
+        [
+          null,
+          24,
+          true,
+          true
+        ]
+      ],
+      "raw": [
+        "topTouchEnd"
+      ],
+      "processorHoverPaths": 0
+    },
+    "view-bubble/back": {
+      "callbacks": [
+        [
+          "pointerover-bubble",
+          2,
+          2,
+          2
+        ],
+        [
+          "pointerenter-bubble",
+          2,
+          2,
+          2
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          26,
+          true,
+          false
+        ],
+        [
+          10,
+          23,
+          false,
+          false
+        ],
+        [
+          10,
+          0,
+          false,
+          false
+        ],
+        [
+          8,
+          23,
+          false,
+          false
+        ],
+        [
+          8,
+          0,
+          false,
+          false
+        ],
+        [
+          2,
+          23,
+          false,
+          false
+        ],
+        [
+          2,
+          0,
+          true,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerOver",
+        "topPointerEnter"
+      ],
+      "processorHoverPaths": 1
+    },
+    "view-bubble/empty": {
+      "callbacks": [
+        [
+          "pointerout-bubble",
+          2,
+          2,
+          2
+        ],
+        [
+          "pointerleave-bubble",
+          2,
+          2,
+          2
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          27,
+          true,
+          false
+        ],
+        [
+          10,
+          24,
+          false,
+          false
+        ],
+        [
+          10,
+          2,
+          false,
+          false
+        ],
+        [
+          8,
+          24,
+          false,
+          false
+        ],
+        [
+          8,
+          2,
+          false,
+          false
+        ],
+        [
+          2,
+          24,
+          false,
+          false
+        ],
+        [
+          2,
+          2,
+          true,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerOut",
+        "topPointerLeave"
+      ],
+      "processorHoverPaths": 1
+    },
+    "view-bubble/empty-in": {
+      "callbacks": [],
+      "hoverLookups": [
+        [
+          null,
+          23,
+          false,
+          true
+        ]
+      ],
+      "raw": [],
+      "processorHoverPaths": 1
+    },
+    "view-bubble/empty-out": {
+      "callbacks": [],
+      "hoverLookups": [
+        [
+          null,
+          24,
+          false,
+          true
+        ]
+      ],
+      "raw": [],
+      "processorHoverPaths": 0
+    },
+    "view-bubble/enter": {
+      "callbacks": [
+        [
+          "pointerover-bubble",
+          2,
+          2,
+          2
+        ],
+        [
+          "pointerenter-bubble",
+          2,
+          2,
+          2
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          26,
+          true,
+          false
+        ],
+        [
+          null,
+          23,
+          false,
+          true
+        ],
+        [
+          10,
+          23,
+          false,
+          false
+        ],
+        [
+          10,
+          0,
+          false,
+          false
+        ],
+        [
+          8,
+          23,
+          false,
+          false
+        ],
+        [
+          8,
+          0,
+          false,
+          false
+        ],
+        [
+          2,
+          23,
+          false,
+          false
+        ],
+        [
+          2,
+          0,
+          true,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerOver",
+        "topPointerEnter"
+      ],
+      "processorHoverPaths": 1
+    },
+    "view-bubble/exit": {
+      "callbacks": [
+        [
+          "pointerout-bubble",
+          2,
+          2,
+          2
+        ],
+        [
+          "pointerleave-bubble",
+          2,
+          2,
+          2
+        ]
+      ],
+      "hoverLookups": [
+        [
+          2,
+          27,
+          true,
+          false
+        ],
+        [
+          null,
+          24,
+          false,
+          true
+        ],
+        [
+          10,
+          24,
+          false,
+          false
+        ],
+        [
+          10,
+          2,
+          false,
+          false
+        ],
+        [
+          8,
+          24,
+          false,
+          false
+        ],
+        [
+          8,
+          2,
+          false,
+          false
+        ],
+        [
+          2,
+          24,
+          false,
+          false
+        ],
+        [
+          2,
+          2,
+          true,
+          false
+        ]
+      ],
+      "raw": [
+        "topPointerOut",
+        "topPointerLeave"
+      ],
+      "processorHoverPaths": 0
+    },
+    "view-bubble/start": {
+      "callbacks": [],
+      "hoverLookups": [],
+      "raw": [],
+      "processorHoverPaths": 0
+    }
+  },
+  "oldHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 63,
+      "normativeFailures": 8,
+      "reportSha256": "bad5a8d85881dd9465d67d496eb3186a79e3ac0369b930e033bf8ce1c4a085a4"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 187,
+      "normativeFailures": 12,
+      "reportSha256": "66c128bbfd2eaf6b4d2a801c4c4d3c3aeaf809ef97e348673dbb7bb9bc5f6730"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 66,
+      "normativeFailures": 3,
+      "reportSha256": "e8a48f39ba6d5fa561aa9a7bd0f63e0bc3936c7720c9bb6225fcd89d330d263c"
+    },
+    "pointer-move": {
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "preservedHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 136,
+      "normativeFailures": 45,
+      "reportSha256": "142690a8813caacee69bc6d9c9c4b95a91088579a1beeeae0fe3c099be14b7f1"
+    },
+    "pointer-hover": {
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "preservedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 137,
+      "normativeFailures": 32,
+      "reportSha256": "d59d8e201516eb6e2dd44f7c4f331fecc455423cef621a661a71921f4921f3bb"
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "678ecd8ec20e26cf9615c72332b11ab7a87b70c986a9812fb2a1c67114f56cf7"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "6b0b6817f5ff6287a84ec67001a06bc1792f86382e70e2b3ebdaa08f04e808ef"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "6cd2d45901b406f8690f7a81f1fb838e41e7ec02940f9af3186662636917f3f2"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "acae40e61407bbc5f0d712ecb22659cecfd56276cf8ddc1e34f6db01d20940e6"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 122,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "b7e8d2cb0e3f32fdd17a6ad5bb034a1ea494afadf927d83c651e799d136035bc"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "451e979fa7aa1b6dc07e2eec6ed164ce00b575817656efd19c66478f6627ea3f"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "0250158277e2187d7ba45762ff6caf44814dc105898d079e4ba6901c9ba1e098"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "d8ed846c6275a426256507942a934c81b077b38a1128b7b7f08707566485dbd6"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "73060f2de620c716a12359c18a05c6687b3dc98a183b741c7d4b64e3b61af4db"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "32fb049261024d70fe2fb1446b94239c04fb04a3a4b431136a7fde06c825e278"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "3d6e6fcac579da666e6a76ee859e99f1cb3f41e2ba3cc5bb8ddba394fe8114aa"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "d048b9cd354193216bd905a3fd6849e2659d0a1176dde6a091fc7158cb7b725d"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "1bc989eddb0346ab6869aa85d229c9d8bacf9d869402a9a087723bc2549a960e"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "eb278abc97c9daf279bd46e54fc87d593dab11f12ba0ffdbea7f9e8c5a14d498"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "3ae7d5793d5e844762e55a6a6c3b3bceab68b4ed8558bdacc7d8f566d4c0aa5b"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "35c5e75283a6f21786ee8cc0c40f12b7d022df269c2e5c94edc93fca180b2997"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 38,
+        "logSha256": "0158ebf5d8b20172cbcea3869e031264302e8fead57cace4e617f46c2d69b835"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "de5c8bc389d9f3f83f6998f8ea08eccf3a905973e4f07af1fa99c7abf740ab69"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "a5a6ab725c3d3db9bf0a330a35dd91786322172fdda57302d635d73a3c844741"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 62,
+        "logSha256": "0242a1d2fa23ef6f91cea1cd5f333f30ab976332adc33ba9a2e89056e791befc"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "7011fd5525c2e186694b14202ecaf11dea6adea7e54111fcd15d09e79dd9924b"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "b6915ac55a6ec87c6f61e29bfa07d600ab520cb760c12b95156fe5ddb31f6351"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 30,
+        "logSha256": "a5554be42bc5ca902d404ad2aa84687f4169f59e3fa493d7094da3ca6f2d2230"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "bb410c5f362c4a6729f16ebd7d3809aa389750f861dd77dc9e5698a7850f6f04"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "7d41b730ee5e0de694701ac2ec05895c1b61ce4e19d7e302dc65b2e7b41e655e"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    },
+    "downChecks": 2731,
+    "documentUpChecks": 6459,
+    "documentMoveChecks": 1940,
+    "viewUpChecks": 297,
+    "queryFaultChecks": 187,
+    "resolverFaultChecks": 66,
+    "moveChecks": 220,
+    "hoverChecks": 158,
+    "rootPathChecksInSequence": 82,
+    "nodeContractChecks": 260,
+    "pythonContractChecks": 13,
+    "examples": 22,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "69a4b5100f74c7e69ab7189cba03376487f54b67438951debd2aa520989fcb5f"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "51d93fed4e9c77912d6462b77e598d181e1ce9ac87ed248bf25512bf179123ff"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "d9c6e256ae4f637f66a9006068bad1cfd63d45d7ca39add0e76b5b5ee2860340"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "1e080c303718c0ae43605a7989f3beee6e1dae063725ef3e964ff8f2e8986b14"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "29ef3fcf005b93568b32c82b43e857a29dad69861b4c8e7aebcc91b56816c775"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 36,
+        "logSha256": "3a6852690fb1258dc096e21af52703ba734fadd9b428eb86014eb7692e07bd14"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 91,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "cold": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      }
+    }
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-query-fault-bootstrap.js": "b7337214cb7071b7fd8e7f6adc3d7a4397b3cf142ed38042cb3609d2013736c9",
+    "tests/pointer-query-fault-fixture.jsx": "55369ae573573c71243b1d7cb29d50be675013c898ca3d7fd1faba1a8c2ec6a8",
+    "tests/pointer-query-fault-probe.gd": "09e45cf893d752ad30a8701e1256b1a5cd53c3afb6aed2101b6c9531c4ece54d",
+    "tests/pointer-move-probe.gd": "667da53a9a7c8223fc64f7052914b33287e9f221be845c5cb1ed0f46425542a3",
+    "tests/pointer-hover-probe.gd": "c2e2243dc957ec7cc9ad072cabdf8b44e0ffe245ad76f86185cdef41b853518b",
+    "tests/pointer-root-path-fixture.jsx": "04390f4b6c3625c319e6b81d034d38284d1a9fab1d945c8699c7dd75a8d0e8ca",
+    "tests/pointer-root-path-probe.gd": "7f2e429b17befc95f6363af730e1c7929d275a125af138e00f315adf6c23ed78",
+    "tests/pointer-root-path-native.test.mjs": "010184a84867c43680608b9ec3e4df5bea88d3c24190f684b6a9e594ef3e480c",
+    "scripts/event-target-bundle.mjs": "e1160d33ef4422c0e8614bf7e5f72237ffe10a28422356c77d236c7a24d832a7",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "native/application_runtime.cpp": "7e0d658a10ab0a97835d76aaa8495ab7bb2a42fc8670852176f236ac51862694",
+    "native/pointer_adapter.cpp": "19dc59f7b4fc4734a2c731d031d73025090d763f3429372fbf2cff1344d941e5",
+    "native/pointer_adapter.h": "3df6ab12f9d12a6297a47d6e836f1fea210501103057d92d0b4549bbfe979647",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+    "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+    "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219",
+    "ReactCommon/react/renderer/core/EventEmitter.cpp": "892993afa65eb62554792517f027491144861984b1a6406f00c876beafc17b78",
+    "ReactCommon/react/renderer/core/EventTarget.cpp": "b2f550880a6dc57997166968d63771016e06dea1c62d1030135b6b9ddb91856f",
+    "ReactCommon/react/renderer/mounting/ShadowTree.cpp": "3eab5654687d9c7932b746170fd1c91464613c33e40bf9faf641a9b2c83c8029",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+    "ReactCommon/react/renderer/uimanager/PointerHoverTracker.cpp": "1652ac4a624a22e9de2e21f01408718289d4aaee66887599d07fb9ef02e77fff",
+    "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "7e0d658a10ab0a97835d76aaa8495ab7bb2a42fc8670852176f236ac51862694",
+    "native/application_runtime.h": "2154edc30fe65fef99aea72cb3c2b675f7b6e456da1fb97666f40c4cc7e0b051",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "97e14f820c2183b8a4cbc4c671855d579cc731538e21de2047aff7e304b62ec5",
+    "native/fabric_application.h": "f176c88bcd4a7a6232693dc8c209e7448b9e6e82d89dbd7e971b2d9f6dbf1672",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "19dc59f7b4fc4734a2c731d031d73025090d763f3429372fbf2cff1344d941e5",
+    "native/pointer_adapter.h": "3df6ab12f9d12a6297a47d6e836f1fea210501103057d92d0b4549bbfe979647",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+    "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+    "native/scroll_adapter.h": "ee81b6a03619a12aa3b664bfe6da429a32134f812305e9f726323e7b1e99d858",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "c7f35518009aa5c26edf7bd9c0c667e14072782d107f2bf37151a3c9fc850106",
+    "native/turbo_module_registry.h": "85fcd70ce210536f45db4fc9e566784b013537d09a5b78d2eb61ff14396ae76d",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "6b1c7450d3b76d98e3e7fb01b306c38dad2599d5c7a9a93ceb54931afdba2a4d",
+    "package.json": "fc3d8d51e91c40384afa876591c99996ac367ddbd91c539e3b54ce7a0d5070c5",
+    ".fallowrc.json": "4db3350761d300fc8728037140d5934e2c9acfe0d174a91ea6273872947c3c82",
+    "tests/rn-pointer-overlay.test.mjs": "055d049be2d479f64186214013e16cf9c2f1a7afe609016482f157e98f6b9c1e",
+    "tests/rn-pointer-interest-overlay.test.mjs": "7ce50ec5f6bc5cc349e9b010fe79d561753de834b058e92156a5697b695ead50"
+  },
+  "changedFilesSinceExecutionBase": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "README.md",
+    "ROADMAP.md",
+    "dashboard/migration.json",
+    "docs/evidence/README.md",
+    "docs/evidence/pointer-hover/README.md",
+    "docs/evidence/pointer-hover/hosted-ci.json",
+    "docs/evidence/pointer-hover/publication.json",
+    "docs/evidence/pointer-root-path/README.md",
+    "docs/research/pointer-hover.md",
+    "docs/research/pointer-root-path.md",
+    "examples/README.md",
+    "examples/pointer-root-path/README.md",
+    "native/application_runtime.cpp",
+    "native/pointer_adapter.cpp",
+    "native/pointer_adapter.h",
+    "native/pointer_event.h",
+    "native/pointer_geometry.cpp",
+    "package.json",
+    "scripts/event-target-bundle.mjs",
+    "scripts/rn-pointer-overlay.mjs",
+    "tests/pointer-hover-native.test.mjs",
+    "tests/pointer-hover-probe.gd",
+    "tests/pointer-query-fault-fixture.jsx",
+    "tests/pointer-root-path-fixture.jsx",
+    "tests/pointer-root-path-native.test.mjs",
+    "tests/pointer-root-path-probe.gd",
+    "tests/rn-pointer-overlay.test.mjs"
+  ],
+  "hostedCI": {
+    "status": "pending-root-path-slice"
+  },
+  "limits": [
+    "Mouse and touch with target bubble listeners and Document capture enter/leave listeners, both original flags enabled.",
+    "Surface selection is unchanged: a first empty-area sample or press still reaches no surface (the game receives it).",
+    "Document hover across the flag matrix, documentElement listeners, pen hover, capture while hovering, responders, hardware, mobile exports and performance remain open.",
+    "The executed tree was dirty on 1302d51; post-commit source pinning must preserve that execution provenance. No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T18:49:52.149001+00:00",
+    "meaning": "Contracts-job gates rerun after every doc, dashboard, example and the receipt body above were final; this field was appended afterwards.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "49059f2ca3a0a0641d3c5db5fec08c8afd6b7320cfba7e715bd7fc2a8c2bdd69"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "4271cb9cb58f3a74f5b2d58237db5b59f40b4930691e894c90c8bdec7bca6528"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "3b6bf9fee8693e85c9112be461037cb1e5c4ad7a7a731a260c66f352abd34858"
+      }
+    }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/71a64c2d00b2607e29665190a461bf6197fe31c7",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 76,
+    "pinSetCounts": {
+      "sourcePins": 21,
+      "nativeSourcePins": 55,
+      "verificationSourcePins": 5
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
+  }
+}

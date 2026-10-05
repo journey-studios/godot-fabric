@@ -175,14 +175,25 @@ The [Document pointermove example](examples/pointer-document-move/README.md)
 certifies original Document and documentElement Move listeners in eight
 original/current × flag lanes: 1,932 headless checks and 330 viewport checks.
 Only the installed current query delivers, at phase 1 for capture and 3 for
-bubble, and a retained control that drops the owner Document fails.
+bubble, and a retained control that drops the owner Document fails. Hosted CI
+repeated the 1,932 headless checks
+([receipt](docs/evidence/pointer-document-move/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-document-move/README.md).
 
 The [hover example](examples/pointer-hover/README.md) lets original View
 `pointerover/out/enter/leave` listeners qualify real mouse and touch hover in RN's
 order, phases and Discrete priority, with enter/leave's non-bubbling rule intact:
-158 headless checks and 32 old-host failures.
+158 headless checks and 32 old-host failures. Hosted CI repeated the 158 checks
+([receipt](docs/evidence/pointer-hover/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-hover/README.md).
+
+The [root-path example](examples/pointer-root-path/README.md) resolves an empty
+point inside a surface to the root view, as RN does, so the root stays in the
+hover path between a view and the empty area, and never makes the root an event
+target. That removes a crash of the preceding host with a Document capture
+`pointerenter`/`pointerleave` listener: 82 headless checks, and the same bundle
+fails 9 checks and crashes on the preceding host.
+[Evidence](docs/evidence/pointer-root-path/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

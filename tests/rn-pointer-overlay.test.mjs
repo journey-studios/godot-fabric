@@ -137,3 +137,29 @@ test('the generated native path query extends exactly Down, Up, Move and hover w
       'PointerOver', 'PointerOverCapture', 'PointerOut', 'PointerOutCapture']);
   assert.match(whitelist, /using Offset = rn::ViewEvents::Offset;/);
 });
+
+test('a root stays in the hover path as a resolved target but never receives an event', () => {
+  const files = renderPointerOverlay(read('h'), read('cpp'), readBinding('h'), readBinding('cpp'));
+  const source = files[base + '.cpp'];
+  // RN's root family has no event dispatcher: the root qualifies only as an ancestor.
+  assert.match(source, /static bool isRootForGodot\(const ShadowNode &node\) \{\s*return node\.getTag\(\) == node\.getSurfaceId\(\);\s*\}/);
+  assert.match(source, /if \(!query \|\| isRootForGodot\(target\)\) return false;/);
+  // A root's own enter/leave lookup never qualifies, while its capture lookup
+  // still propagates to the descendants that enter or leave with it.
+  for (const event of ['Leave', 'Enter'])
+    assert.match(source, new RegExp(`\\(!isRootForGodot\\(node\\) &&\\s*hasNodeInterestForGodot\\(node, godotListenerInterest_, ViewEvents::Offset::Pointer${event}\\)\\)`));
+  assert.match(source, /if \(shouldEmitEvent && !isRootForGodot\(node\)\) \{\s*targetsToEmitLeaveTo\.emplace_back\(node\);/);
+  assert.match(source, /if \(shouldEmitEvent && !isRootForGodot\(node\)\) \{\s*eventDispatcher\(\s*node, "topPointerEnter"/);
+  assert.equal((source.match(/isRootForGodot\(/g) ?? []).length, 6, 'definition, path query, two own lookups and two emissions');
+  // The binding resolves a JS-less payload (an empty point inside a root) before interception.
+  const binding = files[bindingBase + '.cpp'];
+  assert.match(files[bindingBase + '.h'], /using PointerTargetForGodot = std::function<std::shared_ptr<const ShadowNode>\(const EventPayload &\)>;/);
+  assert.match(binding, /if \(!targetNode && godotPointerTarget_\) targetNode = godotPointerTarget_\(eventPayload\);\s*\/\/ A registered physical pointer[\s\S]*?pointerEventsProcessor_\.interceptPointerEvent\(\s*targetNode,/);
+});
+
+test('the binding never dispatches an event to a root, whose EventTarget has no instance handle', () => {
+  const files = renderPointerOverlay(read('h'), read('cpp'), readBinding('h'), readBinding('cpp'));
+  const binding = files[bindingBase + '.cpp'];
+  const callback = binding.slice(binding.indexOf('auto dispatchCallback = '), binding.indexOf('auto targetNode = '));
+  assert.match(callback, /if \(targetNode\.getTag\(\) == targetNode\.getSurfaceId\(\)\) return;[\s\S]*auto eventTarget = targetNode\.getEventEmitter\(\)->getEventTarget\(\);/);
+});

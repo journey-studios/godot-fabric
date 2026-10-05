@@ -1,0 +1,407 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-document-move-four-flags",
+  "status": "verified-completed-hosted-workflow-and-headless-document-move-artifact",
+  "run": {
+    "id": 37351245158,
+    "headSha": "46876eb5a156ee3c4a00476d84f7f58076a29e26",
+    "event": "pull_request",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111902335392,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158/job/111902335392"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111902335602,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158/job/111902335602"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111902335773,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158/job/111902335773"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111902335877,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158/job/111902335877"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 111912655569,
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158/job/111912655569"
+      }
+    ]
+  },
+  "implementationCommit": "c2ad8f547d368a4993f3b75a264d2fd191e8ecf9",
+  "runHeadIsPostCommitSourcePin": true,
+  "actualCheckout": {
+    "sha": "9515c0d975ed822083d3b7a78bb53706d6516467",
+    "parents": [
+      "d75ea5147e3af3d5a18cb55fa288925cd28675c2",
+      "46876eb5a156ee3c4a00476d84f7f58076a29e26"
+    ],
+    "treeSha": "4fbb2f8a80116b90ef4e600b9606ef1e9936c80e",
+    "method": "full checkout SHA from native job git-log output; immutable GitHub Git tree compared to git blob hashes of implementation commit bytes",
+    "producerPathsVerified": 17,
+    "allCuratedTrackedPathsVerified": 20,
+    "trackedPinSetCounts": {
+      "sourcePins": 17,
+      "verificationSourcePins": 3
+    },
+    "allTrackedInputContentIdenticalToImplementationCommit": true,
+    "runHeadTrackedInputsIdenticalToImplementationCommit": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11363587189,
+    "name": "native-pointer-document-move",
+    "zipFile": "build/pointer-document-move-hosted-46876eb/native-pointer-document-move.zip",
+    "zipSizeBytes": 552221,
+    "zipSha256": "a8044a4232ba730d77a09fce5cb068135aaac75f42cf016ee9163131b7fe0441",
+    "fileCount": 17,
+    "comparisonSha256": "4e58b94d180bb304e2c0d7091f0f6f9d145b6285d602d514895313e1e826b04c"
+  },
+  "verification": {
+    "headlessChecks": 1932,
+    "localHeadlessChecks": 1932,
+    "lanes": [
+      {
+        "interest": "original",
+        "flagMode": "disabled",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "checks": 220,
+        "passed": 220,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "b7a6882a15f4ce763ad5c51aba97116f854f731437b2005fce3fd3e3690f5825",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "d9424acf24ab863a66320a9cb9f3374fa1b94a1f6e2fc576dd9a2f1c7c80fc81",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "4ad1684eace9abb03f232375632f769698e45c52878feb2a6e51cbcbeb4279ee",
+        "logSha256": "1cd457280f9a494b4f07276b8a859b8e3732721c04e778b7e598a8f0fe611e65",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "original",
+        "flagMode": "imperative-only",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "checks": 220,
+        "passed": 220,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "b7a6882a15f4ce763ad5c51aba97116f854f731437b2005fce3fd3e3690f5825",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "34d34478d20d7d82371fb28f860d1af4ad57cc98390c917bf4038e3b095417dd",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "822559081c6a25af32339b580eacaa0fa5e57d89d26c3c8512f293ea8240e37b",
+        "logSha256": "ae03c9738255550cae25911dfb042207cae0bfdd8c871fa7bb1a966c8fff9e05",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "original",
+        "flagMode": "internal-only",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "checks": 223,
+        "passed": 223,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "20ec7c80fae333afa7920cb7e74aae8c9d231c5b028d9bf737be0d9f47ac596f",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "76460e222302a297b72c50a6daa453ff9a8704969118ce8c19636fb2415362ce",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "0a04f8e050ce445b1fae40cf0944eafdae32ecdd7c9b26a6550b99097f0e3703",
+        "logSha256": "118b400420ed1d2a188165339cb299df0628cde72bb3009b35077b64ef373f71",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "original",
+        "flagMode": "enabled",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "checks": 225,
+        "passed": 225,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "400b55ff5e201ea2136722de15ee5f79ab0a1b4b2d263792bfbd07043b4ad763",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "1a906c8a009a67b680dff8406f4266eb20c85b21f1c96e6aa66fa56514d8b19a",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "5b48fb80dfe42a6e39025f12009a3141f89fea55594ddf3656331a44b8436ae8",
+        "logSha256": "db346258df34241b6cc9e64084180632ce9dc048f1e7cf48c3c792ef42618a84",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "current",
+        "flagMode": "disabled",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "checks": 220,
+        "passed": 220,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "b7a6882a15f4ce763ad5c51aba97116f854f731437b2005fce3fd3e3690f5825",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "f798e3cc876632be510f92107888d105c2449f6f385a7dfeeda77d316c0b5020",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "c9acab51253f9bd4bd64d5246d5c86761ab13ceb9cb7049fd2f1024ef7d8e1da",
+        "logSha256": "c4664856ed6a955986e2ea89ce9ec140f21faa72ed4b69227e14b5694093438b",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "current",
+        "flagMode": "imperative-only",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "checks": 220,
+        "passed": 220,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "b7a6882a15f4ce763ad5c51aba97116f854f731437b2005fce3fd3e3690f5825",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "764999b0874b52216dd617d54050445ac907a0b7cb9c6016c56f1c8d4b7cd89e",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "732bed515d1a0a82a9f4537b6a5215ac3fe686e6b1c3742676d878e49b0d67ec",
+        "logSha256": "7441754585787d9262da57ab8ed9361f8d03d9cd9c3339018e95d21d9790f0e0",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "current",
+        "flagMode": "internal-only",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "checks": 300,
+        "passed": 300,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "5262e2077071d3bb6dd89a0bf8fe66c1fba9611aa301dd9df9a4fddced4b9505",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "ce2410565f775b3a10d562cb349142a4f3e762bd9f600d0d77000bc850b02522",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "dd618be7bae54545c2ea58ee9d72c24ed0649a67e9e0985389f64184c3765795",
+        "logSha256": "6c1d0efefb1287bef72f70660f9f0953a595883212921a0327b55a35443376db",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      },
+      {
+        "interest": "current",
+        "flagMode": "enabled",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "checks": 304,
+        "passed": 304,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "e5a2e1d48a5caba2e4bdf84e39564bf6f4a34323768dafce2b888cc02a81e2f4",
+        "checkIdsExactlyMatchLocalBaseline": true,
+        "bundleSha256": "d8f0f0469eca6c8e7848b74db7bf7c4256558e7569e03e4733c73f515c233fcb",
+        "bundleExactlyMatchesLocalBaseline": true,
+        "reportSha256": "918ad48f85cd8cc3eda6f9feb2d4101bba732719eb247b637f6ced3e1d869bf1",
+        "logSha256": "c52c9dd3a956979c30e298e53a202fa6042a9488e727c723a2b25afd32fcdbaf",
+        "allStagesEqualLocalBaselineExceptEventTimestamps": true,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true
+      }
+    ],
+    "allEightReportsExactlyMatchComparison": true,
+    "onlyDifferencesFromLocalBaseline": [
+      "event timeStamp/nativeTimeStamp values",
+      "provenance.nativeHostSha256 (runner-built host)",
+      "provenance.node v22.23.2 on runner versus v22.23.3 locally"
+    ],
+    "producerPins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/pointer-document-bootstrap.js": "3a5ebd4c1bdc7a9c4bf07cd62561bcd9746624f2c2b946e15892b484ff5cc37c",
+      "tests/pointer-document-fixture.jsx": "d2dd5d67c2a3f85c175b9ee59b9995122375112e219c7e49edeb95445d253c48",
+      "tests/pointer-document-move-fixture.jsx": "7b531093375d0591657ab7bf263db4faa10e6f1b30a648de0eaf98f87046c269",
+      "tests/pointer-document-up-probe.gd": "42e3920defdc29bf3606ee3ce2d87a54996457fa9f5184aedef26a2c5ea929cc",
+      "tests/pointer-document-move-probe.gd": "dc0fa16d150dec816ee79fa1d3a8ff574c972fbd888533233736b794b2fda725",
+      "tests/pointer-document-move-native.test.mjs": "bcf742586d3500cac8f0b21159c7e4f2c4caaeee209132326554eac71c004f9d",
+      "tests/native-png.mjs": "57e57e03a3aa5474f0704009c8be0231ec9ba35a62cf191cf468e51536a8db2a",
+      "scripts/event-target-bundle.mjs": "38e402383343e9767f9ade265c03e44ad3cfd348a1911f9ff558bd88bc4ce5e8",
+      "sdk/toolchain/platform-plugin.mjs": "51ca46dc14d2f527e012b5748ceaf73dfc0688e4fba677cdd4a2f9a594e70f23",
+      "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": "f1829a07208383868be94b1b5ddc5a00eb0bfd6fafd5e073ccb37dd66d51b044",
+      "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "native/application_runtime.cpp": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f",
+      "scripts/rn-pointer-overlay.mjs": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70"
+    },
+    "producerPinsAgainstImplementationCommit": true,
+    "originalReactNativeSources": {
+      "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+      "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+      "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+      "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+      "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+      "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+      "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+      "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+      "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+      "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+      "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+      "src/private/webapis/dom/nodes/internals/NodeInternals.js": "2e8d491275a6c818e9acc3b7d4d49a76d90b1fb96b9c82a75ae18033f9a908ac",
+      "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js": "2420fa1425c70cd7d4c707f655dd8562024c0a3956a7cbebd760ab9ac01ccbda",
+      "ReactCommon/react/renderer/components/view/primitives.h": "eeae32a735409f92164f37305920a66775c9c2e1ce91335baf2b312a18e1d7d4",
+      "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp": "b0f33a89e1c812112e1457076667863226b4f42247aa35c2b367e577195dd6b7",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+      "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+      "ReactCommon/react/renderer/core/EventEmitter.cpp": "892993afa65eb62554792517f027491144861984b1a6406f00c876beafc17b78",
+      "ReactCommon/react/renderer/core/EventQueue.cpp": "1955769ab1f0fb3f9562db2945feb6c344e9ae110c4f8f2c15115c21ce573188",
+      "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+    },
+    "originalReactNativeInputCount": 23,
+    "allProducerAndRNPinsEqualFrozenLocalReports": true,
+    "declaredNativeHostSha256": "f083933b0b929e23454e150750c2c3f5910041f3b2fe6ce64602dbba2581b9ed",
+    "sameDeclaredNativeHostAcrossEightLanes": true,
+    "declaredNativeHostEqualsViewMoveCI37345287351": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationAndDestructorWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      "tests/event-target-bootstrap.js": {
+        "sha256": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "gitBlobSha1": "102550470787757049f07e0710bdcbed795fb5f6"
+      },
+      "tests/pointer-document-bootstrap.js": {
+        "sha256": "3a5ebd4c1bdc7a9c4bf07cd62561bcd9746624f2c2b946e15892b484ff5cc37c",
+        "gitBlobSha1": "712c68ebd28a95c210d33a1b2ee53f9746d99fb4"
+      },
+      "tests/pointer-document-fixture.jsx": {
+        "sha256": "d2dd5d67c2a3f85c175b9ee59b9995122375112e219c7e49edeb95445d253c48",
+        "gitBlobSha1": "68f237684da0faae46acb5d9883c79c5de408d49"
+      },
+      "tests/pointer-document-move-fixture.jsx": {
+        "sha256": "7b531093375d0591657ab7bf263db4faa10e6f1b30a648de0eaf98f87046c269",
+        "gitBlobSha1": "319360554ce266ae5adef19369260aafe99f19b6"
+      },
+      "tests/pointer-document-up-probe.gd": {
+        "sha256": "42e3920defdc29bf3606ee3ce2d87a54996457fa9f5184aedef26a2c5ea929cc",
+        "gitBlobSha1": "f3b96224470ef0811bcd3bcfb3892d44b9e6d02e"
+      },
+      "tests/pointer-document-move-probe.gd": {
+        "sha256": "dc0fa16d150dec816ee79fa1d3a8ff574c972fbd888533233736b794b2fda725",
+        "gitBlobSha1": "b04cf401f967962e3fe77f02a386cbb0f794a525"
+      },
+      "tests/pointer-document-move-native.test.mjs": {
+        "sha256": "bcf742586d3500cac8f0b21159c7e4f2c4caaeee209132326554eac71c004f9d",
+        "gitBlobSha1": "33d6f2531b8658020dd05ae415a750947728b330"
+      },
+      "tests/native-png.mjs": {
+        "sha256": "57e57e03a3aa5474f0704009c8be0231ec9ba35a62cf191cf468e51536a8db2a",
+        "gitBlobSha1": "d258c22fbe7da498e2f9c75581d18e694e3ec444"
+      },
+      "scripts/event-target-bundle.mjs": {
+        "sha256": "38e402383343e9767f9ade265c03e44ad3cfd348a1911f9ff558bd88bc4ce5e8",
+        "gitBlobSha1": "52714a99a6bcae934bee339fac3b3e3b008f68c6"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "51ca46dc14d2f527e012b5748ceaf73dfc0688e4fba677cdd4a2f9a594e70f23",
+        "gitBlobSha1": "35dc2349bdc83bc67a57bb17d75e4362c8fe619c"
+      },
+      "sdk/toolchain/rn-event-target-overlay.mjs": {
+        "sha256": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+        "gitBlobSha1": "23178f4625fb76d225851517e5581df041f4644f"
+      },
+      "sdk/toolchain/rn-renderer-tag-overlay.mjs": {
+        "sha256": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+        "gitBlobSha1": "a6bcdf649452eed1fd11c130cda7d73080f0a0dd"
+      },
+      "sdk/toolchain/rn-pointer-interest-overlay.mjs": {
+        "sha256": "f1829a07208383868be94b1b5ddc5a00eb0bfd6fafd5e073ccb37dd66d51b044",
+        "gitBlobSha1": "d94d5a345442af2488f78bd686eefdfdddee0c3b"
+      },
+      "src/private-interface.js": {
+        "sha256": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+        "gitBlobSha1": "dbfbcd49e5b894e8006bc2fb08f775e7ca5756f1"
+      },
+      "src/pointer-listener-query.js": {
+        "sha256": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+        "gitBlobSha1": "8b09d3dd6c56a98ba8e28dc0e17f3717f167ef7d"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "8b3915b854a105ae0e10fc3807bfbcd4bc3074ad1dacac6cec7e9f1fefed066f",
+        "gitBlobSha1": "533baf5a900dd1d9bd0e41bfbf5da3384099b265"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "9c1851a21abcbd18b7611d7db5c863bfad8bd56690e0bd54efa4fddd299e6d70",
+        "gitBlobSha1": "57597604037a647204b336d8e00a5d2eb39801d8"
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "2ea7991279b9fd2c145dc576dbcc5d7322eade8e2a701d16198ff4f187265a77",
+        "gitBlobSha1": "405d17543ecc27f91f10a8901cf06eb46ecf04a9"
+      },
+      "package.json": {
+        "sha256": "9a422200d579725e04774ffd18647000f6bc7d77e1865296f8e31355c500eed0",
+        "gitBlobSha1": "1101822af7315ff74f2fa68524d28917a8672d86"
+      },
+      ".fallowrc.json": {
+        "sha256": "470fe2c0d952966e03434445e54a425fb365b4820908b2bf1fa3dd739898ca92",
+        "gitBlobSha1": "0449972263593a0ade42d9eeb39585ec21990d47"
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully; this artifact audit certifies only the eight headless Document pointermove lanes.",
+    "No screenshots, native binary, viewport capture or full bundle bytes are included in this artifact; the 330-check viewport, its 24 pixels and the negative control remain local evidence.",
+    "Bundle hashes and native host hash are declared by runner; source pins, check IDs and stages were independently compared with the local baseline.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile/core parity job status is separate; their outputs are not audited here.",
+    "No hosted certification for root query faults, once/AbortSignal, refs, mutation or reentry during Document Move, captured/no-hit moves, hardware/export or full RN/GF/ABI.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at actual merge checkout; it does not independently inspect a compiled native binary."
+  ],
+  "findings": [],
+  "nativeJobLog": {
+    "file": "build/pointer-document-move-hosted-46876eb/native-job.log",
+    "sha256": "01d28b4494e42b344942f517d06b9b8d20beaa7b214d533f3e384d592e1460fa",
+    "checkoutVerified": true,
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 79,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

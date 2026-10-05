@@ -29,7 +29,8 @@ function record(name, label, receiver, event) {
     // Move and hover cases also listen on the parent and compare coordinates.
     ...(panels.get(name)?.probePointerMove ? {currentTag: event.currentTarget?.tag ?? null,
       offsetX: native?.offsetX ?? null, offsetY: native?.offsetY ?? null} : {}),
-    ...(panels.get(name)?.probePointerHover ? {targetTag: event.target?.tag ?? null} : {})});
+    ...(panels.get(name)?.probePointerHover ? {targetTag: event.target?.tag ?? null,
+      currentIsDocument: event.currentTarget != null && event.currentTarget === panels.get(name).refs.only?.ownerDocument} : {})});
   active.eventRefs.push(event);
   if (event.isTrusted && label === "touchstart" && panels.has(name)) panels.get(name).setStarts(value => value + 1);
   if (event.isTrusted && event.type === "pointerup" && panels.get(name)?.probePointerUp) panels.get(name).setUps(value => value + 1);
@@ -79,13 +80,14 @@ function capability(name) {
     targetTag: ref.tag, connected: ref.isConnected, point: [75, 55], query: queryFaultControl.snapshot()};
 }
 // capture is true, false or "both" (one capture and one bubble listener). The
-// listener sits on the hit target ("only") or on its original parent View. A
-// list of types registers each type with the same phase and place.
+// listener sits on the hit target ("only"), its original parent View or the
+// target's original Document. A list of types registers each type with the
+// same phase and place.
 function configure(name, capture = false, type = "pointerdown", where = "only") {
   const types = Array.isArray(type) ? type : [type];
   if (types.length === 0 || types.some(entry => !probeTypes.includes(entry))) throw Error("Probe supports only declared pointer types");
-  if (!["only", "parent"].includes(where)) throw Error("Probe listeners sit on the hit target or its parent View");
-  reset(name); const panel = panels.get(name), ref = panel.refs[where];
+  if (!["only", "parent", "document"].includes(where)) throw Error("Probe listeners sit on the hit target, its parent View or its Document");
+  reset(name); const panel = panels.get(name), ref = where === "document" ? panel.refs.only.ownerDocument : panel.refs[where];
   for (const entry of types) {
     for (const phase of capture === "both" ? [true, false] : [capture]) {
       const callback = function(event) { record(name, entry + (phase ? "-capture" : "-bubble"), this, event); };
@@ -93,7 +95,8 @@ function configure(name, capture = false, type = "pointerdown", where = "only") 
       panel.bindings.push({ref, callback, capture: phase, type: entry});
     }
   }
-  return {targetTag: panel.refs.only.tag, capture, type, ...(where === "parent" ? {where, listenerTag: ref.tag} : {})};
+  return {targetTag: panel.refs.only.tag, capture, type, ...(where === "parent" ? {where, listenerTag: ref.tag} : {}),
+    ...(where === "document" ? {where, listenerIsDocument: ref != null && ref === panel.refs.only.ownerDocument} : {})};
 }
 function arm(name, caseId) {
   const panel = panels.get(name);

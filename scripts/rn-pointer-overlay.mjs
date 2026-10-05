@@ -46,13 +46,20 @@ namespace {
 struct GodotPointerRetired final {};
 }
 
+// RN 0.87.1 creates each root family (tag == surface ID) without an event
+// dispatcher and its EventTarget without an instance handle, so no event
+// targeted at a root reaches JS. A root only qualifies as an ancestor.
+static bool isRootForGodot(const ShadowNode &node) {
+  return node.getTag() == node.getSurfaceId();
+}
+
 // The default callback is empty. The opt-in SDK query reads existing original
 // EventTarget Maps without creating refs, dispatching events or cloning props.
 static bool hasPointerInterestForGodot(
     const ShadowNode &target, const UIManager &uiManager,
     const PointerEventsProcessor::GodotListenerInterest &query,
     const std::array<ViewEvents::Offset, 2> &offsets) {
-  if (!query) return false;
+  if (!query || isRootForGodot(target)) return false;
   auto interested = [&query, &offsets](const ShadowNode &node) {
     return query(node, static_cast<std::size_t>(offsets[0])) ||
         query(node, static_cast<std::size_t>(offsets[1]));
@@ -214,7 +221,11 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
     bool shouldEmitEvent = hasParentLeaveCaptureListener ||
         hasCapturingListener ||
         isViewListeningToEvents(node, {ViewEvents::Offset::PointerLeave}) ||
-        hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerLeave);`);
+        (!isRootForGodot(node) &&
+            hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerLeave));`);
+  source = replaceOnce(source,
+    '    if (shouldEmitEvent) {\n      targetsToEmitLeaveTo.emplace_back(node);\n    }',
+    '    // The root keeps propagating its capture listener but is never a target.\n    if (shouldEmitEvent && !isRootForGodot(node)) {\n      targetsToEmitLeaveTo.emplace_back(node);\n    }');
   source = replaceOnce(source,
     `  if (!prevHoverTracker->hasSameTarget(*curHoverTracker) &&
       curHoverTracker->areAnyTargetsListeningToEvents(
@@ -241,7 +252,11 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
     bool shouldEmitEvent = hasParentEnterCaptureListener ||
         hasCapturingListener ||
         isViewListeningToEvents(node, {ViewEvents::Offset::PointerEnter}) ||
-        hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerEnter);`);
+        (!isRootForGodot(node) &&
+            hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerEnter));`);
+  source = replaceOnce(source,
+    '    if (shouldEmitEvent) {\n      eventDispatcher(\n          node, "topPointerEnter", ReactEventPriority::Discrete, event);\n    }',
+    '    if (shouldEmitEvent && !isRootForGodot(node)) {\n      eventDispatcher(\n          node, "topPointerEnter", ReactEventPriority::Discrete, event);\n    }');
   source = replaceOnce(source,
     '    unregisterActivePointer(pointerEvent);\n  }\n}',
     `    unregisterActivePointer(pointerEvent);
@@ -276,18 +291,27 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
   void setPointerEventProjectionForGodot(PointerEventProjectionForGodot projection) {
     godotPointerEventProjection_ = std::move(projection);
   }
+  // Resolves a payload without a JS target (no hit view) to a native node,
+  // such as the root view RN targets for an empty point inside it.
+  using PointerTargetForGodot = std::function<std::shared_ptr<const ShadowNode>(const EventPayload &)>;
+  void setPointerTargetForGodot(PointerTargetForGodot target) {
+    godotPointerTarget_ = std::move(target);
+  }
 
  private:
 `);
   bindingHeader = replaceOnce(bindingHeader,
     '  mutable ReactEventPriority currentEventPriority_;',
-    '  mutable ReactEventPriority currentEventPriority_{ReactEventPriority::Default};\n  PointerEventProjectionForGodot godotPointerEventProjection_;');
+    '  mutable ReactEventPriority currentEventPriority_{ReactEventPriority::Default};\n  PointerEventProjectionForGodot godotPointerEventProjection_;\n  PointerTargetForGodot godotPointerTarget_;');
   bindingSource = replaceOnce(bindingSource,
     '    auto dispatchCallback = [this, &runtime, eventTimestamp](',
     '    const auto &godotSourcePayload = eventPayload;\n    auto dispatchCallback = [this, &runtime, eventTimestamp, &godotSourcePayload](');
   bindingSource = replaceOnce(bindingSource,
     '                                const EventPayload& eventPayload) {\n      auto eventTarget = targetNode.getEventEmitter()->getEventTarget();',
     `                                const EventPayload& eventPayload) {
+      // A root's EventTarget has no instance handle (RN creates the root family
+      // without one): dispatching to it would dereference that missing handle.
+      if (targetNode.getTag() == targetNode.getSurfaceId()) return;
       // Processor copies/retargets deliberately retain the original client,
       // screen and identity fields. Only native target-local geometry changes.
       auto projectedPointer = static_cast<const PointerEvent&>(eventPayload);
@@ -299,7 +323,7 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
     '            projectedPointer,\n            eventTimestamp);');
   bindingSource = replaceOnce(bindingSource,
     '    if (targetNode != nullptr) {\n      pointerEventsProcessor_.interceptPointerEvent(\n          targetNode,\n          type,\n          priority,\n          pointerEvent,\n          dispatchCallback,\n          *uiManager_);\n    }',
-    '    // A registered physical pointer can move/up/cancel outside native hits.\n    pointerEventsProcessor_.interceptPointerEvent(\n        targetNode, type, priority, pointerEvent, dispatchCallback, *uiManager_);');
+    '    if (!targetNode && godotPointerTarget_) targetNode = godotPointerTarget_(eventPayload);\n    // A registered physical pointer can move/up/cancel outside native hits.\n    pointerEventsProcessor_.interceptPointerEvent(\n        targetNode, type, priority, pointerEvent, dispatchCallback, *uiManager_);');
   bindingSource = replaceOnce(bindingSource, '#include "UIManagerBinding.h"',
     '#include "UIManagerBinding.h"\n\n#include <folly/ScopeGuard.h>');
   bindingSource = replaceOnce(bindingSource,

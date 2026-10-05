@@ -259,9 +259,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   // Down/Up lookups run once per gesture and report every failure. Move and
   // hover lookups run on every sample or hover change: each distinct failure is
   // retained once, and repeats or distinct failures past the bound are counted.
-  static constexpr std::size_t max_reported_move_query_failures = 16;
-  std::set<std::string> reported_move_query_failures;
-  uint64_t suppressed_move_query_failures{};
+  static constexpr std::size_t max_retained_sample_query_failures = 16;
+  std::set<std::string> retained_sample_query_failures;
+  uint64_t suppressed_sample_query_failures{};
 
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
       const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
@@ -337,6 +337,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         [this](const rn::ShadowNode &target, const rn::EventPayload &source, rn::PointerEvent &event) {
           return project_pointer(target, source, event);
         });
+    rn::UIManagerBinding::getBinding(*runtime)->setPointerTargetForGodot(
+        [this](const rn::EventPayload &payload) { return root_pointer_target(payload); });
     native_modules = std::make_unique<fabric_godot::TurboModuleRegistry>(runtime_id, runtime_scheduler);
     native_modules->add_game_services(game_services);
     if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
@@ -484,6 +486,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           auto *host = root == roots.end() || root->second->stopping ? nullptr : root->second->host();
           return host ? hit_test(host, point) : 0;
         },
+        [this, id](Vector2 point) {
+          auto root = roots.find(id);
+          auto *host = root == roots.end() || root->second->stopping ? nullptr : root->second->host();
+          if (!host || !host->is_visible_in_tree()) return false;
+          const auto local = fabric_godot::local_coordinate(host->get_global_transform_with_canvas(), point);
+          return local.is_finite() && Rect2(Vector2(), host->get_size()).has_point(local);
+        },
         [this](int tag, Vector2 point) {
           auto found = views.find(tag);
           return found == views.end() ? fabric_godot::invalid_coordinate() :
@@ -513,9 +522,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           return fabric_godot::PointerAdapter::Coordinates{page, screen};
         },
         [this](int tag, const std::string &phase, rn::TouchEvent event) { touch_event(tag, phase, std::move(event)); },
-        [this, id](int tag, const std::string &phase, rn::PointerEvent event, Vector2 point,
+        [this, id](int tag, bool root_target, const std::string &phase, rn::PointerEvent event, Vector2 point,
             std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
-          pointer_event(id, tag, phase, std::move(event), point, std::move(history));
+          pointer_event(id, tag, root_target, phase, std::move(event), point, std::move(history));
         });
     if (defer_start) surface.start_pending = true;
     else start_root(id);
@@ -720,15 +729,15 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           // Escaping here discards the remaining EventQueue batch, including
           // TouchStart. Its physical contact stays live until Up/Cancel/retire.
           auto message = std::string("E_POINTER_LISTENER_QUERY: ") + error.what();
-          const bool move = offset != static_cast<std::size_t>(Offset::PointerDown) &&
+          const bool per_sample = offset != static_cast<std::size_t>(Offset::PointerDown) &&
               offset != static_cast<std::size_t>(Offset::PointerDownCapture) &&
               offset != static_cast<std::size_t>(Offset::PointerUp) &&
               offset != static_cast<std::size_t>(Offset::PointerUpCapture);
-          if (move && (reported_move_query_failures.contains(message) ||
-              reported_move_query_failures.size() >= max_reported_move_query_failures)) {
-            ++suppressed_move_query_failures;
+          if (per_sample && (retained_sample_query_failures.contains(message) ||
+              retained_sample_query_failures.size() >= max_retained_sample_query_failures)) {
+            ++suppressed_sample_query_failures;
           } else {
-            if (move) reported_move_query_failures.insert(message);
+            if (per_sample) retained_sample_query_failures.insert(message);
             fail(message);
           }
           return false;
@@ -954,6 +963,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     ui->setDelegate(nullptr);
     rn::UIManagerBinding::getBinding(*runtime)->setPointerEventProjectionForGodot({});
+    rn::UIManagerBinding::getBinding(*runtime)->setPointerTargetForGodot({});
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(nullptr);
     window_listener.reset();
     timer_registry->quit();
@@ -1228,6 +1238,20 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       } else it = pointer_routes.erase(it);
     }
   }
+  // RN resolves an empty point inside a root view to that root (TouchTargetHelper
+  // on Android, the root component view's hitTest on iOS). The root then stays
+  // in the processor's hover path; the processor never emits to it.
+  std::shared_ptr<const rn::ShadowNode> root_pointer_target(const rn::EventPayload &payload) const {
+    const auto *sample = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&payload);
+    if (!sample || !sample->root_target || inactive()) return nullptr;
+    auto root = roots.find(sample->source_surface);
+    if (root == roots.end() || root->second->stopping) return nullptr;
+    std::shared_ptr<const rn::ShadowNode> node;
+    ui->getShadowTreeRegistry().visit(sample->source_surface, [&node](const rn::ShadowTree &tree) {
+      node = tree.getCurrentRevision().rootShadowNode;
+    });
+    return node;
+  }
   bool project_pointer(const rn::ShadowNode &target, const rn::EventPayload &source, rn::PointerEvent &event) {
     const auto *sample = dynamic_cast<const fabric_godot::GodotPointerEvent *>(&source);
     // Other native adapters can still supply ordinary upstream PointerEvents.
@@ -1287,7 +1311,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     sample->history->remember(sample->serial, target.getFamilyShared(), native_point, event.offsetPoint);
     return true;
   }
-  void pointer_event(int id, int tag, const std::string &phase, rn::PointerEvent event, Vector2 point,
+  void pointer_event(int id, int tag, bool root_target, const std::string &phase, rn::PointerEvent event, Vector2 point,
       std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
     auto root = roots.find(id);
     if (inactive() || root == roots.end() || root->second->stopping) return;
@@ -1297,7 +1321,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const auto timestamp = event.timeStamp;
     const auto payload = std::make_shared<fabric_godot::GodotPointerEvent>(std::move(event), point, id,
         host->get_window()->get_instance_id(), host->get_viewport()->get_instance_id(), std::move(history),
-        phase == "cancel" || phase == "up" || phase == "leave");
+        phase == "cancel" || phase == "up" || phase == "leave", root_target && !tag);
     const std::string type = phase == "down" ? "pointerDown" : phase == "up" ? "pointerUp" :
         phase == "cancel" ? "pointerCancel" : phase == "leave" ? "pointerLeave" : "pointerMove";
     const auto category = phase == "down" ? rn::RawEvent::Category::ContinuousStart :
@@ -1306,7 +1330,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     auto found = views.find(tag);
     if (!tag || found == views.end() || retiring.contains(tag) || !found->second.shadow.eventEmitter) {
       // A physical hit can be absent while the contact is captured. A typed
-      // null-target event lets RN resolve capture and hover using its registry.
+      // null-target event lets RN resolve capture and hover using its registry;
+      // the binding resolves a root_target sample to the surface's root node.
       dispatcher->dispatchEvent(rn::RawEvent("top" + std::string(1, static_cast<char>(std::toupper(type[0]))) + type.substr(1), payload,
           nullptr, {}, category, false, timestamp));
       return;
@@ -1692,7 +1717,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("rootCount", roots.size())("bundleEvaluations", bundle_evaluations)("stopped", stopped)
         ("pendingTimers", timer_registry->size())("pendingWork", work.size())
         ("pointerListenerQueryInstalled", pointer_listener_query.has_value())
-        ("pointerListenerQuerySuppressed", static_cast<int64_t>(suppressed_move_query_failures))
+        ("pointerListenerQuerySuppressed", static_cast<int64_t>(suppressed_sample_query_failures))
         ("timerEngine", "react-native/TimerManager")("windowListener", window_listener.has_value())
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())

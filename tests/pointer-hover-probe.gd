@@ -1,9 +1,10 @@
 extends "res://tests/pointer-move-probe.gd"
 
 # Imperative View hover listeners on the actual two-root scene. A button-less
-# mouse moves between the empty surface area (no hit target in this host), A's
-# target and back. Reuses the Move probe's mount, row and capture helpers.
-const NO_HIT := Vector2(250, 60)
+# mouse moves between a point outside every surface, A's target and back, so
+# each transition enters or leaves the whole path, root included. Reuses the
+# Move probe's mount, row and capture helpers.
+const AWAY := Vector2(320, 60)
 const IN := Vector2(75, 55)
 const IN_AGAIN := Vector2(95, 65)
 # The fault application runs only on the corrected host; its checks are never
@@ -128,10 +129,10 @@ func hover_case(id: String, capture_only: bool, where: String, manual: Dictionar
     prefix + "/Exactly the requested original hover listeners are registered on the actual View ref")
   stages[prefix + "/registration"] = registration
   manual_hover("A", prefix, manual)
-  await transition("A", prefix + "/start", NO_HIT, [], [], [], 0 if first else 1)
+  await transition("A", prefix + "/start", AWAY, [], [], [], 0 if first else 1)
   await transition("A", prefix + "/enter", IN, enter, enter_rows, ["T", "P", "C", "R"])
   await transition("A", prefix + "/inside", IN_AGAIN, [], [], ["T", "P", "C", "R"])
-  await transition("A", prefix + "/leave", NO_HIT, leave, leave_rows, [])
+  await transition("A", prefix + "/leave", AWAY, leave, leave_rows, [])
 
 # A touch is a direct pointer without hover: RN enters its path in the Down,
 # before the Down emission, and leaves it after the Up emission because a
@@ -189,9 +190,9 @@ func touch_hover_case() -> void:
     prefix + "/Exactly the requested original hover listeners are registered on the actual View ref")
   stages[prefix + "/registration"] = registration
   await touch_phase(prefix + "/down", "start", [["pointerover-bubble", 2, "T", "T"], ["pointerenter-bubble", 2, "T", "T"]],
-    [["T", 26, true], ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]])
+    [["T", 26, true], ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]])
   await touch_phase(prefix + "/up", "end", [["pointerout-bubble", 2, "T", "T"], ["pointerleave-bubble", 2, "T", "T"]],
-    [["T", 27, true], ["R", 24, false], ["R", 2, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, true]])
+    [["T", 27, true], ["R", 24, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, true]])
 
 var fault_errors_hover: Array = []
 
@@ -229,8 +230,8 @@ func hover_fault_controls() -> void:
   stages["fault/materialize"] = js("publicControl('A','pointerover')")
   stages["fault/over26/fault"] = js("fault('A',26,'throw','over26',2)")
   var faulted := [["T", 26, false], ["T", 28, false], ["P", 26, false], ["P", 28, false], ["C", 26, false], ["C", 28, false], ["R", 26, false], ["R", 28, false],
-    ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]]
-  var leave_rows := [["T", 27, true], ["R", 24, false], ["R", 2, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, true]]
+    ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]]
+  var leave_rows := [["T", 27, true], ["R", 24, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, true]]
   var leave_events := [["pointerout-bubble", 2, "T", "T"], ["pointerleave-bubble", 2, "T", "T"]]
   for round in range(2):
     var prefix := "fault/over26/round-" + str(round + 1)
@@ -243,9 +244,9 @@ func hover_fault_controls() -> void:
       retained = retained and str(app.errors[-1]).contains("GF pointer query deliberate fault: over26")
       fault_errors_hover.append("GF pointer query deliberate fault: over26")
     check(retained, prefix + "/A repeated Over lookup failure is retained once and then only counted")
-    await transition("A", prefix + "/leave", NO_HIT, leave_events, leave_rows, [])
+    await transition("A", prefix + "/leave", AWAY, leave_events, leave_rows, [])
   await transition("A", "fault/over26/recovery/enter", IN, [["pointerover-bubble", 2, "T", "T"], ["pointerenter-bubble", 2, "T", "T"]],
-    [["T", 26, true], ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]], ["T", "P", "C", "R"])
+    [["T", 26, true], ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]], ["T", "P", "C", "R"])
   application.call("stop")
   await settle()
   var stopped := native(application)
@@ -282,46 +283,46 @@ func run_probe() -> void:
     {"pointerover": [["pointerover-bubble", 2, "T", "T"]], "pointerenter": [["pointerenter-bubble", 2, "T", "T"]],
       "pointerout": [["pointerout-bubble", 2, "T", "T"]], "pointerleave": [["pointerleave-bubble", 2, "T", "T"]]},
     [["pointerover-bubble", 2, "T", "T"], ["pointerenter-bubble", 2, "T", "T"]],
-    [["T", 26, true], ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]],
+    [["T", 26, true], ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, true]],
     [["pointerout-bubble", 2, "T", "T"], ["pointerleave-bubble", 2, "T", "T"]],
-    [["T", 27, true], ["R", 24, false], ["R", 2, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, true]], true)
+    [["T", 27, true], ["R", 24, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, true]], true)
   # A capture listener on the target itself still runs at phase 2.
   await hover_case("target-capture", true, "only",
     {"pointerover": [["pointerover-capture", 2, "T", "T"]], "pointerenter": [["pointerenter-capture", 2, "T", "T"]],
       "pointerout": [["pointerout-capture", 2, "T", "T"]], "pointerleave": [["pointerleave-capture", 2, "T", "T"]]},
     [["pointerover-capture", 2, "T", "T"], ["pointerenter-capture", 2, "T", "T"]],
-    [["T", 26, false], ["T", 28, true], ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, true]],
+    [["T", 26, false], ["T", 28, true], ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, true]],
     [["pointerout-capture", 2, "T", "T"], ["pointerleave-capture", 2, "T", "T"]],
-    [["T", 27, false], ["T", 29, true], ["R", 24, false], ["R", 2, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, true]])
+    [["T", 27, false], ["T", 29, true], ["R", 24, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, true]])
   # Bubble listeners on the parent: over/out bubble to it at phase 3, while
   # enter/leave reach it only as their own target at phase 2.
   await hover_case("parent-bubble", false, "parent",
     {"pointerover": [["pointerover-bubble", 3, "T", "P"]], "pointerenter": [], "pointerout": [["pointerout-bubble", 3, "T", "P"]], "pointerleave": []},
     [["pointerover-bubble", 3, "T", "P"], ["pointerenter-bubble", 2, "P", "P"]],
-    [["T", 26, false], ["T", 28, false], ["P", 26, true], ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, true], ["T", 23, false], ["T", 0, false]],
+    [["T", 26, false], ["T", 28, false], ["P", 26, true], ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, false], ["P", 0, true], ["T", 23, false], ["T", 0, false]],
     [["pointerout-bubble", 3, "T", "P"], ["pointerleave-bubble", 2, "P", "P"]],
-    [["T", 27, false], ["T", 29, false], ["P", 27, true], ["R", 24, false], ["R", 2, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, true], ["T", 24, false], ["T", 2, false]])
+    [["T", 27, false], ["T", 29, false], ["P", 27, true], ["R", 24, false], ["C", 24, false], ["C", 2, false], ["P", 24, false], ["P", 2, true], ["T", 24, false], ["T", 2, false]])
   # Capture listeners on the parent: RN emits enter/leave to the parent and,
   # through its capture listener, to the descendant, so capture runs twice.
   await hover_case("parent-capture", true, "parent",
     {"pointerover": [["pointerover-capture", 1, "T", "P"]], "pointerenter": [["pointerenter-capture", 1, "T", "P"]],
       "pointerout": [["pointerout-capture", 1, "T", "P"]], "pointerleave": [["pointerleave-capture", 1, "T", "P"]]},
     [["pointerover-capture", 1, "T", "P"], ["pointerenter-capture", 2, "P", "P"], ["pointerenter-capture", 1, "T", "P"]],
-    [["T", 26, false], ["T", 28, false], ["P", 26, false], ["P", 28, true], ["R", 23, false], ["R", 0, false], ["C", 23, false], ["C", 0, false], ["P", 23, true], ["T", 23, false]],
+    [["T", 26, false], ["T", 28, false], ["P", 26, false], ["P", 28, true], ["R", 23, false], ["C", 23, false], ["C", 0, false], ["P", 23, true], ["T", 23, false]],
     [["pointerout-capture", 1, "T", "P"], ["pointerleave-capture", 1, "T", "P"], ["pointerleave-capture", 2, "P", "P"]],
-    [["T", 27, false], ["T", 29, false], ["P", 27, false], ["P", 29, true], ["R", 24, false], ["R", 2, false], ["C", 24, false], ["C", 2, false], ["P", 24, true], ["T", 24, false]])
+    [["T", 27, false], ["T", 29, false], ["P", 27, false], ["P", 29, true], ["R", 24, false], ["C", 24, false], ["C", 2, false], ["P", 24, true], ["T", 24, false]])
   await touch_hover_case()
   # B has no hover listener and has never dispatched an event, so RN never
   # created its AppRegistry container's public instance. The query reads every
   # node that has one, all false, and skips the container without creating it.
-  await transition("B", "sibling-no-listeners/start", NO_HIT, [], [], [], 0)
+  await transition("B", "sibling-no-listeners/start", AWAY, [], [], [], 0)
   await transition("B", "sibling-no-listeners/enter", IN, [],
     [["T", 26, false], ["T", 28, false], ["P", 26, false], ["P", 28, false], ["R", 26, false], ["R", 28, false],
-      ["R", 23, false], ["R", 0, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, false]], ["T", "P", "R"])
+      ["R", 23, false], ["P", 23, false], ["P", 0, false], ["T", 23, false], ["T", 0, false]], ["T", "P", "R"])
   check(int(tags("B", state()).C) > 0, "sibling-no-listeners/B's AppRegistry container is a real native node that the query skipped")
-  await transition("B", "sibling-no-listeners/leave", NO_HIT, [],
+  await transition("B", "sibling-no-listeners/leave", AWAY, [],
     [["T", 27, false], ["T", 29, false], ["P", 27, false], ["P", 29, false], ["R", 27, false], ["R", 29, false],
-      ["R", 24, false], ["R", 2, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, false]], [])
+      ["R", 24, false], ["P", 24, false], ["P", 2, false], ["T", 24, false], ["T", 2, false]], [])
   stages.beforeStop = {"application": native(application), "react": state()}
   check(stages.beforeStop.application.errors.is_empty(), "cleanup/No query dispatch or responder diagnostic was hidden")
   application.call("stop")

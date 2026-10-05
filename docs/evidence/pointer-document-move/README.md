@@ -136,7 +136,15 @@ Eventos de hover, captura de ponteiro, moves capturados ou sem hit, responders,
 multi-toque, a prioridade com o mapeamento corrigido, hardware, exports mobile e
 performance seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
+A [CI hospedada](hosted-ci.json) desta fatia passou nos cinco jobs no run
+37351245158, no head 46876eb (checkout de merge 9515c0d). O artefato
+`native-pointer-document-move` repete os **1.932 checks headless** das oito lanes,
+com IDs, bundles e estágios idênticos aos locais; além de timestamps, da versão
+patch do Node e do hash do host do runner, nada difere. Nenhuma lane tem linha de
+erro, e as 20 entradas rastreadas batem com c2ad8f5 na árvore do checkout. A
+captura e o controle negativo continuam locais. O [Pages](publication.json) (run
+37352204907, push da `main` em a6af188) implantou exatamente os dados commitados, e o JSON
+público e a API local conferem com eles. Nenhum GF, checkpoint, dependência, peso ou
 denominador foi fechado.
 
 As 20 fontes de código/configuração executadas (17 produtoras do bundle e

@@ -37,6 +37,12 @@ godot::Transform2D inverse(const godot::Transform2D &transform) {
   return result;
 }
 
+// Validation only: the same guarantees and diagnostics as inverse(), for
+// callers that keep the forward transform.
+void require_invertible(const godot::Transform2D &transform) {
+  static_cast<void>(inverse(transform));
+}
+
 godot::Transform2D translation(rn::Point point) {
   return {{1, 0}, {0, 1}, {native_value(point.x), native_value(point.y)}};
 }
@@ -62,7 +68,7 @@ godot::Transform2D local_transform(const rn::LayoutableShadowNode &node) {
       double(matrix[1]) * center_x - double(matrix[5]) * center_y;
   godot::Transform2D result({native_value(matrix[0]), native_value(matrix[1])},
       {native_value(matrix[4]), native_value(matrix[5])}, {native_value(x), native_value(y)});
-  inverse(result);
+  require_invertible(result);
   return result;
 }
 }
@@ -112,14 +118,14 @@ std::optional<godot::Vector2> pointer_local_point(
     layouts.push_back(layout);
   }
 
-  inverse(root_embedding);
+  require_invertible(root_embedding);
   auto transform = root_embedding;
   std::size_t anchor = 0;
   if (mounted) {
     for (std::size_t index = path.size(); index-- > 0;) {
       auto actual = mounted(path[index]->getTag());
       if (!actual) continue;
-      inverse(*actual);
+      require_invertible(*actual);
       transform = *actual;
       anchor = index;
       break;
@@ -136,7 +142,7 @@ std::optional<godot::Vector2> pointer_local_point(
         local_transform(*layouts[index]);
     if (!transform.is_finite())
       throw std::runtime_error("E_POINTER_GEOMETRY_RANGE: composed pointer transform exceeds native coordinate precision");
-    inverse(transform);
+    require_invertible(transform);
   }
 
   const auto point = inverse(transform).xform(viewport_point);

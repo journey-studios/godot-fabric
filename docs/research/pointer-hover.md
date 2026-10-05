@@ -3,8 +3,9 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pointer-hover/README.md) owns the 158
 headless checks (137 healthy and 21 in a hover-fault application) and the
-32-failure native control. Public EventTarget flags remain disabled. Hosted CI
-for this slice is pending.
+32-failure native control. Public EventTarget flags remain disabled. Hosted run
+37352693788 repeated the 158 headless checks with identical IDs and bundle
+([receipt](../evidence/pointer-hover/hosted-ci.json)).
 
 ## RN's hover algorithm filters before JS
 
@@ -88,13 +89,21 @@ cannot pass it vacuously.
 
 ## Next bounded acceptance
 
-- **Empty-area targets.** In this host the empty surface area has no hit target.
-  On Android, RN falls back to the root view: `TouchTargetHelper` starts touch
-  targets at the root's id, and its pointer-event search returns the root itself
-  (`pointerEvents` AUTO, SELF). Document listeners therefore receive Down/Up/Move
-  and hover there, and the root stays hovered while the pointer moves within its
-  surface. This divergence predates hover and is the next delivery; iOS is checked
-  there.
+- **Empty-area targets.** In this host the empty surface area has no hit target,
+  while RN resolves it to the root view (`TouchTargetHelper` on Android,
+  `RCTRootComponentView` hit testing on iOS). RN 0.87.1 creates the root family
+  without an event dispatcher and its EventTarget without an instance handle, so
+  no root-targeted event reaches JS: Document listeners receive nothing over empty
+  areas in either. The observable difference is the hover path. This host drops
+  the root from it on every transition into an empty area, while RN's C++ processor
+  keeps it, so a Document capture `pointerenter`/`pointerleave` listener here sees
+  enter/leave for every node of the path, which RN does not emit while the pointer
+  stays within the root. This predates hover and belongs to the Document hover
+  certification. (An earlier version of this note claimed that RN delivers
+  Down/Up/Move and hover to Document listeners over empty areas; it does not.)
+  The [root-path slice](pointer-root-path.md) keeps the root in the path and also
+  fixes a crash this host had with such a Document capture listener: it emitted
+  enter/leave to the root itself, whose EventTarget has no instance handle.
 - **Document hover.** Document/documentElement hover listeners now qualify through
   the root rule, certified only by the plugin unit tests.
 - **Remaining scope.** Pen hover, touch with other listener placements, pointer

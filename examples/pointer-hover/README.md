@@ -55,6 +55,7 @@ right after its Up, before TouchEnd.
 ## Limits
 
 Document/documentElement hover listeners, the empty surface area (no hit target
-here, the root on RN Android), pen hover, pointer capture while hovering,
+here; RN resolves the root view, whose events never reach JS, but keeps it in the
+hover path), pen hover, pointer capture while hovering,
 responders, hardware, Godot mobile exports and performance require separate
 acceptance. See the [research](../../docs/research/pointer-hover.md).
