@@ -170,6 +170,18 @@ código/configuração executadas (14 produtoras do bundle e da suíte, 57 entra
 do build nativo e 6 de verificação, com sobreposição) correspondem à
 implementação `a10b19ef42ded706235d6b9d8bc401a66bd796c6` por `git show`/SHA-256.
 
+## Mescla com a main
+
+Depois da execução, a `main` recebeu o click (#29) e o AppState (#31). A `main`
+foi mesclada na branch em `16cf38c`, sem rebase, para manter `a10b19e`
+alcançável; os conflitos eram só de anexo, e o `application_runtime.cpp` mesclou
+sozinho. No host da árvore mesclada (`5e21fd40`) passaram de novo `test:switch`
+(108/108), o click (728 checks), o AppState, os 22 exemplos, `test:recovery` e os
+três gates do job `contracts` (261 testes Node). O controle foi refeito com o host
+da `main` em `8f80fed` (`06a33274`) no lugar de `cb0486eb`: o mesmo bundle falha
+exatamente os 2 checks normativos de montagem. O recibo registra essa corrida em
+`mergeReverification`.
+
 ## Limites
 
 Ativação por teclado e foco, acessibilidade (`accessibilityRole="switch"`),
