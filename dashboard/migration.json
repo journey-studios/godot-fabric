@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "View pointermove nativo validado; próximos: CIs das fatias pendentes e Document pointermove"
   },
-  "updatedAt": "2026-10-05T16:21:07.277602+00:00",
+  "updatedAt": "2026-10-05T16:29:08.412982+00:00",
   "source": {
-    "commit": "6b3554c4218a1605d94acd3cd4a81c0c20c9a984",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/6b3554c4218a1605d94acd3cd4a81c0c20c9a984",
-    "scope": "View pointermove com interesse nativo: listeners imperativos originais de pointermove na View qualificam a emissão nativa. 135 checks headless e 159 viewport/20 pixels; o host anterior com o mesmo bundle do SDK falha exatamente 45 checks normativos. Correção nos quatro pontos de Down/Up: consulta do overlay do EventTarget, offsets 1/25 no plugin do SDK, whitelist do callback nativo e cláusula topPointerMove no overlay gerado do PointerEventsProcessor. Listener na View alvo qualifica com 1=true (bubble) ou 1=false/25=true (capture-only) em fase 2; na View pai, o par vazio do alvo vem antes e os callbacks rodam em fase 3 ou 1. Drags de toque e mouse sem botão entregam 1 callback trusted e 1 commit por amostra despachada, em prioridade Default (moves únicos Continuous do host, como no RN; sem ContinuousStart um move Unspecified rodaria Discrete). B sem listeners consulta o caminho inteiro em ordem (B, pai, container do AppRegistry, raiz), todos false. O host faz flush da fila do RN a cada input, então o coalescing de moves do RN nunca encontra move pendente; o acúmulo de input do Godot funde amostras por frame. Registros de build nativo diferem só em host, application_runtime.cpp, rn-pointer-overlay.mjs e na árvore gerada (5 de 6708 entradas). Controles de host anterior refeitos (View Up 8, query 12, resolver 3). Também habilitado sem certificação: listener pointermove em Document/documentElement qualifica moves pela raiz; consulta de Move que lança geraria 1 diagnóstico por amostra. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "63c50137786b4b9789bd1019a381efd43f31a944",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/63c50137786b4b9789bd1019a381efd43f31a944",
+    "scope": "View pointermove com interesse nativo: listeners imperativos originais de pointermove na View qualificam a emissão nativa. 135 checks headless e 159 viewport/20 pixels; o host anterior com o mesmo bundle do SDK falha exatamente 45 checks normativos. Correção nos quatro pontos de Down/Up: consulta do overlay do EventTarget, offsets 1/25 no plugin do SDK, whitelist do callback nativo e cláusula topPointerMove no overlay gerado do PointerEventsProcessor. Listener na View alvo qualifica com 1=true (bubble) ou 1=false/25=true (capture-only) em fase 2; na View pai, o par vazio do alvo vem antes e os callbacks rodam em fase 3 ou 1. Drags de toque e mouse sem botão entregam 1 callback trusted e 1 commit por amostra despachada, em prioridade Default (moves únicos Continuous do host, como no RN; sem ContinuousStart um move Unspecified rodaria Discrete). B sem listeners consulta o caminho inteiro em ordem (B, pai, container do AppRegistry, raiz), todos false. O host faz flush da fila do RN a cada input, então o coalescing de moves do RN nunca encontra move pendente; o acúmulo de input do Godot funde amostras por frame. Registros de build nativo diferem só em host, application_runtime.cpp, rn-pointer-overlay.mjs e na árvore gerada (5 de 6708 entradas). Controles de host anterior refeitos (View Up 8, query 12, resolver 3). Também habilitado sem certificação: listener pointermove em Document/documentElement qualifica moves pela raiz; consulta de Move que lança geraria 1 diagnóstico por amostra. Execução sobre 69bd3b6/dirty; 77 inputs executados conferidos por git show/SHA-256 contra 63c5013; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -484,7 +484,7 @@
             },
             {
               "label": "View pointermove nativo: 135 checks, 159 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointermove-interest/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
             }
           ]
         },
@@ -651,7 +651,7 @@
             },
             {
               "label": "View pointermove nativo: 135 checks, 159 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointermove-interest/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
             }
           ]
         },
@@ -870,7 +870,7 @@
             },
             {
               "label": "View pointermove nativo: 135 checks, 159 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointermove-interest/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
             }
           ]
         },
@@ -1288,7 +1288,7 @@
             },
             {
               "label": "View pointermove nativo: 135 checks, 159 viewport e controle de host anterior 45",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointermove-interest/docs/evidence/pointer-move/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
             }
           ]
         },
@@ -3099,7 +3099,7 @@
         "GF-13"
       ],
       "message": "View pointermove nativo: 135 headless e 159 viewport/20 pixels; o host anterior com o mesmo bundle falha exatamente 45 checks normativos. Overlay do EventTarget, offsets 1/25 do SDK, whitelist nativa e overlay gerado admitem Move; listeners no alvo e no pai (fases 2, 3 e 1), drags e mouse sem botão entregam 1 move trusted e 1 commit por amostra em prioridade Default; B consulta o caminho inteiro false. Controles de host anterior 8/12/3 refeitos. Document pointermove e faults de Move ficam habilitados sem certificação. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/feat/view-pointermove-interest/docs/evidence/pointer-move/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/63c50137786b4b9789bd1019a381efd43f31a944/docs/evidence/pointer-move/README.md"
     },
     {
       "id": "pointer-up-resolver-fault-local-verified-20261005",
