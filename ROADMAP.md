@@ -1182,8 +1182,9 @@ passes 2,723, contracts 255 Node/13 Python and static analysis. Native/SDK bytes
 are unchanged. Capture-phase or View listeners across retirement, application
 stop/restart, keyed remount of the whole tree, general Down/Up pointerId pairing,
 dispatch-time mutation/reentrancy, Up faults and captured/no-hit routing remain
-open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
-denominator closes.
+open. All 71 executed code/configuration inputs match implementation f7c0bab
+via git show/SHA-256 (execution base 3b74ae8/dirty retained). Hosted CI for this
+slice is pending. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

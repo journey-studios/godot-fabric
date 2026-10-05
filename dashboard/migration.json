@@ -10,9 +10,9 @@
   },
   "updatedAt": "2026-10-05T12:34:53.407187+00:00",
   "source": {
-    "commit": "a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/a3e6c6b9fa5e42f9e4b7c24443cf64e3c19d1168",
-    "scope": "Document Up rerender/retirada/remount: 2709 checks headless nas oito lanes (2143 anteriores preservados em ordem) e 535 viewport/7 frames/90 pixels. Rerender mantém Document/documentElement/ref/getter e o Up seguinte; retirar A com A e B segurando contato entrega 1 TouchCancel original e nenhum Up/Raw/query/estado aos listeners retidos, B intacto e positivo depois. Root novo com Document novo: retidos consultam 36/37 false, manual retido ainda chega a OldDoc, release do índice cancelado descartado, gesto novo qualifica só pelo Document novo. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python e static passaram. Execução sobre 3b74ae8/dirty; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/f7c0babf32717a2e399cb9c9ed90f669d721d8a2",
+    "scope": "Document Up rerender/retirada/remount: 2709 checks headless nas oito lanes (2143 anteriores preservados em ordem) e 535 viewport/7 frames/90 pixels. Rerender mantém Document/documentElement/ref/getter e o Up seguinte; retirar A com A e B segurando contato entrega 1 TouchCancel original e nenhum Up/Raw/query/estado aos listeners retidos, B intacto e positivo depois. Root novo com Document novo: retidos consultam 36/37 false, manual retido ainda chega a OldDoc, release do índice cancelado descartado, gesto novo qualifica só pelo Document novo. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python e static passaram. Execução sobre 3b74ae8/dirty; 71 inputs executados conferidos por git show/SHA-256 contra f7c0bab; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -428,7 +428,7 @@
             },
             {
               "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-document-up-refs/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
             }
           ]
         },
@@ -555,7 +555,7 @@
             },
             {
               "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-document-up-refs/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
             }
           ]
         },
@@ -734,7 +734,7 @@
             },
             {
               "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-document-up-refs/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
             }
           ]
         },
@@ -1112,7 +1112,7 @@
             },
             {
               "label": "Document Up rerender/retirada/remount: 2709 checks, 535 viewport e 90 pixels",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/codex/react-native-parity-roadmap/docs/evidence/pointer-document-up-refs/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/f7c0babf32717a2e399cb9c9ed90f669d721d8a2/docs/evidence/pointer-document-up-refs/README.md"
             }
           ]
         },

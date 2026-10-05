@@ -108,3 +108,7 @@ A regressão Down passou **2.723 checks**; contracts passaram **255 Node/13
 Python** e a análise estática passou. A CI desta fatia ainda será executada. A
 [CI da fatia anterior](../pointer-document-up-lifecycle/hosted-ci.json) continua
 válida para os seus 2.143 checks.
+
+As 71 fontes de código/configuração executadas correspondem à implementação
+`f7c0babf32717a2e399cb9c9ed90f669d721d8a2` por `git show`/SHA-256. O recibo preserva a
+base 3b74ae8 e a árvore dirty da execução; este pin pós-commit não é uma nova corrida.
