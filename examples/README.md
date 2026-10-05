@@ -185,6 +185,16 @@ enter and leave only with the root. Its
 checks, 9 visible failures on the preceding host and that host's crash in the
 Document case.
 
+The [Document hover matrix](pointer-document-hover/README.md) registers original
+`pointerover/out/enter/leave` listeners on Document and documentElement over a
+leaf with no listener, in eight lanes (original/current interest × four flag
+configurations): `npm run test:pointers:documents:hover`, outside the launcher
+catalog. Only current interest with native dispatch delivers; over/out reach the
+listeners at phases 1 and 3, and enter/leave reach only capture listeners, when
+the pointer enters or leaves the surface. Its
+[receipt](../docs/evidence/pointer-document-hover/README.md) records 1,530
+headless checks and a retained negative control.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

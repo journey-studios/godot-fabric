@@ -13,6 +13,10 @@ import {getInternalInstanceHandleFromNativeTag, getInternalInstanceHandleFromPub
   getNativeTagFromPublicInstance} from "../src/private-interface";
 
 const panels = new Map(), retained = new Map(), mounts = {}, cleanups = {};
+// eventType "pointerhover" registers each listener for all four hover types.
+const hoverTypes = ["pointerover", "pointerenter", "pointerout", "pointerleave"];
+const typesOf = eventType => eventType === "pointerhover" ? hoverTypes : [eventType];
+const withPointer = eventType => ["pointerup", "pointermove", "pointerhover"].includes(eventType);
 let active = null, sequence = 0;
 const methods = object => object == null ? null : ["addEventListener", "removeEventListener", "dispatchEvent"].map(key => typeof object[key]);
 function noRefSnapshot(name) {
@@ -54,7 +58,7 @@ function record(name, label, expectedCurrent, receiver, event) {
     payloadId: payloadId(native), nativeTarget: native?.target ?? null,
     timeStamp: event.timeStamp ?? null, nativeTimeStamp: native?.timeStamp ?? native?.timestamp ?? null,
     currentPriority: nativeFabricUIManager.unstable_getCurrentEventPriority(),
-    ...(active.eventType === "pointerup" || active.eventType === "pointermove" ? {pointerId: native?.pointerId ?? null,
+    ...(withPointer(active.eventType) ? {pointerId: native?.pointerId ?? null,
       buttons: native?.buttons ?? null, pressure: native?.pressure ?? null, pointerType: native?.pointerType ?? null} : {}),
     ...(active.eventType === "pointermove" ? {offsetX: native?.offsetX ?? null, offsetY: native?.offsetY ?? null} : {})});
   active.eventRefs.push(event);
@@ -93,6 +97,8 @@ function Fixture({name, noRef = false, eventType = "pointerdown"}) {
       onTouchEnd={panel.eventType === "pointerup" ? function(event) { record(name, "TouchEnd", event.currentTarget, this, event); } : undefined}
       onPointerMove={panel.eventType === "pointermove" ? function(event) { record(name, "JSX", event.currentTarget, this, event); } : undefined}
       onTouchMove={panel.eventType === "pointermove" ? function(event) { record(name, "TouchMove", event.currentTarget, this, event); } : undefined}
+      onPointerEnter={panel.eventType === "pointerhover" ? function(event) { record(name, "JSX", event.currentTarget, this, event); } : undefined}
+      onPointerLeave={panel.eventType === "pointerhover" ? function(event) { record(name, "JSX", event.currentTarget, this, event); } : undefined}
       style={{position: "absolute", left: 200, top: 20, width: 120, height: 70, backgroundColor: "#0f766e"}} />
     <View testID={name + "-counter"} style={{position: "absolute", left: 20, top: 170, height: 15,
       width: 20 + count * 4, backgroundColor: "#fde047"}} />
@@ -107,15 +113,18 @@ function raw(channel, value) {
     ? ["topPointerDown", "topPointerUp", "topTouchEnd", "topTouchCancel"].includes(value.eventName)
     : active.eventType === "pointermove"
       ? ["topPointerDown", "topPointerMove", "topTouchMove", "topPointerUp"].includes(value.eventName)
-      : value.eventName === "topPointerDown" || (active.kind === "rootfault" && value.eventName === "topTouchStart");
+      : active.eventType === "pointerhover"
+        ? ["topPointerOver", "topPointerEnter", "topPointerOut", "topPointerLeave"].includes(value.eventName)
+        : value.eventName === "topPointerDown" || (active.kind === "rootfault" && value.eventName === "topTouchStart");
   if (!selected) return;
   active.raw.push({sequence: ++sequence, channel, type: value.eventName, payloadId: payloadId(value.nativeEvent),
     target: value.nativeEvent.target, timeStamp: value.nativeEvent.timeStamp ?? value.nativeEvent.timestamp ?? null,
-    ...(active.eventType === "pointerup" || active.eventType === "pointermove" ? {pointerId: value.nativeEvent.pointerId ?? null,
+    ...(withPointer(active.eventType) ? {pointerId: value.nativeEvent.pointerId ?? null,
       buttons: value.nativeEvent.buttons ?? null, pressure: value.nativeEvent.pressure ?? null,
       pointerType: value.nativeEvent.pointerType ?? null} : {})});
 }
-for (const type of ["topPointerDown", "topTouchStart", "topPointerUp", "topTouchEnd", "topTouchCancel", "topPointerMove", "topTouchMove"])
+for (const type of ["topPointerDown", "topTouchStart", "topPointerUp", "topTouchEnd", "topTouchCancel", "topPointerMove", "topTouchMove",
+  "topPointerOver", "topPointerEnter", "topPointerOut", "topPointerLeave"])
   RawEventEmitter.addListener(type, value => raw("typed", value));
 RawEventEmitter.addListener("*", value => raw("star", value));
 function bindRoot(name, surfaceId, leafTag, sentinelTag) {
@@ -142,8 +151,10 @@ function capability(name) {
 }
 function add(panel, ref, label, capture = false, options = {}, keep = false, action = null) {
   const callback = function(event) { record(panel.name, label, ref, this, event); action?.(event, ref); };
-  ref.addEventListener(panel.eventType, callback, {...options, capture});
-  panel.bindings.push({ref, callback, capture, keep, label, eventType: panel.eventType});
+  for (const eventType of typesOf(panel.eventType)) {
+    ref.addEventListener(eventType, callback, {...options, capture});
+    panel.bindings.push({ref, callback, capture, keep, label, eventType});
+  }
   return callback;
 }
 // A listener registered only from inside another callback. Its identity is
@@ -235,7 +246,7 @@ function configureReentry(panel, kind) {
   } else throw Error("Unknown document reentry: " + kind);
 }
 function configure(name, kind, eventType = "pointerdown") {
-  if (!["pointerdown", "pointerup", "pointermove"].includes(eventType)) throw Error("Unsupported document probe event type");
+  if (!["pointerdown", "pointerup", "pointermove", "pointerhover"].includes(eventType)) throw Error("Unsupported document probe event type");
   reset(name); const panel = panels.get(name), doc = panel.doc, element = panel.element;
   panel.eventType = eventType;
   const D = bootstrap.flags.nativeDispatch, I = bootstrap.flags.imperative;
@@ -268,7 +279,8 @@ function configure(name, kind, eventType = "pointerdown") {
   } else if (kind.startsWith("re-")) {
     if (D) configureReentry(panel, kind);
   } else if (kind !== "none") throw Error("Unknown document configuration: " + kind);
-  return {name, kind, installed: panel.bindings.map(binding => binding.label), noPrototypeBorrow: true,
+  // A hover configuration registers each label once per hover type.
+  return {name, kind, installed: [...new Set(panel.bindings.map(binding => binding.label))], noPrototypeBorrow: true,
     ...(eventType !== "pointerdown" ? {eventType} : {})};
 }
 function arm(name, caseId, target = "leaf", kind = "normal") {
@@ -283,7 +295,7 @@ function manualDocument(name) {
   const doc = panels.get(name).doc;
   if (typeof doc.dispatchEvent !== "function") return {available: false, noPrototypeBorrow: true};
   active.manualTarget = doc;
-  const event = new OriginalEvent(panels.get(name).eventType, {bubbles: true}), returned = doc.dispatchEvent(event);
+  const event = new OriginalEvent(typesOf(panels.get(name).eventType)[0], {bubbles: true}), returned = doc.dispatchEvent(event);
   return {available: true, returned, trusted: event.isTrusted, targetMatches: event.target === doc,
     cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0,
     noPrototypeBorrow: true};
@@ -292,7 +304,7 @@ function manualElement(name) {
   const element = panels.get(name).element;
   if (typeof element.dispatchEvent !== "function") return {available: false, noPrototypeBorrow: true};
   active.manualTarget = element;
-  const event = new OriginalEvent(panels.get(name).eventType, {bubbles: true}), returned = element.dispatchEvent(event);
+  const event = new OriginalEvent(typesOf(panels.get(name).eventType)[0], {bubbles: true}), returned = element.dispatchEvent(event);
   return {available: true, returned, trusted: event.isTrusted, targetMatches: event.target === element,
     cleaned: event.currentTarget === null && event.eventPhase === 0 && event.composedPath().length === 0,
     noPrototypeBorrow: true};
@@ -345,7 +357,9 @@ function snapshot() {
         sameObject: upRefs.length > 0 ? upRefs.every(event => event === upRefs[0]) : null,
         touchEndDistinct: upRefs.length > 0 && touchEndRefs.length > 0
           ? touchEndRefs.every(event => !upRefs.includes(event)) : null}} : {}),
-    ...(active?.eventType === "pointermove" ? moveIdentity(active) : {})};
+    ...(active?.eventType === "pointermove" ? moveIdentity(active) : {}),
+    ...(active?.eventType === "pointerhover" ? {eventType: active.eventType, discretePriority: nativeFabricUIManager.unstable_DiscreteEventPriority,
+      hoverEventIdentity: {callbackCount: active.eventRefs.length, distinctObjects: new Set(active.eventRefs).size}} : {})};
 }
 // Each native move sample dispatches one Event object through every listener;
 // the original TouchMove of the same sample is a distinct Event.

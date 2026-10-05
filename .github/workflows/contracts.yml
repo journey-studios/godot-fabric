@@ -277,6 +277,18 @@ jobs:
             build/pointer-root-path-comparison.json
             build/pointer-root-path-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:pointers:documents:hover
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pointer-document-hover
+          path: |
+            build/pointer-document-hover-original-*-report.json
+            build/pointer-document-hover-current-*-report.json
+            build/pointer-document-hover-comparison.json
+            build/pointer-document-hover-original-*.log
+            build/pointer-document-hover-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

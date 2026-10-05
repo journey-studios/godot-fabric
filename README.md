@@ -195,6 +195,13 @@ target. That removes a crash of the preceding host with a Document capture
 fails 9 checks and crashes on the preceding host.
 [Evidence](docs/evidence/pointer-root-path/README.md).
 
+The [Document hover example](examples/pointer-document-hover/README.md)
+certifies original Document and documentElement hover listeners in eight
+original/current × flag lanes: 1,530 headless checks. Over/out reach them at
+phases 1 and 3; enter/leave reach only capture listeners, when the pointer enters
+or leaves the surface; a retained control that ignores the owner Document fails.
+[Evidence](docs/evidence/pointer-document-hover/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

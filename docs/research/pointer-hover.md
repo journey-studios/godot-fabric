@@ -104,11 +104,38 @@ cannot pass it vacuously.
   The [root-path slice](pointer-root-path.md) keeps the root in the path and also
   fixes a crash this host had with such a Document capture listener: it emitted
   enter/leave to the root itself, whose EventTarget has no instance handle.
-- **Document hover.** Document/documentElement hover listeners now qualify through
-  the root rule, certified only by the plugin unit tests.
+- **Document hover.** Certified across the four flags and both interest modes;
+  see [Document listeners](#document-listeners) below.
 - **Remaining scope.** Pen hover, touch with other listener placements, pointer
   capture while hovering, root retirement with an active hover, responders,
   hardware, exported mobile input and performance remain open.
 
 The [example](../../examples/pointer-hover/README.md) shows the ordinary ref syntax
 within the isolated opt-in configuration.
+
+## Document listeners
+
+The [Document hover evidence](../evidence/pointer-document-hover/README.md)
+runs Document and documentElement over/out/enter/leave listeners in eight lanes
+(original/current interest × four flag configurations): 1,530 headless checks.
+Document listeners exist with native dispatch alone; documentElement listeners
+also need imperative events; only the current interest with native dispatch
+installs the query.
+
+At the root, the query plays the role RN's ViewProps play for an ancestor:
+- **Over/out.** The path query reads the root last, bubble first and capture only
+  when no bubble listener qualified. The event is dispatched to the leaf, so the
+  Document and documentElement capture listeners run at phase 1 and their bubble
+  listeners at phase 3.
+- **Enter/leave.** These never bubble: only capture listeners see them, at phase
+  1, and only for nodes that actually enter or leave. Because the root stays in the
+  hover path while the pointer is inside it, its capture Maps propagate enter to
+  the container, parent and leaf when the pointer arrives from outside the surface,
+  and leave when it exits; moving between the leaf and the empty area propagates
+  nothing. Bubble enter/leave listeners on the Document or documentElement never
+  run, because RN never delivers an event targeted at a root.
+
+A touch enters the path in its Down and leaves it after its Up, like a mouse
+arriving from and returning to outside the surface. A retained control whose SDK
+ignores the owner Document for hover offsets fails 34 and 22 probe checks in the
+two delivering lanes, and the independent oracle rejects both reports.

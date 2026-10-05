@@ -37,6 +37,7 @@
     "tests/pointer-document-move-fixture.jsx",
     "tests/pointer-hover-fixture.jsx",
     "tests/pointer-root-path-fixture.jsx",
+    "tests/pointer-document-hover-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx"
   ],
   "ignorePatterns": [

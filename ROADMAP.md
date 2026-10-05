@@ -1607,6 +1607,47 @@ surface selection for empty-area input, pen hover, capture while hovering,
 responders and multi-touch remain open. Hosted CI for this slice is pending. No
 whole GF, checkpoint, weight or denominator closes.
 
+
+### Document hover across four original flags (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[Document hover evidence](docs/evidence/pointer-document-hover/README.md)
+certifies original `pointerover/out/enter/leave` listeners on Document and
+documentElement over the View hover and root-path native support, in eight lanes
+(original/current interest × disabled, imperative-only, internal-only and enabled
+flags): **1,530 headless checks**.
+
+Document listeners exist with native dispatch alone and documentElement listeners
+also need imperative events; original interest installs no query and delivers
+nothing. With the current query, a mouse arriving from outside the surface gets
+over at the leaf (capture at phase 1, bubble at phase 3) and enter for the
+container, parent and leaf on every capture listener at phase 1; moving between
+the leaf and the empty area delivers only out/over, because the root stays in the
+hover path; leaving the surface delivers out and leave for leaf, parent and
+container. Bubble enter/leave listeners on the Document or documentElement never
+run, since RN never delivers a root-targeted event. The root reads exactly the
+over/out path (bubble, then capture only when bubble did not qualify) and the
+capture enter/leave Maps; Views read only empty Maps. A touch enters in its Down
+and leaves after its Up. Manual dispatches prove installation and the method gate,
+a JSX sentinel with `onPointerEnter`/`onPointerLeave` delivers by props in every
+lane, B's listeners stay isolated, and removing the listeners during hover stops
+delivery at the next change. A retained control whose SDK ignores the owner
+Document for hover offsets fails 34 (internal-only) and 22 (enabled) probe checks,
+and the independent oracle rejects both reports.
+
+Only tests changed: the Document fixture accepts `pointerhover` (all four hover
+types per listener, hover Raw and a JSX enter/leave sentinel), and a wrapper,
+probe, oracle and CI step run the matrix. The shared bundler is pinned by every
+preceding-host control, so the View Up, query-fault, resolver-fault, Move, hover
+and root-path controls were rerun with the new bundles and still reproduce
+8/12/3/45/32/9 failures (the root-path Document case still crashes on the hover
+host). The contracts gates (260 Node/13 Python, static analysis, publication
+scan), `test:recovery` and the 25 native suites pass on the same host, including
+Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
+158, root path 82 and 22 examples. Viewport capture, root query
+faults at hover offsets, once/AbortSignal, refs, mutation and reentry during
+Document hover, pen hover and capture while hovering remain open. Hosted CI for
+this slice is pending. No whole GF, checkpoint, weight or denominator closes.
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
