@@ -536,7 +536,8 @@ retained `E_POINTER_LISTENER_QUERY` diagnostic. A faulted bubble lookup still le
 a capture listener qualify the Up; with no other qualifying lookup the Up is not
 delivered, while the original TouchEnd and contact cleanup survive. The faults run
 in a second application, so the healthy matrix stays diagnostic-free: 6,451
-headless checks and 1,179 graphical checks with 132 pixels.
+headless checks, also passed in hosted CI, and 1,179 graphical checks with 132
+pixels.
 [Evidence and limits](docs/evidence/pointer-document-up-fault/README.md).
 
 | After a faulted bubble lookup and its recovery |

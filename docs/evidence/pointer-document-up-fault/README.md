@@ -122,10 +122,30 @@ performance continuam abertos.
 
 Original/current são controles do modo de interesse do SDK sobre o mesmo
 binário nativo, não comparações entre hosts nativos antigos e novos. A CI desta
-fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso ou
-denominador foi fechado.
+fatia está no [recibo hospedado](hosted-ci.json). Nenhum GF, checkpoint,
+dependência, peso ou denominador foi fechado.
 
 As 71 fontes de código/configuração executadas correspondem à implementação
 `eda1bf23b5dd20f1460d7276f7a7c364819f6d66` por `git show`/SHA-256. O recibo preserva a
 base f5660c6 e a árvore dirty da reexecução feita depois da revisão; este pin
 pós-commit não é uma nova corrida.
+
+## CI hospedada
+
+O workflow Contracts
+[37328158081](https://github.com/journey-studios/godot-fabric/actions/runs/37328158081)
+passou nos cinco jobs para o head `6f9e10c`. O job nativo fez checkout do merge
+`ba30dee` (`3377343` + `6f9e10c`), e as 71 fontes de código/configuração
+dessa árvore têm os mesmos blobs da implementação `eda1bf2`. O artefato
+`native-pointer-document-up` contém as oito lanes headless com **6.451 checks**,
+IDs idênticos aos da baseline local, os mesmos bundles e os estágios `fault/*` em
+cada lane. Além de timestamps de evento, da versão patch do Node e do hash do host
+compilado pelo runner, os relatórios diferem apenas nos identificadores de
+alocação do Godot da segunda aplicação (444 por lane: `hostInstanceId`,
+`runtimeId` e `id` de nós), que dependem do histórico do processo. O recibo só os
+aceita como uma renomeação um-para-um, conferida em cada lane; qualquer outra
+diferença seria um finding. As linhas `ERROR: FABRIC_ERROR:` de cada log são
+exatamente os diagnósticos esperados da lane. Não houve findings.
+
+A CI certifica apenas as lanes headless. O viewport com 1.179 checks e 132 pixels
+e o controle negativo continuam sendo evidência local; os limites acima não mudam.

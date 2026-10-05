@@ -1300,7 +1300,13 @@ native/SDK bytes are unchanged. Component and resolver faults on Up, repeated
 faults or faults during retirement/stop, captured/no-hit routing and Down/Up
 pointerId pairing remain open. All 71 executed code/configuration inputs match
 implementation eda1bf2 via git show/SHA-256 (execution base f5660c6/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+retained). Hosted Contracts run 37328158081 passed all five jobs at 6f9e10c
+(merge checkout ba30dee); its [audited artifact](docs/evidence/pointer-document-up-fault/hosted-ci.json)
+repeats the 6,451 headless checks with identical IDs, bundles and fault stages,
+the second application's Godot allocation ids differing only by a one-to-one
+renaming, and all 71 tracked inputs match eda1bf2 in the checkout tree. The
+viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
+weight or denominator closes.
 
 
 ### View Up component query faults (2026-10-05)
