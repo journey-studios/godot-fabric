@@ -217,6 +217,13 @@ loss is `inactive`, a pause is `background`, and stop sends no event. Its
 [receipt](../docs/evidence/app-state/README.md) records 75 headless checks, the
 preceding-host control and a retained negative control.
 
+The [shared touches matrix](shared-touches/README.md) presses the original
+`Pressable`s of two roots with overlapping touches and the mouse in four flag
+lanes: `npm run test:responders:shared-touches`, outside the launcher catalog.
+Each TouchEvent lists every touch of the application. Its
+[receipt](../docs/evidence/shared-touches/README.md) records 92 headless checks
+and the preceding-host control.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

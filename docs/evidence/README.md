@@ -241,6 +241,14 @@ events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
 checks, and a host whose focus outranks the pause fails 5, which the independent
 oracle rejects. Hosted CI pending.
 
+The [shared touches record](shared-touches/README.md) lists every root's active
+touches in each TouchEvent, because the roots of one application share RN's one
+JS responder: 92 headless checks in four flag lanes over two roots' original
+`Pressable`s. A touch in another root no longer releases a held press, and the
+two responder implementations differ only where RN's do, when the responder's
+own touch ends first. The preceding host fails exactly the 9 normative checks.
+Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

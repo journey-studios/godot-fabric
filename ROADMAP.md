@@ -1783,6 +1783,45 @@ implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
 executed tree is the implementation's). Hosted CI for this slice is pending. No
 whole GF, checkpoint, weight or denominator closes.
 
+### Touches shared by every root (2026-10-05)
+
+GF-13 remains **In progress**. The
+[shared touches evidence](docs/evidence/shared-touches/README.md) makes every
+TouchEvent list the active touches of all roots of the application, because
+they share one Hermes runtime and so RN's one JS responder and touch history:
+**92 headless checks** in four flag lanes over two roots' original
+`Pressable`s, with actual Godot touches and the mouse.
+
+Before, each root listed only its own touches: with root A pressed, a touch
+ending in root B looked like the last touch of A's gesture, RN released A's
+responder and A's `Pressable` pressed with B's touch, a defect every public
+responder consumer shared (`Pressable`, `PanResponder`, the touchables). Each
+root's pointer adapter now adds the other roots' active touches to `touches`;
+`changedTouches` and `targetTouches` keep the touch's own target, and a touch in
+another root still cannot claim (no common ancestor). RN's iOS and Android
+surfaces each keep their own list (`RCTSurfaceTouchHandler`,
+`JSTouchDispatcher`), so this is a deliberate departure in favor of the
+single-surface semantics RN's responder is written for. When the responder's own
+touch ends while another root's touch is down, the legacy plugin releases at
+once, while `ReactNativeResponder` (native-dispatch flags) waits until no touch
+remains, as on one RN surface; the lanes of each implementation agree and the
+two differ only there. The integrated dispatch probe and the pointer-geometry
+example pinned per-root lists and now expect the application's list.
+
+The preceding host (main's PanResponder tree) runs the same bundle and fails
+exactly the 9 normative checks. The seven preceding-host controls that pin the
+SDK bundle were rerun with the merged bundles and still reproduce
+8/12/3/45/32/9/31 failures; the contracts gates (260 Node/13 Python, static
+analysis, publication scan), `test:recovery`, the native suites (22 examples,
+Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
+158, root path 82, Document hover 1,530, click 728, PanResponder 128, AppState
+75, shared touches 92, `parity:godot`) and the native SDK batch pass on the same
+host. Pointer capture across roots, several touch devices, hardware and mobile
+exports remain open. All 16 executed code/configuration inputs match
+implementation 1b7dac5 via git show/SHA-256 (execution base 283065d/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

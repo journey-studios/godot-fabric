@@ -222,6 +222,12 @@ notifications Godot delivers to the `FabricApplication`, with two roots sharing
 one state: 75 headless checks. The preceding host fails exactly its 62
 lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
 
+The [shared touches example](examples/shared-touches/README.md) presses two
+roots of one application at the same time: every TouchEvent lists the whole
+application's touches, as RN's one JS responder expects, so a touch in one root
+no longer releases a press held in another. 92 headless checks in four flag
+lanes; the preceding host fails exactly 9. [Evidence](docs/evidence/shared-touches/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
