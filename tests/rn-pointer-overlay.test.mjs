@@ -108,7 +108,7 @@ test('the overlay changes native lifetime boundaries without replacing upstream 
 });
 
 
-test('the generated native path query extends exactly Down, Up and Move with typed bubble/capture pairs', () => {
+test('the generated native path query extends exactly Down, Up, Move and hover with typed bubble/capture pairs', () => {
   const files = renderPointerOverlay(read('h'), read('cpp'), readBinding('h'), readBinding('cpp'));
   const source = files[base + '.cpp'];
   const helper = source.slice(source.indexOf('static bool hasPointerInterestForGodot('),
@@ -117,15 +117,23 @@ test('the generated native path query extends exactly Down, Up and Move with typ
   assert.match(helper, /query\(node, static_cast<std::size_t>\(offsets\[0\]\)\) \|\|\s*query\(node, static_cast<std::size_t>\(offsets\[1\]\)\)/);
   assert.match(helper, /if \(interested\(target\)\) return true;/);
   assert.match(helper, /ancestors\.rbegin\(\)/);
-  assert.equal((source.match(/hasPointerInterestForGodot\(/g) ?? []).length, 4,
-    'one shared helper and exactly three native categories invoke it');
+  assert.equal((source.match(/hasPointerInterestForGodot\(/g) ?? []).length, 6,
+    'one shared helper, the three emitted categories and the out/over hover checks invoke it');
   assert.match(source, /type == "topPointerDown" && hasPointerInterestForGodot\([\s\S]*?\{ViewEvents::Offset::PointerDown, ViewEvents::Offset::PointerDownCapture\}/);
   assert.match(source, /type == "topPointerUp" && hasPointerInterestForGodot\([\s\S]*?\{ViewEvents::Offset::PointerUp, ViewEvents::Offset::PointerUpCapture\}/);
   assert.match(source, /type == "topPointerMove" && hasPointerInterestForGodot\([\s\S]*?\{ViewEvents::Offset::PointerMove, ViewEvents::Offset::PointerMoveCapture\}/);
+  // Out/over consult the previous/current target's whole path; enter/leave keep
+  // RN's per-node rule with one query per own and capture offset.
+  assert.match(source, /hasPointerInterestForGodot\(\*prevTarget, uiManager, godotListenerInterest_,\s*\{ViewEvents::Offset::PointerOut, ViewEvents::Offset::PointerOutCapture\}\)/);
+  assert.match(source, /hasPointerInterestForGodot\(\*curTarget, uiManager, godotListenerInterest_,\s*\{ViewEvents::Offset::PointerOver, ViewEvents::Offset::PointerOverCapture\}\)/);
+  assert.deepEqual([...source.matchAll(/hasNodeInterestForGodot\(node, godotListenerInterest_, ViewEvents::Offset::(Pointer\w+)\)/g)].map(match => match[1]),
+    ['PointerLeaveCapture', 'PointerLeave', 'PointerEnterCapture', 'PointerEnter']);
   const host = fs.readFileSync(path.join(root, 'native/application_runtime.cpp'), 'utf8');
   const whitelist = host.slice(host.indexOf('pointer_processor().setListenerInterestForGodot('),
     host.indexOf('auto root = roots.find(node.getSurfaceId());', host.indexOf('pointer_processor().setListenerInterestForGodot(')));
-  assert.deepEqual([...whitelist.matchAll(/static_cast<std::size_t>\(Offset::(Pointer\w+)\)/g)].map(match => match[1]),
-    ['PointerDown', 'PointerDownCapture', 'PointerUp', 'PointerUpCapture', 'PointerMove', 'PointerMoveCapture']);
+  assert.deepEqual([...whitelist.matchAll(/Offset::(Pointer\w+)/g)].map(match => match[1]),
+    ['PointerDown', 'PointerDownCapture', 'PointerUp', 'PointerUpCapture', 'PointerMove', 'PointerMoveCapture',
+      'PointerEnter', 'PointerEnterCapture', 'PointerLeave', 'PointerLeaveCapture',
+      'PointerOver', 'PointerOverCapture', 'PointerOut', 'PointerOutCapture']);
   assert.match(whitelist, /using Offset = rn::ViewEvents::Offset;/);
 });

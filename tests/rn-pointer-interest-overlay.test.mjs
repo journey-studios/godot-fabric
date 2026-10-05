@@ -26,6 +26,8 @@ const originalStorageFunction = `function getListenersForPhase(
 const exportOpening = "export function hasPointerDownListenerForGodot(target, capture) {";
 const upExportOpening = "export function hasPointerUpListenerForGodot(target, capture) {";
 const moveExportOpening = "export function hasPointerMoveListenerForGodot(target, capture) {";
+const hoverTypes = {enter: "pointerenter", leave: "pointerleave", over: "pointerover", out: "pointerout"};
+const hoverExportOpening = name => `export function hasPointer${name[0].toUpperCase() + name.slice(1)}ListenerForGodot(target, capture) {`;
 
 // Execute only the generated queries against supplied original-shaped storage.
 // This does not certify RN registration, NativeDOM, or native input transport.
@@ -35,9 +37,11 @@ function queriesWithStorage(getListenersForPhase) {
   assert.equal(appended.split(exportOpening).length, 2);
   assert.equal(appended.split(upExportOpening).length, 2);
   assert.equal(appended.split(moveExportOpening).length, 2);
+  for (const name of Object.keys(hoverTypes)) assert.equal(appended.split(hoverExportOpening(name)).length, 2);
   return new Function("getListenersForPhase", appended.replace(/^export /gm, "") +
     "\nreturn {down: hasPointerDownListenerForGodot, up: hasPointerUpListenerForGodot, " +
-    "move: hasPointerMoveListenerForGodot};")(getListenersForPhase);
+    "move: hasPointerMoveListenerForGodot, enter: hasPointerEnterListenerForGodot, leave: hasPointerLeaveListenerForGodot, " +
+    "over: hasPointerOverListenerForGodot, out: hasPointerOutListenerForGodot};")(getListenersForPhase);
 }
 function queryWithStorage(getListenersForPhase) { return queriesWithStorage(getListenersForPhase).down; }
 function upQueryWithStorage(getListenersForPhase) { return queriesWithStorage(getListenersForPhase).up; }
@@ -52,6 +56,7 @@ test("default and original controls retain the exact pinned EventTarget bytes", 
   assert.ok(!source.includes(exportOpening));
   assert.ok(!source.includes(upExportOpening));
   assert.ok(!source.includes(moveExportOpening));
+  for (const name of Object.keys(hoverTypes)) assert.ok(!source.includes(hoverExportOpening(name)));
 });
 
 test("current mode only appends shared Down/Up/Move queries and preserves every original method byte", () => {
@@ -66,6 +71,7 @@ test("current mode only appends shared Down/Up/Move queries and preserves every 
   assert.ok(generated.indexOf(exportOpening) > source.length);
   assert.ok(generated.indexOf(upExportOpening) > source.length);
   assert.ok(generated.indexOf(moveExportOpening) > source.length);
+  for (const name of Object.keys(hoverTypes)) assert.ok(generated.indexOf(hoverExportOpening(name)) > source.length);
   assert.equal(renderPointerInterestOverlay(source, "current"), generated);
 });
 
@@ -395,6 +401,21 @@ test("the pure Move query selects only pointermove registrations in the requeste
     assert.equal(moveQueryWithStorage(() => new Map([[type, new Map([[() => {}, {removed: false}]])]]))(target, false), false);
 });
 
+test("each hover query selects only its own type in the requested phase", () => {
+  for (const [name, type] of Object.entries(hoverTypes)) {
+    const target = {}, bubbleEntry = {removed: false}, captureEntry = {removed: true};
+    const bubble = new Map([[type, new Map([[() => {}, bubbleEntry]])]]), capture = new Map([[type, new Map([[() => {}, captureEntry]])]]);
+    const queries = queriesWithStorage((value, isCapture) => isCapture ? capture : bubble);
+    assert.equal(queries[name](target, false), true, name + " bubble");
+    assert.equal(queries[name](target, true), false, name + " removed capture entry is no interest");
+    captureEntry.removed = false; assert.equal(queries[name](target, true), true, name + " capture");
+    for (const other of Object.keys(hoverTypes).filter(key => key !== name))
+      assert.equal(queries[other](target, false), false, name + " storage cannot satisfy " + other);
+    for (const category of ["down", "up", "move"]) assert.equal(queries[category](target, false), false);
+    assert.equal(queries[name](null, false), false);
+  }
+});
+
 test("Move interest is read-only and rejects missing storage without consuming once listeners", () => {
   const noTarget = moveQueryWithStorage(() => { throw Error("null Move target inspected storage"); });
   assert.equal(noTarget(null, false), false);
@@ -473,9 +494,20 @@ test("the compiled SDK installer gates installation and maps exactly Down/Up/Mov
   target.capture.get("pointermove").set(() => {}, {removed: false}); assert.equal(query(target, 25), true);
   target.bubble.delete("pointermove"); assert.equal(query(target, 1), false);
   assert.equal(query(target, 25), true, "capture Move remains live after bubble Move removal");
-  // Hover, enter/leave, click and capture notifications stay outside the opt-in.
+  // Exact hover offsets: enter 0/23, leave 2/24, over 26/28, out 27/29.
+  const hover = {bubble: new Map(), capture: new Map()};
+  for (const [offset, type, capture] of [[0, "pointerenter", false], [23, "pointerenter", true], [2, "pointerleave", false], [24, "pointerleave", true],
+    [26, "pointerover", false], [28, "pointerover", true], [27, "pointerout", false], [29, "pointerout", true]]) {
+    hover.bubble.clear(); hover.capture.clear();
+    (capture ? hover.capture : hover.bubble).set(type, new Map([[() => {}, {removed: false}]]));
+    storageReads.length = 0;
+    assert.equal(query(hover, offset), true, "offset " + offset);
+    assert.deepEqual(storageReads.map(([, phase]) => phase), [capture]);
+    (capture ? hover.capture : hover.bubble).delete(type); assert.equal(query(hover, offset), false);
+  }
+  // Click and the capture notifications stay outside the opt-in.
   const poisoned = new Proxy({}, {get() { throw Error("unsupported offset resolved a candidate"); }});
-  for (const offset of [0, 2, 19, 23, 24, 26, 27, 28, 29, 30, 31, 32, 33, 38, -1, Infinity, NaN, "1", "36", null, undefined]) {
+  for (const offset of [19, 30, 31, 32, 33, 38, -1, Infinity, NaN, "1", "36", null, undefined]) {
     storageReads.length = 0;
     assert.equal(query(poisoned, offset, true), false); assert.deepEqual(storageReads, []);
   }
@@ -494,6 +526,20 @@ test("the compiled root callback reads only the chosen original-shaped element o
   doc.bubble.set("pointermove", new Map([[() => {}, {removed: false}]]));
   assert.equal(query(handle, 1, true), true, "the owner Document bubble Move Map is consulted");
   assert.equal(query(handle, 25, true), false);
+  // pointerenter/pointerleave do not bubble: a Document bubble listener never
+  // qualifies them at the root, while its capture listener and over/out do.
+  for (const [type, bubbleOffset, captureOffset] of [["pointerenter", 0, 23], ["pointerleave", 2, 24]]) {
+    doc.bubble.set(type, new Map([[() => {}, {removed: false}]]));
+    assert.equal(query(handle, bubbleOffset, true), false, type + " bubble on the Document cannot qualify the root");
+    doc.capture.set(type, new Map([[() => {}, {removed: false}]]));
+    assert.equal(query(handle, captureOffset, true), true, type + " capture on the Document qualifies the root");
+    element.bubble.set(type, new Map([[() => {}, {removed: false}]]));
+    assert.equal(query(handle, bubbleOffset, true), true, type + " on documentElement qualifies its own root");
+  }
+  for (const [type, offset] of [["pointerover", 26], ["pointerout", 27]]) {
+    doc.bubble.set(type, new Map([[() => {}, {removed: false}]]));
+    assert.equal(query(handle, offset, true), true, type + " bubbles to the Document");
+  }
   storageReads.length = 0;
   assert.equal(query({rootHandle: false}, 37, true), false); assert.deepEqual(storageReads, []);
   assert.equal(query({rootHandle: true, publicInstance: null}, 37, true), false); assert.deepEqual(storageReads, []);

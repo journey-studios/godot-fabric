@@ -432,6 +432,7 @@ func run_probe() -> void:
   # The preceding host never consults Move Maps, so its fault phase is moot.
   if not allow_original_negative:
     await move_fault_controls()
+  check_hover_lookups()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()

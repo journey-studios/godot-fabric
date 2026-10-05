@@ -256,9 +256,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   int viewport_updates{};
   std::string metrics_error;
   std::vector<std::string> errors;
-  // Down/Up lookups run once per gesture and report every failure. Move lookups
-  // run on every sample, hover included: each distinct Move failure is retained
-  // once, and repeats or distinct failures past the bound are only counted.
+  // Down/Up lookups run once per gesture and report every failure. Move and
+  // hover lookups run on every sample or hover change: each distinct failure is
+  // retained once, and repeats or distinct failures past the bound are counted.
   static constexpr std::size_t max_reported_move_query_failures = 16;
   std::set<std::string> reported_move_query_failures;
   uint64_t suppressed_move_query_failures{};
@@ -670,17 +670,17 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (pointer_listener_query) throw jsi::JSError(rt, "Pointer listener query is already installed");
       pointer_listener_query.emplace(args[0].asObject(rt).asFunction(rt));
       pointer_processor().setListenerInterestForGodot([this](const rn::ShadowNode &node, std::size_t offset) {
-        // Only Down/Up/Move are opted in. Other native filter categories
-        // (hover, click, capture notifications) retain their preceding
-        // behavior until separately verified.
+        // Down/Up/Move and the hover categories are opted in. Click and the
+        // capture notifications retain their preceding behavior until
+        // separately verified.
         if (inactive() || !pointer_listener_query) return false;
         using Offset = rn::ViewEvents::Offset;
-        if (offset != static_cast<std::size_t>(Offset::PointerDown) &&
-            offset != static_cast<std::size_t>(Offset::PointerDownCapture) &&
-            offset != static_cast<std::size_t>(Offset::PointerUp) &&
-            offset != static_cast<std::size_t>(Offset::PointerUpCapture) &&
-            offset != static_cast<std::size_t>(Offset::PointerMove) &&
-            offset != static_cast<std::size_t>(Offset::PointerMoveCapture)) return false;
+        static constexpr Offset admitted[] = {Offset::PointerDown, Offset::PointerDownCapture,
+            Offset::PointerUp, Offset::PointerUpCapture, Offset::PointerMove, Offset::PointerMoveCapture,
+            Offset::PointerEnter, Offset::PointerEnterCapture, Offset::PointerLeave, Offset::PointerLeaveCapture,
+            Offset::PointerOver, Offset::PointerOverCapture, Offset::PointerOut, Offset::PointerOutCapture};
+        if (std::none_of(std::begin(admitted), std::end(admitted),
+                [offset](Offset candidate) { return offset == static_cast<std::size_t>(candidate); })) return false;
         auto root = roots.find(node.getSurfaceId());
         if (root == roots.end() || root->second->stopping) return false;
         auto current = ui->getNewestCloneOfShadowNode(node);
@@ -720,8 +720,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           // Escaping here discards the remaining EventQueue batch, including
           // TouchStart. Its physical contact stays live until Up/Cancel/retire.
           auto message = std::string("E_POINTER_LISTENER_QUERY: ") + error.what();
-          const bool move = offset == static_cast<std::size_t>(Offset::PointerMove) ||
-              offset == static_cast<std::size_t>(Offset::PointerMoveCapture);
+          const bool move = offset != static_cast<std::size_t>(Offset::PointerDown) &&
+              offset != static_cast<std::size_t>(Offset::PointerDownCapture) &&
+              offset != static_cast<std::size_t>(Offset::PointerUp) &&
+              offset != static_cast<std::size_t>(Offset::PointerUpCapture);
           if (move && (reported_move_query_failures.contains(message) ||
               reported_move_query_failures.size() >= max_reported_move_query_failures)) {
             ++suppressed_move_query_failures;

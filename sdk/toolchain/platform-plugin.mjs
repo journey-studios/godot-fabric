@@ -73,7 +73,9 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
       builder.onLoad({ filter: /\.js$/ }, async ({ path: filename }) => {
         if (filename === path.join(platformRoot, "pointer-listener-query.js") && pointerInterestMode === "current")
           return {loader: "js", contents: `
-import {hasPointerDownListenerForGodot, hasPointerUpListenerForGodot, hasPointerMoveListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
+import {hasPointerDownListenerForGodot, hasPointerUpListenerForGodot, hasPointerMoveListenerForGodot,
+  hasPointerEnterListenerForGodot, hasPointerLeaveListenerForGodot, hasPointerOverListenerForGodot,
+  hasPointerOutListenerForGodot} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))};
 import * as Flags from ${JSON.stringify(path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js"))};
 import {getOwnerDocument} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/NodeInternals.js"))};
 import {isReactNativeDocumentElementInstanceHandle, getPublicInstanceFromReactNativeDocumentElementInstanceHandle} from ${JSON.stringify(path.join(rnRoot, "src/private/webapis/dom/nodes/internals/ReactNativeDocumentElementInstanceHandle.js"))};
@@ -86,6 +88,14 @@ export function installPointerListenerQuery() {
       // capture for the remaining native pointer categories.
       let query, capture;
       switch (offset) {
+        case 0: query = hasPointerEnterListenerForGodot; capture = false; break;
+        case 2: query = hasPointerLeaveListenerForGodot; capture = false; break;
+        case 23: query = hasPointerEnterListenerForGodot; capture = true; break;
+        case 24: query = hasPointerLeaveListenerForGodot; capture = true; break;
+        case 26: query = hasPointerOverListenerForGodot; capture = false; break;
+        case 27: query = hasPointerOutListenerForGodot; capture = false; break;
+        case 28: query = hasPointerOverListenerForGodot; capture = true; break;
+        case 29: query = hasPointerOutListenerForGodot; capture = true; break;
         case 1: query = hasPointerMoveListenerForGodot; capture = false; break;
         case 25: query = hasPointerMoveListenerForGodot; capture = true; break;
         case 34: query = hasPointerDownListenerForGodot; capture = false; break;
@@ -99,8 +109,11 @@ export function installPointerListenerQuery() {
       const element = getPublicInstanceFromReactNativeDocumentElementInstanceHandle(candidate);
       // These instances were created and linked by RN when the root started.
       // Only read their original slots/Maps; generic renderer ref lookup is lazy.
+      // pointerenter/pointerleave do not bubble: at the root only the Document's
+      // capture listeners take part, never its bubble listeners.
+      const bubbling = offset !== 0 && offset !== 2;
       return query(element, capture) ||
-        (element != null && query(getOwnerDocument(element), capture));
+        (element != null && (bubbling || capture) && query(getOwnerDocument(element), capture));
     });
 }`};
         if (!filename.startsWith(rnRoot + path.sep)) return;

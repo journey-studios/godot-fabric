@@ -11,10 +11,10 @@ globalThis.PointerResolverFaultProbe = {
   configure: base.configure,
   arm: base.arm,
   publicControl: base.publicControl,
-  armResolverFault(name) {
+  armResolverFault(name, passThrough = 0) {
     const capability = base.capability(name);
     if (!capability.original || !capability.connected) throw Error("Resolver target must be a real original connected View ref");
-    return resolverFaultControl.arm(capability.targetTag);
+    return resolverFaultControl.arm(capability.targetTag, passThrough);
   },
   snapshot() { return {...base.snapshot(), resolver: resolverFaultControl.snapshot()}; },
 };

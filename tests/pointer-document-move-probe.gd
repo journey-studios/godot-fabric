@@ -316,6 +316,7 @@ func run_probe() -> void:
     surfaces[name].queue_free()
   application.queue_free()
   await settle()
+  check_hover_lookups()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var report := {"scenario": "native-pointer-document-move-four-flags", "reactNative": "0.87.1", "godot": Engine.get_version_info().string,
     "displayServer": DisplayServer.get_name(), "flagMode": flag_mode, "interestMode": interest_mode, "captureRequested": capture,

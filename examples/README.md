@@ -164,6 +164,16 @@ matrix is pending.
 | --- | --- |
 | [![Native counters before Move](../docs/evidence/pointer-document-move/initial.png)](pointer-document-move/README.md) | [![Document callbacks update only A](../docs/evidence/pointer-document-move/updated.png)](pointer-document-move/README.md) |
 
+The [hover probe](pointer-hover/README.md) registers original `pointerover`,
+`pointerout`, `pointerenter` and `pointerleave` listeners on a View or its parent,
+bubble or capture, and drives a button-less mouse in and out, then a touch:
+`npm run test:pointers:hover`, outside the launcher catalog. Callbacks follow RN's
+order, phases and Discrete priority, enter/leave keep their non-bubbling rule, a
+touch enters its path in the Down and leaves it after the Up, and the full lookup
+sequence is checked. Its [receipt](../docs/evidence/pointer-hover/README.md)
+records 158/158 headless checks and 32 visible old-host failures with the same SDK
+bundle.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

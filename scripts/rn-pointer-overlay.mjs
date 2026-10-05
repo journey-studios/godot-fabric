@@ -70,6 +70,15 @@ static bool hasPointerInterestForGodot(
   return false;
 }
 
+// Enter/leave filtering is per node: the node's own listener or a capture
+// listener on an entering/leaving ancestor, exactly as RN applies ViewProps.
+static bool hasNodeInterestForGodot(
+    const ShadowNode &node,
+    const PointerEventsProcessor::GodotListenerInterest &query,
+    ViewEvents::Offset offset) {
+  return query && query(node, static_cast<std::size_t>(offset));
+}
+
 void PointerEventsProcessor::removePointerForGodot(PointerIdentifier pointerId) {
   if (auto found = godotPointerLifetimes_.find(pointerId); found != godotPointerLifetimes_.end()) {
     *found->second = false;
@@ -177,6 +186,62 @@ std::array<std::size_t, 4> PointerEventsProcessor::pointerStateCountsForGodot() 
         (type == "topPointerMove" && hasPointerInterestForGodot(
             *targetNode, uiManager, godotListenerInterest_,
             {ViewEvents::Offset::PointerMove, ViewEvents::Offset::PointerMoveCapture})))) {`);
+  // Hover: out/over consult the whole path like the other categories; enter
+  // and leave keep RN's per-node rule, adding the original Maps beside ViewProps.
+  source = replaceOnce(source,
+    `  if (!prevHoverTracker->hasSameTarget(*curHoverTracker) &&
+      prevHoverTracker->areAnyTargetsListeningToEvents(
+          {ViewEvents::Offset::PointerOut,
+           ViewEvents::Offset::PointerOutCapture},
+          uiManager)) {
+    auto prevTarget = prevHoverTracker->getTarget(uiManager);
+    if (prevTarget != nullptr) {`,
+    `  if (!prevHoverTracker->hasSameTarget(*curHoverTracker)) {
+    auto prevTarget = prevHoverTracker->getTarget(uiManager);
+    if (prevTarget != nullptr && (prevHoverTracker->areAnyTargetsListeningToEvents(
+            {ViewEvents::Offset::PointerOut, ViewEvents::Offset::PointerOutCapture}, uiManager) ||
+        hasPointerInterestForGodot(*prevTarget, uiManager, godotListenerInterest_,
+            {ViewEvents::Offset::PointerOut, ViewEvents::Offset::PointerOutCapture}))) {`);
+  source = replaceOnce(source,
+    `    bool hasCapturingListener = isViewListeningToEvents(
+        node, {ViewEvents::Offset::PointerLeaveCapture});
+    bool shouldEmitEvent = hasParentLeaveCaptureListener ||
+        hasCapturingListener ||
+        isViewListeningToEvents(node, {ViewEvents::Offset::PointerLeave});`,
+    `    bool hasCapturingListener = isViewListeningToEvents(
+        node, {ViewEvents::Offset::PointerLeaveCapture}) ||
+        hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerLeaveCapture);
+    bool shouldEmitEvent = hasParentLeaveCaptureListener ||
+        hasCapturingListener ||
+        isViewListeningToEvents(node, {ViewEvents::Offset::PointerLeave}) ||
+        hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerLeave);`);
+  source = replaceOnce(source,
+    `  if (!prevHoverTracker->hasSameTarget(*curHoverTracker) &&
+      curHoverTracker->areAnyTargetsListeningToEvents(
+          {ViewEvents::Offset::PointerOver,
+           ViewEvents::Offset::PointerOverCapture},
+          uiManager)) {
+    auto curTarget = curHoverTracker->getTarget(uiManager);
+    if (curTarget != nullptr) {`,
+    `  if (!prevHoverTracker->hasSameTarget(*curHoverTracker)) {
+    auto curTarget = curHoverTracker->getTarget(uiManager);
+    if (curTarget != nullptr && (curHoverTracker->areAnyTargetsListeningToEvents(
+            {ViewEvents::Offset::PointerOver, ViewEvents::Offset::PointerOverCapture}, uiManager) ||
+        hasPointerInterestForGodot(*curTarget, uiManager, godotListenerInterest_,
+            {ViewEvents::Offset::PointerOver, ViewEvents::Offset::PointerOverCapture}))) {`);
+  source = replaceOnce(source,
+    `    bool hasCapturingListener = isViewListeningToEvents(
+        node, {ViewEvents::Offset::PointerEnterCapture});
+    bool shouldEmitEvent = hasParentEnterCaptureListener ||
+        hasCapturingListener ||
+        isViewListeningToEvents(node, {ViewEvents::Offset::PointerEnter});`,
+    `    bool hasCapturingListener = isViewListeningToEvents(
+        node, {ViewEvents::Offset::PointerEnterCapture}) ||
+        hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerEnterCapture);
+    bool shouldEmitEvent = hasParentEnterCaptureListener ||
+        hasCapturingListener ||
+        isViewListeningToEvents(node, {ViewEvents::Offset::PointerEnter}) ||
+        hasNodeInterestForGodot(node, godotListenerInterest_, ViewEvents::Offset::PointerEnter);`);
   source = replaceOnce(source,
     '    unregisterActivePointer(pointerEvent);\n  }\n}',
     `    unregisterActivePointer(pointerEvent);
