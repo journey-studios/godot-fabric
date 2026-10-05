@@ -8,6 +8,10 @@ export declare const AppRegistry: Pick<typeof RN.AppRegistry, "getAppKeys"> & {
 export declare const RootTagContext: typeof RN.RootTagContext;
 export declare const NativeModules: typeof RN.NativeModules;
 export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;
+/** RN's original AppState, fed by the Godot application lifecycle. */
+export declare const AppState: typeof RN.AppState;
+export type AppStateStatus = RN.AppStateStatus;
+export type AppStateEvent = RN.AppStateEvent;
 export declare const TurboModuleRegistry: typeof RN.TurboModuleRegistry;
 export type TurboModule = RN.TurboModule;
 export type EmitterSubscription = RN.EmitterSubscription;

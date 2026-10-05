@@ -195,6 +195,21 @@ the pointer enters or leaves the surface. Its
 [receipt](../docs/evidence/pointer-document-hover/README.md) records 1,530
 headless checks and a retained negative control.
 
+The [click matrix](pointer-click/README.md) presses and releases mouse buttons
+and touches over a group, a sibling, a top-level view, a `Pressable` and a
+`ScrollView` in eight lanes: `npm run test:pointers:click`, outside the launcher
+catalog. A primary release clicks the deepest view both hit paths share, and a
+scroll drag cancels its contact. Its
+[receipt](../docs/evidence/pointer-click/README.md) records 728 headless checks,
+the preceding-host control and two retained negative controls.
+
+The [AppState probe](app-state/README.md) delivers Godot's focus, pause and
+memory-warning notifications to an application whose two roots subscribe to the
+public `AppState`: `npm run test:app-state`, outside the launcher catalog. Focus
+loss is `inactive`, a pause is `background`, and stop sends no event. Its
+[receipt](../docs/evidence/app-state/README.md) records 75 headless checks, the
+preceding-host control and a retained negative control.
+
 The [Switch probe](switch/README.md) mounts RN's original `Switch.js` in two roots
 and toggles it with actual mouse clicks and touch taps: `npm run test:switch`,
 outside the launcher catalog. A value prop that does not follow is restored by

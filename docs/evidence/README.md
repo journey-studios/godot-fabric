@@ -212,7 +212,26 @@ the installed current query delivers. Over/out reach them at phases 1 and 3;
 enter/leave reach only capture listeners at phase 1, for the nodes entering or
 leaving with the root; bubble enter/leave listeners on the root never run. A
 retained control that ignores the owner Document for hover offsets fails 34/22
-probe checks, and the independent oracle rejects it. Hosted CI pending.
+probe checks, and the independent oracle rejects it. Hosted run 37364101069 passed
+the same 1,530 checks with identical IDs and bundles
+([receipt](pointer-document-hover/hosted-ci.json)).
+
+The [click record](pointer-click/README.md) runs click synthesis and the scroll
+takeover in eight lanes: 728 headless checks. A primary release clicks the
+deepest mounted view on both hit paths, never a shared root, and a ScrollView
+drag sends its contact one `pointercancel` and then only touches. The preceding
+host fails exactly 31 normative checks; a host clicking the release target fails
+10, an SDK without `topClick` throws in the legacy lane, and the independent
+oracle rejects both controls. Hosted CI pending.
+
+The [AppState record](app-state/README.md) delivers Godot's application focus,
+pause and memory-warning notifications through the running main loop to an actual
+`FabricApplication` whose two roots read RN's original `AppState`: 75 headless
+checks. Focus loss is `inactive`, a pause is `background`, only new states are
+sent, focus changes also send `focus`/`blur`, a paused game tree still delivers
+events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
+checks, and a host whose focus outranks the pause fails 5, which the independent
+oracle rejects. Hosted CI pending.
 
 The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's
 shared iOS/macOS Switch descriptor and a custom-drawn Godot switch: 108/108

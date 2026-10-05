@@ -88,6 +88,12 @@ test("an exact public RN PlatformBaseViewConfig import selects the Godot base co
   assert.equal(base.validAttributes.pointerEvents, true);
   assert.equal(base.validAttributes.style.zIndex, true);
   assert.equal(base.validAttributes.kind, undefined);
+  // The host synthesizes click like RN's platforms; without this registration
+  // the legacy plugin rejects every topClick as an unsupported event type.
+  const click = base.bubblingEventTypes.topClick.phasedRegistrationNames;
+  assert.deepEqual([click.bubbled, click.captured, click.skipBubbling], ["onClick", "onClickCapture", undefined]);
+  assert.equal(base.validAttributes.onClick, true);
+  assert.equal(base.validAttributes.onClickCapture, true);
   assert.ok(Object.keys(result.metafile.inputs).some(input => input.endsWith("src/base-view-config.js")));
 });
 

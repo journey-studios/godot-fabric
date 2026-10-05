@@ -235,10 +235,11 @@ export function Pressable({
     ],
   );
   const handlers = usePressability(config);
-  // Hover/click activation needs a desktop/accessibility adapter. Never pretend
-  // those paths work by registering callbacks that native input cannot emit.
-  const { onMouseEnter, onMouseLeave, onClick, ...responderHandlers } =
-    handlers;
+  // Mouse hover needs a desktop adapter: never register callbacks that native
+  // input cannot emit. Upstream's onClick stays, as on RN's Pressable: it
+  // ignores the host's pointer clicks (they carry pointerType), so press still
+  // comes only from the responder, and it replaces a caller's own onClick.
+  const { onMouseEnter, onMouseLeave, ...responderHandlers } = handlers;
   return (
     <View
       {...props}

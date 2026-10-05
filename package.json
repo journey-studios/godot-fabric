@@ -64,6 +64,8 @@
     "test:pointers:hover": "node --test tests/pointer-hover-native.test.mjs",
     "test:pointers:root-path": "node --test tests/pointer-root-path-native.test.mjs",
     "test:pointers:documents:hover": "node --test tests/pointer-document-hover-native.test.mjs",
+    "test:pointers:click": "node --test tests/pointer-click-native.test.mjs",
+    "test:app-state": "node --test tests/app-state-native.test.mjs",
     "test:switch": "node --test tests/switch-native.test.mjs"
   },
   "dependencies": {

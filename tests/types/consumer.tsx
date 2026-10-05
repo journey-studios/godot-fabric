@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AppRegistry, RootTagContext, Button, Switch, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, RootTagContext, Button, Switch, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
@@ -78,6 +78,18 @@ const nativeEmitter = new NativeEventEmitter(NativeModules.GodotFabricNativeFixt
 const nativeSubscription = nativeEmitter.addListener("GodotFabricFixtureValue", () => {});
 nativeSubscription.remove();
 void nativeSum;
+
+// AppState is the original pinned module and keeps its event contract.
+const appState: AppStateStatus | null | undefined = AppState.currentState === "active" ? "active" : null;
+const appStateSubscription = AppState.addEventListener("change", (state: AppStateStatus) => { void state; });
+const memorySubscription = AppState.addEventListener("memoryWarning", () => {});
+const blurEvent: AppStateEvent = "blur";
+appStateSubscription.remove(); memorySubscription.remove();
+void appState; void blurEvent;
+// @ts-expect-error change handlers receive the original AppStateStatus
+AppState.addEventListener("change", (state: number) => { void state; });
+// @ts-expect-error unknown AppState events are rejected
+AppState.addEventListener("suspend", () => {});
 
 // DOM traversal comes from the original pinned public instance types.
 function readTree(element: ViewInstance) {

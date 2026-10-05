@@ -268,7 +268,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
 
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
       const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
-      std::shared_ptr<fabric_godot::AdapterRegistry> selected)
+      const std::shared_ptr<fabric_godot::AppLifecycle> &lifecycle, std::shared_ptr<fabric_godot::AdapterRegistry> selected)
       : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)), adapters(std::move(selected)) {
     if (adapters && !adapters->sealed()) throw std::runtime_error("E_ADAPTER_UNSEALED: application requires a sealed selection");
     // One application owns Hermes, Fabric, scheduling and timers. All native
@@ -353,6 +353,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add_device_info([this] {
       return folly::dynamic::object("Dimensions", device_dimensions());
     });
+    native_modules->add_app_state(lifecycle);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
           [this](rn::SurfaceId id, rn::dom::DOMRect rect, bool transforms) {
@@ -491,6 +492,19 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           auto root = roots.find(id);
           auto *host = root == roots.end() || root->second->stopping ? nullptr : root->second->host();
           return host ? hit_test(host, point) : 0;
+        },
+        [this, id](int tag) {
+          // The mounted (native) hierarchy, like RN's hit path: flattened views
+          // have no Control and the root host never receives an event.
+          std::vector<int> path;
+          auto root = roots.find(id);
+          auto *host = root == roots.end() ? nullptr : root->second->host();
+          auto found = views.find(tag);
+          if (!host || found == views.end()) return path;
+          for (Control *control = found->second.control; control && control != host;
+              control = Object::cast_to<Control>(control->get_parent()))
+            if (const int mounted = tag_for(control)) path.push_back(mounted);
+          return path;
         },
         [this, id](Vector2 point) {
           auto root = roots.find(id);
@@ -1341,18 +1355,26 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (inactive() || root == roots.end() || root->second->stopping) return;
     auto *host = root->second->host();
     if (!host || !host->get_window() || !host->get_viewport()) return;
+    auto found = views.find(tag);
+    const bool mounted = tag && found != views.end() && !retiring.contains(tag) && found->second.shadow.eventEmitter;
+    // A click names the view both hit paths share. RN routes it through no
+    // capture or hover state, so it never resolves a missing target elsewhere.
+    if (phase == "click" && !mounted) return;
     ++root->second->events;
     const auto timestamp = event.timeStamp;
+    // A click ends its contact like Up: it never borrows geometry from another
+    // target and never raises a geometry error for an embedding that changed.
     const auto payload = std::make_shared<fabric_godot::GodotPointerEvent>(std::move(event), point, id,
         host->get_window()->get_instance_id(), host->get_viewport()->get_instance_id(), std::move(history),
-        phase == "cancel" || phase == "up" || phase == "leave", root_target && !tag);
+        phase == "cancel" || phase == "up" || phase == "leave" || phase == "click", root_target && !tag);
     const std::string type = phase == "down" ? "pointerDown" : phase == "up" ? "pointerUp" :
-        phase == "cancel" ? "pointerCancel" : phase == "leave" ? "pointerLeave" : "pointerMove";
+        phase == "cancel" ? "pointerCancel" : phase == "leave" ? "pointerLeave" : phase == "click" ? "click" :
+        "pointerMove";
+    // TouchEventEmitter::onClick dispatches the synthetic click as Discrete.
     const auto category = phase == "down" ? rn::RawEvent::Category::ContinuousStart :
         phase == "up" || phase == "cancel" || phase == "leave" ? rn::RawEvent::Category::ContinuousEnd :
-        rn::RawEvent::Category::Unspecified;
-    auto found = views.find(tag);
-    if (!tag || found == views.end() || retiring.contains(tag) || !found->second.shadow.eventEmitter) {
+        phase == "click" ? rn::RawEvent::Category::Discrete : rn::RawEvent::Category::Unspecified;
+    if (!mounted) {
       // A physical hit can be absent while the contact is captured. A typed
       // null-target event lets RN resolve capture and hover using its registry;
       // the binding resolves a root_target sample to the surface's root node.
@@ -1704,7 +1726,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return;
     }
     if ((name == "scrollDragStart" || name == "scrollDragTo") && !roots.at(found->second.surface_id)->pointer->owns(node->getTag())) return;
-    if (found->second.scroll && found->second.scroll->command(name, args)) return;
+    if (auto *scroll = found->second.scroll.get()) {
+      const int tag = node->getTag(), surface_id = found->second.surface_id;
+      const bool idle = !scroll->dragging();
+      if (scroll->command(name, args)) {
+        // The drag now owns the contacts begun inside it, as RN's native
+        // scroll views do when they start dragging.
+        if (idle && scroll->dragging() && !roots.at(surface_id)->stopping) roots.at(surface_id)->pointer->takeover(tag);
+        return;
+      }
+    }
     if (name == "setTextAndSelection" && found->second.input) {
       if (!args.isArray() || args.size() != 4 || !args[0].isNumber() ||
           !(args[1].isNull() || args[1].isString()) || !args[2].isNumber() || !args[3].isNumber()) {
@@ -1869,8 +1900,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
 namespace fabric_godot {
 ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
     const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services,
-    std::shared_ptr<AdapterRegistry> adapters)
-    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services), std::move(adapters))) {
+    std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<AdapterRegistry> adapters)
+    : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services),
+          lifecycle, std::move(adapters))) {
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }
