@@ -1853,7 +1853,7 @@
           "evidence": [
             {
               "label": "AppState: 75 checks, host anterior com 62 falhas normativas e sabotagem rejeitada",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/708767945f1330211a69522144d6537d8d8b814c/docs/evidence/app-state/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1024b45ff8fa58b7436b3cf30352d9ef3e2e65f1/docs/evidence/app-state/README.md"
             }
           ]
         },
@@ -3301,7 +3301,7 @@
         "GF-21"
       ],
       "message": "AppState do ciclo de vida do Godot: 75 headless. O AppState original do RN, lido pelo import público, recebe FOCUS_IN/OUT, PAUSED/RESUMED e o aviso de memória que o SceneTree propaga ao FabricApplication; duas roots compartilham um estado. Sem foco é inactive, pausado é background, só estados novos são enviados, focus/blur seguem cada mudança de foco, a pausa do jogo não conta e o stop não envia nada. Host anterior falha exatamente 62; host com foco acima da pausa falha 5 e o oráculo rejeita. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/708767945f1330211a69522144d6537d8d8b814c/docs/evidence/app-state/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1024b45ff8fa58b7436b3cf30352d9ef3e2e65f1/docs/evidence/app-state/README.md"
     },
     {
       "id": "pointer-document-hover-hosted-ci-and-pages-20261005",
