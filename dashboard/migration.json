@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Click na soltura e takeover do ScrollView validados nas oito lanes; próximos: CI desta fatia, depois notificações de captura"
   },
-  "updatedAt": "2026-10-05T20:57:51.838212+00:00",
+  "updatedAt": "2026-10-05T22:10:57.425207+00:00",
   "source": {
     "commit": "b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
     "url": "https://github.com/journey-studios/godot-fabric/commit/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
@@ -1833,7 +1833,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "System environment and app lifecycle",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values",
       "dependencies": [
         "GF-05",
@@ -1843,14 +1843,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
           "done": false,
-          "evidence": []
+          "evidence": [
+            {
+              "label": "AppState: 75 checks, host anterior com 62 falhas normativas e sabotagem rejeitada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1024b45ff8fa58b7436b3cf30352d9ef3e2e65f1/docs/evidence/app-state/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3289,6 +3294,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "app-state-local-verified-20261005",
+      "at": "2026-10-05T22:10:57.425207+00:00",
+      "taskIds": [
+        "GF-21"
+      ],
+      "message": "AppState do ciclo de vida do Godot: 75 headless. O AppState original do RN, lido pelo import público, recebe FOCUS_IN/OUT, PAUSED/RESUMED e o aviso de memória que o SceneTree propaga ao FabricApplication; duas roots compartilham um estado. Sem foco é inactive, pausado é background, só estados novos são enviados, focus/blur seguem cada mudança de foco, a pausa do jogo não conta e o stop não envia nada. Host anterior falha exatamente 62; host com foco acima da pausa falha 5 e o oráculo rejeita. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1024b45ff8fa58b7436b3cf30352d9ef3e2e65f1/docs/evidence/app-state/README.md"
+    },
     {
       "id": "pointer-document-hover-hosted-ci-and-pages-20261005",
       "at": "2026-10-05T20:57:51.838212+00:00",

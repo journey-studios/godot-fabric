@@ -5,7 +5,7 @@
 #include <vector>
 
 class FabricSurface;
-namespace fabric_godot { class ApplicationRuntime; class AdapterLoader; }
+namespace fabric_godot { class ApplicationRuntime; class AdapterLoader; class AppLifecycle; }
 
 // Experimental explicit owner. Final resource/editor authoring is still GF-28.
 class FabricApplication : public godot::Node {
@@ -15,6 +15,7 @@ class FabricApplication : public godot::Node {
   ~FabricApplication() override;
   void _process(double delta) override;
   void _exit_tree() override;
+  void _notification(int what);
   godot::String evaluate(const godot::String &source);
   godot::String snapshot();
   void stop();
@@ -44,6 +45,8 @@ class FabricApplication : public godot::Node {
   std::unique_ptr<fabric_godot::ApplicationRuntime> runtime;
   bool initialization_attempted = false;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
+  // One lifecycle per application: every root's AppState reads the same state.
+  std::shared_ptr<fabric_godot::AppLifecycle> app_state;
   bool bundle_loaded = false;
   bool terminal_stopped = false;
   std::vector<std::string> pre_runtime_errors;
