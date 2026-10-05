@@ -1227,8 +1227,9 @@ show/SHA-256 (execution base de89fb2/dirty retained). Hosted Contracts run
 [audited artifact](docs/evidence/pointer-document-up-mutation/hosted-ci.json)
 repeats the 4,401 headless checks with identical IDs, bundles and mutation
 stages, and all 71 tracked inputs match 4342db0 in the checkout tree. The
-viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
-weight or denominator closes.
+viewport/pixel proof and negative control stay local. [Pages 37325323565](docs/evidence/pointer-document-up-mutation/publication.json)
+published this record (data d67e981, main renderer); full public/local JSON matched.
+No whole GF, checkpoint, weight or denominator closes.
 
 
 ### Document Up reentrant dispatch (2026-10-05)
@@ -1264,8 +1265,9 @@ git show/SHA-256 (execution base dbd6324/dirty retained). Hosted Contracts run
 [audited artifact](docs/evidence/pointer-document-up-reentry/hosted-ci.json)
 repeats the 5,097 headless checks with identical IDs, bundles and reentry
 stages, and all 71 tracked inputs match f0c00ce in the checkout tree. The
-viewport/pixel proof and negative control stay local. No whole GF, checkpoint,
-weight or denominator closes.
+viewport/pixel proof and negative control stay local. [Pages 37325323565](docs/evidence/pointer-document-up-reentry/publication.json)
+published this record (data d67e981, main renderer); full public/local JSON matched.
+No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

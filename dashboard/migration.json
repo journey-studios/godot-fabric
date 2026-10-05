@@ -8,11 +8,11 @@
     "focusSequence": "3",
     "focusTitle": "Document Up mutação e reentrância com CI verificada; próximo: faults da consulta do Up"
   },
-  "updatedAt": "2026-10-05T14:30:37.106409+00:00",
+  "updatedAt": "2026-10-05T14:32:17.004784+00:00",
   "source": {
     "commit": "f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24",
     "url": "https://github.com/journey-studios/godot-fabric/commit/f0c00cefe67dd78c5be6b6e3fe5b82b3abcc1c24",
-    "scope": "Document Up dispatch reentrante: 5097 checks headless nas oito lanes (4401 anteriores preservados em ordem) e 946 viewport/9 frames/118 pixels. Callback capture ou bubble do Up nativo emite pointerup novo no próprio Document: os três listeners rodam em fase 2, untrusted, num Event distinto e ainda na prioridade Discrete; ao retornar, o Up nativo segue trusted com fase, currentTarget, target, caminho de 5 alvos e globalThis.event intactos, e os listeners restantes rodam trusted num commit. Re-despachar o próprio Up lança 'already being dispatched' sem alterá-lo. Dispatch aninhado no Document de B não consulta o nativo nem muda estado/commit/contato de B. Controle negativo retido (vazamento de globalThis.event) falha 3 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre dbd6324/dirty; 71 inputs executados conferidos por git show/SHA-256 contra f0c00ce; CI Contracts 37321794370 em 4a907dd repetiu 5097 checks com IDs/bundles/estágios reentry iguais aos locais. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "scope": "Document Up dispatch reentrante: 5097 checks headless nas oito lanes (4401 anteriores preservados em ordem) e 946 viewport/9 frames/118 pixels. Callback capture ou bubble do Up nativo emite pointerup novo no próprio Document: os três listeners rodam em fase 2, untrusted, num Event distinto e ainda na prioridade Discrete; ao retornar, o Up nativo segue trusted com fase, currentTarget, target, caminho de 5 alvos e globalThis.event intactos, e os listeners restantes rodam trusted num commit. Re-despachar o próprio Up lança 'already being dispatched' sem alterá-lo. Dispatch aninhado no Document de B não consulta o nativo nem muda estado/commit/contato de B. Controle negativo retido (vazamento de globalThis.event) falha 3 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre dbd6324/dirty; 71 inputs executados conferidos por git show/SHA-256 contra f0c00ce; CI Contracts 37321794370 em 4a907dd repetiu 5097 checks com IDs/bundles/estágios reentry iguais aos locais. Nenhum GF/checkpoint/peso/denominador fechado. Pages 37325323565/main renderer/data d67e981 confirmou build/deploy e JSON público/local completo dos recibos de CI de mutação e reentrância.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -2993,6 +2993,18 @@
     }
   ],
   "activity": [
+    {
+      "id": "pointer-document-up-mutation-reentry-public-pages-verified-37325323565",
+      "at": "2026-10-05T14:32:17.004784+00:00",
+      "taskIds": [
+        "GF-06",
+        "GF-07",
+        "GF-08",
+        "GF-13"
+      ],
+      "message": "Pages 37325323565 concluiu build/deploy com renderer do main e dados d67e981. JSON público completo e API local iguais ao commit; publicados os recibos das CIs de mutação 37319530371 (4401 checks) e reentrância 37321794370 (5097 checks). Nenhum GF/checkpoint/denominador fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37325323565"
+    },
     {
       "id": "pointer-document-up-reentry-hosted-ci-37321794370",
       "at": "2026-10-05T14:30:37.106409+00:00",

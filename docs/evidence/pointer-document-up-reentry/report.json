@@ -4011,5 +4011,15 @@
     "uniqueTrackedInputCount": 71,
     "allExecutedCodeAndConfigurationInputsMatchImplementationCommit": true,
     "executionBaseAndDirtyStatePreserved": true
+  },
+  "dashboardPublication": {
+    "status": "verified-public-branch-data",
+    "runUrl": "https://github.com/journey-studios/godot-fabric/actions/runs/37325323565",
+    "dataCommit": "d67e9817d4774e7e0a501a00f02baf64059c2449",
+    "mainRendererCommit": "33773437f736f9d9beeffbe9db69ad3bab1524d1",
+    "completePublicJSONMatchesCommittedData": true,
+    "localLiveAPIEqualsCommittedData": true,
+    "buildAndDeployPassed": true,
+    "receipt": "docs/evidence/pointer-document-up-reentry/publication.json"
   }
 }
