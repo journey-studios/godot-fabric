@@ -12,7 +12,7 @@ públicos continuam off. O [recibo](report.json) fixa fontes, hashes e resultado
 | Host corrigido, headless | 219/219 | 135 checks da aplicação saudável e 84 da aplicação de faults de Move |
 | Host corrigido, viewport macOS | 243/243 | Os mesmos 219 checks, 20 pixels reais, dois contadores e dois saves/dimensões |
 
-As três lanes executam o mesmo bundle (`c9c5e663…`), com as mesmas 15 fontes
+As três lanes executam o mesmo bundle (`2a76a0e3…`), com as mesmas 15 fontes
 produtoras de teste e SDK e os mesmos 19 pins originais do RN. Os outros dois
 produtores, `native/application_runtime.cpp` e `scripts/rn-pointer-overlay.mjs`,
 são compilados no host, então o pin deles no bundle não diz nada sobre o host
