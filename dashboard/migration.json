@@ -10,9 +10,9 @@
   },
   "updatedAt": "2026-10-05T15:18:52.939682+00:00",
   "source": {
-    "commit": "f9a3b25601e746c527fd9172020d9240b25ee9be",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/f9a3b25601e746c527fd9172020d9240b25ee9be",
-    "scope": "View Up faults no resolver da ref: 296 checks headless (240 anteriores preservados em ordem) e 324 viewport/24 pixels. Getter único em canonical.publicInstance da View real, armado depois do Down, na mesma segunda aplicação dos faults de componente: a primeira leitura nativa (lookup 36) falha antes de qualquer entrada no SDK e só esse lookup é rejeitado com 1 E_POINTER_LISTENER_QUERY; o lookup 37 lê o descriptor restaurado e entra no SDK — com capture e bubble na View o Up entrega os dois num commit; só com bubble a consulta passa aos ancestrais e ao root, todos false, sem Up, com TouchEnd e limpeza mantidos. Controles de host anterior refeitos com os bundles novos (View Up 8, resolver 3). Controle negativo retido (getter que não lança) falha 9 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Query faults 186, resolver 65, Document Up 6451, Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "6b3554c4218a1605d94acd3cd4a81c0c20c9a984",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/6b3554c4218a1605d94acd3cd4a81c0c20c9a984",
+    "scope": "View Up faults no resolver da ref: 296 checks headless (240 anteriores preservados em ordem) e 324 viewport/24 pixels. Getter único em canonical.publicInstance da View real, armado depois do Down, na mesma segunda aplicação dos faults de componente: a primeira leitura nativa (lookup 36) falha antes de qualquer entrada no SDK e só esse lookup é rejeitado com 1 E_POINTER_LISTENER_QUERY; o lookup 37 lê o descriptor restaurado e entra no SDK — com capture e bubble na View o Up entrega os dois num commit; só com bubble a consulta passa aos ancestrais e ao root, todos false, sem Up, com TouchEnd e limpeza mantidos. Controles de host anterior refeitos com os bundles novos (View Up 8, resolver 3). Controle negativo retido (getter que não lança) falha 9 checks e o oráculo independente. Só testes mudaram; native/SDK inalterados. Query faults 186, resolver 65, Document Up 6451, Down 2723, contracts 255 Node/13 Python, exemplos e static passaram. Execução sobre 01d3add/dirty; 82 inputs executados conferidos por git show/SHA-256 contra 6b3554c; CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -341,7 +341,7 @@
             },
             {
               "label": "View Up faults no resolver da ref: 296 checks e 324 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-resolver-faults/docs/evidence/pointer-up-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6b3554c4218a1605d94acd3cd4a81c0c20c9a984/docs/evidence/pointer-up-resolver-faults/README.md"
             }
           ]
         },
@@ -480,7 +480,7 @@
             },
             {
               "label": "View Up faults no resolver da ref: 296 checks e 324 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-resolver-faults/docs/evidence/pointer-up-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6b3554c4218a1605d94acd3cd4a81c0c20c9a984/docs/evidence/pointer-up-resolver-faults/README.md"
             }
           ]
         },
@@ -643,7 +643,7 @@
             },
             {
               "label": "View Up faults no resolver da ref: 296 checks e 324 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-resolver-faults/docs/evidence/pointer-up-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6b3554c4218a1605d94acd3cd4a81c0c20c9a984/docs/evidence/pointer-up-resolver-faults/README.md"
             }
           ]
         },
@@ -858,7 +858,7 @@
             },
             {
               "label": "View Up faults no resolver da ref: 296 checks e 324 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-resolver-faults/docs/evidence/pointer-up-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6b3554c4218a1605d94acd3cd4a81c0c20c9a984/docs/evidence/pointer-up-resolver-faults/README.md"
             }
           ]
         },
@@ -1272,7 +1272,7 @@
             },
             {
               "label": "View Up faults no resolver da ref: 296 checks e 324 viewport",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/test/view-up-resolver-faults/docs/evidence/pointer-up-resolver-faults/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/6b3554c4218a1605d94acd3cd4a81c0c20c9a984/docs/evidence/pointer-up-resolver-faults/README.md"
             }
           ]
         },

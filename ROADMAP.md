@@ -1374,8 +1374,10 @@ their 8 and 3 normative failures with the new bundles. Query faults 186, resolve
 faults 65, Document Up 6,451, Down 2,723, contracts 255 Node/13 Python, 22 examples
 and static analysis pass; native/SDK bytes are unchanged. stateNode/canonical and
 root-handle resolver faults, repeated faults and faults during retirement/stop
-remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+remain open. All 82 executed code/configuration inputs, including the resolver
+bootstrap, match implementation 6b3554c via git show/SHA-256 (execution base
+01d3add/dirty retained). Hosted CI for this slice is pending. No whole GF,
+checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

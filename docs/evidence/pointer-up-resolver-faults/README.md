@@ -86,3 +86,10 @@ categorias de evento, mobile/exports, hardware e performance continuam abertos.
 
 A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
 ou denominador foi fechado.
+
+As 82 fontes de código/configuração executadas, incluindo o bootstrap do
+resolver, correspondem à implementação `6b3554c4218a1605d94acd3cd4a81c0c20c9a984` por
+`git show`/SHA-256. O recibo preserva a base 01d3add e a árvore dirty da execução,
+e confere que os commits feitos durante ela (o recibo de CI dos faults de root e o
+merge da `main`) não tocam nenhuma entrada executada; este pin pós-commit não é
+uma nova corrida.
