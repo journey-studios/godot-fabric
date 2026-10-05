@@ -1,6 +1,5 @@
 #pragma once
 #include <folly/dynamic.h>
-#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <functional>
@@ -64,7 +63,8 @@ class SystemAppearance {
   void remove_listeners(double count) {
     if (!std::isfinite(count) || count < 0 || std::floor(count) != count)
       throw std::invalid_argument("Appearance.removeListeners expects a nonnegative integer");
-    listeners_ -= std::min(static_cast<uint64_t>(count), listeners_);
+    // Compare before converting: a double beyond uint64_t has no defined cast.
+    listeners_ = count >= static_cast<double>(listeners_) ? 0 : listeners_ - static_cast<uint64_t>(count);
   }
   folly::dynamic snapshot() const {
     return folly::dynamic::object("scheme", scheme())("override", override_)
