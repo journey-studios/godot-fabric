@@ -1600,7 +1600,7 @@
           "evidence": [
             {
               "label": "Listas virtualizadas: 44 checks, host anterior 3, SDK anterior 11 e sabotagem rejeitada",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/3e9ec4974b473f1c3d0c8847031c7883a9612be3/docs/evidence/virtualized-list/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/194ce1e54e64a365407f25ae3f609b0196217584/docs/evidence/virtualized-list/README.md"
             }
           ]
         },
@@ -3330,7 +3330,7 @@
         "GF-15"
       ],
       "message": "Listas virtualizadas no ScrollView do SDK: 44 headless. FlatList, SectionList, VirtualizedList e VirtualizedSectionList originais do RN vêm do import público e janelam sob roda e arrasto reais do Godot em duas roots: janelas e visíveis batem com computeWindowedRenderLimits e o ViewabilityHelper, células fora da janela desmontam e voltam, onEndReached dispara uma vez por comprimento, scrollToIndex/Offset/End/Location chegam aos offsets do RN e as listas medidas chamam onScrollToIndexFailed com a média medida. O host aplica scrollEventThrottle pela regra do Android e arrasta nas coordenadas do ScrollContainer, então a lista invertida segue o dedo. Host anterior falha exatamente 3; SDK anterior 11; ScrollView sem onLayout 3 e o oráculo rejeita. Primeira fatia do GF-15: só o checkpoint slice fecha. CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/3e9ec4974b473f1c3d0c8847031c7883a9612be3/docs/evidence/virtualized-list/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/194ce1e54e64a365407f25ae3f609b0196217584/docs/evidence/virtualized-list/README.md"
     },
     {
       "id": "pan-responder-local-verified-20261005",
