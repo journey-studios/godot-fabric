@@ -194,8 +194,9 @@ func distinct(values: Array) -> int:
   return seen.size()
 
 # How many frames an animation takes is the host's frame pacing (a host may stall
-# and then deliver Godot frames back to back, and the frame clock turns those into
-# ticks no closer than half a refresh period) and, for a decay, its own stop rule: it
+# and then deliver Godot frames back to back, and under Time pacing, which a headless
+# run always has, the frame clock turns those into ticks no closer than half a refresh
+# period) and, for a decay, its own stop rule: it
 # ends at the first step under 0.1. So the probe never asks for the number of frames
 # or values a regular 60 Hz clock would give. It asks for what holds at any pacing: a
 # driver needs more than one frame, an animation that runs for a duration or to rest

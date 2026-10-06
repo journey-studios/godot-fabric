@@ -14,24 +14,45 @@ extends SceneTree
 # JS and the Controls saw once per Godot frame, and checks only what holds at any
 # pacing; the independent oracle (tests/frame-clock-oracle.mjs) recomputes every
 # decision of the clock from the frame times the host reports.
+#
+# No check relies on what the machine delivers. A hosted runner stalls the process and
+# a slow one cannot produce a 3 ms frame at all, so a check never assumes a pattern of
+# Godot frame times: the rule is stated over the frames that were delivered (a frame
+# closer than half a period to the one before, and within a period of the last tick,
+# waits; vacuously true where no such frame came) and what each lane really delivered
+# is an observation (observedPace in the report, FRAME_CLOCK_PACE lines in the log).
+# What a lane counts exists by construction: it runs until it has followed MIN_FRAMES
+# frames and MIN_TICKS ticks, and the stalls of the bursts lane are delays the Pacer
+# inserts. native/frame_clock_test.cpp proves the rule on the exact patterns instead (the
+# 13 and 3 ms pipelined frames, a catch-up frame 0.4 ms behind a stall, a loop of 1000
+# frames a second) and on random ones.
+#
 # --allow-original-negative runs the same checks on the preceding host, which has no
 # frame clock and ticks on every Godot frame: the cadence checks are normative and
-# must fail there, the rest must pass on both hosts. --sabotage runs them on a
-# deliberately broken host and expects failures.
+# must fail there, the rest must pass on both hosts (on a machine that delivers the
+# patterns the lanes name). --sabotage runs them on a deliberately broken host and
+# expects failures. --replay=<report.json> evaluates the checks on a report that was
+# recorded before, a hosted run's artifact say, without running the application.
 const SIZE := Vector2(400, 340)
 const LIMIT_MS := 8000
 # Every lane runs at least this long, whatever the host does to its decay: the
 # preceding host ends it within tens of milliseconds at a fast pace, and a lane that
 # short would say nothing of the pace it is named for.
 const MIN_RUN_MS := 700
+# However slow the machine, a lane follows at least this many Godot frames and, on a host with a
+# clock, this many ticks before it stops: what the checks count (callbacks, interval firings,
+# stalls) exists by construction, not by the speed of the machine.
+const MIN_FRAMES := 40
+const MIN_TICKS := 8
 const PERIOD_MS := 1000.0 / 60.0
 const DISPLAY_RATE := 144.0
 # RN's decay (velocity 0.5, deceleration 0.99) rests asymptotically at 50 px and
 # ends at its first step under 0.1, so a pacing decides how near the 50 it lands:
 # frames 1 ms apart end it at 40 px, 6.9 ms apart at 48.5 and a whole 60 Hz period
-# apart at 49.4. Ticks are never closer than half a period (8.33 ms), which lands
-# it at 48.75 or beyond whatever the steps in between; the oracle derives that
-# window from the driver's own rule, and the probe takes it with a margin.
+# apart at 49.4. Under Time pacing, which the four lanes below have, ticks are never
+# closer than half a period (8.33 ms), which lands it at 48.75 or beyond whatever the
+# steps in between; the oracle derives that window from the driver's own rule, and the
+# probe takes it with a margin.
 const LANDING_LOWEST := 48.7
 const LANDING_HIGHEST := 50.0
 const PACINGS := ["paced-60", "headless", "fast", "bursts"]
@@ -61,6 +82,7 @@ var surface: Control
 var pacer: Pacer
 var checks: Array = []
 var stages: Dictionary = {}
+var observed_pace: Dictionary = {}
 var expected_original_failures: Array = []
 # The host's time when the probe started: every timestamp in the report is relative
 # to it, which the report's decimal digits then keep exactly.
@@ -74,9 +96,9 @@ func check(condition: bool, name: String) -> bool:
   return condition
 
 # A cadence check needs the frame clock: the snapshot of its counters, ticks no
-# closer than half a period, or a decay that lands where those ticks land it. The
-# preceding host has no clock and ticks on every Godot frame, so it must fail
-# exactly these checks.
+# closer than half a period (under Time pacing, which is where the clock promises
+# that), or a decay that lands where those ticks land it. The preceding host has no
+# clock and ticks on every Godot frame, so it must fail exactly these checks.
 func cadence_check(condition: bool, name: String) -> bool:
   expected_original_failures.append(name)
   return check(condition, name)
@@ -182,8 +204,7 @@ func apply_pacing(name: String) -> void:
       OS.low_processor_usage_mode_sleep_usec = 0
       pacer.alternate_usec = [13000, 3000]
 
-# The Godot frame times of a run, from the probe's own clock: how the loop was
-# paced, which the lane needs to have been what it names.
+# The Godot frame times of a run, from the probe's own clock: how the loop was paced.
 func gaps(run: Dictionary) -> Array:
   var out: Array = []
   var previous := number(run.rest.ms)
@@ -197,40 +218,37 @@ func median(values: Array) -> float:
   sorted.sort()
   return float(sorted[sorted.size() >> 1]) if not sorted.is_empty() else -1.0
 
-func share_under(values: Array, limit: float) -> float:
-  return float(values.filter(func(value: float) -> bool: return value < limit).size()) / maxf(values.size(), 1)
-
 # A stall frame is one that follows its predecessor by three periods or more and a
 # catch-up frame the one closer than half a period behind it.
-func stalls_and_catch_ups(values: Array) -> Array:
+func stalls_and_catch_ups(values: Array, period_ms: float) -> Array:
   var stalls := 0
   var catch_ups := 0
   for index in range(values.size()):
-    if values[index] >= 3.0 * PERIOD_MS:
+    if values[index] >= 3.0 * period_ms:
       stalls += 1
-      if index + 1 < values.size() and values[index + 1] < PERIOD_MS / 2.0:
+      if index + 1 < values.size() and values[index + 1] < period_ms / 2.0:
         catch_ups += 1
   return [stalls, catch_ups]
 
-# The bounds are loose on purpose: a machine that stalls the process (the stutter
-# stressor) still runs each lane at its pace between the stalls.
-func pacing_as_named(run: Dictionary) -> bool:
+# What the machine delivered in a run, as an observation: the frames, their median gap, those
+# closer than half a period to the one before, and the stalls with the catch-up frames behind
+# them. Nothing here is asserted, since no machine is promised to deliver a pattern. It tells
+# which patterns a lane really exercised, and so whether a check that quantifies over them held
+# vacuously.
+func pace_of(run: Dictionary, period_ms: float) -> Dictionary:
   var values := gaps(run)
-  match run.pattern:
-    "paced-60":
-      return values.size() >= 20 and median(values) > 8.0 and median(values) < 40.0
-    "headless":
-      return values.size() >= 20 and share_under(values, PERIOD_MS / 2.0) > 0.3
-    "fast":
-      return values.size() >= 50 and share_under(values, PERIOD_MS / 2.0) > 0.7
-    "bursts":
-      var found := stalls_and_catch_ups(values)
-      return values.size() >= 20 and found[0] >= 3 and found[1] >= 3
-    "presentation-bimodal", "time-bimodal":
-      return values.size() >= 20 and share_under(values, PERIOD_MS / 2.0) > 0.15 and share_under(values, PERIOD_MS / 2.0) < 0.85
-    _:
-      return values.size() >= 20 and median(values) > 3.0 and median(values) < 40.0
-  return false
+  var found := stalls_and_catch_ups(values, period_ms)
+  return {"frames": values.size(), "medianGapMs": snappedf(median(values), 0.001),
+    "gapsUnderHalfPeriod": values.filter(func(value: float) -> bool: return value < period_ms / 2.0).size(),
+    "stalls": found[0], "catchUps": found[1]}
+
+# Every lane's observation, from the runs recorded, on the log and for the report.
+func observe_pace() -> void:
+  var runs: Dictionary = stages["runs"]
+  for name: String in runs.keys():
+    var period := 1000.0 / DISPLAY_RATE if name == "display-144" else PERIOD_MS
+    observed_pace[name] = pace_of(runs[name], period)
+    print("FRAME_CLOCK_PACE " + name + ": " + JSON.stringify(observed_pace[name]))
 
 # One pacing: a loop of frame callbacks, a zero-delay interval and a native decay
 # run side by side, a sample per Godot frame, until the decay ends.
@@ -251,7 +269,7 @@ func decay_run(pattern: String) -> Dictionary:
   while Time.get_ticks_msec() - started < LIMIT_MS and not ended(run, pattern):
     await advance(run)
   await advance(run, 12)
-  while Time.get_ticks_msec() - started < MIN_RUN_MS:
+  while Time.get_ticks_msec() - started < LIMIT_MS and (Time.get_ticks_msec() - started < MIN_RUN_MS or not long_enough(run)):
     await advance(run)
   act("stopLoop('raf')")
   mark(run, "stop-loop")
@@ -264,6 +282,14 @@ func decay_run(pattern: String) -> Dictionary:
   if SEAMS.has(pattern):
     application.remove_meta("validation_frame_pacing")
   return run
+
+# The lane has followed enough for what its checks count to exist, whatever the machine's speed:
+# Godot frames and, on a host with a clock, the ticks that served the loop and the animation.
+func long_enough(run: Dictionary) -> bool:
+  if run.samples.size() < MIN_FRAMES:
+    return false
+  var last: Dictionary = run.samples.back()
+  return last.clock.is_empty() or counter(last, "ticks") - counter(run.rest, "ticks") >= MIN_TICKS
 
 func pump_pairs(run: Dictionary, from: int, to: int) -> Array:
   var pairs: Array = []
@@ -279,7 +305,8 @@ func entries_at(run: Dictionary, index: int, kind: String, label: String = "") -
 func counter(row: Dictionary, key: String) -> int:
   return int(number(row.clock.get(key)))
 
-# No two timestamps of a series are closer than half a period.
+# No two timestamps of a series are closer than half a period; a period of 0 asks for no
+# spacing, which is what a presented window (Presentation pacing) promises.
 func apart(values: Array, period_ms: float) -> bool:
   for index in range(1, values.size()):
     if number(values[index]) - number(values[index - 1]) < period_ms / 2.0 - 1e-6:
@@ -288,7 +315,7 @@ func apart(values: Array, period_ms: float) -> bool:
 
 # Over the loop window, the frame callbacks of the loop ran in exactly the pumps the
 # clock ticked, each with that tick's timestamp, and the timestamps JS received are
-# never closer than half a period.
+# never closer than half a period (period 0 under Presentation pacing, which asks for none).
 func callbacks_on_ticks(run: Dictionary, period_ms: float = PERIOD_MS) -> bool:
   var received: Array = []
   for pair: Array in pump_pairs(run, run.marks["loop"], run.marks["stop-loop"]):
@@ -308,7 +335,9 @@ func callbacks_on_ticks(run: Dictionary, period_ms: float = PERIOD_MS) -> bool:
       received.append(call.timestamp)
   return received.size() >= 5 and apart(received, period_ms)
 
-# The ticks of a run, whenever they happened, are never closer than half a period.
+# The ticks of a run, whenever they happened, are never closer than half a period (a Time
+# pacing property: it is not asked of a presented window, where every frame with a
+# consumer ticks).
 func ticks_apart(run: Dictionary, period_ms: float) -> bool:
   var previous := -INF
   var seen := 0
@@ -345,14 +374,33 @@ func every_frame_ticks(run: Dictionary) -> bool:
       return false
   return true
 
-# The frames the loop's callback waited through, over the loop window.
-func waited_frames(run: Dictionary) -> int:
-  if run.samples[run.marks["stop-loop"] - 1].clock.is_empty():
-    return -1
-  return counter(run.samples[run.marks["stop-loop"] - 1], "skipped") - counter(run.rest, "skipped")
+# Over the loop window a consumer waits in every frame, and the rule gives each frame its
+# decision from the times the host reported: it ticks unless a tick has served a consumer
+# before, it started less than half a period after the previous frame and it started less
+# than a period after the last tick. Where the machine delivers frames that close, such as
+# the 3 ms ones of a pipelined loop, they must wait; where it delivers none the condition
+# holds vacuously, which is the point: it never asks the machine for a pattern. A frame
+# exactly on a boundary, to the precision the report keeps, is not judged.
+func decisions_follow_the_rule(run: Dictionary, period_ms: float) -> bool:
+  for pair: Array in pump_pairs(run, run.marks["loop"], run.marks["stop-loop"]):
+    var before: Dictionary = pair[0]
+    var after: Dictionary = pair[1]
+    if after.clock.is_empty():
+      return false
+    var ticked := counter(after, "ticks") > counter(before, "ticks")
+    var served := counter(before, "ticks") > 0
+    var gap := number(after.clock.lastFrameMs) - number(before.clock.lastFrameMs)
+    var since := number(after.clock.lastFrameMs) - number(before.clock.lastTickMs) if served else INF
+    if absf(gap - period_ms / 2.0) <= 1e-6 or (served and absf(since - period_ms) <= 1e-6):
+      continue
+    var must := not served or gap >= period_ms / 2.0 or since >= period_ms
+    if ticked != must:
+      return false
+  return true
 
 # The backend delivers a frame only on a tick, at most one, with the tick's timestamp,
-# and the timestamps it received are never closer than half a period.
+# and the timestamps it received are never closer than half a period (period 0 under
+# Presentation pacing, which asks for none).
 func backend_on_ticks(run: Dictionary, period_ms: float = PERIOD_MS) -> bool:
   var delivered := 0
   var received: Array = []
@@ -405,7 +453,6 @@ func landing(run: Dictionary) -> float:
 func decay_checks(pattern: String) -> void:
   var run: Dictionary = stages["runs"][pattern]
   var label := pattern + "/"
-  check(pacing_as_named(run), label + "The Godot loop runs at the pace the lane names, so the lane exercises it")
   cadence_check(frames_accounted(run) and callbacks_on_ticks(run),
     label + "A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period")
   cadence_check(ticks_apart(run, PERIOD_MS), label + "Ticks are never closer than half a refresh period")
@@ -434,7 +481,11 @@ func micro(expression: String, frames: int) -> Dictionary:
   await advance(run, frames)
   return run
 
-func callbacks_case() -> void:
+# Each request follows 40 idle Godot frames, which the headless loop's sleep (6.9 ms a frame)
+# spreads over some 0.28 s, far over one period; the first request is also the first consumer of
+# the run, which no tick has served yet. So a request is due in the very next frame whatever the
+# machine does between frames.
+func run_callbacks() -> void:
   apply_pacing("headless")
   await settle(40)
   var idle := await micro("", 40)
@@ -447,6 +498,14 @@ func callbacks_case() -> void:
   await settle(40)
   var nested := await micro("nested('nested')", 40)
   stages["callbacks"] = {"idle": idle, "once": once, "cancelled": cancelled, "ordered": ordered, "nested": nested}
+
+func check_callbacks() -> void:
+  var stage: Dictionary = stages["callbacks"]
+  var idle: Dictionary = stage["idle"]
+  var once: Dictionary = stage["once"]
+  var cancelled: Dictionary = stage["cancelled"]
+  var ordered: Dictionary = stage["ordered"]
+  var nested: Dictionary = stage["nested"]
   var first: Dictionary = idle.samples.back()
   cadence_check((not first.clock.is_empty() and counter(first, "frames") - counter(idle.rest, "frames") == 40
     and counter(first, "ticks") == counter(idle.rest, "ticks") and counter(first, "skipped") == counter(idle.rest, "skipped")),
@@ -478,23 +537,27 @@ func callbacks_case() -> void:
 
 # The clock's own report on a host whose display reports no rate, which the headless
 # DisplayServer never does.
-func clock_case() -> void:
+func run_clock() -> void:
   await settle(4)
   var run := begin("", "headless")
   stages["clock"] = {"sample": run.rest}
-  var clock: Dictionary = run.rest.clock
+
+func check_clock() -> void:
+  var clock: Dictionary = stages["clock"]["sample"]["clock"]
   cadence_check((not clock.is_empty() and clock.source == "fallback" and clock.refreshRate == 60.0
     and absf(number(clock.periodMs) - PERIOD_MS) < 1e-9 and int(clock.frames) > 0 and int(clock.ticks) == 0 and int(clock.skipped) == 0),
     "clock/A display that reports no refresh rate gives the 60 Hz fallback period, and the counters start at zero ticks")
   cadence_check(not clock.is_empty() and clock.pacing == "time" and clock.pacingSource == "headless",
     "clock/A headless display server gives Time pacing, since it presents nothing")
 
-func display_case() -> void:
+func run_display() -> void:
   application.set_meta("validation_refresh_rate", DISPLAY_RATE)
   await settle(2)
   stages["runs"]["display-144"] = await decay_run("display-144")
   application.remove_meta("validation_refresh_rate")
   stages["runs"]["fallback-144"] = await decay_run("fallback-144")
+
+func check_display() -> void:
   var display: Dictionary = stages["runs"]["display-144"]
   var fallback: Dictionary = stages["runs"]["fallback-144"]
   var clock: Dictionary = display.samples.back().clock
@@ -504,38 +567,41 @@ func display_case() -> void:
   cadence_check(frames_accounted(display) and callbacks_on_ticks(display, 1000.0 / DISPLAY_RATE) and backend_on_ticks(display, 1000.0 / DISPLAY_RATE)
     and ticks_apart(display, 1000.0 / DISPLAY_RATE),
     "display-144/At 144 Hz callbacks and animation frames run on ticks never closer than half of that period")
+  # The loop is the same but the screen reports nothing, so the period is the fallback's: the frames the
+  # machine delivers closer than half of it to the one before wait, as many as that loop has.
   var thinned: Dictionary = fallback.samples.back().clock
-  var window_ticks := counter(fallback.samples[fallback.marks["stop-loop"] - 1], "ticks") - counter(fallback.samples[fallback.marks["loop"]], "ticks")
-  var elapsed: float = number(fallback.samples[fallback.marks["stop-loop"] - 1].ms) - number(fallback.samples[fallback.marks["loop"]].ms)
-  # Thinned to the fallback's rate, never beyond it: a process that a busy neighbour stalls ticks less.
   cadence_check((not thinned.is_empty() and thinned.source == "fallback" and ticks_apart(fallback, PERIOD_MS)
-    and float(window_ticks) < 0.7 * elapsed / (1000.0 / DISPLAY_RATE) and float(window_ticks) <= 1.2 * elapsed / PERIOD_MS),
-    "fallback-144/The same loop on a screen that reports nothing falls back to 60 Hz and is thinned to at most one tick per 16.7 ms")
+    and decisions_follow_the_rule(fallback, PERIOD_MS)),
+    "fallback-144/The same loop on a screen that reports nothing falls back to 60 Hz: ticks stay half a period apart and the frames closer than that to the one before, within a period of the last tick, wait")
 
 # V-Sync presents every Godot frame as one image, yet the engine pipelines its frames, which come in
-# two clusters. The lanes give the application a loop with that timing and state, through the
+# two clusters. The lanes ask the application for a loop with that timing (the Pacer alternates 13 and
+# 3 ms of delay, which a fast machine delivers and a slow one does not) and state, through the
 # validation seam, how its window is presented: as a V-Sync window (Presentation) and, for contrast,
-# as one nothing paces (Time).
-func pipelined_case() -> void:
+# as one nothing paces (Time). native/frame_clock_test.cpp runs the same rule on the exact pattern.
+func run_pipelined() -> void:
   stages["runs"]["presentation-bimodal"] = await decay_run("presentation-bimodal")
   stages["runs"]["time-bimodal"] = await decay_run("time-bimodal")
+
+func check_pipelined() -> void:
   var presented: Dictionary = stages["runs"]["presentation-bimodal"]
   var timed: Dictionary = stages["runs"]["time-bimodal"]
-  check(pacing_as_named(presented) and pacing_as_named(timed),
-    "pipelined/The Godot loop alternates frames about 13 ms and 3 ms apart, so the lanes exercise that timing")
   var shown: Dictionary = presented.samples.back().clock
   cadence_check((not shown.is_empty() and shown.pacing == "presentation" and shown.pacingSource == "validation"
     and every_frame_ticks(presented) and frames_accounted(presented) and callbacks_on_ticks(presented, 0.0) and backend_on_ticks(presented, 0.0)),
-    "presentation-bimodal/Under Presentation pacing every Godot frame is a tick, the 3 ms ones included, and runs a callback and an animation frame")
+    "presentation-bimodal/Under Presentation pacing every Godot frame is a tick, however close to the one before, and runs a callback and an animation frame")
   var thinned: Dictionary = timed.samples.back().clock
   cadence_check((not thinned.is_empty() and thinned.pacing == "time" and thinned.pacingSource == "validation"
-    and ticks_apart(timed, PERIOD_MS) and waited_frames(timed) > 0),
-    "time-bimodal/Under Time pacing the same frames are thinned: the 3 ms ones wait and ticks stay half a period apart")
+    and ticks_apart(timed, PERIOD_MS) and decisions_follow_the_rule(timed, PERIOD_MS)),
+    "time-bimodal/Under Time pacing the same frames are judged by time: those closer than half a period to the one before, within a period of the last tick, wait, and ticks stay half a period apart")
 
-func runs_case() -> void:
+func run_pacings() -> void:
   stages["runs"] = {}
   for pattern: String in PACINGS:
     stages["runs"][pattern] = await decay_run(pattern)
+
+func check_pacings() -> void:
+  for pattern: String in PACINGS:
     decay_checks(pattern)
   var landings: Array = PACINGS.map(func(pattern: String) -> float: return landing(stages["runs"][pattern]))
   var spread: float = landings.max() - landings.min()
@@ -544,7 +610,7 @@ func runs_case() -> void:
 
 # Stopping the application with a loop pending: no later tick, and a clock that
 # reports one state however often it is asked.
-func stop_case() -> void:
+func run_stop() -> void:
   var run := begin("", "headless")
   act("startLoop('raf')")
   await advance(run, 8)
@@ -554,13 +620,60 @@ func stop_case() -> void:
   var after: Dictionary = app_state().get("frameClock", {})
   var again: Dictionary = app_state().get("frameClock", {})
   stages["stop"] = {"before": before, "after": after, "again": again}
+
+func check_stop() -> void:
+  var before: Dictionary = stages["stop"]["before"]
+  var after: Dictionary = stages["stop"]["after"]
+  var again: Dictionary = stages["stop"]["again"]
   cadence_check(not before.is_empty() and after == before and again == before and number(before.get("ticks")) > 0.0,
     "stop/Stopping the application with a loop pending ends its ticks and leaves one clock state")
+
+# Every check, from what the lanes recorded: the same code judges a fresh run and, with --replay, a
+# report that was recorded before. The order is the order of the report.
+func evaluate() -> void:
+  observe_pace()
+  check_clock()
+  check_callbacks()
+  check_pacings()
+  check_display()
+  check_pipelined()
+  check_stop()
 
 func _initialize() -> void:
   allow_original_negative = OS.get_cmdline_user_args().has("--allow-original-negative")
   sabotage = OS.get_cmdline_user_args().has("--sabotage")
+  for argument: String in OS.get_cmdline_user_args():
+    if argument.begins_with("--replay="):
+      call_deferred("replay_probe", argument.trim_prefix("--replay="))
+      return
   call_deferred("run_probe")
+
+# Judges a report recorded before, without the application: its lanes' frames, events and clock
+# snapshots are all the checks read.
+func replay_probe(path: String) -> void:
+  var file := FileAccess.open(path, FileAccess.READ)
+  if file == null:
+    push_error("FRAME_CLOCK_REPLAY_UNREADABLE: " + path)
+    quit(2)
+    return
+  var parsed: Variant = JSON.parse_string(file.get_as_text())
+  file.close()
+  if not parsed is Dictionary:
+    push_error("FRAME_CLOCK_REPLAY_UNPARSEABLE: " + path)
+    quit(2)
+    return
+  var report: Dictionary = parsed
+  var recorded: Dictionary = report.get("stages", {})
+  if not recorded.has("runs") or not recorded.has("callbacks") or not recorded.has("clock") or not recorded.has("stop"):
+    push_error("FRAME_CLOCK_REPLAY_INCOMPLETE: " + path)
+    quit(2)
+    return
+  stages = recorded
+  evaluate()
+  var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
+  print("FRAME_CLOCK_REPLAY: " + str(checks.size()) + " checks, " + str(failures.size()) + " failed")
+  print("FRAME_CLOCK_REPLAY_CHECKS: " + JSON.stringify(checks))
+  quit(0 if failures.is_empty() else 1)
 
 func mount_surface() -> void:
   surface = ClassDB.instantiate("FabricSurface")
@@ -585,12 +698,12 @@ func run_probe() -> void:
   origin_usec = Time.get_ticks_usec()
   origin_ms = number(js("now()"), 0.0)
   stages["boxes"] = js("boxes()")
-  await clock_case()
-  await callbacks_case()
-  await runs_case()
-  await display_case()
-  await pipelined_case()
-  await stop_case()
+  await run_clock()
+  await run_callbacks()
+  await run_pacings()
+  await run_display()
+  await run_pipelined()
+  await run_stop()
   await finish_probe()
 
 func finish_probe() -> void:
@@ -600,6 +713,7 @@ func finish_probe() -> void:
   application.queue_free()
   pacer.queue_free()
   await settle(2)
+  evaluate()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
   var observed := failures.duplicate()
   var expected := expected_original_failures.duplicate()
@@ -611,7 +725,7 @@ func finish_probe() -> void:
     "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages, "periodMs": PERIOD_MS,
     "displayRate": DISPLAY_RATE, "expectedOriginalFailures": expected_original_failures,
     "allowOriginalNegative": allow_original_negative, "originalNegativeObserved": negative_observed, "sabotage": sabotage,
-    "allCurrentAssertionsPassed": failures.is_empty(),
+    "allCurrentAssertionsPassed": failures.is_empty(), "observedPace": observed_pace,
     "scope": {"publicReactNativeImport": true, "requestAnimationFrameCallbacks": true, "rnCxxNativeAnimatedDecay": true,
       "headlessPacingsOnly": true, "displayRateFromAValidationMetaOnly": true, "realDisplaysCertified": false,
       "vsyncConfigurationCertified": false, "timersQuantizedToTicks": false, "mobileExportsCertified": false}}

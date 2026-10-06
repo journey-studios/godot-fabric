@@ -17,6 +17,10 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 // consumes and --sabotage=presentation on one that ignores V-Sync presentation and times
 // the frames of a presented window (scripts/frame-clock-sabotage.mjs builds those hosts
 // and restores the source).
+// --replay=<report.json> judges a report that was recorded before, a hosted run's artifact say:
+// the probe's own checks run over the recorded lanes in Godot, without the application, and the
+// oracle recomputes every decision, so a machine that failed can be replayed on any other.
+const replayArgument = process.argv.find(argument => argument.startsWith("--replay="));
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? "always");
@@ -76,7 +80,38 @@ function assertSameReproducer(control, report, bundle, name) {
   assert.notEqual(control.provenance.nativeHostSha256, report.provenance.nativeHostSha256, name);
 }
 
+// What each lane really delivered, for the log of whoever reads a run: the checks hold of any of it.
+function observedPace(stats) {
+  return Object.entries(stats).map(([lane, run]) => `${lane}: ${run.pacing.frames} Godot frames, ${run.pacing.gapsUnderHalfPeriod} closer than half a period to the one before, ${
+    run.pacing.stalls} stalls with ${run.pacing.catchUps} catch-up frames, ${run.ticks} ticks`).join("\n  ");
+}
+
+// The probe's own checks over a recorded report, in Godot and without the application.
+function replayChecks(binary, file) {
+  const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/frame-clock-probe.gd", "--",
+    `--replay=${path.resolve(file)}`], {encoding: "utf8", timeout: 120000, maxBuffer: 64 * 1024 * 1024});
+  const log = (result.stdout ?? "") + (result.stderr ?? "");
+  assert.equal(result.error, undefined, log);
+  assert.doesNotMatch(log, /SCRIPT ERROR|Program crashed|ObjectDB instances leaked|Resources still in use/);
+  const verdicts = log.match(/^FRAME_CLOCK_REPLAY_CHECKS: (.*)$/m);
+  assert.ok(verdicts, log);
+  return {status: result.status, log, checks: JSON.parse(verdicts[1])};
+}
+
+async function replay(file) {
+  const report = JSON.parse(await readFile(file, "utf8"));
+  const replayed = replayChecks(await ensureGodotBinary(), file);
+  assert.equal(replayed.status, 0, replayed.log);
+  assert.match(replayed.log, /FRAME_CLOCK_REPLAY: \d+ checks, 0 failed/, replayed.log);
+  console.log(`${path.basename(file)}: ${replayed.log.match(/FRAME_CLOCK_REPLAY: .*/)[0]}; the oracle accepts it`);
+  console.log(`  ${observedPace(verifyFrameClockReport(report).runs)}`);
+}
+
 test("The frame clock gives requestAnimationFrame and RN's Native Animated a display link's cadence on every Godot pacing", async () => {
+  if (replayArgument !== undefined) {
+    await replay(replayArgument.slice("--replay=".length));
+    return;
+  }
   const bundle = await bundleFrameClockProbe();
   const binary = await ensureGodotBinary();
   const {result, log, report} = await runProbe(binary, bundle);
@@ -136,6 +171,12 @@ test("The frame clock gives requestAnimationFrame and RN's Native Animated a dis
   assert.equal(report.allCurrentAssertionsPassed, true);
   assert.match(log, /FRAME_CLOCK_PASSED: \d+/);
   const stats = verifyFrameClockReport(report);
+  console.log(`The Godot frames each lane delivered:\n  ${observedPace(stats.runs)}`);
+  // Judging the recorded report again, as --replay judges one from anywhere else, gives the verdicts of the run.
+  const replayed = replayChecks(binary, path.join(root, `build/frame-clock-${lane}-report.json`));
+  assert.equal(replayed.status, 0, replayed.log);
+  assert.deepEqual(replayed.checks, report.checks.filter(row => !row.name.startsWith("report/")),
+    "Replaying the recorded report gives the verdicts of the run");
   const original = await optionalJson("build/frame-clock-original-report.json");
   if (original != null) {
     assert.ok(original.originalNegativeObserved);
