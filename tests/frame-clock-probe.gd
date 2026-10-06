@@ -305,6 +305,13 @@ func entries_at(run: Dictionary, index: int, kind: String, label: String = "") -
 func counter(row: Dictionary, key: String) -> int:
   return int(number(row.clock.get(key)))
 
+# The timestamp a recorded callback received: the one field of an event that the host decides. A host that
+# calls back with none leaves the key out of the entry, so it reads -1 here and the checks that need a real
+# timestamp fail on it, where reading the key directly would abort the probe, or a replay of its report, with
+# the checks after it never recorded.
+func stamp(entry: Dictionary) -> float:
+  return number(entry.get("timestamp"))
+
 # No two timestamps of a series are closer than half a period; a period of 0 asks for no
 # spacing, which is what a presented window (Presentation pacing) promises.
 func apart(values: Array, period_ms: float) -> bool:
@@ -327,12 +334,12 @@ func callbacks_on_ticks(run: Dictionary, period_ms: float = PERIOD_MS) -> bool:
     var calls := entries_at(run, pair[2], "frame", "raf")
     if ticked == 0 and not calls.is_empty():
       return false
-    if ticked == 1 and (calls.size() != 1 or absf(number(calls[0].timestamp) - number(after.clock.lastTickMs)) > 1e-4):
+    if ticked == 1 and (calls.size() != 1 or absf(stamp(calls[0]) - number(after.clock.lastTickMs)) > 1e-4):
       return false
     if ticked not in [0, 1]:
       return false
     for call: Dictionary in calls:
-      received.append(call.timestamp)
+      received.append(stamp(call))
   return received.size() >= 5 and apart(received, period_ms)
 
 # The ticks of a run, whenever they happened, are never closer than half a period (a Time
@@ -510,14 +517,17 @@ func check_callbacks() -> void:
   cadence_check((not first.clock.is_empty() and counter(first, "frames") - counter(idle.rest, "frames") == 40
     and counter(first, "ticks") == counter(idle.rest, "ticks") and counter(first, "skipped") == counter(idle.rest, "skipped")),
     "callbacks/A Godot frame nothing waits for is neither a tick nor a waited frame")
+  # The callback may be missing (a host, or a recorded report, where the request got none): both checks below
+  # then fail, and hit[0] is read only once there is exactly one, so a replay judges such a report instead of
+  # aborting in check_callbacks with the checks after it never recorded.
   var hit := entries_at(once, 0, "frame", "once")
   check((hit.size() == 1 and entries_at(once, 1, "frame", "once").is_empty() and once.events.size() == 1
-    and number(hit[0].timestamp) > 0.0),
+    and stamp(hit[0]) > 0.0),
     "callbacks/A request after idling reaches its callback in the very next Godot frame, with a frame timestamp")
   var after: Dictionary = once.samples[0]
-  cadence_check((not after.clock.is_empty() and counter(after, "ticks") == counter(once.rest, "ticks") + 1
+  cadence_check((hit.size() == 1 and not after.clock.is_empty() and counter(after, "ticks") == counter(once.rest, "ticks") + 1
     and counter(after, "skipped") == counter(once.rest, "skipped")
-    and absf(number(hit[0].timestamp) - number(after.clock.lastTickMs)) < 1e-4),
+    and absf(stamp(hit[0]) - number(after.clock.lastTickMs)) < 1e-4),
     "callbacks/That frame is a tick the clock counts, and its timestamp is the clock's")
   var last: Dictionary = cancelled.samples.back()
   cadence_check((cancelled.events.is_empty() and not last.clock.is_empty()
@@ -526,13 +536,13 @@ func check_callbacks() -> void:
   var parts: Array = ordered.events.filter(func(entry: Dictionary) -> bool: return entry.get("kind") == "frame")
   check((parts.size() == 3 and parts.all(func(entry: Dictionary) -> bool: return entry.at == parts[0].at)
     and parts.map(func(entry: Dictionary) -> String: return str(entry.label)) == ["ordered:a", "ordered:b", "ordered:c"]
-    and parts.all(func(entry: Dictionary) -> bool: return entry.timestamp == parts[0].timestamp)
+    and parts.all(func(entry: Dictionary) -> bool: return stamp(entry) == stamp(parts[0])) and stamp(parts[0]) > 0.0
     and parts[0].sequence < parts[1].sequence and parts[1].sequence < parts[2].sequence),
     "callbacks/Callbacks registered before one frame run in that frame, in order, with one timestamp")
   var outer: Array = nested.events.filter(func(entry: Dictionary) -> bool: return entry.get("label") == "nested:outer")
   var inner: Array = nested.events.filter(func(entry: Dictionary) -> bool: return entry.get("label") == "nested:inner")
   cadence_check((outer.size() == 1 and inner.size() == 1 and inner[0].at > outer[0].at
-    and number(inner[0].timestamp) - number(outer[0].timestamp) >= PERIOD_MS / 2.0 - 1e-6),
+    and stamp(outer[0]) > 0.0 and stamp(inner[0]) - stamp(outer[0]) >= PERIOD_MS / 2.0 - 1e-6),
     "callbacks/A callback requested from inside a callback runs on a later tick, at least half a refresh period after it")
 
 # The clock's own report on a host whose display reports no rate, which the headless

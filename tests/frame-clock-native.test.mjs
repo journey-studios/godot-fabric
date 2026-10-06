@@ -177,6 +177,19 @@ test("The frame clock gives requestAnimationFrame and RN's Native Animated a dis
   assert.equal(replayed.status, 0, replayed.log);
   assert.deepEqual(replayed.checks, report.checks.filter(row => !row.name.startsWith("report/")),
     "Replaying the recorded report gives the verdicts of the run");
+  // A report where the request got no callback is judged like any other: the two checks that need the callback
+  // fail and every check is still recorded, where reading the missing event once aborted the replay partway
+  // (replayChecks rejects a script error), dropping the checks after it.
+  const withoutCallback = structuredClone(report);
+  withoutCallback.stages.callbacks.once.events = [];
+  const withoutCallbackFile = path.join(root, `build/frame-clock-${lane}-without-callback-report.json`);
+  await writeFile(withoutCallbackFile, JSON.stringify(withoutCallback));
+  const judged = replayChecks(binary, withoutCallbackFile);
+  assert.equal(judged.status, 1, judged.log);
+  assert.equal(judged.checks.length, replayed.checks.length, "A report without the callback loses no check to the replay");
+  assert.deepEqual(judged.checks.filter(row => !row.passed).map(row => row.name), [
+    "callbacks/A request after idling reaches its callback in the very next Godot frame, with a frame timestamp",
+    "callbacks/That frame is a tick the clock counts, and its timestamp is the clock's"]);
   const original = await optionalJson("build/frame-clock-original-report.json");
   if (original != null) {
     assert.ok(original.originalNegativeObserved);
