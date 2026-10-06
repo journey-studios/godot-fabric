@@ -283,7 +283,8 @@ frames in two roots. Defaults, small/large/numeric sizes, the phase advancing on
 per frame while animating and frozen when stopped, `hidesWhenStopped`, color,
 remount and root isolation are covered. The preceding host fails exactly the 2
 mount checks; a retained sabotage that stops the per-frame work fails 9 checks
-and the independent oracle rejects it. Hosted CI pending.
+and the independent oracle rejects it. Hosted run 37395264445 repeated the
+33 checks and the oracle accepts its report ([receipt](activity-indicator/hosted-ci.json)).
 
 The [capture notification record](pointer-capture-notifications/README.md) runs
 `gotpointercapture`/`lostpointercapture` for JSX props and original View,

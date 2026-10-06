@@ -5,6 +5,8 @@ Godot 4.7.2. The [evidence](../evidence/activity-indicator/README.md) owns the 3
 headless checks across actual SceneTree frames, the control on the preceding
 host (exactly 2 normative failures) and a retained sabotage that stops the
 spinner's per-frame work, which the probe and the independent oracle both reject.
+Hosted run 37395264445 repeated the 33 checks and the independent oracle accepts
+its report ([receipt](../evidence/activity-indicator/hosted-ci.json)).
 
 ## What RN does
 

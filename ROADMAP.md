@@ -1981,8 +1981,15 @@ examples; codegen, the native SDK pack/verify, adapters (loader 89 checks/21
 cases, runtime 13 runs/213 checks), consumer (30 + 40) and cold start pass too.
 All 74 executed code/configuration inputs match implementation a652343 via git
 show/SHA-256. Accessibility, reduced motion, UIKit's exact timing and geometry,
-pixel captures, hardware and mobile exports remain open. Hosted CI for this slice
-is pending. No whole GF, checkpoint, weight or denominator closes.
+pixel captures, hardware and mobile exports remain open. Hosted Contracts run
+37395264445 (the push of main 54ede87) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/activity-indicator/hosted-ci.json)
+repeats the 33 headless checks, the independent oracle accepts the downloaded
+report and the recomputed observations equal the pinned ones except the spinner
+phases, which depend on frame time. All 74 tracked inputs match the checkout
+tree (7 differ from a652343 through commits main gained afterwards). [Pages
+37395264170](docs/evidence/activity-indicator/publication.json) deployed this
+record from main 54ede87. No whole GF, checkpoint, weight or denominator closes.
 
 ### Pointer capture notifications for listeners (2026-10-05)
 

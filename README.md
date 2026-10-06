@@ -257,6 +257,7 @@ RN's original `ActivityIndicator.js` over the generated `ActivityIndicatorView`
 descriptor and a native Godot spinner whose phase advances once per actual frame
 while `animating`, freezes when stopped and hides with `hidesWhenStopped`. 33
 headless checks in two roots; the preceding host fails the 2 mount checks.
+Hosted CI repeated the 33 checks ([receipt](docs/evidence/activity-indicator/hosted-ci.json)).
 [Evidence](docs/evidence/activity-indicator/README.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
