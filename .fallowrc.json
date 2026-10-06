@@ -11,6 +11,8 @@
     "src/ui-manager.js",
     "src/react-native-platform.jsx",
     "src/render-application.jsx",
+    "src/animated-exports.js",
+    "src/platform-color-value-types.js",
     "src/svg.jsx",
     "src/unsupported-reanimated.js",
     "src/unsupported-safe-area.js",
@@ -49,7 +51,8 @@
     "tests/touchables-animated-fixture.jsx",
     "tests/activity-indicator-fixture.jsx",
     "tests/pointer-capture-notifications-fixture.jsx",
-    "tests/appearance-fixture.jsx"
+    "tests/appearance-fixture.jsx",
+    "tests/native-animated-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -109,6 +112,20 @@
       ]
     },
     {
+      "file": "src/animated-exports.js",
+      "exports": [
+        "default"
+      ]
+    },
+    {
+      "file": "src/platform-color-value-types.js",
+      "exports": [
+        "PlatformColor",
+        "normalizeColorObject",
+        "processColorObject"
+      ]
+    },
+    {
       "file": "src/svg.jsx",
       "exports": [
         "G",
@@ -164,6 +181,10 @@
         "UIManager",
         "NativeModules",
         "NativeEventEmitter",
+        "Animated",
+        "Easing",
+        "useAnimatedValue",
+        "useAnimatedValueXY",
         "TurboModuleRegistry",
         "codegenNativeComponent",
         "codegenNativeCommands"
@@ -249,7 +270,14 @@
             "SectionListData",
             "Appearance",
             "useColorScheme",
-            "ColorSchemeName"
+            "ColorSchemeName",
+            "Animated",
+            "Easing",
+            "EasingFunction",
+            "useAnimatedValue",
+            "useAnimatedValueXY",
+            "TouchableOpacity",
+            "TouchableOpacityProps"
           ]
         },
         {

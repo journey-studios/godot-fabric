@@ -8,6 +8,7 @@
 #include <react/bridging/Bridging.h>
 #include <react/bridging/Promise.h>
 #include <react/nativemodule/featureflags/NativeReactNativeFeatureFlags.h>
+#include <react/renderer/animated/AnimatedModule.h>
 #include <react/renderer/runtimescheduler/RuntimeSchedulerCallInvoker.h>
 #include <algorithm>
 #include <cmath>
@@ -542,6 +543,12 @@ void TurboModuleRegistry::add_feature_flags() {
   add(std::string(rn::NativeReactNativeFeatureFlags::kModuleName),
       [](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
         return std::make_shared<rn::NativeReactNativeFeatureFlags>(invoker);
+      });
+}
+void TurboModuleRegistry::add_native_animated() {
+  add(std::string(rn::AnimatedModule::kModuleName),
+      [](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+        return std::make_shared<rn::AnimatedModule>(invoker, std::make_shared<rn::NativeAnimatedNodesManagerProvider>());
       });
 }
 void TurboModuleRegistry::add_game_services(const std::shared_ptr<GameServiceRegistry> &services) {

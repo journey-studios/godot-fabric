@@ -28,7 +28,7 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
-if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms"].includes(globalThis.godotScenario)) {
+if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms", "animated"].includes(globalThis.godotScenario)) {
   if (globalThis.godotScenario === "shared") require("./shared/App");
   else if (globalThis.godotScenario === "refs") require("./refs/App");
   else if (globalThis.godotScenario === "tree") require("./tree/App");
@@ -38,6 +38,7 @@ if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics
   else if (globalThis.godotScenario === "view") require("./view/App");
   else if (globalThis.godotScenario === "coordinates") require("./coordinates/App");
   else if (globalThis.godotScenario === "transforms") require("./transforms/App");
+  else if (globalThis.godotScenario === "animated") require("./animated/App");
   else if (globalThis.godotScenario === "services") require("./services/App");
   else if (globalThis.godotScenario === "service-boundaries") require("../tests/services-boundary-fixture");
   else if (globalThis.godotScenario === "metrics") {

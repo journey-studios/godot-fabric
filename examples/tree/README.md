@@ -47,9 +47,12 @@ props used by lookup without rewriting React's declarative canonical props.
 Consequently, native lookup and `.id` can intentionally disagree after an
 imperative update. This fixture records the immediate native lookup change
 while `.id` retains its declarative fallback. The next children-only React
-commit restores that fallback in native lookup through the pinned renderer's
-original cloning path. A later changed declarative ID updates both. These
-observations do not promise imperative ID persistence across every re-render.
+commit keeps the imperative ID in native lookup: it clones the node JS holds,
+which on RN's JS thread is the clone `setNativeProps` committed, because RN's
+`ReactInstance` updates the runtime shadow node reference of every clone before
+each JS callback (`ReactInstance.cpp:101`) and this host sets the same
+thread-local. A later changed declarative ID updates both. These observations
+do not promise imperative ID persistence across every re-render.
 
 ## Logical tree and retained collections
 

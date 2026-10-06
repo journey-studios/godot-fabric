@@ -73,7 +73,8 @@
     "test:touchables": "node --test tests/touchables-native.test.mjs",
     "test:activity-indicator": "node --test tests/activity-indicator-native.test.mjs",
     "test:pointers:capture": "node --test tests/pointer-capture-notifications-native.test.mjs",
-    "test:appearance": "node --test tests/appearance-native.test.mjs"
+    "test:appearance": "node --test tests/appearance-native.test.mjs",
+    "test:animated": "node --test tests/native-animated-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

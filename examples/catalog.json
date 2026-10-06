@@ -154,6 +154,13 @@
     "scene": "examples/typography/scene.tscn"
   },
   {
+    "id": "animated",
+    "title": "Original RN Animated on RN's C++ NativeAnimated, advanced by Godot frames",
+    "api": "public",
+    "source": "examples/animated/App.jsx",
+    "scene": "examples/animated/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",

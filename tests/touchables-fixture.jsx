@@ -142,7 +142,7 @@ function Fixture({name}) {
       <TouchableWithoutFeedback onPress={() => {}} />
     </Case>
     <Case root={name} name="opacity">
-      <TouchableOpacity onPress={() => {}} style={box(72, 412, 40, 20)}>
+      <TouchableOpacity testID={id("opacity")} onPress={() => {}} style={box(72, 412, 40, 20, "#0e7490")}>
         <View style={{width: 10, height: 10}} />
       </TouchableOpacity>
     </Case>

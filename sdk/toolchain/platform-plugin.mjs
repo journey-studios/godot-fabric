@@ -70,6 +70,19 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
         if (importer === path.join(rnRoot, "Libraries/ReactNative/AppRegistryImpl.js"))
           return { path: path.join(platformRoot, "render-application.jsx") };
       });
+      builder.onResolve({ filter: /^\.\/AnimatedExports$/ }, ({ importer }) => {
+        // RN's Animated.js keeps its original body; only its export glue is
+        // Godot's, which leaves out wrappers over hosts Godot does not have.
+        if (importer === path.join(rnRoot, "Libraries/Animated/Animated.js"))
+          return { path: path.join(platformRoot, "animated-exports.js") };
+      });
+      builder.onResolve({ filter: /^\.\.\/\.\.\/StyleSheet\/PlatformColorValueTypes$/ }, ({ importer }) => {
+        // iOS and Android ship their own PlatformColorValueTypes; Godot has no OS
+        // color resources. Only RN's AnimatedColor, which Animated exports, imports
+        // it by name; every other RN module keeps RN's own generic forwarder.
+        if (importer === path.join(rnRoot, "Libraries/Animated/nodes/AnimatedColor.js"))
+          return { path: path.join(platformRoot, "platform-color-value-types.js") };
+      });
       builder.onResolve({ filter: /(?:^|\/)PlatformBaseViewConfig$/ }, args => {
         // Only upstream ViewConfig and the exact RN deep import own this seam.
         // A project's similarly named relative module remains project-owned.

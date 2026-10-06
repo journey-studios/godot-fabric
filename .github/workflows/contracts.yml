@@ -126,6 +126,18 @@ jobs:
             build/appearance-current.log
             build/appearance-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:animated
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-animated
+          path: |
+            build/native-animated-report.json
+            build/native-animated-current-report.json
+            build/native-animated-comparison.json
+            build/native-animated-current.log
+            build/native-animated-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

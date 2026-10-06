@@ -1,30 +1,30 @@
 extends SceneTree
 
-# RN's original TouchableWithoutFeedback and TouchableHighlight on two real
-# roots, driven by actual Godot mouse and touch input. JS records what the
-# touchables report; native snapshots show what the Controls display.
+# RN's original TouchableWithoutFeedback, TouchableHighlight and TouchableOpacity
+# on two real roots, driven by actual Godot mouse and touch input. JS records
+# what the touchables report; native snapshots show what the Controls display.
 # --lane current runs every case. --lane preceding-sdk and --lane sabotage run
-# the same fixture on another SDK; --lane animated mounts RN's original
-# TouchableOpacity to show why it stays unavailable.
+# the same fixture on another SDK; --lane animated presses the public
+# TouchableOpacity alone and follows its opacity through RN's native module.
 const DEVICE := 1001
 const SIZE := Vector2(400, 520)
 const ORIGINS := {"A": Vector2.ZERO, "B": Vector2(420, 0)}
 # Hosts each case must commit, and the backgrounds RN's style gives them.
 const CASE_HOSTS := {"twf": ["twf"], "th": ["th", "th-child"], "long": ["long", "long-child"], "delayed": ["delayed", "delayed-child"],
   "slop": ["slop"], "disabled": ["disabled", "disabled-child"], "nested": ["outer", "inner"], "card": ["card", "card-button"],
-  "removable": ["removable", "removable-child"], "toggle": ["toggle", "toggle-child"], "text": ["label", "label-child"], "caption": ["caption"]}
+  "removable": ["removable", "removable-child"], "toggle": ["toggle", "toggle-child"], "text": ["label", "label-child"], "caption": ["caption"],
+  "opacity": ["opacity"]}
 const BASE := {"twf": "334155ff", "th": "16a34aff", "th-child": "2563ebff", "long": "0f766eff", "long-child": "1d4ed8ff",
   "delayed": "334155ff", "delayed-child": "0891b2ff", "slop": "a16207ff", "disabled": "64748bff", "disabled-child": "94a3b8ff",
   "outer": "1e293bff", "inner": "be185dff", "card": "1e293bff", "card-button": "4d7c0fff", "removable": "475569ff",
   "removable-child": "7e22ceff", "toggle": "365314ff", "toggle-child": "b45309ff", "label": "0f766eff", "label-child": "00000000",
-  "caption": "7c2d12ff"}
+  "caption": "7c2d12ff", "opacity": "0e7490ff"}
 # Underlay color and child activeOpacity while each TouchableHighlight is pressed.
 const PRESSED := {"th": ["dc2626ff", 0.4], "long": ["7c3aedff", 0.85], "delayed": ["ea580cff", 0.6],
   "removable": ["f43f5eff", 0.5], "toggle": ["22d3eeff", 0.85], "label": ["1d4ed8ff", 0.6]}
 const CHILDREN_ONLY := "React.Children.only expected to receive a single React element child."
 const INLINE := "Inline Controls are not implemented in Godot Text"
 const STYLE := "Godot TouchableHighlight does not implement style shadowColor"
-const OPACITY_REASON := "Godot platform does not implement TouchableOpacity: its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet"
 var lane := "current"
 var application: Node
 var surfaces: Dictionary = {}
@@ -215,14 +215,13 @@ func mount_case() -> void:
     "mount/th-ref/A ref on TouchableHighlight reaches its native host in both roots")
   var failing := {"single-two": [CHILDREN_ONLY, "TouchableHighlight with two children fails at render with React.Children.only"],
     "single-none": [CHILDREN_ONLY, "TouchableWithoutFeedback without a child fails at render with React.Children.only"],
-    "opacity": [OPACITY_REASON, "TouchableOpacity fails at render with its explicit NativeAnimatedModule reason"],
     "inline": [INLINE, "TouchableHighlight inside Text fails at render as an inline Control"],
     "style": [STYLE, "TouchableHighlight rejects a style its native View does not implement"]}
   for name: String in failing:
     var messages: Array = errors.filter(func(entry: Dictionary) -> bool: return entry.case == name).map(func(entry: Dictionary) -> String: return entry.root + ":" + entry.message)
     normative_check(messages == ["A:" + failing[name][0], "B:" + failing[name][0]], "mount/" + name + "/" + failing[name][1])
   var unexpected := errors.filter(func(entry: Dictionary) -> bool: return not entry.case in failing)
-  normative_check(unexpected.is_empty() and errors.size() == 2 * failing.size(), "mount/render-errors/Only the single-child, contract and TouchableOpacity cases fail at render")
+  normative_check(unexpected.is_empty() and errors.size() == 2 * failing.size(), "mount/render-errors/Only the single-child and contract cases fail at render")
 
 # The SDK Pressable is the same in every lane; it proves the harness presses.
 func sentinel_case() -> void:
@@ -506,21 +505,42 @@ func stop_case() -> void:
     var final_root := native(surfaces[root_name])
     check(int(final_root.nativeTags) == 0 and int(final_root.creates) == int(final_root.deletes), "stop/Root " + root_name + " balances its native Controls")
 
-# RN's original TouchableOpacity commits its Animated.View host; the props
-# hook's passive effect then flushes the native animated queue and throws.
+# The public TouchableOpacity renders RN's Animated.View: Pressability animates its
+# opacity with the native driver, which RN's C++ NativeAnimatedModule runs on
+# the Godot frame tick. A real press dims the host and release restores it.
 func animated_case() -> void:
   await settle(12)
   var app := native(application)
   var errors: Array = js("renderErrors()")
-  var hosts: Array = js("hosts()")
-  stages["animated"] = {"application": app, "renderErrors": errors, "hosts": hosts, "root": native(surfaces.A)}
-  check(errors.size() == 1 and errors[0].case == "opacity" and errors[0].message == "Native animated module is not available"
-    and errors[0].name == "Invariant Violation", "animated/RN's Animated.View fails its mount effect without NativeAnimatedModule")
-  check(hosts.size() == 2 and hosts[0] is float and int(hosts[0]) > 0 and hosts[1] == null and view("A", "opacity").is_empty(),
-    "animated/The committed Animated.View host is removed, so no TouchableOpacity remains to press")
-  var app_errors: Array = app.get("errors", [])
-  check(app_errors.is_empty() and view("A", "sibling").get("testID", "") == "A-sibling",
-    "animated/The error boundary keeps the root and its sibling alive without a runtime error")
+  var rest := view("A", "opacity")
+  var animated: Dictionary = app.get("nativeAnimated", {})
+  stages["animated"] = {"application": app, "renderErrors": errors, "rest": rest, "root": native(surfaces.A)}
+  check(errors.is_empty() and not rest.is_empty() and is_equal_approx(float(rest.opacity), 1.0) and animated.get("enabled") == true
+    and view("A", "sibling").get("testID", "") == "A-sibling",
+    "animated/RN's TouchableOpacity commits its Animated.View host over RN's native module without a render error")
+  var at := center("A", "opacity")
+  send("mouse", "down", at)
+  await settle(12)
+  var pressed := view("A", "opacity")
+  var held: Dictionary = native(application).get("nativeAnimated", {})
+  stages["animated"].pressed = pressed
+  stages["animated"].held = held
+  check(is_equal_approx(float(pressed.get("opacity", -1.0)), 0.5) and int(held.get("directUpdates", 0)) > 0,
+    "animated/A real press dims the host to activeOpacity through the native driver")
+  send("mouse", "up", at)
+  await settle(60)
+  var released := view("A", "opacity")
+  var events: Array = take()
+  var finished: Dictionary = native(application).get("nativeAnimated", {})
+  stages["animated"].released = released
+  stages["animated"].events = events
+  stages["animated"].finished = finished
+  check((is_equal_approx(float(released.get("opacity", -1.0)), 1.0) and int(finished.get("resumes", 0)) == 2
+    and finished.get("active") == false and int(finished.get("staleDirectUpdates", -1)) == 0
+    and events.map(func(row: Dictionary) -> String: return row.type) == ["in", "out", "press"]),
+    "animated/Release restores the opacity, onPress fires once and the backend idles after two runs")
+  var app_errors: Array = native(application).get("errors", [])
+  check(app_errors.is_empty(), "animated/The root runs without a runtime error")
   await stop_case()
 
 func _initialize() -> void:
@@ -582,7 +602,7 @@ func run() -> void:
     "expectedPrecedingFailures": normative, "precedingNegativeObserved": preceding_negative,
     "allCurrentAssertionsPassed": failed.is_empty(),
     "scope": {"actualNativeInput": true, "publicFacadeImports": lane != "animated", "originalTouchableModules": lane in ["current", "animated"],
-      "productionBundle": true, "twoRoots": lane != "animated", "touchableOpacityAvailable": false,
+      "productionBundle": true, "twoRoots": lane != "animated", "touchableOpacityAvailable": lane != "preceding-sdk",
       "concurrentCrossRootResponders": false, "hardwareCertified": false}}
   var file := FileAccess.open("res://build/touchables-report.json", FileAccess.WRITE)
   if not check(file != null, "report/The touchables report can be saved"):
@@ -592,7 +612,7 @@ func run() -> void:
   if lane == "preceding-sdk":
     print("TOUCHABLES_PRECEDING_NEGATIVE: " + str(failed.size()) if preceding_negative else "TOUCHABLES_FAILED")
   elif lane == "animated":
-    print("TOUCHABLES_ANIMATED_UNAVAILABLE: " + str(checks.size()) if failed.is_empty() else "TOUCHABLES_FAILED")
+    print("TOUCHABLES_ANIMATED_PASSED: " + str(checks.size()) if failed.is_empty() else "TOUCHABLES_FAILED")
   elif lane == "sabotage":
     print("TOUCHABLES_SABOTAGE_REJECTED: " + str(failed.size()) if not failed.is_empty() else "TOUCHABLES_SABOTAGE_ACCEPTED")
   else:

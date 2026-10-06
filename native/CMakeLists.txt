@@ -67,7 +67,12 @@ set(MODULES
   react/renderer/attributedstring react/renderer/observers/events
   react/renderer/viewtransition react/performance/timeline
   react/performance/cdpmetrics jsinspector-modern/tracing
-  reactperflogger/reactperflogger jserrorhandler logger oscompat)
+  reactperflogger/reactperflogger jserrorhandler logger oscompat
+  # RN's C++ NativeAnimated backend. Its provider also links the legacy-path
+  # Scheduler symbols, which the shared AnimationBackend path never calls.
+  react/renderer/animated react/renderer/animated/drivers
+  react/renderer/animated/event_drivers react/renderer/animated/internal
+  react/renderer/animated/nodes react/renderer/scheduler)
 set(SOURCES "${RN}/jsi/jsi/jsi.cpp" "${RN}/jsi/jsi/JSIDynamic.cpp"
   "${RN}/react/runtime/TimerManager.cpp"
   "${RN}/runtimeexecutor/platform/cxx/ReactCommon/RuntimeExecutorSyncUIThreadUtils.cpp")
@@ -162,7 +167,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
 if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # Retain the binding objects for the pinned Godot class profile as SDK exports,
   # including classes only an external adapter uses. This is one archive in one

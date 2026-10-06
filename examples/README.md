@@ -45,6 +45,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [chart](chart/README.md) | Original Chart Kit with the supported SVG subset | Internal | [App](chart/App.jsx) · [scene](chart/scene.tscn) |
 | [nativewind](nativewind/README.md) | Utility classes, variables, breakpoints and manual theme | Public | [App](nativewind/App.jsx) · [scene](nativewind/scene.tscn) |
 | [typography](typography/README.md) | Nested text, fonts, wrapping and retained child state | Mixed | [App](typography/App.jsx) · [scene](typography/scene.tscn) |
+| [animated](animated/README.md) | Original Animated on RN's C++ NativeAnimated advanced by Godot frames, and TouchableOpacity | Public | [App](animated/App.jsx) · [scene](animated/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
