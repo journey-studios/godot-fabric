@@ -222,6 +222,14 @@ notifications Godot delivers to the `FabricApplication`, with two roots sharing
 one state: 75 headless checks. The preceding host fails exactly its 62
 lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
 
+The [capture notification example](examples/pointer-capture-notifications/README.md)
+certifies `gotpointercapture`/`lostpointercapture` for JSX props and original
+View, documentElement and Document listeners, and hover and click while a pointer
+is captured, in eight original/current × flag lanes: 672 headless checks. RN
+notifies a capture at the pointer's next event, retargeted to its owner, and the
+host already matches it; two retained sabotages fail.
+[Evidence](docs/evidence/pointer-capture-notifications/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

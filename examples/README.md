@@ -217,6 +217,14 @@ loss is `inactive`, a pause is `background`, and stop sends no event. Its
 [receipt](../docs/evidence/app-state/README.md) records 75 headless checks, the
 preceding-host control and a retained negative control.
 
+The [capture notification matrix](pointer-capture-notifications/README.md)
+captures mouse and touch contacts over two roots and observes got/lost on JSX
+props and on original View, documentElement and Document listeners, with hover
+and click while captured, in eight lanes: `npm run test:pointers:capture`,
+outside the launcher catalog. Its
+[receipt](../docs/evidence/pointer-capture-notifications/README.md) records 672
+headless checks and two retained sabotages.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
