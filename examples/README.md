@@ -224,6 +224,13 @@ Switch.js's `setValue`, disabled input is ignored and colors reach the native
 switch. Its [receipt](../docs/evidence/switch/README.md) records 108/108
 headless checks, the preceding host's 2 mount failures and a retained sabotage.
 
+The [shared touches matrix](shared-touches/README.md) presses the original
+`Pressable`s of two roots with overlapping touches and the mouse in four flag
+lanes: `npm run test:responders:shared-touches`, outside the launcher catalog.
+Each TouchEvent lists every touch of the application. Its
+[receipt](../docs/evidence/shared-touches/README.md) records 92 headless checks
+and the preceding-host control.
+
 The [touchables probe](touchables/README.md) presses RN's original
 `TouchableWithoutFeedback` and `TouchableHighlight`, imported from `react-native`,
 with real mouse and touch on two roots: `npm run test:touchables`, outside the

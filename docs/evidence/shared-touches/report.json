@@ -1,0 +1,659 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-shared-touches",
+  "status": "verified-local-four-lanes-preceding-host-and-regressions",
+  "at": "2026-10-05T23:18:10.790674+00:00",
+  "executionBaseCommit": "283065d6eafb2bc30ca8f0d120aabaeb98df4aa6",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "1b7dac52794ffd13257857621942c5df20ca127b",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "nativeHostSha256": "bf3d88c9f77816d19d6e279d5950309afb61d6aa53341abe151614ddafcfa2d2",
+    "nativeCodeChanged": true
+  },
+  "commands": [
+    "npm run test:responders:shared-touches",
+    "node tests/shared-touches-native.test.mjs --allow-original-negative (preserved preceding host installed)"
+  ],
+  "headlessChecks": 92,
+  "lanes": [
+    {
+      "flagMode": "disabled",
+      "responder": "ResponderEventPlugin",
+      "checks": 23,
+      "passed": 23,
+      "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+      "bundleSha256": "0a6a775689fbe21b695e2f693f7d674823795382af887d61cad17f28fe25fdb5",
+      "reportSha256": "b378040ddb62efe9096a74f42faec8ecd07ef4ea144913a0ddc8c02b66199973",
+      "logSha256": "0109c960fd881d020af830392beed7b2abe0b8401d1687d4a9459d871f9d582d",
+      "callbacks": {
+        "mixed/mouse-a-touch-b": [
+          "A:pressIn:[0]",
+          "A:pressOut:[0]",
+          "A:press:[0]"
+        ],
+        "touch/a-lifts-first": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]"
+        ],
+        "touch/cancel-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[2]"
+        ],
+        "touch/overlap-a-then-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]"
+        ],
+        "touch/overlap-b-then-a": [
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ],
+        "touch/sequential": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]",
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ]
+      }
+    },
+    {
+      "flagMode": "imperative-only",
+      "responder": "ResponderEventPlugin",
+      "checks": 23,
+      "passed": 23,
+      "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+      "bundleSha256": "fb99a6d48e23ffa57ab299ec8da668a2e5c8afd4976d4ba8e58de48f30f72a8b",
+      "reportSha256": "3836666ca0e69497c3f348a794eadd4dacdaa9f139751546fadb155a2ea02c78",
+      "logSha256": "84260dcfb47844028daca8aecb6e056d8283c1c4b141e2e608923b6151633edd",
+      "callbacks": {
+        "mixed/mouse-a-touch-b": [
+          "A:pressIn:[0]",
+          "A:pressOut:[0]",
+          "A:press:[0]"
+        ],
+        "touch/a-lifts-first": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]"
+        ],
+        "touch/cancel-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[2]"
+        ],
+        "touch/overlap-a-then-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]"
+        ],
+        "touch/overlap-b-then-a": [
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ],
+        "touch/sequential": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]",
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ]
+      }
+    },
+    {
+      "flagMode": "internal-only",
+      "responder": "ReactNativeResponder",
+      "checks": 23,
+      "passed": 23,
+      "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+      "bundleSha256": "57d4de0081dd470142cb2d4fce1a7678cc2f6dc44674997804a91fbea1a13792",
+      "reportSha256": "47f2da03e1d6c0f945ff989e54634d17bf3922f20c52d7d842426cdfe93ad39a",
+      "logSha256": "81924e4870167a1faab7b700ca68ef9085a01421f839504abfbec49e9937a425",
+      "callbacks": {
+        "mixed/mouse-a-touch-b": [
+          "A:pressIn:[0]",
+          "A:pressOut:[0]",
+          "A:press:[0]"
+        ],
+        "touch/a-lifts-first": [
+          "A:pressIn:[1]",
+          "A:pressOut:[2]",
+          "A:press:[2]"
+        ],
+        "touch/cancel-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[2]"
+        ],
+        "touch/overlap-a-then-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]"
+        ],
+        "touch/overlap-b-then-a": [
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ],
+        "touch/sequential": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]",
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ]
+      }
+    },
+    {
+      "flagMode": "enabled",
+      "responder": "ReactNativeResponder",
+      "checks": 23,
+      "passed": 23,
+      "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+      "bundleSha256": "3b67f46c2ecedaf1023af3c20d1c684fb20dd52c89c4fbf62970e745b7ae9e1e",
+      "reportSha256": "bd4e7bb7512ca72cf744a43999e04565abdd09affa81a27417477003dc481d17",
+      "logSha256": "1d02b2bcdd1dc87cd9eca608b9c45d302c6bc7fb457527f676071fc7875dae4c",
+      "callbacks": {
+        "mixed/mouse-a-touch-b": [
+          "A:pressIn:[0]",
+          "A:pressOut:[0]",
+          "A:press:[0]"
+        ],
+        "touch/a-lifts-first": [
+          "A:pressIn:[1]",
+          "A:pressOut:[2]",
+          "A:press:[2]"
+        ],
+        "touch/cancel-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[2]"
+        ],
+        "touch/overlap-a-then-b": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]"
+        ],
+        "touch/overlap-b-then-a": [
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ],
+        "touch/sequential": [
+          "A:pressIn:[1]",
+          "A:pressOut:[1]",
+          "A:press:[1]",
+          "B:pressIn:[1]",
+          "B:pressOut:[1]",
+          "B:press:[1]"
+        ]
+      }
+    }
+  ],
+  "responderDivergence": {
+    "cases": [
+      "touch/a-lifts-first"
+    ],
+    "ResponderEventPlugin": [
+      "A:pressIn:[1]",
+      "A:pressOut:[1]",
+      "A:press:[1]"
+    ],
+    "ReactNativeResponder": [
+      "A:pressIn:[1]",
+      "A:pressOut:[2]",
+      "A:press:[2]"
+    ],
+    "reason": "ReactNativeResponder releases only when no touch remains listed; the legacy plugin when no listed touch is inside the responder"
+  },
+  "precedingHostControl": {
+    "flagMode": "enabled",
+    "nativeHostSha256": "06a33274cf55143a9eb76a8402d95b64e7e662ad650cef554de18bcd802f805e",
+    "source": "main 2ec988e native tree (built from 3edd80c, identical native sources)",
+    "checks": 23,
+    "failures": [
+      "mixed/mouse-a-touch-b/Each TouchEvent lists every touch the application's runtime sees",
+      "mixed/mouse-a-touch-b/The original Pressables see RN's single-responder gesture",
+      "touch/a-lifts-first/Each TouchEvent lists every touch the application's runtime sees",
+      "touch/a-lifts-first/The original Pressables see RN's single-responder gesture",
+      "touch/cancel-b/Each TouchEvent lists every touch the application's runtime sees",
+      "touch/overlap-a-then-b/Each TouchEvent lists every touch the application's runtime sees",
+      "touch/overlap-a-then-b/The original Pressables see RN's single-responder gesture",
+      "touch/overlap-b-then-a/Each TouchEvent lists every touch the application's runtime sees",
+      "touch/overlap-b-then-a/The original Pressables see RN's single-responder gesture"
+    ],
+    "reportSha256": "bb302d1c4345ec847b896f0996ccc4da86eadcc529c4e41c3dd6e2a2e536b63a",
+    "logSha256": "f51d201a2488c89ac85538670aae2385a3fc70a3936e4b1d0290bbaaefe7ffb5",
+    "runnerLogSha256": "dd519e2cdca1aafcb2ddd992e4a9cf304fd697820308091a68a5d2d3a3722139",
+    "sameBundleAsCurrent": true,
+    "comparisonSha256": "974a66853d9ea4a62ede02f48a4cf2611ee867edfc10a88bee54217070b4f507"
+  },
+  "refreshedPrecedingHostControls": {
+    "pointer-up": {
+      "nativeHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "preservedHostSha256": "a6ae1863f7d75e3bae7b8b14184a5a92b4f092129f6d408f6485d213c832725f",
+      "checks": 63,
+      "normativeFailures": 8,
+      "reportSha256": "d0914e148790f584f4489e23b2b952ab375e0365d48fa4d591de767fa86d9c90"
+    },
+    "pointer-query-fault": {
+      "nativeHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "preservedHostSha256": "e5e6da9faadd276df7b25e637f89bc5c9eb53fea0f1a24bddea18bcebb64bfce",
+      "checks": 187,
+      "normativeFailures": 12,
+      "reportSha256": "e52a2e264eaa139ce23bc5ca4e2401f034839a612926561cc5bfc97f519989c9"
+    },
+    "pointer-resolver-fault": {
+      "nativeHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "preservedHostSha256": "df06c37a96d8e4c9abf968d358d7bd16dd60d99aa53fed35924c4e04488c08c5",
+      "checks": 66,
+      "normativeFailures": 3,
+      "reportSha256": "24385eb48803c7807db56a5211f582b54c689aaa0ebf0eb0a2eecf0ae02ff70a"
+    },
+    "pointer-move": {
+      "nativeHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "preservedHostSha256": "d8553d9945c484ab6a8a4d843dd973c88db3e878c4bc5c8a25afcf88824670ae",
+      "checks": 136,
+      "normativeFailures": 45,
+      "reportSha256": "4c06fec67d6d033f646fee2ca9a15c9aaa8247306696ddca06d943623b30e593"
+    },
+    "pointer-hover": {
+      "nativeHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "preservedHostSha256": "ab0b783d11df7d16d4de4aec73a26bf01d9241e4a97cbc0df5f9949093172e8c",
+      "checks": 137,
+      "normativeFailures": 32,
+      "reportSha256": "e9f33aefb6034780236d9fca505797016b7d332ffa242bf26e74895baf8787cc"
+    },
+    "pointer-root-path": {
+      "nativeHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "preservedHostSha256": "6fe21917f1e1db718cd871d6c5f24f828e1a81e41efcb58c2dea7c9b5c6fb449",
+      "checks": 45,
+      "normativeFailures": 9,
+      "reportSha256": "053410ac9649b45b5f9eaed8a9457dd5b23d6f7f90634da2a1ca6b75ec604385"
+    },
+    "pointer-click": {
+      "nativeHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1",
+      "preservedHostSha256": "c86205d3e156d58df3d0a59f95045cc5c772a22f5aed3c05d550997b539619f1",
+      "checks": 91,
+      "normativeFailures": 31,
+      "reportSha256": "6a2d2cea1cba718a5c7b5951f4c190f62cf943ba3654691870d9bc20b3ba4e30"
+    }
+  },
+  "clickControlRetry": {
+    "firstAttempt": "SIGKILL after 8 s while three parallel slices were building",
+    "retryLogSha256": "af51a8ca3b60398f4c7e0392233f9699a1f44dbc12b60c8efa2a4d3fd622a6c5",
+    "clickSuiteRecheck": {
+      "exitCode": 0,
+      "seconds": 59,
+      "logSha256": "099c40e7fca2f8b3e4e50d59d0b898dd78172ebbc03f62149f8c2a0612aad974"
+    }
+  },
+  "updatedContracts": {
+    "tests/event-dispatch-integrated-probe.gd": "A's TouchEnd still lists B's contact; the responder owner follows each implementation",
+    "examples/pointer-geometry/validation.gd": "A's TouchCancel still lists B's surviving contact",
+    "firstBatteryFailures": [
+      "test:events:integrated",
+      "test:examples"
+    ],
+    "rerunsAfterUpdate": {
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "196f2652db39eab8b13756e3cd32e448da9c957e61d5d41d3fffc07f015665fd"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 142,
+        "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+      }
+    }
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 179,
+        "logSha256": "eee7d3dbf42cee59d21a0ff3f1d870afb968a53dbaed8353700b84fda9187855"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "df8276b4ddf27cbdb79081ab951a04b49e0d4037372b890d3e51eb989e965014"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "1b4e3ae99618c17204f13788998feac900b664a830fe0cbdbc7e20544f520b9d"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "a8de77043f7faedb017a5e7342bf07f792c338c83f37fa883cd0456e72f263e7"
+      },
+      "test:examples": {
+        "exitCode": 1,
+        "seconds": 103,
+        "logSha256": "1d3ddfa257502e48c56b967f8a1cc469da80ceb49825a925c0b1f986fdbb0bf2"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "00f9f6d1b61f42502099221e02fc58f4d3a7bf5f183bf671074316a85365fd1b"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "ab8aee95a14f5013fcb9854205a8bc07dbba7e2f50c86d257b5db9458f1b6419"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "846cde51e8a60d9f7fb0fc3190aedc8cb35de8dc03fe69c3a75f0d6637d953cf"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "26e21b4b2a43994f45a00e5e2252d7a71399c32cacf4498bd2ff7f989ccc32e0"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "d63688503e480c79b4541f12dca4c15897412630d7e23df60ce581e8c41af6e4"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "5fa3d4d590d6448a1766c30e19ddb234273d548d0879e6e86d19827f635e03ac"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "b8931e783cc4a949cc7197b32f9fd92c6d58d71b1ba24980c0d9f01f829b90cc"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "3f0a67c15a56322dfa803bf6ad7443784c6dc57b25d1acb06bec5eddefa0300c"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "7d9f5cec373a942a00a968c94caa4735311033aeea4441135ee9b2390425f771"
+      },
+      "test:events:integrated": {
+        "exitCode": 1,
+        "seconds": 16,
+        "logSha256": "baebfd32476de1e6b306a429d361c29302f5435e746d55d033199ce312c2d523"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "4f7c35178715f95cf679436c34a20274475cbe60ae1c800820ef3d1c6fe9b7f6"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "a40eb1d908ec6dcda62170ab9dd490243674899cf3a8d6bc220aeebc40b69026"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 39,
+        "logSha256": "05cde86115b8931795c91c15f564bbfb0890b8e5206e54b2f8afc64ecd92aa57"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "8e7f8baccc7d5c08ba6e6371912ab375d8ad391ba60f47f455dbf5f351d80162"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "e43435d161f9badb41c61af7aad68e9ca4efb6a888a2c71b8570f0331cb42923"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "97c99b165efdbd9c5a93b871467a31464bb63d9def98653449c8113a3f727a8b"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "2c0b2507c6570b15108790595c555980bfcbb1d836ab654b0cd9c2af66714536"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "4fc424eaa903133ae024d84df852a07597430ee0baa8b8e0953b6506e380f2fe"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 39,
+        "logSha256": "7c2976a71b0e70d8014266d9f40d4be88a0849fa88c4887fea9922d96750342a"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "be23dd41cabc1936522251c5c71eb9084b22d0743a4c155fdce3af6fba7ffd61"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "116874636f43f2ea67a2ec088ca56e5178939c6026c5659532b84d997d6c77ae"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "086ff148bb9b23c6afc4153a455903bfc896a9b156a8ccc4e89199d6e842e480"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 65,
+        "logSha256": "ed198d140334359916068063d33db3284e486c7010f850b2a1976fd3242628d2"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "c4691ac729599b8effd9c82ed8f2f4b54b0746c11af3b5782a9a0a2909211837"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "fa459eea0cfb24a1c8ce4a28b9db664b166330acbb1ba48e11eaf8379695c736"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 48,
+        "logSha256": "97e4fff65841016b9f728cc52e53f95f3f40403cc199fcbc5951e5c775344939"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      },
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "69a4b5100f74c7e69ab7189cba03376487f54b67438951debd2aa520989fcb5f"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "b95ff5caf23dd8fa77f3fb107a08a7bad8adb3cfe731399d2c704a731273a8cc"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "3cf2028fd825467d52682d33b526b5fb15009da52018ace95a97272e54e3c410"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 27,
+        "logSha256": "da9ae2fad63453bef504b8f5df342904970d6e2b9cddae38d6d7200ddc2afef4"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 78,
+        "logSha256": "1d60bb2b7dc3202203f9aed682fc30ce4392a283013ed9e8ba73942f97474f8f"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 72,
+        "logSha256": "637f7841cf1395bcc72076a70a13ff5bba044d2f70c7bdd0fc6846afdd0e195d"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 244,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "cold": {
+        "exitCode": 0,
+        "seconds": 31,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      }
+    },
+    "reruns": {
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 21,
+        "logSha256": "40860fc83a18be355370ccffdab73aee7d98ffe1a9f5a0cc9adcfbbfa887f512"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 59,
+        "logSha256": "099c40e7fca2f8b3e4e50d59d0b898dd78172ebbc03f62149f8c2a0612aad974"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "196f2652db39eab8b13756e3cd32e448da9c957e61d5d41d3fffc07f015665fd"
+      },
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 142,
+        "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+      }
+    },
+    "downChecks": 2731,
+    "documentUpChecks": 6459,
+    "documentMoveChecks": 1940,
+    "documentHoverChecks": 1530,
+    "clickChecks": 728,
+    "panResponderChecks": 128,
+    "viewUpChecks": 297,
+    "queryFaultChecks": 187,
+    "resolverFaultChecks": 66,
+    "moveChecks": 220,
+    "hoverChecks": 158,
+    "rootPathChecks": 82,
+    "nodeContractChecks": 260,
+    "pythonContractChecks": 13,
+    "examples": 22,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/shared-touches-fixture.jsx": "441b4a29a2619163de99a58503ca8b8daa006cb6310bc91ca33ec7348a8761de",
+    "tests/shared-touches-probe.gd": "f56314e4e587d0c6747bb3aef28703f53704b9361cf74c665d15bc3f0304cc7d",
+    "tests/shared-touches-native.test.mjs": "57d0ca2b9310ea0d42252e9d825f7fd6b45c92a5df330730b466502f2fbbfc43",
+    "scripts/event-target-bundle.mjs": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "src/react-native-platform.jsx": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+    "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+    "native/application_runtime.cpp": "d322b41f9dfe67f070061f2d13a571f5082f1b145882cc0e0d9878f1cdb2d5ac",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp": "b0f33a89e1c812112e1457076667863226b4f42247aa35c2b367e577195dd6b7"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "2fcab791c26772821958a64e66ac3482d296e8a5a800d6388a85c8fcc0d6bbef",
+    "package.json": "0eb674af4e81a63018c73dcfd9a9cb57afcee9f451523f00262acaf9605db9f2",
+    ".fallowrc.json": "38a8c4b5aa389b642bce0539caaffaa046b5c20abbd006e89c502ac4155d243c",
+    "tests/event-dispatch-integrated-probe.gd": "9e8f0341a138984e7081df3e274e872aa4eaa0af468eab57d748c18090c3341a",
+    "examples/pointer-geometry/validation.gd": "2d0978a465d5cae64d3295bcad127ab44b4d60fc401197ca931cc46699d14f1c"
+  },
+  "changedFilesSinceMain": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "examples/pointer-geometry/validation.gd",
+    "native/application_runtime.cpp",
+    "native/pointer_adapter.cpp",
+    "native/pointer_adapter.h",
+    "package.json",
+    "tests/event-dispatch-integrated-probe.gd",
+    "tests/shared-touches-fixture.jsx",
+    "tests/shared-touches-native.test.mjs",
+    "tests/shared-touches-probe.gd"
+  ],
+  "hostedCI": {
+    "status": "pending-shared-touches-slice"
+  },
+  "limits": [
+    "Touches and the mouse over two roots, four flag lanes on the same host, headless.",
+    "RN's platforms keep one touch list per surface; this host lists the application's touches on purpose.",
+    "Pointer capture across roots, several touch devices, hardware and mobile exports are not exercised.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> | sha256",
+    "sources": 16,
+    "allMatch": true
+  },
+  "reviewReruns": [
+    {
+      "reason": "CodeRabbit review on PR 34: the integrated probe's report scope still said root-local",
+      "commit": "a906ab6",
+      "command": "npm run test:events:integrated",
+      "changedSource": {
+        "tests/event-dispatch-integrated-probe.gd": "25a60526b07d3d84e3cff6389331818b0aa2abda42fa8dcba9d86484041ef2bb"
+      },
+      "nativeHostSha256": "bf3d88c9f77816d19d6e279d5950309afb61d6aa53341abe151614ddafcfa2d2",
+      "lanes": {
+        "original": {
+          "checks": 181,
+          "reportSha256": "4f08603b076c2ae99de3743408c9e592049ac337a7a82bb5438df2c5ce08ba27"
+        },
+        "integrated": {
+          "checks": 206,
+          "reportSha256": "668ca2da09c5b0636406a8941c0acc88e06e1dc2c39b0641a928a4faa184478c"
+        }
+      },
+      "nativeTouchScope": "application-wide",
+      "exitCode": 0,
+      "runnerLogSha256": "af769c75aa70bb0195ff851be84a92ca3f305a8adcff7ab5b71a3bf18ac08fb3"
+    }
+  ]
+}

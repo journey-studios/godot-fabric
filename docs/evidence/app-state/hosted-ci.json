@@ -1,0 +1,709 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-app-state",
+  "status": "verified-completed-hosted-workflow-and-headless-app-state-artifact",
+  "run": {
+    "id": 37382633328,
+    "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/31",
+    "status": "completed",
+    "conclusion": "success",
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "failure",
+        "startedAt": "2026-10-05T22:27:53Z",
+        "jobs": [
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112008150975,
+            "runAttempt": 1,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:27:57Z",
+            "completedAt": "2026-10-05T22:28:56Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112008150975"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112008151282,
+            "runAttempt": 1,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:33:14Z",
+            "completedAt": "2026-10-05T22:57:09Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112008151282"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "failure",
+            "databaseId": 112008151365,
+            "runAttempt": 1,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:27:57Z",
+            "completedAt": "2026-10-05T22:29:28Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112008151365"
+          },
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112008151398,
+            "runAttempt": 1,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:37:09Z",
+            "completedAt": "2026-10-05T22:45:34Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112008151398"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "skipped",
+            "databaseId": 112018125795,
+            "runAttempt": 1,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:57:10Z",
+            "completedAt": "2026-10-05T22:57:09Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018125795"
+          }
+        ]
+      },
+      {
+        "attempt": 2,
+        "conclusion": "success",
+        "startedAt": "2026-10-05T22:58:54Z",
+        "rerun": "failed jobs only (reference-android and its dependent parity-comparison)",
+        "jobs": [
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112018692558,
+            "runAttempt": 2,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:58:59Z",
+            "completedAt": "2026-10-05T23:05:26Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018692558"
+          },
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112018694379,
+            "runAttempt": 2,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:37:09Z",
+            "completedAt": "2026-10-05T22:45:34Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018694379"
+          },
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112018694673,
+            "runAttempt": 2,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:27:57Z",
+            "completedAt": "2026-10-05T22:28:56Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018694673"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112018739103,
+            "runAttempt": 2,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T22:33:14Z",
+            "completedAt": "2026-10-05T22:57:09Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018739103"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112020808353,
+            "runAttempt": 2,
+            "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+            "startedAt": "2026-10-05T23:05:30Z",
+            "completedAt": "2026-10-05T23:05:56Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112020808353"
+          }
+        ]
+      }
+    ],
+    "attempt1Failure": {
+      "job": "reference-android",
+      "attempt": 1,
+      "jobId": 112008151365,
+      "failedStep": "reactivecircus/android-emulator-runner > Install Android SDK (sdkmanager --install emulator --channel=0)",
+      "sdkmanagerCommand": "[command]/usr/bin/sh -c \\sdkmanager --install emulator --channel=0 > /dev/null",
+      "logLine": "Warning: An error occurred while preparing SDK package Android Emulator: Error on ZipFile unknown archive.",
+      "errorLine": "##[error]The process '/usr/bin/sh' failed with exit code 1",
+      "parityScriptStarted": false,
+      "classification": "infrastructure: the Android Emulator SDK package download/unzip failed before the emulator booted; no project test ran in this job",
+      "logSha256": "db796c5776bbc355feffc14482f76be41c858afd6dd700bd48dc53fb2a214744"
+    },
+    "attempt2CarriedOverJobs": [
+      {
+        "job": "contracts",
+        "attempt1Id": 112008150975,
+        "attempt2Id": 112018694673,
+        "sameStartAndCompletion": true,
+        "attempt2LogByteIdenticalToAttempt1": true
+      },
+      {
+        "job": "native-cold-start",
+        "attempt1Id": 112008151282,
+        "attempt2Id": 112018739103,
+        "sameStartAndCompletion": true,
+        "attempt2LogByteIdenticalToAttempt1": true
+      },
+      {
+        "job": "reference-ios",
+        "attempt1Id": 112008151398,
+        "attempt2Id": 112018694379,
+        "sameStartAndCompletion": true,
+        "attempt2LogByteIdenticalToAttempt1": true
+      }
+    ],
+    "attempt2ExecutedJobs": [
+      "reference-android",
+      "parity-comparison"
+    ],
+    "attempt2ReferenceAndroidChecks": 13,
+    "jobs": [
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112018692558,
+        "runAttempt": 2,
+        "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+        "startedAt": "2026-10-05T22:58:59Z",
+        "completedAt": "2026-10-05T23:05:26Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018692558"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112018694379,
+        "runAttempt": 2,
+        "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+        "startedAt": "2026-10-05T22:37:09Z",
+        "completedAt": "2026-10-05T22:45:34Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018694379"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112018694673,
+        "runAttempt": 2,
+        "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+        "startedAt": "2026-10-05T22:27:57Z",
+        "completedAt": "2026-10-05T22:28:56Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018694673"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112018739103,
+        "runAttempt": 2,
+        "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+        "startedAt": "2026-10-05T22:33:14Z",
+        "completedAt": "2026-10-05T22:57:09Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112018739103"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112020808353,
+        "runAttempt": 2,
+        "headSha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+        "startedAt": "2026-10-05T23:05:30Z",
+        "completedAt": "2026-10-05T23:05:56Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328/job/112020808353"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts (attempt 1)": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+      "native-cold-start (attempt 1)": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+      "reference-android (attempt 1)": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+      "reference-ios (attempt 1)": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+      "reference-android (attempt 2)": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+      "parity-comparison (attempt 2)": "8f80feda8c38512f3608f479da21b7abac5c3e0a"
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 23.92
+  },
+  "implementationCommit": "708767945f1330211a69522144d6537d8d8b814c",
+  "runHeadIsPostCommitSourcePin": true,
+  "actualCheckout": {
+    "sha": "8f80feda8c38512f3608f479da21b7abac5c3e0a",
+    "parents": [
+      "72155bc8ffc785006d70be6e3b74fe3c672f3588"
+    ],
+    "treeSha": "cb3aadc002e6723ed2297dfb40c02c926c908d8a",
+    "treeEntries": 981,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "method": "full checkout SHA from native job git-log output (a push of main checks out the pushed commit); immutable GitHub Git tree compared to git blob hashes of implementation commit bytes",
+    "producerPathsVerified": 16,
+    "nativeSourcePathsVerified": 56,
+    "allCuratedTrackedPathsVerified": 70,
+    "trackedPinSetCounts": {
+      "sourcePins": 16,
+      "nativeSourcePins": 56,
+      "verificationSourcePins": 5
+    },
+    "pathsInMoreThanOnePinSet": [
+      "native/app_lifecycle.h",
+      "native/application_runtime.cpp",
+      "native/application_runtime.h",
+      "native/fabric_application.cpp",
+      "native/fabric_application.h",
+      "native/turbo_module_registry.cpp",
+      "native/turbo_module_registry.h"
+    ],
+    "allTrackedInputContentIdenticalToImplementationCommit": true,
+    "runHeadTrackedInputsIdenticalToImplementationCommit": true,
+    "pathsWhoseBytesDifferAtRunHead": [],
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11375918985,
+    "name": "native-app-state",
+    "zipFile": "work/app-state/native-app-state.zip",
+    "zipSizeBytes": 39623,
+    "zipSha256": "c4e0b39d4fc63f5d295ce968436587c026d43b9742f3ef374df5fe4a282f8f29",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-05T22:41:25Z",
+    "fileCount": 5,
+    "comparisonSha256": "319acc3ac604a040999d86b8e212ee4aaa8d90a525e4f389e544d760a208eb19",
+    "files": {
+      "app-state-comparison.json": "319acc3ac604a040999d86b8e212ee4aaa8d90a525e4f389e544d760a208eb19",
+      "app-state-current-report.json": "78b38580a8cdbdf8835e24841e70db35f9d909a7dfe21d3ec2273ce4e2738d9c",
+      "app-state-current.log": "a77c1705d5e128c986d2070c10fc30b17165c644c7920c61246d2cbe8deb340c",
+      "app-state-probe-bundle.json": "28994a9398cd8d81069e57dcdaaf8996d88c5c094557b868d06e717ed59ef7d3",
+      "app-state-report.json": "4c509e3fd16ba1c9fb9c154dfc6bc41c6ee36854b8ee37a5393941c5e73b9bf4"
+    }
+  },
+  "verification": {
+    "headlessChecks": 75,
+    "localHeadlessChecks": 75,
+    "lanes": [
+      {
+        "lane": "current",
+        "checks": 75,
+        "passed": 75,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "8d4fa560d6580c471d6b25c4eea7089050b76316057792fb5ec4cb775865a685",
+        "checkIdDigestFormula": "sha256 of the check names joined by a newline (the AppState receipt builder's formula)",
+        "checkIdDigestEqualsCurated": true,
+        "checkIdDigestJSONSeparatorsFormula": "32bc1c588e01c56d00d0938e3b8ed3119a38822db699800c56ee3aa3c565c68a",
+        "checkIdDigestJSONSeparatorsFormulaEqualsCurated": false,
+        "curatedCheckIdDigestSha256": "8d4fa560d6580c471d6b25c4eea7089050b76316057792fb5ec4cb775865a685",
+        "bundleSha256": "11b57edd0b904a4051d7593852666550bff3fb8a56c66a1dae781ecfe5d61be9",
+        "bundleHashComparedFields": [
+          "app-state-current-report.json provenance.bundle.bundle.sha256",
+          "app-state-probe-bundle.json bundle.sha256",
+          "app-state-comparison.json current.provenance.bundle.bundle.sha256"
+        ],
+        "bundleExactlyMatchesCuratedLane": true,
+        "curatedBundleSha256AllLanes": {
+          "current": "11b57edd0b904a4051d7593852666550bff3fb8a56c66a1dae781ecfe5d61be9",
+          "original": "11b57edd0b904a4051d7593852666550bff3fb8a56c66a1dae781ecfe5d61be9",
+          "sabotage": "11b57edd0b904a4051d7593852666550bff3fb8a56c66a1dae781ecfe5d61be9"
+        },
+        "reportSha256": "78b38580a8cdbdf8835e24841e70db35f9d909a7dfe21d3ec2273ce4e2738d9c",
+        "logSha256": "a77c1705d5e128c986d2070c10fc30b17165c644c7920c61246d2cbe8deb340c",
+        "passedMarkerInLog": true,
+        "normativeChecks": 62,
+        "executedObservationsRecomputedFromHostedEqualCurated": true,
+        "executedObservationDifferences": []
+      }
+    ],
+    "rawProbeReportEqualsCurrentReportWithoutProvenance": true,
+    "comparisonCurrentEqualsCurrentReport": true,
+    "comparisonOriginalControlPresent": false,
+    "comparisonIntentionalNativeProducerDifferences": [
+      "native/app_lifecycle.h",
+      "native/fabric_application.cpp",
+      "native/fabric_application.h",
+      "native/turbo_module_registry.cpp",
+      "native/turbo_module_registry.h",
+      "native/application_runtime.cpp",
+      "native/application_runtime.h"
+    ],
+    "probeBundleReceiptEqualsReportProvenanceBundle": true,
+    "producerPins": {
+      "tests/app-state-fixture.jsx": "28b0789b710f9a7e92e3a0a3b55a2fa4133a176cb3efc87172698f7a3e3abb48",
+      "tests/app-state-probe.gd": "9cb54936b3823738ef8b072812d4d2e96973e9925002ebb3dbe41d221d125a56",
+      "tests/app-state-native.test.mjs": "4c771c14655a28fe743aedac1ba351af66712d42a46de33a9c07322df98cc7d6",
+      "tests/app-state-oracle.mjs": "b6e2feae10ebe8ff4d7dbce09b720df5fdf114952bbad33ee6aa9f56b9f13b55",
+      "scripts/app-state-bundle.mjs": "54a07a67028129eb0f8119e66876b6f2b088d8e6c98ee0ce24295433da4a2912",
+      "src/app-state.js": "4a630422e09310dd3bdb9cad8428dc816af1edb0097c08ed6513528e60d2efa8",
+      "src/platform-environment.js": "bd43c382c8b7611ce623bcd86caad147b31e58ad523cd3cc3d8bf916caf7d73c",
+      "src/react-native-platform.jsx": "32a54afe21b773defe4853fa26015364845a806d9afab3d51dd2bd8e55d38278",
+      "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+      "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+      "native/fabric_application.cpp": "7fe3b19ab8aec3de80c539001318eb095615de18fd27000bf3be9045855c86e8",
+      "native/fabric_application.h": "8570d4ef002f24b6b79d8e4dfda75b71e2f29224810ac50e78df3e9746a4f2d9",
+      "native/turbo_module_registry.cpp": "d10e1e79c834cd3f7a97248efec78ff08ec486da40e7de05b9c61d4acb8664a7",
+      "native/turbo_module_registry.h": "db195aedc103189acca35ca58df4f6dea9e15c9b4109940e7123006f64de6ec6",
+      "native/application_runtime.cpp": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+      "native/application_runtime.h": "f2f24c1908457fe7d941f475eeb7e0b3d081abcb35adf457922b3138ef77e38c"
+    },
+    "producerPinsEqualCuratedSourcePins": true,
+    "producerPinsAgainstImplementationCommit": true,
+    "originalReactNativeSources": {
+      "Libraries/AppState/AppState.js": "7f835cbc4bf63b4562ba2fdc3fee7a9a592a1477f18c3299a6ecfe17c59a7f00",
+      "Libraries/AppState/NativeAppState.js": "baf73b7d1b6565b5080adc35f2820d23d93343673e7a8592a8c3120aba47cdb1",
+      "src/private/specs_DEPRECATED/modules/NativeAppState.js": "f10bb50c2265d75c96f36830fb733c5517d6098386e4d26e0bfb04983ef6b3e1",
+      "Libraries/EventEmitter/NativeEventEmitter.js": "132e1d5314fde128d56724d26f96b13eb0bbfe56a69e5ac9d17fd6ce297b6d91",
+      "Libraries/EventEmitter/RCTDeviceEventEmitter.js": "a24e33cbb6272ecd5ca580c348434b6444c8a5a36ecdbfca7ae8c3e5ba498ed1",
+      "Libraries/vendor/emitter/EventEmitter.js": "adb61a5de47f0b89f72da0f27a69a9631cf60257beb9b0bc7b5830c081c0e221",
+      "Libraries/TurboModule/TurboModuleRegistry.js": "433e760b8dde773c9f5aaa8832d06f58fe758e83966b2377bb4f240d62820195",
+      "index.js": "5e03e5233650531810ef3129db116e1e534bbf30d85fccf6a10248ef9a088538",
+      "React/CoreModules/RCTAppState.mm": "6c97037211e200e6e18b98afaa9b53a333b5d3d89c0b8b9dc80115095b3dc5d7",
+      "React/Modules/RCTEventEmitter.m": "8dc3fd5e7da3b617970edaa2368c786b5a7edc88c401549da0aafef57f9ab995",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/appstate/AppStateModule.kt": "0c138c2fadf87c3e27c64dd8ead2df8d90d0cd001fc01a9ecd393074857822c9",
+      "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86",
+      "ReactCommon/react/nativemodule/core/ReactCommon/TurboModule.cpp": "35454614a9dd58c7d5da95bb824d7d6de3749f2e69aa4258bf7b8b6e99b9aed4",
+      "ReactCommon/react/bridging/Function.h": "d27bdd1728bcbc7b18cbf3b883dab53bda01d1f6edc54b21d47bf5390e54670c"
+    },
+    "originalReactNativeInputCount": 14,
+    "originalReactNativeSourcesEqualCurated": true,
+    "bundleInputCount": 167,
+    "declaredNativeHostSha256": "6e7fdd76899a160f8a510cac30c60293b79740fde3134e55516af723172c71da",
+    "localNativeHostSha256": "60825a18b7313fe889f34b3fddffdc9f50453465a7bcdb56eda02eba042cbfe4",
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "localNode": "v22.23.3",
+    "onlyDifferencesFromLocalBaseline": [
+      "provenance.nativeHostSha256 (runner-built host)",
+      "provenance.node v22.23.2 on runner versus v22.23.3 locally"
+    ],
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationAndDestructorWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "972ee5d1198bbb052cce29c5cde16375ecf7830893712742d069c0126556fac7",
+        "gitBlobSha1": "fe070daceb2dcb6121bf95b6d830db2ee2cadd05"
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "59813722805c54e0fec7109cb4157e6f86a64074e234beb0859f8e1a2d5896f5",
+        "gitBlobSha1": "a4fa5bf1693a6e0dea9d194ebfa2682bf6633c58"
+      },
+      "dependencies.json": {
+        "sha256": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "gitBlobSha1": "f0480c2a65061b3bfc7d6350e07d5189d3b8dda9"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+        "gitBlobSha1": "d2451e8fc6314eb726a2fb4137488167e67c912d"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "gitBlobSha1": "b72cd2f29399e1c85f8b49cbc6bae3bbb1c26355"
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab"
+      },
+      "native/affine_transform.h": {
+        "sha256": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+        "gitBlobSha1": "9d5f274ad58504550d49b34e5ad72ffe05bfed81"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+        "gitBlobSha1": "1d14a7e8eb4edfd1811909c2541e42ed50612b34"
+      },
+      "native/app_lifecycle.h": {
+        "sha256": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+        "gitBlobSha1": "bbc5295c158d6b856a12aa96c47db3ffb4936e9a"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+        "gitBlobSha1": "a69ee709ab5b383985c87c131d75f56cd188b62b"
+      },
+      "native/application_runtime.h": {
+        "sha256": "f2f24c1908457fe7d941f475eeb7e0b3d081abcb35adf457922b3138ef77e38c",
+        "gitBlobSha1": "1887397a329a2552d65d23a0de58efe87d86d6d5"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "7fe3b19ab8aec3de80c539001318eb095615de18fd27000bf3be9045855c86e8",
+        "gitBlobSha1": "a43d2da1a37415b16e0c952e74f20047029b2105"
+      },
+      "native/fabric_application.h": {
+        "sha256": "8570d4ef002f24b6b79d8e4dfda75b71e2f29224810ac50e78df3e9746a4f2d9",
+        "gitBlobSha1": "585f2086410eef387340f77b9e4d724330f3b8a6"
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "gitBlobSha1": "7236f0fa2dcc99a0b116b9106c5875a704ece920"
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0"
+      },
+      "native/godot-profile.json": {
+        "sha256": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+        "gitBlobSha1": "668bd0863459c8f7f10112740a251a5d90b5172f"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "gitBlobSha1": "f5b738bf9ac46cbbc28d0fffe121bd905ad6983b"
+      },
+      "native/godot_dom.h": {
+        "sha256": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "gitBlobSha1": "0fa395d405c49add5db2aa13d81e56883cce5daf"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2"
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "gitBlobSha1": "7412ebe6f12f3e9a5c7b02ffa18538c11aa9c4eb"
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "gitBlobSha1": "83600b2957d39833353c6045b0d2cf85ff13a6f7"
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+        "gitBlobSha1": "f4e82711c021e61d71184e749cefdc0d37c51e04"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "a44aa78379206bfd77afb8fe468fa73e7c5d75e20d68662b3c29f4a2cdcb1588",
+        "gitBlobSha1": "e6904a6d9be7d6a39136f7adc31c1bc4280d4a39"
+      },
+      "native/pointer_event.h": {
+        "sha256": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "gitBlobSha1": "1fded160c6d93d439ff2775cf32679394ddb4501"
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+        "gitBlobSha1": "cfad3573a78bef9d8ecb4349f45e6e43ea231aa0"
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "gitBlobSha1": "ac6ec4d84af956672279ec8f7099a764a55c7e89"
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396"
+      },
+      "native/register.cpp": {
+        "sha256": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+        "gitBlobSha1": "307ed1bbac314d3cd5b915071efb1defe588ccf0"
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+        "gitBlobSha1": "14af1106f5c8d786b5c96e122f40692c95f6f2e9"
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "69587ae4399a87e5085d17343abaa68071d6120dcffccfdf86eb65d9549044ac",
+        "gitBlobSha1": "38326e0c1626dffea7a8893626bd23b268dabb12"
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+        "gitBlobSha1": "2bd6b1ed6e2970b91f87ef521f78ea232b2a0bf9"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+        "gitBlobSha1": "46f1ebb22aad93543d09657d5d8dc2b5d139d819"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "d10e1e79c834cd3f7a97248efec78ff08ec486da40e7de05b9c61d4acb8664a7",
+        "gitBlobSha1": "e0454c9b439dc31340f6907252407ca957e6509f"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "db195aedc103189acca35ca58df4f6dea9e15c9b4109940e7123006f64de6ec6",
+        "gitBlobSha1": "e2f9f90f3dd6830982a69026001ba6759949be68"
+      },
+      "package.json": {
+        "sha256": "8a10242356e83661a864961b52aadc9ee9d18a1aa5f8a9478d4a6d07551da01f",
+        "gitBlobSha1": "092904c98e3f18874f68286fa84c7610dc694518"
+      },
+      "scripts/app-state-bundle.mjs": {
+        "sha256": "54a07a67028129eb0f8119e66876b6f2b088d8e6c98ee0ce24295433da4a2912",
+        "gitBlobSha1": "eb6c833227ee15ead14f5fb55ad2b6f662e107dc"
+      },
+      "scripts/codegen-contract.mjs": {
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "gitBlobSha1": "82e8e7fdac887d69c6f233132dbe26acdac6fbe2"
+      },
+      "scripts/native-sdk.mjs": {
+        "sha256": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+        "gitBlobSha1": "9366491c432af511009f96688b9a9c3a6f400ff2"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af",
+        "gitBlobSha1": "5f832f5f73490ce8a2eb7e62d9ce559a8e7a3d4f"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "gitBlobSha1": "e8bce20845e3645b3adfdb7ed11f6f575b5a9b59"
+      },
+      "src/app-state.js": {
+        "sha256": "4a630422e09310dd3bdb9cad8428dc816af1edb0097c08ed6513528e60d2efa8",
+        "gitBlobSha1": "9efcc77fffbc315b5dbc96a152ee1dc49d12f17f"
+      },
+      "src/platform-environment.js": {
+        "sha256": "bd43c382c8b7611ce623bcd86caad147b31e58ad523cd3cc3d8bf916caf7d73c",
+        "gitBlobSha1": "4bc9c21c7626bd12bf4fea3f1de0b8fc1d12c7c6"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "32a54afe21b773defe4853fa26015364845a806d9afab3d51dd2bd8e55d38278",
+        "gitBlobSha1": "518ef50d9945496af384e33d490a7da11ba16f14"
+      },
+      "tests/app-state-fixture.jsx": {
+        "sha256": "28b0789b710f9a7e92e3a0a3b55a2fa4133a176cb3efc87172698f7a3e3abb48",
+        "gitBlobSha1": "226ba155264cd828618376e7d994dcf362a927c5"
+      },
+      "tests/app-state-native.test.mjs": {
+        "sha256": "4c771c14655a28fe743aedac1ba351af66712d42a46de33a9c07322df98cc7d6",
+        "gitBlobSha1": "5a93fe74ae66e5f07d9282b387e1cfc5cfb2c392"
+      },
+      "tests/app-state-oracle.mjs": {
+        "sha256": "b6e2feae10ebe8ff4d7dbce09b720df5fdf114952bbad33ee6aa9f56b9f13b55",
+        "gitBlobSha1": "f0a4e1ec2272c232da14059a417074371f009b1f"
+      },
+      "tests/app-state-probe.gd": {
+        "sha256": "9cb54936b3823738ef8b072812d4d2e96973e9925002ebb3dbe41d221d125a56",
+        "gitBlobSha1": "121fed8cf379b241a510de1c14c0e0ac6417aa41"
+      },
+      "tests/types/consumer.tsx": {
+        "sha256": "bf64e6db5224a3ec94f848cc4b91c835eadee4645afb6978dd7cff1f932ef700",
+        "gitBlobSha1": "c2bed4c389bcbaf82346562486d2e8d9442caee3"
+      },
+      "types/react-native.ts": {
+        "sha256": "b53bdb6f894539d864a54a188cddf5d249346fb35556fc39778a56719ccce9c7",
+        "gitBlobSha1": "72451d26c70ee429cf128ccb7fc3d2496d90e660"
+      }
+    }
+  },
+  "limits": [
+    "Attempt 1 failed only in reference-android, while installing the Android Emulator SDK package (sdkmanager: Error on ZipFile unknown archive), before any project code ran; the failed jobs were rerun and attempt 2 passed. The native job that produced this artifact ran once, in attempt 1; attempt 2 carried its result over.",
+    "This artifact audit certifies only the headless current AppState lane (75 checks); the preceding-host control and the retained sabotage remain local evidence.",
+    "The local current report itself is not retained (the curated report keeps its hash); the hosted report was compared with the curated report through check IDs, bundle, producer and RN pins, the normative-check count and the executedObservations recomputed with the curated derivation.",
+    "Bundle hash and native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "No hardware focus, real OS lifecycle, Godot Android/iOS export or appearance certification.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary."
+  ],
+  "findings": [],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 112008151282,
+    "file": "work/app-state/native-job.log",
+    "sha256": "2145a01acc4a8d87c660e78ef7d4f08203f2e038b1111174ae2f6fdfa1af439f",
+    "checkoutVerified": true,
+    "testAppStateTap": {
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 94,
+    "fullRawLogIncludedInReceipt": false
+  }
+}
