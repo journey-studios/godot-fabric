@@ -44,6 +44,16 @@ void require_invertible(const godot::Transform2D &transform) {
   static_cast<void>(inverse(transform));
 }
 
+// A collapsed view (affine_transform.h) has no painted affine, like display: none.
+// This is the transform step's own definition, asked of RN's matrix; a matrix that
+// is not finite or not planar is no collapse, and local_transform reports it.
+bool collapsed(const rn::LayoutableShadowNode &node) {
+  const auto matrix = node.getTransform().matrix;
+  for (auto value : matrix)
+    if (!std::isfinite(value)) return false;
+  return planar_violation(matrix) == PlanarViolation::None && planar_transform<godot::real_t>(matrix).collapsed;
+}
+
 godot::Transform2D translation(rn::Point point) {
   return {{1, 0}, {0, 1}, {native_value(point.x), native_value(point.y)}};
 }
@@ -113,6 +123,13 @@ std::optional<godot::Vector2> pointer_local_point(
       return std::nullopt;
     for (auto value : {metrics.frame.origin.x, metrics.frame.origin.y,
         metrics.frame.size.width, metrics.frame.size.height}) native_value(value);
+    // A target or capture owner inside a collapsed subtree follows display: none:
+    // the nearest mounted Control keeps its last invertible transform, which no
+    // longer describes what RN draws, so no offset is projected through it.
+    if (collapsed(*layout)) {
+      if (hidden) *hidden = true;
+      return std::nullopt;
+    }
     layouts.push_back(layout);
   }
 

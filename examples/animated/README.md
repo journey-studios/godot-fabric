@@ -103,8 +103,11 @@ they render, with their reason; `Animated.View` does not reject View styles Godo
 lacks. A uniform `transform: [{ scale }]`, animated or not, renders as a planar
 uniform scale (RN builds it as `scale3d`; the
 [uniform scale record](../../docs/evidence/uniform-scale/README.md) shows an
-`Animated.View` on the native driver), while `scale: 0` still fails with
-`E_TRANSFORM_SINGULAR`. `LayoutAnimation`, native `Animated.event` on the SDK
+`Animated.View` on the native driver), and `scale: 0` collapses its View as RN does (it
+failed with `E_TRANSFORM_SINGULAR` until the
+[singular transforms record](../../docs/evidence/singular-transforms/README.md), whose
+entrance and exit animations run on the native driver). `LayoutAnimation`, native
+`Animated.event` on the SDK
 ScrollView, asserted animation of layout props (exploratory runs of `width` and
 `marginLeft` followed frame by frame), `PlatformColor` interpolation, reduced motion,
 performance budgets and Godot mobile exports require separate acceptance. See the

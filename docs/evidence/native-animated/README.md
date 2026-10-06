@@ -17,6 +17,8 @@ independente refaz cada amostra a partir dos timestamps entregues. O
 | Sabotagem `persistence`, host `fd3783fe` | 73/75 | Exatamente 2 falhas: sem a atualização das referências do JS, o React volta às props anteriores à animação; o oráculo rejeita o relatório |
 | Host atual `e90888f8`, headless | 75/75 | Duas roots, os dois drivers, timing, spring, decay, composição, interpolação, `useAnimatedValueXY`, `stopAnimation`, listener, re-render, desmontagem e `TouchableOpacity` por mouse e toque |
 
+> Nota posterior (2026-10-06): os commits [`381a8b4`](https://github.com/journey-studios/godot-fabric/commit/381a8b443214d6ac3eb7392cb0d1f10e52724ecf) e [`634285f`](https://github.com/journey-studios/godot-fabric/commit/634285fd41be0006bf39710ac763d60a87a20473) tornaram independentes do ritmo em que o host entrega os quadros as checagens de contagem e de mesmo quadro da suíte, e a sabotagem `frames` passou a falhar 31 checks, não 32; a tabela acima e a seção Controles descrevem a execução deste recibo.
+
 As lanes executam o mesmo bundle, com as mesmas fontes de teste e SDK; só os
 produtores nativos diferem. O host anterior foi compilado com `npm run setup` a
 partir da main `1607044` (o merge do Appearance), antes de a árvore receber o trabalho

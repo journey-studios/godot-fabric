@@ -37,7 +37,7 @@ RN compatibility.
 | Area | Implemented subset | Important limits |
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
-| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and invertible 2D affine styles | RTL, singular/3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
+| View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and planar 2D affine styles, a singular one collapsing its View as RN does | RTL, 3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | Switch | RN's original Switch.js over RN's shared iOS/macOS Switch descriptor: value, onValueChange/onChange, disabled, trackColor/thumbColor/ios_backgroundColor, setValue restore of an unchanged value, testID/ref; mouse click and touch tap | 63×28 default frame (RN's iOS 26 size); custom-drawn, without animation, thumb dragging, keyboard activation or accessibility; Android-only props are unused |
@@ -45,7 +45,7 @@ RN compatibility.
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, original TextInput.State and native focus/blur coordination, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | Touchables | [Original TouchableWithoutFeedback, TouchableHighlight](../examples/touchables/README.md) and TouchableOpacity: RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots; TouchableOpacity dims through RN's native animated driver (0 ms on the grant, 250 ms back) | No TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |
-| Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by Godot frames | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; a uniform `transform: [{ scale }]`, animated or not, renders as a planar uniform scale ([uniform scale record](evidence/uniform-scale/README.md)); `scale: 0` and other singular transforms still fail as `E_TRANSFORM_SINGULAR` |
+| Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by Godot frames | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; a uniform `transform: [{ scale }]`, animated or not, renders as a planar uniform scale ([uniform scale record](evidence/uniform-scale/README.md)); `scale: 0` and other singular transforms, animated or not, collapse their View as RN does ([singular transforms record](evidence/singular-transforms/README.md)) |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated drag in the ScrollView's own coordinates | All children mount; no inertia/momentum, bounce, paging, zoom, sticky headers, refresh, indicators or complete nested/multitouch scrolling |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
@@ -167,7 +167,10 @@ family's offset at the exact last valid native point. With no valid history it
 omits that terminal callback while releasing original contact authority.
 A connected `display:none` target retains original RN delivery using its empty
 layout metrics; this case has no painted local inverse. The public fixture
-checks its captured offsets equal client coordinates.
+checks its captured offsets equal client coordinates. A target or capture owner inside
+a View whose JSX transform is singular (a collapsed View) follows the same path and
+keeps RN's own offsets, as the
+[singular transforms record](evidence/singular-transforms/README.md) shows.
 
 This bounded desktop path uses a generated, SHA-pinned native RN overlay; the
 downloaded sources and reconciler remain unchanged. SDK headers and binaries
@@ -246,13 +249,32 @@ and by pointer projection. A `Pressable` with a `scale` takes real presses where
 only the scale reaches and reports target-local points from the scaled matrix. See
 the [uniform scale record](evidence/uniform-scale/README.md).
 
-The native host rejects singular matrices (`E_TRANSFORM_SINGULAR`, which includes
-`scale: 0`), 3D or perspective (`E_TRANSFORM_3D`: any entry that couples z, such as
-`rotateX` or `perspective`, or a weight other than 1), nonfinite matrices
+A singular transform (`scale: 0`, `scaleX: 0`, a rank-one matrix, an animation through
+0), or one that loses rank at the Control's native precision, collapses its View as RN's
+platforms do. The Control and its subtree are hidden (nothing is drawn or hit and the
+contacts inside are canceled), the Control keeps the last invertible transform it
+carried, no error is raised, and the next invertible transform restores it, through a
+React commit or through the native driver. Hiding the subtree is a deliberate choice:
+Android skips a child whose matrix does not invert together with its subtree, and so
+does iOS when the container clips, but iOS's `hitTest:` can still reach descendants of
+an unclipped container with a nonzero `overflowInset`, which the host does not
+reproduce. Layout, `onLayout` and RN's measurement APIs
+stay RN's own, so a singular matrix reports a degenerate box. The transform step returns
+that result explicitly (`PlanarTransform` in `native/affine_transform.h`) and visibility
+is decided in one place, `displayType != None && !collapsed`. Keyboard focus inside a
+collapsed View is released when the native driver collapses it (asserted by the suite);
+a collapse through a React commit was observed to keep it, because the host's transaction
+restores the focus owner, as it does for `display: none` (an exploratory observation the
+suite does not assert). RN keeps focus in both, and a guard on `is_visible_in_tree()` in
+that restoration is an open item. See the
+[singular transforms record](evidence/singular-transforms/README.md).
+
+The native host rejects 3D or perspective (`E_TRANSFORM_3D`: any entry that couples z,
+such as `rotateX` or `perspective`, or a weight other than 1), nonfinite matrices
 (`E_TRANSFORM_NONFINITE`) and results or inverses outside native coordinate
-precision (`E_TRANSFORM_RANGE`). The eight public rejection cases also verify
-cleanup after a partially mounted tree; unsupported transforms do not silently
-fall back to identity.
+precision (`E_TRANSFORM_RANGE`). The six public rejection cases also verify cleanup
+after a partially mounted tree; unsupported transforms do not silently fall back to
+identity.
 
 The pinned upstream JS processor accepts CSS transform strings, but its
 `translateX/translateY` string branch discards percentage units. Use array
@@ -260,7 +282,7 @@ syntax such as `{ translateX: "25%" }` for percentages. Array percentages have
 native execution proof; CSS pixel strings have processor-contract proof only.
 The adapter does not substitute a new CSS parser. This checkpoint does not
 certify transformed clipping, every host component, transform animation,
-singular/3D support or mobile reference parity.
+3D support or mobile reference parity.
 
 ## Input coordinate contract
 
@@ -292,8 +314,9 @@ inverse. The separate [input-guard proof](evidence/transforms/input-guards.json)
 executes determinant overflow despite finite local matrices, an ignored START,
 restoration and a genuine press, and cancellation after overflow or a singular
 Surface offset transform. It verifies no fabricated points, completed press or
-stale responder. This input safety behavior does not implement singular JSX
-rendering. Valid rotation/style changes during a held gesture, overlapping-root
+stale responder. This input safety behavior is separate from rendering singular JSX
+transforms, which the [singular transforms record](evidence/singular-transforms/README.md)
+covers. Valid rotation/style changes during a held gesture, overlapping-root
 routing, simultaneous multitouch, hardware/DPI policy, SubViewport and embedded
 Windows require separate acceptance.
 

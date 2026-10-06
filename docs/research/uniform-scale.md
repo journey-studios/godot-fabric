@@ -4,9 +4,11 @@ Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/uniform-scale/README.md) owns the five
 fresh applications (29 headless checks, 35 with the renderer capture), the
 preceding-host control (the same bundle fails exactly its 22 normative checks)
-and the independent oracle. `scale: 0` and every other singular transform still
-fail with `E_TRANSFORM_SINGULAR`; perspective and any rotation out of the plane
-still fail with `E_TRANSFORM_3D`. Hosted CI is pending.
+and the independent oracle. `scale: 0` and every other singular transform failed with
+`E_TRANSFORM_SINGULAR` when this slice ran (the
+[singular transforms slice](singular-transforms.md) collapses them as RN does);
+perspective and any rotation out of the plane still fail with `E_TRANSFORM_3D`. Hosted
+CI is pending.
 
 ## What RN does
 
@@ -97,9 +99,10 @@ with `E_TRANSFORM_3D` as the first error of every mount.
 
 ## Remaining scope
 
-`scale: 0`, `scaleX: 0` and any singular matrix still fail with
-`E_TRANSFORM_SINGULAR` (a press-in animation that starts at zero is common, so this
-is the next requirement); 3D, perspective, `rotateX`/`rotateY`, a weight other than 1
+`scale: 0`, `scaleX: 0` and any singular matrix failed with `E_TRANSFORM_SINGULAR` here
+(a press-in animation that starts at zero is common; the
+[singular transforms slice](singular-transforms.md) is that requirement); 3D,
+perspective, `rotateX`/`rotateY`, a weight other than 1
 and `transformOrigin` z remain rejected; transformed clipping, touch input on a
 scaled `Pressable` (the scene presses with the mouse), Godot mobile exports and the
 contract, parity and targets of GF-10 are not certified.

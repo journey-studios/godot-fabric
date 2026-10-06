@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Escala uniforme de transform (scale) em Controls planares do Godot, estática, animada e sob clique real; Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelos quadros do Godot; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: transforms singulares (scale: 0), recibos de CI/Pages, Networking e Modal"
+    "focusTitle": "Transforms singulares do RN (scale: 0, scaleX: 0, matrizes sem inversa, entradas e saídas animadas pelo zero) colapsam a View como no RN em vez de lançar E_TRANSFORM_SINGULAR; escala uniforme de transform (scale) em Controls planares do Godot, estática, animada e sob clique real; Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelos quadros do Godot; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: recibos de CI/Pages, Networking e Modal"
   },
-  "updatedAt": "2026-10-06T10:59:17.034787+00:00",
+  "updatedAt": "2026-10-06T13:52:40.675274+00:00",
   "source": {
-    "commit": "6fbfb18c7dac619f58a818a5b3cbc3abb6c61f25",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/6fbfb18c7dac619f58a818a5b3cbc3abb6c61f25",
-    "scope": "Escala uniforme do RN (transform: [{ scale }]), estática e animada, em Controls planares do Godot: o RN a escreve como scale3d(n, n, n) e o guard de transformações rejeitava o elemento de z (E_TRANSFORM_3D), então nenhum scale montava; esse elemento só multiplica z e os pontos de um Control planar têm z = 0, então a regra planar passa a ter uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e os acoplamentos reais de z e o peso seguem rejeitados. 29 checks headless em cinco aplicações (três escalas estáticas, Animated.View com useNativeDriver e um Pressable sob dois cliques reais) contra matrizes derivadas do JSX por um oráculo independente; o host anterior falha exatamente as 22 normativas. scale: 0 e demais transforms singulares seguem abertos. CI desta fatia pendente. Não fecha checkpoint: o GF-10 não é primeira fatia.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/41"
+    "commit": "ca9f195bca7ece12e05e4c0768a39fcb352fa87c",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/ca9f195bca7ece12e05e4c0768a39fcb352fa87c",
+    "scope": "Transforms singulares do RN (scale: 0, scaleX: 0, matrizes sem inversa e animações pelo zero) em Controls planares do Godot: o host lançava E_TRANSFORM_SINGULAR, que derrubava o commit que montava um scale: 0 e o quadro do native driver que chegava a 0, enquanto o RN não desenha nem acerta a View e não lança erro. A etapa de transformação devolve um resultado explícito (PlanarTransform: os fatores ou collapsed, inclusive o posto perdido na precisão de um float), o runtime esconde o Control no único ponto em que decide a visibilidade e ele guarda a última transformada invertível, e a projeção de ponteiros trata um alvo ou dono de captura colapsado como display: none. 49 checks headless em oito aplicações (estáticos, Animated.View de 0 a 1 e de 1 a 0 com useNativeDriver, escala por estado do React e ponteiro capturado por uma View que colapsa) contra valores derivados do JSX por um oráculo independente; o host anterior falha exatamente as 37 normativas e a sabotagem retida da projeção de ponteiros falha exatamente 2. 3D, peso diferente de 1 e transforms fora da precisão nativa seguem rejeitados. CI desta fatia pendente. Não fecha checkpoint: o GF-10 não é primeira fatia.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/42"
   },
   "phases": [
     {
@@ -1172,7 +1172,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda. Escala uniforme: o transform: [{ scale }] do RN, estático ou animado, monta como escala planar uniforme no mesmo Control (o RN o escreve como scale3d e o elemento de z não move ponto do plano), a regra planar tem uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e um Pressable escalado recebe cliques reais onde só a escala alcança; 29 headless em cinco aplicações, host anterior falha exatamente 22, oito casos de rejeição e 81 checks; scale: 0 e demais singulares, 3D e peso diferente de 1 seguem rejeitados. CI desta fatia pendente.",
+      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. 3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda. Escala uniforme: o transform: [{ scale }] do RN, estático ou animado, monta como escala planar uniforme no mesmo Control (o RN o escreve como scale3d e o elemento de z não move ponto do plano), a regra planar tem uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e um Pressable escalado recebe cliques reais onde só a escala alcança; 29 headless em cinco aplicações, host anterior falha exatamente 22, oito casos de rejeição e 81 checks; 3D e peso diferente de 1 seguem rejeitados. CI desta fatia pendente. Transforms singulares: scale: 0, scaleX: 0, matrizes sem inversa e entradas ou saídas animadas pelo zero colapsam a View como no RN, sem erro (o Control escondido guarda a última transformada invertível, a próxima o restaura e a projeção de ponteiros o trata como display: none); 49 headless em oito aplicações, host anterior falha exatamente 37, sabotagem da projeção falha exatamente 2, seis casos de rejeição e 61 checks; o toque em andamento é cancelado, o foco é solto pelo native driver (assegurado pela suíte) e mantido por commit do React (observação exploratória), e o limiar de 1e-6 do iOS fica fora do colapso exato. CI desta fatia pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3440,6 +3440,17 @@
     }
   ],
   "activity": [
+    {
+      "id": "singular-transforms-local-verified-20261006",
+      "at": "2026-10-06T13:52:40.675274+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-19",
+        "GF-13"
+      ],
+      "message": "Transforms singulares do RN (scale: 0, scaleX: 0, matrizes sem inversa e entradas ou saídas animadas pelo zero) renderizam como no RN: a View deixa de ser desenhada e de receber hit (o host esconde também a sub-árvore, como o Android e o iOS com container que recorta), nenhum erro é lançado e a próxima transformada invertível a restaura; o host lançava E_TRANSFORM_SINGULAR, que derrubava o commit que montava um scale: 0 e o quadro do native driver que chegava a 0. A etapa de transformação devolve um resultado explícito (PlanarTransform: os fatores ou collapsed, inclusive o posto perdido na precisão de um float), o runtime esconde o Control no único ponto em que decide a visibilidade e ele guarda a última transformada invertível, e a projeção de ponteiros trata um alvo ou dono de captura colapsado como display: none. 49 checks headless em oito aplicações (quatro estáticos, Animated.View de 0 a 1 e de 1 a 0 com useNativeDriver, escala por estado do React e ponteiro capturado por uma View que colapsa) contra valores derivados do JSX por um oráculo independente; o host anterior falha exatamente as 37 normativas e a sabotagem retida da projeção de ponteiros falha exatamente 2, ambas rejeitadas pelo oráculo. Os casos públicos de rejeição são seis de novo, mas outros seis (perspectiva, rotateX, peso diferente de 1 e três de faixa; 61 checks). O toque em andamento é cancelado (o RN o mantém), o foco é solto pelo native driver (assegurado pela suíte) e mantido por commit do React (observação exploratória), o limiar de 1e-6 do iOS fica fora do colapso exato e os descendentes que o iOS ainda acerta num container sem recorte e com overflowInset não são reproduzidos (item aberto). O GF-10 não é primeira fatia: nenhum checkpoint fecha; CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4a7c381517fee1b2f4ba883628f4f4650f8bc8d7/docs/evidence/singular-transforms/README.md"
+    },
     {
       "id": "uniform-scale-local-verified-20261006",
       "at": "2026-10-06T10:59:17.034787+00:00",

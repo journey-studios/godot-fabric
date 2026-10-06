@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Animated, AppRegistry, Easing, View, Text, Pressable, findNodeHandle, useAnimatedValue } from "react-native";
+import { Animated, AppRegistry, Easing, View, Text, TextInput, Pressable, findNodeHandle, useAnimatedValue } from "react-native";
 
 const refs = new Map();
 const retained = new Map();
@@ -151,8 +151,6 @@ function TransformGallery() {
 AppRegistry.registerComponent("TransformGallery", () => TransformGallery);
 export function TransformGuardCase({ mode }) {
   const transforms = {
-    singular: [{ scaleX: 0 }],
-    "rank-one": [{ matrix: [1, 5, 0, 0, 5, 25, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }],
     "3d": [{ perspective: 300 }],
     "rotate-x": [{ rotateX: "30deg" }],
     "w-not-one": [{ matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2] }],
@@ -261,6 +259,166 @@ function UniformScaleCase({ mode }) {
   return mode === "uniform-press" ? <PressScaleCase /> : <StaticScaleCase mode={mode} />;
 }
 AppRegistry.registerComponent("UniformScaleCase", () => UniformScaleCase);
+
+// Singular transforms. RN draws and hits nothing of a view whose transform has no
+// inverse (scale: 0, scaleX: 0, a rank-one matrix, an animation through 0) and
+// raises no error; the host collapses that View's Control (native/transform_adapter.h)
+// and brings it back with the next invertible transform. Each case is its own
+// AppRegistry root, which singular.gd mounts in an independent application. `box` is
+// the View under test, a Pressable above a `behind` Pressable on a plate: a real
+// press where the box was reaches the plate while the box is collapsed and the box
+// once it is shown. Every Surface is SINGULAR_CARD wide and the 160 x 100 box sits
+// SINGULAR_LEFT from its left edge.
+const SINGULAR_SIZE = { width: 160, height: 100 };
+const SINGULAR_CARD = 215;
+const SINGULAR_LEFT = 28;
+// The smallest float subnormal, 2^-149: the matrix [2u u; u u] is not singular (its
+// determinant is u squared) but its smaller singular value, 0.38 u, rounds to zero in
+// a float, which is where the Control stores its scale. RN's Float matrix holds it exactly.
+const SINGULAR_UNIT = 2 ** -149;
+const SINGULAR_CASES = {
+  "scale-zero": { title: "scale: 0", color: "#0ea5e9", style: { transform: [{ scale: 0 }] } },
+  "scale-x-zero": { title: "scaleX: 0", color: "#f59e0b", style: { transform: [{ scaleX: 0 }] } },
+  "rank-one": { title: "a rank-one matrix\n[1 5; 5 25]", color: "#a855f7",
+    style: { transform: [{ matrix: [1, 5, 0, 0, 5, 25, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }] } },
+  "rank-lost": { title: "rank lost in float\n[2u u; u u], u = 2^-149", color: "#6366f1",
+    style: { transform: [{ matrix: [2 * SINGULAR_UNIT, SINGULAR_UNIT, 0, 0, SINGULAR_UNIT, SINGULAR_UNIT, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }] } },
+  entrance: { title: "Animated scale 0 to 1, native driver", color: "#22c55e" },
+  exit: { title: "Animated scale 1 to 0, native driver", color: "#ec4899" },
+  toggle: { title: "scale from React state: 0, 1.25, 0, 1", color: "#14b8a6" },
+  capture: { title: "the capture owner collapses mid-gesture", color: "#f43f5e" },
+};
+// The scale each step of the toggle case declares.
+const SINGULAR_TOGGLE = [0, 1.25, 0, 1];
+const singularBox = () => ({ position: "absolute", left: SINGULAR_LEFT, top: 140, ...SINGULAR_SIZE });
+const singular = { renders: 0, runs: 0, ends: [], presses: [], pointer: [], focus: [], run: null, advance: null, collapseOwner: null };
+globalThis.SingularTransform = {
+  run: () => singular.run(),
+  advance: () => singular.advance(),
+  collapseOwner: () => singular.collapseOwner(),
+  state: () => ({ renders: singular.renders, runs: singular.runs, ends: [...singular.ends],
+    presses: singular.presses.map(entry => ({ ...entry })), pointer: singular.pointer.map(entry => ({ ...entry })),
+    focus: [...singular.focus] }),
+};
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+// The presses each target received, logged as pressIn, pressOut and press with the
+// point they report, and counted in the caption.
+function useSingularPresses() {
+  const [counts, setCounts] = useState({ box: 0, behind: 0 });
+  const record = (who, type) => event => {
+    const { target, locationX, locationY, pageX, pageY } = event.nativeEvent;
+    singular.presses.push({ who, type, target, locationX, locationY, pageX, pageY });
+    if (type === "press") {
+      setCounts(value => ({ ...value, [who]: value[who] + 1 }));
+    }
+  };
+  const handlers = who => ({ onPressIn: record(who, "in"), onPressOut: record(who, "out"), onPress: record(who, "press") });
+  return { caption: `box ${counts.box} · behind ${counts.behind}`, handlers };
+}
+function SingularFrame({ mode, caption, children }) {
+  return <View testID="singular-root" style={{ flex: 1, backgroundColor: "#16233b" }}>
+    <Text style={{ position: "absolute", left: 16, top: 10, width: SINGULAR_CARD - 32, height: 38,
+      color: "#f8fafc", fontSize: 14, fontWeight: "700" }}>{SINGULAR_CASES[mode].title}</Text>
+    <Text testID="singular-caption" style={{ position: "absolute", left: 16, top: 288, width: SINGULAR_CARD - 32, height: 20,
+      color: "#b5c6e0", fontSize: 12 }}>{caption}</Text>
+    {children}
+    {/* The layout box without the transform: the outline the transform departs from. */}
+    <View testID="singular-layout" pointerEvents="none"
+      style={{ ...singularBox(), borderWidth: 2, borderColor: "#e2e8f0" }} />
+  </View>;
+}
+// The plate behind the box: the Pressable a press reaches where the box is not.
+function SingularPlate({ handlers }) {
+  return <Pressable ref={attach("singular-behind")} testID="singular-behind" onLayout={layout("singular-behind")}
+    {...handlers("behind")} style={{ position: "absolute", left: 6, top: 110, width: SINGULAR_CARD - 12, height: 160,
+      backgroundColor: "#2d4166" }} />;
+}
+// The View under test, with a marker child: a collapsed box has a subtree whose
+// drawing and hits can be checked too.
+function SingularBox({ mode, as: Box = Pressable, style, children, ...rest }) {
+  return <Box ref={attach("singular-box")} testID="singular-box" onLayout={layout("singular-box")} {...rest}
+    style={{ ...singularBox(), backgroundColor: SINGULAR_CASES[mode].color, ...style }}>
+    <View testID="singular-child" pointerEvents="none"
+      style={{ position: "absolute", left: 14, top: 14, width: 28, height: 28, backgroundColor: "#f8fafc" }} />
+    {children}
+  </Box>;
+}
+// A field inside the box, whose keyboard focus is observed when the box collapses.
+function SingularInput() {
+  return <TextInput testID="singular-input" onFocus={() => singular.focus.push("focus")} onBlur={() => singular.focus.push("blur")}
+    style={{ position: "absolute", left: 14, top: 58, width: 110, height: 28, backgroundColor: "#f8fafc",
+      color: "#0f172a", fontSize: 12 }} />;
+}
+function StaticSingularCase({ mode }) {
+  const { caption, handlers } = useSingularPresses();
+  return <SingularFrame mode={mode} caption={caption}>
+    <SingularPlate handlers={handlers} />
+    <SingularBox mode={mode} {...handlers("box")} style={SINGULAR_CASES[mode].style} />
+  </SingularFrame>;
+}
+// The native driver runs the scale from one end to the other; React renders at mount
+// and for the captions of presses, never per frame.
+function AnimatedSingularCase({ mode }) {
+  const from = mode === "entrance" ? 0 : 1;
+  const scale = useAnimatedValue(from);
+  const { caption, handlers } = useSingularPresses();
+  singular.renders += 1;
+  singular.run = () => {
+    const toValue = 1 - from;
+    singular.runs += 1;
+    Animated.timing(scale, { toValue, duration: 600, easing: Easing.inOut(Easing.cubic), useNativeDriver: true })
+      .start(({ finished }) => { singular.ends.push({ toValue, finished }); });
+  };
+  return <SingularFrame mode={mode} caption={caption}>
+    <SingularPlate handlers={handlers} />
+    <SingularBox mode={mode} as={AnimatedPressable} {...handlers("box")} style={{ transform: [{ scale }] }}>
+      {mode === "exit" && <SingularInput />}
+    </SingularBox>
+  </SingularFrame>;
+}
+// The scale is plain React state: 0 collapses the View, any other value shows it.
+function ToggleSingularCase({ mode }) {
+  const [step, setStep] = useState(0);
+  const { caption, handlers } = useSingularPresses();
+  singular.advance = () => setStep(value => value + 1);
+  return <SingularFrame mode={mode} caption={caption}>
+    <SingularPlate handlers={handlers} />
+    <SingularBox mode={mode} {...handlers("box")} style={{ transform: [{ scale: SINGULAR_TOGGLE[step] }] }} />
+  </SingularFrame>;
+}
+// A pointer pressed on `source` is captured by the box, which then collapses while
+// the pointer is still down. Its events keep reaching the capture owner.
+function CaptureSingularCase({ mode }) {
+  const [collapsed, setCollapsed] = useState(false);
+  const { caption, handlers } = useSingularPresses();
+  singular.collapseOwner = () => setCollapsed(true);
+  const note = (who, type) => event => {
+    const { pointerId, target, offsetX, offsetY, clientX, clientY } = event.nativeEvent;
+    singular.pointer.push({ who, type, pointerId, target, offsetX, offsetY, clientX, clientY });
+    if (who === "source" && type === "down") {
+      refs.get("singular-box").setPointerCapture(pointerId);
+    }
+  };
+  const track = type => ({ [`onPointer${type[0].toUpperCase()}${type.slice(1)}`]: note("owner", type) });
+  return <SingularFrame mode={mode} caption={caption}>
+    <SingularPlate handlers={handlers} />
+    <View ref={attach("singular-source")} testID="singular-source" onPointerDown={note("source", "down")}
+      style={{ position: "absolute", left: SINGULAR_LEFT, top: 52, width: 160, height: 52, backgroundColor: "#475569" }} />
+    <SingularBox mode={mode} as={View} {...track("move")} {...track("up")}
+      onGotPointerCapture={note("owner", "gotcapture")} onLostPointerCapture={note("owner", "lostcapture")}
+      style={collapsed ? { transform: [{ scale: 0 }] } : {}} />
+  </SingularFrame>;
+}
+function SingularCase({ mode }) {
+  if (mode === "entrance" || mode === "exit") {
+    return <AnimatedSingularCase mode={mode} />;
+  }
+  if (mode === "capture") {
+    return <CaptureSingularCase mode={mode} />;
+  }
+  return mode === "toggle" ? <ToggleSingularCase mode={mode} /> : <StaticSingularCase mode={mode} />;
+}
+AppRegistry.registerComponent("SingularTransformCase", () => SingularCase);
 globalThis.GodotTransforms = {
   stats: () => ({ mounts: { ...observations.mounts }, cleanups: { ...observations.cleanups },
     layouts: JSON.parse(JSON.stringify(observations.layouts)), events: [...observations.events],

@@ -217,8 +217,9 @@ or static, failed with `E_TRANSFORM_3D` when this slice ran: RN builds it as
 `scale3d(n, n, n)` and the transforms guard (`native/affine_transform.h`, a contract
 of an earlier slice) rejected a matrix whose z scale is not 1, so the advice then was
 to animate `scaleX` and `scaleY`. The later [uniform scale
-slice](uniform-scale.md) accepts it, animated or not; `scale: 0` still fails as
-singular.
+slice](uniform-scale.md) accepts it, animated or not; `scale: 0` failed as singular
+until the [singular transforms slice](singular-transforms.md), which collapses the View as
+RN does.
 
 ## Remaining scope
 

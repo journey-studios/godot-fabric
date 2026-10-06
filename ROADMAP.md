@@ -328,7 +328,10 @@ HostInstance commands, RTL and mobile differential acceptance remain open.
 Next in sequence 3: continue the public HostInstance/native-command branch.
 (Extended on 2026-10-06: the uniform scale section at the end of this log makes the
 host accept RN's `scale`, shares one planar rule between the transform adapter and
-pointer projection, and brings the public rejection cases to eight and 81 checks.)
+pointer projection, and brings the public rejection cases to eight and 81 checks; the
+collapsed singular transforms section after it renders singular JSX transforms as RN
+does and brings them back to six and 61, a different six from the checkpoint's:
+perspective, `rotateX`, a weight other than 1 and three out-of-range cases.)
 
 The [completed hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) at `5885331` passed contracts, native cold start, original iOS/Android references and parity comparison. The dated earlier pending observation remains in [ci.json](docs/evidence/transforms/ci.json). These limited reference fixtures do not close full transform parity, the Godot mobile ports or GF-08.
 
@@ -2302,9 +2305,10 @@ error of every mount. The public rejection cases are now eight (`rotateX` and a 
 other than 1 join perspective, so the guard still proves it rejects real 3D) and pass 81
 checks; the input guards pass 25 and the affine factor test 41,278.
 
-Open: `scale: 0` and every other singular transform still fail with
-`E_TRANSFORM_SINGULAR`, and a press-in animation that starts at zero is common, so that
-is the next requirement; 3D, `perspective`, `rotateX`/`rotateY`, a weight other than 1
+Open: `scale: 0` and every other singular transform failed with `E_TRANSFORM_SINGULAR`
+when this slice ran, and a press-in animation that starts at zero is common (the
+collapsed singular transforms section below is that requirement); 3D, `perspective`,
+`rotateX`/`rotateY`, a weight other than 1
 and `transformOrigin` z stay rejected; touch input on a scaled `Pressable`, `measure` of
 scaled targets, transformed clipping and the Godot mobile exports are not asserted here.
 A separate commit, `6f947d3`, hardens the Animated example's capture check by comparing
@@ -2319,6 +2323,103 @@ ActivityIndicator 33, Animated 75) and the native SDK batch pass. All 86 execute
 code/configuration inputs match implementation 6fbfb18 via git show/SHA-256 (executed
 from the committed tree, execution base 0157b15). Hosted CI for this slice is pending.
 No whole GF, checkpoint, weight or denominator closes.
+
+Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
+monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
+recomputation of RN's `FrameAnimationDriver` from the delivered timestamps (hosted CI showed
+near-duplicate frames stepping against the ramp) and renamed the `FRAMES` check phrase; the
+executed record above stays as written for implementation `6fbfb18`.
+
+### Collapsed singular transforms (2026-10-06)
+
+GF-10 stays **In progress**; this is not its first slice, so none of its checkpoints
+changes, and no whole GF, weight or denominator closes. The
+[singular transforms evidence](docs/evidence/singular-transforms/README.md) makes the
+host render a View whose planar `transform` has no inverse as RN does: the View is
+neither drawn nor hit, no error is raised, and the next invertible transform shows it
+again; the host hides its subtree too, as Android does and iOS does when the container
+clips. `Transform::Scale` flattens a factor below 1e-5 to exactly 0 (`isZero`),
+so `scale: 0`, `scaleX: 0` and every animation that starts or ends at 0 reach the host
+as an exactly singular matrix, and a `matrix` entry is not flattened, so `[1 5; 5 25]`
+is singular by itself; the host threw `E_TRANSFORM_SINGULAR` for all of them, which
+aborted the commit that mounted a static `scale: 0` and failed the native-driver frame
+that reached 0 in an entrance or an exit. iOS refuses the hit on the view itself once
+the determinant of the layer's 2×2 part is below 1e-6 (its `hitTest:` can still reach
+descendants when the container does not clip and has a nonzero `overflowInset`) and
+Android's `TouchTargetHelper` skips a child whose matrix does not invert, with its
+subtree, while RN's C++ never inverts a transform: `onLayout` stays Yoga's frame, and
+`getBoundingClientRect`, `measure` and `measureInWindow` report the degenerate box (the
+bounding box of the four mapped corners).
+
+The transform step now returns an explicit result, `PlanarTransform` in
+`native/affine_transform.h`: the planar factors, or `collapsed` for a singular matrix
+or one whose scale rounds to zero in the Control's own `float` (the case the host used
+to report as `E_TRANSFORM_RANGE`). `ApplicationRuntime::apply` resolves it once per View
+and decides visibility in the one place it is decided, `displayType != None &&
+!collapsed`; a collapsed Control keeps the last invertible transform it carried, so its
+geometry stays finite until a later update restores it (a React commit, or the native
+driver, whose synchronous updates go through the same `apply`), and the existing rule
+for hidden Controls cancels the contacts inside it. Pointer projection asks the same
+definition and treats a target or capture owner inside a collapsed subtree as
+`display: none`, so the event keeps RN's own offsets (the client point minus the origin
+of the transformed box: (52, 70) for a pointer at (160, 260) and a `scale: 0` owner
+centered at (108, 190), not coordinates projected through the Control).
+
+Eight fresh Hermes applications, each in a Godot Surface of its own, compare the
+Control, RN's measurements, real mouse presses and a captured pointer with values
+derived from the JSX: **49 headless checks** (58 with the renderer capture) for
+`scale: 0`, `scaleX: 0`, a rank-one matrix, a matrix that only loses rank in a float, an
+`Animated.View` scaled 0 to 1 and another 1 to 0 with `useNativeDriver` (91 and 90
+sampled frames, each shown frame the planar matrix of its own scale), a scale that
+React state moves through 0, 1.25, 0 and 1 (a contact held on the box when the state
+collapses it is canceled), and a pointer captured by a View that collapses mid-gesture.
+A real press where the collapsed box would be reaches the plate behind it, and the box
+again once it is shown. An independent Node oracle derives all of it from the
+declarations and agrees with the Controls to 1.6e-11 (linear) and 4.0e-5 (translation).
+The same bundle on the preceding host (the one the uniform scale slice executed, built
+from `6fbfb18`) fails exactly the 37 normative checks, with `E_TRANSFORM_SINGULAR` as the
+first error of every singular mount (`E_TRANSFORM_RANGE` for the float rank loss), and a
+retained sabotage of the pointer projection (`scripts/transform-singular-sabotage.mjs`)
+fails exactly the two capture checks, rejected by the oracle. The public rejection cases
+are six again but not the checkpoint's six: `singular` and `rank-one` are positive cases
+now, and `rotateX` and a weight other than 1 joined perspective and the three
+out-of-range cases; they pass 61 checks. The input guards pass 25 and the affine factor
+test 57,703.
+
+Open: a touch in progress inside a collapsed View is canceled where RN keeps it, and
+keyboard focus inside one is released when the native driver collapses it (asserted by
+`exit/FOCUS_RELEASED`) but was observed to survive a collapse through a React commit,
+because the host's transaction restores the focus owner as it already does for
+`display: none` (an exploratory observation the suite does not assert; RN keeps focus
+in both). A guard on `is_visible_in_tree()` in that restoration would make the two paths
+agree, and a real zero scale with a guarded projection would keep touches and focus
+through a collapse; both are open. On iOS, descendants of a collapsed View whose
+container does not clip and has a nonzero `overflowInset` can still be hit; the host
+skips the whole subtree, as Android does and iOS does for a clipping container, so those
+hits are not reproduced (open). iOS refuses hits below a determinant of 1e-6 (a scale
+of about 1e-3) and Android treats a 3×3 determinant below 1e-5 as singular, while the
+host collapses only an exactly singular matrix or a scale that rounds to zero in a
+float. 3D, `perspective`, `rotateX`/`rotateY`, a weight other than 1 and
+`transformOrigin` z stay rejected; touch input on a collapsed or restored `Pressable`, a
+collapse under a `ScrollView`, transformed clipping and the Godot mobile exports are not
+asserted here. On the committed tree the contracts gates (264 Node/13 Python, static
+analysis, publication scan), `test:recovery`, the 35 native suites (23 examples/2,262
+checks, transform guards 61 plus 25 input checks and the 29- and 49-check uniform scale
+and singular lanes, Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move
+1,940, hover 158, root path 82, Document hover 1,530, click 728, capture notifications
+672, PanResponder 128, AppState 75, lists 44, Appearance 79, Switch 108, shared touches
+92, touchables 93, ActivityIndicator 33, Animated 75) and the native SDK batch pass
+(`test:animated` failed once on a 2 ms timing assertion of its JS-driver composition and
+passed three reruns). All 87 executed code/configuration inputs match implementation
+`ca9f195` via git show/SHA-256 (executed from the committed tree, execution base
+`9e7cc4f`). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+denominator closes.
+
+Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
+monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
+recomputation of RN's `FrameAnimationDriver` from the delivered timestamps (hosted CI showed
+near-duplicate frames stepping against the ramp) and renamed the `FRAMES_UP` and `FRAMES_DOWN`
+check phrases; the executed record above stays as written for implementation `ca9f195`.
 
 ## M1 — Complete the native UI tree
 

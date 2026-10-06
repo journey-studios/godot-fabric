@@ -230,6 +230,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     std::unique_ptr<fabric_godot::ScrollAdapter> scroll;
     std::unique_ptr<fabric_godot::AdapterView> external;
     uint64_t mount_id{};
+    // What the committed transform leaves of this View, resolved with its shadow.
+    fabric_godot::PlanarTransform transform{};
   };
   std::map<int, Mounted> views;
   std::unordered_map<Control *, int> native_tags;
@@ -1056,7 +1058,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     control->set_name(props->testId.empty() ? String("Fabric_") + String::num_int64(shadow.tag) : gd(props->testId));
     control->set_position({shadow.layoutMetrics.frame.origin.x, shadow.layoutMetrics.frame.origin.y});
 
-    control->set_visible(shadow.layoutMetrics.displayType != rn::DisplayType::None);
+    // The one place a View's visibility is decided. A collapsed transform (singular:
+    // RN draws and hits nothing of the View or its subtree) hides the Control like
+    // display: none does, and a hidden Control cancels the contacts of its subtree.
+    // Godot cannot draw a singular Control: Control::set_scale clamps 0 to 1e-5, and
+    // its input paths invert a visible Control's transform without a guard.
+    mounted.transform = fabric_godot::resolve_transform(*props, shadow.layoutMetrics);
+    control->set_visible(shadow.layoutMetrics.displayType != rn::DisplayType::None && !mounted.transform.collapsed);
     control->set_modulate({1, 1, 1, props->opacity});
     // Fabric has already flattened stacking contexts and sorted mount indices.
     // A second CanvasItem z-order would let descendants escape those contexts.
@@ -1142,8 +1150,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (!mounted.external && component_kind(mounted.shadow) != "view")
       mounted.control->set_clip_contents(true);
     mounted.control->set_size(size);
-    fabric_godot::apply_transform(*mounted.control,
-        *std::static_pointer_cast<const rn::ViewProps>(mounted.shadow.props), mounted.shadow.layoutMetrics);
+    fabric_godot::apply_transform(*mounted.control, mounted.transform, mounted.shadow.layoutMetrics);
   }
   void emit(int tag, const std::string &name, folly::dynamic payload) {
     if (inactive() || retiring.contains(tag)) return;
