@@ -167,7 +167,11 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
               // DisplayServer); detect_pacing documents the values.
               const bool headless = String(display->call("get_name")) == "headless";
               const int vsync = display->call("window_get_vsync_mode", window->get_window_id());
-              const auto detected = fabric_godot::FrameClock::detect_pacing(headless, vsync);
+              // While the window cannot draw (minimized, say) Godot's main loop sleeps
+              // low_processor_usage_mode_sleep_usec per frame even with V-Sync, so presentation
+              // paces nothing. Godot 4.7.2 exposes window_can_draw per window, not can_any_window_draw.
+              const bool can_draw = display->call("window_can_draw", window->get_window_id());
+              const auto detected = fabric_godot::FrameClock::detect_pacing(headless, vsync, can_draw);
               metrics.pacing = detected.pacing;
               metrics.pacing_source = detected.source;
             }

@@ -29,9 +29,11 @@ namespace fabric_godot {
 // 13 ms apart, around an 8 ms mean). A rule on that time would drop presented
 // images and judder what moves.
 //
-// Time. Nothing paces the loop (headless, V-Sync off or mailbox), so time is the
-// only reference. With T = 1000 / R ms, R being the refresh rate of the screen that
-// shows the application's window when the display reports a positive one and 60
+// Time. Nothing paces the loop (headless, V-Sync off or mailbox, or a window that
+// cannot draw: Godot's main loop then sleeps low_processor_usage_mode_sleep_usec per
+// frame, V-Sync or not, so that sleep paces the frames and not presentation), so time
+// is the only reference. With T = 1000 / R ms, R being the refresh rate of the screen
+// that shows the application's window when the display reports a positive one and 60
 // otherwise (Godot's documented fallback, and the single-frame interval RN assumes),
 // the frame at time t is a tick iff it has a consumer and any of these holds:
 //   - no tick has served a consumer yet;
@@ -43,7 +45,7 @@ namespace fabric_godot {
 //
 // T / 2 is rounding to the nearest refresh period: the widest tolerance that
 // never thins a loop already paced at the refresh with jitter under T / 2. What
-// follows from the rule, at the rate in force:
+// follows from the rule under Time pacing, at the rate in force:
 //   - two ticks are never closer than T / 2: a tick is itself a Godot frame, so
 //     the previous tick is at or before the previous Godot frame;
 //   - a loop capped at the refresh (Engine.max_fps) or slower ticks on every
@@ -51,10 +53,14 @@ namespace fabric_godot {
 //   - a loop faster than T / 2 ticks about once per T;
 //   - a stall gives one late tick: the catch-up frames behind it are closer than
 //     T / 2 to each other and to the tick;
-//   - after idling, the first frame with a consumer ticks at once, which is what
-//     a display link started on demand does.
+//   - after idling, the first frame with a consumer ticks at once when it is due,
+//     that is, when no tick has served a consumer yet, when it starts T / 2 after
+//     the previous Godot frame, or when a period has passed since the last tick; on
+//     a loop faster than T / 2, a request within a period of the last tick waits out
+//     the period, as a display link would.
 // Time is only for loops nothing paces: given a presented loop it would thin the
-// frames that reach the screen.
+// frames that reach the screen. None of the above holds under Presentation: every
+// frame with a consumer ticks, however close it is to the one before.
 //
 // Open: a Presentation tick carries the CPU time of its frame, so the steps between
 // ticks are as uneven as those frames (3 and 13 ms above) and a decay, which ends
@@ -72,15 +78,23 @@ class FrameClock {
 
   // The pacing of a window from what the DisplayServer reports, and why: the source
   // is a literal. vsync_mode is DisplayServer.VSyncMode: 0 disabled, 1 enabled,
-  // 2 adaptive, 3 mailbox. Enabled and adaptive present each frame on the display's
-  // schedule; mailbox and disabled do not wait for it, and headless has no display.
+  // 2 adaptive, 3 mailbox. can_draw is DisplayServer.window_can_draw for the window.
+  // Headless has no display and comes first (its windows cannot draw either). A window
+  // that cannot draw (a minimized one, say) is not presented: Godot's main loop sleeps
+  // low_processor_usage_mode_sleep_usec per frame while no window can draw, V-Sync or
+  // not, so that sleep paces the frames and not presentation. Otherwise enabled and
+  // adaptive present each frame on the display's schedule, and mailbox and disabled do
+  // not wait for it.
   struct Detected {
     Pacing pacing;
     const char *source;
   };
-  static Detected detect_pacing(bool headless, int vsync_mode) {
+  static Detected detect_pacing(bool headless, int vsync_mode, bool can_draw) {
     if (headless) {
       return {Pacing::Time, "headless"};
+    }
+    if (!can_draw) {
+      return {Pacing::Time, "undrawable"};
     }
     if (vsync_mode == 1 || vsync_mode == 2) {
       return {Pacing::Presentation, "vsync"};

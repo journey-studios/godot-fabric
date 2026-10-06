@@ -299,17 +299,40 @@ void pacing_changes_apply_on_the_next_frame() {
 }
 
 void the_display_decides_the_pacing() {
-  const auto presented = [](bool headless, int mode) { return FrameClock::detect_pacing(headless, mode); };
-  require(presented(false, 1).pacing == Pacing::Presentation && std::string(presented(false, 1).source) == "vsync",
-      "A window with V-Sync enabled is presented on the display's schedule");
-  require(presented(false, 2).pacing == Pacing::Presentation && std::string(presented(false, 2).source) == "vsync",
-      "and so is one with adaptive V-Sync");
+  const auto detect = [](bool headless, int mode, bool can_draw = true) { return FrameClock::detect_pacing(headless, mode, can_draw); };
+  const auto is = [](FrameClock::Detected detected, Pacing pacing, const char *source) {
+    return detected.pacing == pacing && std::string(detected.source) == source;
+  };
+  require(is(detect(false, 1), Pacing::Presentation, "vsync"), "A window with V-Sync enabled that can draw is presented on the display's schedule");
+  require(is(detect(false, 2), Pacing::Presentation, "vsync"), "and so is one with adaptive V-Sync");
   for (int mode : {0, 3, -1, 7})
-    require(presented(false, mode).pacing == Pacing::Time && std::string(presented(false, mode).source) == "unpaced",
-        "V-Sync disabled, mailbox or an unknown mode does not wait for the display");
+    require(is(detect(false, mode), Pacing::Time, "unpaced"), "V-Sync disabled, mailbox or an unknown mode does not wait for the display");
   for (int mode : {0, 1, 2, 3})
-    require(presented(true, mode).pacing == Pacing::Time && std::string(presented(true, mode).source) == "headless",
+    require(is(detect(true, mode), Pacing::Time, "headless"),
         "A headless display server has no display to pace anything, whatever V-Sync mode it reports");
+  // Godot's main loop sleeps low_processor_usage_mode_sleep_usec per frame while no window can draw, with V-Sync or
+  // without it, so a window that cannot draw (a minimized one, say) has frames that time paces, not presentation.
+  for (int mode : {0, 1, 2, 3, -1, 7})
+    require(is(detect(false, mode, false), Pacing::Time, "undrawable"),
+        "A window that cannot draw is paced by time, whatever V-Sync mode it reports");
+  for (int mode : {0, 1, 2, 3})
+    require(is(detect(true, mode, false), Pacing::Time, "headless"),
+        "Headless comes first: its windows cannot draw either, and its source says there is no display");
+  // The mapping is per frame: a window that is minimized and restored goes from Presentation to Time and back, and
+  // the clock follows on the next frame, as it does for any other change of pacing.
+  Player window(120, true, Pacing::Presentation);
+  const auto frames = pipelined_frames(40);
+  window.run(0, frames);
+  const size_t drawn = window.ticks.size();
+  require(drawn == window.frames.size(), "While the window can draw, every pipelined frame ticks");
+  window.pacing = detect(false, 1, false).pacing;
+  for (double interval : frames) window.step(window.frames.back() + interval);
+  require(window.ticks.size() - drawn == frames.size() / 2,
+      "While it cannot draw, the same frames are judged by time: the 13 ms ones tick and the 3 ms ones wait");
+  const size_t hidden = window.ticks.size();
+  window.pacing = detect(false, 1, true).pacing;
+  for (double interval : frames) window.step(window.frames.back() + interval);
+  require(window.ticks.size() - hidden == frames.size(), "and when it can draw again every frame ticks again");
 }
 
 // Whatever the pacing, the consumers and the rate: the properties below are the
