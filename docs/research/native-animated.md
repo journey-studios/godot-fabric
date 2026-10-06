@@ -213,9 +213,12 @@ shared backend and its backend commits every frame, move the Control's size and
 position frame by frame; `scaleX` and `scaleY` animate; `Animated.sequence` with
 `Animated.delay`, `Animated.loop` and `Animated.parallel` over native timings end with
 `finished: true` at the expected times. A uniform `transform: [{ scale }]`, animated
-or static, fails with `E_TRANSFORM_3D`: RN builds it as `scale3d(n, n, n)` and the
-transforms guard (`native/affine_transform.h`, a contract of an earlier slice) rejects
-a matrix whose z scale is not 1, so animate `scaleX` and `scaleY`.
+or static, failed with `E_TRANSFORM_3D` when this slice ran: RN builds it as
+`scale3d(n, n, n)` and the transforms guard (`native/affine_transform.h`, a contract
+of an earlier slice) rejected a matrix whose z scale is not 1, so the advice then was
+to animate `scaleX` and `scaleY`. The later [uniform scale
+slice](uniform-scale.md) accepts it, animated or not; `scale: 0` still fails as
+singular.
 
 ## Remaining scope
 
@@ -225,5 +228,6 @@ ScrollView and the `Animated.ScrollView`, `FlatList` and `SectionList` wrappers;
 native driver (only the exploratory runs above cover it); `PlatformColor`
 interpolation; `unstable_disableBatchingForNativeCreate`; reduced motion; behavior
 under JS load and across background and resume; frame and heap budgets (GF-30);
-hardware and Godot Android and iOS exports; the uniform `scale` above; and the
-contract, parity and targets of GF-19.
+hardware and Godot Android and iOS exports; and the contract, parity and targets of
+GF-19. (A uniform `scale` was open here until the [uniform scale
+slice](uniform-scale.md).)

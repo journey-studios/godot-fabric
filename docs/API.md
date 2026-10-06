@@ -45,7 +45,7 @@ RN compatibility.
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, original TextInput.State and native focus/blur coordination, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | Touchables | [Original TouchableWithoutFeedback, TouchableHighlight](../examples/touchables/README.md) and TouchableOpacity: RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots; TouchableOpacity dims through RN's native animated driver (0 ms on the grant, 250 ms back) | No TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |
-| Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by Godot frames | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; `transform: [{ scale }]`, animated or not, fails as `E_TRANSFORM_3D` (RN builds scale3d), so animate `scaleX` and `scaleY` |
+| Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by Godot frames | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; a uniform `transform: [{ scale }]`, animated or not, renders as a planar uniform scale ([uniform scale record](evidence/uniform-scale/README.md)); `scale: 0` and other singular transforms still fail as `E_TRANSFORM_SINGULAR` |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated drag in the ScrollView's own coordinates | All children mount; no inertia/momentum, bounce, paging, zoom, sticky headers, refresh, indicators or complete nested/multitouch scrolling |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
@@ -237,11 +237,22 @@ wrapper, materializing it through a transform and removing the transform
 preserve the retained child's native identity, ref and React state in the
 executed fixture. See the [assertions and captures](evidence/transforms/README.md).
 
-The native host rejects singular matrices (`E_TRANSFORM_SINGULAR`), 3D or
-perspective (`E_TRANSFORM_3D`), nonfinite matrices (`E_TRANSFORM_NONFINITE`) and
-results or inverses outside native coordinate precision (`E_TRANSFORM_RANGE`).
-The six public rejection cases also verify cleanup after a partially mounted
-tree; unsupported transforms do not silently fall back to identity.
+A uniform `scale: n`, static or animated, is accepted: RN writes it as
+`scale3d(n, n, n)`, and the entry at index 10 only multiplies z, which cannot move
+a point of a planar Control (iOS and Android render it in the plane too), so it is
+not part of the planar rule. That rule has one definition,
+`planar_violation` in `native/affine_transform.h`, used by the transform adapter
+and by pointer projection. A `Pressable` with a `scale` takes real presses where
+only the scale reaches and reports target-local points from the scaled matrix. See
+the [uniform scale record](evidence/uniform-scale/README.md).
+
+The native host rejects singular matrices (`E_TRANSFORM_SINGULAR`, which includes
+`scale: 0`), 3D or perspective (`E_TRANSFORM_3D`: any entry that couples z, such as
+`rotateX` or `perspective`, or a weight other than 1), nonfinite matrices
+(`E_TRANSFORM_NONFINITE`) and results or inverses outside native coordinate
+precision (`E_TRANSFORM_RANGE`). The eight public rejection cases also verify
+cleanup after a partially mounted tree; unsupported transforms do not silently
+fall back to identity.
 
 The pinned upstream JS processor accepts CSS transform strings, but its
 `translateX/translateY` string branch discards percentage units. Use array

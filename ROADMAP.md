@@ -326,6 +326,9 @@ checkpoints, decisions, weights and the dashboard denominator remain unchanged.
 Valid transform animation during contact, transformed masks, complete
 HostInstance commands, RTL and mobile differential acceptance remain open.
 Next in sequence 3: continue the public HostInstance/native-command branch.
+(Extended on 2026-10-06: the uniform scale section at the end of this log makes the
+host accept RN's `scale`, shares one planar rule between the transform adapter and
+pointer projection, and brings the public rejection cases to eight and 81 checks.)
 
 The [completed hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) at `5885331` passed contracts, native cold start, original iOS/Android references and parity comparison. The dated earlier pending observation remains in [ci.json](docs/evidence/transforms/ci.json). These limited reference fixtures do not close full transform parity, the Godot mobile ports or GF-08.
 
@@ -2242,9 +2245,10 @@ records. Open: `LayoutAnimation` and layout transitions, native `Animated.event`
 the SDK ScrollView, asserted animation of layout props (exploratory runs of `width`
 and `marginLeft` followed frame by frame), `PlatformColor` interpolation, reduced
 motion, behavior under JS load and across background/resume, frame budgets (GF-30),
-Godot mobile exports and a uniform `transform: [{ scale }]`, which fails with
-`E_TRANSFORM_3D` because the transforms guard rejects the z scale of RN's `scale3d`
-(animate `scaleX` and `scaleY`). On the committed tree the contracts gates (264
+Godot mobile exports. (A uniform `transform: [{ scale }]` failed with `E_TRANSFORM_3D`
+when this slice ran, because the transforms guard rejected the z scale of RN's
+`scale3d`; the uniform scale section below accepts it.) On the committed tree the
+contracts gates (264
 Node/13 Python, static analysis, publication scan), `test:recovery`, the 35 native
 suites (23 examples/2,260 checks, Down 2,731, Document Up 6,459, View Up 297, Move
 220, Document Move 1,940, hover 158, root path 82, Document hover 1,530, click
@@ -2255,6 +2259,66 @@ inputs match implementation d96383c via git show/SHA-256 (executed from the
 committed tree, execution base fb42709). Hosted CI for this slice is
 pending. Only GF-19's first-slice checkpoint closes; no whole GF, other checkpoint,
 weight or denominator closes.
+
+### Uniform scale on Godot transforms (2026-10-06)
+
+GF-10 stays **In progress**; this is not its first slice, so none of its checkpoints
+changes, and no whole GF, weight or denominator closes. The
+[uniform scale evidence](docs/evidence/uniform-scale/README.md) makes the host accept
+React Native's `transform: [{ scale: n }]`, static or animated. RN writes it as
+`scale3d(n, n, n)` (`Transform::Scale` sets matrix indices 0, 5 and 10), and the
+transforms guard rejected every such matrix with `E_TRANSFORM_3D: expected a planar
+affine transform`, so no `scale` mounted: not a press-and-pop `Animated.View` with
+`useNativeDriver`, not a `Pressable` with a `scale`. With every z-coupling entry zero,
+index 10 only multiplies z and a Control's points have z = 0, so it cannot move a point
+of the plane (iOS applies all 16 entries to the layer's `CATransform3D` and Android
+decomposes to `scaleX` and `scaleY`, both in the plane); index 15 divides x and y and
+stays 1.
+
+The planar rule now has one definition, `planar_violation` in
+`native/affine_transform.h`, which the transform adapter (`E_TRANSFORM_3D`, its two
+messages unchanged) and pointer projection (`E_POINTER_GEOMETRY_3D`) both call; the
+projection's own copy would otherwise have disagreed about index 10. That branch of the
+projection is not reachable from a Godot scenario with a scaled node: a node with a
+transform forms a stacking context, is always mounted and anchors the projection (a
+scratch build counted 0 calls in the scene and 7, all with the identity matrix, in the
+`pointer-geometry` example), so the unit test of the shared predicate, which includes
+RN's `Float` matrices, covers it. Every z-coupling entry and the weight stay rejected.
+
+Five fresh Hermes applications, each in a Godot Surface of its own, compare the Control
+with planar matrices derived from the JSX: **29 headless checks** (35 with the renderer
+capture) for `scale: 1.5`, `[{ scale: 0.5 }, { rotate: "30deg" }]`, `scale: 1.5` about
+`transformOrigin: ["25%", "75%"]`, an `Animated.View` scaled 1 to 1.5 with
+`useNativeDriver` (90 sampled frames up, 87 back by a real press on a button, each a
+uniform scale and the matrix of its own factor) and a `Pressable` with `scale: 1.2`
+under two real mouse presses: one outside its scaled bounds reaches nothing, and one
+outside its layout box but inside the scaled one fires `pressIn`, `pressOut` and
+`press` once and reports the target-local point the inverse of the scaled matrix gives,
+`(6.67, 95.0)`. An independent Node oracle derives the matrices from the declarations
+and agrees with the Controls to 4.8e-8 (linear) and 2.0e-5 (translation). The same
+bundle on the preceding host (the one the Animated slice executed, built from
+`d96383c`) fails exactly the 22 normative checks, with `E_TRANSFORM_3D` as the first
+error of every mount. The public rejection cases are now eight (`rotateX` and a weight
+other than 1 join perspective, so the guard still proves it rejects real 3D) and pass 81
+checks; the input guards pass 25 and the affine factor test 41,278.
+
+Open: `scale: 0` and every other singular transform still fail with
+`E_TRANSFORM_SINGULAR`, and a press-in animation that starts at zero is common, so that
+is the next requirement; 3D, `perspective`, `rotateX`/`rotateY`, a weight other than 1
+and `transformOrigin` z stay rejected; touch input on a scaled `Pressable`, `measure` of
+scaled targets, transformed clipping and the Godot mobile exports are not asserted here.
+A separate commit, `6f947d3`, hardens the Animated example's capture check by comparing
+the track's and the Run button's pixels instead of the whole frame (CodeRabbit on #40).
+On the committed tree the contracts gates (264 Node/13 Python, static analysis,
+publication scan), `test:recovery`, the 35 native suites (23 examples/2,262 checks,
+transform guards 81 plus 25 input checks and the 29-check uniform scale lane, Down
+2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover 158, root
+path 82, Document hover 1,530, click 728, capture notifications 672, PanResponder 128,
+AppState 75, lists 44, Appearance 79, Switch 108, shared touches 92, touchables 93,
+ActivityIndicator 33, Animated 75) and the native SDK batch pass. All 86 executed
+code/configuration inputs match implementation 6fbfb18 via git show/SHA-256 (executed
+from the committed tree, execution base 0157b15). Hosted CI for this slice is pending.
+No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

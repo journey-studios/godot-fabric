@@ -76,6 +76,8 @@ ignored START, restoration and cancellation preserving the last valid sample.
 This does not establish singular JSX rendering.
 GF-08/GF-10/GF-13 remain in progress; broader ref/View/input acceptance,
 transformed clipping, singular/3D support and mobile differential work remain.
+The later [uniform scale record](uniform-scale/README.md) accepts RN's uniform
+`scale` on the same Control and extends the public rejection cases to eight.
 
 The later [read-only tree record](tree/README.md) adds original RN View IDs,
 root-scoped lookup, logical node traversal, snapshot collections, RawText updates
@@ -337,6 +339,21 @@ JS thread does not update the shadow node references it holds fails 2; the oracl
 rejects both. The record also updates two earlier contracts (the touchables suite
 renders `TouchableOpacity`; a tree children-only commit keeps an imperative native
 ID) and keeps their executed files as history. Four captures. Hosted CI pending.
+
+The [uniform scale record](uniform-scale/README.md) accepts RN's
+`transform: [{ scale }]`, which the transforms guard rejected because RN writes it
+as `scale3d(n, n, n)`, on the same planar Control: five Hermes applications (a
+scale, a scale with a rotation, a scale about a `transformOrigin`, an
+`Animated.View` scaled by `useNativeDriver` and back by a real press, and a
+`Pressable` pressed with the real mouse where only its scale reaches), 29
+headless checks and 35 with the renderer capture, compared with planar matrices
+derived from the JSX by an independent oracle. The planar rule now has one
+definition shared by the transform adapter and pointer projection; the eight
+public rejection cases pass 81 checks and the affine factor test 41,278. The
+preceding host fails exactly the 22 normative checks, with `E_TRANSFORM_3D` at
+every mount. `scale: 0` and the other singular transforms still fail. A separate
+commit hardens the Animated example's capture check. One capture. Hosted CI
+pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

@@ -1,0 +1,1011 @@
+{
+  "schemaVersion": 1,
+  "scenario": "uniform-scale",
+  "status": "verified-local-headless-preceding-host-control-and-regressions",
+  "at": "2026-10-06T11:01:06.121060Z",
+  "executionBaseCommit": "0157b1553322402ec9f2ffd397e9d85406cdd7ef",
+  "executedTreeSha": "0c7ae8da6b4ce459eed4285c5b0007a813f59e8a",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "6fbfb18c7dac619f58a818a5b3cbc3abb6c61f25",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/6fbfb18c7dac619f58a818a5b3cbc3abb6c61f25",
+  "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/41",
+  "separateCommit": {
+    "commit": "6f947d3d5715e773430a54b4996fb9a94ca8f381",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/6f947d3d5715e773430a54b4996fb9a94ca8f381",
+    "subject": "test(animated): Compare the example's captures by region",
+    "meaning": "Hardens the Animated example's capture check after the CodeRabbit finding on #40: the pixels of the track and of the Run button are hashed per region instead of the whole viewport, so unrelated pixels can no longer make the comparison pass without the animated box. The example goes from 10 to 12 headless checks (22 with --capture) and test:examples from 2,260 to 2,262."
+  },
+  "dependsOn": "The Animated slice (docs/evidence/native-animated), the transforms record and its guard (docs/evidence/transforms) and the pointer geometry projection (docs/evidence/pointer-geometry)",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the capture lane: macOS native renderer)",
+    "nativeHostSha256": "87a011d50c34073f60191ceb891e7e951365b65ab72c8b0a04b2d3dd351aae41",
+    "precedingHostSha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc"
+  },
+  "commands": [
+    "npm run test:transforms:guards",
+    "npm run test:transforms:guards -- --capture",
+    "npm run test:transforms:guards -- --allow-original-negative (the preceding host installed in addons/)",
+    ".deps/build/affine_transform_test"
+  ],
+  "headlessChecks": 29,
+  "captureLaneChecks": 35,
+  "normativeChecks": 22,
+  "structuralChecks": 7,
+  "guardApplications": 8,
+  "guardChecks": 81,
+  "inputGuardChecks": 25,
+  "affineFactorChecks": 41278,
+  "rule": {
+    "definition": "planar_violation in native/affine_transform.h: None, ZCoupling (any of matrix[2], [3], [6], [7], [8], [9], [11], [14] nonzero) or Weight (matrix[15] != 1), in that order",
+    "freeEntry": "matrix[10]: with every z-coupling entry zero it only multiplies z, and a Control's points have z = 0",
+    "whyIndex10IsFree": "RN writes scale n as scale3d(n, n, n) (Transform::Scale sets matrix[0], [5] and [10]); iOS copies all 16 entries to the layer's CATransform3D and Android applies scale[0] and scale[1] as scaleX and scaleY, both in the plane",
+    "users": {
+      "affine_factors": "E_TRANSFORM_3D, with 'perspective and 3D transforms are not implemented' for ZCoupling and 'expected a planar affine transform' for Weight",
+      "local_transform": "E_POINTER_GEOMETRY_3D"
+    },
+    "stillRejected": [
+      "singular matrices, scale: 0 included (E_TRANSFORM_SINGULAR)",
+      "every z-coupling entry (rotateX, rotateY, perspective)",
+      "matrix[15] != 1",
+      "nonfinite entries",
+      "results or inverses outside native coordinate precision"
+    ],
+    "newPublicRejectionCases": {
+      "rotate-x": "rotateX 30deg: z coupling at matrix[6] and [9]",
+      "w-not-one": "matrix with matrix[15] = 2"
+    }
+  },
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: five fresh Hermes applications, each in a Godot Surface of its own, compared with planar matrices derived from the JSX.",
+      "nativeHostSha256": "87a011d50c34073f60191ceb891e7e951365b65ab72c8b0a04b2d3dd351aae41",
+      "bundleSha256": "f424980c0f9e057230de687a8aba1caacab3bee0498cc81d63f6709932f6ea47",
+      "checks": 29,
+      "passed": 29,
+      "failed": 0,
+      "checkIdDigestSha256": "8b82d9d8ec20237af8861d48187cdef5aa0a1a2c5c7f78a2dea0adb0e757a8bd",
+      "reportSha256": "8add8c23efcdf73946fdcab5b3aec595abf3052ceabe7b455d8644cada4be6aa",
+      "logSha256": "6c287a36b220d3e5d557c8de35b8110c6cc10372396ead7e95daf41776161d32"
+    },
+    {
+      "lane": "capture",
+      "meaning": "Current host in the native renderer (--capture): the same 29 checks plus the saved frame and the pixels of every case, decoded apart from Godot's readback.",
+      "nativeHostSha256": "87a011d50c34073f60191ceb891e7e951365b65ab72c8b0a04b2d3dd351aae41",
+      "bundleSha256": "f424980c0f9e057230de687a8aba1caacab3bee0498cc81d63f6709932f6ea47",
+      "checks": 35,
+      "passed": 35,
+      "failed": 0,
+      "checkIdDigestSha256": "37375062a117388fb54c622c68ac550ec44652a124f8110988dfe61de0d9262e",
+      "reportSha256": "b234a50b0cc296f81b9e777b87bf0d145f9b90e9baf6f7333ab7b33d66e01b7c",
+      "logSha256": "f1ba9b4311b367f8dcd28c706224fdb72b1f170b6bd6ead9826120d3a19ff984"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host the Animated slice executed (built from d96383c, whose native and SDK sources equal 0157b15's); expected negative control (--allow-original-negative).",
+      "nativeHostSha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+      "bundleSha256": "f424980c0f9e057230de687a8aba1caacab3bee0498cc81d63f6709932f6ea47",
+      "checks": 29,
+      "passed": 7,
+      "failed": 22,
+      "checkIdDigestSha256": "8b82d9d8ec20237af8861d48187cdef5aa0a1a2c5c7f78a2dea0adb0e757a8bd",
+      "reportSha256": "0371e249cc3cba6d6bbd9d1825eb8cd232bb0ac0918f1beecfdb0433c9a997d3",
+      "logSha256": "bf413289db0c5e5f6c78933855aefbc9a4d996e25b588028083f8b6bf4560154",
+      "failedIds": [
+        "uniform/Mounting the public style raises no host error",
+        "uniform/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+        "uniform/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+        "uniform/The matrix and the layout size stay put across later frames without a host error",
+        "uniform-rotate/Mounting the public style raises no host error",
+        "uniform-rotate/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+        "uniform-rotate/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+        "uniform-rotate/The matrix and the layout size stay put across later frames without a host error",
+        "uniform-origin/Mounting the public style raises no host error",
+        "uniform-origin/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+        "uniform-origin/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+        "uniform-origin/The matrix and the layout size stay put across later frames without a host error",
+        "uniform-press/Mounting the public style raises no host error",
+        "uniform-press/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+        "uniform-press/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+        "uniform-press/The matrix and the layout size stay put across later frames without a host error",
+        "uniform-press/A real mouse press outside the scaled bounds reaches no Pressable and leaves no contact",
+        "uniform-press/A real mouse press outside the layout bounds but inside the scaled bounds fires pressIn, pressOut and press once at the point the scaled matrix maps it to",
+        "uniform-animated/The native animation runs to its end without a host error and RN reports finished once",
+        "uniform-animated/Every frame of the Control is a uniform planar scale of its own analytical matrix and intermediate frames were drawn",
+        "uniform-animated/After the end commit the Control rests at scale 1.5 with the analytical matrix and React never committed per frame",
+        "uniform-animated/A real press on Pop animates the scale back to 1: every frame is planar and the Control returns to identity"
+      ]
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+      "bytes": 5494656
+    },
+    "current": {
+      "sha256": "87a011d50c34073f60191ceb891e7e951365b65ab72c8b0a04b2d3dd351aae41",
+      "bytes": 5494656,
+      "rebuiltFromCommittedSources": true,
+      "note": "Forcing transform_adapter.cpp and pointer_geometry.cpp to recompile from the committed sources reproduced the same hash"
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+    "provenance": {
+      "builtFrom": "d96383c46dde79fb9d242f89e68360d49a81663a, the Animated implementation the Animated receipt executed (host e90888f8...)",
+      "nativeAndSdkSourcesEqualExecutionBase": true,
+      "verification": "git diff --name-only d96383c 0157b15 lists only README.md, ROADMAP.md, dashboard/migration.json, docs/ and the README.md of examples, examples/animated and examples/touchables: nothing under native/, src/, sdk/, scripts/, tests/, types/, the package files, dependencies.json, .github or .fallowrc.json",
+      "kept": "build/uniform-scale-previous-host/fabric_godot.dylib (local, not in Git)"
+    },
+    "checks": 29,
+    "normativeFailures": 22,
+    "structuralChecksPassed": 7,
+    "sameBundle": true,
+    "normativeFailureIds": [
+      "uniform/Mounting the public style raises no host error",
+      "uniform/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+      "uniform/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+      "uniform/The matrix and the layout size stay put across later frames without a host error",
+      "uniform-rotate/Mounting the public style raises no host error",
+      "uniform-rotate/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+      "uniform-rotate/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+      "uniform-rotate/The matrix and the layout size stay put across later frames without a host error",
+      "uniform-origin/Mounting the public style raises no host error",
+      "uniform-origin/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+      "uniform-origin/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+      "uniform-origin/The matrix and the layout size stay put across later frames without a host error",
+      "uniform-press/Mounting the public style raises no host error",
+      "uniform-press/The Control carries the analytical planar matrix: six affine coefficients and four corners",
+      "uniform-press/The Control scale is uniform at the declared factor, its angle is the declared rotation and its position adds the origin translation",
+      "uniform-press/The matrix and the layout size stay put across later frames without a host error",
+      "uniform-press/A real mouse press outside the scaled bounds reaches no Pressable and leaves no contact",
+      "uniform-press/A real mouse press outside the layout bounds but inside the scaled bounds fires pressIn, pressOut and press once at the point the scaled matrix maps it to",
+      "uniform-animated/The native animation runs to its end without a host error and RN reports finished once",
+      "uniform-animated/Every frame of the Control is a uniform planar scale of its own analytical matrix and intermediate frames were drawn",
+      "uniform-animated/After the end commit the Control rests at scale 1.5 with the analytical matrix and React never committed per frame",
+      "uniform-animated/A real press on Pop animates the scale back to 1: every frame is planar and the Control returns to identity"
+    ],
+    "guardsAndInputGuardsPass": true,
+    "guardApplications": 8,
+    "guardChecks": 81,
+    "inputGuardChecks": 25,
+    "oracleRejectsTheReport": true,
+    "firstErrorOfEveryScaledMount": {
+      "uniform": "Exception in HostFunction: E_TRANSFORM_3D: expected a planar affine transform",
+      "uniform-rotate": "Exception in HostFunction: E_TRANSFORM_3D: expected a planar affine transform",
+      "uniform-origin": "Exception in HostFunction: E_TRANSFORM_3D: expected a planar affine transform",
+      "uniform-press": "Exception in HostFunction: E_TRANSFORM_3D: expected a planar affine transform"
+    },
+    "recoveryErrorAfterAMount": "Exception in HostFunction: map::at:  key not found",
+    "animatedBackendErrors": {
+      "E_TRANSFORM_3D: expected a planar affine transform": 88,
+      "Non-js exception: E_TRANSFORM_3D: expected a planar affine transform": 1,
+      "Exception in HostFunction: E_TRANSFORM_3D: expected a planar affine transform": 1
+    },
+    "animatedControlStayedAtScale": 1.0,
+    "animatedFramesDelivered": 91
+  },
+  "oracle": {
+    "file": "scripts/transform-scale-oracle.mjs",
+    "independence": "Derives each case's planar matrix, the press points and their inverse from the JSX declaration with plain arithmetic and never reads the probe's pass flags: a report with every flag forced to passed is still rejected when a recorded Control, frame or event is wrong or missing",
+    "agreementWithTheControls": {
+      "maximumLinearError": 4.7683720083568915e-08,
+      "maximumTranslationError": 1.9550323031580774e-05,
+      "animatedSamples": 177,
+      "animatedIntermediateFrames": 146
+    },
+    "tolerances": {
+      "linearCoefficients": 1e-05,
+      "translation": 0.001,
+      "scale": 1e-06,
+      "angle": 1e-05,
+      "position": 0.001,
+      "pressLocation": 0.01,
+      "pixelChannelOfPng": "6 of 255"
+    },
+    "nodeDecodedPng": "tests/native-png.mjs decodes the saved frame apart from Godot's readback at the oracle's points",
+    "runnerAsserts": [
+      "the failing checks equal the probe's normative list, by name and by position",
+      "every visible Godot error is a failed check or a host error the report keeps",
+      "the oracle rejects the preceding host's report"
+    ]
+  },
+  "executedObservations": {
+    "staticCases": {
+      "uniform": {
+        "global": [
+          1.5,
+          0,
+          0,
+          1.5,
+          30,
+          125
+        ],
+        "scale": [
+          1.5,
+          1.5
+        ],
+        "drawnAngleRad": 0,
+        "controlRotationRad": 0,
+        "offsetTransformEnabled": false,
+        "position": [
+          65,
+          140
+        ],
+        "size": [
+          160,
+          100
+        ],
+        "expectedGlobal": [
+          1.5,
+          0,
+          0,
+          1.5,
+          30,
+          125
+        ]
+      },
+      "uniform-rotate": {
+        "global": [
+          0.433013,
+          0.25,
+          -0.25,
+          0.433013,
+          427.858978,
+          158.349365
+        ],
+        "scale": [
+          0.5,
+          0.5
+        ],
+        "drawnAngleRad": 0.523599,
+        "controlRotationRad": 2.094395,
+        "offsetTransformEnabled": true,
+        "position": [
+          65,
+          140
+        ],
+        "size": [
+          160,
+          100
+        ],
+        "expectedGlobal": [
+          0.433013,
+          0.25,
+          -0.25,
+          0.433013,
+          427.858978,
+          158.349365
+        ]
+      },
+      "uniform-origin": {
+        "global": [
+          1.5,
+          0,
+          0,
+          1.5,
+          650,
+          112.5
+        ],
+        "scale": [
+          1.5,
+          1.5
+        ],
+        "drawnAngleRad": 0,
+        "controlRotationRad": 0,
+        "offsetTransformEnabled": false,
+        "position": [
+          85,
+          127.5
+        ],
+        "size": [
+          160,
+          100
+        ],
+        "expectedGlobal": [
+          1.5,
+          0,
+          0,
+          1.5,
+          650,
+          112.5
+        ]
+      }
+    },
+    "animated": {
+      "riseSamples": 90,
+      "riseFramesBetweenTheEnds": 73,
+      "minimumScaleOnTheRise": 0.999939,
+      "finalScale": 1.5,
+      "fallSamples": 87,
+      "fallFramesBetweenTheEnds": 73,
+      "minimumScaleOnTheFall": 1,
+      "maximumScaleOnTheFall": 1.500001,
+      "finalGlobalMatrix": [
+        1,
+        0,
+        0,
+        1,
+        145,
+        485
+      ],
+      "backend": {
+        "directUpdates": 89,
+        "staleDirectUpdates": 0,
+        "frames": 90,
+        "resumes": 1,
+        "pauses": 1,
+        "active": false
+      },
+      "reactAtTheEndOfTheRise": {
+        "ends": [
+          {
+            "finished": true,
+            "toValue": 1.5
+          }
+        ],
+        "presses": [],
+        "renders": 2,
+        "runs": 1
+      },
+      "reactAtTheEndOfTheFall": {
+        "ends": [
+          {
+            "finished": true,
+            "toValue": 1.5
+          },
+          {
+            "finished": true,
+            "toValue": 1
+          }
+        ],
+        "presses": [],
+        "renders": 3,
+        "runs": 2
+      },
+      "curveSlack": 0.001,
+      "curveSlackReason": "RN's FrameAnimationDriver rounds the frame index and extends the segment linearly (FrameAnimationDriver.cpp, lines 81-118), so the ease-in undershoots its start by about 1e-4 in the first frames"
+    },
+    "press": {
+      "layoutBox": "160 x 100 at left 140, top 140 in a 440 x 325 Surface; scale 1.2 about the centre covers (-16, -10) to (176, 110) in the box's own coordinates",
+      "missPointInTheBoxCoordinates": [
+        -24,
+        50
+      ],
+      "hitPointInTheBoxCoordinates": [
+        -8,
+        104
+      ],
+      "missWindowPoint": [
+        571,
+        535
+      ],
+      "hitWindowPoint": [
+        587,
+        589
+      ],
+      "targetTag": 10,
+      "missEvents": [],
+      "missContacts": 0,
+      "missResponder": 0,
+      "heldContacts": 1,
+      "heldResponder": 10,
+      "events": [
+        {
+          "type": "in",
+          "target": 10,
+          "locationX": 6.66666,
+          "locationY": 95,
+          "pageX": 132,
+          "pageY": 244
+        },
+        {
+          "type": "out",
+          "target": 10,
+          "locationX": 6.66666,
+          "locationY": 95,
+          "pageX": 132,
+          "pageY": 244
+        },
+        {
+          "type": "press",
+          "target": 10,
+          "locationX": 6.66666,
+          "locationY": 95,
+          "pageX": 132,
+          "pageY": 244
+        }
+      ],
+      "unscaledLocalPointWouldBe": [
+        -8,
+        104
+      ],
+      "captionAfterMiss": "a Pressable under a uniform scale",
+      "captionAfterHit": "pressed at (6.7, 95.0) in its own coordinates",
+      "contactsAfterRelease": 0,
+      "responderAfterRelease": 0,
+      "holdSeconds": 0.2,
+      "minPressDurationMs": 130
+    },
+    "release": {
+      "uniform": {
+        "creates": 6,
+        "deletes": 6,
+        "nativeTags": 0,
+        "errors": []
+      },
+      "uniform-rotate": {
+        "creates": 6,
+        "deletes": 6,
+        "nativeTags": 0,
+        "errors": []
+      },
+      "uniform-origin": {
+        "creates": 7,
+        "deletes": 7,
+        "nativeTags": 0,
+        "errors": []
+      },
+      "uniform-animated": {
+        "creates": 8,
+        "deletes": 8,
+        "nativeTags": 0,
+        "errors": []
+      },
+      "uniform-press": {
+        "creates": 6,
+        "deletes": 6,
+        "nativeTags": 0,
+        "errors": []
+      }
+    },
+    "independentRuntimes": 5
+  },
+  "pointerPath": {
+    "sharedPredicateInPointerProjection": true,
+    "localTransformReachableFromAGodotScenarioWithAScaledNode": false,
+    "reason": "pointer_local_point anchors at the deepest mounted node from the target upward and calls local_transform only for nodes below the anchor; a node with a transform forms a stacking context (ViewShadowNode.cpp, line 48) and is always mounted, so it is its own anchor",
+    "scratchCallCounts": {
+      "uniformScaleScene": 0,
+      "pointerGeometryExample": 7,
+      "pointerGeometryExampleMatrices": "all with matrix[10] = 1 and matrix[0] = 1 (flattened refs)",
+      "retained": false
+    },
+    "coveredBy": "native/affine_transform_test.cpp: the predicate on std::array<double, 16> and on RN's std::array<float, 16> (scale3d(1.5, 1.5, 1.5) planar, perspective(300) not)"
+  },
+  "exploratoryObservationsOutsideTheReceipt": [
+    "With scale: 1 on the Pressable, a press at the point only the scale reaches records no event and the press check fails together with the matrix and factor checks, while the miss check passes: the check discriminates the geometry the hit test uses (scratch edit, restored byte for byte).",
+    "The oracle rejected 33 of 33 hand-edited copies of the current report (scale, matrix, translation, angle, frames, renders, the way back, the event list, targets, coordinates, caption, pointer state and layout).",
+    "A Pressable whose own scale changes while pressed (1.2 at rest, 0.9 pressed) recorded in, press and out once and the Control's scale went 1.2, 0.9, 1.2 (one scratch run; the press-and-pop shape that motivated the slice).",
+    "Counting the calls of local_transform in a scratch build gave 0 in the uniform scale scene and 7, all with the identity matrix, in the pointer-geometry example; the source and the host were restored (same source hash, same host hash).",
+    "Before the predicate lines were added, the affine factor test of this slice compiled against the preceding header fails at the first uniform scale with E_TRANSFORM_3D, and the previous test compiled against the new header fails at the index 10 expectation.",
+    "scale: 0 and scaleX: 0 mounted as public styles in fresh Hermes applications fail with one E_TRANSFORM_SINGULAR: singular transforms are not implemented exception each (21 scratch checks of the guard teardown family); the same style is what an animated value that starts at 0 hands to the mount."
+  ],
+  "captures": {
+    "command": "npm run test:transforms:guards -- --capture",
+    "checks": 35,
+    "pixelSamples": 35,
+    "pixelSamplesByCase": {
+      "uniform": 6,
+      "uniform-rotate": 7,
+      "uniform-origin": 8,
+      "uniform-animated": 5,
+      "uniform-press": 9
+    },
+    "pixelSamplesByKind": {
+      "box": 19,
+      "card": 15,
+      "marker": 1
+    },
+    "files": [
+      {
+        "path": "docs/evidence/uniform-scale/transform-uniform-scale.png",
+        "sha256": "5041e1008577144f854015dbd82c24255fc83ae55c4f31c77347eb90657b31a0",
+        "bytes": 33694,
+        "width": 900,
+        "height": 680,
+        "stableAcrossRuns": true
+      }
+    ]
+  },
+  "regressions": {
+    "steps": {
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 121,
+        "logSha256": "0113de806926b64fb800e26d007ceabf21dd42789b4014c8404d1cf7a16e0187"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "09fb02496c2c3ea8903a37278c55a370bc7eada25851b3206e36fc3246f24de0"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "19a5bf6064abed64d08357cf7d37038a5d9d0db8c986bc491614fdbe363daaa7"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "e83fd6d4bbee85b3adea55ec9b1658363cd36d10624ad0abde8665ffbe2c8c30"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "d3735b091fdd8736ace1cc3d61015cf42d81e69f42f51d2322a8441fb64f64ad"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "b829528787a6872a05fcc47bf81aed0c169fafcaadd1003da0ddb08fad3ad375"
+      },
+      "test:lists": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "654cc9592c6af2453752ee5d092973851c94ef54da4b7355f477dc32a8102d54"
+      },
+      "test:appearance": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "98c6ca8756570cd688998459cdb250b6a1148f88cbc91b6153be9d201b5c219e"
+      },
+      "test:animated": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "1fedbddd401fcb61f558bdb353f936b366249882349a0d7d2a6211059cadf44c"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "bc984ad8ef39402ff4921af1717d346b568458168cad744677f4638fac177690"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "39759252155e5be9c9ed123e629528fa2c7a8f23660d5a88e73eefc51a6580e5"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "d78502c41a04335cdbe3efb02e906ac321abf477476f37d43b470857da0f6a78"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "05e257d6328210ec23a0201fda69819f5da7eae6232abbaa3df7280997a7668e"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "7cdd9e77b1138dff370f82cd991ad8417a0929b3e2768a153d1d6b4a2ae657e0"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "f070ecb4688ecfca770068296eb506ec0a1ac4d5d121e2fbd3b25a559b7d3c63"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "b474269dbf92317b717ccc0482ef75cab42952898cc5c6ffb5592212134b1194"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "f3aac132c610d20a4aee384a01df8102b45b1457df2b0261a8c7c52f099b4b4f"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "6e714de6fd1eabdcda504700a67a71f4c12d20705e47ea30ab94b409e8b8c8a0"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 40,
+        "logSha256": "610cb0a03c4e4cd56355a590ac98fa054987d31f5b83ff3bf652957f3c5d85d6"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "502634d6a5cca1a151c24f8c16d8f283b8d6d6bc5d38e071e4af5e7bb0715b98"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "bf2bd73525998dc268ab0cc28f9214e43c4bd054b7a074348628709ad6663bc5"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 66,
+        "logSha256": "3363957d339557a67f5da4e5c1bc3294cdd5225972526c729fd88d89cbb929de"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "f39d6b1168db1ef9f6a27e8f01386193a2af813c02d965b8712af5d0f0bbd319"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "195079b003bf1c82f61dbefa06a1939f2e230c947779272d5d367a010b56cecd"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "c5edcaf148e3e2c367c34fa43b9c6c30181386920422d3ea988017f6563651a4"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "49a7e82987adb09f47d84c0f7103d493780300c17d4f377707b1f1d886a6b431"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "91af45327e1f487c5f58b71d5f8391cc4a22621ee8cc7617f79431745b491794"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 31,
+        "logSha256": "f64649c207ff60c776d2e0b3569d48f14f002c36dd9c8b1abb452f9e8d61c18f"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 59,
+        "logSha256": "599cc10ae4704de3c26c81bca9aa7d0d0e2ddb5ebdcb16868a8254ab1900f0ab"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "84bf4968e82a21927f7cfabc9cdd2c0c863a2c8e239dae03c5e7458668a1c277"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "a31b4b916c7317b1a5a605c8b21b75130a17b923fad149316931e5b5da831f7c"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "b37d68afcca589d11795dfd2126b67f2e26e9125d1817116c7422b05d0839879"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "e331913735b5d7cf89f7c7806e606589f0d587ec46fb6172285d5ee184000cb3"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "5719ec8e0faadfcbb58cf73ca6f53935b8c53d08ba221ede43c824151d65d729"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 65,
+        "logSha256": "20019e16e37b9e2afdb645b517bc9756150fcd338f0755f977f2b22f37312b89"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "4c0fcc4319ecbcf7b69a724c8f81a30116787f12d00b42ae2c75b8906966774e"
+      }
+    },
+    "counts": {
+      "examples": 2262,
+      "examplesCount": 23,
+      "animatedExample": 12,
+      "transformsExample": 309,
+      "down": 2731,
+      "documentUp": 6459,
+      "documentMove": 1940,
+      "documentHover": 1530,
+      "click": 728,
+      "captureNotifications": 672,
+      "viewUp": 297,
+      "move": 220,
+      "hover": 158,
+      "rootPath": 82,
+      "queryFaults": 187,
+      "resolverFaults": 66,
+      "panResponder": 128,
+      "sharedTouches": 92,
+      "appState": 75,
+      "virtualizedList": 44,
+      "appearance": 79,
+      "switch": 108,
+      "activityIndicator": 33,
+      "touchables": 93,
+      "touchablesAnimatedLane": 7,
+      "animated": 75,
+      "focusCommands": 112,
+      "nativeModules": 76,
+      "transformGuards": 81,
+      "transformInputGuards": 25,
+      "uniformScaleHeadless": 29,
+      "uniformScaleCapture": 35,
+      "nodeContractChecks": 264,
+      "nodeContractRuns": [
+        6,
+        8,
+        264
+      ],
+      "pythonContractChecks": 13,
+      "affineFactorChecks": 41278
+    },
+    "note": "Every native-cold-start suite step after Godot install and npm run setup, plus test:recovery, from the committed tree on the host built from it"
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "5a19b9289d3d47400fe4c682459a791f196303b5ec45116f1a8823ac41fc459f"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "aa4b8e8f13707116ddb83dc156a051da2fff14222c4e1c76b18b175852745881"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "99155c3b029fdf75b8a8e7bd722cfe573ea16ccf03fe951f7ff75919c60aaa53"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "dece29394b74d49f870c2bec5433b38b1c50f3fe4c49e05a9b55e666766a8b36"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "ff7c71883b0d5e1564996a874656f634364dc2f700fcfc228db64e7c71b0b3a8"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "13df95669ba4907dd99313223700dc9151d07737c8edf29b1b59c4e3668a8641"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 95,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "7dd08763fd8a9a26180eb73ccb99ece6409345d598e1ee812fe705bfbc638e53"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    },
+    "counts": {
+      "affineFactorChecks": 41278,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6
+    }
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "87a011d50c34073f60191ceb891e7e951365b65ab72c8b0a04b2d3dd351aae41",
+    "inputsMatchCommit": true,
+    "inputs": 63,
+    "compiler": {
+      "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    }
+  },
+  "sourcePins": {
+    "examples/transforms/App.jsx": "1bc311cc3623695da39d471c74442902bfdd64e834f58836d1ac6a84a15dbbca",
+    "examples/transforms/guards.gd": "1ea6add853ca0a0291a2b29190b1d3c8a5f427946d1864e83bbfd8d94baf1982",
+    "examples/transforms/uniform-scale.gd": "9789006b76beb357656eaddfadd141ceeed85c52e58a596fcf097ffa1db14e4a",
+    "examples/transforms/uniform-scale.tscn": "fd5afc50e3f5f79503dcbbe0c93d31e041641ddb9174119a6ad6d668e9bc8b4a",
+    "scripts/transform-guards-check.mjs": "ceaf72ec97310e37a7bf4a79927414a7fb7b04a8364219df86fc046d34237563",
+    "scripts/transform-scale-oracle.mjs": "2007a8ef23bd1459f9b2b99dad4897c374a31f377ffe6ad99478b4ec2ebfb089",
+    "native/affine_transform.h": "b12a685df212dde3975c0b626f8850e5fb02ee07a745dc951562d183195178ce",
+    "native/affine_transform_test.cpp": "cf1a733cd4e76a9c796b9c8573eafad631fac0b6c485d8077f67e000f022c7b7",
+    "native/pointer_geometry.cpp": "339080edbf9d3e504b18c01ee46722894b2e7500c3e55a47871891a01362f6bf",
+    ".github/workflows/contracts.yml": "5d3a70607d35cf4cab1823dd1f6ebf60b56005fbfcddeb4947a395321019005b"
+  },
+  "verificationSourcePins": {
+    "package.json": "5b6d92336a94b9c5d804f657a4f3bb707c5a466d5f88173d4f7dee98a47dcdb0",
+    ".fallowrc.json": "7964d1e77803b2a18346ae19ebdfd55f16cd58fea1f8818c95167835a0f2f2c5",
+    "examples/catalog.json": "0f30562b12dbbf7d3d94f640da5639a9ec572f5da06cdd4bb1004c75084cbc24",
+    "examples/entry.jsx": "0af56596552a5fc34c2cb97e9d1a2ea1c4db0b6540bcc0549bc54f297a943abd",
+    "examples/transforms/validation.gd": "e4f55712cfc89784f189ec6bec21b83b35a94d8b2ed3711562f68211a7d1a07c",
+    "examples/transforms/input-guards.gd": "18780ee5280587281980065cf4b824df0e50c593f0c769a77b7df7bc0ee6945e",
+    "examples/transforms/input-guards.tscn": "3a1bd32a77926ce1ca6299534936ee6c2f1d4dc8126bebe8fa3afe3588620144",
+    "examples/transforms/scene.tscn": "314c684b9c281627c1fa9b5622292101a704c5546a95379ae1af597316af1f23",
+    "examples/animated/App.jsx": "64eadedfb7fcaed8262bc2269f15cbff4e2e7db394e2cb5a86adafd4e8521e16",
+    "examples/animated/validation.gd": "b296502b6718ff71b129309b05adfb2f73f1b538a7cbe4b7ae48e187b7e7950a",
+    "examples/animated/scene.tscn": "916204fe53d0d58e912a091984707859ab1918d5816ee5aa4a7985695f2de237",
+    "src/react-native-platform.jsx": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+    "src/animated-exports.js": "4097fe4cd5167222581d7ac1c3032e224aedeff506026619241ba85975942f67",
+    "sdk/toolchain/platform-plugin.mjs": "e19e81451fda62f844d4e302c747d460f17a343d8b829c1c60eb970e06c14062",
+    "tests/native-png.mjs": "57e57e03a3aa5474f0704009c8be0231ec9ba35a62cf191cf468e51536a8db2a",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "b071a8af566e18ded36097b6d670d8c79b348d0118847729f4bf4465b389a31f",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "b12a685df212dde3975c0b626f8850e5fb02ee07a745dc951562d183195178ce",
+    "native/affine_transform_test.cpp": "cf1a733cd4e76a9c796b9c8573eafad631fac0b6c485d8077f67e000f022c7b7",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "bfb64413d1f3b8088a314e3e09ce5019112f1210b2093d67fe5a9127454754a7",
+    "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/native_animated.cpp": "6ba44aa090c81411632c17bf9b59f128e5b5231932990ff54d474443603df36b",
+    "native/native_animated.h": "0fa63cae7a1c2fee8c7839499519c29d3c0176b9926ad5c013566b43dab4a245",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "339080edbf9d3e504b18c01ee46722894b2e7500c3e55a47871891a01362f6bf",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "ReactCommon/react/renderer/components/view/conversions.h": "5014fa79e018d2a3a4f82a50189c37a3a1d9c67bc584188d05f9cdbe50651acb",
+    "ReactCommon/react/renderer/graphics/Transform.cpp": "ae7718e1702be80d6d5075e7291ab21a355f67d6afdaeef02f9fbbb03732b00b",
+    "ReactCommon/react/renderer/graphics/Transform.h": "5c27dbee77cee4f2c0bd9398295e7af693e89581f15a0f67be2804313aad3cc4",
+    "ReactCommon/react/renderer/components/view/BaseViewProps.cpp": "62ebc4eca1d47cfa4bea5e91e121e1e87a5b0a7d43498567edcb4d446fe046d6",
+    "ReactCommon/react/renderer/components/view/ViewShadowNode.cpp": "ff016c3b7f5140f946429dab92bae18afd8f28975e8a5f2bb66db32db31edda3",
+    "ReactCommon/react/renderer/animated/nodes/TransformAnimatedNode.cpp": "6f1fb0acb4aa6eecb87de4cf4d5cb3c800bd9eead89b7066e7ff614544c94dca",
+    "ReactCommon/react/renderer/animated/drivers/FrameAnimationDriver.cpp": "86469fa386c1c409d2a5b0f3e277b60080f3b98a8560718b27d661d775dd6cfc",
+    "React/Fabric/RCTConversions.h": "7bfccae3de96daa50013aebaafa50ebdb1171742b8a3acec0daeaad86f78e705",
+    "React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm": "e3e72be3a2626957b2090a8d5ee826895bac319f28e51d41db1445121758f827",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/BaseViewManager.java": "27c578b59752fd76bbdcfc4d1fb627a8c277b0391b2e82b42baeb2469a08aa00",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/MatrixMathHelper.kt": "8051be5ce81962a47e60ae58d6e424b395689c4e178cf1a0058b91c761c6fd74",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "Libraries/Components/Pressable/Pressable.js": "af258af1c382f4e5ba450a2b53d20b330cbeaee427c3dbb71e8c88a1dca11a1f",
+    "Libraries/StyleSheet/processTransform.js": "18297aa0d2f9743c6a140b9f597c495e5d03dbbec92a7974e031bf339393d896"
+  },
+  "hostedCI": {
+    "status": "pending-uniform-scale-slice"
+  },
+  "limits": [
+    "scale: 0, scaleX: 0 and every other singular transform still fail with E_TRANSFORM_SINGULAR; a pop-in that starts at zero is the next requirement.",
+    "3D, perspective, rotateX/rotateY (every z-coupling entry), a weight other than 1 and transformOrigin z remain rejected; scaleZ now has no effect in the plane, as on both platforms, and is not exercised by the scene (the unit test covers its matrix).",
+    "The Pressable is pressed with the mouse; touch input on a scaled Pressable, measure/measureInWindow of a scaled target (RN's own code, covered in the gallery with scaleX), transformed clipping and Godot Android and iOS exports are not covered.",
+    "The local_transform branch of pointer projection cannot be reached from a Godot scenario with a scaled node (a transformed node is always mounted and anchors the projection); only the unit test of the shared predicate covers it.",
+    "The preceding host's per-frame error count and the animated frame counts vary with the frame rate; the checks assert thresholds and uniformity, not those counts.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed: GF-10 is not at its first slice, so its slice checkpoint, already closed, does not change."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin and the working tree",
+    "sourcePins": 10,
+    "nativeSourcePins": 63,
+    "verificationSourcePins": 16,
+    "uniqueCodeAndConfigurationInputs": 86,
+    "mismatches": [],
+    "originalReactNativeSources": 14,
+    "executedFromTheCommittedTree": true
+  },
+  "gates": {
+    "ranAt": "2026-10-06T11:02:14.183767+00:00",
+    "meaning": "Contracts-job gates, test:recovery and the dashboard checks on the final tree with this record's documents, the dashboard entry and the receipt body (this field is appended afterwards).",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "5871292e17763cead5659c8c86f319bd324e5845921dd6cd633b21ed4a511d54"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "061c7a5cd35711ffc089f3503e6757f249b767e1368cc78cd5c6171d26a95b6a"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "40730d218f800beae210d24ac74db1493b7a31a6916ba248e2bc25cb1d3d2329"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "abfff73dc6b86ccc059d7a86c437f3c560f8573680ae8e118c28ff80ceb67e14"
+      },
+      "dashboard:check": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ccbababb026589cf03be230de1b2888ea9fe9ac22177b669873a2e40854a88ca"
+      },
+      "test:dashboard": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "2716782584675917b96605aa9b239c748093891df1a375f4506ee8df56e712f8"
+      },
+      "type-check": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "386165be90e955da25ceaec961c4cb36e9f86f8107c5c74c2df0cde6983d51e0"
+      }
+    },
+    "counts": {
+      "nodeContractRuns": [
+        6,
+        8,
+        264
+      ],
+      "nodeContractChecks": 264,
+      "pythonContractChecks": 13,
+      "nodeFailures": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

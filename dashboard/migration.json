@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelos quadros do Godot; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: recibos de CI/Pages, Networking e Modal"
+    "focusTitle": "Escala uniforme de transform (scale) em Controls planares do Godot, estática, animada e sob clique real; Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelos quadros do Godot; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: transforms singulares (scale: 0), recibos de CI/Pages, Networking e Modal"
   },
-  "updatedAt": "2026-10-06T08:09:28.266615+00:00",
+  "updatedAt": "2026-10-06T10:59:17.034787+00:00",
   "source": {
-    "commit": "d96383c46dde79fb9d242f89e68360d49a81663a",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/d96383c46dde79fb9d242f89e68360d49a81663a",
-    "scope": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público react-native: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls com o tick de quadros do Godot como relógio, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. 75 checks headless em duas roots; o host anterior falha exatamente as 59 normativas; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2 e o oráculo independente rejeita as duas. Dois contratos antigos mudam de propósito: o TouchableOpacity passa a montar e a animar, e um commit só com filhos mantém o ID nativo imperativo do exemplo tree. CI desta fatia pendente. Fecha só o checkpoint de fatia do GF-19.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/40"
+    "commit": "6fbfb18c7dac619f58a818a5b3cbc3abb6c61f25",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/6fbfb18c7dac619f58a818a5b3cbc3abb6c61f25",
+    "scope": "Escala uniforme do RN (transform: [{ scale }]), estática e animada, em Controls planares do Godot: o RN a escreve como scale3d(n, n, n) e o guard de transformações rejeitava o elemento de z (E_TRANSFORM_3D), então nenhum scale montava; esse elemento só multiplica z e os pontos de um Control planar têm z = 0, então a regra planar passa a ter uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e os acoplamentos reais de z e o peso seguem rejeitados. 29 checks headless em cinco aplicações (três escalas estáticas, Animated.View com useNativeDriver e um Pressable sob dois cliques reais) contra matrizes derivadas do JSX por um oráculo independente; o host anterior falha exatamente as 22 normativas. scale: 0 e demais transforms singulares seguem abertos. CI desta fatia pendente. Não fecha checkpoint: o GF-10 não é primeira fatia.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/41"
   },
   "phases": [
     {
@@ -1172,7 +1172,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda.",
+      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. Singular/3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda. Escala uniforme: o transform: [{ scale }] do RN, estático ou animado, monta como escala planar uniforme no mesmo Control (o RN o escreve como scale3d e o elemento de z não move ponto do plano), a regra planar tem uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e um Pressable escalado recebe cliques reais onde só a escala alcança; 29 headless em cinco aplicações, host anterior falha exatamente 22, oito casos de rejeição e 81 checks; scale: 0 e demais singulares, 3D e peso diferente de 1 seguem rejeitados. CI desta fatia pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1887,7 +1887,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls com o tick de quadros do Godot como relógio, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. Timing, spring, decay, composição, interpolação, useAnimatedValueXY, stopAnimation, listener, re-render, desmontagem e duas roots de um só backend; TouchableOpacity por mouse e toque. 75 headless, host anterior falha exatamente 59; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2, rejeitadas pelo oráculo. Animated.Text/Image/ScrollView/FlatList/SectionList lançam onde renderizam e um transform scale uniforme falha com E_TRANSFORM_3D (guard de transformações anterior; scaleX e scaleY animam). Abertos: LayoutAnimation, Animated.event nativo no ScrollView, props de layout afirmadas pela suíte, PlatformColor, movimento reduzido, carga de JS e background/retomada, orçamentos de quadro e exports mobile. CI desta fatia pendente.",
+      "note": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls com o tick de quadros do Godot como relógio, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. Timing, spring, decay, composição, interpolação, useAnimatedValueXY, stopAnimation, listener, re-render, desmontagem e duas roots de um só backend; TouchableOpacity por mouse e toque. 75 headless, host anterior falha exatamente 59; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2, rejeitadas pelo oráculo. Animated.Text/Image/ScrollView/FlatList/SectionList lançam onde renderizam; um transform scale uniforme falhava com E_TRANSFORM_3D e passou a renderizar, animado ou não, na fatia da escala uniforme (GF-10). Abertos: LayoutAnimation, Animated.event nativo no ScrollView, props de layout afirmadas pela suíte, PlatformColor, movimento reduzido, carga de JS e background/retomada, orçamentos de quadro e exports mobile. CI desta fatia pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3440,6 +3440,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "uniform-scale-local-verified-20261006",
+      "at": "2026-10-06T10:59:17.034787+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-19",
+        "GF-13"
+      ],
+      "message": "Escala uniforme (transform: [{ scale }]) sobre Controls planares do Godot: o RN a escreve como scale3d(n, n, n) e o guard de transformações rejeitava o elemento de z com E_TRANSFORM_3D, então nenhum scale montava, nem o Animated.View com useNativeDriver. O elemento só multiplica z e os pontos de um Control planar têm z = 0; a regra planar passa a ter uma definição só, usada pelo adaptador e pela projeção de ponteiros, e os acoplamentos reais de z e o peso seguem rejeitados. 29 checks headless em cinco aplicações (escala, rotação, transformOrigin, Animated.View nativo e Pressable sob dois cliques reais) contra matrizes derivadas do JSX por um oráculo independente; o host anterior falha exatamente as 22 normativas. scale: 0 e demais transforms singulares seguem abertos. O GF-10 não é primeira fatia: nenhum checkpoint fecha; CI pendente."
+    },
     {
       "id": "native-animated-local-verified-20261006",
       "at": "2026-10-06T08:09:28.266615+00:00",
