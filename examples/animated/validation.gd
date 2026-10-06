@@ -9,6 +9,7 @@ var checks: Array = []
 var stages: Dictionary = {}
 var images: Dictionary = {}
 var capturing := false
+var track: Control
 @onready var application: Node = $Application
 @onready var surface: Control = $Surface
 
@@ -58,13 +59,48 @@ func snap(stage: String) -> Dictionary:
   stages[stage] = {"box": value, "animated": animated(), "example": example()}
   return value
 
+# Fabric hoists the box next to its parent View under the surface root, so the
+# box's Control parent is the whole root. The track is the smallest other Control
+# that holds the box at rest.
+func track_of(box: Control) -> Control:
+  var found: Control = null
+  for candidate in surface.find_children("*", "Control", true, false):
+    var node := candidate as Control
+    if node != box and node.get_global_rect().encloses(box.get_global_rect()):
+      if found == null or node.size.x * node.size.y < found.size.x * found.size.y:
+        found = node
+  return found
+
+# The box's bounds as drawn, including its rotation.
+func bounds(node: Control) -> Rect2:
+  return node.get_global_transform() * Rect2(Vector2.ZERO, node.size)
+
+# The readback rectangle of a Control, in the physical pixels of the saved frame.
+func region(node: Control) -> Rect2i:
+  var physical := get_window().get_final_transform() * node.get_global_rect()
+  return Rect2i(Vector2i(physical.position.round()), Vector2i(physical.size.round()))
+
+func digest(image: Image, area: Rect2i) -> String:
+  var context := HashingContext.new()
+  context.start(HashingContext.HASH_SHA256)
+  context.update(image.get_region(area).get_data())
+  return context.finish().hex_encode()
+
+# The whole frame also changes for unrelated reasons (a dimmed button, the status
+# text), so each stage is hashed per region: the track the box moves in and the
+# Run button. The full frame is still saved as the capture.
 func capture(stage: String) -> void:
   if not capturing:
     return
   await RenderingServer.frame_post_draw
   var image := get_viewport().get_texture().get_image()
   verify(image.save_png("res://build/animated-%s.png" % stage) == OK, "Renderer capture saved: " + stage)
-  images[stage] = hash(image.get_data())
+  var track_area := region(track)
+  var run_area := region(control("animated-run"))
+  var frame := Rect2i(Vector2i.ZERO, image.get_size())
+  var inside := track_area.has_area() and run_area.has_area() and frame.encloses(track_area) and frame.encloses(run_area)
+  verify(inside, "The track and the Run button lie inside the captured frame: " + stage)
+  images[stage] = {"track": digest(image, track_area) if inside else "", "run": digest(image, run_area) if inside else ""}
 
 func at(id: String) -> Vector2:
   return control(id).get_global_rect().get_center()
@@ -97,6 +133,8 @@ func run() -> void:
   verify(mounted, "The public example mounts its Animated.View box and two TouchableOpacity buttons")
   await frames(10)
   var box := control("animated-box")
+  track = track_of(box)
+  verify(track != null, "The box rests inside a track Control, the smallest Control that holds it")
   var rest := snap("before")
   var state := animated()
   verify((is_equal_approx(rest.opacity, 1.0) and is_equal_approx(angle(box), 0.0) and state.get("enabled") == true
@@ -131,6 +169,8 @@ func run() -> void:
     "The box rests at the final opacity, translation and a quarter turn, and the backend idles")
   verify(example().get("renders") == 3,
     "React rendered three times, not once per frame: the animation never committed")
+  verify(track != null and track.get_global_rect().encloses(bounds(box)),
+    "The box ends inside the same track, so its pixels hold every stage of the travel")
   await capture("end")
 
   # Back: a full click returns the box over RN's own timing.
@@ -146,8 +186,13 @@ func run() -> void:
   verify(native_state().get("errors", []).is_empty() and not images.has("end") == not capturing,
     "The run raised no host error")
   if capturing:
-    verify(images.before != images.pressed and images.pressed != images["mid-animation"] and images["mid-animation"] != images.end
-      and images.before != images.end, "The renderer readback differs at every captured stage")
+    var rest_pixels: Dictionary = images.before
+    var mid_pixels: Dictionary = images["mid-animation"]
+    var end_pixels: Dictionary = images.end
+    verify((rest_pixels.track != mid_pixels.track and mid_pixels.track != end_pixels.track and rest_pixels.track != end_pixels.track),
+      "The track's pixels differ between rest, mid-animation and the end: the renderer drew the moving box")
+    verify((not rest_pixels.track.is_empty() and images.pressed.track == rest_pixels.track and images.pressed.run != rest_pixels.run),
+      "A press changes the Run button's pixels and leaves the track's as they were")
   await finish()
 
 func finish() -> void:

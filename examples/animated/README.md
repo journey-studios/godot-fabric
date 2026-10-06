@@ -58,7 +58,8 @@ translation and rotation, that RN reports the end once with `finished: true`, th
 the box rests at its final values with no stale update, and that React rendered
 three times by then: the animation never committed. Back returns the box and releases the
 pressed button, stopping the application releases the backend without a host error,
-and with `--capture` every readback differs from the others. The
+and with `--capture` the pixels of the track the box moves in differ between rest,
+mid-animation and the end, while a press changes only the Run button's. The
 [probe](../../tests/native-animated-probe.gd) and its independent oracle cover the
 animations frame by frame.
 
