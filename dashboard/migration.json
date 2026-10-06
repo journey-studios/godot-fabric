@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; Switch na main; próximos: Touchables (#30), Appearance (#35), ActivityIndicator, listas virtualizadas e notificações de captura"
+    "focusTitle": "Appearance e useColorScheme sobre o tema do sistema do Godot; Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: recibos de CI/Pages, Animated, Networking e Modal"
   },
-  "updatedAt": "2026-10-06T01:20:17.790635+00:00",
+  "updatedAt": "2026-10-06T03:08:06.996867+00:00",
   "source": {
-    "commit": "1b7dac52794ffd13257857621942c5df20ca127b",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/1b7dac52794ffd13257857621942c5df20ca127b",
-    "scope": "Toques compartilhados entre raízes: cada TouchEvent lista os toques ativos de todas as raízes da aplicação, porque elas compartilham o único responder JS do RN; um toque que termina em outra raiz não reivindica nem solta o gesto que uma raiz segura enquanto o toque dela continua; um toque cancelado ainda termina o responder único, como numa superfície do RN. As plataformas do RN mantêm uma lista por superfície, então é um desvio deliberado a favor da semântica de superfície única; o ReactNativeResponder (flags de dispatch nativo) só libera quando não resta toque, como numa superfície do RN. Quatro lanes com 92 checks headless; host anterior falha exatamente 9; dois contratos antigos (dispatch integrado e pointer-geometry) passam a esperar a lista da aplicação. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
+    "commit": "b13bcddec7ea5aed48c9a1f0022e0577c110d572",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b13bcddec7ea5aed48c9a1f0022e0577c110d572",
+    "scope": "Appearance e useColorScheme originais do RN, pelo import público react-native, alimentados pelo tema do sistema do DisplayServer do Godot e pelo override de setColorScheme: duas roots de uma aplicação renderizam o mesmo esquema, e duas aplicações abertas ao mesmo tempo recebem cada mudança por um único callback de tema compartilhado. 79 checks headless; o host anterior falha exatamente as 56 normativas e o host antes do callback compartilhado exatamente as 9 do callback; sabotagem retida. CI desta fatia pendente. Fecha só o checkpoint de fatia do GF-21.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/35"
   },
   "phases": [
     {
