@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {timingDriver} from "./transform-timing-driver.mjs";
 
 // The oracle for examples/transforms/singular.gd, written apart from it. What RN
 // computes for each declaration in examples/transforms/App.jsx (the box a degenerate
@@ -54,12 +55,15 @@ export const COLORS = {"scale-zero": "0ea5e9", "scale-x-zero": "f59e0b", "rank-o
 // states, the canceled contact, the layout and release; the capture its three phases
 // and release; and one for the independence of the runtimes.
 const CHECKS = {"scale-zero": 6, "scale-x-zero": 6, "rank-one": 6, "rank-lost": 6, entrance: 6, exit: 7, toggle: 7, capture: 4};
-// RN's FrameAnimationDriver rounds the frame index and extends linearly, so an ease
-// curve strays from its ends by about 1e-4 in the first frames.
-const CURVE_SLACK = 1e-3;
 // RN's Transform::Scale flattens a factor below this to exactly 0 (isZero): a View is
 // collapsed then, and never shown at a smaller scale.
 const RN_ZERO = 1e-5;
+// What the Control's signed scale may differ from the value RN's driver applied, once the
+// value is rounded to the float RN's props carry it in. The host splits the matrix into the
+// Control's own scale and angle, which here reproduces that float to double rounding
+// (maximumFactorError); this leaves the room of about 16 ulps at 1 that the Animated lane
+// gives an opacity.
+const FACTOR_TOLERANCE = 1e-6;
 
 const close = (actual, expected, tolerance, what) =>
   assert.ok(Math.abs(actual - expected) <= tolerance, `${what}: ${actual} against ${expected}`);
@@ -186,59 +190,71 @@ function verifyStaticCase(report, mode) {
   assert.deepEqual(entry.afterStop.errors, [], `${mode}: no host error`);
 }
 
-// One animation, frame by frame. The Control is hidden while RN's scale is zero and
-// otherwise shown at the planar matrix of the signed scale its own scale and angle
-// carry (an ease curve strays from its start by a hair, so a shown frame can be a tiny
-// mirrored scale, a half turn at that scale, and the first frames can fall back
-// through RN's zero: the Control collapses and returns within them); it is never shown
-// below RN's own zero and never hidden once the scale is clearly away from it, so
-// hidden frames come before the first clearly shown one when rising and after the last
-// when falling. The scales stay between the ends and move one way. Returns how many
-// frames were drawn strictly between the ends.
+// One animation, frame by frame, from a sample taken before it ran. The backend delivers one
+// timestamp per Godot frame, however the host paces them, and RN's native timing driver turns
+// each into the scale the node takes (transform-timing-driver.mjs recomputes it, the extension
+// of the table between its entries included, and completes on the first frame past the last).
+// So every sample is judged against the driver's own value for the frames delivered so far,
+// never against a count of frames or a curve that moves one way, which no pacing guarantees.
+// The Control is hidden exactly while that value collapses (RN flattens a factor below
+// RN_ZERO to 0) and otherwise shown at the planar matrix of the signed scale its own scale and
+// angle carry, which is the value: a value an ease curve extends below 0 in its first frames
+// is a tiny mirrored scale, a half turn at that scale. A Godot frame in which the backend
+// delivered nothing leaves the Control as it was. Returns how many frames the host delivered
+// and how many of them applied a scale strictly between the ends.
 function verifyLeg(mode, samples, rising, worst) {
   const label = rising ? "rise" : "fall";
-  assert.ok(Array.isArray(samples) && samples.length >= 8, `${label}: the Control was sampled frame by frame`);
-  let extreme = rising ? 0 : 1, drawn = 0, elapsed = -1;
-  const away = [], hidden = [];
+  assert.ok(Array.isArray(samples) && samples.length >= 2, `${label}: the Control was sampled frame by frame`);
+  const from = rising ? 0 : 1, to = rising ? 1 : 0;
+  assert.equal(samples[0].frames, 0, `${label}: the backend had delivered no frame before the animation`);
+  assert.equal(samples[0].ts, null, `${label}: and so no timestamp`);
+  const driver = timingDriver({from, to});
+  let value = from, complete = false, delivered = 0, between = 0, elapsed = -1;
   for (const [index, sample] of samples.entries()) {
     assert.ok(sample.ms >= elapsed, `${label} sample ${index} is in time order`);
     elapsed = sample.ms;
+    if (index > 0) {
+      const before = samples[index - 1], frames = sample.frames - before.frames;
+      assert.ok(frames === 0 || frames === 1, `${label} sample ${index}: at most one frame per Godot frame`);
+      if (frames === 0) {
+        assert.equal(sample.ts, before.ts, `${label} sample ${index}: no frame, no new timestamp`);
+      } else {
+        assert.ok(typeof sample.ts === "number" && (before.ts === null || sample.ts > before.ts),
+          `${label} sample ${index}: frame timestamps increase`);
+        delivered += 1;
+        // A frame after the driver completed has none to run.
+        if (!complete) {
+          ({value, complete} = driver(sample.ts));
+          if (value > Math.min(from, to) && value < Math.max(from, to)) {
+            between += 1;
+          }
+        }
+      }
+    }
     assertKeptTransform(sample.global, `${label} sample ${index}`);
-    if (!sample.visible) {
+    // The node's value as RN's props carry it, a float.
+    const applied = Math.fround(value);
+    if (Math.abs(applied) < RN_ZERO) {
+      assert.equal(sample.visible, false, `${label} sample ${index}: hidden while RN's scale is zero (${value})`);
       assert.equal(sample.visibleInTree, false, `${label} sample ${index}: a hidden Control is not visible in the tree`);
-      hidden.push(index);
       continue;
     }
+    assert.equal(sample.visible, true, `${label} sample ${index}: shown while RN's scale is ${value}`);
     assert.equal(sample.visibleInTree, true, `${label} sample ${index}: a shown Control is visible in the tree`);
     // The signed scale comes from the Control's own scale and angle, apart from the global matrix it is compared with.
     const [scaleX, scaleY] = sample.scale, factor = scaleX * Math.cos(sample.angle);
     close(scaleY, scaleX, 1e-6, `${label} sample ${index}: uniform scale`);
     close(Math.sin(sample.angle), 0, 1e-6, `${label} sample ${index}: a turn of 0 or half a turn at most`);
-    assert.ok(Math.abs(factor) >= RN_ZERO - 1e-9, `${label} sample ${index}: scale ${factor} is not below RN's zero`);
-    assert.ok(factor >= -CURVE_SLACK && factor <= 1 + CURVE_SLACK, `${label} sample ${index}: scale ${factor} stays between 0 and 1`);
-    assert.ok(rising ? factor >= extreme - CURVE_SLACK : factor <= extreme + CURVE_SLACK, `${label} sample ${index}: scale ${factor} moves one way`);
-    extreme = rising ? Math.max(extreme, factor) : Math.min(extreme, factor);
+    close(factor, applied, FACTOR_TOLERANCE, `${label} sample ${index}: the scale RN's driver applied`);
+    worst.factor = Math.max(worst.factor, Math.abs(factor - applied));
     // The whole matrix, not just the scale: every shown frame is the planar matrix of its own factor.
-    planar(mode, factor).forEach((value, axis) => {
-      close(sample.global[axis], value, axis < 4 ? 1e-5 : 1e-3, `${label} sample ${index}: affine coefficient ${axis}`);
-      worst[axis < 4 ? "linear" : "translation"] = Math.max(worst[axis < 4 ? "linear" : "translation"], Math.abs(sample.global[axis] - value));
+    planar(mode, factor).forEach((expected, axis) => {
+      close(sample.global[axis], expected, axis < 4 ? 1e-5 : 1e-3, `${label} sample ${index}: affine coefficient ${axis}`);
+      worst[axis < 4 ? "linear" : "translation"] = Math.max(worst[axis < 4 ? "linear" : "translation"], Math.abs(sample.global[axis] - expected));
     });
-    if (factor > 0.001 && factor < 0.999) {
-      drawn += 1;
-    }
-    if (Math.abs(factor) > CURVE_SLACK) {
-      away.push(index);
-    }
   }
-  assert.ok(away.length > 0, `${label}: the scale left RN's zero`);
-  const boundary = rising ? away[0] : away.at(-1);
-  for (const index of hidden) {
-    assert.ok(rising ? index < boundary : index > boundary, `${label} sample ${index}: hidden while the scale is away from zero`);
-  }
-  assert.equal(samples[0].visible, !rising, `${label}: the first sample is ${rising ? "hidden" : "shown"}`);
-  assert.equal(samples.at(-1).visible, rising, `${label}: the last sample is ${rising ? "shown" : "hidden"}`);
-  assert.ok(drawn >= 3, `${label}: frames between the ends were drawn: ${drawn}`);
-  return drawn;
+  assert.ok(complete, `${label}: RN's driver completed over the frames delivered`);
+  return {delivered, between};
 }
 
 function verifyAnimatedCase(report, mode, worst) {
@@ -256,8 +272,7 @@ function verifyAnimatedCase(report, mode, worst) {
   // A real press before the animation: on the collapsed Animated.View it reaches the
   // plate behind it, on the shown one the box.
   assertPress(mode, entry.pressBefore, rising ? "behind" : "box", `${mode} before`);
-  const drawn = verifyLeg(mode, entry.samples, rising, worst);
-  assert.equal(drawn, entry.drawn, `${mode}: the probe counted the same intermediate frames`);
+  const frames = verifyLeg(mode, entry.samples, rising, worst);
   assert.deepEqual(entry.react.ends, [{toValue: rising ? 1 : 0, finished: true}], `${mode}: RN reports one finished animation`);
   assert.equal(entry.react.runs, 1, `${mode}: the animation ran once`);
   assert.equal(entry.react.renders, entry.rendersBefore, `${mode}: React rendered no frame of the animation`);
@@ -282,6 +297,7 @@ function verifyAnimatedCase(report, mode, worst) {
     assert.equal(entry.focus, undefined, `${mode}: no field to focus`);
   }
   assert.deepEqual(entry.afterStop.errors, [], `${mode}: no host error`);
+  return frames;
 }
 
 function verifyToggleCase(report, worst) {
@@ -415,12 +431,11 @@ export function verifySingularReport(report, {capture = false} = {}) {
   }
   assert.equal(names.length, 1 + MODES.reduce((total, mode) => total + CHECKS[mode], 0) + (capture ? 1 + MODES.length : 0), "No check is missing or extra");
   assert.equal(new Set(MODES.map(mode => report.cases[mode]?.runtimeId)).size, MODES.length, "Eight independent runtimes");
-  const worst = {linear: 0, translation: 0};
+  const worst = {linear: 0, translation: 0, factor: 0};
   for (const mode of STATIC_MODES) {
     verifyStaticCase(report, mode);
   }
-  verifyAnimatedCase(report, ENTRANCE, worst);
-  verifyAnimatedCase(report, EXIT, worst);
+  const legs = [verifyAnimatedCase(report, ENTRANCE, worst), verifyAnimatedCase(report, EXIT, worst)];
   verifyToggleCase(report, worst);
   verifyCaptureCase(report);
   if (capture) {
@@ -438,9 +453,8 @@ export function verifySingularReport(report, {capture = false} = {}) {
       assert.equal(sample.passed, true, `${sample.case}: pixel at ${point}`);
     }
   }
-  return {maximumLinearError: worst.linear, maximumTranslationError: worst.translation,
-    animatedSamples: report.cases[ENTRANCE].samples.length + report.cases[EXIT].samples.length,
-    animatedIntermediateFrames: report.cases[ENTRANCE].drawn + report.cases[EXIT].drawn};
+  return {maximumLinearError: worst.linear, maximumTranslationError: worst.translation, maximumFactorError: worst.factor,
+    animatedFrames: legs[0].delivered + legs[1].delivered, animatedIntermediateFrames: legs[0].between + legs[1].between};
 }
 
 // The rejection the oracle gives on its own derivations, with every probe flag

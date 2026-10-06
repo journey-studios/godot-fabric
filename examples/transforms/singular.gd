@@ -64,7 +64,7 @@ const TOGGLE_STEPS := [0.0, 1.25, 0.0, 1.0]
 const DEVICE := 1001
 const TOLERANCE := 1e-3
 # RN's FrameAnimationDriver rounds the frame index and extends the segment
-# linearly, so an ease curve strays from [0, 1] by about 1e-4 in its first frames
+# linearly, so an ease curve strays from [0, 1] by about 2e-4 in its first frames
 # (FrameAnimationDriver.cpp, update). That is RN's own curve on every platform.
 const CURVE_SLACK := 1e-3
 # RN's Transform::Scale flattens a factor below this to exactly 0 (isZero), which is
@@ -109,8 +109,8 @@ const REST_SHOWN := "The Animated.View mounts at scale 1 with RN's native backen
 const UNHIT := "A real mouse press on the collapsed Animated.View reaches the plate behind it once and never the box"
 const HIT := "A real mouse press on the shown Animated.View reaches the box once and never the plate"
 const RUNS := "The native animation runs to its end without a host error, RN reports finished once and React never rendered per frame"
-const FRAMES_UP := "The Control is hidden at the start, never shown below RN's zero and never hidden once the scale is away from it, every shown frame is the analytical matrix of its own scale, and intermediate frames were drawn"
-const FRAMES_DOWN := "The Control is shown at the start, never shown below RN's zero and never hidden until the scale is back near it, every shown frame is the analytical matrix of its own scale, and intermediate frames were drawn"
+const FRAMES_UP := "The Control is hidden at the start, never shown below RN's zero and never hidden once the scale is away from it, every shown frame is the analytical matrix of its own scale, and the Control changes only on frames the backend delivered"
+const FRAMES_DOWN := "The Control is shown at the start, never shown below RN's zero and never hidden until the scale is back near it, every shown frame is the analytical matrix of its own scale, and the Control changes only on frames the backend delivered"
 const SHOWN_END := "At the end the Control rests at scale 1 with the identity matrix, and a real mouse press reaches the box once and never the plate"
 const COLLAPSED_END := "At the end the Control is hidden with a finite invertible transform, and a real mouse press reaches the plate once and never the box"
 const FOCUS_RELEASED := "The keyboard focus of a field inside the box is released when the native driver collapses it: Godot has no focus owner and JS saw focus and then blur"
@@ -134,6 +134,9 @@ var surfaces: Dictionary = {}
 var capturing := false
 var negative := false
 var sabotaged := false
+# The timestamp (RN's backend, in ms) of the first frame each application delivered: the origin of
+# the timestamps its samples record.
+var frame_origins: Dictionary = {}
 
 func verify(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -470,10 +473,19 @@ func static_case(mode: String) -> void:
   verify(kept, mode + "/" + STABLE)
   mark(mode, "later", later)
 
+# One observation of the box, taken as a Godot frame starts: the previous frame's application tick has
+# run, so the Control shows what RN's backend applied for the last timestamp the host delivered to it
+# (lastFrameMs, relative to the first one this application delivered, null before any).
 func sample(mode: String, started: int) -> Dictionary:
   var box := control(mode, "singular-box")
-  return {"ms": Time.get_ticks_msec() - started, "visible": box.visible, "visibleInTree": box.is_visible_in_tree(),
-    "scale": [box.scale.x, box.scale.y], "angle": angle(box), "global": affine_values(box.get_global_transform_with_canvas())}
+  var animated := backend(mode)
+  var delivered := int(animated.get("frames", 0))
+  var stamp := float(animated.get("lastFrameMs", 0.0))
+  if delivered > 0 and not frame_origins.has(mode):
+    frame_origins[mode] = stamp
+  return {"ms": Time.get_ticks_msec() - started, "frames": delivered, "ts": (stamp - float(frame_origins[mode])) if delivered > 0 else null,
+    "visible": box.visible, "visibleInTree": box.is_visible_in_tree(), "scale": [box.scale.x, box.scale.y], "angle": angle(box),
+    "global": affine_values(box.get_global_transform_with_canvas())}
 
 # One animation, frame by frame, from a sample taken before it runs until RN has
 # reported its end. A host that fails mid-animation may tear the tree down, so the
@@ -504,21 +516,34 @@ func run_leg(mode: String) -> Array:
 # the Control collapses and returns within them. It is never shown below RN's own
 # zero, and never hidden once the scale is clearly away from it: hidden frames come
 # before the first clearly shown one when rising and after the last when falling. The
-# scales stay between the ends and move one way, and how many frames were drawn
-# strictly between the ends is counted.
-func judge(mode: String, samples: Array, rising: bool) -> Dictionary:
-  var extreme := 0.0 if rising else 1.0
+# scales stay between the ends.
+# How the host paces its frames is not the probe's to assume: how many it delivers, how
+# far apart, and whether the scale steps back where RN's driver rounds its table index
+# are all the host's own. So the probe asks only for what holds at any pacing: the
+# backend delivered more than one frame (the first and the one that ends the animation),
+# at most one per Godot frame, and the Control changed only on a sample that follows a
+# frame it delivered. The oracle recomputes the scale of every frame from the delivered
+# timestamps and owns the rest.
+func judge(mode: String, samples: Array, rising: bool) -> bool:
+  if samples.size() < 2:
+    return false
   var uniform := true
-  var monotone := true
   var in_range := true
   var planar := true
   var kept := true
-  var drawn := 0
+  var driven := true
   var away: Array = []
   var hidden_at: Array = []
   for index in range(samples.size()):
     var entry: Dictionary = samples[index]
     var values: Array = entry.global
+    if index > 0:
+      var before: Dictionary = samples[index - 1]
+      var delivered := int(entry.frames) - int(before.frames)
+      driven = driven and (delivered == 0 or delivered == 1)
+      if delivered == 0:
+        driven = (driven and entry.visible == before.visible and entry.scale == before.scale and entry.angle == before.angle and
+          entry.global == before.global)
     # The signed scale comes from the Control's own scale and angle, apart from the global matrix it is compared with.
     var factor := float(entry.scale[0]) * cos(float(entry.angle))
     var finite := true
@@ -529,24 +554,20 @@ func judge(mode: String, samples: Array, rising: bool) -> Dictionary:
       hidden_at.append(index)
       continue
     uniform = uniform and absf(float(entry.scale[0]) - float(entry.scale[1])) <= 1e-6 and absf(sin(float(entry.angle))) <= 1e-6
-    monotone = monotone and (factor >= extreme - CURVE_SLACK if rising else factor <= extreme + CURVE_SLACK)
     in_range = in_range and absf(factor) >= RN_ZERO - 1e-9 and factor >= -CURVE_SLACK and factor <= 1.0 + CURVE_SLACK
     planar = planar and close_values(values, affine_values(placement(mode, factor).page))
-    if factor > 0.001 and factor < 0.999:
-      drawn += 1
     if absf(factor) > CURVE_SLACK:
       away.append(index)
-    extreme = maxf(extreme, factor) if rising else minf(extreme, factor)
   var boundary: int = -1
   if not away.is_empty():
     boundary = away[0] if rising else away.back()
   var order := boundary >= 0
   for index: int in hidden_at:
     order = order and (index < boundary if rising else index > boundary)
-  var first_hidden: bool = not samples.is_empty() and (not samples[0].visible if rising else samples[0].visible)
-  var last_shown: bool = not samples.is_empty() and (samples.back().visible if rising else not samples.back().visible)
-  return {"ok": (samples.size() >= 8 and first_hidden and last_shown and order and uniform and monotone and in_range and planar and
-    kept and drawn >= 3), "drawn": drawn}
+  var first_hidden: bool = not samples[0].visible if rising else samples[0].visible
+  var last_shown: bool = samples.back().visible if rising else not samples.back().visible
+  var delivered_in_leg := int(samples.back().frames) - int(samples[0].frames)
+  return (delivered_in_leg >= 2 and driven and first_hidden and last_shown and order and uniform and in_range and planar and kept)
 
 func animated_case(mode: String) -> void:
   var rising := mode == ENTRANCE
@@ -592,10 +613,8 @@ func animated_case(mode: String) -> void:
     float(ends[0].get("toValue", -1)) == toward and int(running.get("staleDirectUpdates", -1)) == 0 and
     int(running.get("directUpdates", 0)) > 0 and running.get("active") == false and int(after.get("renders", -2)) == renders_before),
     mode + "/" + RUNS)
-  var leg := judge(mode, samples, rising)
-  verify(leg.ok, mode + "/" + (FRAMES_UP if rising else FRAMES_DOWN))
+  verify(judge(mode, samples, rising), mode + "/" + (FRAMES_UP if rising else FRAMES_DOWN))
   mark(mode, "samples", samples)
-  mark(mode, "drawn", leg.drawn)
   mark(mode, "react", after)
   mark(mode, "backend", running)
   mark(mode, "rendersBefore", renders_before)

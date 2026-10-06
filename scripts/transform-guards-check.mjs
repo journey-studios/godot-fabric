@@ -250,7 +250,7 @@ async function verifyUniformScale() {
       maximumErrorsAgainstTheOracle: oracle }, null, 2) + "\n");
   }
   console.log(`TRANSFORM_UNIFORM_SCALE_${capture ? "CAPTURE_" : ""}VERIFIED: ${report.checks.length} executed checks; ` +
-    `${oracle.animatedSamples} animated frames, ${oracle.animatedIntermediateFrames} between the ends`);
+    `${oracle.animatedFrames} frames delivered to the animations, ${oracle.animatedIntermediateFrames} between the ends`);
 }
 
 // The singular-transform lane (examples/transforms/singular.gd): eight fresh
@@ -430,5 +430,5 @@ async function verifySingular() {
       maximumErrorsAgainstTheOracle: oracle }, null, 2) + "\n");
   }
   console.log(`TRANSFORM_SINGULAR_${capture ? "CAPTURE_" : ""}VERIFIED: ${report.checks.length} executed checks; ` +
-    `${oracle.animatedSamples} animated frames, ${oracle.animatedIntermediateFrames} between the ends`);
+    `${oracle.animatedFrames} frames delivered to the animations, ${oracle.animatedIntermediateFrames} between the ends`);
 }

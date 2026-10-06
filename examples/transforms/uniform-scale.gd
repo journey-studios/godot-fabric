@@ -39,9 +39,9 @@ const PRESS_SCALE := 1.2
 const DEVICE := 1001
 const TOLERANCE := 1e-3
 # RN's FrameAnimationDriver rounds the frame index and extends the segment
-# linearly, so an ease-in curve undershoots its start by about 1e-4 in the first
+# linearly, so an ease curve strays from its ends by about 1e-4 in the first
 # frames (FrameAnimationDriver.cpp, update). That is RN's own curve on every
-# platform; the scale may stray from [1, 1.5] and from monotone by this much.
+# platform; the scale may stray from [1, 1.5] by this much.
 const CURVE_SLACK := 1e-3
 # The two presses, in the box's own coordinates (the unscaled layout box is
 # (0, 0) to (160, 100); the scale 1.2 about its centre covers (-16, -10) to
@@ -83,7 +83,7 @@ const FACTORS := "The Control scale is uniform at the declared factor, its angle
 const STABLE := "The matrix and the layout size stay put across later frames without a host error"
 const REST := "The Animated.View mounts at rest: scale 1 on both axes with RN's native backend attached and idle"
 const RUNS := "The native animation runs to its end without a host error and RN reports finished once"
-const FRAMES := "Every frame of the Control is a uniform planar scale of its own analytical matrix and intermediate frames were drawn"
+const FRAMES := "Every frame of the Control is a uniform planar scale of its own analytical matrix and the Control changes only on frames the backend delivered"
 const FINAL := "After the end commit the Control rests at scale 1.5 with the analytical matrix and React never committed per frame"
 const BACK := "A real press on Pop animates the scale back to 1: every frame is planar and the Control returns to identity"
 const MISSED := "A real mouse press outside the scaled bounds reaches no Pressable and leaves no contact"
@@ -98,6 +98,9 @@ var apps: Dictionary = {}
 var surfaces: Dictionary = {}
 var capturing := false
 var negative := false
+# The timestamp (RN's backend, in ms) of the first frame the animated application delivered:
+# the origin of the timestamps its samples record, null before any.
+var frame_origin: Variant = null
 
 func verify(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
@@ -265,12 +268,21 @@ func static_case(mode: String) -> void:
   verify((is_instance_valid(box) and close_values(affine_values(box.get_global_transform_with_canvas()), affine_values(global), 1e-9) and
     box.size.is_equal_approx(BOX_SIZE) and later_errors.is_empty()), mode + "/" + STABLE)
 
+# One observation of the animated box, taken as a Godot frame starts: the previous frame's application
+# tick has run, so the Control shows what RN's backend applied for the last timestamp the host delivered
+# to it (lastFrameMs, relative to the first one it delivered, null before any).
 func sample(box: Control, started: int) -> Dictionary:
-  return {"ms": Time.get_ticks_msec() - started, "scale": [box.scale.x, box.scale.y], "angle": angle(box),
-    "global": affine_values(box.get_global_transform_with_canvas())}
+  var animated := backend(ANIMATED)
+  var delivered := int(animated.get("frames", 0))
+  var stamp := float(animated.get("lastFrameMs", 0.0))
+  if delivered > 0 and frame_origin == null:
+    frame_origin = stamp
+  return {"ms": Time.get_ticks_msec() - started, "frames": delivered, "ts": (stamp - float(frame_origin)) if delivered > 0 else null,
+    "scale": [box.scale.x, box.scale.y], "angle": angle(box), "global": affine_values(box.get_global_transform_with_canvas())}
 
-# A real mouse press and release at a window point, as the Animated example does.
-func mouse(phase: String, point: Vector2) -> void:
+# A real mouse press or release at a window point, as the Animated example does. The caller
+# waits for the frames that handle it, which is how a press can be sampled while it runs.
+func send_mouse(phase: String, point: Vector2) -> void:
   if phase == "down":
     var motion := InputEventMouseMotion.new()
     motion.device = DEVICE
@@ -283,15 +295,22 @@ func mouse(phase: String, point: Vector2) -> void:
   button.pressed = phase == "down"
   button.button_mask = MOUSE_BUTTON_MASK_LEFT if phase == "down" else 0
   Input.parse_input_event(button)
+
+func mouse(phase: String, point: Vector2) -> void:
+  send_mouse(phase, point)
   await frames(2)
 
-# One animation, frame by frame, until RN has reported `ends` ends. A host that
-# fails mid-animation may tear the tree down, so the Control is looked up every
-# frame instead of held. The end callback commits once (the caption): twelve more
-# frames show the Control survives it.
-func run_leg(ends: int) -> Array:
+# One animation, frame by frame, from a sample taken before `start` runs until RN has
+# reported `ends` ends. A host that fails mid-animation may tear the tree down, so the
+# Control is looked up every frame instead of held. The end callback commits once (the
+# caption): twelve more frames show the Control survives it.
+func run_leg(ends: int, start: Callable) -> Array:
   var samples: Array = []
   var started := Time.get_ticks_msec()
+  var resting := control(ANIMATED, "scale-box")
+  if resting != null:
+    samples.append(sample(resting, started))
+  start.call()
   while Time.get_ticks_msec() - started < 6000:
     await frames(1)
     var live := control(ANIMATED, "scale-box")
@@ -306,29 +325,41 @@ func run_leg(ends: int) -> Array:
     samples.append(sample(settled, started))
   return samples
 
-# Whether every frame of a leg from one scale to another is a uniform planar scale
-# of its own analytical matrix, stays between the ends (within the curve's slack)
-# and moves one way, and how many frames were drawn strictly between the ends.
-func judge(samples: Array, from: float, to: float) -> Dictionary:
-  var rising := to > from
+# Whether every frame of a leg from one scale to another is a uniform planar scale of
+# its own analytical matrix, stays between the ends (within the curve's slack) and goes
+# from one end to the other.
+# How the host paces its frames is not the probe's to assume: how many it delivers, how
+# far apart, and whether the scale steps back where RN's driver rounds its table index
+# are all the host's own. So the probe asks only for what holds at any pacing: the
+# backend delivered more than one frame (the first and the one that ends the animation,
+# which sets the end value itself), at most one per Godot frame, and the Control changed
+# only on a sample that follows a frame it delivered. The oracle recomputes the scale of
+# every frame from the delivered timestamps and owns the rest.
+func judge(samples: Array, from: float, to: float) -> bool:
+  if samples.size() < 2:
+    return false
   var low := minf(from, to)
   var high := maxf(from, to)
-  var extreme := from
   var uniform := true
-  var monotone := true
   var in_range := true
   var planar := true
-  var drawn := 0
-  for entry: Dictionary in samples:
+  var driven := true
+  for index in range(samples.size()):
+    var entry: Dictionary = samples[index]
+    if index > 0:
+      var before: Dictionary = samples[index - 1]
+      var delivered := int(entry.frames) - int(before.frames)
+      driven = driven and (delivered == 0 or delivered == 1)
+      if delivered == 0:
+        driven = driven and entry.scale == before.scale and entry.angle == before.angle and entry.global == before.global
     var factor := float(entry.scale[0])
     uniform = uniform and absf(factor - float(entry.scale[1])) <= 1e-6 and absf(float(entry.angle)) <= 1e-6
-    monotone = monotone and (factor >= extreme - CURVE_SLACK if rising else factor <= extreme + CURVE_SLACK)
     in_range = in_range and factor >= low - CURVE_SLACK and factor <= high + CURVE_SLACK
     planar = planar and close_values(entry.global, affine_values(placement(ANIMATED, factor).page))
-    if factor > low + 0.001 and factor < high - 0.001:
-      drawn += 1
-    extreme = maxf(extreme, factor) if rising else minf(extreme, factor)
-  return {"ok": samples.size() >= 8 and drawn >= 3 and uniform and monotone and in_range and planar, "drawn": drawn}
+  var delivered_in_leg := int(samples.back().frames) - int(samples[0].frames)
+  var from_start := absf(float(samples[0].scale[0]) - from) <= 1e-6
+  var to_end := absf(float(samples.back().scale[0]) - to) <= 1e-6
+  return delivered_in_leg >= 2 and driven and from_start and to_end and uniform and in_range and planar
 
 func animated_case() -> void:
   var app: Node = apps[ANIMATED]
@@ -344,8 +375,7 @@ func animated_case() -> void:
   verify((before_errors.is_empty() and box.scale.is_equal_approx(Vector2.ONE) and absf(angle(box)) < 1e-6 and
     close_values(affine_values(box.get_global_transform_with_canvas()), affine_values(rest.page)) and idle.get("enabled") == true and
     int(idle.get("frames", -1)) == 0 and idle.get("active") == false), ANIMATED + "/" + REST)
-  apps[ANIMATED].call("evaluate", "UniformScale.run()")
-  var samples := await run_leg(1)
+  var samples := await run_leg(1, func() -> void: apps[ANIMATED].call("evaluate", "UniformScale.run()"))
   var last: Dictionary = samples.back() if not samples.is_empty() else {}
   var after := state(ANIMATED)
   var running := backend(ANIMATED)
@@ -353,15 +383,13 @@ func animated_case() -> void:
   var ends: Array = after.get("ends", [])
   verify((errors.is_empty() and ends.size() == 1 and ends[0].get("finished") == true and float(ends[0].get("toValue", 0)) == END_SCALE and
     int(running.get("staleDirectUpdates", -1)) == 0), ANIMATED + "/" + RUNS)
-  var rise := judge(samples, 1.0, END_SCALE)
-  verify(rise.ok, ANIMATED + "/" + FRAMES)
+  verify(judge(samples, 1.0, END_SCALE), ANIMATED + "/" + FRAMES)
   var final_plan := placement(ANIMATED, END_SCALE)
   verify((not last.is_empty() and absf(float(last.scale[0]) - END_SCALE) < 1e-6 and absf(float(last.scale[1]) - END_SCALE) < 1e-6 and
     close_values(last.global, affine_values(final_plan.page)) and int(after.get("renders", -1)) == 2 and
     int(running.get("directUpdates", 0)) > 0 and running.get("active") == false), ANIMATED + "/" + FINAL)
   evidence[ANIMATED]["errors"] = errors
   evidence[ANIMATED]["samples"] = samples
-  evidence[ANIMATED]["drawn"] = rise.drawn
   evidence[ANIMATED]["react"] = after
   evidence[ANIMATED]["backend"] = running
   evidence[ANIMATED]["expected"] = {"restGlobal": affine_values(rest.page), "finalGlobal": affine_values(final_plan.page)}
@@ -369,28 +397,26 @@ func animated_case() -> void:
   if capturing:
     await capture()
   # The press-and-pop half: a real press on the example's own button runs the same
-  # animation back to 1, where the matrix is the identity again.
+  # animation back to 1, where the matrix is the identity again. The release starts it, so
+  # the leg is sampled from before the release and no frame of it goes unobserved.
   var pop := control(ANIMATED, "scale-pop")
-  var pressed := false
-  if pop != null:
-    await mouse("down", pop.get_global_rect().get_center())
-    await frames(4)
-    await mouse("up", pop.get_global_rect().get_center())
-    pressed = true
+  var pressed := pop != null
   var back_samples: Array = []
-  if pressed:
-    back_samples = await run_leg(2)
+  if pop != null:
+    var center := pop.get_global_rect().get_center()
+    await mouse("down", center)
+    await frames(4)
+    back_samples = await run_leg(2, func() -> void: send_mouse("up", center))
   var home := control(ANIMATED, "scale-box")
   var back_state := state(ANIMATED)
   var back_ends: Array = back_state.get("ends", [])
   var back_errors: Array = snapshot(app).get("errors", [])
-  var back := judge(back_samples, END_SCALE, 1.0)
-  verify((pressed and home != null and back.ok and back_errors.is_empty() and back_ends.size() == 2 and
+  verify((pressed and home != null and judge(back_samples, END_SCALE, 1.0) and back_errors.is_empty() and back_ends.size() == 2 and
     back_ends[1].get("finished") == true and float(back_ends[1].get("toValue", -1)) == 1.0 and int(back_state.get("runs", 0)) == 2 and
     int(back_state.get("renders", -1)) == 3 and home.scale.is_equal_approx(Vector2.ONE) and absf(angle(home)) < 1e-6 and
     home.get("offset_transform_enabled") != true and
     close_values(affine_values(home.get_global_transform_with_canvas()), affine_values(rest.page))), ANIMATED + "/" + BACK)
-  evidence[ANIMATED]["back"] = {"samples": back_samples, "drawn": back.drawn, "react": back_state, "errors": back_errors}
+  evidence[ANIMATED]["back"] = {"samples": back_samples, "react": back_state, "errors": back_errors}
 
 func settle(seconds: float) -> void:
   await get_tree().create_timer(seconds).timeout
