@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://examples/virtualized-list/validation.gd" id="1"]
+
+[node name="VirtualizedListExample" type="Node"]
+script = ExtResource("1")
+
+[node name="Application" type="FabricApplication" parent="."]
+metadata/scenario = "virtualized-list"
+
+[node name="Surface" type="FabricSurface" parent="."]
+offset_left = 40.0
+offset_top = 40.0
+offset_right = 860.0
+offset_bottom = 640.0
+application_path = NodePath("../Application")
+component_name = "VirtualizedListExample"
+initial_props = {}
