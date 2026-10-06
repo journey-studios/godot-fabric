@@ -359,8 +359,8 @@ public rejection cases pass 81 checks and the affine factor test 41,278. The
 preceding host fails exactly the 22 normative checks, with `E_TRANSFORM_3D` at
 every mount. `scale: 0` and the other singular transforms failed then; the
 [singular transforms record](singular-transforms/README.md) below collapses them. A
-separate commit hardens the Animated example's capture check. One capture. Hosted CI
-pending.
+separate commit hardens the Animated example's capture check. One capture. Hosted
+run 37455258901 repeated the 29, 81 and 25 headless checks ([receipt](uniform-scale/hosted-ci.json)).
 
 The [singular transforms record](singular-transforms/README.md) renders a transform
 with no inverse as RN does (the View neither drawn nor hit, no error, restored by the

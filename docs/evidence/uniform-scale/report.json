@@ -933,7 +933,12 @@
     "Libraries/StyleSheet/processTransform.js": "18297aa0d2f9743c6a140b9f597c495e5d03dbbec92a7974e031bf339393d896"
   },
   "hostedCI": {
-    "status": "pending-uniform-scale-slice"
+    "status": "verified",
+    "run": 37455258901,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37455258872,
+    "publication": "publication.json"
   },
   "limits": [
     "scale: 0, scaleX: 0 and every other singular transform still fail with E_TRANSFORM_SINGULAR; a pop-in that starts at zero is the next requirement.",

@@ -316,7 +316,9 @@ against planar matrices derived from the JSX, with an independent oracle; the
 preceding host fails exactly the 22 that need the scale. The host's planar rule now
 has one definition, shared by the transform adapter and pointer projection.
 `scale: 0` and other singular transforms failed then and collapse their View since the
-singular transforms proof below. [Evidence](docs/evidence/uniform-scale/README.md).
+singular transforms proof below. Hosted CI repeated the 29 checks
+([receipt](docs/evidence/uniform-scale/hosted-ci.json)).
+[Evidence](docs/evidence/uniform-scale/README.md).
 
 The [singular transforms proof](examples/transforms/README.md#singular-transforms)
 mounts RN's singular `transform` styles in eight Hermes applications: `scale: 0`,

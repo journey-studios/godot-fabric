@@ -2345,8 +2345,16 @@ path 82, Document hover 1,530, click 728, capture notifications 672, PanResponde
 AppState 75, lists 44, Appearance 79, Switch 108, shared touches 92, touchables 93,
 ActivityIndicator 33, Animated 75) and the native SDK batch pass. All 86 executed
 code/configuration inputs match implementation 6fbfb18 via git show/SHA-256 (executed
-from the committed tree, execution base 0157b15). Hosted CI for this slice is pending.
-No whole GF, checkpoint, weight or denominator closes.
+from the committed tree, execution base 0157b15). Hosted Contracts run
+37455258901 (the push of main 9e7cc4f) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/uniform-scale/hosted-ci.json)
+repeats the 29 headless checks of the uniform scale lane with identical IDs and
+bundle, the 81 guard checks of the eight rejection cases and the 25 input
+guards; the independent oracle accepts the downloaded report and every check the
+preceding-host control fails passes. All 86 tracked inputs match the checkout
+tree and implementation 6fbfb18. [Pages
+37455258872](docs/evidence/uniform-scale/publication.json) deployed this record
+from main 9e7cc4f. No whole GF, checkpoint, weight or denominator closes.
 
 Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
 monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
