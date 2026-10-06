@@ -1097,7 +1097,7 @@
   },
   "limits": [
     "TouchableOpacity stays an explicit placeholder: RN 0.87.1 Animated.View needs NativeAnimatedModule at mount (GF-19).",
-    "Concurrent presses in two roots are not certified: the single JS responder lets a touch ending in root B release root A's responder.",
+    "Simultaneous presses with these touchables in two roots remain untested; the host's per-root touch lists that let a touch ending in root B release root A's responder were fixed by the shared touches slice (#34), which this merged-host run includes.",
     "TouchableNativeFeedback/TouchableBounce, focus and keyboard activation, accessibility (GF-20), click synthesis and typed declarations remain open.",
     "Headless macOS arm64 with injected Godot input only; no hardware, mobile export, dev-mode PressabilityDebugView or performance certification."
   ],
