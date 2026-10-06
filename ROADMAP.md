@@ -1919,9 +1919,9 @@ Move 1,940, hover 158, root path 82, Document hover 1,530, touchables 93 and 22
 examples; codegen, the native SDK pack/verify, adapters (registry 207/11, loader
 89/21, runtime 13 runs/213 checks), consumer (30 + 40) and cold start pass too.
 All 30 executed code/configuration inputs match implementation 0e18060 via git
-show/SHA-256 (execution base 15e1dda/dirty retained). Concurrent presses in two
-roots (a touch ending in root B releases root A's single JS responder),
-TouchableNativeFeedback, focus and keyboard activation, accessibility, click
+show/SHA-256 (execution base 15e1dda/dirty retained). The wrong-root release of
+concurrent presses is fixed in the host by the shared touches slice;
+concurrent presses with the touchables themselves, TouchableNativeFeedback, focus and keyboard activation, accessibility, click
 synthesis, typed declarations and hardware remain open. Hosted CI for this slice
 is pending. No whole GF, checkpoint, weight or denominator closes.
 ## M1 — Complete the native UI tree

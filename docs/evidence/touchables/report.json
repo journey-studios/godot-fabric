@@ -1133,5 +1133,45 @@
     "command": "git show <implementationCommit>:<repo-relative source> | sha256",
     "allMatchExecutedBytes": true,
     "executionBaseAndDirtyStatePreserved": true
+  },
+  "mergeReverification": {
+    "reason": "main gained AppState, PanResponder, Switch and the shared touches fix (#34) after the slice ran; merged without rebase",
+    "mergeCommits": [
+      "04621d1",
+      "2a500b3"
+    ],
+    "mainCommit": "8b87d78",
+    "nativeHostSha256": "760f381459053b681857b88a7109ae2128e18c27ec135a9b259b0ab440d9b5e0",
+    "touchablesChecks": 93,
+    "touchablesPassed": 93,
+    "touchablesReportSha256": "94805882fcdd05333d64fc5a02731bb15eb5303e32aee83ee3b51dc072a8dbb4",
+    "sharedTouchesFixIncluded": true,
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "2166437c57d191871ad6076568c903872adaf53275bb38f13331623b3bc5f6e8"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "3e9a09d719d48d5050c52f86cb722fb959ab5155cce09d6f3ddb1f695c61ff93"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "06a051f91687c4a7d44302b022afcfaca1d3167509b3f97b6e66c743d7efbf30"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "logSha256": "5c26cb3e1ed8a59f6ec7f9c177a8863072b9a072de57ed4232c3ef1d450607f6"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "logSha256": "7e0aa94d3efd2049d3c7de0af3ed4d8e90359d000821efd2ce83f19c6e989f8e"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "logSha256": "aea541876ae8c4289b180e715ad53f6f870bd85f7bbc2893d5b91ce2245e29ef"
+      }
+    },
+    "concurrentTouchablePressesAsserted": false
   }
 }

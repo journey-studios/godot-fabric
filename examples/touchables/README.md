@@ -64,7 +64,8 @@ follows View's supported styles.
 
 ## Limits
 
-Concurrent presses in two roots, TouchableOpacity, TouchableNativeFeedback,
+Concurrent presses with the touchables themselves (the shared touches fix covers
+the responder they use), TouchableOpacity, TouchableNativeFeedback,
 focus and keyboard activation, accessibility, click synthesis, typed
 declarations, hardware and mobile exports require separate acceptance. See the
 [research](../../docs/research/touchables.md).

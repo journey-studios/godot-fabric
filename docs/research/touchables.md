@@ -125,11 +125,15 @@ Two controls show that it detects the wiring rather than any press:
 
 ## Remaining scope
 
-Concurrent presses in two roots are not certified. The responder is a single JS
-responder: during exploration, a touch that started and ended in root B while
-root A held the responder released A's responder, because B's touch arrays hold
-no touch inside A, and A's `onPress` received B's payload. RN surfaces also
-report only their own touches, so this needs its own acceptance. Also open:
+During exploration, a touch that started and ended in root B while root A held
+the single JS responder released A's responder, because B's touch arrays held no
+touch inside A, and A's `onPress` received B's payload. That was a host
+transport defect shared by every responder consumer; the
+[shared touches](../evidence/shared-touches/README.md) slice (#34) fixes it by
+listing every root's touches in each event and certifies it with `Pressable`.
+The touchables go through the same responder and this suite reran on the fixed
+host, but concurrent presses with the touchables themselves are not asserted
+separately. Also open:
 TouchableOpacity (GF-19); TouchableNativeFeedback and TouchableBounce; focus,
 keyboard activation and accessibility (GF-13, GF-20); click synthesis; typed
 declarations for the touchables; dev-mode `PressabilityDebugView` (the bundle is

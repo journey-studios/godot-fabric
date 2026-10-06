@@ -151,10 +151,14 @@ mudar o comportamento das outras suítes.
 
 ## Limites
 
-Pressões simultâneas em duas roots não são certificadas: o responder do JS é
-único, e na exploração um toque que começou e terminou na root B soltou o
-responder de A (os arrays de toques de B não têm toque dentro de A), disparando o
-`onPress` de A com o payload de B. Também seguem abertos o `TouchableOpacity`
+Na exploração, um toque que começou e terminou na root B soltava o responder de
+A (os arrays de toques de B não tinham toque dentro de A) e disparava o `onPress`
+de A com o payload de B. O defeito era do transporte de toques do host e atingia
+todo consumidor do responder; a fatia de [toques compartilhados](../shared-touches/README.md)
+(#34) o corrige, listando os toques de todas as roots em cada evento, e o
+certifica com `Pressable`. Os touchables passam pelo mesmo responder, e esta suíte
+repetiu os 93 checks sobre o host com a correção, mas pressões simultâneas com
+os próprios touchables não são afirmadas separadamente. Também seguem abertos o `TouchableOpacity`
 (GF-19), `TouchableNativeFeedback` e `TouchableBounce`, foco e ativação por
 teclado, acessibilidade (GF-20), síntese de click, declarações tipadas, o
 `PressabilityDebugView` de desenvolvimento, hardware e exports mobile. A CI
