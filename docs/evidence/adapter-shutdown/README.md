@@ -25,6 +25,14 @@ roots disappear, external views/providers and React effects dispose once, and
 both external and core Button signals lose event authority after the request.
 RAF/timer cases additionally prove their next scheduled callback never runs.
 The runner rejects engine/script errors, hangs and missing/excess assertions.
+
+> Later note: commit [`e67f82c`](https://github.com/journey-studios/godot-fabric/commit/e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d) runs RAF callbacks on the ticks of the
+> [frame clock](../frame-clock/README.md), which are the host's pacing and not a number of
+> Godot frames. The consumer validation (`tests/adapters/consumer/validation.gd`) therefore
+> no longer waits ten Godot frames after scheduling the RAF and timer callbacks of these
+> cases: `frames_after` waits until the native signal has requested the stop and then
+> gives teardown its ten frames. Case names, check names and counts above are unchanged
+> and describe the executed record.
 [Runtime stages](runtime.json) retain hashes of executed logs and fixture inputs.
 
 Native runtime/application/modules/services regressions passed 2/4/2/2. One

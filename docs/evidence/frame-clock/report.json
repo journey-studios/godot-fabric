@@ -1,0 +1,1593 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frame-clock",
+  "status": "verified-local-headless-preceding-host-control-three-sabotages-and-unit-test",
+  "at": "2026-10-06T19:29:33.438Z",
+  "executionBaseCommit": "b274a0c2b583bb6a5b7a558ecf8dcaad0902f54f",
+  "executedTreeSha": "983960ea6b510ae660f8dd44af100353e1b145e0",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
+  "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/43",
+  "dependsOn": "The Animated slice (docs/evidence/native-animated), whose native driver this clock paces, and the singular transforms slice (docs/evidence/singular-transforms), whose host is the preceding one",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the lanes state V-Sync presentation and the refresh rate through two validation seams)",
+    "nativeHostSha256": "6745423faf2ebee96974a715bdf2c9c188b7d9ac5d1a6aa631a982d0a6e35dcc",
+    "precedingHostSha256": "cc89e2d4e3d0c36d78be188060eff84a7c084190111974e5d64cd15a23fd3f0e",
+    "sabotagedHostSha256": {
+      "always": "bc4a20480532f395c09443ef4825448a8f637e37198fc824b697dcb3973285c6",
+      "idle": "6525a0b943942cc1fd2378b0eb3d369f1ff34950ea3c04480a1f23696f3b8c52",
+      "presentation": "bd88d09a2c93bf3fa3381de2c5a465fa47a57fc8844ef7eb232e9fe357040511"
+    }
+  },
+  "commands": [
+    "npm run test:frame-clock",
+    "node tests/frame-clock-native.test.mjs --allow-original-negative",
+    "node scripts/frame-clock-sabotage.mjs",
+    "node scripts/native-animated-sabotage.mjs",
+    "node scripts/transform-singular-sabotage.mjs",
+    ".deps/build/frame_clock_test"
+  ],
+  "headlessChecks": 42,
+  "cadenceChecks": 29,
+  "baselineChecks": 13,
+  "unitTest": {
+    "binary": ".deps/build/frame_clock_test",
+    "source": "native/frame_clock_test.cpp",
+    "sha256": "afedaa6e85cfd0eb5b55b3743da1634018ee57116b019d83b3ad1aa4663cf45b",
+    "output": "FRAME_CLOCK_PASSED",
+    "tests": [
+      "refresh_rate_selection",
+      "counters_and_state",
+      "boundaries_are_inclusive",
+      "capped_loops_tick_on_every_frame",
+      "high_refresh_displays",
+      "fast_loops_tick_once_per_period",
+      "ci_bursts_tick_once_per_pair",
+      "a_stall_gives_one_late_tick",
+      "idle_loops_start_on_demand",
+      "rate_changes_apply_on_the_next_frame",
+      "presentation_ticks_every_frame_with_a_consumer",
+      "pacing_changes_apply_on_the_next_frame",
+      "the_display_decides_the_pacing",
+      "properties_hold_for_arbitrary_pacing"
+    ],
+    "logSha256": "0bfbd423c2d1df8d9870f3b4591d74d8655fd6d8f98dbaff889f314c7943b143",
+    "note": "Synthetic Godot frame times through one FrameClock, the way the runtime asks it once per frame, with boundaries on exact binary fractions (R = 64) and 24 seeded random pacings, a third of them presented."
+  },
+  "model": {
+    "definition": "native/frame_clock.h: FrameClock::frame(now_ms, refresh_rate, pacing, consumer) returns whether this Godot frame is a tick",
+    "rule": "tick = consumer && (pacing == Presentation || due); due = !served || now - previous_frame >= T / 2 || now - last_tick >= T; T = 1000 / R ms",
+    "rate": "R is the refresh rate the display reports for the window's screen when it is positive and finite (rateSource display), 60 otherwise (rateSource fallback)",
+    "presentation": "a window with V-Sync enabled or adaptive on a real display: every frame with a consumer is a tick",
+    "time": "headless, V-Sync disabled or mailbox, or unknown: the due rule above",
+    "detection": {
+      "function": "FrameClock::detect_pacing(headless, vsync_mode)",
+      "headless": "Time, source headless",
+      "vsyncEnabledOrAdaptive": "Presentation, source vsync",
+      "vsyncDisabledOrMailbox": "Time, source unpaced",
+      "seams": {
+        "validation_refresh_rate": "Hz, a meta of FabricApplication",
+        "validation_frame_pacing": "presentation or time, source validation"
+      }
+    },
+    "consumer": "pending frame callbacks, or a Native Animated backend that asked for frames and has not asked to pause (NativeAnimated::active)",
+    "ticked": [
+      "requestAnimationFrame callbacks, with the tick's timestamp",
+      "RN's Native Animated backend frame, with the same timestamp"
+    ],
+    "notTicked": [
+      "timers (setTimeout, setInterval)",
+      "pointer and keyboard input",
+      "the host phase",
+      "the work queue"
+    ],
+    "snapshot": "frameClock {periodMs, refreshRate, rateSource, pacing, pacingSource, frames, ticks, skippedFrames, lastFrameMs, lastTickMs}",
+    "properties": [
+      "two ticks are never closer than T / 2 under Time pacing",
+      "a loop capped at the refresh or slower ticks on every frame while its jitter stays under T / 2",
+      "a loop faster than T / 2 ticks about once per T",
+      "a stall gives one late tick and the catch-up frames behind it wait",
+      "after idling the first frame with a consumer ticks at once"
+    ],
+    "decayLandingByUniformStep": {
+      "halfPeriod": 48.82411193847656,
+      "period": 49.444549560546875,
+      "sixPointNineMs": 48.51854705810547,
+      "oneMs": 40.005619049072266
+    },
+    "decayLandingWindowAtHalfPeriod60Hz": [
+      48.7493,
+      50
+    ]
+  },
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: eight loop paces, the callbacks, clock and stop cases, the independent oracle over what the host reports.",
+      "nativeHostSha256": "6745423faf2ebee96974a715bdf2c9c188b7d9ac5d1a6aa631a982d0a6e35dcc",
+      "bundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+      "checks": 42,
+      "passed": 42,
+      "failed": 0,
+      "checkIdDigestSha256": "50a7240a8b146b8cb7f9c88094e5fd5b57ff75a3e5ea7c6b4e452880875a652f",
+      "reportSha256": "6aeb080d4e2982525bbda266d315e2a9894c9aad82b5a0cf8da98b036520c861",
+      "logSha256": "e51c8dac75b983202c1d69ff45e68512cd0cdda517480bb67f110f844189330e"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host of the singular transforms slice (main b274a0c), which has no frame clock and ticks on every Godot frame; expected negative control (--allow-original-negative).",
+      "nativeHostSha256": "cc89e2d4e3d0c36d78be188060eff84a7c084190111974e5d64cd15a23fd3f0e",
+      "bundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+      "checks": 42,
+      "passed": 13,
+      "failed": 29,
+      "failedIds": [
+        "clock/A display that reports no refresh rate gives the 60 Hz fallback period, and the counters start at zero ticks",
+        "clock/A headless display server gives Time pacing, since it presents nothing",
+        "callbacks/A Godot frame nothing waits for is neither a tick nor a waited frame",
+        "callbacks/That frame is a tick the clock counts, and its timestamp is the clock's",
+        "callbacks/A request cancelled before its frame never runs and leaves no tick or waited frame behind",
+        "callbacks/A callback requested from inside a callback runs on a later tick, at least half a refresh period after it",
+        "paced-60/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "paced-60/Ticks are never closer than half a refresh period",
+        "paced-60/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "headless/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "headless/Ticks are never closer than half a refresh period",
+        "headless/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "headless/The native decay ends and lands inside the window half-period ticks allow",
+        "fast/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "fast/Ticks are never closer than half a refresh period",
+        "fast/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "fast/The native decay ends and lands inside the window half-period ticks allow",
+        "bursts/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "bursts/Ticks are never closer than half a refresh period",
+        "bursts/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "bursts/Each stall gives one late tick: the frame after it ticks and the catch-up frame behind it waits",
+        "bursts/The native decay ends and lands inside the window half-period ticks allow",
+        "decay/The native decay lands within the same window under every Godot pacing, the hosted runner's bursts included",
+        "display-144/The display's own refresh rate sets the clock's period",
+        "display-144/At 144 Hz callbacks and animation frames run on ticks never closer than half of that period",
+        "fallback-144/The same loop on a screen that reports nothing falls back to 60 Hz and is thinned to at most one tick per 16.7 ms",
+        "presentation-bimodal/Under Presentation pacing every Godot frame is a tick, the 3 ms ones included, and runs a callback and an animation frame",
+        "time-bimodal/Under Time pacing the same frames are thinned: the 3 ms ones wait and ticks stay half a period apart",
+        "stop/Stopping the application with a loop pending ends its ticks and leaves one clock state"
+      ],
+      "checkIdDigestSha256": "50a7240a8b146b8cb7f9c88094e5fd5b57ff75a3e5ea7c6b4e452880875a652f",
+      "reportSha256": "670eeecacbc4a230e8f294f0efb2e733a4cb47a12e9f330d8b81e4794fa3fa39",
+      "logSha256": "7251e04d488b37765ba675592377270b5fe4f1df516c2f02272c27f11e6dcdbe"
+    },
+    {
+      "lane": "sabotage-always",
+      "meaning": "A host whose clock ticks every frame that has a consumer, whatever the pacing: the cadence of the preceding host, now reported by a clock (--sabotage); retained sabotage.",
+      "nativeHostSha256": "bc4a20480532f395c09443ef4825448a8f637e37198fc824b697dcb3973285c6",
+      "bundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+      "checks": 42,
+      "passed": 21,
+      "failed": 21,
+      "failedIds": [
+        "callbacks/A callback requested from inside a callback runs on a later tick, at least half a refresh period after it",
+        "paced-60/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "paced-60/Ticks are never closer than half a refresh period",
+        "paced-60/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "headless/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "headless/Ticks are never closer than half a refresh period",
+        "headless/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "headless/The native decay ends and lands inside the window half-period ticks allow",
+        "fast/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "fast/Ticks are never closer than half a refresh period",
+        "fast/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "fast/The native decay ends and lands inside the window half-period ticks allow",
+        "bursts/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+        "bursts/Ticks are never closer than half a refresh period",
+        "bursts/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+        "bursts/Each stall gives one late tick: the frame after it ticks and the catch-up frame behind it waits",
+        "bursts/The native decay ends and lands inside the window half-period ticks allow",
+        "decay/The native decay lands within the same window under every Godot pacing, the hosted runner's bursts included",
+        "display-144/At 144 Hz callbacks and animation frames run on ticks never closer than half of that period",
+        "fallback-144/The same loop on a screen that reports nothing falls back to 60 Hz and is thinned to at most one tick per 16.7 ms",
+        "time-bimodal/Under Time pacing the same frames are thinned: the 3 ms ones wait and ticks stay half a period apart"
+      ],
+      "checkIdDigestSha256": "50a7240a8b146b8cb7f9c88094e5fd5b57ff75a3e5ea7c6b4e452880875a652f",
+      "reportSha256": "5c34e6a95a6454147fa5e4ce3a9065eeb79b43eab01f9c3320ff2804e340e9e0",
+      "logSha256": "ee82e70c229ce23873c7a537c49d5b5185065fb23888a17c5f17063cde70cac8"
+    },
+    {
+      "lane": "sabotage-idle",
+      "meaning": "A host whose clock decides without asking whether anything consumes frames, so it ticks and counts ticks for idle frames (--sabotage=idle); retained sabotage.",
+      "nativeHostSha256": "6525a0b943942cc1fd2378b0eb3d369f1ff34950ea3c04480a1f23696f3b8c52",
+      "bundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+      "checks": 42,
+      "passed": 37,
+      "failed": 5,
+      "failedIds": [
+        "clock/A display that reports no refresh rate gives the 60 Hz fallback period, and the counters start at zero ticks",
+        "callbacks/A Godot frame nothing waits for is neither a tick nor a waited frame",
+        "callbacks/A request after idling reaches its callback in the very next Godot frame, with a frame timestamp",
+        "callbacks/That frame is a tick the clock counts, and its timestamp is the clock's",
+        "callbacks/A request cancelled before its frame never runs and leaves no tick or waited frame behind"
+      ],
+      "checkIdDigestSha256": "50a7240a8b146b8cb7f9c88094e5fd5b57ff75a3e5ea7c6b4e452880875a652f",
+      "reportSha256": "ecd79d342a506a21561067668b8133231b212537da02bc51c701e7cce0e01365",
+      "logSha256": "c382401aac90a01cfd9bc07c86f6c7a3524b90772ad9f3ca73652caa38c3666f"
+    },
+    {
+      "lane": "sabotage-presentation",
+      "meaning": "A host whose clock ignores V-Sync presentation and applies the time rule to a presented window (--sabotage=presentation); retained sabotage.",
+      "nativeHostSha256": "bd88d09a2c93bf3fa3381de2c5a465fa47a57fc8844ef7eb232e9fe357040511",
+      "bundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+      "checks": 42,
+      "passed": 41,
+      "failed": 1,
+      "failedIds": [
+        "presentation-bimodal/Under Presentation pacing every Godot frame is a tick, the 3 ms ones included, and runs a callback and an animation frame"
+      ],
+      "checkIdDigestSha256": "50a7240a8b146b8cb7f9c88094e5fd5b57ff75a3e5ea7c6b4e452880875a652f",
+      "reportSha256": "6b405a08ec9e41cbc1086ae1ffde244ccf5f8f95fa05707cdd902532cdb388c8",
+      "logSha256": "816ecd07981038f99f7a7820e6dd573d2b41ca2d6684ebe54cc3d086e3a05591"
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "cc89e2d4e3d0c36d78be188060eff84a7c084190111974e5d64cd15a23fd3f0e",
+      "bytes": 5494864,
+      "stringOccurrences": {
+        "skippedFrames": 0,
+        "pacingSource": 0,
+        "validation_frame_pacing": 0,
+        "validation_refresh_rate": 0
+      }
+    },
+    "current": {
+      "sha256": "6745423faf2ebee96974a715bdf2c9c188b7d9ac5d1a6aa631a982d0a6e35dcc",
+      "bytes": 5494944,
+      "stringOccurrences": {
+        "skippedFrames": 1,
+        "pacingSource": 1,
+        "validation_frame_pacing": 1,
+        "validation_refresh_rate": 1
+      }
+    },
+    "sabotage-always": {
+      "sha256": "bc4a20480532f395c09443ef4825448a8f637e37198fc824b697dcb3973285c6",
+      "bytes": 5494944,
+      "stringOccurrences": {
+        "skippedFrames": 1,
+        "pacingSource": 1,
+        "validation_frame_pacing": 1,
+        "validation_refresh_rate": 1
+      }
+    },
+    "sabotage-idle": {
+      "sha256": "6525a0b943942cc1fd2378b0eb3d369f1ff34950ea3c04480a1f23696f3b8c52",
+      "bytes": 5494944,
+      "stringOccurrences": {
+        "skippedFrames": 1,
+        "pacingSource": 1,
+        "validation_frame_pacing": 1,
+        "validation_refresh_rate": 1
+      }
+    },
+    "sabotage-presentation": {
+      "sha256": "bd88d09a2c93bf3fa3381de2c5a465fa47a57fc8844ef7eb232e9fe357040511",
+      "bytes": 5494944,
+      "stringOccurrences": {
+        "skippedFrames": 1,
+        "pacingSource": 1,
+        "validation_frame_pacing": 1,
+        "validation_refresh_rate": 1
+      }
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "cc89e2d4e3d0c36d78be188060eff84a7c084190111974e5d64cd15a23fd3f0e",
+    "provenance": {
+      "builtFrom": "ca9f195bca7ece12e05e4c0768a39fcb352fa87c, the singular transforms implementation; its hash is the one that record executed",
+      "nativeAndSdkSourcesEqualExecutionBase": true,
+      "verification": "git diff --name-only ca9f195 b274a0c lists only documents, the dashboard, two transform example scripts, four transform scripts and the three Animated test files: no native or SDK source",
+      "kept": "build/frame-clock-previous-host/fabric_godot.dylib (local, not in Git)"
+    },
+    "checks": 42,
+    "normativeFailures": 29,
+    "baselineChecksPassed": 13,
+    "sameBundle": true,
+    "normativeFailureIds": [
+      "clock/A display that reports no refresh rate gives the 60 Hz fallback period, and the counters start at zero ticks",
+      "clock/A headless display server gives Time pacing, since it presents nothing",
+      "callbacks/A Godot frame nothing waits for is neither a tick nor a waited frame",
+      "callbacks/That frame is a tick the clock counts, and its timestamp is the clock's",
+      "callbacks/A request cancelled before its frame never runs and leaves no tick or waited frame behind",
+      "callbacks/A callback requested from inside a callback runs on a later tick, at least half a refresh period after it",
+      "paced-60/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+      "paced-60/Ticks are never closer than half a refresh period",
+      "paced-60/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+      "headless/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+      "headless/Ticks are never closer than half a refresh period",
+      "headless/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+      "headless/The native decay ends and lands inside the window half-period ticks allow",
+      "fast/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+      "fast/Ticks are never closer than half a refresh period",
+      "fast/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+      "fast/The native decay ends and lands inside the window half-period ticks allow",
+      "bursts/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+      "bursts/Ticks are never closer than half a refresh period",
+      "bursts/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+      "bursts/Each stall gives one late tick: the frame after it ticks and the catch-up frame behind it waits",
+      "bursts/The native decay ends and lands inside the window half-period ticks allow",
+      "decay/The native decay lands within the same window under every Godot pacing, the hosted runner's bursts included",
+      "display-144/The display's own refresh rate sets the clock's period",
+      "display-144/At 144 Hz callbacks and animation frames run on ticks never closer than half of that period",
+      "fallback-144/The same loop on a screen that reports nothing falls back to 60 Hz and is thinned to at most one tick per 16.7 ms",
+      "presentation-bimodal/Under Presentation pacing every Godot frame is a tick, the 3 ms ones included, and runs a callback and an animation frame",
+      "time-bimodal/Under Time pacing the same frames are thinned: the 3 ms ones wait and ticks stay half a period apart",
+      "stop/Stopping the application with a loop pending ends its ticks and leaves one clock state"
+    ],
+    "oracleRejectsTheReport": true,
+    "firstClockSnapshot": {},
+    "decayLandingByLane": {
+      "bursts": 45.61,
+      "display-144": 48.549,
+      "fallback-144": 48.452,
+      "fast": 13.493,
+      "headless": 48.505,
+      "paced-60": 49.369,
+      "presentation-bimodal": 48.683,
+      "time-bimodal": 48.408
+    }
+  },
+  "retainedSabotage": {
+    "script": "scripts/frame-clock-sabotage.mjs",
+    "receiptFile": "build/frame-clock-sabotage.json (local, not in Git); the receipt body is below",
+    "receiptFormat": "godot-fabric.frame-clock-sabotage/v1",
+    "sourceSha256": {
+      "genuine": {
+        "native/frame_clock.h": "4ebabb1a4a400e774abc338b327970fb0d02baed639c8f5b22206a1ac84a4c0d"
+      },
+      "restored": {
+        "native/frame_clock.h": "4ebabb1a4a400e774abc338b327970fb0d02baed639c8f5b22206a1ac84a4c0d"
+      }
+    },
+    "hostSha256": {
+      "genuine": "6745423faf2ebee96974a715bdf2c9c188b7d9ac5d1a6aa631a982d0a6e35dcc",
+      "restored": "6745423faf2ebee96974a715bdf2c9c188b7d9ac5d1a6aa631a982d0a6e35dcc"
+    },
+    "variants": [
+      {
+        "name": "always",
+        "file": "native/frame_clock.h",
+        "find": "    const bool tick = consumer && (pacing == Pacing::Presentation || due);",
+        "replace": "    const bool tick = consumer;",
+        "sourceSha256": "90984121b7e0741250000d670ddb0d31231d3578a384dc165731377602d3b717",
+        "hostSha256": "bc4a20480532f395c09443ef4825448a8f637e37198fc824b697dcb3973285c6",
+        "runStatus": 0,
+        "failedChecks": 21,
+        "cadenceChecksFailed": 21,
+        "baselineChecksFailed": 0,
+        "failedIds": [
+          "callbacks/A callback requested from inside a callback runs on a later tick, at least half a refresh period after it",
+          "paced-60/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+          "paced-60/Ticks are never closer than half a refresh period",
+          "paced-60/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+          "headless/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+          "headless/Ticks are never closer than half a refresh period",
+          "headless/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+          "headless/The native decay ends and lands inside the window half-period ticks allow",
+          "fast/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+          "fast/Ticks are never closer than half a refresh period",
+          "fast/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+          "fast/The native decay ends and lands inside the window half-period ticks allow",
+          "bursts/A frame callback runs in exactly the Godot frames the clock ticks, each with that tick's timestamp, never closer than half a refresh period",
+          "bursts/Ticks are never closer than half a refresh period",
+          "bursts/RN's Native Animated backend delivers at most one frame per tick, never between ticks, with the tick's timestamp, never closer than half a refresh period",
+          "bursts/Each stall gives one late tick: the frame after it ticks and the catch-up frame behind it waits",
+          "bursts/The native decay ends and lands inside the window half-period ticks allow",
+          "decay/The native decay lands within the same window under every Godot pacing, the hosted runner's bursts included",
+          "display-144/At 144 Hz callbacks and animation frames run on ticks never closer than half of that period",
+          "fallback-144/The same loop on a screen that reports nothing falls back to 60 Hz and is thinned to at most one tick per 16.7 ms",
+          "time-bimodal/Under Time pacing the same frames are thinned: the 3 ms ones wait and ticks stay half a period apart"
+        ],
+        "oracleRejection": "callbacks: the nested callback's tick is at least half a period after the outer's",
+        "sourceRestoredByteForByte": true,
+        "restoredHostEqualsGenuine": true
+      },
+      {
+        "name": "idle",
+        "file": "native/frame_clock.h",
+        "find": "    const bool tick = consumer && (pacing == Pacing::Presentation || due);",
+        "replace": "    const bool tick = pacing == Pacing::Presentation || due;",
+        "sourceSha256": "c4f837d38671993d4fb18e7896d76becdf8dd0c95c27038e00f9860257faa345",
+        "hostSha256": "6525a0b943942cc1fd2378b0eb3d369f1ff34950ea3c04480a1f23696f3b8c52",
+        "runStatus": 0,
+        "failedChecks": 5,
+        "cadenceChecksFailed": 4,
+        "baselineChecksFailed": 1,
+        "failedIds": [
+          "clock/A display that reports no refresh rate gives the 60 Hz fallback period, and the counters start at zero ticks",
+          "callbacks/A Godot frame nothing waits for is neither a tick nor a waited frame",
+          "callbacks/A request after idling reaches its callback in the very next Godot frame, with a frame timestamp",
+          "callbacks/That frame is a tick the clock counts, and its timestamp is the clock's",
+          "callbacks/A request cancelled before its frame never runs and leaves no tick or waited frame behind"
+        ],
+        "oracleRejection": "A display with no refresh rate gives the 60 Hz fallback, with no tick yet",
+        "sourceRestoredByteForByte": true,
+        "restoredHostEqualsGenuine": true
+      },
+      {
+        "name": "presentation",
+        "file": "native/frame_clock.h",
+        "find": "    const bool tick = consumer && (pacing == Pacing::Presentation || due);",
+        "replace": "    const bool tick = consumer && due;",
+        "sourceSha256": "ddf7217ba3c972e2a74c25f64c5267042f31998347a9069757e22a44775523ef",
+        "hostSha256": "bd88d09a2c93bf3fa3381de2c5a465fa47a57fc8844ef7eb232e9fe357040511",
+        "runStatus": 0,
+        "failedChecks": 1,
+        "cadenceChecksFailed": 1,
+        "baselineChecksFailed": 0,
+        "failedIds": [
+          "presentation-bimodal/Under Presentation pacing every Godot frame is a tick, the 3 ms ones included, and runs a callback and an animation frame"
+        ],
+        "oracleRejection": "presentation-bimodal pump 2: a presented frame with a consumer is a tick, none waits",
+        "sourceRestoredByteForByte": true,
+        "restoredHostEqualsGenuine": true
+      }
+    ]
+  },
+  "oracle": {
+    "file": "tests/frame-clock-oracle.mjs",
+    "independence": "Written from the contract the clock states and from RN's decay driver, not from the probe or the C++: it takes the Godot frame times the host reports once per frame and recomputes, for every frame, whether it had to be a tick, what JS and RN's Native Animated received in it, and where the decay driver lands from the frames it was given, in float32",
+    "window": {
+      "lowestLanding": 48.74930563591774,
+      "asymptote": 49.99999999999996,
+      "span": 1.2506943640822143,
+      "uniformLanding": {
+        "halfPeriod": 48.82411193847656,
+        "period": 49.444549560546875,
+        "sixPointNineMs": 48.51854705810547,
+        "oneMs": 40.005619049072266
+      }
+    },
+    "decayLandingByLane": {
+      "bursts": 49.868,
+      "display-144": 48.327,
+      "fallback-144": 49.526,
+      "fast": 49.408,
+      "headless": 49.434,
+      "paced-60": 49.391,
+      "presentation-bimodal": 48.759,
+      "time-bimodal": 49.602
+    },
+    "runnerAsserts": [
+      "the report's check names are unique and every ERROR line is a failed check",
+      "the oracle accepts the current report and rejects the report of the preceding host and of each sabotage even with every probe check forced to passed",
+      "the controls share the current bundle and every producer but the native ones",
+      "the saved controls fail exactly the cadence checks (preceding host) or at least one check (sabotages)"
+    ]
+  },
+  "executedObservations": {
+    "runs": {
+      "paced-60": {
+        "pacing": "paced-60",
+        "godotFrames": 55,
+        "ticks": 45,
+        "framesWaitedThrough": 1,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 29,
+        "landing": 49.3911,
+        "loopFrames": 46,
+        "loopTicks": 45,
+        "loopTicksPerSecond": 58.832,
+        "medianGodotGapMs": 16.67,
+        "shareOfGapsUnderHalfPeriod": 0,
+        "stalls": {
+          "stalls": 0,
+          "lateTicks": 0,
+          "catchUps": 0,
+          "catchUpsWaited": 0
+        }
+      },
+      "headless": {
+        "pacing": "headless",
+        "godotFrames": 114,
+        "ticks": 36,
+        "framesWaitedThrough": 69,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 25,
+        "landing": 49.434,
+        "loopFrames": 105,
+        "loopTicks": 36,
+        "loopTicksPerSecond": 49.783,
+        "medianGodotGapMs": 6.892,
+        "shareOfGapsUnderHalfPeriod": 0.97368,
+        "stalls": {
+          "stalls": 0,
+          "lateTicks": 0,
+          "catchUps": 0,
+          "catchUpsWaited": 0
+        }
+      },
+      "fast": {
+        "pacing": "fast",
+        "godotFrames": 2734,
+        "ticks": 41,
+        "framesWaitedThrough": 2684,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 29,
+        "landing": 49.4085,
+        "loopFrames": 2725,
+        "loopTicks": 41,
+        "loopTicksPerSecond": 57.048,
+        "medianGodotGapMs": 0.231,
+        "shareOfGapsUnderHalfPeriod": 0.99927,
+        "stalls": {
+          "stalls": 0,
+          "lateTicks": 0,
+          "catchUps": 0,
+          "catchUpsWaited": 0
+        }
+      },
+      "bursts": {
+        "pacing": "bursts",
+        "godotFrames": 65,
+        "ticks": 17,
+        "framesWaitedThrough": 39,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 15,
+        "landing": 49.8676,
+        "loopFrames": 56,
+        "loopTicks": 17,
+        "loopTicksPerSecond": 18.033,
+        "medianGodotGapMs": 6.786,
+        "shareOfGapsUnderHalfPeriod": 0.76923,
+        "stalls": {
+          "stalls": 11,
+          "lateTicks": 11,
+          "catchUps": 11,
+          "catchUpsWaited": 11
+        }
+      },
+      "display-144": {
+        "pacing": "display-144",
+        "godotFrames": 113,
+        "ticks": 104,
+        "framesWaitedThrough": 0,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 52,
+        "landing": 48.3272,
+        "loopFrames": 104,
+        "loopTicks": 104,
+        "loopTicksPerSecond": 144,
+        "medianGodotGapMs": 6.944,
+        "shareOfGapsUnderHalfPeriod": 0.97345,
+        "stalls": {
+          "stalls": 0,
+          "lateTicks": 0,
+          "catchUps": 0,
+          "catchUpsWaited": 0
+        }
+      },
+      "fallback-144": {
+        "pacing": "fallback-144",
+        "godotFrames": 114,
+        "ticks": 37,
+        "framesWaitedThrough": 68,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 26,
+        "landing": 49.5259,
+        "loopFrames": 105,
+        "loopTicks": 37,
+        "loopTicksPerSecond": 50.353,
+        "medianGodotGapMs": 6.945,
+        "shareOfGapsUnderHalfPeriod": 0.97368,
+        "stalls": {
+          "stalls": 0,
+          "lateTicks": 0,
+          "catchUps": 0,
+          "catchUpsWaited": 0
+        }
+      },
+      "presentation-bimodal": {
+        "pacing": "presentation-bimodal",
+        "godotFrames": 75,
+        "ticks": 66,
+        "framesWaitedThrough": 0,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 37,
+        "landing": 48.7592,
+        "loopFrames": 66,
+        "loopTicks": 66,
+        "loopTicksPerSecond": 89.557,
+        "medianGodotGapMs": 6.479,
+        "shareOfGapsUnderHalfPeriod": 0.50667,
+        "stalls": null
+      },
+      "time-bimodal": {
+        "pacing": "time-bimodal",
+        "godotFrames": 74,
+        "ticks": 33,
+        "framesWaitedThrough": 32,
+        "framesNothingWaitedFor": 9,
+        "backendFrames": 24,
+        "landing": 49.6025,
+        "loopFrames": 65,
+        "loopTicks": 33,
+        "loopTicksPerSecond": 43.966,
+        "medianGodotGapMs": 15.062,
+        "shareOfGapsUnderHalfPeriod": 0.5,
+        "stalls": {
+          "stalls": 0,
+          "lateTicks": 0,
+          "catchUps": 0,
+          "catchUpsWaited": 0
+        }
+      }
+    },
+    "callbacks": {
+      "cancelled": {
+        "pacing": "headless",
+        "events": 0,
+        "samples": 8
+      },
+      "idle": {
+        "pacing": "headless",
+        "events": 0,
+        "samples": 40
+      },
+      "nested": {
+        "pacing": "headless",
+        "events": 2,
+        "samples": 40
+      },
+      "once": {
+        "pacing": "headless",
+        "events": 1,
+        "samples": 8
+      },
+      "ordered": {
+        "pacing": "headless",
+        "events": 3,
+        "samples": 8
+      }
+    },
+    "clockSample": {
+      "frames": 15,
+      "lastFrameMs": 20.435792028904,
+      "lastTickMs": null,
+      "pacing": "time",
+      "pacingSource": "headless",
+      "periodMs": 16.6666666666667,
+      "refreshRate": 60,
+      "skipped": 0,
+      "source": "fallback",
+      "ticks": 0
+    },
+    "stop": {
+      "before": {
+        "frames": 3721,
+        "lastFrameMs": 278849768.783625,
+        "lastTickMs": 278849753.973666,
+        "pacing": "time",
+        "pacingSource": "headless",
+        "periodMs": 16.6666666666667,
+        "rateSource": "fallback",
+        "refreshRate": 60,
+        "skippedFrames": 2901,
+        "ticks": 385
+      },
+      "after": {
+        "frames": 3721,
+        "lastFrameMs": 278849768.783625,
+        "lastTickMs": 278849753.973666,
+        "pacing": "time",
+        "pacingSource": "headless",
+        "periodMs": 16.6666666666667,
+        "rateSource": "fallback",
+        "refreshRate": 60,
+        "skippedFrames": 2901,
+        "ticks": 385
+      },
+      "again": {
+        "frames": 3721,
+        "lastFrameMs": 278849768.783625,
+        "lastTickMs": 278849753.973666,
+        "pacing": "time",
+        "pacingSource": "headless",
+        "periodMs": 16.6666666666667,
+        "rateSource": "fallback",
+        "refreshRate": 60,
+        "skippedFrames": 2901,
+        "ticks": 385
+      }
+    },
+    "decayLandingByHost": {
+      "current": {
+        "bursts": 49.868,
+        "display-144": 48.327,
+        "fallback-144": 49.526,
+        "fast": 49.408,
+        "headless": 49.434,
+        "paced-60": 49.391,
+        "presentation-bimodal": 48.759,
+        "time-bimodal": 49.602
+      },
+      "preceding-host": {
+        "bursts": 45.61,
+        "display-144": 48.549,
+        "fallback-144": 48.452,
+        "fast": 13.493,
+        "headless": 48.505,
+        "paced-60": 49.369,
+        "presentation-bimodal": 48.683,
+        "time-bimodal": 48.408
+      },
+      "sabotage-always": {
+        "bursts": 45.982,
+        "display-144": 48.643,
+        "fallback-144": 48.548,
+        "fast": 13.724,
+        "headless": 48.3,
+        "paced-60": 49.296,
+        "presentation-bimodal": 48.196,
+        "time-bimodal": 47.917
+      },
+      "sabotage-idle": {
+        "bursts": 49.677,
+        "display-144": 48.535,
+        "fallback-144": 49.497,
+        "fast": 49.418,
+        "headless": 49.469,
+        "paced-60": 49.373,
+        "presentation-bimodal": 48.686,
+        "time-bimodal": 49.562
+      },
+      "sabotage-presentation": {
+        "bursts": 49.73,
+        "display-144": 48.524,
+        "fallback-144": 49.485,
+        "fast": 49.359,
+        "headless": 49.545,
+        "paced-60": 49.367,
+        "presentation-bimodal": 49.549,
+        "time-bimodal": 49.622
+      }
+    }
+  },
+  "refreshedControlsOfOtherSlices": {
+    "note": "The Animated and singular transforms controls and sabotages rebuilt from the committed tree, so their local receipts describe the host of this slice",
+    "animated": {
+      "precedingHostFailures": 59,
+      "sabotageFramesFailures": 31,
+      "sabotagePersistenceFailures": 2,
+      "currentChecks": 75,
+      "receiptFormat": "godot-fabric.native-animated-sabotage/v3",
+      "sourceRestoredByteForByte": true,
+      "restoredHostEqualsGenuine": true
+    },
+    "singularTransforms": {
+      "sabotageFailures": 2,
+      "receiptFormat": "godot-fabric.transform-singular-sabotage/v1",
+      "sourceRestoredByteForByte": true,
+      "restoredHostEqualsGenuine": true
+    }
+  },
+  "contractUpdates": {
+    "animated": {
+      "files": [
+        "tests/native-animated-probe.gd",
+        "tests/native-animated-oracle.mjs",
+        "tests/native-animated-fixture.jsx"
+      ],
+      "renamedChecks": [
+        {
+          "before": "native-timing/The request reaches the backend's very next frame, one Godot frame after the call",
+          "after": "native-timing/The request reaches the backend's next frame-clock tick: the first tick after the call delivers its first frame"
+        },
+        {
+          "before": "native-spring/The request reaches the backend's very next frame, one Godot frame after the call",
+          "after": "native-spring/The request reaches the backend's next frame-clock tick: the first tick after the call delivers its first frame"
+        },
+        {
+          "before": "native-decay/The request reaches the backend's very next frame, one Godot frame after the call",
+          "after": "native-decay/The request reaches the backend's next frame-clock tick: the first tick after the call delivers its first frame"
+        },
+        {
+          "before": "native-created/The request reaches the backend's very next frame, one Godot frame after the call",
+          "after": "native-created/The request reaches the backend's next frame-clock tick: the first tick after the call delivers its first frame"
+        },
+        {
+          "before": "native-xy/The request reaches the backend's very next frame, one Godot frame after the call",
+          "after": "native-xy/The request reaches the backend's next frame-clock tick: the first tick after the call delivers its first frame"
+        }
+      ],
+      "oracle": "the first delivered frame is the first tick after the request (no tick between them), at most one tick per Godot frame, the backend runs only on a tick; the latency allowance of the TouchableOpacity legs is gone",
+      "scope": {
+        "before": {
+          "frameClockIsGodotsTick": true
+        },
+        "after": {
+          "frameClockIsGodotsTick": false,
+          "frameClockIsDisplayPaced": true
+        }
+      },
+      "race": "native-race defers RN's queue flush by 3 requestAnimationFrame ticks (it was 90 ms of setTimeout)",
+      "stop": "native-stop waits for two delivered backend frames (it advanced 120 ms)",
+      "checks": 75
+    },
+    "touchables": {
+      "file": "tests/touchables-probe.gd",
+      "change": "the animated lane waits for the press to dim the host and the backend to go idle, and for the release to restore it with two resumes, instead of 12 and 60 Godot frames",
+      "checks": 93
+    },
+    "animatedExample": {
+      "file": "examples/animated/validation.gd",
+      "change": "the press waits for the button to reach 0.4 instead of six Godot frames"
+    },
+    "runtimeErrors": {
+      "file": "tests/runtime_errors.gd",
+      "check": "A failed callback cannot prevent unrelated queued work",
+      "before": "the trace equals [\"after-frame\",\"timeout\",\"after-timeout\"]",
+      "after": "the trace has the three entries and the two timers keep their order"
+    },
+    "consumer": {
+      "file": "tests/adapters/consumer/validation.gd",
+      "change": "the RAF and timer reentrancy cases wait for the native signal's stop or retirement request, then ten frames (frames_after), instead of ten Godot frames from the scheduling"
+    },
+    "ci": {
+      "file": ".github/workflows/contracts.yml",
+      "change": "a test:frame-clock step and a native-frame-clock artifact after the animated ones in native-cold-start"
+    },
+    "historicalEvidenceKeptAsRecord": [
+      "docs/evidence/native-animated/report.json",
+      "docs/evidence/runtime/provenance.json",
+      "docs/evidence/game-services/regressions.json"
+    ]
+  },
+  "headedObservationsOutsideTheReceipt": {
+    "description": "A scratch script (not retained) ran the application with the frame-clock probe's requestAnimationFrame loop in a real macOS window and read the application's snapshot once per Godot frame. The suite asserts none of it.",
+    "machine": "MacBook Pro M3 Pro, a 120 Hz ProMotion display, Godot 4.7.2 Compatibility renderer",
+    "runs": [
+      {
+        "arguments": "--frames=720",
+        "vsyncMode": 1,
+        "maxFps": 0,
+        "displayServer": "macOS",
+        "screenRefreshHz": 120,
+        "pacing": "presentation",
+        "pacingSource": "vsync",
+        "rateSource": "display",
+        "refreshRate": 120,
+        "periodMs": 8.333,
+        "frames": 720,
+        "elapsedMs": 5999.8,
+        "framesPerSecond": 120,
+        "gapMs": {
+          "min": 1.06,
+          "median": 8.3,
+          "p90": 13.03,
+          "max": 16.15
+        },
+        "ticks": 720,
+        "ticksPerSecond": 120,
+        "skippedFrames": 0,
+        "histogramOf2MsBuckets": "0-2:6 2-4:90 4-6:138 6-8:22 8-10:224 10-12:112 12-14:104 14-16:22 16-18:2"
+      },
+      {
+        "arguments": "--frames=720",
+        "vsyncMode": 1,
+        "maxFps": 0,
+        "displayServer": "macOS",
+        "screenRefreshHz": 120,
+        "pacing": "presentation",
+        "pacingSource": "vsync",
+        "rateSource": "display",
+        "refreshRate": 120,
+        "periodMs": 8.333,
+        "frames": 720,
+        "elapsedMs": 6003.9,
+        "framesPerSecond": 119.9,
+        "gapMs": {
+          "min": 1.24,
+          "median": 8.32,
+          "p90": 13.25,
+          "max": 18.31
+        },
+        "ticks": 720,
+        "ticksPerSecond": 119.9,
+        "skippedFrames": 0,
+        "histogramOf2MsBuckets": "0-2:9 2-4:115 4-6:116 6-8:33 8-10:203 10-12:89 12-14:116 14-16:38 18-20:1"
+      },
+      {
+        "arguments": "--vsync=0 --frames=2400",
+        "vsyncMode": 0,
+        "maxFps": 0,
+        "displayServer": "macOS",
+        "screenRefreshHz": 120,
+        "pacing": "time",
+        "pacingSource": "unpaced",
+        "rateSource": "display",
+        "refreshRate": 120,
+        "periodMs": 8.333,
+        "frames": 2400,
+        "elapsedMs": 1448.5,
+        "framesPerSecond": 1656.9,
+        "gapMs": {
+          "min": 0.5,
+          "median": 0.53,
+          "p90": 0.66,
+          "max": 11.38
+        },
+        "ticks": 166,
+        "ticksPerSecond": 114.6,
+        "skippedFrames": 2234,
+        "histogramOf2MsBuckets": "0-2:2385 2-4:14 10-12:1"
+      },
+      {
+        "arguments": "--maxfps=60 --frames=360",
+        "vsyncMode": 1,
+        "maxFps": 60,
+        "displayServer": "macOS",
+        "screenRefreshHz": 120,
+        "pacing": "presentation",
+        "pacingSource": "vsync",
+        "rateSource": "display",
+        "refreshRate": 120,
+        "periodMs": 8.333,
+        "frames": 360,
+        "elapsedMs": 5999.4,
+        "framesPerSecond": 60,
+        "gapMs": {
+          "min": 10.76,
+          "median": 16.67,
+          "p90": 17.17,
+          "max": 22.49
+        },
+        "ticks": 360,
+        "ticksPerSecond": 60,
+        "skippedFrames": 0,
+        "histogramOf2MsBuckets": "10-12:2 12-14:1 14-16:19 16-18:334 18-20:1 20-22:2 22-24:1"
+      },
+      {
+        "arguments": "--vsync=0 --maxfps=60 --frames=360",
+        "vsyncMode": 0,
+        "maxFps": 60,
+        "displayServer": "macOS",
+        "screenRefreshHz": 120,
+        "pacing": "time",
+        "pacingSource": "unpaced",
+        "rateSource": "display",
+        "refreshRate": 120,
+        "periodMs": 8.333,
+        "frames": 360,
+        "elapsedMs": 5997.1,
+        "framesPerSecond": 60,
+        "gapMs": {
+          "min": 8.78,
+          "median": 16.65,
+          "p90": 17.3,
+          "max": 24.07
+        },
+        "ticks": 360,
+        "ticksPerSecond": 60,
+        "skippedFrames": 0,
+        "histogramOf2MsBuckets": "8-10:2 12-14:2 14-16:23 16-18:328 18-20:3 22-24:1 24-26:1"
+      }
+    ],
+    "rendererReadback": "window_set_vsync_mode with ADAPTIVE or MAILBOX reads back ENABLED on this renderer; DisplayServer.screen_get_refresh_rate reported 120.0 and costs about 0.35 microseconds a call"
+  },
+  "regressions": {
+    "steps": {
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 122,
+        "logSha256": "0113de806926b64fb800e26d007ceabf21dd42789b4014c8404d1cf7a16e0187"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "78e04ddf00334d54b0f05182f2a26e995a33885aac3623289fc5e2538db00493"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "8bc5644c65cd3f17d092fff1d8e1b9294dbfc9a87d0f8a02d161c33611b63c8d"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "30604cf9f7b7b6a90f6862176995dd0a8f49e1fe26475d246e2e7fe0eaaf18b5"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "851571b8f9a304696af8310807612473b44823a8ad796b4208c222743f7cb485"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "68ed060e1f7b7713a4c95d40dc2b7a1f7a7f8b312cbd40c0cb060f0a839404f9"
+      },
+      "test:lists": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "7da0339c2ba084e5ead34425b68b0e07c8fb2b8b7f8c37e614212ce8f774aad3"
+      },
+      "test:appearance": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "50dd8810c6b6183b97c474ed66f6ff8843f29d0b8228cfb62a62b307a444e20a"
+      },
+      "test:animated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "0c19e76bef71b9468ccb8896b1924282ec26bad8f304e9e859535810271049ee"
+      },
+      "test:frame-clock": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "67f632d7430495daeb2d2bdb55ebc3fc9ad23dd859fa685542ca8dbecf834325"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "4c255979df7944652202bfe0e647a8973ea3d6786de95ad3f94cc42325dd9d3a"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "5d07db7110cc535444828d57fc2a0126782a72191b78b89957ad65650d6c562a"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "e236480c6200ad1c326bf8b7ede830723af559f877bd8ace03aa87ba5a893b13"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "93177ab84846b72dd7eba3b66b0bcc3ac162443bceab894fa95fa2caa36aa5d2"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "7a3c0531503198b6185109284727117410e24dc6eb5762d7ea00c491399b2080"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "ae7b832e7d1a1f7b8970585219eca670cf9cb7137c2c654c7ec019623907d903"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "7f356ca008b20bceb0c82cd9f045cdf4dcd4cf5185c19df35acd53a9b176fded"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "b2bcbb35d59b8d66aa260cd7c556f1271a4a0c7c000ba9488a9ef5e98d07594f"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "27bb1c2310406656dba0a4cff9f50c698d480ef2b7ef42f438d00254f2d4c5d7"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 39,
+        "logSha256": "f8263b4895f0f631acff89d7a4e0656b2a3d78f55172e4ea8f14d8fb97685d5a"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "2127f7d324bf3530b3b8dfbb5d3fa95fe9b67383e73708487496b9a20c16a5ff"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "0457f871f5b7d8761915b3c09c922c23104140a6060f0d2ac401b47a33758eed"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 65,
+        "logSha256": "f2fd8792ac86e095786535995dafd6cb404c8e0237ab898ca3991a115f3e7a5f"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "130bfce04b89a755de7e829af8e09c81f01458760d9ebee56e8c59eaed28ebb8"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "ca2fb6cb04be56fbf68c6862605baa75d19fda186f3fc69251b9657ec44e1d9f"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 33,
+        "logSha256": "55bb8cc011f8b0a7ef6859ea81e48fdab863f91684cd55fec7c3498e9b30b888"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "a72622408baee51332cb2857f02bd5650c16b462068a10ac908a9bba7825c6bc"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "9958b38e906b2707fadc142bd3b279a2628ef2a0bee8e9194515b16d5e4fbe4a"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 30,
+        "logSha256": "e60a0bcfa1d059024e85b191c1b55bc42938d10c912cc113ac17940bd9d6d9e4"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 58,
+        "logSha256": "48cf0f6efb59cbec6202f3b043194f77ca52ebafdafa37cb110e1787e515d29c"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "9772b9ffff79e36c33bf84ea544c5a3ff3319d3a5d7c7b9fb353a0985eba3753"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "037757dcade62ac9e4d272fffd4e7aa3f02b19ac841e6224d6ca265fd159c94d"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "995fe874be46b70f0643e8bd1613d05fd18a0a2d699dde9e520a4a6a525b61c8"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "d8c14229d6939078a24054434eca5f75b7d25932dbf28cf262951ef6ee214252"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "07c34a714ab6416558cfe0164beaa4fb1db7946e6ce3f259c99708193b1f4a28"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 64,
+        "logSha256": "4a88aa92118b774afd1ecc17e00c565b34478b141390929506101cfd55ce846e"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "0900f7c7ffb27bdede1c890873ef7b91fbdf8416d14847e595d5c751090ae63f"
+      }
+    },
+    "counts": {
+      "examples": 2262,
+      "examplesCount": 23,
+      "animatedExample": 12,
+      "transformsExample": 309,
+      "down": 2731,
+      "documentUp": 6459,
+      "documentMove": 1940,
+      "documentHover": 1530,
+      "click": 728,
+      "captureNotifications": 672,
+      "viewUp": 297,
+      "move": 220,
+      "hover": 158,
+      "rootPath": 82,
+      "queryFaults": 187,
+      "resolverFaults": 66,
+      "panResponder": 128,
+      "sharedTouches": 92,
+      "appState": 75,
+      "virtualizedList": 44,
+      "appearance": 79,
+      "switch": 108,
+      "activityIndicator": 33,
+      "touchables": 93,
+      "touchablesAnimatedLane": 7,
+      "animated": 75,
+      "frameClock": 42,
+      "focusCommands": 112,
+      "nativeModules": 76,
+      "eventDispatch": 647,
+      "transformGuards": 61,
+      "transformInputGuards": 25,
+      "frameClockUnitTests": 14,
+      "affineFactorChecks": 57703,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6
+    },
+    "note": "Every native-cold-start suite step after Godot install and npm run setup, in the workflow's order, plus test:examples and test:recovery, from the committed tree; every step passed on its first run"
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ab306e6f54980a8a5a833feb49add3b8ec8c87f087ad54107e9826873b20cbca"
+      },
+      "frame-clock-unit": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "0bfbd423c2d1df8d9870f3b4591d74d8655fd6d8f98dbaff889f314c7943b143"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "b9cab0d2426c77531364dc0169a88af422f5695dc0a67921a66b2c0ec462acc4"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "9cd8bab65a2819cc502e185e990788f31e704a9b1984f9cbdec5c242d7e9585a"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ed00bdf28fe7baa16b2f2993892b51dbf5da388aea6a11f3026b9afa40dcdc05"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "0f191f48e0b446f89ffb754c788a281797593f8a68ff8bff354be762ac9af8df"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "460bc1d5b7b12f9ca493593bb7275745f4b2e2c00d6bd0a225bd40c2c6107cf9"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 92,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "f445d70a3df41e256f0a42013884f2d9a21428359b93d9964096c00970616796"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    },
+    "outputDirectories": "fresh build/*-stageb directories for codegen-native-compile, native-sdk, adapter-registry, adapter-loader and adapter-runtime (deleted after the run); test:consumer, test:cold and parity:godot used their own",
+    "counts": {
+      "affineFactorChecks": 57703,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6
+    }
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "6745423faf2ebee96974a715bdf2c9c188b7d9ac5d1a6aa631a982d0a6e35dcc",
+    "inputsMatchCommit": true,
+    "inputs": 65,
+    "compiler": {
+      "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    }
+  },
+  "sourcePins": {
+    ".fallowrc.json": "1e17153b8ba446009212bf6da2e88c21b1566bd91b71358de87b572bafe68231",
+    ".github/workflows/contracts.yml": "42f347b0c283a86a0fba64adceabc8e8301715ee3cffc992fb54c67f1c6e584a",
+    "examples/animated/validation.gd": "7f9787450faa98026ace53d46ec8421a3d02748e4855a42c58afee04ba7c5bec",
+    "native/CMakeLists.txt": "7d87e9300dd9a39dc9c7d3a44d4a09bd004d5a2401d32de6f5fc92f9e7cafdc9",
+    "native/application_runtime.cpp": "0144a67328387f09fa551f5b8548af5506e3150e93f9e1f43d920298f6aabf8e",
+    "native/application_runtime.h": "2c7c89fe91d65b4c72a33fb5fbbefc58a31b98c2c69f4081d305d9b3b856e3db",
+    "native/fabric_application.cpp": "6d50c5c20a41913ec60b701a6904c75ac843a7ebd3c79c824ba8e25a8d6933f2",
+    "native/frame_clock.h": "4ebabb1a4a400e774abc338b327970fb0d02baed639c8f5b22206a1ac84a4c0d",
+    "native/frame_clock_test.cpp": "140041f706690c709b0c500d6cd88ee7c03c47cef650dffbf412ccdf3ce6cf0b",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "package.json": "a232ebe5b367322d350a6111042d7ab011f3441a35764264d47860c5a04d9014",
+    "scripts/frame-clock-bundle.mjs": "c3c2122ba373e9ef94c87b92fa5fb4dd33d3a6b2a189c55d27accff35dd97566",
+    "scripts/frame-clock-sabotage.mjs": "7ba28d7a2ffb4b96dc0678f02b1340ffa92aa27d86e527727dc80e897426087c",
+    "tests/adapters/consumer/validation.gd": "9cf4aa12fc2f0b0cf08c8140a11601fbb8495c58d47a75eebae71442dfbc572d",
+    "tests/frame-clock-cases.mjs": "c7368cd0b4efd4b165369b7d495c9a1da363e09fedfc5d1ca4548c56da097b8d",
+    "tests/frame-clock-fixture.jsx": "5ed7773b423a5e75ab860c9c115862a000b0e04b3d0b1e14c93374c9a7c38b8c",
+    "tests/frame-clock-native.test.mjs": "6b0688094a6c37fe09fb4bcd53a5606ddaaf69cbfb6071e80f09aad06cb53418",
+    "tests/frame-clock-oracle.mjs": "df88f1d4c10c102b24d6917eb659cd52b37f444d9976d6f5ec8107824c5fcaac",
+    "tests/frame-clock-probe.gd": "ec0de485e7cab3aad079ef247da9a5230c6b7797aa3414aa362eb16288a27d39",
+    "tests/native-animated-fixture.jsx": "0c8458e45264d9dbce52e6d726b78273553d752a0eabbf8c25614f93ef73c112",
+    "tests/native-animated-oracle.mjs": "937d53bf3f7636f5e4247afd56c4ed40775e02ad22ce01b2eaf7f4397a0a9b46",
+    "tests/native-animated-probe.gd": "011dbc7f4e34b423bf056cc5894ea6951826ccf19aa6fe9473dbfd4448396f6e",
+    "tests/runtime-native.test.mjs": "da143708b24b90e40e368e7db87815bd0817d5b697baac05b794e30552bfff1b",
+    "tests/runtime_errors.gd": "e5ec6aceadd4a7b9d733ef1218bd23ca6a5d22e37829d76cd2871236bb21316c",
+    "tests/touchables-probe.gd": "1e0b3ef050e63d5fa0c2a69e0ae140b7ffe096c6b0f593935300e9b65c2966ae"
+  },
+  "verificationSourcePins": {
+    "examples/animated/App.jsx": "64eadedfb7fcaed8262bc2269f15cbff4e2e7db394e2cb5a86adafd4e8521e16",
+    "examples/animated/scene.tscn": "916204fe53d0d58e912a091984707859ab1918d5816ee5aa4a7985695f2de237",
+    "examples/catalog.json": "0f30562b12dbbf7d3d94f640da5639a9ec572f5da06cdd4bb1004c75084cbc24",
+    "examples/entry.jsx": "0af56596552a5fc34c2cb97e9d1a2ea1c4db0b6540bcc0549bc54f297a943abd",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    "scripts/native-animated-bundle.mjs": "9b96ae126c8fa15fd457deb8dce1c23faffc1941a2fca7008e76498a9d7161b3",
+    "scripts/native-animated-sabotage.mjs": "1e9b07f1fe23f302d0ee814f74c1a8310d6356ccef035f2cdcadfe77665f4613",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "scripts/transform-singular-sabotage.mjs": "89b7c0061529bb1064d1eb88ea21978187e2633490571bddd8c6e28fce6da48e",
+    "sdk/toolchain/platform-plugin.mjs": "e19e81451fda62f844d4e302c747d460f17a343d8b829c1c60eb970e06c14062",
+    "src/animated-exports.js": "4097fe4cd5167222581d7ac1c3032e224aedeff506026619241ba85975942f67",
+    "src/platform-color-value-types.js": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+    "src/react-native-platform.jsx": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+    "tests/native-animated-cases.mjs": "b7901f8f6956c4ff9c9e9fe92d908c3da046ee8f25e4ce0b8cb18000b6835053",
+    "tests/native-animated-native.test.mjs": "e49bbb72e0b69c7d6da0a42a7061a23a03c8e41970ae8800ac6359f20b228781",
+    "tests/touchables-animated-fixture.jsx": "e6261b9a6c3d8d313d8a1d853cfddf038a985c3fd19a6d2c88ec4e168facc607",
+    "tests/touchables-fixture.jsx": "d14320227d21b53fe421589a9b814340c7f848d36fe779d88956b8d561a8b340",
+    "tests/touchables-native.test.mjs": "4bbd87ba1eae29d3cf40eded77826632c59487ab104101300ca26ab6d3f91097"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "7d87e9300dd9a39dc9c7d3a44d4a09bd004d5a2401d32de6f5fc92f9e7cafdc9",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+    "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "0144a67328387f09fa551f5b8548af5506e3150e93f9e1f43d920298f6aabf8e",
+    "native/application_runtime.h": "2c7c89fe91d65b4c72a33fb5fbbefc58a31b98c2c69f4081d305d9b3b856e3db",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "6d50c5c20a41913ec60b701a6904c75ac843a7ebd3c79c824ba8e25a8d6933f2",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/frame_clock.h": "4ebabb1a4a400e774abc338b327970fb0d02baed639c8f5b22206a1ac84a4c0d",
+    "native/frame_clock_test.cpp": "140041f706690c709b0c500d6cd88ee7c03c47cef650dffbf412ccdf3ce6cf0b",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+    "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Animated/Animated.js": "658514b38e484cb106acc58e46c5c8849d325b693f4c16e3d7d177f18df8d6c2",
+    "Libraries/Animated/AnimatedImplementation.js": "aa0045f644697591c3e619cfa92df141593d21291982706191c5213aa91a176d",
+    "Libraries/Animated/useAnimatedValue.js": "208a019e4dae384d3e172a999e9446d47c956326adde35f7169d477a59538b3b",
+    "Libraries/Animated/components/AnimatedView.js": "00adcb6fe0cd68958bc2e35c1fe10bb6ee039149057c45e4456b1d44d74d2b67",
+    "Libraries/Animated/createAnimatedComponent.js": "f43699c7a66ae061efa5658cc8fa72ad9681541bbe2d4a4b55e42d5373a5394d",
+    "Libraries/Animated/nodes/AnimatedValue.js": "5fd8ecb6502c5a8ce191273fdc78522ca16f48b0b90153b4d1265c7b1e9c79ed",
+    "Libraries/Animated/animations/DecayAnimation.js": "54c9907dc4bbe2167e969c4a7c6be58212eb8eb3a21093ac6e5f6927ad8d8cdc",
+    "src/private/animated/NativeAnimatedHelper.js": "e431a4b40387635d2c844a435c039f9567613fd97d3397db1944f591ba3aebc9",
+    "ReactCommon/react/runtime/TimerManager.cpp": "4da567def5bf1c65895cb8dc70682c03371008f30f30f7022a56c9412ce57275",
+    "React/CoreModules/RCTTiming.mm": "464bc284890b54a48f382686bfba26779111a57b4960db34f1ac6012762950b5",
+    "React/Base/RCTDisplayLink.m": "8a6ccdbe016218cc7bf6f8e361e82e89558cf7a99bdf55b70d41baffbb94a38b",
+    "React/Fabric/RCTScheduler.mm": "0d1ede5f7e414798c83eef3b0a0f235a26eb60c023787e68397e067d9795814f",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.kt": "2ece31995da4fc2b37f117ccd7713a85a14aefb750f2255a1542315828a3fc25",
+    "ReactAndroid/src/main/jni/react/fabric/FabricUIManagerBinding.cpp": "e53126373be416e8d228df4aaac1c3455cf834a1e6187d2b95fdfbae7a60b9e8",
+    "ReactCommon/react/renderer/animated/drivers/DecayAnimationDriver.cpp": "c1f44b65696daabbdd43161c376f5e83dd7768e33037cfc29835be86e480a65b",
+    "ReactCommon/react/renderer/animationbackend/AnimationChoreographer.h": "2ee5f4cf1e7d9a7bb4802b7db97fb72ba514002a5ecedbe0feb08d8ac259a5b3",
+    "ReactCommon/react/runtime/platform/ios/ReactCommon/ObjCTimerRegistry.mm": "ea02a8e2dd09a2b9c042deb76033befc5ce1964983df0d59eb758ee4eeef049a",
+    "ReactCommon/react/renderer/animationbackend/AnimationBackend.cpp": "0ac37c9cd9ddd85c82c6ddb527f54c9efcb8e96d8fed2a926a678856c8253cc6",
+    "React/Base/RCTFrameUpdate.m": "07eb3e66467cf0bea629c22f4b68e0172d1de43e2964b9c522d45656d49e2e30"
+  },
+  "hostedCI": {
+    "status": "pending-frame-clock-slice"
+  },
+  "limits": [
+    "Timers (setTimeout, setInterval) still run on every Godot frame: they are not quantized to ticks, as RN's iOS and Android timers are quantized to display frames. The baseline check 'A zero-delay interval fires once on every Godot frame, tick or not' records it.",
+    "A Presentation tick carries the CPU time of its Godot frame, so the steps between ticks are as uneven as those frames and a decay lands lower than at a regular cadence (the presentation-bimodal lane ends about 1 px short of the Time lanes); the iOS display link hands RN the regular targetTimestamp, which is not implemented.",
+    "ADAPTIVE and MAILBOX V-Sync are mapped by detect_pacing and covered by the unit test only: the Compatibility renderer of this Mac reads both back as ENABLED.",
+    "Real displays are not certified: the lanes are headless and state V-Sync presentation and the refresh rate through validation seams; the headed observations are one exploratory run each on one 120 Hz Mac, outside the receipt.",
+    "Variable refresh rates, external screens, OS suspend and resume, behavior under JS load, frame budgets (GF-30) and Godot Android and iOS exports are not covered.",
+    "The clock has no visual output: there is no example scene and no capture.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed: GF-05 and GF-19 are not at their first slice, so their slice checkpoints, already closed, do not change."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin and the working tree",
+    "sourcePins": 26,
+    "nativeSourcePins": 65,
+    "verificationSourcePins": 18,
+    "bundleSources": 19,
+    "uniqueCodeAndConfigurationInputs": 101,
+    "inputsInMoreThanOneGroup": 19,
+    "mismatches": [],
+    "originalReactNativeSources": 19,
+    "executedFromTheCommittedTree": true
+  },
+  "stutterObservationsOutsideTheReceipt": {
+    "description": "A scratch harness (not retained) froze and thawed (SIGSTOP and SIGCONT) the Godot process that ran the probe, with random durations, so that its frames came as on a hosted runner: a stall, then frames close behind it. It ran each suite on the committed tree with the retained controls present. The suite asserts none of it.",
+    "series": [
+      {
+        "suite": "test:frame-clock",
+        "stutter": "default",
+        "stopEachFor": "20 to 70 ms",
+        "runBetweenStops": "3 to 40 ms",
+        "runs": 6,
+        "passed": 6,
+        "secondsPerRun": [
+          17,
+          17,
+          17,
+          16,
+          17,
+          16
+        ]
+      },
+      {
+        "suite": "test:animated",
+        "stutter": "default",
+        "stopEachFor": "20 to 70 ms",
+        "runBetweenStops": "3 to 40 ms",
+        "runs": 6,
+        "passed": 6,
+        "secondsPerRun": [
+          14,
+          14,
+          14,
+          14,
+          14,
+          13
+        ]
+      },
+      {
+        "suite": "test:frame-clock",
+        "stutter": "harsh",
+        "stopEachFor": "40 to 150 ms",
+        "runBetweenStops": "2 to 15 ms",
+        "runs": 10,
+        "passed": 10,
+        "secondsPerRun": [
+          22,
+          22,
+          23,
+          23,
+          22,
+          23,
+          23,
+          22,
+          23,
+          23
+        ]
+      },
+      {
+        "suite": "test:animated",
+        "stutter": "harsh",
+        "stopEachFor": "40 to 150 ms",
+        "runBetweenStops": "2 to 15 ms",
+        "runs": 10,
+        "passed": 10,
+        "secondsPerRun": [
+          17,
+          17,
+          17,
+          17,
+          17,
+          17,
+          17,
+          17,
+          17,
+          17
+        ]
+      }
+    ]
+  },
+  "gates": {
+    "ranAt": "2026-10-06T19:43:52.221Z",
+    "meaning": "Contracts-job gates, test:recovery and the dashboard checks on the final tree with this record's documents, the dashboard entry and the receipt body (this field is appended afterwards).",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 16,
+        "logSha256": "48949f6c91484a1066a6acd98f7651401a938ad8d9a693e2b51249b6d0804b2f"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "454132d3f23d63030cd1ce55807afd90c00544d45c1071d419cef56716b3a5b5"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "17ca5d1250890f70b1c90636aa3b61e4643c879442cac75d16bfd80fa56c7b1c"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "c5cc367a1468e4325103ad9c5bf0f8967dffc078aa1d966f3f2efb07c53e9acc"
+      },
+      "dashboard:check": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ccbababb026589cf03be230de1b2888ea9fe9ac22177b669873a2e40854a88ca"
+      },
+      "test:dashboard": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "633911789ebc9b79b94ace7162a450dde1fe4c2abec61987c13c3081f79fe1bf"
+      },
+      "type-check": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "386165be90e955da25ceaec961c4cb36e9f86f8107c5c74c2df0cde6983d51e0"
+      }
+    },
+    "counts": {
+      "nodeContractRuns": [
+        6,
+        8,
+        264
+      ],
+      "nodeContractChecks": 264,
+      "pythonContractChecks": 13,
+      "nodeFailures": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

@@ -332,7 +332,8 @@ The [Animated record](native-animated/README.md) runs RN's original `Animated`,
 `Easing`, `useAnimatedValue(XY)` and `TouchableOpacity` in two roots of one
 application, with the JS driver on `requestAnimationFrame` and, with
 `useNativeDriver`, RN's own C++ `AnimatedModule` and shared `AnimationBackend`
-advanced by Godot's frame tick: 75 headless checks. An independent oracle replays
+advanced by Godot's frame tick (the [frame clock record](frame-clock/README.md) made
+that tick display-paced later): 75 headless checks. An independent oracle replays
 RN's frame, spring and decay drivers over the timestamps the host delivered and
 agrees with the Controls to rounding; mouse and touch presses dim the
 `TouchableOpacity` through the native driver. The preceding host fails exactly the
@@ -378,6 +379,31 @@ again, not the checkpoint's six (perspective, `rotateX`, a weight other than 1 a
 out-of-range cases; 61 checks), the input guards 25 and the affine factor test 57,703.
 Keyboard focus is released by a native-driver collapse (asserted) and kept by a
 React-commit one (an exploratory observation). One capture. Hosted CI pending.
+
+The [frame clock record](frame-clock/README.md) makes `requestAnimationFrame` callbacks
+and RN's Native Animated frames run at a display link's cadence instead of on every
+Godot frame. One host clock (`native/frame_clock.h`) decides, once per Godot frame,
+whether the frame is a tick. A window presented with V-Sync (enabled or adaptive) on a
+real display ticks every frame with a consumer: the engine presents each process frame
+as one image and pipelines them (about 3 and 13 ms apart on a 120 Hz window), so the
+time between frames says nothing. A loop nothing paces (headless, V-Sync off or
+mailbox) ticks a frame that starts at least half a refresh period after the previous
+Godot frame or a whole period after the last tick, at the rate the display reports for
+the window's screen (60 Hz when it reports none). Eight Hermes loop paces (capped at 60
+fps, headless, uncapped, stalled in the hosted runner's burst pattern, a 144 Hz display,
+the same loop on a screen that reports nothing, and the pipelined frames of a V-Sync
+window presented and timed), 42 headless checks recomputed frame by frame by an
+independent oracle, and a C++ unit test over synthetic pacings. The preceding host fails
+exactly the 29 cadence checks (the same native decay lands at 13.5 of 50 uncapped and
+45.6 under bursts); three retained sabotages (a clock that always ticks, one that ticks
+for idle frames, one that times a presented window) fail 21, 5 and 1, and the oracle
+rejects each. Timers, input and the work queue still run on every Godot frame, and five
+checks of the Animated record were renamed on purpose (its executed files keep the
+history). Exploratory headed observations on a 120 Hz Mac: V-Sync on, 720 of 720 frames
+ticked at 120.0 per second; V-Sync off, 166 of 2,400 at 114.6 per second;
+`Engine.max_fps` 60, 360 of 360. The clock has no visual output, so there is no capture.
+Open: regular presentation timestamps, timers quantized to ticks, and `ADAPTIVE` and
+`MAILBOX` V-Sync beyond the unit test. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

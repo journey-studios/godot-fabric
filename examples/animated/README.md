@@ -10,9 +10,10 @@ npm run test:animated
 RN's original `Animated`, `Easing`, `useAnimatedValue` and `TouchableOpacity`
 through the public `react-native` import. A box moves, rotates and fades with
 `useNativeDriver: true`: RN's own C++ Native Animated and AnimationBackend
-animate it, and Godot's frame tick is their clock. The box's Control changes on
-every frame without a React commit; only the status text re-renders, when the
-animation ends. The two buttons are `TouchableOpacity`: a press dims the button to
+animate it, and the host's [frame clock](../../docs/evidence/frame-clock/README.md) is
+their clock: its ticks come at the display's pace, not on every Godot frame. The box's
+Control changes on every tick without a React commit; only the status text re-renders,
+when the animation ends. The two buttons are `TouchableOpacity`: a press dims the button to
 its `activeOpacity` through the same native driver, and release brings it back
 over RN's 250 ms timing. The launcher entry is the interactive demo;
 `npm run test:animated` is the [evidence](../../docs/evidence/native-animated/README.md)
@@ -29,8 +30,8 @@ has delivered no frame.
 ![The Run button dimmed while the mouse is down](../../docs/evidence/native-animated/animated-pressed.png)
 
 **Press** holds the mouse down on Run. `TouchableOpacity` dims to its
-`activeOpacity` (0.4) with a native timing of 0 ms, so the very next frames show
-the button dimmed while the box has not moved.
+`activeOpacity` (0.4) with a native timing of 0 ms, so the next ticks show the
+button dimmed while the box has not moved.
 
 ![The box part way along its track, rotated and half faded](../../docs/evidence/native-animated/animated-mid-animation.png)
 
@@ -93,7 +94,7 @@ function Slide() {
 
 | Driver | Who advances the animation | Who updates the Controls |
 | --- | --- | --- |
-| `useNativeDriver: true` | RN's `AnimatedModule` and `AnimationBackend` in C++, one frame per Godot frame | The backend, directly, without a commit |
+| `useNativeDriver: true` | RN's `AnimatedModule` and `AnimationBackend` in C++, one frame per tick of the host's frame clock | The backend, directly, without a commit |
 | `useNativeDriver: false` | RN's JS drivers on `requestAnimationFrame` | `setNativeProps` per frame, plus a React commit 48 ms after the last one |
 
 ## Limits

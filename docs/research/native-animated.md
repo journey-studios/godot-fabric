@@ -108,6 +108,12 @@ frames, not 18. RN's drivers only need a timestamp per frame, and Godot has no f
 callback with a vsync timestamp, so the tick the host already reads for
 `requestAnimationFrame` is the timestamp.
 
+> Later note: the [frame clock slice](frame-clock.md) put a display link between those
+> Godot frames and the backend. It runs the frame callbacks and the backend only on the
+> ticks it decides, at a display's pace (never two within half a refresh period),
+> so the 45 frames of the paragraph above are what this slice's runs saw of a loop
+> nothing paced, and the timestamp is the tick's.
+
 ## The mapping
 
 - **Flags.** `native/register.cpp` overrides RN's feature flags once, at extension
@@ -122,10 +128,13 @@ callback with a vsync timestamp, so the tick the host already reads for
   Several roots of one application share it.
 - **The choreographer is the frame tick.** `resume()` and `pause()` only record
   that the backend has animations; the runtime calls `frame(timestamp)` once per
-  Godot frame, after the frame callbacks (`requestAnimationFrame`) and the
-  microtask drain, and never after the application stops. A batch that JS
-  flushes in that tick therefore reaches the backend's next frame at most one
-  Godot frame later, which the probe measures. The choreographer's own `now()`,
+  tick of the host's frame clock, after the frame callbacks (`requestAnimationFrame`)
+  and the microtask drain, and never after the application stops. A batch that JS
+  flushes in that tick therefore reaches the backend's next tick, which the probe
+  measures. (When this slice ran, every Godot frame was that tick and the probe
+  asserted the very next frame; the [frame clock slice](frame-clock.md) made ticks
+  display-paced, and the probe asserts that the first tick after the call delivers
+  the backend's first frame.) The choreographer's own `now()`,
   which stamps updates pushed between frames, reads the same clock as the frame
   timestamps, since RN's default `HighResTimeStamp` is another clock on some
   platforms.
@@ -173,7 +182,7 @@ The [fixture](../../tests/native-animated-fixture.jsx) runs the experiment in
 roots of one application, with both drivers, and logs everything JS observes in
 order, each entry stamped with `Date.now()`. The
 [probe](../../tests/native-animated-probe.gd) reads, once per Godot frame and before
-the application's next tick, the timestamp the host delivered to the backend, the
+the application's next frame, the timestamp of the tick the host delivered to the backend, the
 backend's counters and the opacity, position and angle of the real Controls: what
 that frame applied. Mouse and touch presses on the `TouchableOpacity` are actual
 Godot input events.

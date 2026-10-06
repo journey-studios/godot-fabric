@@ -506,6 +506,50 @@ O RN documenta [timers e RAF](https://reactnative.dev/docs/timers) e
 precisa cobrir o pump do runtime e callbacks nativos; a direção aprovada não
 certifica esse comportamento no protótipo.
 
+**Relógio de frames (regra implementada no protótipo):** o RN executa os callbacks de
+`requestAnimationFrame` e os frames do Native Animated a partir do display link da
+plataforma (`CADisplayLink` no iOS, `Choreographer` no Android), que nunca dispara
+duas vezes dentro de um período de atualização e, depois de uma parada, dispara uma vez
+e atrasado, sem repor os frames perdidos. O host tem um único relógio de frames,
+`native/frame_clock.h`, o único lugar em que a cadência é decidida. A cada frame do
+Godot o runtime o consulta com o instante do frame, a taxa de atualização que a tela da
+janela informa, o modo de apresentação da janela e se algo consome frames (callbacks de
+frame pendentes ou um backend do Native Animated com uma animação a rodar). Só um *tick*
+executa os callbacks e o frame de animação, ambos com o timestamp do tick; timers,
+input, a fase do host e a fila de trabalho seguem a cada frame do Godot. Um frame só é
+tick se há consumidor, e então o modo decide:
+
+- **Presentation** (janela numa tela real, com V-Sync ligado ou adaptativo): todo frame
+  com consumidor é tick. O motor bloqueia na tela e apresenta cada frame do processo
+  como uma imagem; o tempo entre os frames do Godot não diz nada aqui, porque a CPU
+  corre à frente da tela e o motor encadeia os frames.
+- **Time** (headless, V-Sync desligado ou mailbox, ou desconhecido): com `T = 1000 / R`
+  ms, sendo `R` a taxa que a tela da janela informa quando positiva e finita, e 60 caso
+  contrário (o fallback do próprio Godot e o intervalo de um frame que o RN assume), o
+  frame no instante `t` é tick se, e somente se, nenhum tick serviu um consumidor ainda,
+  ou `t − (frame anterior do Godot) ≥ T / 2`, ou `t − (tick anterior) ≥ T`. Todo frame do
+  Godot, tick ou não, é o frame anterior do seguinte; só um tick é o tick anterior.
+
+Daí decorre, no modo Time: dois ticks nunca ficam mais próximos que `T / 2`; um loop
+limitado à taxa de atualização (`Engine.max_fps`) ou mais lento faz tick em todo frame
+enquanto o jitter ficar abaixo de `T / 2`; um loop mais rápido que `T / 2` faz tick cerca
+de uma vez por `T`; uma parada dá um tick tardio, e os frames de recuperação atrás dele
+esperam; depois de ocioso, o primeiro frame com consumidor faz tick na hora, como um
+display link iniciado sob demanda. O modo Time serve só a loops que nada pacia: aplicado
+a um loop apresentado, descartaria frames que chegam à tela. O modo vem da janela
+(`FrameClock::detect_pacing`): headless e V-Sync desligado ou mailbox dão Time, V-Sync
+ligado ou adaptativo dá Presentation, e a origem aparece no `snapshot().frameClock`.
+
+Esta regra ainda não faz: timestamps regulares de apresentação como o `targetTimestamp`
+do iOS (um tick de Presentation carrega o tempo de CPU do frame, então os passos entre
+ticks são tão irregulares quanto esses frames); quantizar `setTimeout` e `setInterval` a
+ticks (os timers do RN rodam em frames de display e os do host seguem a cada frame do
+Godot); nem a regra de retomada de timeouts vencidos, intervals e animações depois da
+suspensão do OS, que segue a especificar. `ADAPTIVE` e `MAILBOX` só têm o teste de
+unidade como cobertura: o renderizador medido os devolve como `ENABLED`. A
+[evidência](evidence/frame-clock/README.md) e a [pesquisa](research/frame-clock.md)
+registram o que foi executado, localmente, com a CI hospedada pendente.
+
 ### Aceitação do tema 4
 
 Uma surface dentro de um Container recebe constraints corretas. Intervenções

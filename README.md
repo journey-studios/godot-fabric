@@ -296,7 +296,7 @@ The [Animated example](examples/animated/README.md) runs React Native's original
 `Animated`, `Easing`, `useAnimatedValue(XY)` and `TouchableOpacity` from the public
 import. The JS driver advances on `requestAnimationFrame`; with `useNativeDriver`,
 RN's own C++ `AnimatedModule` and shared `AnimationBackend` run timing, spring and
-decay with Godot's frame tick as their clock and update the Controls without a
+decay with the host's frame clock as their clock and update the Controls without a
 React commit, in two roots of one application: 75 headless checks recomputed frame
 by frame by an independent oracle. The preceding host fails exactly its 59
 normative checks, and hosts that hand the backend seconds or leave the JS thread's
@@ -327,6 +327,22 @@ checks against values derived from the JSX with an independent oracle; the prece
 host fails exactly the 37 that need the collapse, and a retained sabotage of the pointer
 projection fails exactly 2. 3D, a weight other than 1 and out-of-range transforms remain
 rejected. [Evidence](docs/evidence/singular-transforms/README.md).
+
+The [frame clock record](docs/evidence/frame-clock/README.md) makes
+`requestAnimationFrame` callbacks and RN's Native Animated frames run at a display
+link's cadence instead of on every Godot frame: a headless, uncapped or stalled loop
+delivered hundreds of frames a second or frames 0.4 ms apart, which ended native decays
+early and flaked hosted CI. One host clock decides, once per Godot frame, whether the
+frame is a tick. With V-Sync on a real display every frame with a consumer is a tick;
+otherwise (headless, V-Sync off) a frame ticks when it starts at least half a refresh
+period after the previous frame or a whole period after the last tick, at the rate the
+display reports (60 Hz when it reports none). Timers, input and the work queue still run
+on every Godot frame. 42 headless checks over eight loop paces, recomputed by an
+independent oracle from the frame times the host reports; the preceding host fails
+exactly the 29 cadence checks and three retained sabotages fail 21, 5 and 1. The clock
+has no visual output, so there is no example scene or screenshot. Timers are not
+quantized to ticks, presented frames carry CPU time and not the display's regular
+timestamp, and real displays beyond one exploratory headed run are not certified.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -587,6 +603,7 @@ npm run test:pointers:geometry          # pinned RN counterexamples and real Her
 npm run test:pointers:interest          # original Map query and native View pointerdown interest
 npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
+npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
