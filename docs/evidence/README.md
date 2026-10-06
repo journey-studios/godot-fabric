@@ -359,9 +359,11 @@ separate commit hardens the Animated example's capture check. One capture. Hoste
 pending.
 
 The [singular transforms record](singular-transforms/README.md) renders a transform
-with no inverse as RN does (nothing of the View or its subtree drawn or hit, no
-error, restored by the next invertible transform) instead of throwing
-`E_TRANSFORM_SINGULAR`. The transform step returns an explicit planar result that can
+with no inverse as RN does (the View neither drawn nor hit, no error, restored by the
+next invertible transform) instead of throwing `E_TRANSFORM_SINGULAR`; the host hides
+its subtree too, as Android does and iOS does when the container clips, and does not
+reproduce the descendant hits iOS still allows under an unclipped, overflowing
+container (an open item). The transform step returns an explicit planar result that can
 be collapsed (a singular matrix, or one whose scale rounds to zero in a float), the
 runtime hides the Control in the one place visibility is decided and keeps its last
 invertible transform, and pointer projection treats a target or capture owner inside a
@@ -372,9 +374,10 @@ pointer captured by a View that collapses mid-gesture), 49 headless checks and 5
 the renderer capture, compared with values derived from the JSX by an independent
 oracle; the preceding host fails exactly the 37 normative checks and a retained
 sabotage of the pointer projection fails exactly 2. The public rejection cases are six
-again (61 checks), the input guards 25 and the affine factor test 57,703. Keyboard
-focus is released by a native-driver collapse (asserted) and kept by a React-commit one
-(an exploratory observation). One capture. Hosted CI pending.
+again, not the checkpoint's six (perspective, `rotateX`, a weight other than 1 and three
+out-of-range cases; 61 checks), the input guards 25 and the affine factor test 57,703.
+Keyboard focus is released by a native-driver collapse (asserted) and kept by a
+React-commit one (an exploratory observation). One capture. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

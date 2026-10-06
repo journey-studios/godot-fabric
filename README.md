@@ -51,7 +51,9 @@ The later [uniform scale record](docs/evidence/uniform-scale/README.md) accepts 
 uniform `scale`, static or animated, on the same Control and extends the rejection
 cases to eight, and the
 [singular transforms record](docs/evidence/singular-transforms/README.md) collapses
-singular ones as RN does, which brings the rejection cases back to six.
+singular ones as RN does, which leaves six rejection cases again, though not the
+checkpoint's six: perspective, `rotateX`, a weight other than 1 and three out-of-range
+cases.
 
 The [read-only tree example](examples/tree/README.md) exercises original RN
 documents, ID lookup, logical traversal and collection snapshots across two
@@ -318,13 +320,13 @@ mounts RN's singular `transform` styles in eight Hermes applications: `scale: 0`
 `scaleX: 0`, a rank-one matrix, a matrix that only loses rank in a float, an
 `Animated.View` scaled by `useNativeDriver` from 0 to 1 and from 1 to 0, a scale that
 React state moves through 0, and a pointer captured by a View that collapses
-mid-gesture. RN draws and hits nothing of such a view and raises no error; the host
-hides the Control, keeps its last invertible transform and shows it again with the next
-invertible one. 49 headless checks against values derived from the JSX with an
-independent oracle; the preceding host fails exactly the 37 that need the collapse, and
-a retained sabotage of the pointer projection fails exactly 2. 3D, a weight other than 1
-and out-of-range transforms remain rejected.
-[Evidence](docs/evidence/singular-transforms/README.md).
+mid-gesture. RN draws and hits no such view and raises no error; the host hides the
+Control and its subtree (as Android does, and iOS when the container clips), keeps its
+last invertible transform and shows it again with the next invertible one. 49 headless
+checks against values derived from the JSX with an independent oracle; the preceding
+host fails exactly the 37 that need the collapse, and a retained sabotage of the pointer
+projection fails exactly 2. 3D, a weight other than 1 and out-of-range transforms remain
+rejected. [Evidence](docs/evidence/singular-transforms/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

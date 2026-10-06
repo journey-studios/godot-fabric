@@ -80,16 +80,20 @@ node scripts/transform-singular-sabotage.mjs # rebuilds without the pointer proj
 
 ![Singular transforms: collapsed and shown Views](../../docs/evidence/singular-transforms/transform-singular.png)
 
-RN draws and hits nothing of a view whose planar transform has no inverse, and raises
-no error: `scale: 0`, `scaleX: 0`, a rank-one matrix and every animation that starts or
-ends at 0 are such views, and the next invertible transform shows the view again. The
-host used to throw `E_TRANSFORM_SINGULAR` for them. It now hides the Control and its
-subtree, keeps the last invertible transform the Control carried and raises nothing.
+RN draws and hits no view whose planar transform has no inverse, and raises no error:
+`scale: 0`, `scaleX: 0`, a rank-one matrix and every animation that starts or ends at 0
+are such views, and the next invertible transform shows the view again. The host used to
+throw `E_TRANSFORM_SINGULAR` for them. It now hides the Control and its subtree, keeps
+the last invertible transform the Control carried and raises nothing. Hiding the subtree
+is deliberate: Android skips the child and its subtree and so does iOS when the
+container clips, while iOS's `hitTest:` can still reach descendants of an unclipped
+container with a nonzero `overflowInset`, which the host does not reproduce.
 [singular.gd](singular.gd) mounts eight cases from [App.jsx](App.jsx), each in a fresh
 Hermes application and a Surface of its own. In every card the blue-grey plate is a
-`Pressable` behind the box, the box is a `Pressable` (a `View` in the capture card) with a
-white marker child, and the pale outline is the layout box. The caption counts the real mouse presses each one
-received: a press where the collapsed box would be reaches the plate.
+`Pressable` behind the box, the box is a `Pressable` (a `View` in the capture card) with
+a white marker child, and the pale outline is the layout box. The caption counts the
+real mouse presses each one received: a press where the collapsed box would be reaches
+the plate.
 
 The top row is collapsed: `scale: 0`; `scaleX: 0`; the rank-one matrix `[1 5; 5 25]`;
 and `[2u u; u u]` for the smallest float subnormal `u`, which is not singular but loses
@@ -118,21 +122,23 @@ callbacks. A point inside the rotated parent's AABB but outside its actual quad
 must not activate the expanded hitSlop. Removing a held target retires its
 responder; a later physical release cannot resurrect it.
 
-The executed [checkpoint](../../docs/evidence/transforms/README.md) retains
-309 headless and 345 native assertions, 33 RGBA samples, three actual captures
-and the expected failures against the preceding host. Six isolated public guard
-cases pass 61 checks (perspective, `rotateX`, a weight other than 1 and three
-out-of-range cases), including precise errors, partial-mount cleanup, timers and
-animation frames. The checkpoint's `singular` and `rank-one` cases became positive ones
-in the [singular transforms record](../../docs/evidence/singular-transforms/README.md),
-and the `rotateX` and weight cases came with the
-[uniform scale record](../../docs/evidence/uniform-scale/README.md). The
-separate [input guard](input-guards.gd) passes
-25 checks: finite local embeddings whose composition overflows, an ignored
-START, restoration followed by a genuine press, and held-contact cancellation
-after overflow or a singular external Surface transform. Cancellation preserves
-the last valid coordinates, emits no NaN or completed press and cannot be
-revived by the later physical release. These results are from macOS arm64 with
+The executed [checkpoint](../../docs/evidence/transforms/README.md) retains 309 headless
+and 345 native assertions, 33 RGBA samples, three actual captures, the expected failures
+against the preceding host and six isolated public rejection cases with 61 checks: zero
+scale, a rank-one matrix, perspective, a large determinant, a small determinant and a
+large pivot translation. The current guard ([guards.gd](guards.gd)) also has six
+isolated public cases and 61 checks, but not the same six: perspective, `rotateX`, a
+weight other than 1 and the checkpoint's three out-of-range cases. Zero scale and the
+rank-one matrix became positive cases in the
+[singular transforms record](../../docs/evidence/singular-transforms/README.md), and
+`rotateX` and the weight came with the
+[uniform scale record](../../docs/evidence/uniform-scale/README.md). The current cases
+include precise errors, partial-mount cleanup, timers and animation frames. The separate
+[input guard](input-guards.gd) passes 25 checks: finite local embeddings whose
+composition overflows, an ignored START, restoration followed by a genuine press, and
+held-contact cancellation after overflow or a singular external Surface transform.
+Cancellation preserves the last valid coordinates, emits no NaN or completed press and
+cannot be revived by the later physical release. These results are from macOS arm64 with
 official Godot 4.7.2 and RN 0.87.1.
 
 ## Supported boundary

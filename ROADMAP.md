@@ -330,7 +330,8 @@ Next in sequence 3: continue the public HostInstance/native-command branch.
 host accept RN's `scale`, shares one planar rule between the transform adapter and
 pointer projection, and brings the public rejection cases to eight and 81 checks; the
 collapsed singular transforms section after it renders singular JSX transforms as RN
-does and brings them back to six and 61.)
+does and brings them back to six and 61, a different six from the checkpoint's:
+perspective, `rotateX`, a weight other than 1 and three out-of-range cases.)
 
 The [completed hosted run](https://github.com/journey-studios/godot-fabric/actions/runs/37171931529) at `5885331` passed contracts, native cold start, original iOS/Android references and parity comparison. The dated earlier pending observation remains in [ci.json](docs/evidence/transforms/ci.json). These limited reference fixtures do not close full transform parity, the Godot mobile ports or GF-08.
 
@@ -2328,18 +2329,21 @@ No whole GF, checkpoint, weight or denominator closes.
 GF-10 stays **In progress**; this is not its first slice, so none of its checkpoints
 changes, and no whole GF, weight or denominator closes. The
 [singular transforms evidence](docs/evidence/singular-transforms/README.md) makes the
-host render a View whose planar `transform` has no inverse as RN does: neither the View
-nor its subtree is drawn or hit, no error is raised, and the next invertible transform
-shows it again. `Transform::Scale` flattens a factor below 1e-5 to exactly 0 (`isZero`),
+host render a View whose planar `transform` has no inverse as RN does: the View is
+neither drawn nor hit, no error is raised, and the next invertible transform shows it
+again; the host hides its subtree too, as Android does and iOS does when the container
+clips. `Transform::Scale` flattens a factor below 1e-5 to exactly 0 (`isZero`),
 so `scale: 0`, `scaleX: 0` and every animation that starts or ends at 0 reach the host
 as an exactly singular matrix, and a `matrix` entry is not flattened, so `[1 5; 5 25]`
 is singular by itself; the host threw `E_TRANSFORM_SINGULAR` for all of them, which
 aborted the commit that mounted a static `scale: 0` and failed the native-driver frame
-that reached 0 in an entrance or an exit. iOS refuses hits once the determinant of the
-layer's 2×2 part is below 1e-6 and Android's `TouchTargetHelper` skips a child whose
-matrix does not invert, while RN's C++ never inverts a transform: `onLayout` stays
-Yoga's frame, and `getBoundingClientRect`, `measure` and `measureInWindow` report the
-degenerate box (the bounding box of the four mapped corners).
+that reached 0 in an entrance or an exit. iOS refuses the hit on the view itself once
+the determinant of the layer's 2×2 part is below 1e-6 (its `hitTest:` can still reach
+descendants when the container does not clip and has a nonzero `overflowInset`) and
+Android's `TouchTargetHelper` skips a child whose matrix does not invert, with its
+subtree, while RN's C++ never inverts a transform: `onLayout` stays Yoga's frame, and
+`getBoundingClientRect`, `measure` and `measureInWindow` report the degenerate box (the
+bounding box of the four mapped corners).
 
 The transform step now returns an explicit result, `PlanarTransform` in
 `native/affine_transform.h`: the planar factors, or `collapsed` for a singular matrix
@@ -2371,8 +2375,10 @@ from `6fbfb18`) fails exactly the 37 normative checks, with `E_TRANSFORM_SINGULA
 first error of every singular mount (`E_TRANSFORM_RANGE` for the float rank loss), and a
 retained sabotage of the pointer projection (`scripts/transform-singular-sabotage.mjs`)
 fails exactly the two capture checks, rejected by the oracle. The public rejection cases
-are six again, since `singular` and `rank-one` are positive cases now, and pass 61
-checks; the input guards pass 25 and the affine factor test 57,703.
+are six again but not the checkpoint's six: `singular` and `rank-one` are positive cases
+now, and `rotateX` and a weight other than 1 joined perspective and the three
+out-of-range cases; they pass 61 checks. The input guards pass 25 and the affine factor
+test 57,703.
 
 Open: a touch in progress inside a collapsed View is canceled where RN keeps it, and
 keyboard focus inside one is released when the native driver collapses it (asserted by
@@ -2381,7 +2387,10 @@ because the host's transaction restores the focus owner as it already does for
 `display: none` (an exploratory observation the suite does not assert; RN keeps focus
 in both). A guard on `is_visible_in_tree()` in that restoration would make the two paths
 agree, and a real zero scale with a guarded projection would keep touches and focus
-through a collapse; both are open. iOS refuses hits below a determinant of 1e-6 (a scale
+through a collapse; both are open. On iOS, descendants of a collapsed View whose
+container does not clip and has a nonzero `overflowInset` can still be hit; the host
+skips the whole subtree, as Android does and iOS does for a clipping container, so those
+hits are not reproduced (open). iOS refuses hits below a determinant of 1e-6 (a scale
 of about 1e-3) and Android treats a 3×3 determinant below 1e-5 as singular, while the
 host collapses only an exactly singular matrix or a scale that rounds to zero in a
 float. 3D, `perspective`, `rotateX`/`rotateY`, a weight other than 1 and

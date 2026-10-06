@@ -254,7 +254,11 @@ A singular transform (`scale: 0`, `scaleX: 0`, a rank-one matrix, an animation t
 platforms do. The Control and its subtree are hidden (nothing is drawn or hit and the
 contacts inside are canceled), the Control keeps the last invertible transform it
 carried, no error is raised, and the next invertible transform restores it, through a
-React commit or through the native driver. Layout, `onLayout` and RN's measurement APIs
+React commit or through the native driver. Hiding the subtree is a deliberate choice:
+Android skips a child whose matrix does not invert together with its subtree, and so
+does iOS when the container clips, but iOS's `hitTest:` can still reach descendants of
+an unclipped container with a nonzero `overflowInset`, which the host does not
+reproduce. Layout, `onLayout` and RN's measurement APIs
 stay RN's own, so a singular matrix reports a degenerate box. The transform step returns
 that result explicitly (`PlanarTransform` in `native/affine_transform.h`) and visibility
 is decided in one place, `displayType != None && !collapsed`. Keyboard focus inside a

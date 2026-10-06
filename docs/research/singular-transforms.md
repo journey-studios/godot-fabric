@@ -11,8 +11,9 @@ native coordinate precision still fail with their own errors. Hosted CI is pendi
 ## What RN does
 
 A view whose planar transform is singular (no inverse) is not drawn and is not hit on
-either platform, and RN raises no error; the next update with an invertible transform
-draws and hits it again, because nothing is kept.
+either platform, and RN raises no error; what happens to its descendants differs
+between the platforms (below). The next update with an invertible transform draws and
+hits the view again, because nothing is kept.
 
 - **Where the zero comes from.** `Transform::Scale` flattens a factor whose magnitude
   is below 1e-5 to exactly 0 (`ReactCommon/react/renderer/graphics/Transform.cpp`,
@@ -23,21 +24,25 @@ draws and hits it again, because nothing is kept.
   `BaseViewProps::resolveTransform` only multiplies the operations and wraps them in
   the `transformOrigin` translations (`BaseViewProps.cpp`, lines 526-561).
 - **iOS.** The matrix goes to the layer's `CATransform3D`, and a layer whose 2D part
-  collapses draws nothing. `RCTViewComponentView` refuses the hit when the determinant
-  of that 2×2 part is below 1e-6 (`RCTLayerTransformCollapsesAxis`,
-  `React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm`, lines 100-118),
-  and `betterHitTest` (lines 738-785) only abandons the subtree when the view clips its
-  content. RN's own test covers `scaleX: 0`, `scaleY: 0` and a view scaled to 0.9 and then
-  to 0 (`React/Tests/Mounting/RCTViewComponentViewTests.mm`, lines 145-184), always the
-  hit on the view itself: the children of a collapsed view that does not clip are outside
-  what RN tests.
+  collapses draws nothing. `RCTViewComponentView` refuses the hit on the view itself when
+  the determinant of that 2×2 part is below 1e-6 (`RCTLayerTransformCollapsesAxis`, which
+  makes `pointInside:` return NO,
+  `React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm`, lines 100-118). The
+  descendants are another case: `betterHitTest` (lines 738-785) abandons the subtree only
+  when the container clips or has no `overflowInset` and the point is outside (lines
+  754-760); with a container that does not clip and has a nonzero `overflowInset` it walks
+  the subviews (lines 762-767), so `hitTest:` can still reach descendants of the collapsed
+  view. RN's own test covers `scaleX: 0`, `scaleY: 0` and a view scaled to 0.9 and then to
+  0 (`React/Tests/Mounting/RCTViewComponentViewTests.mm`, lines 145-184), always the hit
+  on the view itself.
 - **Android.** `BaseViewManager` resets the decomposition context, which zeroes its
   scale (`MatrixMathHelper.kt`, lines 487-509), and `MatrixMathHelper.decomposeMatrix`
   returns early for a singular matrix, one whose 3×3 determinant is below 1e-5
   (`MatrixMathHelper.kt`, lines 22-29 and 97-114), so the view is set to scale 0
   (`BaseViewManager.java`, lines 611-632).
   `TouchTargetHelper.getChildPoint` returns `false` for a child whose matrix does not
-  invert and the child is skipped (`TouchTargetHelper.kt`, lines 216-220 and 282-321).
+  invert and the child is skipped with its subtree (`TouchTargetHelper.kt`, lines 216-220
+  and 282-321).
 - **Fabric's C++ never inverts a transform.** `LayoutableShadowNode::
   computeRelativeLayoutMetrics` applies each node's transform to its frame with
   `Transform::applyWithCenter`, the bounding box of the four mapped corners
@@ -164,6 +169,16 @@ the owner's layout coordinates, and the oracle rejects the report.
   end, as it already does for `display: none`; that is an exploratory observation, not
   asserted by the suite. RN keeps the focus in both. A guard on `is_visible_in_tree()` in
   that restoration would make the two paths agree and is an open item.
+- **Descendant hits on iOS.** iOS refuses the hit on the singular view itself, but
+  `hitTest:` still reaches its descendants when the container does not clip and has a
+  nonzero `overflowInset` (`RCTViewComponentView.mm`, lines 754-767); Android's
+  `TouchTargetHelper` skips the child and its subtree, and iOS does the same when the
+  container clips. The host hides and skips the whole subtree, so neither the View nor
+  its descendants are hit: a deliberate choice that matches Android and iOS's clipped
+  case. The descendant hits of an unclipped, overflowing container on iOS are not
+  reproduced and are an open item: they would need the descendants to stay visible and
+  hittable under a singular transform, which Godot does not represent (`Control.scale`
+  is never zero) without a projection per descendant.
 - **Thresholds.** iOS refuses hits below a determinant of 1e-6 (a scale of about 1e-3)
   and Android treats a 3×3 determinant below 1e-5 as singular, while the host collapses
   only where RN's own flattening makes the matrix exactly singular or the scale

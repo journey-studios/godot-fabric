@@ -1,22 +1,25 @@
 # Transforms singulares do RN em Controls planares do Godot: a View colapsa
 
-Esta fatia faz o host renderizar um transform planar singular como o RN: a View e a
-sub-árvore dela não são desenhadas nem recebem hit, nenhum erro é lançado, e tudo volta
-com a próxima transformada invertível. O `Transform::Scale` do RN zera todo fator de
-módulo menor que 1e-5, então `scale: 0`, `scaleX: 0` e toda animação que começa ou
-termina em 0 chegam ao host como uma matriz exatamente singular; uma matriz de posto 1
-também chega, e uma matriz que só perde o posto na precisão de um `float` (onde o
-Control guarda a escala) também. O host anterior lançava `E_TRANSFORM_SINGULAR` (ou
-`E_TRANSFORM_RANGE`, no posto perdido em `float`): um `scale: 0` estático derrubava o commit
-que o montava, e uma entrada ou saída animada derrubava o quadro que chegava a 0. Agora
-a etapa de transformação devolve um resultado explícito (`PlanarTransform`: os fatores,
-ou `collapsed`), o runtime esconde o Control no único ponto em que decide a visibilidade
-(`visible = displayType != None && !collapsed`), o Control guarda a última transformada
-invertível que carregou, e a projeção de ponteiros trata um alvo ou dono de captura
-dentro da sub-árvore colapsada como `display: none`. Oito aplicações Hermes novas, cada
-uma num Surface do Godot, comparam o Control, as medidas do RN, cliques reais e um
-ponteiro capturado com valores derivados da declaração JSX por um oráculo independente. O
-[recibo](report.json) fixa fontes, hashes, captura e resultados.
+Esta fatia faz o host renderizar um transform planar singular como o RN: a View não é
+desenhada nem recebe hit, nenhum erro é lançado, e tudo volta com a próxima transformada
+invertível. O host esconde também a sub-árvore da View, de propósito: é o que o Android faz
+(o `TouchTargetHelper` pula o filho e a sub-árvore dele) e o que o iOS faz quando o
+container recorta. O iOS ainda deixa o `hitTest:` chegar a descendentes de um container que
+não recorta e tem `overflowInset`, e esse hit o host não reproduz (item aberto, em Limites).
+O `Transform::Scale` do RN zera todo fator de módulo menor que 1e-5, então `scale: 0`,
+`scaleX: 0` e toda animação que começa ou termina em 0 chegam ao host como uma matriz
+exatamente singular; uma matriz de posto 1 também chega, e uma matriz que só perde o posto
+na precisão de um `float` (onde o Control guarda a escala) também. O host anterior lançava
+`E_TRANSFORM_SINGULAR` (ou `E_TRANSFORM_RANGE`, no posto perdido em `float`): um `scale: 0`
+estático derrubava o commit que o montava, e uma entrada ou saída animada derrubava o quadro
+que chegava a 0. Agora a etapa de transformação devolve um resultado explícito
+(`PlanarTransform`: os fatores, ou `collapsed`), o runtime esconde o Control no único ponto
+em que decide a visibilidade (`visible = displayType != None && !collapsed`), o Control
+guarda a última transformada invertível que carregou, e a projeção de ponteiros trata um
+alvo ou dono de captura dentro da sub-árvore colapsada como `display: none`. Oito aplicações
+Hermes novas, cada uma num Surface do Godot, comparam o Control, as medidas do RN, cliques
+reais e um ponteiro capturado com valores derivados da declaração JSX por um oráculo
+independente. O [recibo](report.json) fixa fontes, hashes, captura e resultados.
 
 | Lane executada | Checks | Observação |
 | --- | ---: | --- |
@@ -56,7 +59,8 @@ restaura a fonte byte a byte e reconstrói o host genuíno.
 ## O que o RN faz
 
 Uma View cuja transformada planar é singular (não tem inversa) não é desenhada nem recebe
-hit nas duas plataformas, e o RN não lança erro; a próxima atualização com uma transformada
+hit nas duas plataformas, e o RN não lança erro; o que acontece com os descendentes dela
+difere entre as plataformas (abaixo). A próxima atualização com uma transformada
 invertível a desenha e a acerta de novo, porque nada é guardado.
 
 - **De onde vem o zero.** O `Transform::Scale` zera o fator de módulo menor que 1e-5
@@ -67,21 +71,24 @@ invertível a desenha e a acerta de novo, porque nada é guardado.
   por si. O `BaseViewProps::resolveTransform` só multiplica as operações e as envolve nas
   translações do `transformOrigin` (`BaseViewProps.cpp`, linhas 526-561).
 - **iOS.** A matriz vai para o `CATransform3D` da camada e a view fica "visualmente
-  degenerada", nas palavras do próprio RN; o `RCTViewComponentView` recusa o hit quando o
-  determinante da parte 2×2 é menor que 1e-6 (`RCTLayerTransformCollapsesAxis`,
-  `React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm`, linhas 100-118, e o
-  `betterHitTest`, linhas 738-785, que só abandona a sub-árvore quando a view recorta o
-  conteúdo). O teste do próprio RN cobre `scaleX: 0`, `scaleY: 0` e uma view escalada a 0,9
-  e depois a 0 (`React/Tests/Mounting/RCTViewComponentViewTests.mm`, linhas 145-184), sempre
-  o hit na própria view: os filhos de uma view colapsada que não recorta ficam fora do que o
-  RN testa.
+  degenerada", nas palavras do próprio RN; o `RCTViewComponentView` recusa o hit na
+  própria view quando o determinante da parte 2×2 é menor que 1e-6
+  (`RCTLayerTransformCollapsesAxis`, que faz o `pointInside:` devolver NO,
+  `React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm`, linhas 100-118). Os
+  descendentes são outro caso: o `betterHitTest` (linhas 738-785) só abandona a sub-árvore
+  quando o container recorta ou não tem `overflowInset` e o ponto está fora (linhas
+  754-760); com um container que não recorta e tem `overflowInset` diferente de zero ele
+  percorre os filhos (linhas 762-767), então o `hitTest:` ainda pode chegar a descendentes
+  da view colapsada. O teste do próprio RN cobre `scaleX: 0`, `scaleY: 0` e uma view
+  escalada a 0,9 e depois a 0 (`React/Tests/Mounting/RCTViewComponentViewTests.mm`, linhas
+  145-184), sempre o hit na própria view.
 - **Android.** O `BaseViewManager` zera o contexto de decomposição, e o
   `MatrixMathHelper.decomposeMatrix` retorna cedo para uma matriz singular, de determinante
   3×3 menor que 1e-5 (`MatrixMathHelper.kt`, linhas 22-29 e 97-114, e o `reset` do contexto,
   que zera a escala, nas linhas 487-509), então a view recebe escala 0
   (`BaseViewManager.java`, linhas 611-632). O `TouchTargetHelper.getChildPoint`
-  devolve `false` para um filho de matriz não invertível e o filho é pulado
-  (`TouchTargetHelper.kt`, linhas 216-220 e 282-321).
+  devolve `false` para um filho de matriz não invertível e o filho é pulado, com a
+  sub-árvore dele (`TouchTargetHelper.kt`, linhas 216-220 e 282-321).
 - **O C++ do Fabric nunca inverte uma transformada.** O
   `LayoutableShadowNode::computeRelativeLayoutMetrics` aplica a transformada de cada nó ao
   frame com o `Transform::applyWithCenter`, a caixa envolvente dos quatro cantos
@@ -366,6 +373,16 @@ os exemplos de transforms e do Animated.
   arredonda a zero em `float`. Entre 1e-5 e 1e-3 o host mostra um Control de área menor que
   um pixel, que na prática nenhum ponteiro alcança; o limiar do iOS, 1e-6 no determinante,
   fica fora do colapso exato do host.
+- **Hit em descendentes no iOS.** O iOS recusa o hit na própria View singular, mas o
+  `hitTest:` ainda alcança descendentes quando o container não recorta e tem `overflowInset`
+  diferente de zero (`RCTViewComponentView.mm`, linhas 754-767); o Android pula o filho e a
+  sub-árvore dele, e o iOS faz o mesmo quando o container recorta. O host esconde a
+  sub-árvore inteira, então nem a View nem os descendentes recebem hit: uma escolha
+  deliberada, que coincide com o Android e com o caso recortado do iOS e não reproduz o hit
+  nos descendentes de um container que não recorta e transborda no iOS. Reproduzir esse hit
+  exigiria manter os descendentes visíveis e acertáveis sob uma transformada singular, o que
+  o Godot não representa (o `Control.scale` nunca é zero) sem uma projeção por descendente;
+  fica como item aberto.
 - **Payload do ponteiro.** O dono de captura colapsado recebe o payload original do RN (o
   ponto cliente menos a origem da caixa transformada dele), não coordenadas do Control; é o
   mesmo precedente do `display: none`.
