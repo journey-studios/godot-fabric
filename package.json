@@ -70,7 +70,8 @@
     "test:switch": "node --test tests/switch-native.test.mjs",
     "test:responders:shared-touches": "node --test tests/shared-touches-native.test.mjs",
     "test:touchables": "node --test tests/touchables-native.test.mjs",
-    "test:activity-indicator": "node --test tests/activity-indicator-native.test.mjs"
+    "test:activity-indicator": "node --test tests/activity-indicator-native.test.mjs",
+    "test:pointers:capture": "node --test tests/pointer-capture-notifications-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

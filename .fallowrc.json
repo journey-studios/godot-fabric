@@ -46,7 +46,8 @@
     "tests/shared-touches-fixture.jsx",
     "tests/touchables-fixture.jsx",
     "tests/touchables-animated-fixture.jsx",
-    "tests/activity-indicator-fixture.jsx"
+    "tests/activity-indicator-fixture.jsx",
+    "tests/pointer-capture-notifications-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
