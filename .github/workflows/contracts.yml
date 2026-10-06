@@ -43,7 +43,7 @@ jobs:
           ditto -x -k .deps/godot.zip .deps/godot
           echo "GODOT_BIN=$GITHUB_WORKSPACE/.deps/godot/Godot.app/Contents/MacOS/Godot" >> "$GITHUB_ENV"
       - run: npm run setup
-      - name: Reconstruct affine matrices and reject unsupported transforms
+      - name: Reconstruct affine matrices, collapse singular ones and reject unsupported transforms
         run: .deps/build/affine_transform_test
       - run: npm run test:codegen:native -- --node "$(command -v node)"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -89,6 +89,9 @@ jobs:
             build/transforms-uniform-scale.json
             build/transforms-uniform-scale-current-report.json
             build/transforms-uniform-scale-current.log
+            build/transforms-singular.json
+            build/transforms-singular-current-report.json
+            build/transforms-singular-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:runtime
       - run: npm run test:application

@@ -4,14 +4,23 @@
 #include <limits>
 
 namespace fabric_godot {
-void apply_transform(godot::Control &control, const facebook::react::ViewProps &props,
+PlanarTransform resolve_transform(const facebook::react::ViewProps &props,
     const facebook::react::LayoutMetrics &metrics) {
-  const auto factors = affine_factors(props.resolveTransform(metrics).matrix);
+  const auto transform = planar_transform<godot::real_t>(props.resolveTransform(metrics).matrix);
+  if (transform.collapsed)
+    return transform;
+  const auto &factors = transform.factors;
   for (auto value : {factors.scale_x, factors.scale_y, factors.translate_x, factors.translate_y})
     if (!std::isfinite(value) || std::abs(value) > std::numeric_limits<godot::real_t>::max())
       throw std::runtime_error("E_TRANSFORM_RANGE: transform exceeds native coordinate precision");
-  if (godot::real_t(factors.scale_x) == 0 || godot::real_t(factors.scale_y) == 0)
-    throw std::runtime_error("E_TRANSFORM_RANGE: transform loses rank at native coordinate precision");
+  return transform;
+}
+
+void apply_transform(godot::Control &control, const PlanarTransform &transform,
+    const facebook::react::LayoutMetrics &metrics) {
+  if (transform.collapsed)
+    return;
+  const auto &factors = transform.factors;
   const auto center = control.get_size() / 2;
   const godot::Vector2 position{static_cast<godot::real_t>(metrics.frame.origin.x + factors.translate_x),
       static_cast<godot::real_t>(metrics.frame.origin.y + factors.translate_y)};

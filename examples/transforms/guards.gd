@@ -1,9 +1,10 @@
 extends SceneTree
 
-const MODES := ["singular", "rank-one", "3d", "rotate-x", "w-not-one", "range-large", "range-small", "range-pivot"]
+# Singular transforms are not rejections: scale: 0, scaleX: 0 and a rank-one matrix
+# collapse their View (examples/transforms/singular.gd). What stays an error is
+# what a Control cannot carry: 3D, a weight other than 1 and the native range.
+const MODES := ["3d", "rotate-x", "w-not-one", "range-large", "range-small", "range-pivot"]
 const EXPECTED := {
-  "singular": "E_TRANSFORM_SINGULAR: singular transforms are not implemented",
-  "rank-one": "E_TRANSFORM_SINGULAR: singular transforms are not implemented",
   "3d": "E_TRANSFORM_3D: perspective and 3D transforms are not implemented",
   # A rotation about x couples z into y (m[6], m[9]); a weight other than 1
   # would divide x and y. A uniform scale touches neither, so both stay rejected.
@@ -111,7 +112,7 @@ func run_probe() -> void:
   var runtime_ids: Array = cases.map(func(entry: Dictionary) -> Variant: return entry.afterRejection.get("runtimeId", -1))
   var unique_ids: Dictionary = {}
   for id in runtime_ids: unique_ids[id] = true
-  check(cases.size() == MODES.size() and unique_ids.size() == MODES.size(), "All eight rejected public transforms run in independent Hermes application lifetimes")
+  check(cases.size() == MODES.size() and unique_ids.size() == MODES.size(), "All six rejected public transforms run in independent Hermes application lifetimes")
   var failed: bool = cases.size() != MODES.size() or checks.any(func(entry: Dictionary) -> bool: return not entry.passed)
   var report := {"schemaVersion": 1, "scenario": "transforms-guards", "status": "failed" if failed else "passed", "failed": failed,
     "engine": "hermes", "renderer": "fabric", "godot": Engine.get_version_info().string, "reactNative": "0.87.1", "displayServer": DisplayServer.get_name(),
