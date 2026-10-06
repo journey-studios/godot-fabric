@@ -24,16 +24,31 @@ function fixture(t, files) {
   }
   return directory;
 }
-async function compile(directory, entry) {
+async function compile(directory, entry, options = {}) {
   return build({absWorkingDir: directory, entryPoints: [entry], bundle: true,
     write: false, format: "cjs", platform: "neutral", mainFields: ["main"],
-    define: {"process.env.NODE_ENV": '"production"'}, metafile: true, plugins: plugins()});
+    define: {"process.env.NODE_ENV": '"production"'}, metafile: true, plugins: plugins(), ...options});
 }
 function execute(result, globals = {}) {
   const module = {exports: {}};
   vm.runInNewContext(result.outputFiles[0].text, {module, exports: module.exports, ...globals});
   return module.exports;
 }
+
+test("only RN's original lists resolve RN's unexported feature flags", async t => {
+  // The public FlatList reaches @react-native/virtualized-lists, whose
+  // VirtualizedList imports ReactNativeFeatureFlags by a deep RN path.
+  const lists = fixture(t, {"App.js": 'import {FlatList} from "react-native"; export default FlatList;'});
+  const inputs = Object.keys((await compile(lists, "App.js")).metafile.inputs);
+  for (const suffix of ["node_modules/@react-native/virtualized-lists/Lists/VirtualizedList.js",
+    "node_modules/react-native/src/private/featureflags/ReactNativeFeatureFlags.js", "src/lists.js"])
+    assert.ok(inputs.some(input => input.endsWith(suffix)), suffix);
+  // Project code keeps RN's package exports, which do not expose the module.
+  const project = fixture(t, {
+    "App.js": 'import flags from "react-native/src/private/featureflags/ReactNativeFeatureFlags"; export default flags;',
+  });
+  await assert.rejects(compile(project, "App.js", {logLevel: "silent"}), /is not defined by "exports"/);
+});
 
 test("project modules named like RN native seams retain their own implementation", async t => {
   const names = ["Utilities/Platform", "ReactNative/UIManager", "ReactNative/RendererProxy", "BatchedBridge/NativeModules"];

@@ -3,6 +3,7 @@
 #include <react/renderer/components/scrollview/ScrollViewShadowNode.h>
 #include <react/renderer/mounting/ShadowView.h>
 #include <folly/dynamic.h>
+#include <limits>
 #include <optional>
 
 namespace fabric_godot {
@@ -27,7 +28,8 @@ class ScrollAdapter {
   godot::Vector2 content_size_, offset_, drag_origin_, drag_offset_;
   std::optional<godot::Vector2> requested_offset_;
   bool dragging_{false};
-  int scrolls_{}, begins_{}, ends_{};
+  int scrolls_{}, throttled_{}, begins_{}, ends_{};
+  double last_scroll_ms_{-std::numeric_limits<double>::infinity()};
   godot::Vector2 maximum() const;
   void set_offset(godot::Vector2 value);
   void end_drag();

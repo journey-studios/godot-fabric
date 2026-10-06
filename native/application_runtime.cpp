@@ -1701,7 +1701,19 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (auto *scroll = found->second.scroll.get()) {
       const int tag = node->getTag(), surface_id = found->second.surface_id;
       const bool idle = !scroll->dragging();
-      if (scroll->command(name, args)) {
+      auto command_args = args;
+      if ((name == "scrollDragStart" || name == "scrollDragTo") && args.isArray() && args.size() == 2 &&
+          args[0].isNumber() && args[1].isNumber()) {
+        // JS sends page points. RN's native scroll views follow the finger in
+        // their own coordinates, so a flipped (inverted list) or scaled
+        // ScrollView still moves its content with the finger.
+        if (auto *host = roots.at(surface_id)->host()) {
+          const auto point = host->get_global_transform_with_canvas().xform(Vector2(args[0].asDouble(), args[1].asDouble()));
+          const auto local = fabric_godot::local_coordinate(found->second.control->get_global_transform_with_canvas(), point);
+          command_args = folly::dynamic::array(local.x, local.y);
+        }
+      }
+      if (scroll->command(name, command_args)) {
         // The drag now owns the contacts begun inside it, as RN's native
         // scroll views do when they start dragging.
         if (idle && scroll->dragging() && !roots.at(surface_id)->stopping) roots.at(surface_id)->pointer->takeover(tag);

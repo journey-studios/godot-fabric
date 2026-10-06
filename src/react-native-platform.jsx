@@ -17,6 +17,7 @@ import { PublicInput } from "./public-input";
 import TextInputState from "./text-input-state";
 import { validateButton, validateInput } from "./control-contracts.mjs";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
+import OriginalStyleSheet from "react-native/Libraries/StyleSheet/StyleSheet";
 export { default as NativeModules } from "./native-modules";
 export { default as NativeEventEmitter } from "react-native/Libraries/EventEmitter/NativeEventEmitter";
 export * as TurboModuleRegistry from "react-native/Libraries/TurboModule/TurboModuleRegistry";
@@ -34,10 +35,18 @@ export {
   I18nManager,
 } from "./platform-environment";
 export { useWindowDimensions } from "./window-dimensions";
+export {
+  FlatList,
+  SectionList,
+  VirtualizedList,
+  VirtualizedSectionList,
+} from "./lists";
 export { default as Platform } from "./platform";
 export const StyleSheet = {
   hairlineWidth: 1,
   create: (styles) => styles,
+  // RN's own compose, which VirtualizedList uses for its cells and headers.
+  compose: (style1, style2) => OriginalStyleSheet.compose(style1, style2),
   flatten(style) {
     return Array.isArray(style)
       ? Object.assign({}, ...style.map(StyleSheet.flatten))
@@ -148,10 +157,9 @@ export const TouchableOpacity = unavailable("TouchableOpacity");
 export const TouchableWithoutFeedback = unavailable("TouchableWithoutFeedback");
 export const ActivityIndicator = unavailable("ActivityIndicator");
 export const StatusBar = unavailable("StatusBar");
-export const FlatList = unavailable("FlatList");
 export const ImageBackground = unavailable("ImageBackground");
 export const KeyboardAvoidingView = unavailable("KeyboardAvoidingView");
-export const VirtualizedList = unavailable("VirtualizedList");
+export const RefreshControl = unavailable("RefreshControl");
 export function Button(props) {
   if (useTextAncestor()) throw new Error("Inline Controls are not implemented in Godot Text");
   validateButton(props);

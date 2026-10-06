@@ -1,5 +1,6 @@
 import path from "node:path";
 import { readFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { transformAsync } from "@babel/core";
 import {renderEventTargetParentOverlay} from "./rn-event-target-overlay.mjs";
 import {renderRendererTagOverlay} from "./rn-renderer-tag-overlay.mjs";
@@ -25,6 +26,24 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
   if (pointerInterestMode === "current" && nativeDispatchMode !== "experimental")
     throw new Error("E_POINTER_INTEREST_DISPATCH: current interest requires experimental native dispatch");
   const rnRoot = path.dirname(resolveSdk("react-native/package.json"));
+  // RN's FlatList/SectionList import @react-native/virtualized-lists (Flow
+  // source) from RN's own location. Resolved when first needed: an SDK without
+  // the package never loads one of its modules.
+  let listsRoot;
+  const inListsPackage = filename => {
+    if (listsRoot === undefined) {
+      try {
+        listsRoot = path.dirname(createRequire(path.join(rnRoot, "package.json"))
+          .resolve("@react-native/virtualized-lists/package.json"));
+      } catch (error) {
+        if (error.code !== "MODULE_NOT_FOUND") {
+          throw error;
+        }
+        listsRoot = null;
+      }
+    }
+    return listsRoot !== null && filename.startsWith(listsRoot + path.sep);
+  };
   return {
     name: "godot-platform",
     setup(builder) {
@@ -39,6 +58,13 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
         // Only this platform facade may resolve the unexported original module.
         if (importer !== path.join(platformRoot, "private-interface.js")) return;
         return { path: path.join(rnRoot, "src/private/renderer/events/dispatchNativeEvent.js") };
+      });
+      builder.onResolve({ filter: /^react-native\/src\/private\/featureflags\/ReactNativeFeatureFlags$/ }, ({ importer }) => {
+        // The original virtualized lists import this unexported RN module. Only
+        // that package resolves it; other code keeps RN's package exports.
+        if (inListsPackage(importer)) {
+          return { path: path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js") };
+        }
       });
       builder.onResolve({ filter: /(?:^|\/)renderApplication$/ }, ({ importer }) => {
         if (importer === path.join(rnRoot, "Libraries/ReactNative/AppRegistryImpl.js"))
@@ -116,7 +142,7 @@ export function installPointerListenerQuery() {
         (element != null && (bubbling || capture) && query(getOwnerDocument(element), capture));
     });
 }`};
-        if (!filename.startsWith(rnRoot + path.sep)) return;
+        if (!filename.startsWith(rnRoot + path.sep) && !inListsPackage(filename)) return;
         let source = await readFile(filename, "utf8");
         if (filename === path.join(rnRoot, "src/private/webapis/dom/events/EventTarget.js"))
           source = renderPointerInterestOverlay(source, pointerInterestMode);

@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { AppRegistry, AppState, RootTagContext, Button, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
@@ -60,6 +61,25 @@ TextInput.State.focusTextInput(42);
 TextInput.State.registerInput(null);
 // @ts-expect-error the singleton may hold an internal input without public clear
 TextInput.State.currentlyFocusedInput()?.clear();
+
+// RN's original lists keep their upstream props and instance methods.
+type Row = { id: string };
+function Lists() {
+  const list = useRef<FlatList<Row>>(null);
+  list.current?.scrollToIndex({ index: 0, animated: false });
+  list.current?.scrollToOffset({ offset: 0, animated: false });
+  // @ts-expect-error scrollToIndex needs the index to scroll to
+  list.current?.scrollToIndex({ animated: false });
+  const renderRow: ListRenderItem<Row> = ({ item }) => <View testID={item.id} />;
+  const sections: ReadonlyArray<SectionListData<string>> = [{ key: "s", data: ["a"] }];
+  return <View>
+    <FlatList ref={list} data={[{ id: "a" }]} renderItem={renderRow} keyExtractor={row => row.id} />
+    <SectionList sections={sections} renderItem={({ item }) => <View testID={item} />} />
+    <VirtualizedList data={3} getItemCount={() => 3} getItem={(_, index) => ({ id: String(index) })}
+      renderItem={renderRow} />
+  </View>;
+}
+void Lists; void VirtualizedSectionList;
 
 void Consumer;
 AppRegistry.registerComponent("Consumer", () => Consumer);

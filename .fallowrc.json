@@ -40,7 +40,8 @@
     "tests/pointer-document-hover-fixture.jsx",
     "tests/pointer-click-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx",
-    "tests/app-state-fixture.jsx"
+    "tests/app-state-fixture.jsx",
+    "tests/virtualized-list-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -141,6 +142,9 @@
         "ActivityIndicator",
         "StatusBar",
         "FlatList",
+        "SectionList",
+        "VirtualizedSectionList",
+        "RefreshControl",
         "ImageBackground",
         "KeyboardAvoidingView",
         "VirtualizedList",
@@ -225,7 +229,13 @@
             "codegenNativeCommands",
             "AppState",
             "AppStateStatus",
-            "AppStateEvent"
+            "AppStateEvent",
+            "FlatList",
+            "SectionList",
+            "VirtualizedList",
+            "VirtualizedSectionList",
+            "ListRenderItem",
+            "SectionListData"
           ]
         },
         {

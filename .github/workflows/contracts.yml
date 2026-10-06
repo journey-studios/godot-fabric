@@ -102,6 +102,18 @@ jobs:
             build/app-state-current.log
             build/app-state-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:lists
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-virtualized-list
+          path: |
+            build/virtualized-list-report.json
+            build/virtualized-list-current-report.json
+            build/virtualized-list-comparison.json
+            build/virtualized-list-current.log
+            build/virtualized-list-current-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
