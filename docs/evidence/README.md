@@ -261,6 +261,18 @@ The preceding host fails exactly the 2 mount checks; a retained sabotage of the
 native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
 CI pending.
 
+The [touchables record](touchables/README.md) runs RN's original
+`TouchableWithoutFeedback` and `TouchableHighlight` from the public facade with
+actual Godot mouse and touch on two roots: 93/93 headless checks. Callbacks keep
+Pressability's order and payloads (press out before press on release), the
+Highlight's underlay and child opacity show on the native Controls with its
+`delayPressOut` timer, and long press, hitSlop and retention, disabled grants,
+nesting and removal mid-press follow RN. The same fixture on the preceding SDK
+fails exactly its 19 render checks; a retained imitation over the SDK Pressable
+fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
+lane shows RN's original TouchableOpacity failing at mount without
+`NativeAnimatedModule`. Hosted CI pending.
+
 The [virtualized-list record](virtualized-list/README.md) scrolls RN's original
 `FlatList`, `SectionList` and `VirtualizedList` on the SDK ScrollView with real
 wheel steps and touch drags in two roots: 44 headless checks. Windows match RN's
