@@ -39,6 +39,7 @@ export {
   I18nManager,
 } from "./platform-environment";
 export { useWindowDimensions } from "./window-dimensions";
+export { default as useColorScheme } from "react-native/Libraries/Utilities/useColorScheme";
 export {
   FlatList,
   SectionList,
@@ -228,8 +229,3 @@ export function ScrollView(props) {
 // Upstream PanResponder: gesture state from the original responder events and
 // their touch history, including multi-touch centroids.
 export { default as PanResponder } from "react-native/Libraries/Interaction/PanResponder";
-export function useColorScheme() {
-  throw new Error(
-    "Chart platform system color scheme is not implemented; use an explicit chart theme",
-  );
-}

@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; Switch na main; próximos: Touchables (#30), Appearance (#35), ActivityIndicator, listas virtualizadas e notificações de captura"
+    "focusTitle": "Appearance e useColorScheme sobre o tema do sistema do Godot; Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: recibos de CI/Pages, Animated, Networking e Modal"
   },
-  "updatedAt": "2026-10-06T00:47:35.512294+00:00",
+  "updatedAt": "2026-10-06T03:08:06.996867+00:00",
   "source": {
-    "commit": "1b7dac52794ffd13257857621942c5df20ca127b",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/1b7dac52794ffd13257857621942c5df20ca127b",
-    "scope": "Toques compartilhados entre raízes: cada TouchEvent lista os toques ativos de todas as raízes da aplicação, porque elas compartilham o único responder JS do RN; um toque que termina em outra raiz não reivindica nem solta o gesto que uma raiz segura enquanto o toque dela continua; um toque cancelado ainda termina o responder único, como numa superfície do RN. As plataformas do RN mantêm uma lista por superfície, então é um desvio deliberado a favor da semântica de superfície única; o ReactNativeResponder (flags de dispatch nativo) só libera quando não resta toque, como numa superfície do RN. Quatro lanes com 92 checks headless; host anterior falha exatamente 9; dois contratos antigos (dispatch integrado e pointer-geometry) passam a esperar a lista da aplicação. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
+    "commit": "b13bcddec7ea5aed48c9a1f0022e0577c110d572",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/b13bcddec7ea5aed48c9a1f0022e0577c110d572",
+    "scope": "Appearance e useColorScheme originais do RN, pelo import público react-native, alimentados pelo tema do sistema do DisplayServer do Godot e pelo override de setColorScheme: duas roots de uma aplicação renderizam o mesmo esquema, e duas aplicações abertas ao mesmo tempo recebem cada mudança por um único callback de tema compartilhado. 79 checks headless; o host anterior falha exatamente as 56 normativas e o host antes do callback compartilhado exatamente as 9 do callback; sabotagem retida. CI desta fatia pendente. Fecha só o checkpoint de fatia do GF-21.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/35"
   },
   "phases": [
     {
@@ -1904,13 +1904,13 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo. CI 37382633328 repetiu os 75 checks em 8f80fed, após reexecutar o reference-android por falha de infraestrutura.",
+      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo. CI 37382633328 repetiu os 75 checks em 8f80fed, após reexecutar o reference-android por falha de infraestrutura. Appearance e useColorScheme originais do RN pelo import público, alimentados pelo tema do sistema do DisplayServer e pelo override de setColorScheme: override light/dark vence, unspecified/auto seguem o sistema, sem modo escuro começa em light, evento só quando o esquema efetivo muda e stop sem evento; um único callback de tema, registrado uma vez, serve todas as aplicações abertas e quem para ou é liberada sai dele; 79 headless, host anterior falha exatamente 56, o host antes do callback compartilhado falha exatamente os 9 checks de duas aplicações e um host que emite a cada callback falhou 17, rejeitados pelo oráculo.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
+          "done": true,
           "evidence": [
             {
               "label": "AppState: 75 checks, host anterior com 62 falhas normativas e sabotagem rejeitada",
@@ -1919,6 +1919,10 @@
             {
               "label": "CI AppState 37382633328: 5 jobs (reference-android reexecutado), 75 checks e 70 entradas auditadas",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328"
+            },
+            {
+              "label": "Appearance: 79 checks, host anterior com 56 falhas normativas, host antes do callback compartilhado com 9 e sabotagem rejeitada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/d2fed26e1efa6c79c261ecbd14d1f40257037baa/docs/evidence/appearance/README.md"
             }
           ]
         },
@@ -3359,6 +3363,24 @@
     }
   ],
   "activity": [
+    {
+      "id": "appearance-review-shared-callback-20261005",
+      "at": "2026-10-06T01:20:17.790635+00:00",
+      "taskIds": [
+        "GF-21"
+      ],
+      "message": "Revisão do Appearance (CodeRabbit no #35): o DisplayServer tem um só callback de tema por processo e cada aplicação registrava o seu, então a segunda deslocava a primeira, que ficava com o esquema velho. Agora um dono compartilhado registra um Callable estático uma vez e repassa cada mudança a toda aplicação que observa; o módulo entra ao começar e sai no stop ou quando a aplicação é liberada. O probe despacha pelo Callable registrado e cobre duas aplicações ao mesmo tempo: 79 headless; o host anterior falha exatamente 56 e o host antes da correção exatamente os 9 checks de duas aplicações, rejeitado pelo oráculo. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d2fed26e1efa6c79c261ecbd14d1f40257037baa/docs/evidence/appearance/README.md"
+    },
+    {
+      "id": "appearance-local-verified-20261005",
+      "at": "2026-10-05T23:33:49.007688+00:00",
+      "taskIds": [
+        "GF-21"
+      ],
+      "message": "Appearance e useColorScheme do tema do sistema: 67 headless. Os módulos originais do RN, lidos pelo import público, recebem o tema do DisplayServer pelo Callable registrado no callback de tema do sistema e o override de setColorScheme; duas roots re-renderizam o mesmo esquema. Override light/dark vence, unspecified/auto voltam ao sistema, sem modo escuro começa em light, valor desconhecido falha com E_ARGUMENT e o evento só sai quando o efetivo muda. Host anterior falha exatamente 45; host que emite a cada callback falha 17 e o oráculo rejeita. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/80d79da4c3d05e3d677292dec175a03497b27d0c/docs/evidence/appearance/README.md"
+    },
     {
       "id": "pointer-capture-notifications-local-verified-20261005",
       "at": "2026-10-06T00:47:35.512294+00:00",

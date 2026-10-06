@@ -270,6 +270,14 @@ import on the SDK ScrollView, windowed by real wheel and touch input in two root
 44 headless checks. The preceding host fails exactly its 3 ScrollView checks.
 [Evidence](docs/evidence/virtualized-list/README.md).
 
+The [Appearance example](examples/appearance/README.md) runs React Native's
+original `Appearance` and `useColorScheme` from the public import, fed by Godot's
+system theme and the `setColorScheme` override, with two roots re-rendering the
+same scheme and two applications sharing one system theme callback: 79 headless
+checks. The preceding host fails exactly its 56 Appearance checks, and the host
+from before the shared callback its 9 two-application checks.
+[Evidence](docs/evidence/appearance/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

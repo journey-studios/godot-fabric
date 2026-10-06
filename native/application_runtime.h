@@ -11,6 +11,7 @@ namespace fabric_godot {
 class AppLifecycle;
 class GameServiceRegistry;
 class AdapterRegistry;
+class SystemAppearance;
 struct WindowMetrics {
   godot::Vector2 size;
   godot::Vector2 screen;
@@ -21,7 +22,8 @@ class ApplicationRuntime {
  public:
   ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
       const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> game_services,
-      std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<AdapterRegistry> adapters = {});
+      std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<SystemAppearance> appearance,
+      std::shared_ptr<AdapterRegistry> adapters = {});
   ~ApplicationRuntime();
   void load_bundle(const std::string &source, const std::string &source_url);
   void invoke_callable(const std::string &name, const std::string &method, const std::string &args_json);

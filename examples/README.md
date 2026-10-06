@@ -266,6 +266,13 @@ the window unmount and return, and an inverted list follows the finger. Its
 checks, the preceding-host and preceding-SDK controls and a retained negative
 control.
 
+The [Appearance probe](appearance/README.md) changes the system theme through the
+one Callable registered with Godot's `DisplayServer` and overrides it with
+`setColorScheme`, while two roots render through `useColorScheme` and two
+applications observe at once: `npm run test:appearance`, outside the launcher
+catalog. Its [receipt](../docs/evidence/appearance/README.md) records 79 headless
+checks, the preceding-host and pre-fix controls and a retained negative control.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

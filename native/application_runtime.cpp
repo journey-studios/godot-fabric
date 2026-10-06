@@ -271,7 +271,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
 
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
       const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
-      const std::shared_ptr<fabric_godot::AppLifecycle> &lifecycle, std::shared_ptr<fabric_godot::AdapterRegistry> selected)
+      const std::shared_ptr<fabric_godot::AppLifecycle> &lifecycle,
+      const std::shared_ptr<fabric_godot::SystemAppearance> &appearance, std::shared_ptr<fabric_godot::AdapterRegistry> selected)
       : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)), adapters(std::move(selected)) {
     if (adapters && !adapters->sealed()) throw std::runtime_error("E_ADAPTER_UNSEALED: application requires a sealed selection");
     // One application owns Hermes, Fabric, scheduling and timers. All native
@@ -360,6 +361,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       return folly::dynamic::object("Dimensions", device_dimensions());
     });
     native_modules->add_app_state(lifecycle);
+    native_modules->add_appearance(appearance);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
           [this](rn::SurfaceId id, rn::dom::DOMRect rect, bool transforms) {
@@ -1943,9 +1945,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
 namespace fabric_godot {
 ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
     const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services,
-    std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<AdapterRegistry> adapters)
+    std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<SystemAppearance> appearance,
+    std::shared_ptr<AdapterRegistry> adapters)
     : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services),
-          lifecycle, std::move(adapters))) {
+          lifecycle, appearance, std::move(adapters))) {
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }

@@ -299,6 +299,17 @@ wheel steps and touch drags in two roots: 44 headless checks. Windows match RN's
 viewability, `onEndReached`, scroll commands and failures follow RN. The
 preceding host fails exactly 3 normative checks, the preceding SDK 11, and an SDK
 ScrollView without `onLayout` fails 3, which the independent oracle rejects.
+
+The [Appearance record](appearance/README.md) runs RN's original `Appearance` and
+`useColorScheme` in two roots of one application, fed through the one Callable
+registered with Godot's `DisplayServer` for system theme changes, which every
+application shares: 79 headless checks. An override wins over the system,
+`unspecified` follows it again, an unsupported system starts `light`, change
+events are sent only when the effective scheme changes, stop sends nothing, and
+two applications that observe at once both receive each change. The preceding
+host fails exactly the 56 Appearance checks, the host from before the shared
+callback fails exactly its 9 two-application checks, and a host that emitted for
+every callback failed 17 of the first 67; the independent oracle rejects both.
 Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using

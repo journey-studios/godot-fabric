@@ -12,6 +12,10 @@ export declare const NativeEventEmitter: typeof RN.NativeEventEmitter;
 export declare const AppState: typeof RN.AppState;
 export type AppStateStatus = RN.AppStateStatus;
 export type AppStateEvent = RN.AppStateEvent;
+/** RN's original Appearance and useColorScheme, fed by Godot's system theme. */
+export declare const Appearance: typeof RN.Appearance;
+export declare const useColorScheme: typeof RN.useColorScheme;
+export type ColorSchemeName = RN.ColorSchemeName;
 /** RN's original lists on the Godot ScrollView. Sticky headers, pull to refresh
  * and animated scrolling fail when requested. */
 export declare const FlatList: typeof RN.FlatList;
