@@ -193,10 +193,13 @@ function verifyComposition(stage) {
     `sequence-0 ended ${sequenced} ms after the start, for a ${COMPOSITION.sequence[0]} ms ramp`);
   // parallel starts both ramps together; the shorter one ends first. Together is the
   // same frame: the host runs the frame callbacks registered before a frame in that
-  // frame, in order, and defers what they register to the next one, so the longer
-  // ramp reports its first value before the shorter one reports its second.
-  const [, secondShort] = valuesOf(events, "parallel-0");
-  assert.ok(secondShort === undefined || first("parallel-1").sequence < secondShort.sequence, "parallel starts both ramps in the same frame");
+  // frame, in order, and defers what they register to the next one, so both ramps
+  // report their first value in the frame that follows the call. Every entry carries the
+  // timestamp the host gave the frame it was recorded in, which no other frame has: the
+  // order of the entries could not say it, since a first value that came late would
+  // still precede the other ramp's second.
+  const [shorter, longer] = [first("parallel-0"), first("parallel-1")];
+  assert.ok(typeof shorter.frame === "number" && shorter.frame === longer.frame, "parallel starts both ramps in the same frame");
   assert.ok(end("parallel-0").sequence < end("parallel-1").sequence);
   // stagger starts the second ramp its delay after the call that started the stagger.
   const staggered = first("stagger-1").t - startBefore;

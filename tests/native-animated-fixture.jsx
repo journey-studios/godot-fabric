@@ -17,13 +17,27 @@ const registry = new Map();
 const mounted = {};
 const counts = {valueEvents: 0};
 let sequence = 0;
+// The timestamp the host gave the frame callbacks that are running, null outside them. The host runs
+// every callback registered before a frame in that frame, in order, with the one timestamp it took as
+// the frame began, and defers what they register to the next one. Each entry below carries it, so the
+// oracle can tell which frame an entry was recorded in, as the order of the entries cannot.
+let frameTime = null;
+const requestFrame = globalThis.requestAnimationFrame;
+globalThis.requestAnimationFrame = callback => requestFrame(timestamp => {
+  frameTime = timestamp;
+  try {
+    callback(timestamp);
+  } finally {
+    frameTime = null;
+  }
+});
 function note(entry) {
-  log.push({sequence: ++sequence, t: Date.now(), ...entry});
+  log.push({sequence: ++sequence, t: Date.now(), frame: frameTime, ...entry});
 }
 // An entry whose fields take time to compute is stamped before them.
 function stamped(compute) {
   const t = Date.now();
-  log.push({sequence: ++sequence, t, ...compute()});
+  log.push({sequence: ++sequence, t, frame: frameTime, ...compute()});
 }
 // Counts every onAnimatedValueUpdate that reaches JS, whether or not an
 // AnimatedValue listens: only JS asking the native node to report makes it send.
