@@ -231,6 +231,16 @@ Each TouchEvent lists every touch of the application. Its
 [receipt](../docs/evidence/shared-touches/README.md) records 92 headless checks
 and the preceding-host control.
 
+The [touchables probe](touchables/README.md) presses RN's original
+`TouchableWithoutFeedback` and `TouchableHighlight`, imported from `react-native`,
+with real mouse and touch on two roots: `npm run test:touchables`, outside the
+launcher catalog. It checks callback order and payloads, the native underlay and
+child opacity, `delayPressOut`, long press, hitSlop and retention, disabled,
+nesting, removal mid-press and the single-child rule. Its
+[receipt](../docs/evidence/touchables/README.md) records 93/93 headless checks,
+the preceding-SDK and sabotage controls and why `TouchableOpacity` stays
+unavailable.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

@@ -355,6 +355,18 @@ jobs:
             build/shared-touches-internal-only.log
             build/shared-touches-enabled.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:touchables
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-touchables
+          path: |
+            build/touchables-current-report.json
+            build/touchables-animated-report.json
+            build/touchables-comparison.json
+            build/touchables-current.log
+            build/touchables-animated.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

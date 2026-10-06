@@ -3,6 +3,8 @@
 import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
 import OriginalView from "react-native/Libraries/Components/View/View";
+import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
+import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import {
   Pressable as GodotPressable,
@@ -137,9 +139,9 @@ export function Pressable({ style, ...props }) {
   );
 }
 // O interop registra estes tipos na inicialização; isso não fornece os controles.
-function unavailable(name) {
+function unavailable(name, reason) {
   return function UnsupportedGodotComponent() {
-    throw new Error(`Godot platform does not implement ${name}`);
+    throw new Error(`Godot platform does not implement ${name}${reason ? `: ${reason}` : ""}`);
   };
 }
 export const Image = unavailable("Image");
@@ -151,9 +153,25 @@ export function Switch({ style, ...props }) {
   }
   return <OriginalSwitch {...props} style={nativeStyle(style, "Switch")} />;
 }
-export const TouchableHighlight = unavailable("TouchableHighlight");
-export const TouchableOpacity = unavailable("TouchableOpacity");
-export const TouchableWithoutFeedback = unavailable("TouchableWithoutFeedback");
+// RN's original touchables own Pressability, their timers and feedback state.
+// The facade only keeps its host contract: no Controls inside Text and
+// validated styles on the View a touchable renders itself.
+export function TouchableWithoutFeedback(props) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalTouchableWithoutFeedback {...props} />;
+}
+export function TouchableHighlight({ style, ...props }) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalTouchableHighlight {...props} style={nativeStyle(style, "TouchableHighlight")} />;
+}
+// RN 0.87.1 TouchableOpacity renders Animated.View, whose props hook flushes
+// the native animated queue on mount; without that module it throws there.
+export const TouchableOpacity = unavailable("TouchableOpacity",
+  "its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet");
 export const ActivityIndicator = unavailable("ActivityIndicator");
 export const StatusBar = unavailable("StatusBar");
 export const FlatList = unavailable("FlatList");
