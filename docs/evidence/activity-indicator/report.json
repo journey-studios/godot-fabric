@@ -774,5 +774,73 @@
         "logSha256": "61459f764c298450b19139dc4ca0deaa566a58ae30e5f8fe822ec6f9734758ed"
       }
     }
+  },
+  "mergeReverification": {
+    "reason": "the slice was stacked on the Switch branch; after #33 (f165b82) and #34 (8b87d78) merged, main was merged twice without rebase",
+    "mergeCommits": [
+      "99deec8",
+      "f76c9a7"
+    ],
+    "mainCommit": "8b87d78",
+    "nativeHostSha256": "27c23ef4546a783fdf8dbbb6706decea5c96ee712c6fe7effc4372561b5a2c8c",
+    "activityIndicatorChecks": 33,
+    "activityIndicatorReportSha256": "000506e4fcfec4edcd1583fe309de71bfda6c38a4bfe702127f685c1f98eb091",
+    "precedingHostControl": {
+      "nativeHostSha256": "1d26dec2386d69007b1cf0a01499bac16dbe50ee89d840ba258c67f0cfa882ac",
+      "checks": 6,
+      "normativeFailures": [
+        "mount/Each root mounts one native spinner for each of its five RCTActivityIndicatorView elements",
+        "mount/The application reports no host or runtime error"
+      ],
+      "reportSha256": "8d5ccd60bc36e4066435259ccfaa665e58ced24b26d7d40cb2912a6840c9e19b",
+      "refreshedBecause": "the SDK bundle changed with main's PanResponder export",
+      "runnerLogSha256": "2ff2a1ebd13720e7758b0971e238ab344d79d211ed3759113dbb3a4867ca3b64"
+    },
+    "steps": {
+      "activity-merge/test:activity-indicator": {
+        "exitCode": 0,
+        "logSha256": "4993c62f7e2b6896d121c2a258975e9775e9b5125f30d51955610e5d60d510ff"
+      },
+      "activity-merge/test:switch": {
+        "exitCode": 0,
+        "logSha256": "71812f947c8fddd745e9bdedd9f392deabbf84d3a798a73f8a8f0a73efd72f60"
+      },
+      "activity-merge/test:responders:pan": {
+        "exitCode": 0,
+        "logSha256": "9952a60dc013e22562c3669eb3e53d23e8ea8a212bef29a50d791e7353d129c0"
+      },
+      "activity-merge/test:examples": {
+        "exitCode": 0,
+        "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+      },
+      "activity-merge2/test:contracts": {
+        "exitCode": 0,
+        "logSha256": "b4bbe4b595b448788f1866a1f52aaf7cf5752416967084e383e85be170970440"
+      },
+      "activity-merge2/check:static": {
+        "exitCode": 0,
+        "logSha256": "f04c66ee4d68bca1c9396f8ba446c5d6a872382136d16920df0044b5a1f51e97"
+      },
+      "activity-merge2/check:publication": {
+        "exitCode": 0,
+        "logSha256": "2357020b6c01476661cf66ccec6195bc0f64ce3f16e72bbca0972b8b3d86a960"
+      },
+      "activity-merge2/test:activity-indicator": {
+        "exitCode": 0,
+        "logSha256": "6b850faa5d21c3e82bbf62733df0b05e43547d686ba756cd7105890c0560facc"
+      },
+      "activity-merge2/test:switch": {
+        "exitCode": 0,
+        "logSha256": "816cce07a89e79d725bd2b1b262d0268c5b43df647e737268b46ff32a8444749"
+      },
+      "activity-merge2/test:responders:shared-touches": {
+        "exitCode": 0,
+        "logSha256": "81629f3911ee0ecc87286a58d6a2a49bd4207178347f400d8e543340cf165699"
+      },
+      "activity-merge2/test:examples": {
+        "exitCode": 0,
+        "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+      }
+    }
   }
 }

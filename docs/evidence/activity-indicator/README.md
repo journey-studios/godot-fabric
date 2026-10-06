@@ -140,6 +140,16 @@ bundle e da suíte, 60 entradas do build nativo e 6 de verificação, com
 sobreposição) correspondem à implementação
 `a6523439b5146b6e5ad8f30fd8c0435af0c4a65a` por `git show`/SHA-256.
 
+## Mescla com a main
+
+A fatia foi feita sobre a branch do Switch. Depois que o Switch (#33) e os toques
+compartilhados (#34) entraram, a `main` foi mesclada duas vezes, sem rebase
+(`99deec8` e `f76c9a7`). O controle do host anterior foi refeito para o bundle novo
+(as mesmas 2 falhas de montagem), e na árvore mesclada passaram de novo o
+ActivityIndicator (33/33), o Switch, o PanResponder, os toques compartilhados, os
+22 exemplos e os gates do `contracts`. O recibo registra isso em
+`mergeReverification`.
+
 ## Limites
 
 Acessibilidade, movimento reduzido, a velocidade e a geometria exatas do UIKit,
