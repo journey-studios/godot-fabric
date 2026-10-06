@@ -1,0 +1,30 @@
+{
+  "example": "switch",
+  "command": "npm run example -- switch --capture",
+  "godot": "4.7.2-stable (official)",
+  "displayServer": "macOS",
+  "exampleChecks": {
+    "headless": 20,
+    "nativeRenderer": 25
+  },
+  "files": [
+    {
+      "stage": "initial",
+      "path": "docs/evidence/switch/switch-initial.png",
+      "sha256": "63feeb65904a22125e591b0a02544db8d3275dfd9ef5535c07774b6e2fe35a06",
+      "bytes": 49817,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "toggled",
+      "path": "docs/evidence/switch/switch-toggled.png",
+      "sha256": "8b620800853fe920bfa35f1459b066af148ac5836b7c2f4daefc1660feb19f5b",
+      "bytes": 49127,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    }
+  ]
+}

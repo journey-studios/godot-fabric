@@ -149,6 +149,35 @@ até o primeiro scroll, 3 checks falham e o oráculo rejeita o relatório mesmo 
 esses checks marcados como aprovados. A sabotagem é aplicada numa cópia do SDK
 em `build/`; o código executado não muda.
 
+## Capturas
+
+O exemplo interativo [`virtualized-list`](../../../examples/virtualized-list/README.md) abre no
+launcher com `npm run example -- virtualized-list`, e
+`npm run example -- virtualized-list --capture` salva dois quadros do renderizador nativo, de
+900 × 680, enquanto a validação dele gira a roda do mouse sobre as duas listas (14 checks
+headless, 19 com o renderizador). O [recibo de capturas](captures.json) registra o caminho, o
+SHA-256 e as dimensões de cada quadro, e os bytes se repetiram em duas execuções seguidas.
+
+![FlatList nas linhas 0 a 7 e SectionList com o cabeçalho Fruit no topo, ambas em offset 0](virtualized-list-top.png)
+
+**Topo.** A `FlatList` em offset 0 com as linhas 0 a 7 à vista (o RN monta uma janela das 200
+linhas, não todas) e a `SectionList` em offset 0 com o cabeçalho Fruit no topo e o Vegetables
+abaixo; os status dizem `offset 0 · rows 0–7 in view` e `offset 0 · Fruit, Vegetables in view`.
+
+![FlatList nas linhas 33 a 40 e SectionList em Grains e Dairy depois da roda do mouse](virtualized-list-scrolled.png)
+
+**Rolada.** Depois de 30 passos reais da roda sobre a `FlatList` (offset 1.440, linhas 33 a 40
+à vista) e 15 sobre a `SectionList` (offset 720, Grains e Dairy à vista, com o cabeçalho Dairy na
+tela); os status dizem `offset 1440 · rows 33–40 in view` e `offset 720 · Grains, Dairy in view`.
+
+A validação compara o SHA-256 da região de cada lista entre os dois quadros: as duas são
+desenhadas de outro modo depois da roda. Não há oráculo independente de pixels; a janela de
+células e as posições são afirmadas pelos checks do exemplo sobre os Controls nativos.
+
+Estas execuções são locais: o recibo de [CI hospedada](hosted-ci.json) desta fatia não cobre o
+exemplo, que o `npm run test:examples` do job `native-cold-start` passa a repetir (sem captura)
+quando ele entra na `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
+
 ## Regressões
 
 No host desta fatia (`ba161914`) passaram os três gates do job `contracts` (262

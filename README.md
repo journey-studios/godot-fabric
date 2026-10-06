@@ -490,6 +490,20 @@ clock example separately.
 | --- | --- |
 | [![Independent documents, repeated IDs and logical tree refs](docs/evidence/tree/tree-initial.png)](examples/tree/README.md) | [![Current order follows React while retained collections keep their snapshot](docs/evidence/tree/tree-updated.png)](examples/tree/README.md) |
 
+| Switch | ActivityIndicator | Touchables |
+| --- | --- | --- |
+| [![Real clicks toggled Sound and Vibration while the disabled switches stayed](docs/evidence/switch/switch-toggled.png)](examples/switch/README.md) | [![The last two spinners stopped: one hidden, one frozen on its last frame](docs/evidence/activity-indicator/activity-indicator-stopped.png)](examples/activity-indicator/README.md) | [![The TouchableHighlight shows its underlay while the mouse is held](docs/evidence/touchables/touchables-highlight-pressed.png)](examples/touchables/README.md) |
+
+| FlatList and SectionList | Appearance | PanResponder |
+| --- | --- | --- |
+| [![Both lists scrolled by the mouse wheel, with their cells windowed](docs/evidence/virtualized-list/virtualized-list-scrolled.png)](examples/virtualized-list/README.md) | [![setColorScheme turned the whole screen dark](docs/evidence/appearance/appearance-dark.png)](examples/appearance/README.md) | [![A box dragged with the mouse](docs/evidence/pan-responder/pan-responder-dragging.png)](examples/pan-responder/README.md) |
+
+These six launcher examples run RN's original `Switch`, `ActivityIndicator`,
+touchables, `FlatList` and `SectionList`, `Appearance` and `PanResponder` from the
+public `react-native` import, each driven by real mouse input in its validation.
+Every example README shows all the states it captures, and each evidence record
+keeps the SHA-256 of its frames in a `captures.json`.
+
 | Pointerdown interest: initial | Pointerdown interest: after React updates |
 | --- | --- |
 | [![Original refs in the native pointerdown interest fixture](docs/evidence/pointer-interest/initial.png)](examples/pointer-interest/README.md) | [![Native pointerdown fixture after listener-driven React updates](docs/evidence/pointer-interest/updated.png)](examples/pointer-interest/README.md) |

@@ -146,6 +146,35 @@ ligado), e o oráculo independente rejeita o relatório no primeiro toque do Swi
 fixo. A fonte foi restaurada byte a byte e
 o rebuild reproduziu o host `3e316fb6`.
 
+## Capturas
+
+O exemplo interativo [`switch`](../../../examples/switch/README.md) abre no launcher com
+`npm run example -- switch`, e `npm run example -- switch --capture` salva dois quadros do
+renderizador nativo, de 900 × 680, enquanto a validação dele clica de verdade nos switches
+(20 checks headless, 25 com o renderizador). O [recibo de capturas](captures.json) registra o
+caminho, o SHA-256 e as dimensões de cada quadro, e os bytes se repetiram em duas execuções
+seguidas.
+
+![Sound desligado, Vibration ligado com cores próprias e dois switches desabilitados a meia opacidade](switch-initial.png)
+
+**Inicial.** Sound desligado com as cores padrão do iOS, Vibration ligado com `trackColor` e
+`thumbColor` próprios e os dois desabilitados (Beta channel desligado, Managed by your team
+ligado) desenhados a meia opacidade; o status diz `Nothing switched yet`.
+
+![Sound ligado, Vibration desligado e os dois switches desabilitados sem mudança](switch-toggled.png)
+
+**Depois dos cliques.** Depois de cliques reais em Sound, nos dois desabilitados e em
+Vibration: Sound ligado, Vibration desligado e os desabilitados como estavam; o status diz
+`Vibration is off`.
+
+A validação compara o SHA-256 da região de cada switch entre os dois quadros: os dois que
+mudaram são desenhados de outro modo e os dois desabilitados, de forma idêntica. Não há
+oráculo independente de pixels nem comparação com o iOS.
+
+Estas execuções são locais: o recibo de [CI hospedada](hosted-ci.json) desta fatia não cobre o
+exemplo, que o `npm run test:examples` do job `native-cold-start` passa a repetir (sem captura)
+quando ele entra na `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
+
 ## Regressões
 
 No host atual passaram os três gates do job `contracts` (261 testes Node, um deles
