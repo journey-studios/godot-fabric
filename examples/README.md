@@ -258,6 +258,14 @@ outside the launcher catalog. Its
 [receipt](../docs/evidence/pointer-capture-notifications/README.md) records 672
 headless checks and two retained sabotages.
 
+The [virtualized-list probe](virtualized-list/README.md) scrolls RN's original
+`FlatList`, `SectionList` and `VirtualizedList` with wheel steps and touch drags
+in two roots: `npm run test:lists`, outside the launcher catalog. Cells outside
+the window unmount and return, and an inverted list follows the finger. Its
+[receipt](../docs/evidence/virtualized-list/README.md) records 44 headless
+checks, the preceding-host and preceding-SDK controls and a retained negative
+control.
+
 The [Appearance probe](appearance/README.md) changes the system theme through the
 one Callable registered with Godot's `DisplayServer` and overrides it with
 `setColorScheme`, while two roots render through `useColorScheme` and two

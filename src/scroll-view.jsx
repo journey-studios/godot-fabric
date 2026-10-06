@@ -3,6 +3,8 @@ import { register } from "react-native/Libraries/Renderer/shims/ReactNativeViewC
 import flattenStyle from "react-native/Libraries/StyleSheet/flattenStyle";
 import { View, controlViewConfig } from "./components";
 import { getNodeFromPublicInstance } from "./private-interface";
+import { findNodeHandle } from "./renderer-proxy";
+import { listOnlyProps } from "./list-props.mjs";
 
 const scrollViewConfig = {
   uiViewClassName: "ScrollView",
@@ -17,9 +19,12 @@ const scrollViewConfig = {
     horizontal: true,
     scrollEnabled: true,
     contentOffset: true,
+    scrollEventThrottle: true,
     onScroll: true,
     onScrollBeginDrag: true,
     onScrollEndDrag: true,
+    onMomentumScrollBegin: true,
+    onMomentumScrollEnd: true,
   },
   bubblingEventTypes: Object.fromEntries(
     Object.entries(controlViewConfig.bubblingEventTypes).filter(([name]) =>
@@ -31,6 +36,8 @@ const scrollViewConfig = {
     topScroll: { registrationName: "onScroll" },
     topScrollBeginDrag: { registrationName: "onScrollBeginDrag" },
     topScrollEndDrag: { registrationName: "onScrollEndDrag" },
+    topMomentumScrollBegin: { registrationName: "onMomentumScrollBegin" },
+    topMomentumScrollEnd: { registrationName: "onMomentumScrollEnd" },
   },
 };
 const NativeScroll = register("ScrollView", () => scrollViewConfig);
@@ -41,6 +48,10 @@ function command(instance, name, args = []) {
 }
 function point(event) {
   return [event.nativeEvent.pageX, event.nativeEvent.pageY];
+}
+
+function unsupported(feature) {
+  throw new Error(`Godot ScrollView ${feature} is not implemented`);
 }
 
 // Godot's platform subset of ScrollView. Fabric ShadowNode, immutable state,
@@ -56,9 +67,38 @@ export function ScrollView({
   onTouchStartCapture,
   onResponderReject,
   style,
+  // A VirtualizedList always passes these. Sticky headers, refresh,
+  // content-position maintenance and scroll indicators fail when requested.
+  // invertStickyHeaders only applies to sticky headers, isInvertedVirtualizedList
+  // only moves Android's scroll bar and removeClippedSubviews is an
+  // optimization hint: the ScrollContainer already clips its content.
+  stickyHeaderIndices,
+  invertStickyHeaders: _invertStickyHeaders,
+  maintainVisibleContentPosition,
+  refreshControl,
+  isInvertedVirtualizedList: _isInvertedVirtualizedList,
+  removeClippedSubviews: _removeClippedSubviews,
+  showsHorizontalScrollIndicator,
+  showsVerticalScrollIndicator,
   ...props
 }) {
+  if (stickyHeaderIndices != null && stickyHeaderIndices.length > 0) {
+    unsupported("stickyHeaderIndices");
+  }
+  if (maintainVisibleContentPosition != null) {
+    unsupported("maintainVisibleContentPosition");
+  }
+  if (refreshControl != null) {
+    unsupported("refreshControl");
+  }
+  if (showsHorizontalScrollIndicator === true || showsVerticalScrollIndicator === true) {
+    throw new Error("Godot ScrollView does not show scroll indicators");
+  }
   for (const name of Object.keys(props)) {
+    if (listOnlyProps.has(name)) {
+      delete props[name];
+      continue;
+    }
     if (
       !Object.hasOwn(scrollViewConfig.validAttributes, name) ||
       [
@@ -92,11 +132,33 @@ export function ScrollView({
       "ScrollView content container margins and positioning are not implemented",
     );
   const native = useRef(null);
+  const content = useRef(null);
   const origin = useRef(null);
   const pendingGrant = useRef(false);
   const attach = useCallback(
     (instance) => {
       native.current = instance;
+      if (instance) {
+        // RN's ScrollView augments its native instance with these methods
+        // (createRefForwarder in ScrollView.js); scrollTo and scrollToEnd
+        // already come from the platform's public instance.
+        Object.assign(instance, {
+          getScrollResponder: () => instance,
+          getScrollableNode: () => findNodeHandle(instance),
+          getNativeScrollRef: () => instance,
+          getInnerViewNode: () => findNodeHandle(content.current),
+          getInnerViewRef: () => content.current,
+          flashScrollIndicators() {
+            throw new Error("Godot ScrollView does not show scroll indicators");
+          },
+          scrollResponderZoomTo() {
+            unsupported("zoom");
+          },
+          scrollResponderScrollNativeHandleToKeyboard() {
+            unsupported("keyboard scrolling");
+          },
+        });
+      }
       let cleanup;
       if (typeof ref === "function") cleanup = ref(instance);
       else if (ref) ref.current = instance;
@@ -172,6 +234,7 @@ export function ScrollView({
       onResponderTerminate={() => command(native.current, "scrollDragEnd")}
     >
       <View
+        ref={content}
         testID={props.testID ? `${props.testID}-content` : undefined}
         pointerEvents="box-none"
         style={{

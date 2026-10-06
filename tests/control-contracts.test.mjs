@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { validateButton, validateInput, validateSelection } from "../src/control-contracts.mjs";
+import { listOnlyProps } from "../src/list-props.mjs";
 
 test("public control contracts accept documented RN props", () => {
   assert.doesNotThrow(() => validateButton({ title: "Save", disabled: false, color: "#2563eb", onPress() {} }));
@@ -23,6 +25,16 @@ test("wrong values and invalid UTF-16 selections are rejected", () => {
     assert.throws(() => validateInput(props));
   for (const [start, end] of [[2, 1], [0.5, 2], [0, NaN]])
     assert.throws(() => validateSelection(start, end), /UTF-16/);
+});
+
+test("the SDK ScrollView drops exactly the list props that RN's ScrollViewProps lacks", () => {
+  // VirtualizedList spreads every list prop onto its ScrollView. The pinned
+  // inventory decides which ones belong to the lists; the rest stay strict.
+  const inventory = JSON.parse(readFileSync(new URL("../docs/compatibility/contracts-0.87.1.json", import.meta.url), "utf8"));
+  const names = owner => inventory.contracts.filter(row => row.owner === owner).map(row => row.name);
+  const scrollView = new Set(names("ScrollViewProps"));
+  const lists = ["VirtualizedListProps", "FlatListProps", "SectionListProps", "VirtualizedSectionListProps"].flatMap(names);
+  assert.deepEqual([...listOnlyProps].sort(), [...new Set(lists.filter(name => !scrollView.has(name)))].sort());
 });
 
 test("bundled TSX consumer uses the original renderer and Godot public controls", async () => {

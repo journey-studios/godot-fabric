@@ -79,6 +79,15 @@ void ScrollAdapter::sample() {
   }
   if (next == offset_) return;
   offset_ = next;
+  // RN Android's rule (ReactScrollViewHelper.emitScrollEvent): drop a scroll
+  // event while scrollEventThrottle >= max(17 ms, time since the last one).
+  // Like iOS, throttles below one 60 Hz frame send every event.
+  const double now = event.timestamp * 1000;
+  if (props_->scrollEventThrottle >= std::max(17.0, now - last_scroll_ms_)) {
+    ++throttled_;
+    return;
+  }
+  last_scroll_ms_ = now;
   ++scrolls_;
   emitter_->onScroll(event);
 }
@@ -128,6 +137,7 @@ folly::dynamic ScrollAdapter::snapshot() const {
   return folly::dynamic::object("x", offset_.x)("y", offset_.y)
       ("maxX", max.x)("maxY", max.y)("contentWidth", content_size_.x)("contentHeight", content_size_.y)
       ("fabricX", state.contentOffset.x)("fabricY", state.contentOffset.y)
-      ("dragging", dragging_)("enabled", props_->scrollEnabled)("scrolls", scrolls_)("begins", begins_)("ends", ends_);
+      ("dragging", dragging_)("enabled", props_->scrollEnabled)("scrolls", scrolls_)("throttled", throttled_)
+      ("throttle", props_->scrollEventThrottle)("begins", begins_)("ends", ends_);
 }
 }

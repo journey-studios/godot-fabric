@@ -2017,6 +2017,56 @@ tree 0580af7 repeated the 672 checks on its own host with identical IDs and
 results. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
 denominator closes.
 
+### Virtualized lists on the SDK ScrollView (2026-10-05)
+
+GF-15 moves to **In progress** with only its first-slice checkpoint done. The
+[virtualized-list evidence](docs/evidence/virtualized-list/README.md) runs React
+Native's original `FlatList`, `SectionList`, `VirtualizedList` and
+`VirtualizedSectionList` from the public `react-native` import on the SDK
+ScrollView, in two roots of one application scrolled by real Godot wheel steps
+and touch drags: **44 headless checks**.
+
+CommonJS getters export the original modules as lazily as RN's `index.js`. The
+platform plugin transforms `@react-native/virtualized-lists`, resolved from RN's
+own location, like RN's Flow sources, and lets only that package import RN's
+unexported feature flags. The SDK ScrollView drops the 43 list-only props that
+the pinned inventory gives the list owners and not `ScrollViewProps`, accepts
+`scrollEventThrottle` and the momentum events, ignores the clipping hint and the
+Android scroll-bar flag, and throws for sticky headers, refresh,
+`maintainVisibleContentPosition` and visible indicators. Its ref gains RN's
+ScrollView methods the way `createRefForwarder` adds them, `StyleSheet.compose`
+is RN's, and `RefreshControl` becomes an unavailable export. The host applies
+Android's `scrollEventThrottle` rule and converts drag points into the
+ScrollContainer's own coordinates, so an inverted list follows the finger;
+pointer routing is unchanged.
+
+The independent oracle recomputes RN's settled `computeWindowedRenderLimits`
+window and ViewabilityHelper set at every `getItemLayout` stage, every committed
+cell's offset after a jump, `onEndReached` once per content length (again after
+an appended page), the offsets of `scrollToIndex`, `scrollToOffset`,
+`scrollToEnd` and `scrollToLocation`, and RN's average length in
+`onScrollToIndexFailed` for the measured lists. Cells outside the window unmount
+and return, a measured `SectionList` windows under wheel steps, header, footer
+and `ListEmptyComponent` render, and `scrollToEnd()` with RN's animated default
+fails visibly. The preceding host runs the same bundle and fails exactly the 3
+normative checks (inverted drag and throttle); the preceding SDK (`8f80fed`)
+fails the 11 checks that need lists; a retained SDK ScrollView without
+`onLayout` fails 3 checks and the oracle rejects its report. The contracts gates
+(262 Node/13 Python, static analysis, publication scan), `test:recovery`, the 29
+native suites (22 examples, Down 2,731, Document Up 6,459, View Up 297, Move 220,
+Document Move 1,940, hover 158, root path 82, Document hover 1,530, click 728,
+AppState 75, lists 44) and the native SDK batch pass on the same host. Every
+bundle that imports `react-native` changes; the click suite's new bundles still
+pass its 728 checks on the preceding host. After merging main (PanResponder,
+Switch) at `33fc775`, the rebuilt host passes the gates, the 31 native suites and
+the four lanes again. Animated scrolling, momentum, sticky headers, refresh,
+`initialScrollIndex`, `numColumns`, nested lists, RTL, the 10,000-row performance
+fixture, hardware and mobile exports remain open; GF-14 stays Planned. All 73
+executed code/configuration inputs match implementation 3e9ec49 via git
+show/SHA-256 (execution base 8f80fed; the executed tree is the implementation's).
+Hosted CI for this slice is pending. Only GF-15's first-slice checkpoint closes;
+no whole GF, other checkpoint, weight or denominator closes.
+
 ### Appearance and useColorScheme from the system theme (2026-10-05)
 
 GF-21 remains **In progress**; only its first-slice checkpoint becomes done,
@@ -2104,7 +2154,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
 | GF-14 · P1 · Scroll and refresh | Planned | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
-| GF-15 · P1 · Virtualized lists | Planned | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
+| GF-15 · P1 · Virtualized lists | In progress | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
 | GF-16 · P1 · Images and asset pipeline | Planned | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
 | GF-17 · P1 · Shared widgets | In progress | Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases | GF-03, GF-10, GF-13, GF-20 |
 | GF-18 · P1 · Modals and safe areas | Planned | Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation | GF-07, GF-09, GF-13, GF-20, GF-23 |

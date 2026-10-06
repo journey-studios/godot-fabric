@@ -16,6 +16,15 @@ export type AppStateEvent = RN.AppStateEvent;
 export declare const Appearance: typeof RN.Appearance;
 export declare const useColorScheme: typeof RN.useColorScheme;
 export type ColorSchemeName = RN.ColorSchemeName;
+/** RN's original lists on the Godot ScrollView. Sticky headers, pull to refresh
+ * and animated scrolling fail when requested. */
+export declare const FlatList: typeof RN.FlatList;
+export type FlatList<ItemT = unknown> = RN.FlatList<ItemT>;
+export declare const SectionList: typeof RN.SectionList;
+export declare const VirtualizedList: typeof RN.VirtualizedList;
+export declare const VirtualizedSectionList: typeof RN.VirtualizedSectionList;
+export type ListRenderItem<ItemT> = RN.ListRenderItem<ItemT>;
+export type SectionListData<ItemT> = RN.SectionListData<ItemT>;
 export declare const TurboModuleRegistry: typeof RN.TurboModuleRegistry;
 export type TurboModule = RN.TurboModule;
 export type EmitterSubscription = RN.EmitterSubscription;
