@@ -7,8 +7,9 @@ preceding-host control (the same bundle fails exactly its 22 normative checks)
 and the independent oracle. `scale: 0` and every other singular transform failed with
 `E_TRANSFORM_SINGULAR` when this slice ran (the
 [singular transforms slice](singular-transforms.md) collapses them as RN does);
-perspective and any rotation out of the plane still fail with `E_TRANSFORM_3D`. Hosted
-CI is pending.
+perspective and any rotation out of the plane still fail with `E_TRANSFORM_3D`.
+Hosted run 37455258901 repeated the 29 checks and the independent oracle accepts
+its report ([receipt](../evidence/uniform-scale/hosted-ci.json)).
 
 ## What RN does
 

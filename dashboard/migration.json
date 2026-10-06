@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "Relógio de quadros do host: requestAnimationFrame e o NativeAnimated C++ rodam no ritmo de uma tela (todo quadro numa janela com V-Sync que pode desenhar; onde nada pacia o loop, inclusive numa janela que não desenha, meio período de atualização desde o quadro anterior ou um período desde o último tick) e não a cada quadro do Godot; Transforms singulares do RN (scale: 0, scaleX: 0, matrizes sem inversa, entradas e saídas animadas pelo zero) colapsam a View como no RN em vez de lançar E_TRANSFORM_SINGULAR; escala uniforme de transform (scale) em Controls planares do Godot, estática, animada e sob clique real; Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelo relógio de quadros do host; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: recibos de CI/Pages, Networking e Modal"
+    "focusTitle": "Relógio de quadros do host: requestAnimationFrame e o NativeAnimated C++ rodam no ritmo de uma tela (todo quadro numa janela com V-Sync que pode desenhar; onde nada pacia o loop, inclusive numa janela que não desenha, meio período de atualização desde o quadro anterior ou um período desde o último tick) e não a cada quadro do Godot; Transforms singulares do RN (scale: 0, scaleX: 0, matrizes sem inversa, entradas e saídas animadas pelo zero) colapsam a View como no RN em vez de lançar E_TRANSFORM_SINGULAR; escala uniforme de transform (scale) em Controls planares do Godot, estática, animada e sob clique real; Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelo relógio de quadros do host; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: Networking e Modal"
   },
-  "updatedAt": "2026-10-06T19:34:41.181313+00:00",
+  "updatedAt": "2026-10-06T22:54:57.831566+00:00",
   "source": {
     "commit": "e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
-    "scope": "Relógio de quadros do host: o RN roda requestAnimationFrame e os quadros do Native Animated no display link da plataforma (no máximo um disparo por período de atualização e, depois de uma parada, um só, atrasado), e o host os rodava a cada quadro do Godot, então um loop headless, sem limite ou com paradas entregava centenas de quadros por segundo ou quadros a 0,4 ms de distância; o decay nativo, que termina no primeiro passo menor que 0,1, pousava em 13,5 de 50 sem limite e em 45,6 nas rajadas de um runner hospedado, e a CI hospedada flakeava. O FrameClock (native/frame_clock.h) é o único lugar em que a cadência é decidida e é consultado uma vez por quadro do Godot: só um tick executa os callbacks de quadro e o quadro do backend, com um timestamp só, e timers, input e a fila de trabalho seguem a cada quadro. Numa janela com V-Sync em tela real que pode desenhar todo quadro com consumidor é tick; onde nada pacia o loop (headless, V-Sync desligado, ou uma janela que não desenha, como a minimizada, que o loop principal do Godot pacia com uma espera mesmo com V-Sync), com T = 1000 / R ms (R é a taxa que a tela informa, ou 60), é tick o quadro que começa a T / 2 do anterior ou a T do último tick. O requestAnimationFrame é o do próprio host: o tick passa um timestamp só a todos os callbacks e ao quadro do backend, onde o do RN lê performance.now() a cada callback (partida deliberada, como nos navegadores). 37 checks headless em oito ritmos de loop, nenhum supondo o que a máquina entrega (o runner macOS hospedado não produzia quadros de 3 ms e reprovou os dois que supunham), contra um oráculo independente que refaz cada decisão do relógio; o host anterior falha exatamente os 29 de cadência, cada uma das três sabotagens retidas falha pelo menos um check e é rejeitada pelo oráculo, e o teste de unidade em C++ roda 14 casos. Timers quantizados a ticks, timestamps regulares de apresentação (o targetTimestamp do iOS), ADAPTIVE e MAILBOX além do teste de unidade e telas reais seguem abertos. CI desta fatia pendente. Não fecha checkpoint: o GF-05 e o GF-19 não são primeira fatia.",
+    "scope": "Relógio de quadros do host: o RN roda requestAnimationFrame e os quadros do Native Animated no display link da plataforma (no máximo um disparo por período de atualização e, depois de uma parada, um só, atrasado), e o host os rodava a cada quadro do Godot, então um loop headless, sem limite ou com paradas entregava centenas de quadros por segundo ou quadros a 0,4 ms de distância; o decay nativo, que termina no primeiro passo menor que 0,1, pousava em 13,5 de 50 sem limite e em 45,6 nas rajadas de um runner hospedado, e a CI hospedada flakeava. O FrameClock (native/frame_clock.h) é o único lugar em que a cadência é decidida e é consultado uma vez por quadro do Godot: só um tick executa os callbacks de quadro e o quadro do backend, com um timestamp só, e timers, input e a fila de trabalho seguem a cada quadro. Numa janela com V-Sync em tela real que pode desenhar todo quadro com consumidor é tick; onde nada pacia o loop (headless, V-Sync desligado, ou uma janela que não desenha, como a minimizada, que o loop principal do Godot pacia com uma espera mesmo com V-Sync), com T = 1000 / R ms (R é a taxa que a tela informa, ou 60), é tick o quadro que começa a T / 2 do anterior ou a T do último tick. O requestAnimationFrame é o do próprio host: o tick passa um timestamp só a todos os callbacks e ao quadro do backend, onde o do RN lê performance.now() a cada callback (partida deliberada, como nos navegadores). 37 checks headless em oito ritmos de loop, nenhum supondo o que a máquina entrega (o runner macOS hospedado não produzia quadros de 3 ms e reprovou os dois que supunham), contra um oráculo independente que refaz cada decisão do relógio; o host anterior falha exatamente os 29 de cadência, cada uma das três sabotagens retidas falha pelo menos um check e é rejeitada pelo oráculo, e o teste de unidade em C++ roda 14 casos. Timers quantizados a ticks, timestamps regulares de apresentação (o targetTimestamp do iOS), ADAPTIVE e MAILBOX além do teste de unidade e telas reais seguem abertos. CI 37538167415 repetiu os 37 checks em 0bc0166. Não fecha checkpoint: o GF-05 e o GF-19 não são primeira fatia.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/43"
   },
   "phases": [
@@ -263,7 +263,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Getter real da ref agora é contido antes do SDK: erro com causa retida preserva TouchStart/Raw/React e limpa contexto/work/query no stop. Original62/65 com3negativos; corrigido65/viewport85. Bootstrap/globals completos, outros getters/permanentes/proxies/reentrância/dev/mobile abertos. CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados; 15gatesregressãopassaram,SDKnovoigualhostexecutado. Faults DocUp: throw/não booleano no root nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture ainda qualifica após fault no bubble; Up não qualificado mantém TouchEnd e limpeza; 6451 headless/1179 viewport/132 pixels locais; CI faults 37328158081 repetiu 6451 checks em 6f9e10c. Faults View Up: throw/não booleano na View nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture da mesma View ainda qualifica após fault no bubble; View não qualificada passa a consulta aos ancestrais e ao root; 240 headless/268 viewport locais; CI 37330669524 repetiu 240 checks em 01d3add. Resolver View Up: getter em canonical.publicInstance falha o lookup antes do SDK com 1 diagnóstico; o lookup seguinte lê o descriptor restaurado; 296 headless/324 viewport locais; CI 37332057453 repetiu 296 checks em b02ab93. Relógio de quadros do host: requestAnimationFrame e o quadro do NativeAnimated rodam em ticks de um FrameClock, uma decisão por quadro do Godot (todo quadro com consumidor numa janela com V-Sync que pode desenhar; senão, inclusive numa janela que não desenha, meio período de atualização desde o quadro anterior ou um período inteiro desde o último tick), e não a cada quadro; timers, input e a fila seguem a cada quadro, e o requestAnimationFrame do host passa o timestamp único do tick a todos os callbacks. 37 checks headless em oito ritmos, nenhum supondo o que a máquina entrega, com oráculo independente; host anterior falha exatamente 29 e cada sabotagem retida falha pelo menos um; timers quantizados a ticks e timestamps regulares de apresentação abertos; CI do relógio pendente.",
+      "note": "Getter real da ref agora é contido antes do SDK: erro com causa retida preserva TouchStart/Raw/React e limpa contexto/work/query no stop. Original62/65 com3negativos; corrigido65/viewport85. Bootstrap/globals completos, outros getters/permanentes/proxies/reentrância/dev/mobile abertos. CI própria passou cinco jobs; 65 checks do getter e 23 pins auditados; 15gatesregressãopassaram,SDKnovoigualhostexecutado. Faults DocUp: throw/não booleano no root nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture ainda qualifica após fault no bubble; Up não qualificado mantém TouchEnd e limpeza; 6451 headless/1179 viewport/132 pixels locais; CI faults 37328158081 repetiu 6451 checks em 6f9e10c. Faults View Up: throw/não booleano na View nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture da mesma View ainda qualifica após fault no bubble; View não qualificada passa a consulta aos ancestrais e ao root; 240 headless/268 viewport locais; CI 37330669524 repetiu 240 checks em 01d3add. Resolver View Up: getter em canonical.publicInstance falha o lookup antes do SDK com 1 diagnóstico; o lookup seguinte lê o descriptor restaurado; 296 headless/324 viewport locais; CI 37332057453 repetiu 296 checks em b02ab93. Relógio de quadros do host: requestAnimationFrame e o quadro do NativeAnimated rodam em ticks de um FrameClock, uma decisão por quadro do Godot (todo quadro com consumidor numa janela com V-Sync que pode desenhar; senão, inclusive numa janela que não desenha, meio período de atualização desde o quadro anterior ou um período inteiro desde o último tick), e não a cada quadro; timers, input e a fila seguem a cada quadro, e o requestAnimationFrame do host passa o timestamp único do tick a todos os callbacks. 37 checks headless em oito ritmos, nenhum supondo o que a máquina entrega, com oráculo independente; host anterior falha exatamente 29 e cada sabotagem retida falha pelo menos um; timers quantizados a ticks e timestamps regulares de apresentação abertos; CI 37538167415 repetiu os 37 checks em 0bc0166.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1172,7 +1172,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. 3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda. Escala uniforme: o transform: [{ scale }] do RN, estático ou animado, monta como escala planar uniforme no mesmo Control (o RN o escreve como scale3d e o elemento de z não move ponto do plano), a regra planar tem uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e um Pressable escalado recebe cliques reais onde só a escala alcança; 29 headless em cinco aplicações, host anterior falha exatamente 22, oito casos de rejeição e 81 checks; 3D e peso diferente de 1 seguem rejeitados. CI desta fatia pendente. Transforms singulares: scale: 0, scaleX: 0, matrizes sem inversa e entradas ou saídas animadas pelo zero colapsam a View como no RN, sem erro (o Control escondido guarda a última transformada invertível, a próxima o restaura e a projeção de ponteiros o trata como display: none); 49 headless em oito aplicações, host anterior falha exatamente 37, sabotagem da projeção falha exatamente 2, seis casos de rejeição e 61 checks; o toque em andamento é cancelado, o foco é solto pelo native driver (assegurado pela suíte) e mantido por commit do React (observação exploratória), e o limiar de 1e-6 do iOS fica fora do colapso exato. CI desta fatia pendente.",
+      "note": "Transform/origin usa processors/ViewProps originais, ordem, percentuais, shear/reflexão e base/offset do mesmo Control: 309/345 checks e33pixels. Math40932, rejeições61 e controles anteriores65/68. 3D, RTL, máscaras transformadas, StyleSheet/shadows/filters e diferencial completo seguem abertos. View agora usa View.js original para id→nativeID; duas raízes validam precedência, lookup, IDs duplicados e materialização (árvore89/99). O aceite completo não muda. Escala uniforme: o transform: [{ scale }] do RN, estático ou animado, monta como escala planar uniforme no mesmo Control (o RN o escreve como scale3d e o elemento de z não move ponto do plano), a regra planar tem uma definição só, usada pelo adaptador de transformações e pela projeção de ponteiros, e um Pressable escalado recebe cliques reais onde só a escala alcança; 29 headless em cinco aplicações, host anterior falha exatamente 22, oito casos de rejeição e 81 checks; 3D e peso diferente de 1 seguem rejeitados. CI 37455258901 repetiu os 29 checks da escala uniforme, os 81 dos casos de rejeição e os 25 das guardas de entrada em 9e7cc4f. Transforms singulares: scale: 0, scaleX: 0, matrizes sem inversa e entradas ou saídas animadas pelo zero colapsam a View como no RN, sem erro (o Control escondido guarda a última transformada invertível, a próxima o restaura e a projeção de ponteiros o trata como display: none); 49 headless em oito aplicações, host anterior falha exatamente 37, sabotagem da projeção falha exatamente 2, seis casos de rejeição e 61 checks; o toque em andamento é cancelado, o foco é solto pelo native driver (assegurado pela suíte) e mantido por commit do React (observação exploratória), e o limiar de 1e-6 do iOS fica fora do colapso exato. CI 37499277022 repetiu os 49 checks, os 29 da escala uniforme, os 61 dos casos de rejeição e os 25 das guardas de entrada em b274a0c.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1887,7 +1887,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls nos ticks do relógio de quadros do host, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. Timing, spring, decay, composição, interpolação, useAnimatedValueXY, stopAnimation, listener, re-render, desmontagem e duas roots de um só backend; TouchableOpacity por mouse e toque. 75 headless, host anterior falha exatamente 59; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2, rejeitadas pelo oráculo. Animated.Text/Image/ScrollView/FlatList/SectionList lançam onde renderizam; um transform scale uniforme falhava com E_TRANSFORM_3D e passou a renderizar, animado ou não, na fatia da escala uniforme (GF-10). Abertos: LayoutAnimation, Animated.event nativo no ScrollView, props de layout afirmadas pela suíte, PlatformColor, movimento reduzido, carga de JS e background/retomada, orçamentos de quadro e exports mobile. CI desta fatia pendente. O relógio de quadros do host faz o backend e o requestAnimationFrame rodarem em ticks na cadência da tela, e o decay nativo pousa na mesma janela sob todo ritmo de loop, as rajadas de runner hospedado incluídas; cinco checks do driver nativo foram renomeados (o primeiro tick depois do pedido entrega o primeiro quadro); CI do relógio pendente.",
+      "note": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls nos ticks do relógio de quadros do host, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. Timing, spring, decay, composição, interpolação, useAnimatedValueXY, stopAnimation, listener, re-render, desmontagem e duas roots de um só backend; TouchableOpacity por mouse e toque. 75 headless, host anterior falha exatamente 59; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2, rejeitadas pelo oráculo. Animated.Text/Image/ScrollView/FlatList/SectionList lançam onde renderizam; um transform scale uniforme falhava com E_TRANSFORM_3D e passou a renderizar, animado ou não, na fatia da escala uniforme (GF-10). Abertos: LayoutAnimation, Animated.event nativo no ScrollView, props de layout afirmadas pela suíte, PlatformColor, movimento reduzido, carga de JS e background/retomada, orçamentos de quadro e exports mobile. CI 37439650201 repetiu os 75 checks em 0157b15, após reexecutar o native-cold-start por um check de ritmo do decay. O relógio de quadros do host faz o backend e o requestAnimationFrame rodarem em ticks na cadência da tela, e o decay nativo pousa na mesma janela sob todo ritmo de loop, as rajadas de runner hospedado incluídas; cinco checks do driver nativo foram renomeados (o primeiro tick depois do pedido entrega o primeiro quadro); CI 37538167415 repetiu os 37 checks em 0bc0166.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1898,6 +1898,14 @@
             {
               "label": "Animated: 75 checks headless, host anterior com 59 falhas normativas e duas sabotagens retidas rejeitadas pelo oráculo (implementação d96383c)",
               "url": "https://github.com/journey-studios/godot-fabric/blob/b14617e2997579e839e25128b99204f3ad10b8a2/docs/evidence/native-animated/README.md"
+            },
+            {
+              "label": "CI Animated 37439650201: 5 jobs, 75 checks e 89 entradas auditadas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b02a6b9f589187b05663a0f56018bf203cf7a54a/docs/evidence/native-animated/hosted-ci.json"
+            },
+            {
+              "label": "Pages Animated 37439650214: dados da main em 0157b15 implantados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b02a6b9f589187b05663a0f56018bf203cf7a54a/docs/evidence/native-animated/publication.json"
             }
           ]
         },
@@ -1981,7 +1989,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo. CI 37382633328 repetiu os 75 checks em 8f80fed, após reexecutar o reference-android por falha de infraestrutura. Appearance e useColorScheme originais do RN pelo import público, alimentados pelo tema do sistema do DisplayServer e pelo override de setColorScheme: override light/dark vence, unspecified/auto seguem o sistema, sem modo escuro começa em light, evento só quando o esquema efetivo muda e stop sem evento; um único callback de tema, registrado uma vez, serve todas as aplicações abertas e quem para ou é liberada sai dele; 79 headless, host anterior falha exatamente 56, o host antes do callback compartilhado falha exatamente os 9 checks de duas aplicações e um host que emite a cada callback falhou 17, rejeitados pelo oráculo.",
+      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo. CI 37382633328 repetiu os 75 checks em 8f80fed, após reexecutar o reference-android por falha de infraestrutura. Appearance e useColorScheme originais do RN pelo import público, alimentados pelo tema do sistema do DisplayServer e pelo override de setColorScheme: override light/dark vence, unspecified/auto seguem o sistema, sem modo escuro começa em light, evento só quando o esquema efetivo muda e stop sem evento; um único callback de tema, registrado uma vez, serve todas as aplicações abertas e quem para ou é liberada sai dele; 79 headless, host anterior falha exatamente 56, o host antes do callback compartilhado falha exatamente os 9 checks de duas aplicações e um host que emite a cada callback falhou 17, rejeitados pelo oráculo. CI 37408741652 repetiu os 79 checks em 1607044.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2000,6 +2008,14 @@
             {
               "label": "Appearance: 79 checks, host anterior com 56 falhas normativas, host antes do callback compartilhado com 9 e sabotagem rejeitada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/d2fed26e1efa6c79c261ecbd14d1f40257037baa/docs/evidence/appearance/README.md"
+            },
+            {
+              "label": "CI Appearance 37408741652: 5 jobs, 79 checks e 72 entradas auditadas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/169611d7c2cff905edebb8c07a4f3ee0b1037194/docs/evidence/appearance/hosted-ci.json"
+            },
+            {
+              "label": "Pages Appearance 37408741641: dados da main em 1607044 implantados",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/169611d7c2cff905edebb8c07a4f3ee0b1037194/docs/evidence/appearance/publication.json"
             }
           ]
         },
@@ -3440,6 +3456,58 @@
     }
   ],
   "activity": [
+    {
+      "id": "frame-clock-hosted-ci-and-pages-20261006",
+      "at": "2026-10-06T22:54:57.831566+00:00",
+      "taskIds": [
+        "GF-05",
+        "GF-19"
+      ],
+      "message": "CI hospedada do relógio de quadros: o push da main em 0bc0166 (run 37538167415) passou nos cinco jobs na primeira tentativa e repetiu os 37 checks do estado depois da revisão, sem nenhum que suponha a temporização da máquina: os IDs são exatamente os 42 da primeira CI hospedada da branch (run 37521566298, que reprovou dois checks) menos os 8 que a revisão removeu mais os 3 que acrescentou. O oráculo independente aceita o relatório baixado, os checks de cadência que o host anterior falha passam e o teste de unidade em C++ roda no passo test:runtime. 7 das 101 entradas rastreadas diferem de e67f82c, exatamente os sete arquivos da revisão. Pages 37538167731 implantou exatamente os dados de 0bc0166.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/2858ed733f718e031f63ea5e901982463b31ab5d/docs/evidence/frame-clock/hosted-ci.json"
+    },
+    {
+      "id": "singular-transforms-hosted-ci-and-pages-20261006",
+      "at": "2026-10-06T22:54:57.831566+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-19",
+        "GF-13"
+      ],
+      "message": "CI hospedada dos transforms singulares: o push da main em b274a0c (run 37499277022) passou nos cinco jobs na primeira tentativa e repetiu os 49 checks singulares, os 29 da escala uniforme, os 61 dos casos de rejeição e os 25 das guardas de entrada; os digests dos IDs batem com os fixados depois de desfazer a troca de frase do 4d8312d, os oráculos independentes aceitam os relatórios baixados e os checks que o host anterior e a sabotagem falham passam. 5 das 87 entradas rastreadas diferem de ca9f195, os arquivos do 4d8312d. Pages 37499277071 implantou exatamente os dados de b274a0c.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/99b30a03ff926a8c7d845bd84591ed7df58fd1b8/docs/evidence/singular-transforms/hosted-ci.json"
+    },
+    {
+      "id": "uniform-scale-hosted-ci-and-pages-20261006",
+      "at": "2026-10-06T22:54:57.831566+00:00",
+      "taskIds": [
+        "GF-10",
+        "GF-19",
+        "GF-13"
+      ],
+      "message": "CI hospedada da escala uniforme: o push da main em 9e7cc4f (run 37455258901) passou nos cinco jobs na primeira tentativa e repetiu os 29 checks da escala uniforme com IDs e bundle idênticos aos fixados, os 81 dos casos de rejeição e os 25 das guardas de entrada; o oráculo independente aceita o relatório baixado e os checks que o host anterior falha passam. As 86 entradas rastreadas batem com 6fbfb18. Pages 37455258872 implantou exatamente os dados de 9e7cc4f.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/5758fe27c9dac9a489c9a20723da256ad5a748ca/docs/evidence/uniform-scale/hosted-ci.json"
+    },
+    {
+      "id": "native-animated-hosted-ci-and-pages-20261006",
+      "at": "2026-10-06T22:54:57.831566+00:00",
+      "taskIds": [
+        "GF-19",
+        "GF-13",
+        "GF-08"
+      ],
+      "message": "CI hospedada do Animated: o push da main em 0157b15 (run 37439650201) passou nos cinco jobs na segunda tentativa. Na primeira, o native-cold-start caiu no test:animated por um check do decay nativo (4 valores distintos onde o limite fixo pede 5, porque o laço sem teto entregou quadros em pares e o driver de decay terminou no quase duplicado); o job foi reexecutado no mesmo commit e repetiu os 75 checks com IDs e bundle idênticos aos fixados, o oráculo independente aceita o relatório baixado e os checks que o host anterior e as sabotagens falham passam. As 89 entradas rastreadas batem com d96383c. Pages 37439650214 implantou exatamente os dados de 0157b15.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b02a6b9f589187b05663a0f56018bf203cf7a54a/docs/evidence/native-animated/hosted-ci.json"
+    },
+    {
+      "id": "appearance-hosted-ci-and-pages-20261006",
+      "at": "2026-10-06T22:54:57.831566+00:00",
+      "taskIds": [
+        "GF-21"
+      ],
+      "message": "CI hospedada do Appearance: o push da main em 1607044 (run 37408741652) passou nos cinco jobs na primeira tentativa e repetiu os 79 checks do estado depois da revisão com IDs idênticos aos fixados; o oráculo independente aceita o relatório baixado e os checks que o host anterior e o host antes do callback compartilhado falham passam. 22 das 72 entradas rastreadas diferem de a402a1f por commits de revisão e da main. Pages 37408741641 implantou exatamente os dados de 1607044.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/169611d7c2cff905edebb8c07a4f3ee0b1037194/docs/evidence/appearance/hosted-ci.json"
+    },
     {
       "id": "frame-clock-local-verified-20261006",
       "at": "2026-10-06T19:34:41.181313+00:00",

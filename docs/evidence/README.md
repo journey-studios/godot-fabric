@@ -326,7 +326,8 @@ two applications that observe at once both receive each change. The preceding
 host fails exactly the 56 Appearance checks, the host from before the shared
 callback fails exactly its 9 two-application checks, and a host that emitted for
 every callback failed 17 of the first 67; the independent oracle rejects both.
-Hosted CI pending.
+Hosted run 37408741652 repeated the 79 checks with identical IDs and the oracle
+accepts its report ([receipt](appearance/hosted-ci.json)).
 
 The [Animated record](native-animated/README.md) runs RN's original `Animated`,
 `Easing`, `useAnimatedValue(XY)` and `TouchableOpacity` in two roots of one
@@ -341,7 +342,9 @@ agrees with the Controls to rounding; mouse and touch presses dim the
 JS thread does not update the shadow node references it holds fails 2; the oracle
 rejects both. The record also updates two earlier contracts (the touchables suite
 renders `TouchableOpacity`; a tree children-only commit keeps an imperative native
-ID) and keeps their executed files as history. Four captures. Hosted CI pending.
+ID) and keeps their executed files as history. Four captures. Hosted run
+37439650201 repeated the 75 checks on its second attempt, after the first failed one
+check of the native decay ([receipt](native-animated/hosted-ci.json)).
 
 The [uniform scale record](uniform-scale/README.md) accepts RN's
 `transform: [{ scale }]`, which the transforms guard rejected because RN writes it
@@ -356,8 +359,8 @@ public rejection cases pass 81 checks and the affine factor test 41,278. The
 preceding host fails exactly the 22 normative checks, with `E_TRANSFORM_3D` at
 every mount. `scale: 0` and the other singular transforms failed then; the
 [singular transforms record](singular-transforms/README.md) below collapses them. A
-separate commit hardens the Animated example's capture check. One capture. Hosted CI
-pending.
+separate commit hardens the Animated example's capture check. One capture. Hosted
+run 37455258901 repeated the 29, 81 and 25 headless checks ([receipt](uniform-scale/hosted-ci.json)).
 
 The [singular transforms record](singular-transforms/README.md) renders a transform
 with no inverse as RN does (the View neither drawn nor hit, no error, restored by the
@@ -378,7 +381,9 @@ sabotage of the pointer projection fails exactly 2. The public rejection cases a
 again, not the checkpoint's six (perspective, `rotateX`, a weight other than 1 and three
 out-of-range cases; 61 checks), the input guards 25 and the affine factor test 57,703.
 Keyboard focus is released by a native-driver collapse (asserted) and kept by a
-React-commit one (an exploratory observation). One capture. Hosted CI pending.
+React-commit one (an exploratory observation). One capture. Hosted run
+37499277022 repeated the 49, 29, 61 and 25 headless checks
+([receipt](singular-transforms/hosted-ci.json)).
 
 The [frame clock record](frame-clock/README.md) makes `requestAnimationFrame` callbacks
 and RN's Native Animated frames run at a display link's cadence instead of on every
@@ -413,7 +418,8 @@ ticked at 120.0 per second; V-Sync off, 166 of 2,400 at 114.6 per second;
 `Engine.max_fps` 60, 360 of 360; minimized, the window reports it cannot draw and the clock
 reads `time` from `undrawable`. The clock has no visual output, so there is no capture.
 Open: regular presentation timestamps, timers quantized to ticks, and `ADAPTIVE` and
-`MAILBOX` V-Sync beyond the unit test. Hosted CI pending.
+`MAILBOX` V-Sync beyond the unit test. Hosted run 37538167415 repeated the
+37 checks ([receipt](frame-clock/hosted-ci.json)).
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

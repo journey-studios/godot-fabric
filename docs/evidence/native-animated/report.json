@@ -1554,7 +1554,12 @@
     }
   },
   "hostedCI": {
-    "status": "pending-native-animated-slice"
+    "status": "verified",
+    "run": 37439650201,
+    "attempts": 2,
+    "receipt": "hosted-ci.json",
+    "pages": 37439650214,
+    "publication": "publication.json"
   },
   "limits": [
     "The suite asserts only props without layout effects (opacity, translation, rotation); exploratory runs of width and marginLeft with the native driver followed frame by frame (RN's backend commits layout updates), but they are not part of the receipt.",

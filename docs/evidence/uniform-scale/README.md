@@ -272,9 +272,9 @@ original do RN, coberto na galeria com `scaleX`), o clipping transformado, `scal
 agora não tem efeito no plano, como nas plataformas) e os exports mobile do Godot não são
 asseguração desta fatia. O ramo do guard em `local_transform` não é alcançável com um nó
 escalado (o nó é sempre montado e é a própria âncora), então só o teste unitário o cobre.
-A CI hospedada desta fatia está pendente. Nenhum GF, checkpoint, peso ou denominador
-fecha: o GF-10 não é primeira fatia dele, então o checkpoint de fatia, que já estava
-fechado, não muda, e o contrato, a paridade e os alvos seguem abertos.
+Nenhum GF, checkpoint, peso ou denominador fecha: o GF-10 não é primeira fatia dele,
+então o checkpoint de fatia, que já estava fechado, não muda, e o contrato, a paridade
+e os alvos seguem abertos.
 
 Na execução, as 86 fontes de código e configuração executadas (10 produtoras desta fatia,
 63 entradas do build nativo e 16 de verificação, com 3 em comum) correspondem à
@@ -285,3 +285,16 @@ na própria árvore commitada (base `0157b15`, árvore
 local nas fontes executadas; só os documentos desta fatia foram escritos enquanto as
 suítes rodavam), então este pin não é uma corrida nova. O recibo traz o hash da captura;
 os relatórios brutos dos lanes ficam em `build/` e não entram no Git.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 9e7cc4f (run
+37455258901), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-transform-guards` do job nativo repete as lanes headless: os **29
+checks** da escala uniforme, com IDs idênticos aos fixados e o bundle do relatório,
+os 81 dos oito casos de rejeição e os 25 das guardas de entrada; o oráculo
+independente aceita de novo o relatório baixado (erro linear máximo de 4,8e-8, o do
+recibo) e os 22 checks que o host anterior falha passam todos no run. A lane de
+captura (35 checks, renderizador nativo) não roda no runner hospedado. Os 86
+arquivos rastreados batem com `6fbfb18` na árvore do checkout. O
+[Pages](publication.json) (run 37455258872) implantou exatamente os dados commitados
+de 9e7cc4f; o site público já foi substituído pelo deploy seguinte da `main`. Nenhum
+GF, checkpoint, peso ou denominador fecha.

@@ -290,6 +290,7 @@ system theme and the `setColorScheme` override, with two roots re-rendering the
 same scheme and two applications sharing one system theme callback: 79 headless
 checks. The preceding host fails exactly its 56 Appearance checks, and the host
 from before the shared callback its 9 two-application checks.
+Hosted CI repeated the 79 checks ([receipt](docs/evidence/appearance/hosted-ci.json)).
 [Evidence](docs/evidence/appearance/README.md).
 
 The [Animated example](examples/animated/README.md) runs React Native's original
@@ -302,7 +303,9 @@ by frame by an independent oracle. The preceding host fails exactly its 59
 normative checks, and hosts that hand the backend seconds or leave the JS thread's
 runtime reference update off fail exactly 32 and 2. A uniform `transform: [{ scale }]`
 failed with `E_TRANSFORM_3D` then and renders since the uniform scale proof below;
-`LayoutAnimation` is open. [Evidence](docs/evidence/native-animated/README.md).
+`LayoutAnimation` is open. Hosted CI repeated the 75 checks on its second
+attempt ([receipt](docs/evidence/native-animated/hosted-ci.json)).
+[Evidence](docs/evidence/native-animated/README.md).
 
 The [uniform scale proof](examples/transforms/README.md#uniform-scale) mounts RN's
 uniform `transform: [{ scale }]` in five Hermes applications: a scale, a scale with
@@ -313,7 +316,9 @@ against planar matrices derived from the JSX, with an independent oracle; the
 preceding host fails exactly the 22 that need the scale. The host's planar rule now
 has one definition, shared by the transform adapter and pointer projection.
 `scale: 0` and other singular transforms failed then and collapse their View since the
-singular transforms proof below. [Evidence](docs/evidence/uniform-scale/README.md).
+singular transforms proof below. Hosted CI repeated the 29 checks
+([receipt](docs/evidence/uniform-scale/hosted-ci.json)).
+[Evidence](docs/evidence/uniform-scale/README.md).
 
 The [singular transforms proof](examples/transforms/README.md#singular-transforms)
 mounts RN's singular `transform` styles in eight Hermes applications: `scale: 0`,
@@ -326,7 +331,8 @@ last invertible transform and shows it again with the next invertible one. 49 he
 checks against values derived from the JSX with an independent oracle; the preceding
 host fails exactly the 37 that need the collapse, and a retained sabotage of the pointer
 projection fails exactly 2. 3D, a weight other than 1 and out-of-range transforms remain
-rejected. [Evidence](docs/evidence/singular-transforms/README.md).
+rejected. Hosted CI repeated the 49 checks ([receipt](docs/evidence/singular-transforms/hosted-ci.json)).
+[Evidence](docs/evidence/singular-transforms/README.md).
 
 The [frame clock record](docs/evidence/frame-clock/README.md) makes
 `requestAnimationFrame` callbacks and RN's Native Animated frames run at a display
@@ -351,7 +357,8 @@ reports; the preceding host fails exactly the 29 cadence checks, and three retai
 sabotages each fail at least one and are rejected by the oracle. The clock has no visual
 output, so there is no example scene or screenshot. Timers are not quantized to ticks,
 presented frames carry CPU time and not the display's regular timestamp, and real displays
-beyond one exploratory headed run are not certified.
+beyond one exploratory headed run are not certified. Hosted CI repeated the 37 checks
+([receipt](docs/evidence/frame-clock/hosted-ci.json)).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

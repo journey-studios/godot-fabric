@@ -8,7 +8,9 @@ a JS thread that does not update the shadow node references it holds fails 2) an
 the independent oracle that recomputes every sample. LayoutAnimation, native
 `Animated.event` on the SDK ScrollView, reduced motion, `PlatformColor`
 interpolation, performance budgets and Godot mobile exports are not certified.
-Hosted CI is pending.
+Hosted run 37439650201 repeated the 75 checks on its second attempt, after the
+first failed one check of the native decay, and the independent oracle accepts
+its report ([receipt](../evidence/native-animated/hosted-ci.json)).
 
 ## What RN does
 

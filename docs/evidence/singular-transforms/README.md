@@ -393,9 +393,9 @@ os exemplos de transforms e do Animated.
   O cenário prova o hit testing, a projeção e o colapso com o mouse; o toque num `Pressable`
   colapsado ou restaurado, o colapso sob um `ScrollView`, o clipping transformado, `scaleZ` e
   os exports mobile do Godot não são asseguração desta fatia.
-- **CI.** A CI hospedada desta fatia está pendente. Nenhum GF, checkpoint, peso ou
-  denominador fecha: o GF-10 não é primeira fatia dele, então o checkpoint de fatia, que já
-  estava fechado, não muda, e o contrato, a paridade e os alvos seguem abertos.
+- **Fechamento.** Nenhum GF, checkpoint, peso ou denominador fecha: o GF-10 não é
+  primeira fatia dele, então o checkpoint de fatia, que já estava fechado, não muda, e o
+  contrato, a paridade e os alvos seguem abertos.
 
 Observações exploratórias, fora do recibo e não asseguradas pela suíte: (a) num experimento
 descartável, com um campo de texto dentro de uma View colapsada por estado do React, o
@@ -416,3 +416,17 @@ implementação, sem alteração local nas fontes executadas; os documentos dest
 redigidos fora da árvore enquanto as suítes rodavam e só entraram nela depois), então este
 pin não é uma corrida nova. O recibo traz o hash da captura; os relatórios brutos dos lanes
 ficam em `build/` e não entram no Git.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em b274a0c (run
+37499277022), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-transform-guards` repete as quatro lanes headless: os **49 checks**
+dos transforms singulares, os 29 da escala uniforme, os 61 dos seis casos de
+rejeição e os 25 das guardas de entrada. Os digests dos IDs batem com os fixados
+depois de desfazer a troca da frase de três checks dos trechos animados (commit
+`4d8312d`), os oráculos independentes aceitam os dois relatórios baixados, e os 37
+checks que o host anterior falha e os 2 da sabotagem do ramo colapsado passam todos
+no run. A lane de captura (58 checks) não roda no runner hospedado. 82 dos 87
+arquivos rastreados batem com `ca9f195` na árvore do checkout; os outros 5 são os
+que o `4d8312d` mudou. O [Pages](publication.json) (run 37499277071) implantou
+exatamente os dados commitados de b274a0c; o site público já foi substituído pelo
+deploy seguinte da `main`. Nenhum GF, checkpoint, peso ou denominador fecha.

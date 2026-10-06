@@ -1,0 +1,1388 @@
+{
+  "schemaVersion": 1,
+  "scenario": "frame-clock",
+  "status": "verified-completed-hosted-workflow-and-headless-frame-clock-artifact",
+  "run": {
+    "id": 37538167415,
+    "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/43",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "success",
+        "startedAt": "2026-10-06T22:04:00Z",
+        "jobs": [
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112524335882,
+            "runAttempt": 1,
+            "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+            "startedAt": "2026-10-06T22:04:03Z",
+            "completedAt": "2026-10-06T22:05:06Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524335882"
+          },
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112524336190,
+            "runAttempt": 1,
+            "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+            "startedAt": "2026-10-06T22:04:09Z",
+            "completedAt": "2026-10-06T22:11:51Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524336190"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112524336222,
+            "runAttempt": 1,
+            "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+            "startedAt": "2026-10-06T22:04:10Z",
+            "completedAt": "2026-10-06T22:42:04Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524336222"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112524336248,
+            "runAttempt": 1,
+            "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+            "startedAt": "2026-10-06T22:04:03Z",
+            "completedAt": "2026-10-06T22:10:15Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524336248"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112537713362,
+            "runAttempt": 1,
+            "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+            "startedAt": "2026-10-06T22:42:07Z",
+            "completedAt": "2026-10-06T22:42:28Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112537713362"
+          }
+        ]
+      }
+    ],
+    "reruns": [],
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112524335882,
+        "runAttempt": 1,
+        "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+        "startedAt": "2026-10-06T22:04:03Z",
+        "completedAt": "2026-10-06T22:05:06Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524335882"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112524336190,
+        "runAttempt": 1,
+        "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+        "startedAt": "2026-10-06T22:04:09Z",
+        "completedAt": "2026-10-06T22:11:51Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524336190"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112524336222,
+        "runAttempt": 1,
+        "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+        "startedAt": "2026-10-06T22:04:10Z",
+        "completedAt": "2026-10-06T22:42:04Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524336222"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112524336248,
+        "runAttempt": 1,
+        "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+        "startedAt": "2026-10-06T22:04:03Z",
+        "completedAt": "2026-10-06T22:10:15Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112524336248"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112537713362,
+        "runAttempt": 1,
+        "headSha": "0bc016614688cb4034b73e499348428c2f0d3805",
+        "startedAt": "2026-10-06T22:42:07Z",
+        "completedAt": "2026-10-06T22:42:28Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167415/job/112537713362"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "0bc016614688cb4034b73e499348428c2f0d3805",
+      "native-cold-start": "0bc016614688cb4034b73e499348428c2f0d3805",
+      "parity-comparison": "0bc016614688cb4034b73e499348428c2f0d3805",
+      "reference-android": "0bc016614688cb4034b73e499348428c2f0d3805",
+      "reference-ios": "0bc016614688cb4034b73e499348428c2f0d3805"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "contractsJob": {
+      "nodeContractTests": {
+        "tests": 264,
+        "pass": 264,
+        "fail": 0
+      },
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 37.9
+  },
+  "implementationCommit": "e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
+  "committedStateExercised": {
+    "source": "postReview",
+    "commit": "8fc46279d6126b87e4fc6cc1d982f75620dfc3b5",
+    "headlessChecks": 37,
+    "reviewCommits": [
+      "e6d42a4efa8cb224c7db82a24625341eeb21f9e8",
+      "8fc46279d6126b87e4fc6cc1d982f75620dfc3b5"
+    ],
+    "note": "the report's top level describes the implementation commit; the hosted run exercises the tree after review, which the report records in postReview"
+  },
+  "runHeadIsPostCommitSourcePin": true,
+  "pullRequest": {
+    "number": 43,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/43",
+    "title": "feat(runtime): Pace frame callbacks and native animation by the display",
+    "headSha": "eda39789bb97db4e56ffba0752358c47f7352344",
+    "squashMergeCommit": "0bc016614688cb4034b73e499348428c2f0d3805",
+    "mergedAt": "2026-10-06T22:03:57Z",
+    "headTreeSha": "fd84d7814e1c13cb523b0e325270c0fa237f648e",
+    "mainTreeSha": "fd84d7814e1c13cb523b0e325270c0fa237f648e",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 7,
+    "stackedBranchCommitsBeforeImplementation": [],
+    "commitsAfterImplementation": [
+      {
+        "commit": "9f562f5",
+        "subject": "docs(runtime): Pin executed frame clock evidence"
+      },
+      {
+        "commit": "977b01d",
+        "subject": "docs(dashboard): Record the frame clock slice"
+      },
+      {
+        "commit": "e6d42a4",
+        "subject": "fix(runtime): Use time pacing while the window cannot draw"
+      },
+      {
+        "commit": "8fc4627",
+        "subject": "test(runtime): Judge the frame clock lanes on delivered frames only"
+      },
+      {
+        "commit": "f9f53e6",
+        "subject": "docs(runtime): Qualify the frame clock guarantees"
+      },
+      {
+        "commit": "eda3978",
+        "subject": "test(runtime): Keep frame clock replay going when a callback is missing"
+      }
+    ],
+    "trackedPathsChangedAfterImplementation": 7
+  },
+  "actualCheckout": {
+    "sha": "0bc016614688cb4034b73e499348428c2f0d3805",
+    "parents": [
+      "b274a0c2b583bb6a5b7a558ecf8dcaad0902f54f"
+    ],
+    "treeSha": "fd84d7814e1c13cb523b0e325270c0fa237f648e",
+    "treeEntries": 1141,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree is compared with the local tree and every blob of the run head; each tracked path's run-head bytes are compared with the pinned bytes of the implementation commit, and every difference is traced to the commits that introduced it",
+    "trackedPinSetCounts": {
+      "sourcePins": 26,
+      "nativeSourcePins": 65,
+      "verificationSourcePins": 18
+    },
+    "allCuratedTrackedPathsVerified": 101,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "trackedPathsEqualToImplementationCommitAtRunHead": 94,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementation": [
+      "native/fabric_application.cpp",
+      "native/frame_clock.h",
+      "native/frame_clock_test.cpp",
+      "tests/frame-clock-native.test.mjs",
+      "tests/frame-clock-oracle.mjs",
+      "tests/frame-clock-probe.gd",
+      "tests/native-animated-probe.gd"
+    ],
+    "allDifferencesTracedToCommits": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11448340877,
+    "name": "native-frame-clock",
+    "zipSizeBytes": 146541,
+    "zipSha256": "832c862cf029f623c059f9890be4a7a8608eb17787953761f977b993ef24aa3d",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-06T22:17:02Z",
+    "expiresAt": "2027-01-04T22:04:00Z",
+    "fileCount": 5,
+    "filesMatchTheWorkflowUploadPaths": true,
+    "files": {
+      "frame-clock-comparison.json": "39f9b5480570f9bad12a4af032004dba1a6004e28bb14ac75b0581b76471ae73",
+      "frame-clock-current-report.json": "6cf3532947ba619ef9ac0c9063773867cf19d3affe3a771cc48fb6f962badcd6",
+      "frame-clock-current.log": "2335685f846f75e89297b3c5d01d0e9aabc20dda3496f01099b18670922e7905",
+      "frame-clock-probe-bundle.json": "57b0d747285fe41559e06de12875fd25bbac00bd1027bcca514d7a1ffc0bd402",
+      "frame-clock-report.json": "164f5a4e413453905697e1f7214f5acfcf0be38bea52bf94a536e2d671f3d4b0"
+    }
+  },
+  "verification": {
+    "headlessChecks": 37,
+    "committedHeadlessChecks": 37,
+    "lanes": [
+      {
+        "lane": "current",
+        "reportFile": "frame-clock-current-report.json",
+        "logFile": "frame-clock-current.log",
+        "checks": 37,
+        "passed": 37,
+        "uniqueCheckIds": true,
+        "committedChecks": 37,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "091afc91939a2e3340d3fb8d53eb17fd16e08fe969acfbbda8befd0df2a1e354",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':'); the committed state records no digest for this lane",
+        "committedCheckIdDigestSha256": null,
+        "checkIdDigestEqualsCommitted": null,
+        "bundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+        "bundleInputCount": 275,
+        "bundleEqualsHashRecordedInCommittedReportAt": [
+          "lanes[0].bundleSha256",
+          "lanes[1].bundleSha256",
+          "lanes[2].bundleSha256",
+          "lanes[3].bundleSha256",
+          "lanes[4].bundleSha256"
+        ],
+        "pinnedBundleSha256": "64539585fc4cabc8d1a1591deb15cfa733d835ac79b7e3bd9556dcda437ae07b",
+        "bundleEqualsPinnedBundle": true,
+        "nativeHostSha256": "59effb9ffe3304bb9bf3658bb7cbe5495e737c8bf5d911dbd6328a5130eb1c5d",
+        "node": "v22.23.2",
+        "reportSha256": "6cf3532947ba619ef9ac0c9063773867cf19d3affe3a771cc48fb6f962badcd6",
+        "logSha256": "2335685f846f75e89297b3c5d01d0e9aabc20dda3496f01099b18670922e7905",
+        "passedMarker": "FRAME_CLOCK_PASSED: 37",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "pointerRegistryWarningLines": 0,
+        "pinnedProducersChangedSinceTheCommittedState": [
+          "tests/frame-clock-native.test.mjs",
+          "tests/frame-clock-probe.gd"
+        ]
+      }
+    ],
+    "independentOracle": [
+      {
+        "module": "tests/frame-clock-oracle.mjs",
+        "atCommit": "0bc016614688cb4034b73e499348428c2f0d3805",
+        "export": "verifyFrameClockReport",
+        "lane": "current",
+        "acceptsDownloadedReport": true,
+        "modulesLoaded": [
+          "tests/frame-clock-cases.mjs",
+          "tests/frame-clock-oracle.mjs"
+        ],
+        "result": {
+          "window": {
+            "lowestLanding": 48.74930563591774,
+            "asymptote": 49.99999999999996,
+            "span": 1.2506943640822143,
+            "uniformLanding": {
+              "halfPeriod": 48.82411193847656,
+              "period": 49.444549560546875,
+              "sixPointNineMs": 48.51854705810547,
+              "oneMs": 40.005619049072266
+            }
+          },
+          "runs": {
+            "paced-60": {
+              "frames": 49,
+              "ticks": 22,
+              "waited": 18,
+              "idle": 9,
+              "backendFrames": 12,
+              "landing": 49.951065063476605,
+              "loopFrames": 40,
+              "loopTicks": 22,
+              "loopTicksPerSecond": 14.317771217635332,
+              "stalls": {
+                "stalls": 13,
+                "lateTicks": 13,
+                "catchUps": 12,
+                "catchUpsWaited": 12
+              },
+              "pacing": {
+                "frames": 49,
+                "medianGapMs": 20.79399999999987,
+                "shareUnderHalfPeriod": 0.46938775510204084,
+                "gapsUnderHalfPeriod": 23,
+                "stalls": 17,
+                "catchUps": 17
+              }
+            },
+            "headless": {
+              "frames": 61,
+              "ticks": 25,
+              "waited": 27,
+              "idle": 9,
+              "backendFrames": 18,
+              "landing": 49.747291564941406,
+              "loopFrames": 52,
+              "loopTicks": 25,
+              "loopTicksPerSecond": 26.908629059166703,
+              "stalls": {
+                "stalls": 2,
+                "lateTicks": 2,
+                "catchUps": 1,
+                "catchUpsWaited": 1
+              },
+              "pacing": {
+                "frames": 61,
+                "medianGapMs": 6.755000000000109,
+                "shareUnderHalfPeriod": 0.5245901639344263,
+                "gapsUnderHalfPeriod": 32,
+                "stalls": 2,
+                "catchUps": 2
+              }
+            },
+            "fast": {
+              "frames": 828,
+              "ticks": 41,
+              "waited": 778,
+              "idle": 9,
+              "backendFrames": 29,
+              "landing": 49.434326171875,
+              "loopFrames": 819,
+              "loopTicks": 41,
+              "loopTicksPerSecond": 58.34538189187024,
+              "stalls": {
+                "stalls": 0,
+                "lateTicks": 0,
+                "catchUps": 0,
+                "catchUpsWaited": 0
+              },
+              "pacing": {
+                "frames": 828,
+                "medianGapMs": 0.6299999999991996,
+                "shareUnderHalfPeriod": 1,
+                "gapsUnderHalfPeriod": 828,
+                "stalls": 0,
+                "catchUps": 0
+              }
+            },
+            "bursts": {
+              "frames": 49,
+              "ticks": 16,
+              "waited": 24,
+              "idle": 9,
+              "backendFrames": 8,
+              "landing": 49.7967147827148,
+              "loopFrames": 40,
+              "loopTicks": 16,
+              "loopTicksPerSecond": 10.507989027032448,
+              "stalls": {
+                "stalls": 8,
+                "lateTicks": 8,
+                "catchUps": 8,
+                "catchUpsWaited": 8
+              },
+              "pacing": {
+                "frames": 49,
+                "medianGapMs": 16.89599999999882,
+                "shareUnderHalfPeriod": 0.42857142857142855,
+                "gapsUnderHalfPeriod": 21,
+                "stalls": 11,
+                "catchUps": 9
+              }
+            },
+            "display-144": {
+              "frames": 74,
+              "ticks": 35,
+              "waited": 30,
+              "idle": 9,
+              "backendFrames": 26,
+              "landing": 49.8020095825195,
+              "loopFrames": 65,
+              "loopTicks": 35,
+              "loopTicksPerSecond": 46.075790726391396,
+              "stalls": {
+                "stalls": 9,
+                "lateTicks": 9,
+                "catchUps": 9,
+                "catchUpsWaited": 9
+              },
+              "pacing": {
+                "frames": 74,
+                "medianGapMs": 7.477000000000771,
+                "shareUnderHalfPeriod": 0.4594594594594595,
+                "gapsUnderHalfPeriod": 34,
+                "stalls": 9,
+                "catchUps": 9
+              }
+            },
+            "fallback-144": {
+              "frames": 58,
+              "ticks": 24,
+              "waited": 25,
+              "idle": 9,
+              "backendFrames": 18,
+              "landing": 49.663558959960895,
+              "loopFrames": 49,
+              "loopTicks": 24,
+              "loopTicksPerSecond": 30.418559377027968,
+              "stalls": {
+                "stalls": 0,
+                "lateTicks": 0,
+                "catchUps": 0,
+                "catchUpsWaited": 0
+              },
+              "pacing": {
+                "frames": 58,
+                "medianGapMs": 8.359999999998763,
+                "shareUnderHalfPeriod": 0.5,
+                "gapsUnderHalfPeriod": 29,
+                "stalls": 0,
+                "catchUps": 0
+              }
+            },
+            "presentation-bimodal": {
+              "frames": 49,
+              "ticks": 40,
+              "waited": 0,
+              "idle": 9,
+              "backendFrames": 15,
+              "landing": 49.8367614746094,
+              "loopFrames": 40,
+              "loopTicks": 40,
+              "loopTicksPerSecond": 22.153030922308222,
+              "stalls": null,
+              "pacing": {
+                "frames": 49,
+                "medianGapMs": 28.468000000000757,
+                "shareUnderHalfPeriod": 0.04081632653061224,
+                "gapsUnderHalfPeriod": 2,
+                "stalls": 15,
+                "catchUps": 0
+              }
+            },
+            "time-bimodal": {
+              "frames": 49,
+              "ticks": 37,
+              "waited": 3,
+              "idle": 9,
+              "backendFrames": 16,
+              "landing": 49.757080078125,
+              "loopFrames": 40,
+              "loopTicks": 37,
+              "loopTicksPerSecond": 25.04069112307498,
+              "stalls": {
+                "stalls": 9,
+                "lateTicks": 9,
+                "catchUps": 1,
+                "catchUpsWaited": 1
+              },
+              "pacing": {
+                "frames": 49,
+                "medianGapMs": 23.26599999999962,
+                "shareUnderHalfPeriod": 0.08163265306122448,
+                "gapsUnderHalfPeriod": 4,
+                "stalls": 13,
+                "catchUps": 1
+              }
+            }
+          }
+        }
+      }
+    ],
+    "rawProbeReportEqualsCurrentReportWithoutProvenance": true,
+    "probeBundleReceiptEqualsReportProvenanceBundle": true,
+    "comparison": {
+      "controlsAbsent": true,
+      "controlFlags": {
+        "originalControlPresent": false,
+        "sabotageAlwaysPresent": false,
+        "sabotageIdlePresent": false,
+        "sabotagePresentationPresent": false
+      },
+      "intentionalNativeProducerDifferences": [
+        "native/frame_clock.h",
+        "native/frame_clock_test.cpp",
+        "native/application_runtime.cpp",
+        "native/application_runtime.h",
+        "native/fabric_application.cpp",
+        "native/native_animated.h",
+        "native/native_animated.cpp",
+        "native/CMakeLists.txt"
+      ],
+      "intentionalNativeProducersArePinned": true,
+      "currentRecord": "carries checks, host and bundle of the current lane"
+    },
+    "firstHostedRunOfThePullRequest": {
+      "run": 37521566298,
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37521566298",
+      "event": "pull_request",
+      "branch": "feat/frame-clock",
+      "headSha": "977b01d6ee474649eaf08a32059483209d6d7c92",
+      "attempt": 1,
+      "conclusion": "failure",
+      "failingJobs": [
+        {
+          "job": "native-cold-start",
+          "failedSteps": [
+            "Run npm run test:frame-clock"
+          ]
+        }
+      ],
+      "artifactId": 11440548938,
+      "artifactZipSha256": "5317eaa3add927454d5aff15b50269ab1d0872b7873a1a561f00cfa5d791aeec",
+      "artifactZipSha256EqualsArtifactAPIDigest": true,
+      "checks": 42,
+      "failedChecks": [
+        "pipelined/The Godot loop alternates frames about 13 ms and 3 ms apart, so the lanes exercise that timing",
+        "time-bimodal/Under Time pacing the same frames are thinned: the 3 ms ones wait and ticks stay half a period apart"
+      ],
+      "failedChecksEqualTheReportsPostReviewCause": true,
+      "checkIdDigestEqualsTheCommittedPreReviewDigest": true,
+      "reviewRemovedChecksAllInIt": true,
+      "reviewAddedChecksNoneInIt": true,
+      "thisRunsChecksEqualItsChecksMinusRemovedPlusAdded": true,
+      "note": "a pull_request run on the branch head before the review commits, not a push of main; recorded because the review answered its failure"
+    },
+    "cppUnitTestThroughTestRuntime": {
+      "step": "npm run test:runtime",
+      "test": "the frame clock ticks like a display link whatever Godot's pacing",
+      "tapPass": 3,
+      "tapFail": 0,
+      "note": "tests/runtime-native.test.mjs runs .deps/build/frame_clock_test and requires FRAME_CLOCK_PASSED (14 cases)"
+    },
+    "observedPaceInTheLog": {
+      "paced-60": {
+        "catchUps": 17,
+        "frames": 49,
+        "gapsUnderHalfPeriod": 23,
+        "medianGapMs": 20.794,
+        "stalls": 17
+      },
+      "headless": {
+        "catchUps": 2,
+        "frames": 61,
+        "gapsUnderHalfPeriod": 32,
+        "medianGapMs": 6.755,
+        "stalls": 2
+      },
+      "fast": {
+        "catchUps": 0,
+        "frames": 828,
+        "gapsUnderHalfPeriod": 828,
+        "medianGapMs": 0.63,
+        "stalls": 0
+      },
+      "bursts": {
+        "catchUps": 9,
+        "frames": 49,
+        "gapsUnderHalfPeriod": 21,
+        "medianGapMs": 16.896,
+        "stalls": 11
+      },
+      "display-144": {
+        "catchUps": 9,
+        "frames": 74,
+        "gapsUnderHalfPeriod": 34,
+        "medianGapMs": 7.477,
+        "stalls": 9
+      },
+      "fallback-144": {
+        "catchUps": 0,
+        "frames": 58,
+        "gapsUnderHalfPeriod": 29,
+        "medianGapMs": 8.36,
+        "stalls": 0
+      },
+      "presentation-bimodal": {
+        "catchUps": 0,
+        "frames": 49,
+        "gapsUnderHalfPeriod": 2,
+        "medianGapMs": 28.468,
+        "stalls": 15
+      },
+      "time-bimodal": {
+        "catchUps": 1,
+        "frames": 49,
+        "gapsUnderHalfPeriod": 4,
+        "medianGapMs": 23.266,
+        "stalls": 13
+      }
+    },
+    "checkSplit": {
+      "total": 37,
+      "committedCadenceChecks": 29,
+      "committedBaselineChecks": 8,
+      "sumEqualsTotal": true
+    },
+    "controlsAgainstTheHostedLanes": {
+      "preceding-host": {
+        "checksFailingInTheCommittedControl": 29,
+        "presentInHostedLane": 29,
+        "passingInHostedLane": 29,
+        "namesFoundUnderTheirRenamedPhrase": 3
+      },
+      "sabotage-always": {
+        "checksFailingInTheCommittedControl": 21,
+        "presentInHostedLane": 21,
+        "passingInHostedLane": 21,
+        "namesFoundUnderTheirRenamedPhrase": 2
+      },
+      "sabotage-idle": {
+        "checksFailingInTheCommittedControl": 5,
+        "presentInHostedLane": 5,
+        "passingInHostedLane": 5,
+        "namesFoundUnderTheirRenamedPhrase": 0
+      },
+      "sabotage-presentation": {
+        "checksFailingInTheCommittedControl": 1,
+        "presentInHostedLane": 1,
+        "passingInHostedLane": 1,
+        "namesFoundUnderTheirRenamedPhrase": 1
+      },
+      "review": {
+        "checksRemovedByTheReview": 8,
+        "stillInHostedLane": 0,
+        "checksAddedByTheReview": 3,
+        "presentInHostedLane": 3
+      }
+    },
+    "declaredNativeHostSha256": "59effb9ffe3304bb9bf3658bb7cbe5495e737c8bf5d911dbd6328a5130eb1c5d",
+    "sameDeclaredNativeHostAcrossLanes": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "committedNode": "v22.23.3",
+    "producerPins": {
+      "tests/frame-clock-fixture.jsx": "5ed7773b423a5e75ab860c9c115862a000b0e04b3d0b1e14c93374c9a7c38b8c",
+      "tests/frame-clock-cases.mjs": "c7368cd0b4efd4b165369b7d495c9a1da363e09fedfc5d1ca4548c56da097b8d",
+      "tests/frame-clock-probe.gd": "5208c9ddbb349c7b76979bda8b241c1f5ed29b9c2e7a3cbe6fa31150306a73ed",
+      "tests/frame-clock-native.test.mjs": "1f865eac7b50332a2b38c3f2813be1b860dd93aa5bec413dc0fa060dda36ab4a",
+      "tests/frame-clock-oracle.mjs": "cacc8df3e08e269673daa7b495f8c53b15054d21514f1df2c93dde80e82fb49c",
+      "scripts/frame-clock-bundle.mjs": "c3c2122ba373e9ef94c87b92fa5fb4dd33d3a6b2a189c55d27accff35dd97566",
+      "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+      "src/react-native-platform.jsx": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+      "src/animated-exports.js": "4097fe4cd5167222581d7ac1c3032e224aedeff506026619241ba85975942f67",
+      "src/platform-color-value-types.js": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+      "sdk/toolchain/platform-plugin.mjs": "e19e81451fda62f844d4e302c747d460f17a343d8b829c1c60eb970e06c14062",
+      "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+      "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+      "native/application_runtime.cpp": "0144a67328387f09fa551f5b8548af5506e3150e93f9e1f43d920298f6aabf8e",
+      "native/application_runtime.h": "2c7c89fe91d65b4c72a33fb5fbbefc58a31b98c2c69f4081d305d9b3b856e3db",
+      "native/fabric_application.cpp": "994b66c957ae0e3460df6ddfa24e9378537140b047bcd1ddcd4ab9222c6598f9",
+      "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+      "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+      "native/CMakeLists.txt": "7d87e9300dd9a39dc9c7d3a44d4a09bd004d5a2401d32de6f5fc92f9e7cafdc9"
+    },
+    "producerPinsEqualRunHeadBytes": true,
+    "producerPinsDifferingFromImplementationPins": [
+      "native/fabric_application.cpp",
+      "native/frame_clock.h",
+      "native/frame_clock_test.cpp",
+      "tests/frame-clock-native.test.mjs",
+      "tests/frame-clock-oracle.mjs",
+      "tests/frame-clock-probe.gd"
+    ],
+    "producerPinsDifferingFromTheCommittedState": [
+      "tests/frame-clock-native.test.mjs",
+      "tests/frame-clock-probe.gd"
+    ],
+    "producerPinsOutsideTheReportsSourcePins": [
+      "scripts/native-probe-bundle.mjs",
+      "sdk/toolchain/platform-plugin.mjs",
+      "src/animated-exports.js",
+      "src/platform-color-value-types.js",
+      "src/react-native-platform.jsx"
+    ],
+    "producerPinsNotInAnyCommittedPinSet": [],
+    "producerPinsAddedBy": {},
+    "originalReactNativeSources": {
+      "Libraries/Animated/Animated.js": "658514b38e484cb106acc58e46c5c8849d325b693f4c16e3d7d177f18df8d6c2",
+      "Libraries/Animated/AnimatedImplementation.js": "aa0045f644697591c3e619cfa92df141593d21291982706191c5213aa91a176d",
+      "Libraries/Animated/useAnimatedValue.js": "208a019e4dae384d3e172a999e9446d47c956326adde35f7169d477a59538b3b",
+      "Libraries/Animated/components/AnimatedView.js": "00adcb6fe0cd68958bc2e35c1fe10bb6ee039149057c45e4456b1d44d74d2b67",
+      "Libraries/Animated/createAnimatedComponent.js": "f43699c7a66ae061efa5658cc8fa72ad9681541bbe2d4a4b55e42d5373a5394d",
+      "Libraries/Animated/nodes/AnimatedValue.js": "5fd8ecb6502c5a8ce191273fdc78522ca16f48b0b90153b4d1265c7b1e9c79ed",
+      "Libraries/Animated/animations/DecayAnimation.js": "54c9907dc4bbe2167e969c4a7c6be58212eb8eb3a21093ac6e5f6927ad8d8cdc",
+      "src/private/animated/NativeAnimatedHelper.js": "e431a4b40387635d2c844a435c039f9567613fd97d3397db1944f591ba3aebc9",
+      "ReactCommon/react/runtime/TimerManager.cpp": "4da567def5bf1c65895cb8dc70682c03371008f30f30f7022a56c9412ce57275",
+      "React/CoreModules/RCTTiming.mm": "464bc284890b54a48f382686bfba26779111a57b4960db34f1ac6012762950b5",
+      "React/Base/RCTDisplayLink.m": "8a6ccdbe016218cc7bf6f8e361e82e89558cf7a99bdf55b70d41baffbb94a38b",
+      "React/Fabric/RCTScheduler.mm": "0d1ede5f7e414798c83eef3b0a0f235a26eb60c023787e68397e067d9795814f",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/core/JavaTimerManager.kt": "2ece31995da4fc2b37f117ccd7713a85a14aefb750f2255a1542315828a3fc25",
+      "ReactAndroid/src/main/jni/react/fabric/FabricUIManagerBinding.cpp": "e53126373be416e8d228df4aaac1c3455cf834a1e6187d2b95fdfbae7a60b9e8",
+      "ReactCommon/react/renderer/animated/drivers/DecayAnimationDriver.cpp": "c1f44b65696daabbdd43161c376f5e83dd7768e33037cfc29835be86e480a65b",
+      "ReactCommon/react/renderer/animationbackend/AnimationChoreographer.h": "2ee5f4cf1e7d9a7bb4802b7db97fb72ba514002a5ecedbe0feb08d8ac259a5b3"
+    },
+    "originalReactNativeInputCount": 16,
+    "originalReactNativeSourcesEqualCommitted": true,
+    "originalReactNativeSourcesCommittedButNotBundled": {
+      "files": {
+        "React/Base/RCTFrameUpdate.m": true,
+        "ReactCommon/react/renderer/animationbackend/AnimationBackend.cpp": true,
+        "ReactCommon/react/runtime/platform/ios/ReactCommon/ObjCTimerRegistry.mm": true
+      },
+      "reactNativePackage": {
+        "version": "0.87.1",
+        "integrity": "sha512-DJKG6ANoD7BtrE4z9DewiSD7/RxCX73lK5Pu49aUr85P3333Dm2roTiP0rRjQNDZdVizHSOmstWfwF/o9EjCRA=="
+      },
+      "note": "the report pins these platform references from the react-native package; each committed hash equals the file in the version package-lock.json pins at the run head, which the hosted job installs with npm ci"
+    },
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "1e17153b8ba446009212bf6da2e88c21b1566bd91b71358de87b572bafe68231",
+        "gitBlobSha1": "608adb3e726a1254230b4fb90732b6d81cad91e3",
+        "pinSet": "sourcePins"
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "42f347b0c283a86a0fba64adceabc8e8301715ee3cffc992fb54c67f1c6e584a",
+        "gitBlobSha1": "e8df50eef34be0800659d164472c45f249236a6e",
+        "pinSet": "sourcePins"
+      },
+      "dependencies.json": {
+        "sha256": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "gitBlobSha1": "f0480c2a65061b3bfc7d6350e07d5189d3b8dda9",
+        "pinSet": "nativeSourcePins"
+      },
+      "examples/animated/App.jsx": {
+        "sha256": "64eadedfb7fcaed8262bc2269f15cbff4e2e7db394e2cb5a86adafd4e8521e16",
+        "gitBlobSha1": "a06a3e829bf4e9db905b9feb3b46aa67034748a2",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/animated/scene.tscn": {
+        "sha256": "916204fe53d0d58e912a091984707859ab1918d5816ee5aa4a7985695f2de237",
+        "gitBlobSha1": "a2a5f166a76aa78d985cf2c720dbbdd07329eb4e",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/animated/validation.gd": {
+        "sha256": "7f9787450faa98026ace53d46ec8421a3d02748e4855a42c58afee04ba7c5bec",
+        "gitBlobSha1": "983e0c4e15417907e5d9662ca9e9c7688b4dbdfe",
+        "pinSet": "sourcePins"
+      },
+      "examples/catalog.json": {
+        "sha256": "0f30562b12dbbf7d3d94f640da5639a9ec572f5da06cdd4bb1004c75084cbc24",
+        "gitBlobSha1": "a3199a29cd263c0cc528a75ffbfb88e7eecdf5a8",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/entry.jsx": {
+        "sha256": "0af56596552a5fc34c2cb97e9d1a2ea1c4db0b6540bcc0549bc54f297a943abd",
+        "gitBlobSha1": "bc9d6e89c28e855b589b51300f5b5bc12428f7b3",
+        "pinSet": "verificationSourcePins"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "7d87e9300dd9a39dc9c7d3a44d4a09bd004d5a2401d32de6f5fc92f9e7cafdc9",
+        "gitBlobSha1": "8969e61d8f3b1924348a6e8554676d8f1cfd235e",
+        "pinSet": "sourcePins"
+      },
+      "native/activity_indicator_view.cpp": {
+        "sha256": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+        "gitBlobSha1": "f75c30df1a893444883f70624c25274f4b05ab20",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/activity_indicator_view.h": {
+        "sha256": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+        "gitBlobSha1": "8fe602f1e6cbc4cd90d8262a213744caf94376cd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "gitBlobSha1": "b72cd2f29399e1c85f8b49cbc6bae3bbb1c26355",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform.h": {
+        "sha256": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+        "gitBlobSha1": "add1aedcb90ef3e44432875e248b8e2b1d7d8755",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+        "gitBlobSha1": "e4023fd8ad7b8bf6baf7a14dc320b295a2ebb167",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/app_lifecycle.h": {
+        "sha256": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+        "gitBlobSha1": "bbc5295c158d6b856a12aa96c47db3ffb4936e9a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "0144a67328387f09fa551f5b8548af5506e3150e93f9e1f43d920298f6aabf8e",
+        "gitBlobSha1": "c64708a0eeea278c9bc1d15f5f8c0578d42b1702",
+        "pinSet": "sourcePins"
+      },
+      "native/application_runtime.h": {
+        "sha256": "2c7c89fe91d65b4c72a33fb5fbbefc58a31b98c2c69f4081d305d9b3b856e3db",
+        "gitBlobSha1": "0739bf31fb87fc382b62a404c097e3a33efb1c1a",
+        "pinSet": "sourcePins"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "994b66c957ae0e3460df6ddfa24e9378537140b047bcd1ddcd4ab9222c6598f9",
+        "gitBlobSha1": "29e884395192903c1557994cf8ae41898c992329",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "6d50c5c20a41913ec60b701a6904c75ac843a7ebd3c79c824ba8e25a8d6933f2",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "e6d42a4",
+            "subject": "fix(runtime): Use time pacing while the window cannot draw"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.native/fabric_application.cpp.sha256"
+      },
+      "native/fabric_application.h": {
+        "sha256": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "gitBlobSha1": "6491975833295fc096a250bd12d46b0d43243534",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "gitBlobSha1": "7236f0fa2dcc99a0b116b9106c5875a704ece920",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock.h": {
+        "sha256": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+        "gitBlobSha1": "807a10fd3ea0eb8245590575aab4962cc727a9b0",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "4ebabb1a4a400e774abc338b327970fb0d02baed639c8f5b22206a1ac84a4c0d",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "e6d42a4",
+            "subject": "fix(runtime): Use time pacing while the window cannot draw"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.native/frame_clock.h.sha256"
+      },
+      "native/frame_clock_test.cpp": {
+        "sha256": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+        "gitBlobSha1": "67d4bd6a612db9d952ed1daf74418937d9b22ae6",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "140041f706690c709b0c500d6cd88ee7c03c47cef650dffbf412ccdf3ce6cf0b",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "e6d42a4",
+            "subject": "fix(runtime): Use time pacing while the window cannot draw"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.native/frame_clock_test.cpp.sha256"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot-profile.json": {
+        "sha256": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+        "gitBlobSha1": "668bd0863459c8f7f10112740a251a5d90b5172f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "gitBlobSha1": "f5b738bf9ac46cbbc28d0fffe121bd905ad6983b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.h": {
+        "sha256": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "gitBlobSha1": "0fa395d405c49add5db2aa13d81e56883cce5daf",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.cpp": {
+        "sha256": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+        "gitBlobSha1": "5e65cf77bc7198992464b1b5dbd18c23e2745364",
+        "pinSet": "sourcePins"
+      },
+      "native/native_animated.h": {
+        "sha256": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+        "gitBlobSha1": "a17ec1f16c053666803e19235f76e93dd9efdc4a",
+        "pinSet": "sourcePins"
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "gitBlobSha1": "7412ebe6f12f3e9a5c7b02ffa18538c11aa9c4eb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "gitBlobSha1": "83600b2957d39833353c6045b0d2cf85ff13a6f7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+        "gitBlobSha1": "0d18cc8f8f2096f48ba2a558fbf1e383a5ea52d6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+        "gitBlobSha1": "d5b79148e62e992c6d2366822841961a6e5c7b63",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_event.h": {
+        "sha256": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "gitBlobSha1": "1fded160c6d93d439ff2775cf32679394ddb4501",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+        "gitBlobSha1": "358f9cdee1e6481124dec452c06cfa7caf493547",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "gitBlobSha1": "ac6ec4d84af956672279ec8f7099a764a55c7e89",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/register.cpp": {
+        "sha256": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+        "gitBlobSha1": "2dd0159bb736ce77d204a61ce1888db0e2abc593",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+        "gitBlobSha1": "bf147a008d79af29178bd9fce09bed9eb0bb749b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+        "gitBlobSha1": "9bf853c26868c0327ceb4b5bbc6953be114bbdc9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.cpp": {
+        "sha256": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+        "gitBlobSha1": "fa5aa5b5dc27d43be4f9c3f71cfd3706b2b5dfa5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.h": {
+        "sha256": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+        "gitBlobSha1": "5a9bee39b55c89037601afdddcd6d0fb0a797225",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/system_appearance.h": {
+        "sha256": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "gitBlobSha1": "f8faf4cf5e0ec942dfeff10bbeb2e1c3040f3656",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+        "gitBlobSha1": "2af57be4b8b9c05d370b13668d8c5f317c797f62",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+        "gitBlobSha1": "00a19be080a8a6f7c1dd8e80bec6e2dab3db6ee3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+        "gitBlobSha1": "f8cd7a960417ac96fd9ddcad9aff02920cc46c1c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+        "gitBlobSha1": "ba1b7885dc5064776a5d77a5423499c83f68d87b",
+        "pinSet": "nativeSourcePins"
+      },
+      "package.json": {
+        "sha256": "a232ebe5b367322d350a6111042d7ab011f3441a35764264d47860c5a04d9014",
+        "gitBlobSha1": "efa96f407ddde61eac858864dd66bec0e390191d",
+        "pinSet": "sourcePins"
+      },
+      "scripts/codegen-contract.mjs": {
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "gitBlobSha1": "82e8e7fdac887d69c6f233132dbe26acdac6fbe2",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/frame-clock-bundle.mjs": {
+        "sha256": "c3c2122ba373e9ef94c87b92fa5fb4dd33d3a6b2a189c55d27accff35dd97566",
+        "gitBlobSha1": "0f6a977d71b2594a8f71009a0054a540c16179f4",
+        "pinSet": "sourcePins"
+      },
+      "scripts/frame-clock-sabotage.mjs": {
+        "sha256": "7ba28d7a2ffb4b96dc0678f02b1340ffa92aa27d86e527727dc80e897426087c",
+        "gitBlobSha1": "775ab5413e02128d7dbfdbff25c9e6f6f1cc048d",
+        "pinSet": "sourcePins"
+      },
+      "scripts/godot-binary.mjs": {
+        "sha256": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+        "gitBlobSha1": "602d0992e7edd31d3ed3b050bf764d6a3602c581",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-animated-bundle.mjs": {
+        "sha256": "9b96ae126c8fa15fd457deb8dce1c23faffc1941a2fca7008e76498a9d7161b3",
+        "gitBlobSha1": "70efe6a46edd2a76451d03abee46cb05826b6517",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-animated-sabotage.mjs": {
+        "sha256": "1e9b07f1fe23f302d0ee814f74c1a8310d6356ccef035f2cdcadfe77665f4613",
+        "gitBlobSha1": "012f573a24fb7ca8d358f21576467a1224196f97",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-probe-bundle.mjs": {
+        "sha256": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+        "gitBlobSha1": "9b23a853fc52d88e1d190b769c33c8b44216d284",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-sdk.mjs": {
+        "sha256": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+        "gitBlobSha1": "e0e8469f4c498b6c2a063a93fdb56eeb1b286e01",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af",
+        "gitBlobSha1": "5f832f5f73490ce8a2eb7e62d9ce559a8e7a3d4f",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/transform-singular-sabotage.mjs": {
+        "sha256": "89b7c0061529bb1064d1eb88ea21978187e2633490571bddd8c6e28fce6da48e",
+        "gitBlobSha1": "7d7715fe90935d81c6f031c9c31aa67f79f62213",
+        "pinSet": "verificationSourcePins"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "e19e81451fda62f844d4e302c747d460f17a343d8b829c1c60eb970e06c14062",
+        "gitBlobSha1": "fe71d4fe712148bedd1debb0ec1f9158b7343f4f",
+        "pinSet": "verificationSourcePins"
+      },
+      "src/animated-exports.js": {
+        "sha256": "4097fe4cd5167222581d7ac1c3032e224aedeff506026619241ba85975942f67",
+        "gitBlobSha1": "5f8ebec1372d673534dadbebba586bf20af505cc",
+        "pinSet": "verificationSourcePins"
+      },
+      "src/platform-color-value-types.js": {
+        "sha256": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+        "gitBlobSha1": "611d627ff5f60f1bc50957d1f9ae7316e6a33579",
+        "pinSet": "verificationSourcePins"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+        "gitBlobSha1": "b58dd84384153d4d353b1dfdcc15487c8fb02b0c",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/adapters/consumer/validation.gd": {
+        "sha256": "9cf4aa12fc2f0b0cf08c8140a11601fbb8495c58d47a75eebae71442dfbc572d",
+        "gitBlobSha1": "6ca71f7fc845adbeafddfc0816eea476e511867a",
+        "pinSet": "sourcePins"
+      },
+      "tests/frame-clock-cases.mjs": {
+        "sha256": "c7368cd0b4efd4b165369b7d495c9a1da363e09fedfc5d1ca4548c56da097b8d",
+        "gitBlobSha1": "0be6486d61c0536011c258f5c70e151e2aac95d0",
+        "pinSet": "sourcePins"
+      },
+      "tests/frame-clock-fixture.jsx": {
+        "sha256": "5ed7773b423a5e75ab860c9c115862a000b0e04b3d0b1e14c93374c9a7c38b8c",
+        "gitBlobSha1": "87b3bc679d9cb2442847a306e65a6b0c642cf3fc",
+        "pinSet": "sourcePins"
+      },
+      "tests/frame-clock-native.test.mjs": {
+        "sha256": "1f865eac7b50332a2b38c3f2813be1b860dd93aa5bec413dc0fa060dda36ab4a",
+        "gitBlobSha1": "ca0186c88ad979ad40daa07a61af92eaa3b391cd",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "6b0688094a6c37fe09fb4bcd53a5606ddaaf69cbfb6071e80f09aad06cb53418",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "eda3978",
+            "subject": "test(runtime): Keep frame clock replay going when a callback is missing"
+          },
+          {
+            "commit": "8fc4627",
+            "subject": "test(runtime): Judge the frame clock lanes on delivered frames only"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "tests/frame-clock-oracle.mjs": {
+        "sha256": "cacc8df3e08e269673daa7b495f8c53b15054d21514f1df2c93dde80e82fb49c",
+        "gitBlobSha1": "c0aa6f9f06e35574bf31120a6fb3eb72238ef19c",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "df88f1d4c10c102b24d6917eb659cd52b37f444d9976d6f5ec8107824c5fcaac",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "8fc4627",
+            "subject": "test(runtime): Judge the frame clock lanes on delivered frames only"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.tests/frame-clock-oracle.mjs.sha256"
+      },
+      "tests/frame-clock-probe.gd": {
+        "sha256": "5208c9ddbb349c7b76979bda8b241c1f5ed29b9c2e7a3cbe6fa31150306a73ed",
+        "gitBlobSha1": "8c179d94c44b2ae8ab72fede70b28398af16ca7f",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "ec0de485e7cab3aad079ef247da9a5230c6b7797aa3414aa362eb16288a27d39",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "eda3978",
+            "subject": "test(runtime): Keep frame clock replay going when a callback is missing"
+          },
+          {
+            "commit": "8fc4627",
+            "subject": "test(runtime): Judge the frame clock lanes on delivered frames only"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "tests/native-animated-cases.mjs": {
+        "sha256": "b7901f8f6956c4ff9c9e9fe92d908c3da046ee8f25e4ce0b8cb18000b6835053",
+        "gitBlobSha1": "c7d642be696795c01684e29fd54efca4f4579d52",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/native-animated-fixture.jsx": {
+        "sha256": "0c8458e45264d9dbce52e6d726b78273553d752a0eabbf8c25614f93ef73c112",
+        "gitBlobSha1": "12e380d18e1eda843036ffa2fba4d0a458bd8753",
+        "pinSet": "sourcePins"
+      },
+      "tests/native-animated-native.test.mjs": {
+        "sha256": "e49bbb72e0b69c7d6da0a42a7061a23a03c8e41970ae8800ac6359f20b228781",
+        "gitBlobSha1": "be2b94a74678188d617360495d8105991a1f3b09",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/native-animated-oracle.mjs": {
+        "sha256": "937d53bf3f7636f5e4247afd56c4ed40775e02ad22ce01b2eaf7f4397a0a9b46",
+        "gitBlobSha1": "5bd61e10aa708d6ac6cf13130f3cc9cb918983d7",
+        "pinSet": "sourcePins"
+      },
+      "tests/native-animated-probe.gd": {
+        "sha256": "e22651d14a73ba0f0903db88bea2c27c93b50d352d42f13b76eedfe2f996223c",
+        "gitBlobSha1": "992071ff253418f4763c2d774f3a0cc37844179f",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "011dbc7f4e34b423bf056cc5894ea6951826ccf19aa6fe9473dbfd4448396f6e",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "8fc4627",
+            "subject": "test(runtime): Judge the frame clock lanes on delivered frames only"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.tests/native-animated-probe.gd.sha256"
+      },
+      "tests/runtime-native.test.mjs": {
+        "sha256": "da143708b24b90e40e368e7db87815bd0817d5b697baac05b794e30552bfff1b",
+        "gitBlobSha1": "0e8d25f5ecbf77c5f7b1dbc67b422856db64ae85",
+        "pinSet": "sourcePins"
+      },
+      "tests/runtime_errors.gd": {
+        "sha256": "e5ec6aceadd4a7b9d733ef1218bd23ca6a5d22e37829d76cd2871236bb21316c",
+        "gitBlobSha1": "0836ac54ba2ac596f782de5e2f7a405b8a1a0f88",
+        "pinSet": "sourcePins"
+      },
+      "tests/touchables-animated-fixture.jsx": {
+        "sha256": "e6261b9a6c3d8d313d8a1d853cfddf038a985c3fd19a6d2c88ec4e168facc607",
+        "gitBlobSha1": "c894dc7c43fba5f73d1421b7c5d951fa3d904fe6",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/touchables-fixture.jsx": {
+        "sha256": "d14320227d21b53fe421589a9b814340c7f848d36fe779d88956b8d561a8b340",
+        "gitBlobSha1": "0c1d7baee8ee073f36eb0717ca73a20991859a9b",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/touchables-native.test.mjs": {
+        "sha256": "4bbd87ba1eae29d3cf40eded77826632c59487ab104101300ca26ab6d3f91097",
+        "gitBlobSha1": "0e9b1e8203b4d5474c176f2db6a450d3d319dc09",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/touchables-probe.gd": {
+        "sha256": "1e0b3ef050e63d5fa0c2a69e0ae140b7ffe096c6b0f593935300e9b65c2966ae",
+        "gitBlobSha1": "0f846067395dea80f633db45c2ef48f03490e009",
+        "pinSet": "sourcePins"
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the final attempt; this artifact audit certifies only the headless current frame clock lane (37 checks in eight loop paces).",
+    "The preceding-host control (29 cadence failures) and the three retained sabotages remain local evidence; this audit only shows that every check they fail passes in the hosted run (three of them under the names the review gave them). The C++ unit test (14 cases) runs through the test:runtime step. The first hosted run of the pull request failed two checks that assumed a loop timing the runner did not deliver; the checks were removed or rewritten in the review commits and this run is the first push of main on the revised head.",
+    "Bundle hashes and the native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
+    "The slice's own committed limits are unchanged and still apply:",
+    "Timers (setTimeout, setInterval) still run on every Godot frame: they are not quantized to ticks, as RN's iOS and Android timers are quantized to display frames. The baseline check 'A zero-delay interval fires once on every Godot frame, tick or not' records it.",
+    "A Presentation tick carries the CPU time of its Godot frame, so the steps between ticks are as uneven as those frames and a decay lands lower than at a regular cadence (the presentation-bimodal lane ends about 1 px short of the Time lanes); the iOS display link hands RN the regular targetTimestamp, which is not implemented.",
+    "ADAPTIVE and MAILBOX V-Sync are mapped by detect_pacing and covered by the unit test only: the Compatibility renderer of this Mac reads both back as ENABLED.",
+    "Real displays are not certified: the lanes are headless and state V-Sync presentation and the refresh rate through validation seams; the headed observations are one exploratory run each on one 120 Hz Mac, outside the receipt.",
+    "Variable refresh rates, external screens, OS suspend and resume, behavior under JS load, frame budgets (GF-30) and Godot Android and iOS exports are not covered.",
+    "The clock has no visual output: there is no example scene and no capture.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed: GF-05 and GF-19 are not at their first slice, so their slice checkpoints, already closed, do not change.",
+    "A window that cannot draw is detected from DisplayServer.window_can_draw (after review): only a minimized window was forced on purpose, and the OS reported false unprompted in other headed runs (the first seconds, or the middle of a run); occlusion by other windows was not exercised in a controlled way."
+  ],
+  "findings": [
+    "explained, non-blocking: native/fabric_application.cpp: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: e6d42a4 (fix(runtime): Use time pacing while the window cannot draw); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.native/fabric_application.cpp.sha256",
+    "explained, non-blocking: native/frame_clock.h: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: e6d42a4 (fix(runtime): Use time pacing while the window cannot draw); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.native/frame_clock.h.sha256",
+    "explained, non-blocking: native/frame_clock_test.cpp: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: e6d42a4 (fix(runtime): Use time pacing while the window cannot draw); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.native/frame_clock_test.cpp.sha256",
+    "explained, non-blocking: tests/frame-clock-native.test.mjs: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: eda3978 (test(runtime): Keep frame clock replay going when a callback is missing), 8fc4627 (test(runtime): Judge the frame clock lanes on delivered frames only); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: tests/frame-clock-oracle.mjs: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: 8fc4627 (test(runtime): Judge the frame clock lanes on delivered frames only); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/frame-clock-oracle.mjs.sha256",
+    "explained, non-blocking: tests/frame-clock-probe.gd: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: eda3978 (test(runtime): Keep frame clock replay going when a callback is missing), 8fc4627 (test(runtime): Judge the frame clock lanes on delivered frames only); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: tests/native-animated-probe.gd: the run-head bytes differ from the e67f82c pin; the PR branch gained commits that touch this path after the pinned run: 8fc4627 (test(runtime): Judge the frame clock lanes on delivered frames only); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/native-animated-probe.gd.sha256"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 112524336222,
+    "sha256": "0ec4af98824d4bbd8148d0180c2b80e7cb51cdf77400a58bb7db2639db889a9e",
+    "checkoutVerified": true,
+    "step": "npm run test:frame-clock",
+    "stepTap": {
+      "ok": "The frame clock gives requestAnimationFrame and RN's Native Animated a display link's cadence on every Godot pacing",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 124,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

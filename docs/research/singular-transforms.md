@@ -6,7 +6,9 @@ fresh applications (49 headless checks, 58 with the renderer capture), the
 preceding-host control (the same bundle fails exactly its 37 normative checks), the
 retained sabotage of the pointer projection (it fails exactly two) and the independent
 oracle. Perspective, 3D, a weight other than 1, non-finite matrices and results outside
-native coordinate precision still fail with their own errors. Hosted CI is pending.
+native coordinate precision still fail with their own errors.
+Hosted run 37499277022 repeated the 49 checks and the independent oracles accept
+the reports ([receipt](../evidence/singular-transforms/hosted-ci.json)).
 
 ## What RN does
 

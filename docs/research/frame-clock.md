@@ -10,7 +10,9 @@ V-Synced window: each fails at least one check and the oracle rejects each), the
 oracle that recomputes every decision of the clock from the Godot frame times the host
 reports, and the C++ unit test over synthetic pacings. Timers are not quantized to ticks, a
 presented frame carries the CPU time of its frame and not the display's regular timestamp,
-and `ADAPTIVE` and `MAILBOX` V-Sync are covered only by the unit test. Hosted CI is pending.
+and `ADAPTIVE` and `MAILBOX` V-Sync are covered only by the unit test.
+Hosted run 37538167415 repeated the 37 checks and the independent oracle accepts
+its report ([receipt](../evidence/frame-clock/hosted-ci.json)).
 
 ## What RN does
 

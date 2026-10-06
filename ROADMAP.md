@@ -2188,8 +2188,16 @@ Appearance 79) and the native SDK batch pass on the fixed host, and after
 merging main `d62bc27` the capture notifications suite (672), Appearance,
 AppState, the contracts gates and `test:recovery` pass on the final tree. All 76
 executed code/configuration inputs match `b13bcdd` via git show/SHA-256. Hosted
-CI for this slice is pending. No whole GF, other checkpoint, weight or
-denominator closes.
+Contracts run 37408741652 (the push of main 1607044) passed all five jobs in the
+first attempt; its [audited artifact](docs/evidence/appearance/hosted-ci.json)
+repeats the 79 headless checks of the state after the review with identical IDs,
+the independent oracle accepts the downloaded report and every check the
+preceding-host and pre-shared-callback controls fail passes (16 of the 17 the
+first sabotage failed; the 17th no longer exists under that name). All 72
+tracked inputs match the checkout tree (22 differ from a402a1f through the
+review commits and commits main gained afterwards). [Pages
+37408741641](docs/evidence/appearance/publication.json) deployed this record
+from main 1607044. No whole GF, other checkpoint, weight or denominator closes.
 
 ### Animated and TouchableOpacity on RN's C++ Native Animated (2026-10-06)
 
@@ -2262,9 +2270,22 @@ suites (23 examples/2,260 checks, Down 2,731, Document Up 6,459, View Up 297, Mo
 Appearance 79, Switch 108, shared touches 92, touchables 93, ActivityIndicator 33,
 Animated 75) and the native SDK batch pass. All 89 executed code/configuration
 inputs match implementation d96383c via git show/SHA-256 (executed from the
-committed tree, execution base fb42709). Hosted CI for this slice is
-pending. Only GF-19's first-slice checkpoint closes; no whole GF, other checkpoint,
-weight or denominator closes.
+committed tree, execution base fb42709). Hosted Contracts run 37439650201 (the
+push of main 0157b15) passed all five jobs in its second attempt: the first
+attempt failed `native-cold-start` in `test:animated` on one check of the native
+decay (4 distinct Control values where the probe's fixed threshold asks for 5,
+because the uncapped headless loop delivered frames in pairs 57 ms and 0.4 ms
+apart and RN's decay driver ended at the near-duplicate frame), and the rerun of
+the failed jobs passed 75 of 75 on the same commit; commits `381a8b4` and
+`634285f` (#42) later replaced that threshold with pacing-independent rules. Its
+[audited artifact](docs/evidence/native-animated/hosted-ci.json) repeats the 75
+headless checks with identical IDs and bundle, the independent oracle accepts
+the downloaded report and every check the preceding-host control and the two
+sabotages fail passes. All 89 tracked inputs match the checkout tree and
+implementation d96383c. [Pages
+37439650214](docs/evidence/native-animated/publication.json) deployed this
+record from main 0157b15. Only GF-19's first-slice checkpoint closes; no whole
+GF, other checkpoint, weight or denominator closes.
 
 ### Uniform scale on Godot transforms (2026-10-06)
 
@@ -2324,8 +2345,16 @@ path 82, Document hover 1,530, click 728, capture notifications 672, PanResponde
 AppState 75, lists 44, Appearance 79, Switch 108, shared touches 92, touchables 93,
 ActivityIndicator 33, Animated 75) and the native SDK batch pass. All 86 executed
 code/configuration inputs match implementation 6fbfb18 via git show/SHA-256 (executed
-from the committed tree, execution base 0157b15). Hosted CI for this slice is pending.
-No whole GF, checkpoint, weight or denominator closes.
+from the committed tree, execution base 0157b15). Hosted Contracts run
+37455258901 (the push of main 9e7cc4f) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/uniform-scale/hosted-ci.json)
+repeats the 29 headless checks of the uniform scale lane with identical IDs and
+bundle, the 81 guard checks of the eight rejection cases and the 25 input
+guards; the independent oracle accepts the downloaded report and every check the
+preceding-host control fails passes. All 86 tracked inputs match the checkout
+tree and implementation 6fbfb18. [Pages
+37455258872](docs/evidence/uniform-scale/publication.json) deployed this record
+from main 9e7cc4f. No whole GF, checkpoint, weight or denominator closes.
 
 Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
 monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
@@ -2415,8 +2444,18 @@ and singular lanes, Down 2,731, Document Up 6,459, View Up 297, Move 220, Docume
 (`test:animated` failed once on a 2 ms timing assertion of its JS-driver composition and
 passed three reruns). All 87 executed code/configuration inputs match implementation
 `ca9f195` via git show/SHA-256 (executed from the committed tree, execution base
-`9e7cc4f`). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
-denominator closes.
+`9e7cc4f`). Hosted Contracts run 37499277022 (the push of main b274a0c) passed
+all five jobs in the first attempt; its [audited
+artifact](docs/evidence/singular-transforms/hosted-ci.json) repeats the 49
+headless checks of the singular lane, the 29 of the uniform scale lane, the 61
+guard checks of the six rejection cases and the 25 input guards; the check-ID
+digests equal the committed ones once the phrase that commit `4d8312d` renamed
+in three checks is reversed, the independent oracles accept the two downloaded
+reports and every check the preceding-host control and the pointer-projection
+sabotage fail passes. 82 of the 87 tracked inputs match implementation ca9f195
+and the other 5 are the files `4d8312d` changed. [Pages
+37499277071](docs/evidence/singular-transforms/publication.json) deployed this
+record from main b274a0c. No whole GF, checkpoint, weight or denominator closes.
 
 Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
 monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
@@ -2548,9 +2587,21 @@ are in two commits, [`e6d42a4`](https://github.com/journey-studios/godot-fabric/
 [`8fc4627`](https://github.com/journey-studios/godot-fabric/commit/8fc46279d6126b87e4fc6cc1d982f75620dfc3b5)
 (the lanes judged on delivered frames only: the four `tests/` files), and each is pinned to
 its commit by SHA-256 in the `postReview` section of `report.json`, verified against
-`git show <commit>:<path>`. The first hosted CI run failed `test:frame-clock` on a premise
-about the machine, now removed; hosted CI for the revised head is pending. No whole GF,
-checkpoint, weight or denominator closes.
+`git show <commit>:<path>`. The pull request's first hosted run (run
+37521566298, a `pull_request` run on the branch head) failed `test:frame-clock`
+on two checks that assumed 3 ms frames the macOS runner does not deliver; the
+review removed or rewrote them. Hosted Contracts run 37538167415 (the push of
+main 0bc0166) passed all five jobs in the first attempt; its [audited
+artifact](docs/evidence/frame-clock/hosted-ci.json) repeats the 37 headless
+checks of the revised head (29 cadence checks and 8 that hold on every host),
+whose IDs are exactly the 42 of that earlier run minus the 8 the review removed
+plus the 3 it added, with the independent oracle accepting the downloaded report
+and every check the preceding-host control and the three sabotages fail passing;
+the C++ unit test runs through the `test:runtime` step. All 101 tracked inputs
+match the checkout tree (7 differ from e67f82c, exactly the seven files the
+report's `postReview.pins` pin). [Pages
+37538167731](docs/evidence/frame-clock/publication.json) deployed this record
+from main 0bc0166. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 
