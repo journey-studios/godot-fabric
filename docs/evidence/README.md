@@ -381,7 +381,9 @@ sabotage of the pointer projection fails exactly 2. The public rejection cases a
 again, not the checkpoint's six (perspective, `rotateX`, a weight other than 1 and three
 out-of-range cases; 61 checks), the input guards 25 and the affine factor test 57,703.
 Keyboard focus is released by a native-driver collapse (asserted) and kept by a
-React-commit one (an exploratory observation). One capture. Hosted CI pending.
+React-commit one (an exploratory observation). One capture. Hosted run
+37499277022 repeated the 49, 29, 61 and 25 headless checks
+([receipt](singular-transforms/hosted-ci.json)).
 
 The [frame clock record](frame-clock/README.md) makes `requestAnimationFrame` callbacks
 and RN's Native Animated frames run at a display link's cadence instead of on every

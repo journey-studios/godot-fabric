@@ -2444,8 +2444,18 @@ and singular lanes, Down 2,731, Document Up 6,459, View Up 297, Move 220, Docume
 (`test:animated` failed once on a 2 ms timing assertion of its JS-driver composition and
 passed three reruns). All 87 executed code/configuration inputs match implementation
 `ca9f195` via git show/SHA-256 (executed from the committed tree, execution base
-`9e7cc4f`). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
-denominator closes.
+`9e7cc4f`). Hosted Contracts run 37499277022 (the push of main b274a0c) passed
+all five jobs in the first attempt; its [audited
+artifact](docs/evidence/singular-transforms/hosted-ci.json) repeats the 49
+headless checks of the singular lane, the 29 of the uniform scale lane, the 61
+guard checks of the six rejection cases and the 25 input guards; the check-ID
+digests equal the committed ones once the phrase that commit `4d8312d` renamed
+in three checks is reversed, the independent oracles accept the two downloaded
+reports and every check the preceding-host control and the pointer-projection
+sabotage fail passes. 82 of the 87 tracked inputs match implementation ca9f195
+and the other 5 are the files `4d8312d` changed. [Pages
+37499277071](docs/evidence/singular-transforms/publication.json) deployed this
+record from main b274a0c. No whole GF, checkpoint, weight or denominator closes.
 
 Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
 monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's

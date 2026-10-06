@@ -331,7 +331,8 @@ last invertible transform and shows it again with the next invertible one. 49 he
 checks against values derived from the JSX with an independent oracle; the preceding
 host fails exactly the 37 that need the collapse, and a retained sabotage of the pointer
 projection fails exactly 2. 3D, a weight other than 1 and out-of-range transforms remain
-rejected. [Evidence](docs/evidence/singular-transforms/README.md).
+rejected. Hosted CI repeated the 49 checks ([receipt](docs/evidence/singular-transforms/hosted-ci.json)).
+[Evidence](docs/evidence/singular-transforms/README.md).
 
 The [frame clock record](docs/evidence/frame-clock/README.md) makes
 `requestAnimationFrame` callbacks and RN's Native Animated frames run at a display

@@ -1442,7 +1442,12 @@
     "ReactAndroid/src/main/java/com/facebook/react/uimanager/TouchTargetHelper.kt": "36888e9275fd171278aa32acdd17096a53591550aa8c69075e3fc4c9662cd569"
   },
   "hostedCI": {
-    "status": "pending-singular-transforms-slice"
+    "status": "verified",
+    "run": 37499277022,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37499277071,
+    "publication": "publication.json"
   },
   "limits": [
     "3D, perspective, rotateX/rotateY (every z-coupling entry), a weight other than 1 and transformOrigin z remain rejected; the public rejection cases are six (61 checks) since singular and rank-one became positive cases.",
