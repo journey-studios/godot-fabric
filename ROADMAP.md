@@ -1925,6 +1925,45 @@ concurrent presses with the touchables themselves, TouchableNativeFeedback, focu
 synthesis, typed declarations and hardware remain open. Hosted CI for this slice
 is pending. No whole GF, checkpoint, weight or denominator closes.
 
+### ActivityIndicator over a native Godot spinner (2026-10-05)
+
+GF-17 remains **In progress**. The
+[ActivityIndicator evidence](docs/evidence/activity-indicator/README.md) replaces
+the public placeholder that threw on render with RN's original
+`ActivityIndicator.js`, which takes its non-Android path on Godot: a sized View
+around the codegen-generated `RCTActivityIndicatorView` component. The host now
+also compiles the package's generated FBReactNativeSpec ShadowNodes and registers
+the generated `ActivityIndicatorViewComponentDescriptor`, the descriptor iOS
+registers; ActivityIndicator.js sizes the frame (small 20×20, large 36×36 or a
+number), so nothing is measured natively. `GodotActivityIndicator`, a
+custom-drawn Panel, gives **33/33 headless checks** across actual SceneTree
+frames in two roots of one Hermes application.
+
+As in `RCTActivityIndicatorViewComponentView`, `animating` starts and stops the
+spinner; only an animating spinner takes Godot's internal process, and its phase
+advances by real frame time exactly once per frame, stepping eight spokes like
+UIKit. A stopped spinner keeps its phase: with `hidesWhenStopped` it is not drawn,
+without it it is drawn frozen, and restarting resumes from that phase. `color`
+recolors it; without one Godot draws `#999999`, the color RN passes on iOS,
+because ActivityIndicator.js passes `null` outside iOS. The spinner fills the
+frame, which matches the named sizes and scales a numeric size as Android does;
+UIKit keeps its own spinner size.
+
+The preceding host fails exactly the 2 normative mount checks (Fabric's legacy
+interop resolves `ActivityIndicatorView`; the mount rejects it). A retained
+sabotage that never gives the spinner per-frame work fails 9 checks and the
+independent oracle rejects its report; the restored source rebuilds the identical
+host. The contracts gates (262 Node/13 Python, static analysis, publication scan),
+`test:recovery` and the native-cold-start suites pass, including Switch 108,
+AppState 75, click 728, Down 2,731, Document Up 6,459, View Up 297, Move 220,
+Document Move 1,940, hover 158, root path 82, Document hover 1,530 and 22
+examples; codegen, the native SDK pack/verify, adapters (loader 89 checks/21
+cases, runtime 13 runs/213 checks), consumer (30 + 40) and cold start pass too.
+All 74 executed code/configuration inputs match implementation a652343 via git
+show/SHA-256. Accessibility, reduced motion, UIKit's exact timing and geometry,
+pixel captures, hardware and mobile exports remain open. Hosted CI for this slice
+is pending. No whole GF, checkpoint, weight or denominator closes.
+
 ### Appearance and useColorScheme from the system theme (2026-10-05)
 
 GF-21 remains **In progress**; only its first-slice checkpoint becomes done,

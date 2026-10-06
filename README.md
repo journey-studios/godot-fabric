@@ -249,6 +249,13 @@ imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1'
 Animated needs `NativeAnimatedModule`.
 [Evidence](docs/evidence/touchables/README.md).
 
+The [ActivityIndicator example](examples/activity-indicator/README.md) renders
+RN's original `ActivityIndicator.js` over the generated `ActivityIndicatorView`
+descriptor and a native Godot spinner whose phase advances once per actual frame
+while `animating`, freezes when stopped and hides with `hidesWhenStopped`. 33
+headless checks in two roots; the preceding host fails the 2 mount checks.
+[Evidence](docs/evidence/activity-indicator/README.md).
+
 The [Appearance example](examples/appearance/README.md) runs React Native's
 original `Appearance` and `useColorScheme` from the public import, fed by Godot's
 system theme and the `setColorScheme` override, with two roots re-rendering the

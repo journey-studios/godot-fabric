@@ -241,6 +241,15 @@ nesting, removal mid-press and the single-child rule. Its
 the preceding-SDK and sabotage controls and why `TouchableOpacity` stays
 unavailable.
 
+The [ActivityIndicator probe](activity-indicator/README.md) mounts RN's original
+`ActivityIndicator.js` in two roots and measures each spinner across actual
+SceneTree frames: `npm run test:activity-indicator`, outside the launcher
+catalog. The phase advances once per frame while animating and freezes when
+stopped; `hidesWhenStopped`, color and the small/large/numeric frames reach the
+native spinner. Its [receipt](../docs/evidence/activity-indicator/README.md)
+records 33/33 headless checks, the preceding host's 2 mount failures and a
+retained sabotage.
+
 The [Appearance probe](appearance/README.md) changes the system theme through the
 Callable registered with Godot's `DisplayServer` and overrides it with
 `setColorScheme`, while two roots render through `useColorScheme`:
