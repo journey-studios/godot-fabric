@@ -123,7 +123,7 @@ all valid style changes during a held gesture.
 
 ## Explicit rejection and remaining boundaries
 
-> Later note: the [uniform scale record](../uniform-scale/README.md) accepts RN's uniform `scale` and extends the public rejection cases to eight; the six cases and 61 checks below are this record's executed state.
+> Later note: the [uniform scale record](../uniform-scale/README.md) accepts RN's uniform `scale` and extends the public rejection cases to eight; the [singular transforms record](../singular-transforms/README.md) turns the `singular` and `rank-one` cases into positive ones, which leaves six again; the six cases and 61 checks below are this record's executed state.
 
 Six independent Hermes applications mount actual public styles: zero scale,
 rank-one matrix, perspective, a large determinant, a small determinant and a

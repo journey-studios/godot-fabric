@@ -46,10 +46,12 @@ bounds. Painting and input use the same Godot Control. Its
 assertions, 33 pixel samples, stable refs/state across flattening and six
 explicit rejection cases. A separate input guard cancels held contacts when an
 external Godot embedding becomes non-invertible, preserving the last valid
-coordinates. Singular, 3D and out-of-range JSX transforms remain unsupported. The
-later [uniform scale record](docs/evidence/uniform-scale/README.md) accepts RN's
+coordinates. Singular, 3D and out-of-range JSX transforms remained unsupported then.
+The later [uniform scale record](docs/evidence/uniform-scale/README.md) accepts RN's
 uniform `scale`, static or animated, on the same Control and extends the rejection
-cases to eight.
+cases to eight, and the
+[singular transforms record](docs/evidence/singular-transforms/README.md) collapses
+singular ones as RN does, which brings the rejection cases back to six.
 
 The [read-only tree example](examples/tree/README.md) exercises original RN
 documents, ID lookup, logical traversal and collection snapshots across two
@@ -308,8 +310,21 @@ take real mouse presses where its layout box does not reach. 29 headless checks
 against planar matrices derived from the JSX, with an independent oracle; the
 preceding host fails exactly the 22 that need the scale. The host's planar rule now
 has one definition, shared by the transform adapter and pointer projection.
-`scale: 0` and other singular transforms remain unsupported.
-[Evidence](docs/evidence/uniform-scale/README.md).
+`scale: 0` and other singular transforms failed then and collapse their View since the
+singular transforms proof below. [Evidence](docs/evidence/uniform-scale/README.md).
+
+The [singular transforms proof](examples/transforms/README.md#singular-transforms)
+mounts RN's singular `transform` styles in eight Hermes applications: `scale: 0`,
+`scaleX: 0`, a rank-one matrix, a matrix that only loses rank in a float, an
+`Animated.View` scaled by `useNativeDriver` from 0 to 1 and from 1 to 0, a scale that
+React state moves through 0, and a pointer captured by a View that collapses
+mid-gesture. RN draws and hits nothing of such a view and raises no error; the host
+hides the Control, keeps its last invertible transform and shows it again with the next
+invertible one. 49 headless checks against values derived from the JSX with an
+independent oracle; the preceding host fails exactly the 37 that need the collapse, and
+a retained sabotage of the pointer projection fails exactly 2. 3D, a weight other than 1
+and out-of-range transforms remain rejected.
+[Evidence](docs/evidence/singular-transforms/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -569,7 +584,7 @@ npm run test:contracts                   # types/JS compiler/SVG/font contracts 
 npm run test:pointers:geometry          # pinned RN counterexamples and real Hermes binding
 npm run test:pointers:interest          # original Map query and native View pointerdown interest
 npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
-npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup and uniform scale
+npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

@@ -289,6 +289,18 @@ independent oracle: `npm run test:transforms:guards`, next to the transform gall
 Its [receipt](../docs/evidence/uniform-scale/README.md) records 29 headless checks, 35
 with the renderer capture, and the preceding-host control, which fails exactly 22.
 
+The [singular transforms proof](transforms/README.md#singular-transforms) mounts RN's
+singular `transform` styles (`scale: 0`, `scaleX: 0`, a rank-one matrix, a matrix that
+only loses rank in a float, an `Animated.View` scaled 0 to 1 and 1 to 0 on the native
+driver, a scale moved through 0 by React state and a pointer captured by a View that
+collapses) in eight Hermes applications. A real mouse press where the collapsed box was
+reaches the plate behind it, and every Control, RN measurement and event is compared
+with values derived from the JSX by an independent oracle:
+`npm run test:transforms:guards`, next to the transform gallery. Its
+[receipt](../docs/evidence/singular-transforms/README.md) records 49 headless checks, 58
+with the renderer capture, the preceding-host control, which fails exactly 37, and a
+retained sabotage of the pointer projection, which fails exactly 2.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

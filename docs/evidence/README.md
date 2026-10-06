@@ -77,7 +77,9 @@ This does not establish singular JSX rendering.
 GF-08/GF-10/GF-13 remain in progress; broader ref/View/input acceptance,
 transformed clipping, singular/3D support and mobile differential work remain.
 The later [uniform scale record](uniform-scale/README.md) accepts RN's uniform
-`scale` on the same Control and extends the public rejection cases to eight.
+`scale` on the same Control and extends the public rejection cases to eight, and the
+[singular transforms record](singular-transforms/README.md) collapses singular JSX
+transforms as RN does.
 
 The later [read-only tree record](tree/README.md) adds original RN View IDs,
 root-scoped lookup, logical node traversal, snapshot collections, RawText updates
@@ -351,9 +353,28 @@ derived from the JSX by an independent oracle. The planar rule now has one
 definition shared by the transform adapter and pointer projection; the eight
 public rejection cases pass 81 checks and the affine factor test 41,278. The
 preceding host fails exactly the 22 normative checks, with `E_TRANSFORM_3D` at
-every mount. `scale: 0` and the other singular transforms still fail. A separate
-commit hardens the Animated example's capture check. One capture. Hosted CI
+every mount. `scale: 0` and the other singular transforms failed then; the
+[singular transforms record](singular-transforms/README.md) below collapses them. A
+separate commit hardens the Animated example's capture check. One capture. Hosted CI
 pending.
+
+The [singular transforms record](singular-transforms/README.md) renders a transform
+with no inverse as RN does (nothing of the View or its subtree drawn or hit, no
+error, restored by the next invertible transform) instead of throwing
+`E_TRANSFORM_SINGULAR`. The transform step returns an explicit planar result that can
+be collapsed (a singular matrix, or one whose scale rounds to zero in a float), the
+runtime hides the Control in the one place visibility is decided and keeps its last
+invertible transform, and pointer projection treats a target or capture owner inside a
+collapsed subtree as `display: none`. Eight Hermes applications (`scale: 0`,
+`scaleX: 0`, a rank-one matrix, a float rank-loss matrix, an `Animated.View` scaled 0
+to 1 and 1 to 0 by `useNativeDriver`, a scale moved through 0 by React state, and a
+pointer captured by a View that collapses mid-gesture), 49 headless checks and 58 with
+the renderer capture, compared with values derived from the JSX by an independent
+oracle; the preceding host fails exactly the 37 normative checks and a retained
+sabotage of the pointer projection fails exactly 2. The public rejection cases are six
+again (61 checks), the input guards 25 and the affine factor test 57,703. Keyboard
+focus is released by a native-driver collapse (asserted) and kept by a React-commit one
+(an exploratory observation). One capture. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

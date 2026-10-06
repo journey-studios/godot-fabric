@@ -258,6 +258,8 @@ este registro.
 
 ## Limites
 
+> Nota posterior: a [fatia dos transforms singulares](../singular-transforms/README.md) passou a colapsar `scale: 0`, `scaleX: 0` e os demais singulares; o parágrafo abaixo descreve a execução deste recibo.
+
 `scale: 0`, `scaleX: 0` e qualquer transform singular seguem com `E_TRANSFORM_SINGULAR`:
 um pop que começa em escala zero é comum, e é o próximo requisito. 3D, `perspective`,
 `rotateX` e `rotateY` (as entradas de z que o guard continua rejeitando), peso diferente
