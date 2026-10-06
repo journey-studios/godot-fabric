@@ -389,6 +389,8 @@ a paridade e os alvos completos do item. A CI hospedada desta fatia está penden
 Só o checkpoint de primeira fatia do GF-19 fecha, porque esta é a primeira fatia
 verificada dele; nenhum GF, outro checkpoint, peso ou denominador fecha.
 
+> Nota posterior: a [fatia da escala uniforme](../uniform-scale/README.md) passou a aceitar esse `scale`; o parágrafo acima descreve a execução deste recibo.
+
 Na execução, as 89 fontes de código e configuração executadas (18 produtoras
 do bundle, 63 entradas do build nativo e 15 de verificação, com sobreposição)
 correspondem à implementação `d96383c46dde79fb9d242f89e68360d49a81663a` por

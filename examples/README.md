@@ -281,6 +281,14 @@ frame, spring and decay drivers: `npm run test:animated`, next to the launcher
 entry. Its [receipt](../docs/evidence/native-animated/README.md) records 75 headless
 checks, four captures, the preceding-host control and two retained sabotages.
 
+The [uniform scale proof](transforms/README.md#uniform-scale) mounts RN's uniform
+`transform: [{ scale }]` in five Hermes applications (static scales, an `Animated.View`
+on the native driver and a `Pressable` pressed with the real mouse where only its scale
+reaches) and compares every Control with a planar matrix derived from the JSX by an
+independent oracle: `npm run test:transforms:guards`, next to the transform gallery.
+Its [receipt](../docs/evidence/uniform-scale/README.md) records 29 headless checks, 35
+with the renderer capture, and the preceding-host control, which fails exactly 22.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |

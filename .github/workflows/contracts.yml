@@ -86,6 +86,9 @@ jobs:
             build/transforms-guards.log
             build/transforms-input-guards.json
             build/transforms-input-guards.log
+            build/transforms-uniform-scale.json
+            build/transforms-uniform-scale-current-report.json
+            build/transforms-uniform-scale-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:runtime
       - run: npm run test:application

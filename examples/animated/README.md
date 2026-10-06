@@ -58,7 +58,8 @@ translation and rotation, that RN reports the end once with `finished: true`, th
 the box rests at its final values with no stale update, and that React rendered
 three times by then: the animation never committed. Back returns the box and releases the
 pressed button, stopping the application releases the backend without a host error,
-and with `--capture` every readback differs from the others. The
+and with `--capture` the pixels of the track the box moves in differ between rest,
+mid-animation and the end, while a press changes only the Run button's. The
 [probe](../../tests/native-animated-probe.gd) and its independent oracle cover the
 animations frame by frame.
 
@@ -99,9 +100,11 @@ function Slide() {
 
 `Animated.Text`, `Image`, `ScrollView`, `FlatList` and `SectionList` throw where
 they render, with their reason; `Animated.View` does not reject View styles Godot
-lacks. A uniform `transform: [{ scale }]`, animated or not, fails with
-`E_TRANSFORM_3D` (RN builds it as `scale3d`, which the transforms guard rejects):
-animate `scaleX` and `scaleY`. `LayoutAnimation`, native `Animated.event` on the SDK
+lacks. A uniform `transform: [{ scale }]`, animated or not, renders as a planar
+uniform scale (RN builds it as `scale3d`; the
+[uniform scale record](../../docs/evidence/uniform-scale/README.md) shows an
+`Animated.View` on the native driver), while `scale: 0` still fails with
+`E_TRANSFORM_SINGULAR`. `LayoutAnimation`, native `Animated.event` on the SDK
 ScrollView, asserted animation of layout props (exploratory runs of `width` and
 `marginLeft` followed frame by frame), `PlatformColor` interpolation, reduced motion,
 performance budgets and Godot mobile exports require separate acceptance. See the

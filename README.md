@@ -46,7 +46,10 @@ bounds. Painting and input use the same Godot Control. Its
 assertions, 33 pixel samples, stable refs/state across flattening and six
 explicit rejection cases. A separate input guard cancels held contacts when an
 external Godot embedding becomes non-invertible, preserving the last valid
-coordinates. Singular, 3D and out-of-range JSX transforms remain unsupported.
+coordinates. Singular, 3D and out-of-range JSX transforms remain unsupported. The
+later [uniform scale record](docs/evidence/uniform-scale/README.md) accepts RN's
+uniform `scale`, static or animated, on the same Control and extends the rejection
+cases to eight.
 
 The [read-only tree example](examples/tree/README.md) exercises original RN
 documents, ID lookup, logical traversal and collection snapshots across two
@@ -293,9 +296,20 @@ decay with Godot's frame tick as their clock and update the Controls without a
 React commit, in two roots of one application: 75 headless checks recomputed frame
 by frame by an independent oracle. The preceding host fails exactly its 59
 normative checks, and hosts that hand the backend seconds or leave the JS thread's
-runtime reference update off fail exactly 32 and 2. Uniform `transform: [{ scale }]`
-fails with `E_TRANSFORM_3D` (animate `scaleX` and `scaleY`); `LayoutAnimation` is
-open. [Evidence](docs/evidence/native-animated/README.md).
+runtime reference update off fail exactly 32 and 2. A uniform `transform: [{ scale }]`
+failed with `E_TRANSFORM_3D` then and renders since the uniform scale proof below;
+`LayoutAnimation` is open. [Evidence](docs/evidence/native-animated/README.md).
+
+The [uniform scale proof](examples/transforms/README.md#uniform-scale) mounts RN's
+uniform `transform: [{ scale }]` in five Hermes applications: a scale, a scale with
+a rotation, a scale about a `transformOrigin`, an `Animated.View` scaled by
+`useNativeDriver` and back by a real press, and a `Pressable` whose scaled bounds
+take real mouse presses where its layout box does not reach. 29 headless checks
+against planar matrices derived from the JSX, with an independent oracle; the
+preceding host fails exactly the 22 that need the scale. The host's planar rule now
+has one definition, shared by the transform adapter and pointer projection.
+`scale: 0` and other singular transforms remain unsupported.
+[Evidence](docs/evidence/uniform-scale/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -555,7 +569,7 @@ npm run test:contracts                   # types/JS compiler/SVG/font contracts 
 npm run test:pointers:geometry          # pinned RN counterexamples and real Hermes binding
 npm run test:pointers:interest          # original Map query and native View pointerdown interest
 npm run test:pointers:documents         # original Document/root interest across all four RN flag combinations
-npm run test:transforms:guards           # rejected styles, invalid embedding input and cleanup
+npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup and uniform scale
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache
