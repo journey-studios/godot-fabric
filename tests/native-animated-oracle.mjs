@@ -105,6 +105,15 @@ const degrees = text => {
 // between the stamps taken around the call that started it.
 const stepWindow = (previous, stamp, started) => ({low: Math.max(0, previous - started.after), high: stamp - started.before + 1});
 
+// Date.now() reads whole milliseconds, so a lower bound that holds in time (an
+// animation lasts its duration, a timer waits its delay) holds between two of its
+// stamps to within one millisecond. That is the only slack the duration and delay
+// bounds below take. They are measured from the stamp taken before the call that
+// started the animation, never from its first frame: a loaded machine may deliver
+// the first frame well after the start, which shortens "end minus first frame"
+// while the animation itself ran its full duration.
+const CLOCK_GRANULARITY = 1;
+
 // A JS-driver animation on a bare value: every listener entry is on the curve
 // RN's driver computes for the Date.now() it ran at (see stepWindow), its
 // interpolated outputs follow from the raw value, and the end is as RN's driver
@@ -151,7 +160,7 @@ function verifyJsValue(name, stage) {
     const near = values.at(-2);
     assert.ok(Math.abs(near.value - config.to) <= 0.001 && values.at(-1).value === config.to, `${name} ends at rest`);
   } else {
-    assert.ok(values.at(-1).t - start.before >= config.duration - 2, `${name} lasts its duration`);
+    assert.ok(values.at(-1).t - start.before >= config.duration - CLOCK_GRANULARITY, `${name} lasts its duration`);
   }
 }
 
@@ -165,14 +174,28 @@ function verifyComposition(stage) {
   assert.deepEqual(order("loop"), ["loop-iteration:true", "loop-iteration:true", "loop:true"]);
   const first = label => valuesOf(events, label)[0];
   const end = label => endsOf(events, label)[0];
-  // sequence runs its second ramp only after the first ended.
+  // Every composition started in the one call stamped by stage.started, so none of
+  // its animations started before startBefore. RN's JS driver ends a timing
+  // animation at the first frame whose Date.now() is its own start plus its
+  // duration, and the delay of a stagger is a timer set in that call.
+  const {startBefore} = stage.started;
+  // sequence runs its second ramp only after the first ended, and the first ramp
+  // ran its duration.
   assert.ok(first("sequence-1").sequence > end("sequence-0").sequence);
-  assert.ok(end("sequence-0").t - first("sequence-0").t >= COMPOSITION.sequence[0] - 2);
-  // parallel starts both ramps together; the shorter one ends first.
-  assert.ok(Math.abs(first("parallel-0").t - first("parallel-1").t) <= 20);
+  const sequenced = end("sequence-0").t - startBefore;
+  assert.ok(sequenced >= COMPOSITION.sequence[0] - CLOCK_GRANULARITY,
+    `sequence-0 ended ${sequenced} ms after the start, for a ${COMPOSITION.sequence[0]} ms ramp`);
+  // parallel starts both ramps together; the shorter one ends first. Together is the
+  // same frame: the host runs the frame callbacks registered before a frame in that
+  // frame, in order, and defers what they register to the next one, so the longer
+  // ramp reports its first value before the shorter one reports its second.
+  const [, secondShort] = valuesOf(events, "parallel-0");
+  assert.ok(secondShort === undefined || first("parallel-1").sequence < secondShort.sequence, "parallel starts both ramps in the same frame");
   assert.ok(end("parallel-0").sequence < end("parallel-1").sequence);
-  // stagger starts the second ramp its delay after the first.
-  assert.ok(first("stagger-1").t - first("stagger-0").t >= COMPOSITION.stagger.delay - 2);
+  // stagger starts the second ramp its delay after the call that started the stagger.
+  const staggered = first("stagger-1").t - startBefore;
+  assert.ok(staggered >= COMPOSITION.stagger.delay - CLOCK_GRANULARITY,
+    `stagger-1 reported its first value ${staggered} ms after the start, for a ${COMPOSITION.stagger.delay} ms delay`);
   // loop runs its ramp twice: the value falls back once, between the two runs.
   const loop = valuesOf(events, "loop-iteration").map(entry => entry.value);
   assert.equal(loop.filter((value, index) => index > 0 && value < loop[index - 1]).length, 1);
@@ -193,7 +216,7 @@ function verifyInterrupt(stage) {
   assert.equal(stopped.result.finished, false);
   // stop() ran from a 100 ms timer; nothing moved after it and the value read
   // is the last one reported, on the linear curve.
-  assert.ok(stopped.t - start.startBefore >= INTERRUPT.stopAfter - 1);
+  assert.ok(stopped.t - start.startBefore >= INTERRUPT.stopAfter - CLOCK_GRANULARITY);
   assert.ok(stoppedValues.every(entry => entry.sequence < stopped.sequence));
   assert.equal(reading.value, stoppedValues.at(-1).value);
   const linear = milliseconds => milliseconds / INTERRUPT.longDuration;
