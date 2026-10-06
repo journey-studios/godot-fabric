@@ -30,10 +30,9 @@ const originalSources = ["Libraries/Components/Touchable/TouchableWithoutFeedbac
   "src/private/animated/createAnimatedPropsHook.js", "src/private/animated/NativeAnimatedHelper.js",
   "Libraries/Renderer/implementations/ReactFabric-prod.js"];
 const CHILDREN_ONLY = "React.Children.only expected to receive a single React element child.";
-const OPACITY = "Godot platform does not implement TouchableOpacity: its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet";
 const INLINE = "Inline Controls are not implemented in Godot Text";
 const STYLE = "Godot TouchableHighlight does not implement style shadowColor";
-const CASES = ["twf", "th", "long", "delayed", "slop", "disabled", "nested", "card", "removable", "toggle", "text", "caption"];
+const CASES = ["twf", "th", "long", "delayed", "slop", "disabled", "nested", "card", "removable", "toggle", "text", "caption", "opacity"];
 // Fixture props, read here independently of the probe: each host's own
 // background, and each TouchableHighlight's underlay and child activeOpacity
 // (RN's default is 0.85). card and outer style a TouchableWithoutFeedback child.
@@ -41,7 +40,7 @@ const BASE = {twf: "334155ff", th: "16a34aff", "th-child": "2563ebff", long: "0f
   delayed: "334155ff", "delayed-child": "0891b2ff", slop: "a16207ff", disabled: "64748bff", "disabled-child": "94a3b8ff",
   outer: "1e293bff", inner: "be185dff", card: "1e293bff", "card-button": "4d7c0fff", removable: "475569ff",
   "removable-child": "7e22ceff", toggle: "365314ff", "toggle-child": "b45309ff", label: "0f766eff", "label-child": "00000000",
-  caption: "7c2d12ff"};
+  caption: "7c2d12ff", opacity: "0e7490ff"};
 const UNDERLAY = {th: ["dc2626ff", 0.4], long: ["7c3aedff", 0.85], delayed: ["ea580cff", 0.6], removable: ["f43f5eff", 0.5],
   toggle: ["22d3eeff", 0.85], label: ["1d4ed8ff", 0.6], card: ["0ea5e9ff", null]};
 // TouchableWithoutFeedback and TouchableHighlight pass minPressDuration 0, so
@@ -63,10 +62,9 @@ const precedingFailures = [...CASES.map(name => `mount/${name}/The original touc
   "mount/th-ref/A ref on TouchableHighlight reaches its native host in both roots",
   "mount/single-two/TouchableHighlight with two children fails at render with React.Children.only",
   "mount/single-none/TouchableWithoutFeedback without a child fails at render with React.Children.only",
-  "mount/opacity/TouchableOpacity fails at render with its explicit NativeAnimatedModule reason",
   "mount/inline/TouchableHighlight inside Text fails at render as an inline Control",
   "mount/style/TouchableHighlight rejects a style its native View does not implement",
-  "mount/render-errors/Only the single-child, contract and TouchableOpacity cases fail at render"];
+  "mount/render-errors/Only the single-child and contract cases fail at render"];
 
 async function optionalFile(file) {
   try { return await readFile(path.join(root, file)); }
@@ -79,20 +77,6 @@ async function optionalFile(file) {
 }
 const near = (actual, expected) => typeof actual === "number" && Math.abs(actual - expected) < 1e-4;
 const types = rows => rows.map(row => row.type);
-
-// RN's original TouchableOpacity reaches FlatList/SectionList through
-// AnimatedExports' lazy getters, and AnimatedColor imports the platform color
-// module, which has no Godot variant. Neither runs on the mount path the
-// animated lane observes; this test-only seam lets that original bundle build.
-const animatedSeams = {name: "touchables-animated-seams", setup(builder) {
-  builder.onResolve({filter: /^\.\/components\/Animated(?:Flat|Section)List$/}, ({importer}) =>
-    importer === path.join(rnRoot, "Libraries/Animated/AnimatedExports.js") ? {path: "lists", namespace: "touchables-seam"} : undefined);
-  builder.onResolve({filter: /^\.\.\/\.\.\/StyleSheet\/PlatformColorValueTypes$/}, ({importer}) =>
-    importer === path.join(rnRoot, "Libraries/Animated/nodes/AnimatedColor.js") ? {path: "colors", namespace: "touchables-seam"} : undefined);
-  builder.onLoad({filter: /.*/, namespace: "touchables-seam"}, ({path: kind}) => ({loader: "js", contents: kind === "lists"
-    ? "export default function AnimatedListOutsideProbe() { throw new Error('Animated lists are outside the touchables probe'); }"
-    : "export function processColorObject() { return null; }"}));
-}};
 
 // The public consumer build: default platform options and production defines.
 async function bundle(lane, entry, platformRoot, plugins = []) {
@@ -250,7 +234,7 @@ const sections = {
   mount(report) {
     const errors = report.stages.mount.renderErrors.map(row => [row.root, row.case, row.message]);
     assert.deepEqual(errors, ["A", "B"].flatMap(name => [[name, "single-two", CHILDREN_ONLY], [name, "single-none", CHILDREN_ONLY],
-      [name, "opacity", OPACITY], [name, "inline", INLINE], [name, "style", STYLE]]));
+      [name, "inline", INLINE], [name, "style", STYLE]]));
     for (const name of ["A", "B"]) {
       for (const [id, background] of Object.entries(BASE)) {
         const host = report.geometry[name].hosts[id];
@@ -401,15 +385,18 @@ function oracleRejections(report) {
   }));
 }
 
+// The public TouchableOpacity alone: it commits, a real press dims it to its
+// activeOpacity through RN's native module and release brings it back.
 function verifyAnimated(report) {
   assert.ok(report.allCurrentAssertionsPassed && report.checks.every(row => row.passed));
   const stage = report.stages.animated;
-  assert.deepEqual(stage.renderErrors.map(row => [row.root, row.case, row.name, row.message]),
-    [["A", "opacity", "Invariant Violation", "Native animated module is not available"]]);
-  assert.equal(stage.hosts.length, 2);
-  assert.ok(Number.isInteger(stage.hosts[0]) && stage.hosts[0] > 0 && stage.hosts[1] === null);
+  assert.deepEqual(stage.renderErrors, []);
   assert.deepEqual(stage.application.errors, []);
-  assert.ok(!stage.root.nodes.some(node => node.testID === "A-opacity") && stage.root.nodes.some(node => node.testID === "A-sibling"));
+  assert.ok(stage.application.nativeAnimated.enabled && stage.application.nativeAnimated.directUpdates === 0);
+  assert.ok(near(stage.rest.opacity, 1) && near(stage.pressed.opacity, 0.5) && near(stage.released.opacity, 1));
+  assert.ok(stage.held.directUpdates > 0 && stage.finished.resumes === 2 && !stage.finished.active && stage.finished.staleDirectUpdates === 0);
+  assert.deepEqual(stage.events.map(row => row.type), ["in", "out", "press"]);
+  assert.ok(stage.root.nodes.some(node => node.testID === "A-sibling" && node.opacity === 1));
 }
 
 async function precedingSdkRoot() {
@@ -441,7 +428,7 @@ async function sabotageRoot() {
   };
   replace("export function TouchableWithoutFeedback(", "export function TouchableHighlight(",
     "export function TouchableWithoutFeedback({ children, ...props }) {\n  return <Pressable {...props}>{children}</Pressable>;\n}\n");
-  replace("export function TouchableHighlight(", "// RN 0.87.1 TouchableOpacity",
+  replace("export function TouchableHighlight(", "// RN's original TouchableOpacity:",
     "export function TouchableHighlight({ children, style, underlayColor = \"black\", activeOpacity = 0.85, onShowUnderlay, onHideUnderlay, ...props }) {\n" +
     "  const child = React.Children.only(children);\n" +
     "  return <Pressable {...props} style={({ pressed }) => [nativeStyle(style, \"TouchableHighlight\"), pressed ? { backgroundColor: underlayColor } : null]}>\n" +
@@ -459,24 +446,23 @@ test("public touchables run RN's original modules on real Godot input", async ()
     "Libraries/Pressability/Pressability.js", "Libraries/Components/View/View.js"]) {
     assert.ok(current.inputs.includes("node_modules/react-native/" + file), "The public bundle runs the original module: " + file);
   }
-  assert.ok(!current.inputs.some(file => file.endsWith("Touchable/TouchableOpacity.js") || file.includes("react-native/Libraries/Animated/")),
-    "The public facade neither bundles TouchableOpacity nor Animated");
+  // The public facade exports Animated and TouchableOpacity, so every bundle carries them.
+  for (const file of ["Libraries/Components/Touchable/TouchableOpacity.js", "Libraries/Animated/Animated.js"]) {
+    assert.ok(current.inputs.includes("node_modules/react-native/" + file), "The public bundle runs the original module: " + file);
+  }
   const lane = await runLane(binary, "current", current);
   assert.deepEqual(lane.failures, []);
   assert.match(lane.log, new RegExp(`TOUCHABLES_PASSED: ${lane.report.checks.length}$`, "m"));
   verifyCurrent(lane.report);
   assert.ok(Object.values(oracleRejections(lane.report)).every(value => value === null));
 
-  const animated = await bundle("animated", "tests/touchables-animated-fixture.jsx", path.join(root, "src"), [animatedSeams]);
+  const animated = await bundle("animated", "tests/touchables-animated-fixture.jsx", path.join(root, "src"));
   for (const file of ["Libraries/Components/Touchable/TouchableOpacity.js", "Libraries/Animated/createAnimatedComponent.js",
     "src/private/animated/createAnimatedPropsHook.js", "src/private/animated/NativeAnimatedHelper.js"]) {
     assert.ok(animated.inputs.includes("node_modules/react-native/" + file), "The animated lane runs the original module: " + file);
   }
-  // The seam keeps RN's Animated list wrappers out of this lane; the facade's
-  // lazy getters still bundle the original lists, as RN's index.js does.
-  assert.ok(!animated.inputs.some(file => /react-native\/Libraries\/Animated\/components\/Animated(?:Flat|Section)List\.js$/.test(file)));
   const animatedLane = await runLane(binary, "animated", animated);
-  assert.match(animatedLane.log, new RegExp(`TOUCHABLES_ANIMATED_UNAVAILABLE: ${animatedLane.report.checks.length}$`, "m"));
+  assert.match(animatedLane.log, new RegExp(`TOUCHABLES_ANIMATED_PASSED: ${animatedLane.report.checks.length}$`, "m"));
   verifyAnimated(animatedLane.report);
 
   const comparison = {scenario: "native-touchables", current: {checks: lane.report.checks.length, bundleSha256: current.sha256},

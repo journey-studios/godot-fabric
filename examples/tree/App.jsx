@@ -180,10 +180,13 @@ function mutation(name, stage) {
       "Imperative native ID lookup differs from canonical props");
   } else if (stage === "rerender") {
     // Upstream 0.87.1 clones with empty RawProps on a children-only commit;
-    // that path does not merge family.nativeProps_DEPRECATED. This is a
-    // bounded pinned-runtime observation, not a promise of persistence.
-    check(checks, d?.getElementById(name + "-fallback") === r.first && d?.getElementById(name + "-imperative") === null && r.first?.id === name + "-fallback",
-      "Pinned upstream children-only commit restores declarative native ID");
+    // that path does not merge family.nativeProps_DEPRECATED, it clones the node
+    // JS holds. On RN's JS thread that node is the clone setNativeProps committed:
+    // RN's ReactInstance updates the runtime shadow node reference of every clone
+    // before each JS callback (ReactInstance.cpp:101) and this host does the same.
+    // This is a bounded pinned-runtime observation, not a promise of persistence.
+    check(checks, d?.getElementById(name + "-imperative") === r.first && d?.getElementById(name + "-fallback") === null && r.first?.id === name + "-fallback",
+      "Children-only commit keeps the imperative native ID, as RN's JS thread holds setNativeProps' clone");
   } else if (stage === "declared") {
     check(checks, r.first?.id === name + "-declared" && d?.getElementById(name + "-declared") === r.first && d?.getElementById(name + "-imperative") === null,
       "Changed React props overwrite the imperative native ID");

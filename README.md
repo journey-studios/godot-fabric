@@ -247,9 +247,10 @@ modules and Pressability: callback order, native underlay and child opacity,
 `delayPressOut`, long press, hitSlop and retention, nesting, disabled and removal
 mid-press under real mouse and touch on two roots, 93 headless checks. The same
 fixture on the preceding SDK fails exactly its 19 render checks, and a retained
-imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
-Animated needs `NativeAnimatedModule`. Hosted CI repeated the 93 checks
-([receipt](docs/evidence/touchables/hosted-ci.json)).
+imitation over Pressable fails. `TouchableOpacity` was unavailable then, since RN
+0.87.1's Animated needs `NativeAnimatedModule`; the
+[Animated example](examples/animated/README.md) below makes it public. Hosted CI
+repeated the 93 checks ([receipt](docs/evidence/touchables/hosted-ci.json)).
 [Evidence](docs/evidence/touchables/README.md).
 
 The [ActivityIndicator example](examples/activity-indicator/README.md) renders
@@ -283,6 +284,18 @@ same scheme and two applications sharing one system theme callback: 79 headless
 checks. The preceding host fails exactly its 56 Appearance checks, and the host
 from before the shared callback its 9 two-application checks.
 [Evidence](docs/evidence/appearance/README.md).
+
+The [Animated example](examples/animated/README.md) runs React Native's original
+`Animated`, `Easing`, `useAnimatedValue(XY)` and `TouchableOpacity` from the public
+import. The JS driver advances on `requestAnimationFrame`; with `useNativeDriver`,
+RN's own C++ `AnimatedModule` and shared `AnimationBackend` run timing, spring and
+decay with Godot's frame tick as their clock and update the Controls without a
+React commit, in two roots of one application: 75 headless checks recomputed frame
+by frame by an independent oracle. The preceding host fails exactly its 59
+normative checks, and hosts that hand the backend seconds or leave the JS thread's
+runtime reference update off fail exactly 32 and 2. Uniform `transform: [{ scale }]`
+fails with `E_TRANSFORM_3D` (animate `scaleX` and `scaleY`); `LayoutAnimation` is
+open. [Evidence](docs/evidence/native-animated/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

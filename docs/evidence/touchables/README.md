@@ -9,6 +9,11 @@ tem. O probe dirige mouse e toque reais do Godot em duas roots de uma aplicaçã
 Hermes, com o bundle de produção do consumidor público. O [recibo](report.json)
 fixa fontes, hashes e resultados.
 
+Atualização de 2026-10-06: o `TouchableOpacity` passou a montar e a animar na
+fatia do [Animated](../native-animated/README.md), que roda o NativeAnimated C++ do
+RN. Este registro, o recibo e as lanes abaixo descrevem o estado da fatia dos
+touchables, quando ele ainda era um placeholder, e ficam como histórico.
+
 | Lane executada | Checks | Observação |
 | --- | ---: | --- |
 | SDK anterior `15e1dda` (local) | 6/25 | Exatamente as 19 falhas normativas de render, cada uma com a mensagem do placeholder; o sentinela Pressable funciona |

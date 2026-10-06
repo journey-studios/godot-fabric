@@ -52,7 +52,9 @@ The later [tree checkpoint](evidence/tree/README.md) adds View `id`/`nativeID`,
 Text `nativeID`, root-scoped document lookup, original read-only traversal and
 snapshot collections. It reuses this native host and original DOM implementation.
 It also records pinned RawText replacement/null document behavior and the
-children-only commit that restores an imperatively changed native ID.
+children-only commit that keeps an imperatively changed native ID, as RN's JS thread
+holds the clone `setNativeProps` committed (the record's executed files observed the
+opposite before the Animated slice and stay as history).
 Public refs expose the Fabric logical hierarchy, which can differ from Godot
 Control parenting. Full HostInstance/focus/commands and mobile differentials
 remain separate acceptance work.

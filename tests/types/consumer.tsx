@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
+import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
@@ -197,3 +198,39 @@ const numericIndicator = <ActivityIndicator size={48} ref={instance => { if (ins
 // @ts-expect-error size is small, large or a number
 const invalidIndicatorSize = <ActivityIndicator size="medium" />;
 void originalIndicatorProps; void numericIndicator; void invalidIndicatorSize;
+
+// RN's original Animated, Easing and hooks keep their upstream declarations.
+function AnimatedConsumer() {
+  const opacity: Animated.Value = useAnimatedValue(0);
+  const position: Animated.ValueXY = useAnimatedValueXY({x: 0, y: 0});
+  const rotate: Animated.Interpolation<string> = opacity.interpolate({inputRange: [0, 1], outputRange: ["0deg", "180deg"]});
+  const timing: Animated.CompositeAnimation = Animated.timing(opacity, {toValue: 1, duration: 200,
+    easing: Easing.inOut(Easing.quad), useNativeDriver: true});
+  const spring = Animated.spring(position, {toValue: {x: 10, y: 20}, stiffness: 200, damping: 20, mass: 1, useNativeDriver: true});
+  const decay = Animated.decay(opacity, {velocity: 0.5, deceleration: 0.99, useNativeDriver: false});
+  Animated.sequence([timing, Animated.parallel([spring, decay]), Animated.delay(10)]).start(({finished}) => { const done: boolean = finished; void done; });
+  Animated.loop(Animated.stagger(30, [timing, spring]), {iterations: 2}).stop();
+  opacity.addListener(({value}) => { const next: number = value; void next; });
+  opacity.stopAnimation(value => { const last: number = value; void last; });
+  const AnimatedBox = Animated.createAnimatedComponent(View);
+  return <Animated.View style={{opacity, transform: [{translateX: position.x}, {translateY: position.y}, {rotate}]}}>
+    <AnimatedBox style={{opacity}} testID="created" />
+  </Animated.View>;
+}
+// @ts-expect-error useNativeDriver is required by RN's animation configs
+Animated.timing(new Animated.Value(0), {toValue: 1, duration: 100});
+// @ts-expect-error a value animates to a number, not a string
+Animated.timing(new Animated.Value(0), {toValue: "1", duration: 100, useNativeDriver: true});
+const easing: typeof Easing.linear = Easing.bezier(0.4, 0, 0.2, 1);
+void AnimatedConsumer; void easing;
+
+// TouchableOpacity: Pressability's press props and a Godot View style.
+const touchableProps: TouchableOpacityProps = {activeOpacity: 0.4, delayPressOut: 100, disabled: false, testID: "touchable",
+  onPress: () => {}, onPressIn: () => {}, onPressOut: () => {}, onLongPress: () => {}, style: {width: 100, height: 40, opacity: 0.9}};
+const originalTouchableProps: import("../../node_modules/react-native/types_generated/index").TouchableOpacityProps = touchableProps;
+const publicTouchable = <TouchableOpacity {...touchableProps} ref={instance => { if (instance) instance.measure(() => {}); }}><View /></TouchableOpacity>;
+// @ts-expect-error the style is the Godot View subset
+const touchableShadow = <TouchableOpacity style={{shadowColor: "#000000"}} />;
+// @ts-expect-error accessibility props are not verified on this platform
+const touchableAccessibility = <TouchableOpacity accessibilityLabel="Save" />;
+void originalTouchableProps; void publicTouchable; void touchableShadow; void touchableAccessibility;

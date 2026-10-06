@@ -38,6 +38,10 @@ class TurboModuleRegistry {
   // setColorScheme override; it emits only when the effective scheme changes.
   void add_appearance(const std::shared_ptr<SystemAppearance> &appearance);
   void add_feature_flags();
+  // RN's C++ AnimatedModule and nodes manager provider, served as
+  // DefaultTurboModules serves them with the shared AnimationBackend, which the
+  // runtime attaches to its UIManager before installation.
+  void add_native_animated();
   void add_game_services(const std::shared_ptr<GameServiceRegistry> &services);
   void add_fixture();
   void install(facebook::jsi::Runtime &runtime);

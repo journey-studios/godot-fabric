@@ -6,10 +6,15 @@
 #include "switch_view.h"
 #include "activity_indicator_view.h"
 #include "appearance_adapter.h"
+#include "native_animated.h"
 #include <godot_cpp/godot.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 void initialize_fabric(godot::ModuleInitializationLevel level) {
   if (level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
+    // Before any application runtime exists, as RN's app factories do.
+    const auto flags = fabric_godot::configure_react_native_feature_flags();
+    if (!flags.empty()) godot::UtilityFunctions::push_error(godot::String("FABRIC_ERROR: ") + flags.c_str());
     godot::ClassDB::register_class<GodotBorderStyleBox>();
     godot::ClassDB::register_class<GodotSvgNode>();
     godot::ClassDB::register_class<GodotParagraph>();

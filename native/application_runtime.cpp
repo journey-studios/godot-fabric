@@ -21,6 +21,7 @@
 #include "timer_registry.h"
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
+#include "native_animated.h"
 #include <react/runtime/TimerManager.h>
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
 #include <react/renderer/components/view/primitives.h>
@@ -49,6 +50,7 @@
 #include <folly/json.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/core/EventQueueProcessor.h>
+#include <react/renderer/core/ShadowNode.h>
 #include <react/renderer/runtimescheduler/RuntimeScheduler.h>
 #include <react/renderer/runtimescheduler/RuntimeSchedulerBinding.h>
 #include <react/renderer/uimanager/UIManager.h>
@@ -205,6 +207,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   bool draining_surfaces{};
   std::map<int, bool> pending_retirements;
   std::shared_ptr<rn::UIManager> ui;
+  rn::SharedComponentDescriptorRegistry descriptors;
+  // RN's Native Animated backend for this application; null without RN's flags.
+  std::unique_ptr<fabric_godot::NativeAnimated> native_animated;
   rn::ComponentDescriptorProviderRegistry providers;
   std::shared_ptr<rn::EventDispatcher> dispatcher;
   GodotEventBeat *beat{};
@@ -290,6 +295,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     host_metrics = read_window();
     viewport_size = host_metrics.size;
     runtime->global().setProperty(*runtime, "godotScenario", jsi::String::createFromUtf8(*runtime, scenario));
+    // RN's ReactInstance sets this before every JS callback its runtime executor
+    // runs and never resets it (ReactInstance.cpp:101): on the JS thread, a shadow
+    // node cloned with fragment.runtimeShadowNodeReference becomes the node JS
+    // holds. Godot's main thread is this host's JS thread, so it is set once.
+    rn::ShadowNode::setUseRuntimeShadowNodeReferenceUpdateOnThread(true);
     rn::RuntimeExecutor executor = [this](rn::RawCallback &&callback) {
       work.push_back(std::move(callback));
     };
@@ -299,6 +309,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     context->insert(rn::RuntimeSchedulerKey, std::weak_ptr<rn::RuntimeScheduler>(runtime_scheduler));
     ui = std::make_shared<rn::UIManager>(executor, context);
     ui->setDelegate(this);
+    native_animated = fabric_godot::NativeAnimated::attach(ui, now_ms);
     auto owner = std::make_shared<rn::EventBeat::OwnerBox>();
     auto event_beat = std::make_unique<GodotEventBeat>(owner, *runtime_scheduler);
     beat = event_beat.get();
@@ -342,7 +353,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (adapters)
         if (const auto *component = adapters->requested_component(name)) providers.add(component->provider);
     });
-    ui->setComponentDescriptorRegistry(providers.createComponentDescriptorRegistry({dispatcher, context, nullptr}));
+    descriptors = providers.createComponentDescriptorRegistry({dispatcher, context, nullptr});
+    ui->setComponentDescriptorRegistry(descriptors);
     runtime_scheduler->setShadowTreeRevisionConsistencyManager(ui->getShadowTreeRevisionConsistencyManager());
     rn::RuntimeSchedulerBinding::createAndInstallIfNeeded(*runtime, runtime_scheduler);
     rn::UIManagerBinding::createAndInstallIfNeeded(*runtime, ui);
@@ -356,6 +368,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add_game_services(game_services);
     if (scenario == "refs" || scenario == "modules") native_modules->add_fixture();
     native_modules->add_feature_flags();
+    if (native_animated) native_modules->add_native_animated();
     native_modules->add_source_code([this] { return bundle_url; });
     native_modules->add_device_info([this] {
       return folly::dynamic::object("Dimensions", device_dimensions());
@@ -872,6 +885,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         catch (const std::exception &error) { fail(error.what()); }
         if (!stop_requested) runtime->drainMicrotasks();
       }
+      // One native animation frame per Godot frame, at the frame callbacks'
+      // time: RN's backend runs its queued operations, drivers and prop updates.
+      if (frame_tick && native_animated && !stopping && !stop_requested) {
+        try { native_animated->frame(frame_time); }
+        catch (const std::exception &error) { fail(error.what()); }
+      }
       // Bound a frame's work. Timers created by a callback run on a later tick.
       if (!stopping && !stop_requested)
         for (auto id : timer_registry->take_due(now_ms())) {
@@ -981,6 +1000,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     host_phase_pending = false;
     surface_phase_pending = false;
     game_services->stop();
+    if (native_animated) native_animated->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
     std::vector<int> ids;
@@ -1806,8 +1826,29 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (root != roots.end() && (!active || (!root->second->stopping && views.contains(node->getTag()))))
       root->second->pointer->responder(node->getTag(), active, block);
   }
-  void uiManagerShouldSynchronouslyUpdateViewOnUIThread(rn::Tag, const folly::dynamic &) override { fail("setNativeProps is not implemented"); }
-  void uiManagerDidUpdateShadowTree(const std::unordered_map<rn::Tag, folly::dynamic> &) override { fail("Animated adapter is not implemented"); }
+  // RCTMountingManager's synchronouslyUpdateViewOnUIThread: the mounted props
+  // cloned with the animated ones and applied to the Control, without a commit.
+  // The backend's commit hook carries the same values into React's commits.
+  void uiManagerShouldSynchronouslyUpdateViewOnUIThread(rn::Tag tag, const folly::dynamic &props) override {
+    ExecutionScope execution(*this);
+    auto found = views.find(tag);
+    if (inactive() || found == views.end() || retiring.contains(tag) || roots.at(found->second.surface_id)->stopping) {
+      if (native_animated) native_animated->update_dropped();
+      return;
+    }
+    auto &mounted = found->second;
+    try {
+      const auto &descriptor = descriptors->at(mounted.shadow.componentHandle);
+      rn::PropsParserContext parser{mounted.surface_id, *context};
+      auto shadow = mounted.shadow;
+      shadow.props = descriptor.cloneProps(parser, mounted.shadow.props, rn::RawProps(props));
+      apply(shadow);
+      if (native_animated) native_animated->update_applied();
+    } catch (const std::exception &error) { fail(error.what()); }
+  }
+  // Only RN's legacy Animated path (no shared backend) reports here, and iOS
+  // (RCTScheduler.mm) and Android (FabricUIManagerBinding.cpp) both ignore it.
+  void uiManagerDidUpdateShadowTree(const std::unordered_map<rn::Tag, folly::dynamic> &) override {}
   void uiManagerShouldAddEventListener(std::shared_ptr<const rn::EventListener> listener) override { dispatcher->addListener(std::move(listener)); }
   void uiManagerShouldRemoveEventListener(const std::shared_ptr<const rn::EventListener> &listener) override { dispatcher->removeListener(listener); }
   void uiManagerDidStartSurface(const rn::ShadowTree &tree) override {
@@ -1846,6 +1887,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("active", active_pointers)("hoverPointers", hover_pointers)("nextId", next_pointer_id)
         ("stored", pointer_routes.size())("suppressed", suppressed_pointers);
     result["nativeModules"] = native_modules->snapshot();
+    result["nativeAnimated"] = native_animated ? native_animated->snapshot() : folly::dynamic::object("enabled", false);
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
     result["hostPhasePending"] = host_phase_pending;

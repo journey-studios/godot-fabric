@@ -5,6 +5,7 @@ import { ScrollView as GodotScrollView } from "./scroll-view";
 import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
 import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
+import OriginalTouchableOpacity from "react-native/Libraries/Components/Touchable/TouchableOpacity";
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import OriginalActivityIndicator from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
 import {
@@ -24,6 +25,12 @@ import processColor from "react-native/Libraries/StyleSheet/processColor";
 import OriginalStyleSheet from "react-native/Libraries/StyleSheet/StyleSheet";
 export { default as NativeModules } from "./native-modules";
 export { default as NativeEventEmitter } from "react-native/Libraries/EventEmitter/NativeEventEmitter";
+// RN's original Animated over RN's C++ NativeAnimatedModule (useNativeDriver)
+// or requestAnimationFrame (JS driver), and its original Easing and hooks.
+export { default as Animated } from "react-native/Libraries/Animated/Animated";
+export { default as Easing } from "react-native/Libraries/Animated/Easing";
+export { default as useAnimatedValue } from "react-native/Libraries/Animated/useAnimatedValue";
+export { default as useAnimatedValueXY } from "react-native/Libraries/Animated/useAnimatedValueXY";
 export * as TurboModuleRegistry from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 export { default as codegenNativeComponent } from "react-native/Libraries/Utilities/codegenNativeComponent";
 export { default as codegenNativeCommands } from "react-native/Libraries/Utilities/codegenNativeCommands";
@@ -179,10 +186,14 @@ export function TouchableHighlight({ style, ...props }) {
   }
   return <OriginalTouchableHighlight {...props} style={nativeStyle(style, "TouchableHighlight")} />;
 }
-// RN 0.87.1 TouchableOpacity renders Animated.View, whose props hook flushes
-// the native animated queue on mount; without that module it throws there.
-export const TouchableOpacity = unavailable("TouchableOpacity",
-  "its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet");
+// RN's original TouchableOpacity: Pressability drives its Animated.View opacity
+// timing through the native driver, which the C++ NativeAnimatedModule runs.
+export function TouchableOpacity({ style, ...props }) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalTouchableOpacity {...props} style={nativeStyle(style, "TouchableOpacity")} />;
+}
 // RN's original ActivityIndicator.js takes its non-Android path: a sized View
 // around the generated ActivityIndicatorView component.
 export function ActivityIndicator({ style, ...props }) {
