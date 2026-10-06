@@ -2449,44 +2449,71 @@ frames stepping an animation against a ramp.
 runtime asks it once per Godot frame, with the frame's time, the refresh rate the display
 reports for the window's screen, the window's pacing and whether anything consumes frames
 (pending frame callbacks, or a Native Animated backend with an animation to run). Only a
-tick runs the frame callbacks and the backend's frame, with one timestamp; timers, input,
-the host phase and the work queue still run on every Godot frame. With V-Sync enabled or
-adaptive on a real display (`Presentation`) every frame with a consumer is a tick: the
-engine presents each process frame as one image and pipelines them (about 3 and 13 ms
-apart on a 120 Hz window), so the time between frames says nothing. Where nothing paces
-the loop (`Time`: headless, V-Sync off or mailbox), with `T = 1000 / R` ms and `R` the
-refresh rate the display reports, or 60, a frame is a tick iff no tick has served a
-consumer yet, or it starts at least `T / 2` after the previous Godot frame, or `T` after
-the last tick. So ticks are never closer than `T / 2`, a loop capped at the refresh or
-slower ticks on every frame, a faster loop ticks about once per `T`, a stall gives one
-late tick and the catch-up frames behind it wait, and the first frame with a consumer
-after idling ticks at once. `FrameClock::detect_pacing` reads the window's V-Sync mode and
-server on every frame (sources `headless`, `vsync` and `unpaced`), two meta values of the
-application (`validation_refresh_rate`, `validation_frame_pacing`) state them where headless
-cannot, and the application's snapshot reports `frameClock`.
+tick runs the frame callbacks and the backend's frame; timers, input, the host phase and
+the work queue still run on every Godot frame. The host binds its own
+`requestAnimationFrame`, and a tick passes its one timestamp to every callback of the tick
+and to the backend frame, where RN 0.87.1's `TimerManager` rAF samples `performance.now()`
+per callback (browsers pass the frame's shared timestamp too: a deliberate departure). With
+V-Sync enabled or adaptive on a real display, in a window that can draw (`Presentation`),
+every frame with a consumer is a tick, however close to the one before: the engine presents
+each process frame as one image and pipelines them (about 3 and 13 ms apart on a 120 Hz
+window), so the time between frames says nothing. Where nothing paces the loop (`Time`:
+headless, V-Sync off or mailbox, or a window that cannot draw, since Godot's main loop then
+sleeps `low_processor_usage_mode_sleep_usec` per frame even with V-Sync), with
+`T = 1000 / R` ms and `R` the refresh rate the display reports, or 60, a frame is a tick iff
+no tick has served a consumer yet, or it starts at least `T / 2` after the previous Godot
+frame, or `T` after the last tick. So, under Time pacing, ticks are never closer than
+`T / 2`, a loop capped at the refresh or slower ticks on every frame, a faster loop ticks
+about once per `T`, a stall gives one late tick and the catch-up frames behind it wait, and
+the first frame with a consumer after idling ticks at once only when it is due (no tick has
+served a consumer yet, it starts `T / 2` after the previous frame, or a period has passed
+since the last tick; on a faster loop a request within a period of the last tick waits out
+the period, as a display link would). `FrameClock::detect_pacing` reads the window's V-Sync
+mode, server and `DisplayServer.window_can_draw` on every frame (Godot 4.7.2 exposes that
+method per window, not `can_any_window_draw`; sources `headless`, `undrawable`, `vsync` and
+`unpaced`), two meta values of the application (`validation_refresh_rate`,
+`validation_frame_pacing`) state them where headless cannot, and the application's snapshot
+reports `frameClock`. The review added the window-can-draw input and the `undrawable` source
+in commit [`e6d42a4`](https://github.com/journey-studios/godot-fabric/commit/e6d42a4efa8cb224c7db82a24625341eeb21f9e8).
 
 Eight loop paces (capped at 60 fps, headless, uncapped, the hosted runner's bursts, a 144
 Hz display, the same loop on a screen that reports no rate, and the pipelined frames of a
 V-Sync window presented and timed) run a native decay, a loop of frame callbacks and a
-zero-delay interval side by side in 42 headless checks, 29 that need the clock (the
-cadence checks) and 13 that hold on every host. An independent Node oracle, written from
-the contract and RN's decay driver, recomputes every decision of the clock from the Godot
-frame times the host reports and where the decay lands from the timestamps delivered
-(a window of 48.749 to 50 at 60 Hz for frames never closer than half a period). The same
-bundle on the preceding host (the singular transforms slice's, built from `ca9f195`) fails
-exactly the 29 cadence checks, three retained sabotages
+zero-delay interval side by side in 37 headless checks, 29 that need the clock (the
+cadence checks) and 8 that hold on every host. No check assumes what timing the machine
+delivers: the first hosted run, on a macOS runner too slow and too stalled to deliver the 3 ms
+frames of the pipelined lanes, failed the two checks that did (the one that the loop
+alternates 13 and 3 ms, and the one that the 3 ms frames wait), so the rule is now stated over
+the frames that were delivered (a frame closer than half a period to the one before, within
+a period of the last tick, waits; vacuously true where none came), what each lane delivered
+is an observation in the report and the log, what a check counts exists by construction, and
+the unit test proves the rule on the exact patterns (commit
+[`8fc4627`](https://github.com/journey-studios/godot-fabric/commit/8fc46279d6126b87e4fc6cc1d982f75620dfc3b5)).
+A recorded report, that artifact included, is judged by the same checks and the oracle with
+`node tests/frame-clock-native.test.mjs --replay=<report.json>`. An independent Node oracle,
+written from the contract and RN's decay driver, recomputes every decision of the clock from
+the Godot frame times the host reports and where the decay lands from the timestamps
+delivered (a window of 48.749 to 50 at 60 Hz for frames never closer than half a period).
+The same bundle on the preceding host (the singular transforms slice's, built from
+`ca9f195`) fails exactly the 29 cadence checks, three retained sabotages
 (`scripts/frame-clock-sabotage.mjs`: a clock that always ticks, one that ticks for frames
-nothing consumes, one that times a presented window) fail 21, 5 and 1 and are rejected by
-the oracle, and a C++ unit test runs 14 cases over synthetic pacings, boundaries on exact
-binary fractions and 24 seeded random ones. The Animated and singular transforms controls
-and sabotages were rebuilt from the committed tree so their local receipts describe this
-host. In exploratory headed runs on a 120 Hz Mac (not asserted by the suite), 720 of 720
+nothing consumes, one that times a presented window) each fail at least one check (18 to 21,
+3 to 5 and 1 in the local runs, by the short frames the machine delivered) and are rejected
+by the oracle, and a C++ unit test runs 14 cases over synthetic pacings, boundaries on exact
+binary fractions, a window that stops being drawable and 24 seeded random ones. The Animated
+and singular transforms controls and sabotages were rebuilt from the final tree so their
+local receipts describe this host. In exploratory headed runs on a 120 Hz Mac (not asserted by the suite), 720 of 720
 frames ticked with V-Sync (120.0 per second, none waited), 166 of 2,400 without it (114.6 per
 second, at about 1,657 frames per second) and 360 of 360 with `Engine.max_fps` 60; the
-Compatibility renderer reads `ADAPTIVE` and `MAILBOX` back as `ENABLED`. A scratch harness
+Compatibility renderer reads `ADAPTIVE` and `MAILBOX` back as `ENABLED`, and a minimized window
+reported `window_can_draw` false, paced by the 30 ms sleep set for the test (33 frames a
+second, `time` from `undrawable`), where the same window visible or restored ran at 116 to
+119. A scratch harness
 that froze and thawed the Godot process (stops of 20 to 70 ms, and a harsher 40 to 150 ms)
-ran the frame clock and Animated suites 6 and 10 times each on the committed tree, and every
-run passed. The clock has no visual output, so the slice has no example or capture.
+ran the frame clock and Animated suites 6 and 10 times each on `e67f82c`, and the frame
+clock suite again on the revised tree (6 and 10 times, and 4 more under eleven busy loops),
+and every run passed. The clock has no visual output, so the slice has no example or
+capture.
 
 Tests that counted Godot frames to wait for a frame callback or an animation now wait for
 ticks or conditions: five Animated checks were renamed (the first tick after the call
@@ -2504,18 +2531,26 @@ of its Godot frame, so the steps between ticks are as uneven as those frames and
 lands lower than at a regular cadence (the iOS display link hands RN the regular
 `targetTimestamp`); `ADAPTIVE` and `MAILBOX` V-Sync are covered only by the unit test;
 real displays beyond the one exploratory run, variable refresh rates, suspend and resume,
-JS load, frame budgets (GF-30) and Godot mobile exports are not covered. On the committed
-tree the contracts gates (264 Node/13 Python, static analysis, publication scan),
+JS load, frame budgets (GF-30) and Godot mobile exports are not covered. On the tree after
+the review the contracts gates (264 Node/13 Python, static analysis, publication scan),
 `test:recovery`, the 36 native suites (23 examples/2,262 checks, transform guards 61 plus
 25 input checks and the 29- and 49-check uniform scale and singular lanes, Down 2,731,
 Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover 158, root path 82,
 Document hover 1,530, click 728, capture notifications 672, PanResponder 128, AppState 75,
 lists 44, Appearance 79, Switch 108, shared touches 92, touchables 93, ActivityIndicator
-33, Animated 75, frame clock 42) and the native SDK batch pass, each suite with the count
-of the preceding slice and on its first run. All 101 executed code/configuration inputs
-match implementation `e67f82c` via git show/SHA-256 (executed from the committed tree,
-execution base `b274a0c`). Hosted CI for this slice is pending. No whole GF, checkpoint,
-weight or denominator closes.
+33, Animated 75, frame clock 37) and the native SDK batch pass, each suite with the count
+of the preceding slice (the frame clock's own aside) and on its first run; the Animated and
+frame clock steps ran once more after a comment-only edit of the probes. The original
+receipt stays what `e67f82c` executed (its 101 inputs match that commit via
+git show/SHA-256, execution base `b274a0c`); the seven code and test files the review changed
+are in two commits, [`e6d42a4`](https://github.com/journey-studios/godot-fabric/commit/e6d42a4efa8cb224c7db82a24625341eeb21f9e8)
+(a window that cannot draw is paced by time: the three `native/` files) and
+[`8fc4627`](https://github.com/journey-studios/godot-fabric/commit/8fc46279d6126b87e4fc6cc1d982f75620dfc3b5)
+(the lanes judged on delivered frames only: the four `tests/` files), and each is pinned to
+its commit by SHA-256 in the `postReview` section of `report.json`, verified against
+`git show <commit>:<path>`. The first hosted CI run failed `test:frame-clock` on a premise
+about the machine, now removed; hosted CI for the revised head is pending. No whole GF,
+checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

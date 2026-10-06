@@ -333,16 +333,25 @@ The [frame clock record](docs/evidence/frame-clock/README.md) makes
 link's cadence instead of on every Godot frame: a headless, uncapped or stalled loop
 delivered hundreds of frames a second or frames 0.4 ms apart, which ended native decays
 early and flaked hosted CI. One host clock decides, once per Godot frame, whether the
-frame is a tick. With V-Sync on a real display every frame with a consumer is a tick;
-otherwise (headless, V-Sync off) a frame ticks when it starts at least half a refresh
-period after the previous frame or a whole period after the last tick, at the rate the
-display reports (60 Hz when it reports none). Timers, input and the work queue still run
-on every Godot frame. 42 headless checks over eight loop paces, recomputed by an
-independent oracle from the frame times the host reports; the preceding host fails
-exactly the 29 cadence checks and three retained sabotages fail 21, 5 and 1. The clock
-has no visual output, so there is no example scene or screenshot. Timers are not
-quantized to ticks, presented frames carry CPU time and not the display's regular
-timestamp, and real displays beyond one exploratory headed run are not certified.
+frame is a tick. With V-Sync on a real display, in a window that can draw, every frame with
+a consumer is a tick; otherwise (headless, V-Sync off, or a window that cannot draw, such as
+a minimized one, which Godot's main loop paces with a sleep even with V-Sync) a frame ticks
+when it starts at least half a refresh period after the previous frame or a whole period
+after the last tick, at the rate the display reports (60 Hz when it reports none). Timers,
+input and the work queue still run on every Godot frame, and the host's own
+`requestAnimationFrame` gives every callback of a tick, and the animation frame, the tick's
+one timestamp. 37 headless checks over eight loop paces, none of which assumes what timing
+the machine delivers (a macOS runner too slow for 3 ms frames failed the first hosted run
+until they stopped; review commits
+[`e6d42a4`](https://github.com/journey-studios/godot-fabric/commit/e6d42a4efa8cb224c7db82a24625341eeb21f9e8)
+and
+[`8fc4627`](https://github.com/journey-studios/godot-fabric/commit/8fc46279d6126b87e4fc6cc1d982f75620dfc3b5)),
+recomputed by an independent oracle from the frame times the host
+reports; the preceding host fails exactly the 29 cadence checks, and three retained
+sabotages each fail at least one and are rejected by the oracle. The clock has no visual
+output, so there is no example scene or screenshot. Timers are not quantized to ticks,
+presented frames carry CPU time and not the display's regular timestamp, and real displays
+beyond one exploratory headed run are not certified.
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

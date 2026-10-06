@@ -110,9 +110,11 @@ callback with a vsync timestamp, so the tick the host already reads for
 
 > Later note: the [frame clock slice](frame-clock.md) put a display link between those
 > Godot frames and the backend. It runs the frame callbacks and the backend only on the
-> ticks it decides, at a display's pace (never two within half a refresh period),
-> so the 45 frames of the paragraph above are what this slice's runs saw of a loop
-> nothing paced, and the timestamp is the tick's.
+> ticks it decides, at a display's pace: where nothing paces the loop (headless, V-Sync
+> off, a window that cannot draw) no two ticks come within half a refresh period, and
+> where V-Sync presents every frame each frame with a consumer is a tick. So the 45 frames
+> of the paragraph above are what this slice's runs saw of a loop nothing paced, and the
+> timestamp is the tick's.
 
 ## The mapping
 

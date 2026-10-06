@@ -450,34 +450,49 @@ run on the ticks of the host's frame clock, not on every Godot process frame;
 `performance.now()` uses the same monotonic clock as their timestamp.
 
 The frame clock (`native/frame_clock.h`, [evidence](evidence/frame-clock/README.md)) is
-the only place where that cadence is decided, as RN's platforms leave it to a display link (a `CADisplayLink` on iOS, a
-`Choreographer` on Android). The runtime asks it once per Godot frame, with the time of
-the frame, the refresh rate the display reports for the window's screen, the window's
-pacing and whether anything consumes frames (pending RAF callbacks, or a Native
-Animated backend with an animation to run). A frame is a tick only if something
-consumes frames, and then the window's pacing decides:
+the only place where that cadence is decided, as RN's platforms leave it to a display
+link (a `CADisplayLink` on iOS, a `Choreographer` on Android). The runtime asks it once
+per Godot frame, with the time of the frame, the refresh rate the display reports for
+the window's screen, the window's pacing and whether anything consumes frames (pending
+RAF callbacks, or a Native Animated backend with an animation to run). A frame is a tick
+only if something consumes frames, and then the window's pacing decides:
 
-- **Presentation** (a window on a real display with V-Sync enabled or adaptive): every
-  frame with a consumer is a tick.
-- **Time** (headless, V-Sync disabled or mailbox, or unknown): with `T = 1000 / R` ms, `R`
-  being the reported refresh rate when it is positive and finite and 60 otherwise, the
-  frame at time `t` is a tick iff no tick has served a consumer yet, or `t - (the
-  previous Godot frame) >= T / 2`, or `t - (the previous tick) >= T`. So two ticks are
-  never closer than `T / 2`, a loop capped at the refresh rate or slower ticks on every
-  frame, a faster loop ticks about once per `T`, a stall gives one late tick (the
-  catch-up frames behind it wait) and the first frame with a consumer after idling ticks
-  at once.
+- **Presentation** (a window on a real display that can draw, with V-Sync enabled or
+  adaptive): every frame with a consumer is a tick, however close it is to the one before
+  (the pipelined frames of a V-Sync window arrive about 3 ms apart).
+- **Time** (headless, V-Sync disabled or mailbox, a window that cannot draw, or unknown):
+  with `T = 1000 / R` ms, `R` being the reported refresh rate when it is positive and
+  finite and 60 otherwise, the frame at time `t` is a tick iff no tick has served a
+  consumer yet, or `t - (the previous Godot frame) >= T / 2`, or `t - (the previous
+  tick) >= T`. So, under Time pacing, two ticks are never closer than `T / 2`, a loop
+  capped at the refresh rate or slower ticks on every frame, a faster loop ticks about
+  once per `T`, a stall gives one late tick (the catch-up frames behind it wait), and the
+  first frame with a consumer after idling ticks at once only when it is due: when no tick
+  has served a consumer yet, when it starts `T / 2` after the previous Godot frame, or
+  when a period has passed since the last tick. On a loop faster than `T / 2`, a request
+  within a period of the last tick waits out the period, as a display link would.
 
-The pacing is detected per frame (`headless` and `unpaced` give Time, `vsync` gives
-Presentation) and reported, with the rate and its source and the counters, in the
-application snapshot's `frameClock`; `validation_refresh_rate` and
-`validation_frame_pacing` meta values state them where the DisplayServer cannot (headless).
-Only a tick runs the callbacks and the animation frame, all with the tick's timestamp;
-a callback requested during a tick waits for the next one. Timers, input, the host phase
-and the work queue still run on every Godot frame, so `setTimeout(fn, 0)` and short
-intervals are not quantized to ticks as they are on RN's platforms. A Presentation
-tick's timestamp is the CPU time of its Godot frame, not the regular presentation time
-iOS gives RN, so the steps of a decay under V-Sync are as uneven as those frames.
+A window that cannot draw (a minimized one, say) is not presented, and Godot's main loop
+then sleeps `low_processor_usage_mode_sleep_usec` per frame even with V-Sync, so that
+sleep paces the frames and not presentation: it is paced by time. The pacing is detected
+per frame (`headless`, `undrawable` and `unpaced` give Time, `vsync` gives Presentation;
+`DisplayServer.window_can_draw` tells whether the window can draw) and reported, with the
+rate and its source and the counters, in the application snapshot's `frameClock`;
+`validation_refresh_rate` and `validation_frame_pacing` meta values state them where the
+DisplayServer cannot (headless).
+
+Only a tick runs the callbacks and the animation frame. The host binds its own
+`requestAnimationFrame` and `cancelAnimationFrame` after RN's `TimerManager` installs its
+globals (`native/application_runtime.cpp`), so a callback is not a 0 ms timer: a tick runs
+the callbacks pending when it starts, in order, passing every one of them and the Native
+Animated frame the tick's one timestamp, and a callback requested during a tick waits for
+the next one. RN 0.87.1's `TimerManager` rAF would pass `performance.now()`, sampled when
+each callback runs; the frame's shared timestamp, which browsers pass too, is a deliberate
+departure. Timers, input, the host phase and the work queue still run on every Godot
+frame, so `setTimeout(fn, 0)` and short intervals are not quantized to ticks as they are
+on RN's platforms. A Presentation tick's timestamp is the CPU time of its Godot frame, not
+the regular presentation time iOS gives RN, so the steps of a decay under V-Sync are as
+uneven as those frames.
 
 Callback exceptions reach the host error channel. A failed one-shot releases
 its registration; a failed interval remains recurring until cancelled.
