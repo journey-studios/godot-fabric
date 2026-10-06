@@ -366,6 +366,7 @@ func singular_source_acceptance() -> void:
   verify(canceled_id > 0 and survivor_id > 0 and canceled_id != survivor_id and query("A", "capture", canceled_id) and query("B", "capture", survivor_id),
     "singular-survivor-active/ids", "Independent physical A/B contacts have distinct live captured identities")
   registry(2, 2, 2, "singular-survivor-active")
+  var survivor_pointer: Dictionary = last_event("B", "capture", "Move").get("native", {})
 
   var original_offset := {}
   for property: String in ["enabled", "position", "position_ratio", "scale", "rotation", "pivot", "pivot_ratio", "visual_only"]:
@@ -397,11 +398,18 @@ func singular_source_acceptance() -> void:
   var cancellations: Array = stats().get("touches", []).filter(func(entry: Dictionary) -> bool: return entry.get("type") == "Cancel")
   var canceled_touch: Dictionary = cancellations[0] if cancellations.size() == 1 else {}
   var touch_coordinates := ["pageX", "pageY", "screenX", "screenY", "locationX", "locationY", "target", "identifier"]
+  # The application's other active touch, B's survivor (Godot index 31 is
+  # identifier 32), stays listed where it rests.
+  var listed: Array = canceled_touch.get("touches", [])
+  var survivor: Dictionary = listed[0] if listed.size() == 1 else {}
   verify(cancellations.size() == 1 and canceled_touch.get("name") == "A" and canceled_touch.get("id") == "origin" and
     exact_fields(canceled_touch.get("native", {}), previous_touch, touch_coordinates) and
-    canceled_touch.get("touches", ["missing"]).is_empty() and canceled_touch.get("changedTouches", []).size() == 1 and
+    int(survivor.get("identifier", -1)) == 32 and int(survivor.get("target", -1)) == int(read("B", "capture").get("tag", -2)) and
+    absf(float(survivor.get("pageX", NAN)) - float(survivor_pointer.get("pageX", NAN))) < 0.001 and
+    absf(float(survivor.get("pageY", NAN)) - float(survivor_pointer.get("pageY", NAN))) < 0.001 and
+    canceled_touch.get("changedTouches", []).size() == 1 and
     exact_fields(canceled_touch.get("changedTouches", [{}])[0], previous_touch, touch_coordinates),
-    "singular-source/original-touch-cancel", "Separate original TouchCancel preserves last valid origin coordinates and retires only its changed contact")
+    "singular-source/original-touch-cancel", "Separate original TouchCancel preserves last valid origin coordinates, retires only its changed contact and still lists B's survivor")
   var canceled_state := native(surfaces.A)
   var canceled_pointer: Dictionary = canceled_state.get("pointer", {})
   verify(int(canceled_pointer.get("activeTouches", -1)) == 0 and int(canceled_pointer.get("activePointers", -1)) == 0 and

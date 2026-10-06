@@ -3,8 +3,9 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/app-state/README.md) owns the 75 headless
 checks, the preceding-host control (the same bundle fails exactly its 62 normative
-checks) and a retained sabotage of the state mapping. Mobile exports and real OS
-focus changes are not certified.
+checks) and a retained sabotage of the state mapping. Hosted run 37382633328 repeated the 75 checks
+with identical IDs and bundle ([receipt](../evidence/app-state/hosted-ci.json)).
+Mobile exports and real OS focus changes are not certified.
 
 ## What RN does
 
