@@ -239,8 +239,8 @@ launcher catalog. It checks callback order and payloads, the native underlay and
 child opacity, `delayPressOut`, long press, hitSlop and retention, disabled,
 nesting, removal mid-press and the single-child rule. Its
 [receipt](../docs/evidence/touchables/README.md) records 93/93 headless checks,
-the preceding-SDK and sabotage controls and why `TouchableOpacity` stays
-unavailable.
+the preceding-SDK and sabotage controls and why `TouchableOpacity` was unavailable
+then; the [Animated example](animated/README.md) makes it public.
 
 The [ActivityIndicator probe](activity-indicator/README.md) mounts RN's original
 `ActivityIndicator.js` in two roots and measures each spinner across actual
@@ -273,6 +273,13 @@ one Callable registered with Godot's `DisplayServer` and overrides it with
 applications observe at once: `npm run test:appearance`, outside the launcher
 catalog. Its [receipt](../docs/evidence/appearance/README.md) records 79 headless
 checks, the preceding-host and pre-fix controls and a retained negative control.
+
+The [Animated probe](animated/README.md) drives RN's original `Animated` with both
+drivers and `TouchableOpacity` with real mouse and touch in two roots of one
+application, and compares the Controls with an independent oracle that replays RN's
+frame, spring and decay drivers: `npm run test:animated`, next to the launcher
+entry. Its [receipt](../docs/evidence/native-animated/README.md) records 75 headless
+checks, four captures, the preceding-host control and two retained sabotages.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

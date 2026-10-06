@@ -83,8 +83,11 @@ and retained refs during keyed changes and retirement. It passes **89 headless /
 99 native checks**, eight RGBA samples and two captures on the unchanged host.
 The same fixture fails **25/89 checks** with the preceding JS configuration.
 Original source links explain RawText replacement/null ownerDocument and
-imperative native IDs reverting on a children-only commit. GF-08 remains open
-for complete refs/commands and original mobile differentials.
+imperative native IDs, which the record observed reverting on a children-only
+commit; the [Animated record](native-animated/README.md) changed that on purpose
+(RN's JS thread holds the clone `setNativeProps` committed, so the ID stays), and
+this record's executed files keep the earlier observation as history. GF-08 remains
+open for complete refs/commands and original mobile differentials.
 
 The [original TextInputState/focus record](focus/README.md) adds 175 headless /
 189 native checks, 12 pixels and two captures. Previous-host and eligibility
@@ -272,9 +275,10 @@ Highlight's underlay and child opacity show on the native Controls with its
 nesting and removal mid-press follow RN. The same fixture on the preceding SDK
 fails exactly its 19 render checks; a retained imitation over the SDK Pressable
 fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
-lane shows RN's original TouchableOpacity failing at mount without
-`NativeAnimatedModule`. Hosted run 37394073082 repeated the 93 checks and the
-animated lane's 6 ([receipt](touchables/hosted-ci.json)).
+lane showed RN's original TouchableOpacity failing at mount without
+`NativeAnimatedModule` (the [Animated record](native-animated/README.md) makes it
+public, and the lane now presses it). Hosted run 37394073082 repeated the 93 checks
+and the animated lane's 6 ([receipt](touchables/hosted-ci.json)).
 
 The [ActivityIndicator record](activity-indicator/README.md) runs RN's original
 `ActivityIndicator.js` over the generated `ActivityIndicatorView` descriptor and
@@ -319,6 +323,20 @@ host fails exactly the 56 Appearance checks, the host from before the shared
 callback fails exactly its 9 two-application checks, and a host that emitted for
 every callback failed 17 of the first 67; the independent oracle rejects both.
 Hosted CI pending.
+
+The [Animated record](native-animated/README.md) runs RN's original `Animated`,
+`Easing`, `useAnimatedValue(XY)` and `TouchableOpacity` in two roots of one
+application, with the JS driver on `requestAnimationFrame` and, with
+`useNativeDriver`, RN's own C++ `AnimatedModule` and shared `AnimationBackend`
+advanced by Godot's frame tick: 75 headless checks. An independent oracle replays
+RN's frame, spring and decay drivers over the timestamps the host delivered and
+agrees with the Controls to rounding; mouse and touch presses dim the
+`TouchableOpacity` through the native driver. The preceding host fails exactly the
+59 normative checks, a host that hands the backend seconds fails 32, and a host whose
+JS thread does not update the shadow node references it holds fails 2; the oracle
+rejects both. The record also updates two earlier contracts (the touchables suite
+renders `TouchableOpacity`; a tree children-only commit keeps an imperative native
+ID) and keeps their executed files as history. Four captures. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

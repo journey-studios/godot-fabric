@@ -7,9 +7,12 @@ rule are RN's code. This validation drives them with actual Godot mouse and
 touch input on two roots of one Hermes application. Its fixture and command are
 outside the interactive launcher catalog.
 
-`TouchableOpacity` remains unavailable: RN 0.87.1 mounts it as an
-`Animated.View`, which requires a native animated module that Godot does not
-provide yet (GF-19). Rendering it throws an error that says so.
+`TouchableOpacity` joined them with the [Animated example](../animated/README.md):
+RN 0.87.1 mounts it as an `Animated.View`, which needs a native animated module, and
+Godot now runs RN's C++ one. This fixture mounts it with the others, and its
+`animated` lane presses it with a real mouse and touch (7 checks); the
+[Animated evidence](../../docs/evidence/native-animated/README.md) animates it frame by
+frame.
 
 The [evidence](../../docs/evidence/touchables/README.md) records the headless
 checks, the preceding-SDK control, the retained sabotage and the regressions.
@@ -65,7 +68,7 @@ follows View's supported styles.
 ## Limits
 
 Concurrent presses with the touchables themselves (the shared touches fix covers
-the responder they use), TouchableOpacity, TouchableNativeFeedback,
+the responder they use), TouchableNativeFeedback,
 focus and keyboard activation, accessibility, click synthesis, typed
 declarations, hardware and mobile exports require separate acceptance. See the
 [research](../../docs/research/touchables.md).

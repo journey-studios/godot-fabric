@@ -1918,7 +1918,9 @@ reason. RN 0.87.1's Animated props hook flushes the native animated queue in its
 first effect and fails an invariant without `NativeAnimatedModule`, so the
 JS-driven fallback is unreachable; an animated lane mounts the original
 TouchableOpacity (test-only seams for Animated's lazy list getters and platform
-color import) and shows that failure at mount. It depends on GF-19.
+color import) and shows that failure at mount. It depends on GF-19. (Superseded on
+2026-10-06: GF-19's first slice runs RN's C++ Native Animated and makes
+`TouchableOpacity` public; see the Animated section at the end of this log.)
 
 The same fixture on the preceding SDK (15e1dda) fails exactly its 19 render
 checks, each with its placeholder's message, and a retained sabotage that imitates
@@ -2183,6 +2185,77 @@ executed code/configuration inputs match `b13bcdd` via git show/SHA-256. Hosted
 CI for this slice is pending. No whole GF, other checkpoint, weight or
 denominator closes.
 
+### Animated and TouchableOpacity on RN's C++ Native Animated (2026-10-06)
+
+GF-19 becomes **In progress**; only its first-slice checkpoint becomes done, and
+the full item, contract, parity and targets remain open. The
+[Animated evidence](docs/evidence/native-animated/README.md) exports React Native's
+original `Animated`, `Easing`, `useAnimatedValue`, `useAnimatedValueXY` and
+`TouchableOpacity` from the public `react-native` import: **75 headless checks** in
+two roots of one Hermes application, with both drivers. The JS driver advances on
+`requestAnimationFrame`; with `useNativeDriver`, RN's own C++ `AnimatedModule` and
+the shared `AnimationBackend` run the animation, Godot's frame tick is their
+choreographer, and the Controls change without a React commit.
+
+The runtime overrides RN's feature flags once at extension initialization with
+RN's defaults plus `cxxNativeAnimatedEnabled` and `useSharedAnimatedBackend`, the
+configuration RN's OSS channels enable, and attaches one `AnimationBackend` to each
+application's `UIManager` before any JS runs; `AnimatedModule` is served only when
+both flags are on and the backend is attached. The tick calls the backend once per
+Godot frame after the frame callbacks and the microtask drain, so a batch JS flushes
+reaches the backend's very next frame; the backend's own clock reads the same
+steady-clock milliseconds as the frame timestamps. Non-layout props reach the
+Control through `uiManagerShouldSynchronouslyUpdateViewOnUIThread`, which clones the
+mounted props with the animated ones as `RCTMountingManager` does, without a commit;
+a view that is gone is dropped and counted, `uiManagerDidUpdateShadowTree` is a
+no-op as on iOS and Android, and stopping the application stops the choreographer.
+The runtime also sets RN's runtime shadow node reference thread-local once, as
+`ReactInstance` does for every JS callback (`ReactInstance.cpp`, line 101), so the
+clones the backend's commit hook makes with the animated props are what React clones
+next; without it the first React commit after an animation undoes them. Toggling it
+only around the hook failed, and the experimental
+`updateRuntimeShadowNodeReferencesOnCommit` flag is not what RN's runtime does. The
+SDK exports RN's `Animated.View` and `createAnimatedComponent`; `Animated.Text`,
+`Image`, `ScrollView`, `FlatList` and `SectionList` throw where they render, with
+their reason.
+
+In the preceding host (built from main `1607044`, whose native and SDK sources
+equal `fb42709`'s), the same bundle runs the JS drivers but every `Animated.View`
+fails at mount with `Native animated module is not available`: exactly the 59
+normative checks fail. A retained host that hands the backend its timestamps in
+seconds fails 32 checks, and one whose JS thread does not set the
+runtime-reference thread-local fails exactly 2 (final props that must survive
+React commits, and a box that animates back after another root unmounts); the
+independent oracle, which replays RN's frame, spring and decay drivers over the
+timestamps the host delivered and agrees with the Controls to rounding, rejects
+both. The `TouchableOpacity` press dims it to `activeOpacity` through the native
+driver and release returns it over RN's 250 ms timing, from actual mouse and touch
+input.
+
+Two contracts of earlier slices change on purpose. The touchables suite renders the
+original `TouchableOpacity` without its bundling seam (the `animated` lane goes from
+6 failure checks to 7 passing ones; the suite stays at 93 and the preceding-SDK
+control at 19), and the tree example's children-only React commit now keeps an
+imperatively set native ID, as RN's JS thread holds the clone `setNativeProps`
+committed; the slice's executed tree and touchables evidence files stay as historical
+records. Open: `LayoutAnimation` and layout transitions, native `Animated.event` on
+the SDK ScrollView, asserted animation of layout props (exploratory runs of `width`
+and `marginLeft` followed frame by frame), `PlatformColor` interpolation, reduced
+motion, behavior under JS load and across background/resume, frame budgets (GF-30),
+Godot mobile exports and a uniform `transform: [{ scale }]`, which fails with
+`E_TRANSFORM_3D` because the transforms guard rejects the z scale of RN's `scale3d`
+(animate `scaleX` and `scaleY`). On the committed tree the contracts gates (264
+Node/13 Python, static analysis, publication scan), `test:recovery`, the 35 native
+suites (23 examples/2,260 checks, Down 2,731, Document Up 6,459, View Up 297, Move
+220, Document Move 1,940, hover 158, root path 82, Document hover 1,530, click
+728, capture notifications 672, PanResponder 128, AppState 75, lists 44,
+Appearance 79, Switch 108, shared touches 92, touchables 93, ActivityIndicator 33,
+Animated 75) and the native SDK batch pass. All 89 executed code/configuration
+inputs match implementation d96383c via git show/SHA-256 (executed from the
+committed tree, execution base fb42709). Hosted CI for this slice is
+pending. Only GF-19's first-slice checkpoint closes; no whole GF, other checkpoint,
+weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
@@ -2209,7 +2282,7 @@ observe the real system and retain the original event/callback contracts.
 
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
-| GF-19 · P1 · Animated and layout animation | Planned | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
+| GF-19 · P1 · Animated and layout animation | In progress | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
 | GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | Planned | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |

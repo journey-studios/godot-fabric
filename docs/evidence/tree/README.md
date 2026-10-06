@@ -79,7 +79,10 @@ canonical props. A temporary imperative native ID can therefore change lookup
 while the public ref's `.id` retains its declarative value. The validation must
 preserve this upstream distinction. Both roots execute an imperative ID update:
 native lookup changes immediately while `.id` retains the fallback. The next
-children-only React commit restores the declarative native ID. Original
+children-only React commit restores the declarative native ID. (Superseded on
+2026-10-06: the [Animated record](../native-animated/README.md) sets RN's JS-thread
+runtime reference update, so that commit now keeps the imperative ID; the executed
+files in this directory keep the earlier observation as history.) Original
 [UIManager cloning](https://github.com/react/react-native/blob/v0.87.1/packages/react-native/ReactCommon/react/renderer/uimanager/UIManager.cpp#L111-L177)
 does not merge family native overrides for an empty RawProps patch; original
 [surface completion](https://github.com/react/react-native/blob/v0.87.1/packages/react-native/ReactCommon/react/renderer/uimanager/UIManager.cpp#L190-L223)

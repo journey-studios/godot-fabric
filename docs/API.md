@@ -131,7 +131,8 @@ the pinned upstream implementation.
 Changing a string creates a new RawText public instance; unchanged span text
 retains identity. This production renderer leaves RawText `ownerDocument` null.
 An imperative native ID changes lookup without changing canonical `.id`; the
-fixture’s next children-only React commit restores the declared native ID. See
+fixture’s next children-only React commit keeps it, as RN's JS thread holds the clone
+`setNativeProps` committed. See
 [executed evidence and source links](evidence/tree/README.md) for these exact
 limits. Full HostInstance, imperative EventTarget, remaining native commands
 and all-platform differential acceptance remain open under GF-08.

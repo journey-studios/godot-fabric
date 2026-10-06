@@ -1,0 +1,1621 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-animated",
+  "status": "verified-local-headless-preceding-host-control-retained-sabotages-and-regressions",
+  "at": "2026-10-06T08:09:29.856Z",
+  "executionBaseCommit": "fb42709aa8fa65c984ee89e462b69b6350ff7be0",
+  "executedTreeSha": "6ff2ba731630912f4b4e18505f4338ebe2d45c0e",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "d96383c46dde79fb9d242f89e68360d49a81663a",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/d96383c46dde79fb9d242f89e68360d49a81663a",
+  "dependsOn": "The touchables slice (docs/evidence/touchables), the tree record (docs/evidence/tree) and the transforms guard (docs/evidence/transforms)",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless",
+    "nativeHostSha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc"
+  },
+  "commands": [
+    "npm run test:animated",
+    "node tests/native-animated-native.test.mjs --allow-original-negative",
+    "node scripts/native-animated-sabotage.mjs",
+    "npm run example -- animated --capture"
+  ],
+  "headlessChecks": 75,
+  "normativeChecks": 59,
+  "structuralChecks": 16,
+  "frameTick": {
+    "source": "FabricApplication::_process -> ApplicationRuntime::pump",
+    "clock": "std::chrono::steady_clock milliseconds",
+    "framesPerGodotFrame": "at most one, after frame callbacks and the microtask drain",
+    "reactNativeFrameMs": 16.6666666666667,
+    "meanHeadlessFrameMs": 6.85
+  },
+  "rnConfiguration": {
+    "overriddenFlags": [
+      "cxxNativeAnimatedEnabled",
+      "useSharedAnimatedBackend"
+    ],
+    "otherFlags": "RN 0.87.1 defaults",
+    "runtimeReferenceThreadLocal": "ShadowNode::setUseRuntimeShadowNodeReferenceUpdateOnThread(true) once per application runtime, as ReactInstance.cpp:101",
+    "scope": {
+      "actualNativeInput": true,
+      "animatedEventOnScrollViewCertified": false,
+      "frameClockIsGodotsTick": true,
+      "layoutAnimationCertified": false,
+      "mobileExportsCertified": false,
+      "originalAnimatedModules": true,
+      "performanceBudgetsCertified": false,
+      "publicReactNativeImport": true,
+      "rnCxxNativeAnimatedAndSharedBackend": true,
+      "twoRootsOneApplication": true
+    }
+  },
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: two roots of one application, both drivers, RN's C++ AnimatedModule and AnimationBackend advanced by Godot frames, TouchableOpacity pressed by actual mouse and touch.",
+      "nativeHostSha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+      "bundleSha256": "82261fba2240a9e4f251920c5c6da566513e449f3ea6104a1a86f395baa48d8c",
+      "checks": 75,
+      "passed": 75,
+      "failed": 0,
+      "checkIdDigestSha256": "fb7ab902149c0a7ea98800e3a0a538190d7776bb1e78524018cb151bbf3bd422",
+      "reportSha256": "9c1c6eba0562d7e50a3ae0151373fc5d5f85de85dc5f818d4b0579cd04272cb8",
+      "logSha256": "51c3f5402182b9bad38cd4f2a01297aa4ff87dac7d9c8b91330f2edc4415aaf4"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host built from main 1607044 (native and SDK sources identical to fb42709, the execution base), which has no NativeAnimatedModule; expected negative control (--allow-original-negative).",
+      "nativeHostSha256": "e5671b06138acfe35d751b8d903446061016d449e2a9505914223ce53c6bfa3d",
+      "bundleSha256": "82261fba2240a9e4f251920c5c6da566513e449f3ea6104a1a86f395baa48d8c",
+      "checks": 75,
+      "passed": 16,
+      "failed": 59,
+      "failedIds": [
+        "mount/Every Animated.View box and the TouchableOpacity commit a Control in both roots without a render error",
+        "module/RN's backend is attached to the application before any animation and idles with no frame delivered",
+        "js-view/The JS driver moves an Animated.View's Control from 1 to its final opacity",
+        "js-view/The Control rests at the final translateX and rotate",
+        "js-view/The backend is attached and idle, and the JS driver never starts it",
+        "native-timing/The request reaches the backend's very next frame, one Godot frame after the call",
+        "native-timing/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-timing/The Control changes on many frames while JS receives no per-frame value event",
+        "native-timing/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-timing/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-timing/The backend's own clock reads the host's frame clock",
+        "native-timing/The Control rests at the animation's final output",
+        "native-spring/The request reaches the backend's very next frame, one Godot frame after the call",
+        "native-spring/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-spring/The Control changes on many frames while JS receives no per-frame value event",
+        "native-spring/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-spring/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-spring/The backend's own clock reads the host's frame clock",
+        "native-spring/The Control rests at the animation's final output",
+        "native-decay/The request reaches the backend's very next frame, one Godot frame after the call",
+        "native-decay/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-decay/The Control changes on many frames while JS receives no per-frame value event",
+        "native-decay/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-decay/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-decay/The backend's own clock reads the host's frame clock",
+        "native-created/The request reaches the backend's very next frame, one Godot frame after the call",
+        "native-created/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-created/The Control changes on many frames while JS receives no per-frame value event",
+        "native-created/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-created/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-created/The backend's own clock reads the host's frame clock",
+        "native-created/The Control rests at the animation's final output",
+        "native-xy/The request reaches the backend's very next frame, one Godot frame after the call",
+        "native-xy/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-xy/The Control changes on many frames while JS receives no per-frame value event",
+        "native-xy/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-xy/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-xy/The backend's own clock reads the host's frame clock",
+        "native-xy/useAnimatedValueXY moves the Control to its final translateX and translateY",
+        "native-stop/stopAnimation reads exactly the value last applied to the Control",
+        "native-stop/The Control keeps the stopped value on every later frame",
+        "native-stop/The animation ends with finished: false and the backend resumes once and goes idle",
+        "native-listener/addListener hears exactly the distinct values the backend applied, in order, and the final value once more",
+        "native-listener/After removeListener the backend sends no more value events",
+        "native-rerender/A re-render in the middle and one after the end never snap the Control back",
+        "native-rerender/The animation ends once with finished: true and the Control keeps its final transform",
+        "native-unmount/Unmounting mid-animation removes the Control, ends with finished: false, idles the backend and raises no error",
+        "native-unmount/An update for a view that is already gone is dropped and counted, without an error, until RN disconnects it",
+        "native-two-roots/Both roots animate at the same time and each ends once with finished: true",
+        "native-two-roots/Each root's Control rests at its own final transform from one shared backend",
+        "native-two-roots/Unmounting one root mid-animation leaves the other's animation on its way to its end",
+        "persistence/Boxes that finished or stopped an animation keep their final props through later unrelated React commits",
+        "touchable-opacity/mouse/A press moves the TouchableOpacity to activeOpacity through the native driver",
+        "touchable-opacity/mouse/Release returns it to rest over RN's 250 ms timing, one backend run per transition",
+        "touchable-opacity/mouse/onPress fires once, after onPressIn and onPressOut",
+        "touchable-opacity/touch/A press moves the TouchableOpacity to activeOpacity through the native driver",
+        "touchable-opacity/touch/Release returns it to rest over RN's 250 ms timing, one backend run per transition",
+        "touchable-opacity/touch/onPress fires once, after onPressIn and onPressOut",
+        "stop/Stopping the application mid-animation delivers no further frame and raises no error"
+      ],
+      "checkIdDigestSha256": "fb7ab902149c0a7ea98800e3a0a538190d7776bb1e78524018cb151bbf3bd422",
+      "reportSha256": "ad8b12d1ba3895ad0c58178afc55b58c2c05a5fc7aa0851e61a50c1bd237ef41",
+      "logSha256": "9426bb230e0b3396158e0e0f123e4ec360882a279764fc1128f778ce3176b66f"
+    },
+    {
+      "lane": "sabotage-frames",
+      "meaning": "A host whose choreographer hands RN's AnimationBackend its frame timestamps in seconds (--sabotage); retained sabotage.",
+      "nativeHostSha256": "a0bcd0905dab631a6be43e4c245a28f978039d05e75ddb0602a55fc04c4c1e59",
+      "bundleSha256": "82261fba2240a9e4f251920c5c6da566513e449f3ea6104a1a86f395baa48d8c",
+      "checks": 75,
+      "passed": 43,
+      "failed": 32,
+      "failedIds": [
+        "native-timing/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-timing/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-timing/The Control rests at the animation's final output",
+        "native-spring/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-spring/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-spring/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-spring/The Control rests at the animation's final output",
+        "native-decay/The Control changes on many frames while JS receives no per-frame value event",
+        "native-decay/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-decay/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-created/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-created/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-created/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-created/The Control rests at the animation's final output",
+        "native-xy/The end callback reports finished: true with RN's own result once the backend ran the animation",
+        "native-xy/The choreographer resumes once and pauses once after the animation, with at most one frame per Godot frame",
+        "native-xy/Each delivered frame applies at most one direct update to the Control and none is dropped",
+        "native-xy/useAnimatedValueXY moves the Control to its final translateX and translateY",
+        "native-stop/The animation ends with finished: false and the backend resumes once and goes idle",
+        "native-listener/addListener hears exactly the distinct values the backend applied, in order, and the final value once more",
+        "native-rerender/A re-render in the middle and one after the end never snap the Control back",
+        "native-rerender/The animation ends once with finished: true and the Control keeps its final transform",
+        "native-unmount/Unmounting mid-animation removes the Control, ends with finished: false, idles the backend and raises no error",
+        "native-unmount/An update for a view that is already gone is dropped and counted, without an error, until RN disconnects it",
+        "native-two-roots/Both roots animate at the same time and each ends once with finished: true",
+        "native-two-roots/Each root's Control rests at its own final transform from one shared backend",
+        "native-two-roots/Unmounting one root mid-animation leaves the other's animation on its way to its end",
+        "persistence/Boxes that finished or stopped an animation keep their final props through later unrelated React commits",
+        "touchable-opacity/mouse/A press moves the TouchableOpacity to activeOpacity through the native driver",
+        "touchable-opacity/mouse/Release returns it to rest over RN's 250 ms timing, one backend run per transition",
+        "touchable-opacity/touch/A press moves the TouchableOpacity to activeOpacity through the native driver",
+        "touchable-opacity/touch/Release returns it to rest over RN's 250 ms timing, one backend run per transition"
+      ],
+      "checkIdDigestSha256": "fb7ab902149c0a7ea98800e3a0a538190d7776bb1e78524018cb151bbf3bd422",
+      "reportSha256": "eda074b16004a5d0e57723db2fb34b0d030695db8092b35e2a28c70d8fffba07",
+      "logSha256": "b1593f218054a85f516a5e4fd3dfb918fc0c0b8630e8b61352ebea43872b81ff"
+    },
+    {
+      "lane": "sabotage-persistence",
+      "meaning": "A host whose JS thread leaves RN's runtime shadow node reference update off (--sabotage=persistence); retained sabotage.",
+      "nativeHostSha256": "fd3783fe446546afa9771397baa5e485440d7217a2508f1a9224ba5db178e633",
+      "bundleSha256": "82261fba2240a9e4f251920c5c6da566513e449f3ea6104a1a86f395baa48d8c",
+      "checks": 75,
+      "passed": 73,
+      "failed": 2,
+      "failedIds": [
+        "native-two-roots/Unmounting one root mid-animation leaves the other's animation on its way to its end",
+        "persistence/Boxes that finished or stopped an animation keep their final props through later unrelated React commits"
+      ],
+      "checkIdDigestSha256": "fb7ab902149c0a7ea98800e3a0a538190d7776bb1e78524018cb151bbf3bd422",
+      "reportSha256": "bcf5220425b3372ef63a21ff500a6d8e07b3b03c1f6137bac21cfbde19fc6283",
+      "logSha256": "1f722df02dffed8845af87ccfb8e8afe758ccc276dc092ecdb73f23f13644993"
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "e5671b06138acfe35d751b8d903446061016d449e2a9505914223ce53c6bfa3d",
+      "bytes": 4923360,
+      "symbolOccurrences": {
+        "NativeAnimatedNodesManager": 0,
+        "FrameAnimationDriver": 0,
+        "SpringAnimationDriver": 0,
+        "DecayAnimationDriver": 0,
+        "AnimatedPropsRegistry": 0,
+        "AnimationBackendCommitHook": 0
+      }
+    },
+    "current": {
+      "sha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+      "bytes": 5494656,
+      "symbolOccurrences": {
+        "NativeAnimatedNodesManager": 175,
+        "FrameAnimationDriver": 13,
+        "SpringAnimationDriver": 11,
+        "DecayAnimationDriver": 9,
+        "AnimatedPropsRegistry": 11,
+        "AnimationBackendCommitHook": 12
+      }
+    },
+    "sabotage-frames": {
+      "sha256": "a0bcd0905dab631a6be43e4c245a28f978039d05e75ddb0602a55fc04c4c1e59",
+      "bytes": 5494656,
+      "symbolOccurrences": {
+        "NativeAnimatedNodesManager": 175,
+        "FrameAnimationDriver": 13,
+        "SpringAnimationDriver": 11,
+        "DecayAnimationDriver": 9,
+        "AnimatedPropsRegistry": 11,
+        "AnimationBackendCommitHook": 12
+      }
+    },
+    "sabotage-persistence": {
+      "sha256": "fd3783fe446546afa9771397baa5e485440d7217a2508f1a9224ba5db178e633",
+      "bytes": 5494656,
+      "symbolOccurrences": {
+        "NativeAnimatedNodesManager": 175,
+        "FrameAnimationDriver": 13,
+        "SpringAnimationDriver": 11,
+        "DecayAnimationDriver": 9,
+        "AnimatedPropsRegistry": 11,
+        "AnimationBackendCommitHook": 12
+      }
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "e5671b06138acfe35d751b8d903446061016d449e2a9505914223ce53c6bfa3d",
+    "provenance": {
+      "builtFrom": "main 1607044cbdecdae1ff374c40eaf316262535b412 (the Appearance merge)",
+      "builtWith": "npm run setup, before the tree received this slice's work",
+      "nativeAndSdkSourcesEqualExecutionBase": true,
+      "verification": "git diff --name-only 1607044cbdecdae1ff374c40eaf316262535b412 fb42709aa8fa65c984ee89e462b69b6350ff7be0 lists only README.md, ROADMAP.md, dashboard/, docs/evidence/ and docs/research/: nothing under native/, src/, sdk/, scripts/, tests/, types/, examples/, the package files, dependencies.json, .github or .fallowrc.json",
+      "setupLog": "kept outside the repository",
+      "buildRecordRetainedInRepository": false,
+      "evidence": "behavioral (the same bundle fails exactly the 59 checks that need RN's module) and the absence of the C++ Animated nodes manager, drivers, registry and commit hook symbols, counted in hostBinaries"
+    },
+    "checks": 75,
+    "normativeFailures": 59,
+    "structuralChecksPassed": 16,
+    "sameBundle": true,
+    "mountErrors": [
+      {
+        "root": "A",
+        "case": "js-view",
+        "message": "Native animated module is not available"
+      },
+      {
+        "root": "A",
+        "case": "native-timing",
+        "message": "Native animated module is not available"
+      },
+      {
+        "root": "A",
+        "case": "native-spring",
+        "message": "Native animated module is not available"
+      }
+    ],
+    "jsDriverChecksPass": true
+  },
+  "retainedSabotages": {
+    "receiptFormat": "godot-fabric.native-animated-sabotage/v3",
+    "sourceSha256": {
+      "genuine": {
+        "native/native_animated.cpp": "6ba44aa090c81411632c17bf9b59f128e5b5231932990ff54d474443603df36b",
+        "native/application_runtime.cpp": "bfb64413d1f3b8088a314e3e09ce5019112f1210b2093d67fe5a9127454754a7"
+      },
+      "restored": {
+        "native/native_animated.cpp": "6ba44aa090c81411632c17bf9b59f128e5b5231932990ff54d474443603df36b",
+        "native/application_runtime.cpp": "bfb64413d1f3b8088a314e3e09ce5019112f1210b2093d67fe5a9127454754a7"
+      }
+    },
+    "hostSha256": {
+      "genuine": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+      "restored": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc"
+    },
+    "variants": [
+      {
+        "name": "frames",
+        "file": "native/native_animated.cpp",
+        "find": "onAnimationFrame(rn::AnimationTimestamp(timestamp_ms));",
+        "replace": "onAnimationFrame(rn::AnimationTimestamp(timestamp_ms / 1000.0));",
+        "sourceSha256": "ba5e1c45b3fae4d426a650faad91c766be0f1f0837e236beea7cc17728fec033",
+        "hostSha256": "a0bcd0905dab631a6be43e4c245a28f978039d05e75ddb0602a55fc04c4c1e59",
+        "runStatus": 0,
+        "failedChecks": 32,
+        "oracleRejection": "native-timing sample 1 (opacity): 0.999999701976776 against 0.9996783137321472",
+        "sourceRestoredByteForByte": true,
+        "restoredHostEqualsGenuine": true
+      },
+      {
+        "name": "persistence",
+        "file": "native/application_runtime.cpp",
+        "find": "rn::ShadowNode::setUseRuntimeShadowNodeReferenceUpdateOnThread(true);",
+        "replace": "rn::ShadowNode::setUseRuntimeShadowNodeReferenceUpdateOnThread(false);",
+        "sourceSha256": "ee0f253c7ae223c175fcb4506d0dbe3c6ea9c732916a95c1d49232dbd1dc251c",
+        "hostSha256": "fd3783fe446546afa9771397baa5e485440d7217a2508f1a9224ba5db178e633",
+        "runStatus": 0,
+        "failedChecks": 2,
+        "oracleRejection": "native-return sample 0 (opacity): 1 against 0.20000000298023224",
+        "sourceRestoredByteForByte": true,
+        "restoredHostEqualsGenuine": true
+      }
+    ]
+  },
+  "oracle": {
+    "agreementWithTheControls": {
+      "opacity": 2.6645352591003757e-15,
+      "x": 1.9073486328125e-06,
+      "y": 5.115907697472721e-13,
+      "rotation": 1.74845562671985e-07
+    },
+    "perRunMaximumErrors": {
+      "native-timing": {
+        "opacity": 2.6645352591003757e-15,
+        "x": 5.684341886080802e-14,
+        "rotation": 1.192092917712273e-07,
+        "frames": 45,
+        "delivered 0": 45
+      },
+      "native-spring": {
+        "opacity": 4.996003610813204e-16,
+        "x": 4.973799150320701e-13,
+        "rotation": 6.357302442318332e-08,
+        "frames": 131,
+        "delivered 0": 131
+      },
+      "native-decay": {
+        "opacity": 4.996003610813204e-16,
+        "x": 5.684341886080802e-14,
+        "rotation": 1.1920928999487046e-07,
+        "frames": 52,
+        "delivered 0": 52
+      },
+      "native-created": {
+        "opacity": 4.440892098500626e-16,
+        "x": 5.684341886080802e-14,
+        "rotation": 1.74845562671985e-07,
+        "frames": 31,
+        "delivered 0": 31
+      },
+      "native-xy": {
+        "x": 4.973799150320701e-14,
+        "y": 5.115907697472721e-13,
+        "frames": 38,
+        "delivered 0": 38
+      },
+      "native-listener": {
+        "opacity": 4.718447854656915e-16,
+        "frames": 46,
+        "delivered 0": 46
+      },
+      "native-rerender": {
+        "opacity": 4.440892098500626e-16,
+        "x": 5.684341886080802e-14,
+        "rotation": 7.450580627454963e-08,
+        "frames": 47,
+        "delivered 0": 47
+      },
+      "native-stop": {
+        "opacity": 3.885780586188048e-16,
+        "frames": 20,
+        "delivered 0": 20
+      },
+      "native-unmount": {
+        "opacity": 4.440892098500626e-16,
+        "x": 4.618527782440651e-14,
+        "rotation": 8.940696746839727e-08,
+        "frames": 18,
+        "delivered 0": 18
+      },
+      "native-race": {
+        "opacity": 4.440892098500626e-16,
+        "x": 1.9073486328125e-06,
+        "rotation": 2.980232260973992e-08,
+        "frames": 31,
+        "delivered 0": 31
+      },
+      "native-two-a": {
+        "opacity": 5.551115123125783e-16,
+        "x": 5.684341886080802e-14,
+        "rotation": 1.1920929243736111e-07,
+        "frames": 60,
+        "delivered 0": 60
+      },
+      "native-two-b": {
+        "opacity": 4.996003610813204e-16,
+        "x": 5.684341886080802e-14,
+        "rotation": 1.1920928955078128e-07,
+        "frames": 45,
+        "delivered 1": 45
+      },
+      "native-return": {
+        "opacity": 4.996003610813204e-16,
+        "x": 4.973799150320701e-14,
+        "rotation": 1.4901161221603232e-07,
+        "frames": 88,
+        "delivered 0": 88
+      },
+      "touchable-opacity/mouse": {
+        "opacity": 4.996003610813204e-16,
+        "frames": 40,
+        "delivered 0": 2,
+        "delivered 1": 38
+      },
+      "touchable-opacity/touch": {
+        "opacity": 4.996003610813204e-16,
+        "frames": 40,
+        "delivered 0": 2,
+        "delivered 1": 38
+      }
+    },
+    "tolerances": {
+      "opacity": 1e-06,
+      "x": 0.0001,
+      "y": 0.0001,
+      "rotation": 1e-05
+    },
+    "javascriptDriverWindows": "hard bounds from the listener stamps: a step ran after the previous entry was stamped and no later than its own",
+    "independentPersistenceDerivation": "verifyPersistence recomputes each box's final props from the stage samples"
+  },
+  "executedObservations": {
+    "mount": {
+      "rootCount": 2,
+      "mounted": {
+        "A": 1,
+        "B": 1
+      },
+      "uncertifiedAnimatedWrappers": [
+        {
+          "case": "animated-Text",
+          "message": "Godot platform has not certified Animated.Text: it wraps RN's own Text, not the Godot Text"
+        },
+        {
+          "case": "animated-Image",
+          "message": "Godot platform has not certified Animated.Image: Image is not implemented"
+        },
+        {
+          "case": "animated-ScrollView",
+          "message": "Godot platform has not certified Animated.ScrollView: it wraps RN's own ScrollView, not the Godot ScrollView, and Animated.event on that one is not verified"
+        },
+        {
+          "case": "animated-FlatList",
+          "message": "Godot platform has not certified Animated.FlatList: its animated wrapper over the Godot ScrollView is not verified"
+        },
+        {
+          "case": "animated-SectionList",
+          "message": "Godot platform has not certified Animated.SectionList: its animated wrapper over the Godot ScrollView is not verified"
+        }
+      ],
+      "backendBeforeAnyAnimation": {
+        "enabled": true,
+        "frames": 0,
+        "resumes": 0,
+        "directUpdates": 0,
+        "active": false
+      }
+    },
+    "api": {
+      "animated": 27,
+      "easing": 17,
+      "hooks": {
+        "TouchableOpacity": "function",
+        "useAnimatedValue": "function",
+        "useAnimatedValueXY": "function"
+      }
+    },
+    "headlessFrame": {
+      "meanMsBetweenBackendFrames": 6.85,
+      "note": "no vsync in the headless DisplayServer; RN's frame table is 1000/60 ms"
+    },
+    "jsDrivers": {
+      "js-timing": {
+        "values": 59,
+        "elapsedMs": 406,
+        "finalValue": 1,
+        "finished": true
+      },
+      "js-spring": {
+        "values": 133,
+        "elapsedMs": 904,
+        "finalValue": 1,
+        "finished": true
+      },
+      "js-decay": {
+        "values": 48,
+        "elapsedMs": 331,
+        "finalValue": 48.155841629938,
+        "finished": true
+      }
+    },
+    "jsComposition": {
+      "sequence": [
+        "sequence-0:true",
+        "sequence-1:true",
+        "sequence:true"
+      ],
+      "parallel": [
+        "parallel-0:true",
+        "parallel-1:true",
+        "parallel:true"
+      ],
+      "stagger": [
+        "stagger-0:true",
+        "stagger-1:true",
+        "stagger:true"
+      ],
+      "loop": [
+        "loop-iteration:true",
+        "loop-iteration:true",
+        "loop:true"
+      ]
+    },
+    "jsInterrupt": {
+      "stopped": [
+        {
+          "finished": false
+        }
+      ],
+      "stopAnimationRead": 0.051,
+      "first": [
+        {
+          "finished": false
+        }
+      ],
+      "second": [
+        {
+          "finished": true
+        }
+      ]
+    },
+    "jsView": {
+      "restOpacity": 1,
+      "finalOpacity": 0.200000002980232,
+      "backendFramesDuringTheRun": 0,
+      "backendResumes": 0
+    },
+    "nativeRuns": {
+      "native-timing": {
+        "stage": "native-timing",
+        "framesDeliveredInStage": 45,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 44,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-timing",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 2.6645352591003757e-15,
+          "x": 5.684341886080802e-14,
+          "rotation": 1.192092917712273e-07,
+          "frames": 45,
+          "delivered 0": 45
+        }
+      },
+      "native-spring": {
+        "stage": "native-spring",
+        "framesDeliveredInStage": 131,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 130,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-spring",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.996003610813204e-16,
+          "x": 4.973799150320701e-13,
+          "rotation": 6.357302442318332e-08,
+          "frames": 131,
+          "delivered 0": 131
+        }
+      },
+      "native-decay": {
+        "stage": "native-decay",
+        "framesDeliveredInStage": 52,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 50,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-decay",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 48.2549629211426
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.996003610813204e-16,
+          "x": 5.684341886080802e-14,
+          "rotation": 1.1920928999487046e-07,
+          "frames": 52,
+          "delivered 0": 52
+        }
+      },
+      "native-created": {
+        "stage": "native-created",
+        "framesDeliveredInStage": 31,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 30,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-created",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.440892098500626e-16,
+          "x": 5.684341886080802e-14,
+          "rotation": 1.74845562671985e-07,
+          "frames": 31,
+          "delivered 0": 31
+        }
+      },
+      "native-xy": {
+        "stage": "native-xy",
+        "framesDeliveredInStage": 38,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 37,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-xy",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 60
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "x": 4.973799150320701e-14,
+          "y": 5.115907697472721e-13,
+          "frames": 38,
+          "delivered 0": 38
+        }
+      },
+      "native-stop": {
+        "stage": "native-stop",
+        "framesDeliveredInStage": 20,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 19,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-stop",
+            "root": "A",
+            "finished": false
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 3.885780586188048e-16,
+          "frames": 20,
+          "delivered 0": 20
+        }
+      },
+      "native-listener": {
+        "stage": "native-listener",
+        "framesDeliveredInStage": 46,
+        "resumes": 2,
+        "pauses": 2,
+        "directUpdates": 44,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-listener",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.718447854656915e-16,
+          "frames": 46,
+          "delivered 0": 46
+        }
+      },
+      "native-rerender": {
+        "stage": "native-rerender",
+        "framesDeliveredInStage": 47,
+        "resumes": 2,
+        "pauses": 2,
+        "directUpdates": 45,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-rerender",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.440892098500626e-16,
+          "x": 5.684341886080802e-14,
+          "rotation": 7.450580627454963e-08,
+          "frames": 47,
+          "delivered 0": 47
+        }
+      },
+      "native-unmount": {
+        "stage": "native-unmount",
+        "framesDeliveredInStage": 18,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 16,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-unmount",
+            "root": "A",
+            "finished": false
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.440892098500626e-16,
+          "x": 4.618527782440651e-14,
+          "rotation": 8.940696746839727e-08,
+          "frames": 18,
+          "delivered 0": 18
+        }
+      },
+      "native-race": {
+        "stage": "native-race",
+        "framesDeliveredInStage": 31,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 16,
+        "staleUpdates": 13,
+        "ends": [
+          {
+            "label": "native-race",
+            "root": "A",
+            "finished": false
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.440892098500626e-16,
+          "x": 1.9073486328125e-06,
+          "rotation": 2.980232260973992e-08,
+          "frames": 31,
+          "delivered 0": 31
+        }
+      },
+      "native-two-a": {
+        "stage": "native-two-roots",
+        "framesDeliveredInStage": 60,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 96,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-two-b",
+            "root": "B",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          },
+          {
+            "label": "native-two-a",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 5.551115123125783e-16,
+          "x": 5.684341886080802e-14,
+          "rotation": 1.1920929243736111e-07,
+          "frames": 60,
+          "delivered 0": 60
+        }
+      },
+      "native-two-b": {
+        "stage": "native-two-roots",
+        "framesDeliveredInStage": 60,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 96,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-two-b",
+            "root": "B",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          },
+          {
+            "label": "native-two-a",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 1
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.996003610813204e-16,
+          "x": 5.684341886080802e-14,
+          "rotation": 1.1920928955078128e-07,
+          "frames": 45,
+          "delivered 1": 45
+        }
+      },
+      "native-return": {
+        "stage": "native-two-roots/unmount",
+        "framesDeliveredInStage": 88,
+        "resumes": 1,
+        "pauses": 1,
+        "directUpdates": 86,
+        "staleUpdates": 0,
+        "ends": [
+          {
+            "label": "native-return",
+            "root": "A",
+            "finished": true,
+            "offset": 0,
+            "value": 0
+          }
+        ],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.996003610813204e-16,
+          "x": 4.973799150320701e-14,
+          "rotation": 1.4901161221603232e-07,
+          "frames": 88,
+          "delivered 0": 88
+        }
+      },
+      "touchable-opacity/mouse": {
+        "stage": "touchable-opacity/mouse",
+        "framesDeliveredInStage": 40,
+        "resumes": 2,
+        "pauses": 2,
+        "directUpdates": 37,
+        "staleUpdates": 0,
+        "ends": [],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.996003610813204e-16,
+          "frames": 40,
+          "delivered 0": 2,
+          "delivered 1": 38
+        }
+      },
+      "touchable-opacity/touch": {
+        "stage": "touchable-opacity/touch",
+        "framesDeliveredInStage": 40,
+        "resumes": 2,
+        "pauses": 2,
+        "directUpdates": 37,
+        "staleUpdates": 0,
+        "ends": [],
+        "maximumErrorsAgainstTheOracle": {
+          "opacity": 4.996003610813204e-16,
+          "frames": 40,
+          "delivered 0": 2,
+          "delivered 1": 38
+        }
+      }
+    },
+    "touchableOpacity": {
+      "mouse": {
+        "events": [
+          "in",
+          "out",
+          "press"
+        ],
+        "restOpacity": 1,
+        "minimumOpacityWhileHeld": 0.400000005960464,
+        "finalOpacity": 1,
+        "framesDelivered": 40,
+        "runs": 2
+      },
+      "touch": {
+        "events": [
+          "in",
+          "out",
+          "press"
+        ],
+        "restOpacity": 1,
+        "minimumOpacityWhileHeld": 0.400000005960464,
+        "finalOpacity": 1,
+        "framesDelivered": 40,
+        "runs": 2
+      }
+    },
+    "persistence": {
+      "boxesCovered": 7,
+      "reverted": [],
+      "props": {
+        "native-created": {
+          "opacity": 0.200000002980232,
+          "present": true,
+          "rotation": -3.14159262180328,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 100,
+          "y": 170
+        },
+        "native-decay": {
+          "opacity": 0.227920591831207,
+          "present": true,
+          "rotation": 0.757987201213837,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 68.2549591064453,
+          "y": 130
+        },
+        "native-listener": {
+          "opacity": 1,
+          "present": true,
+          "rotation": 0,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 20,
+          "y": 290
+        },
+        "native-rerender": {
+          "opacity": 0.200000002980232,
+          "present": true,
+          "rotation": -3.14159262180328,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 100,
+          "y": 330
+        },
+        "native-spring": {
+          "opacity": 0.200000002980232,
+          "present": true,
+          "rotation": -3.14159262180328,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 100,
+          "y": 90
+        },
+        "native-stop": {
+          "opacity": 0.189818054437637,
+          "present": true,
+          "rotation": 0,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 20,
+          "y": 250
+        },
+        "native-xy": {
+          "opacity": 1,
+          "present": true,
+          "rotation": 0,
+          "scale_x": 1,
+          "scale_y": 1,
+          "x": 80,
+          "y": 240
+        }
+      }
+    },
+    "stop": {
+      "frames": 696,
+      "directUpdates": 695,
+      "staleDirectUpdates": 13,
+      "nowMsAfterStop": null,
+      "activeBefore": true,
+      "activeAfter": false,
+      "errors": []
+    }
+  },
+  "contractUpdates": {
+    "touchables": {
+      "files": [
+        "tests/touchables-fixture.jsx",
+        "tests/touchables-animated-fixture.jsx",
+        "tests/touchables-native.test.mjs",
+        "tests/touchables-probe.gd"
+      ],
+      "opacityCase": "mount/opacity now expects the original TouchableOpacity to commit its host like every touchable (it expected a render error naming NativeAnimatedModule)",
+      "renderErrorsCheck": "'Only the single-child and contract cases fail at render' (it also listed TouchableOpacity)",
+      "animatedLane": {
+        "before": "6 checks asserting the Animated.View failure at mount, deep import with test-only seams",
+        "after": "7 checks that press the public TouchableOpacity without a seam"
+      },
+      "publicBundle": "now contains the original Animated and TouchableOpacity modules",
+      "suite": {
+        "checks": 93,
+        "precedingSdkControlFailures": 19,
+        "note": "the local --preceding-sdk control already failed its sentinel and stop checks on main fb42709, reproduced with main's touchables files and the preceding host; not a change of this slice"
+      },
+      "historicalEvidence": "docs/evidence/touchables/* kept as the record of that slice, with a pointer"
+    },
+    "tree": {
+      "example": "examples/tree/App.jsx",
+      "stage": "rerender",
+      "before": "Pinned upstream children-only commit restores declarative native ID",
+      "after": "Children-only commit keeps the imperative native ID, as RN's JS thread holds setNativeProps' clone",
+      "reason": "ReactInstance.cpp:101 sets the runtime reference update for every JS callback; the commit clones the node JS holds, which is the clone setNativeProps committed",
+      "declaredStageUnchanged": true,
+      "checks": 89,
+      "historicalEvidenceKeptAsRecord": [
+        "docs/evidence/tree/checks.json",
+        "docs/evidence/tree/negative-control.json",
+        "docs/evidence/tree/provenance.json"
+      ]
+    }
+  },
+  "exploratoryObservationsOutsideTheReceipt": [
+    "backgroundColor interpolation (rgba red to blue) with the native driver updates the Control frame by frame and matches the JS driver's colors within a frame",
+    "borderRadius with the native driver updates the corner radii frame by frame",
+    "scaleX and scaleY animate with the native driver; a uniform transform [{scale}], animated or static, fails with E_TRANSFORM_3D (RN builds scale3d, the transforms guard rejects a z scale other than 1)",
+    "Animated.sequence with Animated.delay, Animated.loop and Animated.parallel over native timings end with finished: true at the expected times",
+    "layout props with the native driver, width (80 to 160) and marginLeft (0 to 60), ran without errors: the Control's size and position followed frame by frame, since RN's backend commits layout updates (AnimationBackend::commitUpdates); the suite asserts no layout animation"
+  ],
+  "regressions": {
+    "steps": {
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 123,
+        "logSha256": "231a07370934c107a511fb0e53abd58d2c6b6dbf4fad9d07a9315ad351b18ebc"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "7b1e30709ebd2c28c55fe40230ff71fdae5bead7cb0cee566ef2e2bcc7e7cc0f"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "5d4ba548b0b5014b5efe8dc05f0622acd363f583b75a779c7e18b9e31ab6a626"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "5d0015ddae3f1e680b55987fae2c596ef6674091485d7f393283ea77baee9bcd"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "59dfb50ec5b8422203b21f841f06c4748ceff4e7b8aa0b4b092c71d88551281b"
+      },
+      "test:lists": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "4219261b8fc2d7f766ceafa993b7cd433bc041352d50faed0428453874a104d3"
+      },
+      "test:appearance": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "8f0002448bf9045988bc48ac6d8566bd23d9c509f199358b5030bb4b997af472"
+      },
+      "test:animated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "81a4a3b30cb9eb1c0f8f336de3a7720eecc308e7b6e007908ae4195b124a3397"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "9cb71774c09f4f50c9248cfa3054a01a55e3ca7cc904899337ac5cd8309c5ba1"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "bbf22d63f9e4996c1d400595c931bb772c49f4d5000abc4ccc83d2cc16726aae"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "4ab8b618dc3981a2c7ae5d3c5eaa33bb94f58109851cb8b1b2e9b054996c32e6"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "e0403f492eb688fa80b8b0d543fcf1cd9b753a1ccae0f6f14cc023b3840f3106"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "fd61d2482f8148cdea33d7d6835936cdfee025364f4fdba0c961bb711360b0be"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "69ecdd7627b8b1cd25057ff5ddbda68865d165ac0b6c89fad83fc597bd310553"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "eb102314310665454fee470763da9c46be24ea46beb67a0f90e10da267d7f39a"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "e88897a432d510076221c1c51f3de0ff2d74c1a783ed81b4fa02972d83c177a7"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "22b29b704ead15d0aafbcc16795304acfabd62a5721b7231420079af0547e7ad"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 40,
+        "logSha256": "55c19f1867d50be721880c65f16519dea5fd726a692114062f6976bd1ea872d9"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "c79c858f2ba83e895eff58d599fd4b0f765f386b21f70cf345bdae192110222a"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "61c943744a8969e27c330e762aceef502f75eb6d82f634ed87a940690f4ff470"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "b32442987d93de0378d10d3ef4fc7cfb97a5afa41909852abc1161a60cce61a1"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "5379b0d7ad705f1cc033a86b46b24c209f00a8d453db2abf006b7c5a2df1c393"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "9c95bf73fae3055d989c41e63daec4d9ef7cfa6627bcfbe62569eda4ede49473"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "d3ca24eef8a0135fbc61ee0278d876df75b642598fdcb3337fe0eb271ef0df58"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "e376ce53ec2227eb36be6b3770474fa79d32bf55fc499df78f6b5cd065cdc776"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "1858b6a6dcf6e64fd240919827fe572f240d000122c922b7fa11cd8766323e47"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 32,
+        "logSha256": "7c6347c7149fc4d886126aa442a6eeb5e88effb4d370edf6a1629ffca40855bc"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 60,
+        "logSha256": "388069ceaad0e956004269bf8377451628b51eaf254a756a691ed115c7b64805"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "2b8b0c560040ddeac20ddd75c66b51b1825098f9c1311cf31da9ac902dcdba2e"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "f36ddef0509d379f13ea8da374871fad5661eac2175e4c5106e49b55d35e7ee3"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 21,
+        "logSha256": "4a7f560c0e00f9ddb7db36d7434f8b79ed6b768330f3038b442982fafd8e3a8c"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "0efae82ad6def02c18cedc553ef918b6c95dd496c8a634e08c95157b3a05d954"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "53f5ffc64a7b7db133a2ab446a8733aa281e9574ec489c84882cc3a90b0af10f"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "79e917a8ed6e3bb4d487edc8a92bba64b07ae800de0649c62e84d4df5f505bc4"
+      }
+    },
+    "counts": {
+      "examples": 2260,
+      "examplesCount": 23,
+      "down": 2731,
+      "documentUp": 6459,
+      "documentMove": 1940,
+      "documentHover": 1530,
+      "click": 728,
+      "captureNotifications": 672,
+      "viewUp": 297,
+      "move": 220,
+      "hover": 158,
+      "rootPath": 82,
+      "queryFaults": 187,
+      "resolverFaults": 66,
+      "panResponder": 128,
+      "sharedTouches": 92,
+      "appState": 75,
+      "virtualizedList": 44,
+      "appearance": 79,
+      "switch": 108,
+      "activityIndicator": 33,
+      "touchables": 93,
+      "touchablesAnimatedLane": 7,
+      "animated": 75,
+      "focusCommands": 112,
+      "nativeModules": 76,
+      "eventDispatch": 647,
+      "transformGuards": 61,
+      "nodeContractChecks": 264,
+      "nodeContractRuns": [
+        6,
+        8,
+        264
+      ],
+      "pythonContractChecks": 13
+    }
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "aae2cbdcc31627cbab7e3df3e54bd43afd1620d21fe829e933c17ef2dbbeb2dd"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "8ced851509de37284192236ae317e50fd090e3c073f2c5536e80848ab5edfbe1"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "bddc67ac5075f9e4918cfabfac1840652242999d955f9c0eeded293eb256e81a"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "ba4101a2752499876e207d3a23c46738592e8866ceb099a3fdac4e19435af017"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "f0a0decdb17091d959ce5a0972646ee4623ced71b1a35e3248869ac7fba240d6"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 97,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "0a3fdd1a474ad337d4f6033e016595b3087076b89deb598c195915d259013f81"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    }
+  },
+  "controlsAndSabotageRerun": {
+    "steps": {
+      "animated-control": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "8bdcd3685aae03bc15d2986212749a6fa4f4ab1ece71569e22f342579b61f07a"
+      },
+      "animated-sabotage": {
+        "exitCode": 0,
+        "seconds": 73,
+        "logSha256": "7d5b1a1e798d64593c6aa109701601e8ed71b956dd495ba9469622df96240d3c"
+      },
+      "animated-final": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "257b04732af0027b2d5899fb6a57d9c9a8d25bfc5f8f024ad8aaa80390741469"
+      }
+    },
+    "note": "rerun from the committed tree before this receipt"
+  },
+  "gates": {
+    "test:contracts": {
+      "exitCode": 0,
+      "seconds": 17,
+      "logSha256": "2e7353c15658f3bec16532b5eee8e1a544dfe90596db8c3cfdd1b604f2e5cf7f"
+    },
+    "check:static": {
+      "exitCode": 0,
+      "seconds": 0,
+      "logSha256": "5007027ca3a4e32bab6adbdcf15c492bfe01b0d0b21ca4cada8a259eeda97b0e"
+    },
+    "check:publication": {
+      "exitCode": 0,
+      "seconds": 1,
+      "logSha256": "bd4139cc1213ed362b1fbe3ec3498bb0b4e373d26251d7e60814d926fcb68162"
+    },
+    "test:recovery": {
+      "exitCode": 0,
+      "seconds": 2,
+      "logSha256": "b53289f32c6bad6597ffc69c43bd3c88dc3bcf2ef95fbecc637e1236db1fadce"
+    }
+  },
+  "captures": {
+    "command": "npm run example -- animated --capture",
+    "exampleChecks": {
+      "headless": 10,
+      "nativeRenderer": 15
+    },
+    "files": [
+      {
+        "path": "docs/evidence/native-animated/animated-before.png",
+        "sha256": "df428c9a1f8c8a70c0e9470953fcbbfe89a35b308ae8d115d3bc82d5ffe93372",
+        "bytes": 29830,
+        "width": 900,
+        "height": 680
+      },
+      {
+        "path": "docs/evidence/native-animated/animated-pressed.png",
+        "sha256": "d58ed00495f0d09633b4aa2399ead99e9d3c54a4303cbfd3c823ca89bf28cda4",
+        "bytes": 30074,
+        "width": 900,
+        "height": 680
+      },
+      {
+        "path": "docs/evidence/native-animated/animated-mid-animation.png",
+        "sha256": "7d24e1c87cc2a8e86a82b4b1500b2cd453d5f7b21db3393738eee7ddc8347edf",
+        "bytes": 32473,
+        "width": 900,
+        "height": 680
+      },
+      {
+        "path": "docs/evidence/native-animated/animated-end.png",
+        "sha256": "63966ece85bc456b26c49e8859846a0382cfcda6faf976beadfdd48f46134e82",
+        "bytes": 30968,
+        "width": 900,
+        "height": 680
+      }
+    ]
+  },
+  "sourcePins": {
+    "tests/native-animated-fixture.jsx": "26735003ed1fc113558b24faf3afb25c4be305f67d254c0e665db57afe6ae16d",
+    "tests/native-animated-cases.mjs": "b7901f8f6956c4ff9c9e9fe92d908c3da046ee8f25e4ce0b8cb18000b6835053",
+    "tests/native-animated-probe.gd": "d8acfce2e5714f5a13119e1d626c59ed3aa34e9b0aafb834fb8ebc42c80c4c0d",
+    "tests/native-animated-native.test.mjs": "e49bbb72e0b69c7d6da0a42a7061a23a03c8e41970ae8800ac6359f20b228781",
+    "tests/native-animated-oracle.mjs": "a8165860296e9f19a08a29f4132bb3e569e5a1c222dacb73d8b32dd906c45d00",
+    "scripts/native-animated-bundle.mjs": "9b96ae126c8fa15fd457deb8dce1c23faffc1941a2fca7008e76498a9d7161b3",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/react-native-platform.jsx": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
+    "src/animated-exports.js": "4097fe4cd5167222581d7ac1c3032e224aedeff506026619241ba85975942f67",
+    "src/platform-color-value-types.js": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+    "sdk/toolchain/platform-plugin.mjs": "e19e81451fda62f844d4e302c747d460f17a343d8b829c1c60eb970e06c14062",
+    "native/native_animated.h": "0fa63cae7a1c2fee8c7839499519c29d3c0176b9926ad5c013566b43dab4a245",
+    "native/native_animated.cpp": "6ba44aa090c81411632c17bf9b59f128e5b5231932990ff54d474443603df36b",
+    "native/application_runtime.cpp": "bfb64413d1f3b8088a314e3e09ce5019112f1210b2093d67fe5a9127454754a7",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "native/register.cpp": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+    "native/CMakeLists.txt": "b071a8af566e18ded36097b6d670d8c79b348d0118847729f4bf4465b389a31f"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Animated/Animated.js": "658514b38e484cb106acc58e46c5c8849d325b693f4c16e3d7d177f18df8d6c2",
+    "Libraries/Animated/AnimatedImplementation.js": "aa0045f644697591c3e619cfa92df141593d21291982706191c5213aa91a176d",
+    "Libraries/Animated/Easing.js": "a40148bed7ac671dd4dc25851bcd407dccb2269f79d418e9df29b149ded5e971",
+    "Libraries/Animated/useAnimatedValue.js": "208a019e4dae384d3e172a999e9446d47c956326adde35f7169d477a59538b3b",
+    "Libraries/Animated/useAnimatedValueXY.js": "51be2c57f9b068d872c718b96b6c900caaa259dbce79f963bf830ea4db55793b",
+    "Libraries/Animated/components/AnimatedView.js": "00adcb6fe0cd68958bc2e35c1fe10bb6ee039149057c45e4456b1d44d74d2b67",
+    "Libraries/Animated/createAnimatedComponent.js": "f43699c7a66ae061efa5658cc8fa72ad9681541bbe2d4a4b55e42d5373a5394d",
+    "Libraries/Animated/nodes/AnimatedValue.js": "5fd8ecb6502c5a8ce191273fdc78522ca16f48b0b90153b4d1265c7b1e9c79ed",
+    "Libraries/Animated/nodes/AnimatedInterpolation.js": "eab89da76953ea2a09aa730c57051ead74567c4602993fdbf128a06d97649381",
+    "Libraries/Animated/animations/TimingAnimation.js": "874e50eb5bb6a128f4428301c40fd0ce9ff9817567789613fbbb53a7358d40de",
+    "Libraries/Animated/animations/SpringAnimation.js": "c61a116e0b950c030b0b6400fda02445514a9fd5315e16b8f1ca94c7ef9a9e74",
+    "Libraries/Animated/animations/DecayAnimation.js": "54c9907dc4bbe2167e969c4a7c6be58212eb8eb3a21093ac6e5f6927ad8d8cdc",
+    "Libraries/Animated/NativeAnimatedModule.js": "1db05bc931aeb0c8eecba4a450dff3706b4a608a80c97a704c70051dfd4bde20",
+    "src/private/animated/NativeAnimatedHelper.js": "e431a4b40387635d2c844a435c039f9567613fd97d3397db1944f591ba3aebc9",
+    "src/private/animated/createAnimatedPropsHook.js": "0b4bf4cc0a07b4bcd452fff083b3113d5bb694837c99d97b67de75e500c2310d",
+    "Libraries/Components/Touchable/TouchableOpacity.js": "d1e90d0d5846866ccb1cc5ab35c6775379c2deb39bcd2c3e38c0a7b0d1fcd4bb",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "index.js": "5e03e5233650531810ef3129db116e1e534bbf30d85fccf6a10248ef9a088538",
+    "ReactCommon/react/renderer/animated/AnimatedModule.cpp": "fedd3b597962fd15a94b6e21fd601c5f44f79dd90f81d821f1505a259d467d0c",
+    "ReactCommon/react/renderer/animated/NativeAnimatedNodesManager.cpp": "ce76593398c9780a30273b533caec5043010921a8ed485812886732ce82628e0",
+    "ReactCommon/react/renderer/animated/NativeAnimatedNodesManagerProvider.cpp": "6b1f9927fbc28106383abaeb7aef68e03d9a09dc19627e12aa046a4cb4ef2a4e",
+    "ReactCommon/react/renderer/animated/drivers/FrameAnimationDriver.cpp": "86469fa386c1c409d2a5b0f3e277b60080f3b98a8560718b27d661d775dd6cfc",
+    "ReactCommon/react/renderer/animated/drivers/SpringAnimationDriver.cpp": "0369b961e7d2f3198a9e786ab3eb322908b4242fb16a76d3a1b0e0b7cbb1168a",
+    "ReactCommon/react/renderer/animated/drivers/DecayAnimationDriver.cpp": "c1f44b65696daabbdd43161c376f5e83dd7768e33037cfc29835be86e480a65b",
+    "ReactCommon/react/renderer/animationbackend/AnimationBackend.cpp": "0ac37c9cd9ddd85c82c6ddb527f54c9efcb8e96d8fed2a926a678856c8253cc6",
+    "ReactCommon/react/renderer/animationbackend/AnimationChoreographer.h": "2ee5f4cf1e7d9a7bb4802b7db97fb72ba514002a5ecedbe0feb08d8ac259a5b3",
+    "ReactCommon/react/nativemodule/defaults/DefaultTurboModules.cpp": "c1351baedb7816bb94ef5bb8a47b571ec6d5150783991a4465d6b03084ac6e3c",
+    "React/Fabric/Mounting/RCTMountingManager.mm": "4f1ad241fe512bddf4226b1d8c7838c09dcc374b8c52ac32328454f4686c23e5",
+    "React/Fabric/RCTScheduler.mm": "0d1ede5f7e414798c83eef3b0a0f235a26eb60c023787e68397e067d9795814f",
+    "ReactAndroid/src/main/jni/react/fabric/FabricUIManagerBinding.cpp": "e53126373be416e8d228df4aaac1c3455cf834a1e6187d2b95fdfbae7a60b9e8"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "b071a8af566e18ded36097b6d670d8c79b348d0118847729f4bf4465b389a31f",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+    "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "bfb64413d1f3b8088a314e3e09ce5019112f1210b2093d67fe5a9127454754a7",
+    "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/native_animated.cpp": "6ba44aa090c81411632c17bf9b59f128e5b5231932990ff54d474443603df36b",
+    "native/native_animated.h": "0fa63cae7a1c2fee8c7839499519c29d3c0176b9926ad5c013566b43dab4a245",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+    "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "626b78ba349501e87b28d7104bc5bd1e63841aab91945aae1254350700a8e8ad",
+    "package.json": "5b6d92336a94b9c5d804f657a4f3bb707c5a466d5f88173d4f7dee98a47dcdb0",
+    ".fallowrc.json": "7964d1e77803b2a18346ae19ebdfd55f16cd58fea1f8818c95167835a0f2f2c5",
+    "types/react-native.ts": "0575401bec0fa230a2e0825f968fccc7ab17e8d4c56e5b811010442c8a73df9b",
+    "tests/types/consumer.tsx": "6cce09f611ad7222e4473af6af8b1062ac9e8fd3bb66e7913f7b19d7cec2c897",
+    "examples/animated/App.jsx": "64eadedfb7fcaed8262bc2269f15cbff4e2e7db394e2cb5a86adafd4e8521e16",
+    "examples/animated/validation.gd": "ef256c2ee3393ffa4fc6b19fc68a8686cbb00c7752182850f81d265024faab0a",
+    "examples/animated/scene.tscn": "916204fe53d0d58e912a091984707859ab1918d5816ee5aa4a7985695f2de237",
+    "examples/catalog.json": "0f30562b12dbbf7d3d94f640da5639a9ec572f5da06cdd4bb1004c75084cbc24",
+    "examples/entry.jsx": "0af56596552a5fc34c2cb97e9d1a2ea1c4db0b6540bcc0549bc54f297a943abd",
+    "examples/tree/App.jsx": "5d947e512e2c5a482ccca1c76f27b44350f5120e4176741854984267075db791",
+    "tests/touchables-fixture.jsx": "d14320227d21b53fe421589a9b814340c7f848d36fe779d88956b8d561a8b340",
+    "tests/touchables-animated-fixture.jsx": "e6261b9a6c3d8d313d8a1d853cfddf038a985c3fd19a6d2c88ec4e168facc607",
+    "tests/touchables-native.test.mjs": "4bbd87ba1eae29d3cf40eded77826632c59487ab104101300ca26ab6d3f91097",
+    "tests/touchables-probe.gd": "28b648883c85fedb83693c0d490dd7f66950c34165985bd67363e66183ff7040"
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "e90888f8bdf0650f7517433449dc825a8ed50839c0c7008a58bba0d25b5269fc",
+    "inputsMatchCommit": true,
+    "compiler": {
+      "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    }
+  },
+  "hostedCI": {
+    "status": "pending-native-animated-slice"
+  },
+  "limits": [
+    "The suite asserts only props without layout effects (opacity, translation, rotation); exploratory runs of width and marginLeft with the native driver followed frame by frame (RN's backend commits layout updates), but they are not part of the receipt.",
+    "LayoutAnimation, layout transitions, native Animated.event on the SDK ScrollView, Animated.Text/Image/ScrollView/FlatList/SectionList, PlatformColor interpolation, unstable_disableBatchingForNativeCreate and reduced motion are not covered.",
+    "A uniform transform [{scale}] fails with E_TRANSFORM_3D (pre-existing transforms guard); animate scaleX and scaleY.",
+    "Behavior under JS load, across background and resume, frame and heap budgets (GF-30), hardware and Godot Android and iOS exports are not executed.",
+    "No whole GF, other checkpoint, dependency, weight or denominator closed; only GF-19's first-slice checkpoint."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin and the working tree",
+    "sourcePins": 18,
+    "nativeSourcePins": 63,
+    "verificationSourcePins": 15,
+    "uniqueCodeAndConfigurationInputs": 89,
+    "mismatches": [],
+    "originalReactNativeSources": 30,
+    "executedFromTheCommittedTree": true
+  },
+  "finalTreeGates": {
+    "ranAt": "2026-10-06T08:18:22.513913+00:00",
+    "meaning": "Contracts-job gates, test:recovery and the dashboard checks rerun after every doc, the dashboard entry and the receipt body above were final (including the correction of the preceding host's provenance); this field was appended afterwards.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "2268135cb92c8d511f3fa147a346d88faa95d47e4a37481a4c9cc36dd1110c69"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "5007027ca3a4e32bab6adbdcf15c492bfe01b0d0b21ca4cada8a259eeda97b0e"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "688c435da515acb06ec869214be35cb5c101facd0618eeaad8f769743c966edc"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "c8d612b6a10ba613cb3477a2d0c50b69d8de2dba728b3666badd34b59368eb95"
+      },
+      "dashboard:check": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "9a1b2912c455c30a5e296a2f274d5b2d297cfb59838580f48cf880a09d658c1b"
+      },
+      "test:dashboard": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "14d368c402f64a8f3a4684e8852dc2dabb5055de687b832e4957badf9f79861e"
+      }
+    },
+    "counts": {
+      "nodeContractChecks": 264,
+      "nodeContractRuns": [
+        6,
+        8,
+        264
+      ],
+      "pythonContractChecks": 13
+    }
+  }
+}
