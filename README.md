@@ -264,6 +264,12 @@ notifies a capture at the pointer's next event, retargeted to its owner, and the
 host already matches it; two retained sabotages fail.
 [Evidence](docs/evidence/pointer-capture-notifications/README.md).
 
+The [virtualized-list example](examples/virtualized-list/README.md) runs React
+Native's original `FlatList`, `SectionList` and `VirtualizedList` from the public
+import on the SDK ScrollView, windowed by real wheel and touch input in two roots:
+44 headless checks. The preceding host fails exactly its 3 ScrollView checks.
+[Evidence](docs/evidence/virtualized-list/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

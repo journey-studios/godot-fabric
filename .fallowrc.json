@@ -42,6 +42,7 @@
     "tests/pan-responder-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx",
     "tests/app-state-fixture.jsx",
+    "tests/virtualized-list-fixture.jsx",
     "tests/switch-fixture.jsx",
     "tests/shared-touches-fixture.jsx",
     "tests/touchables-fixture.jsx",
@@ -148,6 +149,9 @@
         "ActivityIndicator",
         "StatusBar",
         "FlatList",
+        "SectionList",
+        "VirtualizedSectionList",
+        "RefreshControl",
         "ImageBackground",
         "KeyboardAvoidingView",
         "VirtualizedList",
@@ -235,7 +239,13 @@
             "codegenNativeCommands",
             "AppState",
             "AppStateStatus",
-            "AppStateEvent"
+            "AppStateEvent",
+            "FlatList",
+            "SectionList",
+            "VirtualizedList",
+            "VirtualizedSectionList",
+            "ListRenderItem",
+            "SectionListData"
           ]
         },
         {

@@ -1610,7 +1610,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Virtualized lists",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results",
       "dependencies": [
         "GF-10",
@@ -1618,14 +1618,19 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "FlatList, SectionList, VirtualizedList e VirtualizedSectionList originais do RN pelo import público sobre o ScrollView do SDK, janelados por roda e arrasto reais em duas roots: janelas e visíveis exatos do RN, onEndReached, scrollToIndex/Offset/End/Location com falhas medidas, lista invertida seguindo o dedo e scrollEventThrottle pela regra do Android; 44 headless, host anterior falha exatamente 3, SDK anterior 11 e um ScrollView sem onLayout 3, rejeitado pelo oráculo.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Listas virtualizadas: 44 checks, host anterior 3, SDK anterior 11 e sabotagem rejeitada",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/194ce1e54e64a365407f25ae3f609b0196217584/docs/evidence/virtualized-list/README.md"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3365,6 +3370,15 @@
       ],
       "message": "Notificações de captura de ponteiro em oito lanes: 672 headless. gotpointercapture e lostpointercapture chegam às props JSX e aos listeners originais de View, documentElement e Document na ordem do PointerEventsProcessor do RN: a captura fica pendente na hora e é notificada no evento seguinte do ponteiro (lost, depois got, redirecionados e Discrete), antes do hover e do próprio evento; Up e Cancel liberam depois do próprio dispatch; o hover segue o dono; remover o dono limpa sem notificação; o click mantém os caminhos físicos. O host já seguia o RN: só entram testes, CI e configuração. SDK com got/lost sem bolha falha 12/13 checks por lane e overlay com hover físico falha 33; o oráculo independente rejeita os 16 relatórios. A árvore mesclada com a main repetiu os 672 checks. CI pendente.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/b543733dbc42aa26c7296adfe79f8b1e41afca83/docs/evidence/pointer-capture-notifications/README.md"
+    },
+    {
+      "id": "virtualized-list-local-verified-20261005",
+      "at": "2026-10-06T00:20:56.206922+00:00",
+      "taskIds": [
+        "GF-15"
+      ],
+      "message": "Listas virtualizadas no ScrollView do SDK: 44 headless. FlatList, SectionList, VirtualizedList e VirtualizedSectionList originais do RN vêm do import público e janelam sob roda e arrasto reais do Godot em duas roots: janelas e visíveis batem com computeWindowedRenderLimits e o ViewabilityHelper, células fora da janela desmontam e voltam, onEndReached dispara uma vez por comprimento, scrollToIndex/Offset/End/Location chegam aos offsets do RN e as listas medidas chamam onScrollToIndexFailed com a média medida. O host aplica scrollEventThrottle pela regra do Android e arrasta nas coordenadas do ScrollContainer, então a lista invertida segue o dedo. Host anterior falha exatamente 3; SDK anterior 11; ScrollView sem onLayout 3 e o oráculo rejeita. Primeira fatia do GF-15: só o checkpoint slice fecha. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/194ce1e54e64a365407f25ae3f609b0196217584/docs/evidence/virtualized-list/README.md"
     },
     {
       "id": "pan-responder-hosted-ci-and-pages-20261005",

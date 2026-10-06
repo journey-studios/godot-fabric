@@ -472,7 +472,9 @@ test("public touchables run RN's original modules on real Godot input", async ()
     "src/private/animated/createAnimatedPropsHook.js", "src/private/animated/NativeAnimatedHelper.js"]) {
     assert.ok(animated.inputs.includes("node_modules/react-native/" + file), "The animated lane runs the original module: " + file);
   }
-  assert.ok(!animated.inputs.some(file => file.includes("react-native/Libraries/Lists/") || file.includes("virtualized-lists")));
+  // The seam keeps RN's Animated list wrappers out of this lane; the facade's
+  // lazy getters still bundle the original lists, as RN's index.js does.
+  assert.ok(!animated.inputs.some(file => /react-native\/Libraries\/Animated\/components\/Animated(?:Flat|Section)List\.js$/.test(file)));
   const animatedLane = await runLane(binary, "animated", animated);
   assert.match(animatedLane.log, new RegExp(`TOUCHABLES_ANIMATED_UNAVAILABLE: ${animatedLane.report.checks.length}$`, "m"));
   verifyAnimated(animatedLane.report);

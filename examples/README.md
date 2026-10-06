@@ -258,6 +258,14 @@ outside the launcher catalog. Its
 [receipt](../docs/evidence/pointer-capture-notifications/README.md) records 672
 headless checks and two retained sabotages.
 
+The [virtualized-list probe](virtualized-list/README.md) scrolls RN's original
+`FlatList`, `SectionList` and `VirtualizedList` with wheel steps and touch drags
+in two roots: `npm run test:lists`, outside the launcher catalog. Cells outside
+the window unmount and return, and an inverted list follows the finger. Its
+[receipt](../docs/evidence/virtualized-list/README.md) records 44 headless
+checks, the preceding-host and preceding-SDK controls and a retained negative
+control.
+
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |
 | [![Public form](../docs/evidence/public-controls/form-initial.png)](form/README.md) | [![Counter](../docs/evidence/public-controls/counter-initial.png)](counter/README.md) | [![NativeWind](../docs/evidence/public-controls/nativewind-initial.png)](nativewind/README.md) |
