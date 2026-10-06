@@ -5,6 +5,8 @@ Godot 4.7.2. The [evidence](../evidence/pointer-capture-notifications/README.md)
 owns the 672 headless checks in eight lanes and two retained negative controls.
 No native or SDK code changed: the host already matches RN here. Public
 EventTarget flags remain disabled.
+Hosted run 37396999119 repeated the 672 checks with identical IDs and raw
+sequences ([receipt](../evidence/pointer-capture-notifications/hosted-ci.json)).
 
 ## What RN does
 

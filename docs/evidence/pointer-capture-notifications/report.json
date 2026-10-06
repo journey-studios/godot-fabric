@@ -1023,7 +1023,12 @@
   },
   "changedFilesSinceExecutionBase": [],
   "hostedCI": {
-    "status": "pending-capture-notifications-slice"
+    "status": "verified",
+    "run": 37396999119,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37396999274,
+    "publication": "publication.json"
   },
   "limits": [
     "Mouse left button and touches over two roots of one application, eight original/current x flag lanes on one host, headless.",

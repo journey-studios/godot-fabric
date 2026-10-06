@@ -2041,7 +2041,15 @@ captured, capture across roots, pen, hardware and mobile exports remain open. Al
 23 executed code/configuration inputs match implementation 6ad77b8 via git
 show/SHA-256 (executed on that commit). After main reached 54ede87, the merged
 tree 0580af7 repeated the 672 checks on its own host with identical IDs and
-results. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+results. Hosted Contracts run 37396999119 (the push of main d62bc27) passed all
+five jobs in the first attempt; its [audited
+artifact](docs/evidence/pointer-capture-notifications/hosted-ci.json) repeats
+the 672 headless checks with identical IDs, raw sequences and capture
+notifications and the bundles of the merged tree. All 23 tracked inputs match
+the checkout tree (6 differ from 6ad77b8 through commits main gained
+afterwards). [Pages
+37396999274](docs/evidence/pointer-capture-notifications/publication.json)
+deployed this record from main d62bc27. No whole GF, checkpoint, weight or
 denominator closes.
 
 ### Virtualized lists on the SDK ScrollView (2026-10-05)

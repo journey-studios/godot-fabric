@@ -265,7 +265,8 @@ certifies `gotpointercapture`/`lostpointercapture` for JSX props and original
 View, documentElement and Document listeners, and hover and click while a pointer
 is captured, in eight original/current × flag lanes: 672 headless checks. RN
 notifies a capture at the pointer's next event, retargeted to its owner, and the
-host already matches it; two retained sabotages fail.
+host already matches it; two retained sabotages fail. Hosted CI repeated
+the 672 checks ([receipt](docs/evidence/pointer-capture-notifications/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-capture-notifications/README.md).
 
 The [virtualized-list example](examples/virtualized-list/README.md) runs React

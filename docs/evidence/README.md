@@ -294,7 +294,9 @@ retargeted and Discrete), Up and Cancel release it after their own dispatch,
 hover follows the owner, removal clears it without a notification and click keeps
 the physical hit paths. No native or SDK code changed; an SDK without got/lost
 bubbling fails 12 or 13 checks per lane and an overlay tracking hover by the
-physical target 33, and the independent oracle rejects both. Hosted CI pending.
+physical target 33, and the independent oracle rejects both. Hosted run
+37396999119 repeated the 672 checks with identical IDs and raw sequences
+([receipt](pointer-capture-notifications/hosted-ci.json)).
 
 The [virtualized-list record](virtualized-list/README.md) scrolls RN's original
 `FlatList`, `SectionList` and `VirtualizedList` on the SDK ScrollView with real
