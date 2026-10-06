@@ -305,6 +305,8 @@ wheel steps and touch drags in two roots: 44 headless checks. Windows match RN's
 viewability, `onEndReached`, scroll commands and failures follow RN. The
 preceding host fails exactly 3 normative checks, the preceding SDK 11, and an SDK
 ScrollView without `onLayout` fails 3, which the independent oracle rejects.
+Hosted run 37401008543 repeated the 44 checks with identical IDs
+([receipt](virtualized-list/hosted-ci.json)).
 
 The [Appearance record](appearance/README.md) runs RN's original `Appearance` and
 `useColorScheme` in two roots of one application, fed through the one Callable

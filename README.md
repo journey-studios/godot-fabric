@@ -273,6 +273,7 @@ The [virtualized-list example](examples/virtualized-list/README.md) runs React
 Native's original `FlatList`, `SectionList` and `VirtualizedList` from the public
 import on the SDK ScrollView, windowed by real wheel and touch input in two roots:
 44 headless checks. The preceding host fails exactly its 3 ScrollView checks.
+Hosted CI repeated the 44 checks ([receipt](docs/evidence/virtualized-list/hosted-ci.json)).
 [Evidence](docs/evidence/virtualized-list/README.md).
 
 The [Appearance example](examples/appearance/README.md) runs React Native's

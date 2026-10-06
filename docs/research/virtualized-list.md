@@ -3,9 +3,11 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/virtualized-list/README.md) owns the 44
 headless checks, the preceding-host control (the same bundle fails exactly its 3
-normative checks), the preceding-SDK control (11 normative checks) and a retained
-sabotage of the ScrollView layout event. Hardware input, mobile exports and the
-10,000-row performance acceptance of GF-15 are not certified.
+normative checks), the preceding-SDK control (11 normative checks) and a
+retained sabotage of the ScrollView layout event. Hosted run 37401008543
+repeated the 44 checks with identical IDs
+([receipt](../evidence/virtualized-list/hosted-ci.json)). Hardware input, mobile
+exports and the 10,000-row performance acceptance of GF-15 are not certified.
 
 ## What RN does
 

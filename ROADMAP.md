@@ -2099,8 +2099,15 @@ the four lanes again. Animated scrolling, momentum, sticky headers, refresh,
 fixture, hardware and mobile exports remain open; GF-14 stays Planned. All 73
 executed code/configuration inputs match implementation 3e9ec49 via git
 show/SHA-256 (execution base 8f80fed; the executed tree is the implementation's).
-Hosted CI for this slice is pending. Only GF-15's first-slice checkpoint closes;
-no whole GF, other checkpoint, weight or denominator closes.
+Hosted Contracts run 37401008543 (the push of main c8f0e4b) passed all five jobs
+in the first attempt; its [audited
+artifact](docs/evidence/virtualized-list/hosted-ci.json) repeats the 44 headless
+checks with identical IDs and the independent oracle accepts the downloaded
+report. All 73 tracked inputs match the checkout tree (13 differ from 3e9ec49
+through commits main gained afterwards). [Pages
+37401008504](docs/evidence/virtualized-list/publication.json) deployed this
+record from main c8f0e4b. Only GF-15's first-slice checkpoint closes, with the
+slice itself; no whole GF, other checkpoint, weight or denominator closes.
 
 ### Appearance and useColorScheme from the system theme (2026-10-05)
 
