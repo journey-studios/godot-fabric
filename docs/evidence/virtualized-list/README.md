@@ -182,6 +182,13 @@ agora com PanResponder 128 e Switch 108, e as quatro lanes da fatia se repetiram
 normativos, o SDK anterior falha 11 e a sabotagem falha 3, rejeitada pelo
 oráculo. O lote do SDK nativo rodou uma vez, na implementação.
 
+## Revisão
+
+O `scrollDragStart`/`scrollDragTo` passou a descartar o passo de arrasto quando o ponto local
+não é finito (embedding singular), em vez de deixar o adapter lançar (`bb38440`). No host
+recompilado a suíte repetiu os 44 checks, os controles de SDK anterior e de sabotagem foram
+refeitos nele e o click passou de novo; o recibo registra isso em `reviewReruns`.
+
 ## Limites
 
 Scroll animado não existe: um comando sem `animated` salta onde o RN anima,
