@@ -6,6 +6,7 @@ import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
 import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
+import OriginalActivityIndicator from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
 import {
   Pressable as GodotPressable,
   Button as GodotButton,
@@ -172,7 +173,14 @@ export function TouchableHighlight({ style, ...props }) {
 // the native animated queue on mount; without that module it throws there.
 export const TouchableOpacity = unavailable("TouchableOpacity",
   "its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet");
-export const ActivityIndicator = unavailable("ActivityIndicator");
+// RN's original ActivityIndicator.js takes its non-Android path: a sized View
+// around the generated ActivityIndicatorView component.
+export function ActivityIndicator({ style, ...props }) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalActivityIndicator {...props} style={nativeStyle(style, "ActivityIndicator")} />;
+}
 export const StatusBar = unavailable("StatusBar");
 export const FlatList = unavailable("FlatList");
 export const ImageBackground = unavailable("ImageBackground");

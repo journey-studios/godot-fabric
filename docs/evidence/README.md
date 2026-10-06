@@ -273,6 +273,15 @@ fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
 lane shows RN's original TouchableOpacity failing at mount without
 `NativeAnimatedModule`. Hosted CI pending.
 
+The [ActivityIndicator record](activity-indicator/README.md) runs RN's original
+`ActivityIndicator.js` over the generated `ActivityIndicatorView` descriptor and
+a custom-drawn Godot spinner: 33/33 headless checks across actual SceneTree
+frames in two roots. Defaults, small/large/numeric sizes, the phase advancing once
+per frame while animating and frozen when stopped, `hidesWhenStopped`, color,
+remount and root isolation are covered. The preceding host fails exactly the 2
+mount checks; a retained sabotage that stops the per-frame work fails 9 checks
+and the independent oracle rejects it. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

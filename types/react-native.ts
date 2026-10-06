@@ -77,6 +77,10 @@ export interface ButtonProps extends Pick<RN.ButtonProps, "onPress"> {
 export type SwitchProps = Pick<RN.SwitchProps, "value" | "disabled" | "onChange" | "onValueChange" |
   "thumbColor" | "trackColor" | "ios_backgroundColor" | "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
 export type SwitchChangeEvent = RN.SwitchChangeEvent;
+/** RN's original ActivityIndicator.js (non-Android path) over the generated
+ * ActivityIndicatorView component; a numeric size sizes the Godot spinner. */
+export type ActivityIndicatorProps = Pick<RN.ActivityIndicatorProps, "animating" | "color" | "hidesWhenStopped" | "size" |
+  "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
 export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {
@@ -89,6 +93,7 @@ export declare const TextInput: React.ComponentType<TextInputProps & React.RefAt
 };
 export declare const Button: React.ComponentType<ButtonProps & React.RefAttributes<NativeInstance>>;
 export declare const Switch: React.ComponentType<SwitchProps & React.RefAttributes<NativeInstance>>;
+export declare const ActivityIndicator: React.ComponentType<ActivityIndicatorProps & React.RefAttributes<NativeInstance>>;
 export declare const StyleSheet: {
   hairlineWidth: number;
   create<T extends Record<string, TextStyle>>(styles: T): T;

@@ -23,8 +23,8 @@ facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
 
 The facade exposes View, Text, Pressable, TouchableWithoutFeedback,
-TouchableHighlight, ScrollView, Button, Switch and single-line TextInput for
-public composition. The [typed form](../examples/form/README.md)
+TouchableHighlight, ScrollView, Button, Switch, ActivityIndicator and single-line
+TextInput for public composition. The [typed form](../examples/form/README.md)
 exercises the new controls through ordinary RN imports. Internal probes remain
 separate; neither those probes nor the public form certify the complete mobile
 API. NativeWind TextInput interop still requires dedicated validation.
@@ -41,6 +41,7 @@ RN compatibility.
 | Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | Switch | RN's original Switch.js over RN's shared iOS/macOS Switch descriptor: value, onValueChange/onChange, disabled, trackColor/thumbColor/ios_backgroundColor, setValue restore of an unchanged value, testID/ref; mouse click and touch tap | 63×28 default frame (RN's iOS 26 size); custom-drawn, without animation, thumb dragging, keyboard activation or accessibility; Android-only props are unused |
+| ActivityIndicator | RN's original ActivityIndicator.js over the generated ActivityIndicatorView descriptor: animating, hidesWhenStopped, color, small/large/numeric size, testID/ref; the spinner advances with real frame time only while animating | Custom-drawn eight-spoke spinner filling the frame (UIKit keeps its own size); RN's iOS gray without a color; no accessibility or reduced-motion handling |
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, original TextInput.State and native focus/blur coordination, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | Touchables | [Original TouchableWithoutFeedback and TouchableHighlight](../examples/touchables/README.md): RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots | TouchableOpacity throws (RN 0.87.1 Animated requires NativeAnimatedModule); no TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |

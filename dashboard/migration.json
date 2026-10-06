@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; Switch na main; próximos: Touchables (#30), Appearance (#35), ActivityIndicator, listas virtualizadas e notificações de captura"
   },
-  "updatedAt": "2026-10-05T23:40:50.400304+00:00",
+  "updatedAt": "2026-10-06T00:23:27.517034+00:00",
   "source": {
     "commit": "1b7dac52794ffd13257857621942c5df20ca127b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b7dac52794ffd13257857621942c5df20ca127b",
@@ -1691,7 +1691,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos. Fatia Switch: o Switch.js original do RN roda sobre o descritor Switch compartilhado de iOS/macOS e um switch nativo desenhado no Godot (108/108 checks headless com clique e toque reais em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do setValue é rejeitada), com teclado, acessibilidade, animação e caminho Android ainda abertos.",
+      "note": "Switch, ActivityIndicator e contratos completos/acessibilidade seguem abertos. Fatia Switch: o Switch.js original do RN roda sobre o descritor Switch compartilhado de iOS/macOS e um switch nativo desenhado no Godot (108/108 checks headless com clique e toque reais em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do setValue é rejeitada), com teclado, acessibilidade, animação e caminho Android ainda abertos. Fatia ActivityIndicator: o ActivityIndicator.js original do RN roda sobre o descritor ActivityIndicatorView gerado e um spinner nativo desenhado no Godot (33/33 checks headless em frames reais do SceneTree em duas roots; o host anterior falha os 2 checks de montagem e a sabotagem do trabalho por frame é rejeitada), com acessibilidade, movimento reduzido e capturas de pixel ainda abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1706,6 +1706,10 @@
             {
               "label": "Switch: 108 checks headless, controle do host anterior e sabotagem",
               "url": "https://github.com/journey-studios/godot-fabric/blob/e51ac18c146890420e7e8a75789faafa53b5bc07/docs/evidence/switch/README.md"
+            },
+            {
+              "label": "ActivityIndicator: 33 checks em frames reais, controle do host anterior e sabotagem",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b334085f30d3b6e2bc0634b3da13d433d7361d93/docs/evidence/activity-indicator/README.md"
             }
           ]
         },
@@ -3360,6 +3364,15 @@
       ],
       "message": "Toques compartilhados entre raízes em quatro lanes: 92 headless. Cada raiz listava só os próprios toques, então um toque que terminava na raiz B soltava o responder da raiz A e o Pressable de A pressionava com o toque de B; agora cada evento lista os toques da aplicação inteira, como uma superfície única do RN. Quando o toque do próprio responder termina antes, o plugin legado solta na hora e o ReactNativeResponder espera o último toque, como no RN. Host anterior falha exatamente 9; sete controles de host anterior refeitos. CI pendente.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/417d08a8ae9e9a146a1a48b20daea958c387a7b5/docs/evidence/shared-touches/README.md"
+    },
+    {
+      "id": "activity-indicator-local-verified-20261005",
+      "at": "2026-10-05T23:16:11.266928+00:00",
+      "taskIds": [
+        "GF-17"
+      ],
+      "message": "ActivityIndicator público: o ActivityIndicator.js original do RN segue o caminho não Android sobre o ActivityIndicatorViewComponentDescriptor gerado (o mesmo do iOS) e um spinner nativo desenhado no Godot. 33/33 checks headless em frames reais do SceneTree em duas roots: padrões do RN (cinza do iOS sem cor), tamanhos small/large/numérico, fase que avança uma vez por frame enquanto anima e congela parada, hidesWhenStopped, cor, remontagem e isolamento entre roots. O host anterior falha exatamente os 2 checks de montagem; a sabotagem do trabalho por frame falha 9 checks e o oráculo rejeita. Contracts 262 Node/13 Python e as suítes nativas passaram; CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b334085f30d3b6e2bc0634b3da13d433d7361d93/docs/evidence/activity-indicator/README.md"
     },
     {
       "id": "pan-responder-local-verified-20261005",

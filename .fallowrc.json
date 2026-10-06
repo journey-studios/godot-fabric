@@ -45,7 +45,8 @@
     "tests/switch-fixture.jsx",
     "tests/shared-touches-fixture.jsx",
     "tests/touchables-fixture.jsx",
-    "tests/touchables-animated-fixture.jsx"
+    "tests/touchables-animated-fixture.jsx",
+    "tests/activity-indicator-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -214,6 +215,7 @@
             "Button",
             "Switch",
             "SwitchChangeEvent",
+            "ActivityIndicator",
             "StyleSheet",
             "AppRegistry",
             "RootTagContext",
