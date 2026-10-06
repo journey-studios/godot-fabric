@@ -90,8 +90,8 @@ avisando quando ela não existe mais; no Android, o `AndroidAnimationChoreograph
 guarda `resume()`/`pause()` e o callback de quadro só chama o backend enquanto está
 ativo, e o `FabricUIManagerBinding.cpp` atualiza a view do mesmo modo. As duas
 plataformas ignoram `schedulerDidUpdateShadowTree`, que só o caminho legado do
-Animated usava. Os dois flags são `false` nos padrões do 0.87.1; os canais OSS do RN
-ligam o `cxxNativeAnimatedEnabled` no canary e o `useSharedAnimatedBackend` no
+Animated usava. As duas flags são `false` nos padrões do 0.87.1; os canais OSS do RN
+ligam a `cxxNativeAnimatedEnabled` no canary e a `useSharedAnimatedBackend` no
 experimental.
 
 Na thread JS, o executor de runtime do `ReactInstance` chama
@@ -108,7 +108,7 @@ O import público não exportava `Animated`, `Easing` nem os hooks, e o
 `TouchableOpacity` era um placeholder que lançava porque a `Animated.View` dele
 precisa do módulo nativo. Os dois métodos do delegate do UIManager no runtime
 falhavam alto (`setNativeProps is not implemented` e `Animated adapter is not
-implemented`), os flags do RN ficavam nos padrões, não existia
+implemented`), as flags do RN ficavam nos padrões, não existia
 `NativeAnimatedModule` e nada ligava a referência de runtime da thread, porque este
 host não usa o `ReactInstance`.
 
@@ -124,16 +124,16 @@ não tem um callback de quadro com timestamp de vsync: o tick que o host já lê
 
 ## A implementação
 
-1. **Flags.** [`register.cpp`](../../../native/register.cpp) sobrescreve os flags do RN
+1. **Flags.** [`register.cpp`](../../../native/register.cpp) sobrescreve as flags do RN
    uma única vez, na inicialização da extensão e antes de qualquer runtime lê-los, com
    os padrões do RN mais `cxxNativeAnimatedEnabled` e `useSharedAnimatedBackend`, a
-   configuração que os canais OSS do RN ligam; se um flag já tinha sido lido, a
+   configuração que os canais OSS do RN ligam; se uma flag já tinha sido lida, a
    extensão emite um `FABRIC_ERROR` em vez de seguir com metade da configuração.
 2. **Um backend por aplicação.** O [`NativeAnimated`](../../../native/native_animated.cpp)
    cria o `AnimationBackend` do RN sobre o `UIManager` da aplicação antes de qualquer
    JS, como o scheduler do RN faz com `useSharedAnimatedBackend`, e o
    [registro de TurboModules](../../../native/turbo_module_registry.cpp) só serve o
-   `AnimatedModule` do RN quando os dois flags estão ligados e o backend está
+   `AnimatedModule` do RN quando as duas flags estão ligadas e o backend está
    anexado. As roots de uma aplicação o compartilham.
 3. **O choreographer é o tick.** `resume()` e `pause()` só registram que o backend
    tem animações; o [runtime](../../../native/application_runtime.cpp) chama
@@ -160,8 +160,8 @@ não tem um callback de quadro com timestamp de vsync: o tick que o host já lê
    formas foram tentadas e descartadas: alternar a referência só em volta do hook de
    commit do backend falhou, porque os clones feitos fora dessa janela (clones de
    layout, `setNativeProps`) perdem a referência fraca que liga o nó ao wrapper do
-   JS e os clones seguintes do hook não conseguem redirecioná-lo; e o flag
-   experimental `updateRuntimeShadowNodeReferencesOnCommit`, desligado nos padrões
+   JS e os clones seguintes do hook não conseguem redirecioná-lo; e a flag
+   experimental `updateRuntimeShadowNodeReferencesOnCommit`, desligada nos padrões
    do 0.87.1 e nos canais OSS do RN, fazia a persistência passar mas não é o que o
    runtime publicado do RN faz. A referência de thread também faz o JS segurar o
    clone que o `setNativeProps` commita, o que mudou um contrato existente (veja
@@ -320,9 +320,9 @@ sabotagens foram refeitos na mesma árvore, com a CI do job `native-cold-start` 
 roteiro dos passos.
 
 O controle `--preceding-sdk` local dos touchables já falhava na main `fb42709` (os
-checks `sentinel` e `stop`, por mudanças posteriores no host e no SDK): reproduzi as
-mesmas 21 falhas com os arquivos de teste e de SDK da main e o host anterior. Não é
-regressão desta fatia, e a CI não o executa.
+checks `sentinel` e `stop`, por mudanças posteriores no host e no SDK): as mesmas 21
+falhas se reproduzem com os arquivos de teste e de SDK de `fb42709` e o host anterior.
+Não é regressão desta fatia, e a CI não o executa.
 
 O SDK muda para todo bundle que importa `react-native`, porque a fachada passa a
 exportar o `Animated` e o `TouchableOpacity` original. Os controles de host anterior
@@ -337,7 +337,7 @@ arquivos executados delas continuam como registros históricos do que foi observ
 na época.
 
 - **Touchables.** O `TouchableOpacity` deixa de ser um placeholder: o check
-  `mount/opacity` do suite passa a ser o mesmo de todos os touchables (o host
+  `mount/opacity` da suíte passa a ser o mesmo de todos os touchables (o host
   monta sem erro de render, em vez de lançar com o motivo do `NativeAnimatedModule`),
   e a mensagem do check `render-errors` deixa de citar o `TouchableOpacity`. A lane
   `animated`, que importava o `TouchableOpacity` original por dentro do pacote com
@@ -345,7 +345,7 @@ na época.
   falha no mount (6 checks de indisponibilidade), agora monta o `TouchableOpacity`
   público sem seam: 7 checks, com a opacidade indo de 1 a 0,5 e voltando pelo driver
   nativo. O bundle público passa a conter o `Animated` e o `TouchableOpacity`
-  originais. O suite continua em 93 checks, o controle do SDK anterior continua
+  originais. A suíte continua em 93 checks, o controle do SDK anterior continua
   falhando exatamente 19 e a sabotagem retida continua sendo rejeitada pelo oráculo.
   O [registro dos touchables](../touchables/README.md) descreve o estado daquela
   fatia, quando o `TouchableOpacity` ainda não montava.
@@ -369,7 +369,7 @@ na época.
 
 ## Limites
 
-O suite afirma o driver nativo só com props sem layout (opacidade, translação e
+A suíte afirma o driver nativo só com props sem layout (opacidade, translação e
 rotação). Fora do recibo, em execuções exploratórias únicas sobre a árvore commitada, a
 interpolação de `backgroundColor`, o `borderRadius`, `scaleX`/`scaleY`,
 `sequence`/`delay`/`loop`/`parallel` sobre timings nativos e as props de layout
@@ -381,7 +381,7 @@ transformações (`native/affine_transform.h`, contrato de uma fatia anterior) r
 matrizes cujo escalonamento em z não é 1; animar `scaleX` e `scaleY` funciona. Segue
 aberto no GF-19: `LayoutAnimation` e transições de layout, `Animated.event` nativo no
 ScrollView do SDK e os wrappers `Animated.ScrollView`, `FlatList` e `SectionList`,
-`Animated.Text` e `Animated.Image`, animação de props de layout afirmada pelo suite,
+`Animated.Text` e `Animated.Image`, animação de props de layout afirmada pela suíte,
 interpolação de `PlatformColor`, `unstable_disableBatchingForNativeCreate`, movimento reduzido,
 comportamento sob carga de JS e em background/retomada, orçamentos de quadro e heap
 (GF-30), hardware e exports Android e iOS do Godot, o `scale` uniforme e o contrato,
@@ -392,7 +392,7 @@ verificada dele; nenhum GF, outro checkpoint, peso ou denominador fecha.
 Na execução, as 89 fontes de código e configuração executadas (18 produtoras
 do bundle, 63 entradas do build nativo e 15 de verificação, com sobreposição)
 correspondem à implementação `d96383c46dde79fb9d242f89e68360d49a81663a` por
-`git show`/SHA-256, e o recibo registra os 30 fontes originais do RN que o bundle e
+`git show`/SHA-256, e o recibo registra as 30 fontes originais do RN que o bundle e
 as referências de plataforma usam. A execução foi feita na própria árvore commitada
 (base `fb42709`, árvore `6ff2ba731630912f4b4e18505f4338ebe2d45c0e` idêntica à da implementação, sem alterações
 locais), então este pin não é uma corrida nova. O recibo traz os hashes das quatro
