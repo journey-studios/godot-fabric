@@ -303,7 +303,9 @@ by frame by an independent oracle. The preceding host fails exactly its 59
 normative checks, and hosts that hand the backend seconds or leave the JS thread's
 runtime reference update off fail exactly 32 and 2. A uniform `transform: [{ scale }]`
 failed with `E_TRANSFORM_3D` then and renders since the uniform scale proof below;
-`LayoutAnimation` is open. [Evidence](docs/evidence/native-animated/README.md).
+`LayoutAnimation` is open. Hosted CI repeated the 75 checks on its second
+attempt ([receipt](docs/evidence/native-animated/hosted-ci.json)).
+[Evidence](docs/evidence/native-animated/README.md).
 
 The [uniform scale proof](examples/transforms/README.md#uniform-scale) mounts RN's
 uniform `transform: [{ scale }]` in five Hermes applications: a scale, a scale with

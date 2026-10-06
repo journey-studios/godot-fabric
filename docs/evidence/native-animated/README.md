@@ -389,9 +389,9 @@ ScrollView do SDK e os wrappers `Animated.ScrollView`, `FlatList` e `SectionList
 interpolação de `PlatformColor`, `unstable_disableBatchingForNativeCreate`, movimento reduzido,
 comportamento sob carga de JS e em background/retomada, orçamentos de quadro e heap
 (GF-30), hardware e exports Android e iOS do Godot, o `scale` uniforme e o contrato,
-a paridade e os alvos completos do item. A CI hospedada desta fatia está pendente.
-Só o checkpoint de primeira fatia do GF-19 fecha, porque esta é a primeira fatia
-verificada dele; nenhum GF, outro checkpoint, peso ou denominador fecha.
+a paridade e os alvos completos do item. Só o checkpoint de primeira fatia do GF-19
+fecha, porque esta é a primeira fatia verificada dele; nenhum GF, outro checkpoint,
+peso ou denominador fecha.
 
 > Nota posterior: a [fatia da escala uniforme](../uniform-scale/README.md) passou a aceitar esse `scale`; o parágrafo acima descreve a execução deste recibo.
 
@@ -404,3 +404,24 @@ as referências de plataforma usam. A execução foi feita na própria árvore c
 locais), então este pin não é uma corrida nova. O recibo traz os hashes das quatro
 capturas; o recibo local das sabotagens (formato v3) e os relatórios brutos ficam em
 `build/` e não entram no Git.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 0157b15 (run
+37439650201). Na primeira tentativa o `native-cold-start` caiu no `test:animated`: o
+check `native-decay/The Control changes on many frames while JS receives no
+per-frame value event` viu 4 valores distintos do Control onde o limite fixo da
+suíte pede 5, porque o laço sem teto do Godot entregou os quadros em pares (57 ms e
+depois 0,4 ms de distância) e o driver de decay do RN terminou no quadro quase
+duplicado pela regra dele; os valores estavam certos para os timestamps entregues.
+Não foi infraestrutura: o job foi reexecutado no mesmo commit e passou os 75 checks,
+e os cinco jobs terminaram verdes na segunda tentativa (`contracts`, `reference-ios`
+e `reference-android`, verdes na primeira, foram reaproveitados). Os commits
+`381a8b4` e `634285f`, mesclados com o #42, trocaram esse limite fixo por regras
+independentes do ritmo, e o relógio de quadros do #43 paciou o laço pelo display. O
+artefato `native-animated` da segunda tentativa repete os **75 checks headless** com
+IDs e bundle idênticos aos fixados; o oráculo independente aceita o relatório
+baixado, e os 59 checks que o host anterior falha, os 32 da sabotagem `frames` e os
+2 da sabotagem de persistência passam todos no run. Os 89 arquivos rastreados batem
+com `d96383c` na árvore do checkout. O [Pages](publication.json) (run 37439650214)
+implantou exatamente os dados commitados de 0157b15; o site público já foi
+substituído pelo deploy seguinte da `main`. Nenhum GF, checkpoint, peso ou
+denominador fecha.

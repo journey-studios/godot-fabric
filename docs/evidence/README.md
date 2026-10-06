@@ -342,7 +342,9 @@ agrees with the Controls to rounding; mouse and touch presses dim the
 JS thread does not update the shadow node references it holds fails 2; the oracle
 rejects both. The record also updates two earlier contracts (the touchables suite
 renders `TouchableOpacity`; a tree children-only commit keeps an imperative native
-ID) and keeps their executed files as history. Four captures. Hosted CI pending.
+ID) and keeps their executed files as history. Four captures. Hosted run
+37439650201 repeated the 75 checks on its second attempt, after the first failed one
+check of the native decay ([receipt](native-animated/hosted-ci.json)).
 
 The [uniform scale record](uniform-scale/README.md) accepts RN's
 `transform: [{ scale }]`, which the transforms guard rejected because RN writes it

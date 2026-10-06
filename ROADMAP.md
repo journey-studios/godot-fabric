@@ -2270,9 +2270,22 @@ suites (23 examples/2,260 checks, Down 2,731, Document Up 6,459, View Up 297, Mo
 Appearance 79, Switch 108, shared touches 92, touchables 93, ActivityIndicator 33,
 Animated 75) and the native SDK batch pass. All 89 executed code/configuration
 inputs match implementation d96383c via git show/SHA-256 (executed from the
-committed tree, execution base fb42709). Hosted CI for this slice is
-pending. Only GF-19's first-slice checkpoint closes; no whole GF, other checkpoint,
-weight or denominator closes.
+committed tree, execution base fb42709). Hosted Contracts run 37439650201 (the
+push of main 0157b15) passed all five jobs in its second attempt: the first
+attempt failed `native-cold-start` in `test:animated` on one check of the native
+decay (4 distinct Control values where the probe's fixed threshold asks for 5,
+because the uncapped headless loop delivered frames in pairs 57 ms and 0.4 ms
+apart and RN's decay driver ended at the near-duplicate frame), and the rerun of
+the failed jobs passed 75 of 75 on the same commit; commits `381a8b4` and
+`634285f` (#42) later replaced that threshold with pacing-independent rules. Its
+[audited artifact](docs/evidence/native-animated/hosted-ci.json) repeats the 75
+headless checks with identical IDs and bundle, the independent oracle accepts
+the downloaded report and every check the preceding-host control and the two
+sabotages fail passes. All 89 tracked inputs match the checkout tree and
+implementation d96383c. [Pages
+37439650214](docs/evidence/native-animated/publication.json) deployed this
+record from main 0157b15. Only GF-19's first-slice checkpoint closes; no whole
+GF, other checkpoint, weight or denominator closes.
 
 ### Uniform scale on Godot transforms (2026-10-06)
 
