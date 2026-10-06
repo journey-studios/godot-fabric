@@ -547,6 +547,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         [this, id](int tag, bool root_target, const std::string &phase, rn::PointerEvent event, Vector2 point,
             std::shared_ptr<fabric_godot::PointerGeometryHistory> history) {
           pointer_event(id, tag, root_target, phase, std::move(event), point, std::move(history));
+        },
+        [this, id]() {
+          // Every root of this application shares one Hermes runtime and so
+          // one JS responder and touch history.
+          std::vector<rn::Touch> active;
+          for (const auto &[other, root] : roots) {
+            if (other == id || !root->pointer) continue;
+            for (const auto &touch : root->pointer->touches()) active.push_back(touch);
+          }
+          return active;
         });
     if (defer_start) surface.start_pending = true;
     else start_root(id);

@@ -43,6 +43,7 @@
     "tests/pointer-document-up-fixture.jsx",
     "tests/app-state-fixture.jsx",
     "tests/switch-fixture.jsx",
+    "tests/shared-touches-fixture.jsx",
     "tests/appearance-fixture.jsx"
   ],
   "ignorePatterns": [

@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "3",
-    "focusTitle": "PanResponder original validado nas quatro lanes; próximos: CI desta fatia e as entregas paralelas (AppState, Touchables, Switch)"
+    "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; Switch na main; próximos: Touchables (#30), Appearance (#35), ActivityIndicator, listas virtualizadas e notificações de captura"
   },
-  "updatedAt": "2026-10-05T23:33:49.007688+00:00",
+  "updatedAt": "2026-10-05T23:40:50.400304+00:00",
   "source": {
-    "commit": "b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/b880b9b3d0a60b5633f74d0b7e4719a3a0df62c0",
-    "scope": "Click sintetizado na soltura e takeover do ScrollView: o host emite topClick quando o ponteiro primário solta o botão principal, para a View montada mais profunda comum aos caminhos do Down e do Up (Android/W3C), com o filtro de primário e botão 0 do iOS; nada quando só a raiz é comum. O click copia a amostra do Up (ponteiro, ponto, timestamp, sem botões), com offset local ao alvo, em prioridade Discrete, depois do Up e antes do TouchEnd, e nunca consulta Maps de listener. Um arrasto do ScrollView do SDK assume os contatos que começaram nele: um pointercancel e depois só toques, sem Up nem click. O SDK declara topClick/onClick/onClickCapture no view config base (sem isso o plugin legado rejeita cada click) e o Pressable mantém o onClick do Pressability, que ignora clicks de ponteiro. Oito lanes com 728 checks headless; host anterior falha exatamente 31; controles negativos (host que clica o alvo do Up: 10 falhas; SDK sem topClick: erro em cada click no modo legado) rejeitados pelo oráculo independente. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
+    "commit": "1b7dac52794ffd13257857621942c5df20ca127b",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/1b7dac52794ffd13257857621942c5df20ca127b",
+    "scope": "Toques compartilhados entre raízes: cada TouchEvent lista os toques ativos de todas as raízes da aplicação, porque elas compartilham o único responder JS do RN; um toque que termina em outra raiz não reivindica nem solta o gesto que uma raiz segura enquanto o toque dela continua; um toque cancelado ainda termina o responder único, como numa superfície do RN. As plataformas do RN mantêm uma lista por superfície, então é um desvio deliberado a favor da semântica de superfície única; o ReactNativeResponder (flags de dispatch nativo) só libera quando não resta toque, como numa superfície do RN. Quatro lanes com 92 checks headless; host anterior falha exatamente 9; dois contratos antigos (dispatch integrado e pointer-geometry) passam a esperar a lista da aplicação. CI desta fatia pendente. Nenhum GF/checkpoint/peso/denominador fechado.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/14"
   },
   "phases": [
@@ -1302,7 +1302,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "DocumentUp once/pre-aborted/abort-after-first passaram2143/oito SDK-flaglanes e414viewport/62pixels. Once A12/B2→A13/B2→A13/B2:1commit primeiro,zero segundo;36/37negativos/semRawUp,TouchEnd/cleanup reais. Sinal originalfalse→true, manualpré/pósabort e controle originalSDKonce passam. Down2723/contracts255Node13Python/static. CI baseline 842 1371/5 jobs verificada; CI lifecycle 37246479501 5 jobs/2143 checks auditada. View/element/outrasfases lifecycle,dispatchmutation/capturedUp/DownUpID/move/hover/responders/mobile/dev/performance abertos. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais; CI mutação 37319530371 repetiu 4401 checks em c7e5037. Reentrância DocUp: dispatch aninhado num callback nativo roda untrusted em fase 2 e Discrete, o Up retoma trusted com estado intacto, re-despachar o próprio Up lança; 5097 headless/946 viewport locais; CI reentrância 37321794370 repetiu 5097 checks em 4a907dd. Faults DocUp: throw/não booleano no root nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture ainda qualifica após fault no bubble; Up não qualificado mantém TouchEnd e limpeza; 6451 headless/1179 viewport/132 pixels locais; CI faults 37328158081 repetiu 6451 checks em 6f9e10c. Faults View Up: throw/não booleano na View nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture da mesma View ainda qualifica após fault no bubble; View não qualificada passa a consulta aos ancestrais e ao root; 240 headless/268 viewport locais; CI 37330669524 repetiu 240 checks em 01d3add. Resolver View Up: getter em canonical.publicInstance falha o lookup antes do SDK com 1 diagnóstico; o lookup seguinte lê o descriptor restaurado; 296 headless/324 viewport locais; CI 37332057453 repetiu 296 checks em b02ab93. Move View: listeners imperativos de pointermove (alvo e pai) qualificam moves nativos de toque e mouse (offsets 1/25); fases 2, 3 e 1; 1 callback trusted e 1 commit por amostra em prioridade Default; B consulta o caminho inteiro false; falhas de lookup de Move retidas uma vez por causa (até 16) e repetições contadas; 219 headless/243 viewport locais, host anterior 45 falhas; CI 37345287351 repetiu 219 checks em 4ca3f1f. Move Document: listeners originais de pointermove em Document/documentElement qualificam moves pela consulta da raiz só no interesse current com D (documentElement também exige I); fases 1 e 3; 1932 headless/330 viewport locais, controle negativo retido; CI 37351245158 repetiu 1932 checks em 46876eb. Hover View: listeners imperativos de pointerover/out/enter/leave qualificam o hover nativo de mouse e toque na ordem e nas fases do RN (prioridade Discrete), enter/leave sem bubbling na raiz; 158 headless locais, host anterior 32 falhas; CI 37352693788 repetiu 158 checks em fcaae01; área vazia sem alvo: o RN resolve a raiz, cujos eventos não chegam ao JS, mas a mantém no caminho de hover; entra na certificação de hover em Document. Caminho da raiz: ponto vazio dentro da superfície resolve para a raiz, que fica no caminho de hover e nunca é alvo; corrige o crash com capture de enter/leave no Document; 82 headless locais, host anterior 9 falhas e crash; CI 37359026197 repetiu 82 checks em a478778. Hover Document: listeners originais de over/out/enter/leave em Document/documentElement nas oito lanes; over/out em fases 1 e 3, enter/leave só no capture ao entrar e sair da superfície; 1530 headless locais, controle negativo retido; CI 37364101069 repetiu 1530 checks em 15e1dda. Click: soltura primária do botão principal clica a View montada mais profunda comum ao Down e ao Up; takeover do ScrollView cancela o contato; SDK declara topClick; 728 headless locais, host anterior 31 falhas, controles negativos retidos; CI 37375758262 repetiu 728 checks em 72155bc. PanResponder: o módulo original do RN substitui o stub que lançava erro; arrastos de toque e mouse, dois dedos, negociação com pai que reivindica, filho que recusa e pai de captura, remoção no meio do gesto; 128 headless locais nas quatro lanes, SDK anterior falha na montagem, sabotagem retida, CI pendente.",
+      "note": "DocumentUp once/pre-aborted/abort-after-first passaram2143/oito SDK-flaglanes e414viewport/62pixels. Once A12/B2→A13/B2→A13/B2:1commit primeiro,zero segundo;36/37negativos/semRawUp,TouchEnd/cleanup reais. Sinal originalfalse→true, manualpré/pósabort e controle originalSDKonce passam. Down2723/contracts255Node13Python/static. CI baseline 842 1371/5 jobs verificada; CI lifecycle 37246479501 5 jobs/2143 checks auditada. View/element/outrasfases lifecycle,dispatchmutation/capturedUp/DownUpID/move/hover/responders/mobile/dev/performance abertos. Refs DocUp: rerender mantém Document/root/ref; retirar A com contato ativo entrega 1 TouchCancel e nenhum Up; listeners retidos inertes no root novo; release do contato cancelado descartado; 2709 headless/535 viewport/90 pixels locais; CI refs 37310815360 repetiu 2709 checks em 862e39d. Mutação DocUp: remove/abort de pendente pulado no mesmo Up, add no mesmo Map só no próximo gesto, bubble adicionado no capture roda no mesmo Up com consulta só de capture; 4401 headless/835 viewport/118 pixels locais; CI mutação 37319530371 repetiu 4401 checks em c7e5037. Reentrância DocUp: dispatch aninhado num callback nativo roda untrusted em fase 2 e Discrete, o Up retoma trusted com estado intacto, re-despachar o próprio Up lança; 5097 headless/946 viewport locais; CI reentrância 37321794370 repetiu 5097 checks em 4a907dd. Faults DocUp: throw/não booleano no root nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture ainda qualifica após fault no bubble; Up não qualificado mantém TouchEnd e limpeza; 6451 headless/1179 viewport/132 pixels locais; CI faults 37328158081 repetiu 6451 checks em 6f9e10c. Faults View Up: throw/não booleano na View nos offsets 36/37 rejeitam só aquele lookup com 1 diagnóstico; capture da mesma View ainda qualifica após fault no bubble; View não qualificada passa a consulta aos ancestrais e ao root; 240 headless/268 viewport locais; CI 37330669524 repetiu 240 checks em 01d3add. Resolver View Up: getter em canonical.publicInstance falha o lookup antes do SDK com 1 diagnóstico; o lookup seguinte lê o descriptor restaurado; 296 headless/324 viewport locais; CI 37332057453 repetiu 296 checks em b02ab93. Move View: listeners imperativos de pointermove (alvo e pai) qualificam moves nativos de toque e mouse (offsets 1/25); fases 2, 3 e 1; 1 callback trusted e 1 commit por amostra em prioridade Default; B consulta o caminho inteiro false; falhas de lookup de Move retidas uma vez por causa (até 16) e repetições contadas; 219 headless/243 viewport locais, host anterior 45 falhas; CI 37345287351 repetiu 219 checks em 4ca3f1f. Move Document: listeners originais de pointermove em Document/documentElement qualificam moves pela consulta da raiz só no interesse current com D (documentElement também exige I); fases 1 e 3; 1932 headless/330 viewport locais, controle negativo retido; CI 37351245158 repetiu 1932 checks em 46876eb. Hover View: listeners imperativos de pointerover/out/enter/leave qualificam o hover nativo de mouse e toque na ordem e nas fases do RN (prioridade Discrete), enter/leave sem bubbling na raiz; 158 headless locais, host anterior 32 falhas; CI 37352693788 repetiu 158 checks em fcaae01; área vazia sem alvo: o RN resolve a raiz, cujos eventos não chegam ao JS, mas a mantém no caminho de hover; entra na certificação de hover em Document. Caminho da raiz: ponto vazio dentro da superfície resolve para a raiz, que fica no caminho de hover e nunca é alvo; corrige o crash com capture de enter/leave no Document; 82 headless locais, host anterior 9 falhas e crash; CI 37359026197 repetiu 82 checks em a478778. Hover Document: listeners originais de over/out/enter/leave em Document/documentElement nas oito lanes; over/out em fases 1 e 3, enter/leave só no capture ao entrar e sair da superfície; 1530 headless locais, controle negativo retido; CI 37364101069 repetiu 1530 checks em 15e1dda. Click: soltura primária do botão principal clica a View montada mais profunda comum ao Down e ao Up; takeover do ScrollView cancela o contato; SDK declara topClick; 728 headless locais, host anterior 31 falhas, controles negativos retidos; CI 37375758262 repetiu 728 checks em 72155bc. PanResponder: o módulo original do RN substitui o stub que lançava erro; arrastos de toque e mouse, dois dedos, negociação com pai que reivindica, filho que recusa e pai de captura, remoção no meio do gesto; 128 headless locais nas quatro lanes, SDK anterior falha na montagem, sabotagem retida; CI 37385104730 repetiu os 128 checks em 2ec988e. Toques compartilhados: cada TouchEvent lista os toques de todas as raízes da aplicação, como o responder único do RN espera; o fim de um toque em outra raiz não solta mais o press de uma raiz que segura o próprio toque (um cancel ainda termina o responder único); 92 headless nas quatro lanes, host anterior falha 9, CI pendente.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1509,6 +1509,14 @@
             {
               "label": "PanResponder original: 128 checks em quatro lanes, SDK anterior e sabotagem",
               "url": "https://github.com/journey-studios/godot-fabric/blob/0a19e397d9294ee3d82d192be5101e716d6c623a/docs/evidence/pan-responder/README.md"
+            },
+            {
+              "label": "Toques compartilhados: 92 checks em quatro lanes, host anterior com 9 falhas",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/417d08a8ae9e9a146a1a48b20daea958c387a7b5/docs/evidence/shared-touches/README.md"
+            },
+            {
+              "label": "CI PanResponder 37385104730: 5 jobs, 128 checks e 11 fontes auditadas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730"
             }
           ]
         },
@@ -1867,7 +1875,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo. Appearance e useColorScheme originais do RN pelo import público, alimentados pelo tema do sistema do DisplayServer e pelo override de setColorScheme: override light/dark vence, unspecified/auto seguem o sistema, sem modo escuro começa em light, evento só quando o esquema efetivo muda e stop sem evento; 67 headless, host anterior falha exatamente 45 e um host que emite a cada callback falha 17, rejeitado pelo oráculo.",
+      "note": "AppState original do RN pelo import público, alimentado por FOCUS_IN/OUT, PAUSED/RESUMED e aviso de memória que o SceneTree propaga ao FabricApplication: sem foco é inactive, pausado é background, só estados novos, focus/blur a cada mudança de foco e stop sem evento; 75 headless, host anterior falha exatamente 62 e um host com foco acima da pausa falha 5, rejeitado pelo oráculo. CI 37382633328 repetiu os 75 checks em 8f80fed, após reexecutar o reference-android por falha de infraestrutura. Appearance e useColorScheme originais do RN pelo import público, alimentados pelo tema do sistema do DisplayServer e pelo override de setColorScheme: override light/dark vence, unspecified/auto seguem o sistema, sem modo escuro começa em light, evento só quando o esquema efetivo muda e stop sem evento; 67 headless, host anterior falha exatamente 45 e um host que emite a cada callback falha 17, rejeitado pelo oráculo.",
       "blocker": "",
       "checkpoints": [
         {
@@ -1878,6 +1886,10 @@
             {
               "label": "AppState: 75 checks, host anterior com 62 falhas normativas e sabotagem rejeitada",
               "url": "https://github.com/journey-studios/godot-fabric/blob/1024b45ff8fa58b7436b3cf30352d9ef3e2e65f1/docs/evidence/app-state/README.md"
+            },
+            {
+              "label": "CI AppState 37382633328: 5 jobs (reference-android reexecutado), 75 checks e 70 entradas auditadas",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328"
             },
             {
               "label": "Appearance: 67 checks, host anterior com 45 falhas normativas e sabotagem rejeitada",
@@ -3330,6 +3342,33 @@
       ],
       "message": "Appearance e useColorScheme do tema do sistema: 67 headless. Os módulos originais do RN, lidos pelo import público, recebem o tema do DisplayServer pelo Callable registrado no callback de tema do sistema e o override de setColorScheme; duas roots re-renderizam o mesmo esquema. Override light/dark vence, unspecified/auto voltam ao sistema, sem modo escuro começa em light, valor desconhecido falha com E_ARGUMENT e o evento só sai quando o efetivo muda. Host anterior falha exatamente 45; host que emite a cada callback falha 17 e o oráculo rejeita. CI pendente.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/80d79da4c3d05e3d677292dec175a03497b27d0c/docs/evidence/appearance/README.md"
+    },
+    {
+      "id": "pan-responder-hosted-ci-and-pages-20261005",
+      "at": "2026-10-05T23:40:50.400304+00:00",
+      "taskIds": [
+        "GF-13"
+      ],
+      "message": "CI hospedada do PanResponder: o push da main em 2ec988e (run 37385104730) passou nos cinco jobs na primeira tentativa e repetiu os 128 checks nas quatro lanes com IDs e callbacks idênticos aos fixados e os bundles da árvore mesclada com o AppState. Pages 37385104756 implantou exatamente os dados de 2ec988e e o JSON público confere.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730"
+    },
+    {
+      "id": "app-state-hosted-ci-and-pages-20261005",
+      "at": "2026-10-05T23:40:50.400304+00:00",
+      "taskIds": [
+        "GF-21"
+      ],
+      "message": "CI hospedada do AppState: o push da main em 8f80fed (run 37382633328) passou nos cinco jobs depois de reexecutar o reference-android, que caiu ao baixar o emulador; o artefato repetiu os 75 checks com IDs e bundle idênticos e 70 entradas iguais à implementação 7087679. Pages 37382633232 implantou exatamente os dados de 8f80fed.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37382633328"
+    },
+    {
+      "id": "shared-touches-local-verified-20261005",
+      "at": "2026-10-05T23:26:04.485287+00:00",
+      "taskIds": [
+        "GF-13"
+      ],
+      "message": "Toques compartilhados entre raízes em quatro lanes: 92 headless. Cada raiz listava só os próprios toques, então um toque que terminava na raiz B soltava o responder da raiz A e o Pressable de A pressionava com o toque de B; agora cada evento lista os toques da aplicação inteira, como uma superfície única do RN. Quando o toque do próprio responder termina antes, o plugin legado solta na hora e o ReactNativeResponder espera o último toque, como no RN. Host anterior falha exatamente 9; sete controles de host anterior refeitos. CI pendente.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/417d08a8ae9e9a146a1a48b20daea958c387a7b5/docs/evidence/shared-touches/README.md"
     },
     {
       "id": "pan-responder-local-verified-20261005",

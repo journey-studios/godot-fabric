@@ -78,8 +78,15 @@ Pinch zoom por bibliotecas de gráfico, handles do `InteractionManager`,
 velocidade em hardware real, ScrollViews aninhados e negociação com controles
 nativos do Godot seguem abertos.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
-ou denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 2ec988e (run
+37385104730), com os cinco jobs verdes na primeira tentativa. O artefato
+`native-pan-responder` repete os **128 checks headless** nas quatro lanes com IDs e
+callbacks idênticos aos fixados e os bundles da segunda corrida de revisão (a árvore
+mesclada com o AppState); as 11 fontes produtoras batem com os bytes esperados, e as
+três entradas de verificação que diferem dos pins de b3327e4 vêm da mescla do
+AppState, como registra o recibo. O [Pages](publication.json) (run 37385104756)
+implantou exatamente os dados de 2ec988e, e o JSON público confere com eles. Nenhum
+GF, checkpoint, dependência, peso ou denominador foi fechado.
 
 Na revisão, a comparação entre lanes passou a incluir `x0`, `y0`, `moveX` e
 `moveY` (antes cobria callbacks, deslocamento e toques ativos). O runner de

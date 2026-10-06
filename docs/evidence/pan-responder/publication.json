@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-05T23:36:18.372339+00:00",
+  "run": 37385104756,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104756",
+  "event": "push",
+  "branch": "main",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/32",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "buildCheckout": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+  "dashboardTestsTap": {
+    "pass": 8,
+    "fail": 0
+  },
+  "dataCommit": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+  "rendererCommit": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+  "inMain": true,
+  "mainHeadAtCheck": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+  "deployment": {
+    "id": 6871201977,
+    "sha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+    "state": "success",
+    "at": "2026-10-05T22:52:05Z",
+    "environmentUrl": "https://journey-studios.github.io/godot-fabric/"
+  },
+  "deployedArtifact": {
+    "name": "github-pages",
+    "id": 11377620525,
+    "zipSha256": "efde8ceee7858719c656ca04ac0cef7e671bcea58c5f0e8a382b92f858d6a7a6",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "files": [
+      ".nojekyll",
+      "AGENT_PROMPT.md",
+      "app.mjs",
+      "fonts/JetBrainsMono.ttf",
+      "fonts/NotoSans.ttf",
+      "fonts/OFL-JetBrainsMono.txt",
+      "fonts/OFL-NotoSans.txt",
+      "index.html",
+      "migration.json",
+      "model.mjs",
+      "style.css"
+    ],
+    "migrationJsonSha256": "8597f7eb592cff140f1593da1d1ec647e796ce329c6f0d90b140fb54b5ca2b65",
+    "publicationMetadataPresent": false
+  },
+  "deployedJSONEqualsCommittedData": true,
+  "deployedJSONBytesEqualCommittedBytes": true,
+  "committedMigrationJsonSha256": "8597f7eb592cff140f1593da1d1ec647e796ce329c6f0d90b140fb54b5ca2b65",
+  "deployedRendererEqualsCommittedDashboard": true,
+  "deployedRendererFiles": [
+    "index.html",
+    "app.mjs",
+    "model.mjs",
+    "style.css",
+    "AGENT_PROMPT.md"
+  ],
+  "deployedFontsEqualCommittedAssets": true,
+  "livePublicSite": {
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "state": "current",
+    "fetchedAt": "2026-10-05T23:34:49Z",
+    "fetchedWith": "curl (plain URL, plus a cache-busting query for comparison)",
+    "httpLastModified": "Mon, 05 Oct 2026 22:51:59 GMT",
+    "httpEtag": "\"6ac42a0f-3d8ae\"",
+    "publicBytesSha256": "8597f7eb592cff140f1593da1d1ec647e796ce329c6f0d90b140fb54b5ca2b65",
+    "publicBytesEqualDeployedArtifact": true,
+    "cacheBustedFetchIdentical": true,
+    "fullPublicJSONEqualsCommittedData": true,
+    "liveRendererEqualsCommittedDashboard": true,
+    "liveFontsEqualCommittedAssets": true,
+    "mainHeadAtCheck": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+    "mainHasNotMovedSince": true,
+    "latestPagesDeployment": {
+      "id": 6871201977,
+      "sha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+      "run": 37385104756
+    },
+    "latestPagesDeploymentIsThisRun": true,
+    "laterPagesRuns": [
+      {
+        "run": 37389293372,
+        "event": "pull_request",
+        "branch": "feat/appearance-color-scheme",
+        "deploy": "skipped"
+      },
+      {
+        "run": 37388532210,
+        "event": "pull_request",
+        "branch": "fix/application-wide-touches",
+        "deploy": "skipped"
+      },
+      {
+        "run": 37385430348,
+        "event": "pull_request",
+        "branch": "feat/switch-control",
+        "deploy": "skipped"
+      }
+    ],
+    "laterPagesRunsAreBuildOnlyPullRequests": true
+  },
+  "findings": []
+}
