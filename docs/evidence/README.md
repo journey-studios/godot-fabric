@@ -273,7 +273,8 @@ nesting and removal mid-press follow RN. The same fixture on the preceding SDK
 fails exactly its 19 render checks; a retained imitation over the SDK Pressable
 fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
 lane shows RN's original TouchableOpacity failing at mount without
-`NativeAnimatedModule`. Hosted CI pending.
+`NativeAnimatedModule`. Hosted run 37394073082 repeated the 93 checks and the
+animated lane's 6 ([receipt](touchables/hosted-ci.json)).
 
 The [ActivityIndicator record](activity-indicator/README.md) runs RN's original
 `ActivityIndicator.js` over the generated `ActivityIndicatorView` descriptor and

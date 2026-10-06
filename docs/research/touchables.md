@@ -6,6 +6,8 @@ checks, the preceding-SDK control, the retained sabotage and the regressions.
 `TouchableWithoutFeedback` and `TouchableHighlight` are public; `TouchableOpacity`
 stays an explicit placeholder because RN's Animated needs a native module this
 host does not provide.
+Hosted run 37394073082 repeated the 93 checks and the animated lane's 6
+([receipt](../evidence/touchables/hosted-ci.json)).
 
 ## What RN's touchables are
 

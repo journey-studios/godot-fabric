@@ -248,7 +248,8 @@ modules and Pressability: callback order, native underlay and child opacity,
 mid-press under real mouse and touch on two roots, 93 headless checks. The same
 fixture on the preceding SDK fails exactly its 19 render checks, and a retained
 imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
-Animated needs `NativeAnimatedModule`.
+Animated needs `NativeAnimatedModule`. Hosted CI repeated the 93 checks
+([receipt](docs/evidence/touchables/hosted-ci.json)).
 [Evidence](docs/evidence/touchables/README.md).
 
 The [ActivityIndicator example](examples/activity-indicator/README.md) renders

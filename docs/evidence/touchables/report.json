@@ -1093,7 +1093,12 @@
     "tests/touchables-probe.gd"
   ],
   "hostedCI": {
-    "status": "pending-touchables-slice"
+    "status": "verified",
+    "run": 37394073082,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37394074068,
+    "publication": "publication.json"
   },
   "limits": [
     "TouchableOpacity stays an explicit placeholder: RN 0.87.1 Animated.View needs NativeAnimatedModule at mount (GF-19).",

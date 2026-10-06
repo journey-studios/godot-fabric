@@ -1935,8 +1935,15 @@ All 30 executed code/configuration inputs match implementation 0e18060 via git
 show/SHA-256 (execution base 15e1dda/dirty retained). The wrong-root release of
 concurrent presses is fixed in the host by the shared touches slice;
 concurrent presses with the touchables themselves, TouchableNativeFeedback, focus and keyboard activation, accessibility, click
-synthesis, typed declarations and hardware remain open. Hosted CI for this slice
-is pending. No whole GF, checkpoint, weight or denominator closes.
+synthesis, typed declarations and hardware remain open. Hosted Contracts run
+37394073082 (the push of main 946e624) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/touchables/hosted-ci.json) repeats
+the 93 headless checks and the 6 of the animated lane; every check the
+preceding-SDK control and the sabotage fail passes. All 30 tracked inputs match
+the checkout tree (7 differ from 0e18060 through commits main gained
+afterwards). [Pages 37394074068](docs/evidence/touchables/publication.json)
+deployed this record from main 946e624. No whole GF, checkpoint, weight or
+denominator closes.
 
 ### ActivityIndicator over a native Godot spinner (2026-10-05)
 
