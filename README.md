@@ -230,7 +230,8 @@ application's touches, as RN's one JS responder expects, so a touch ending in
 one root no longer releases a press held in another while that press's own
 touch is down; a canceled touch still terminates the one responder, as on one RN
 surface. 92 headless checks in four flag lanes; the preceding host fails exactly
-9. [Evidence](docs/evidence/shared-touches/README.md).
+9. Hosted CI repeated the 92 checks ([receipt](docs/evidence/shared-touches/hosted-ci.json)).
+[Evidence](docs/evidence/shared-touches/README.md).
 
 The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
 over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual

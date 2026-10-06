@@ -3,7 +3,9 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/shared-touches/README.md) owns the 92
 headless checks in four flag lanes and the preceding-host control. Public
-EventTarget flags remain disabled. Hosted CI for this slice is pending.
+EventTarget flags remain disabled.
+Hosted run 37392899167 repeated the 92 checks with identical IDs and callbacks
+([receipt](../evidence/shared-touches/hosted-ci.json)).
 
 ## What RN's responder assumes
 

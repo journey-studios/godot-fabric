@@ -1828,8 +1828,14 @@ Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
 host. Pointer capture across roots, several touch devices, hardware and mobile
 exports remain open. All 16 executed code/configuration inputs match
 implementation 1b7dac5 via git show/SHA-256 (execution base 283065d/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+retained). Hosted Contracts run 37392899167 (the push of main 8b87d78) passed
+all five jobs in the first attempt; its [audited
+artifact](docs/evidence/shared-touches/hosted-ci.json) repeats the 92 headless
+checks with identical IDs and callbacks, including the responders' documented
+divergence. All 16 tracked inputs match the checkout tree (6 differ from 1b7dac5
+through commits main gained afterwards). [Pages
+37392898967](docs/evidence/shared-touches/publication.json) deployed this record
+from main 8b87d78. No whole GF, checkpoint, weight or denominator closes.
 
 ### Switch over a native Godot switch (2026-10-05)
 

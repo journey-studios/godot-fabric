@@ -250,7 +250,8 @@ JS responder: 92 headless checks in four flag lanes over two roots' original
 while the press's own touch is down, while a canceled touch still terminates the
 one responder; the two responder implementations differ only where RN's do,
 when the responder's own touch ends first. The preceding host fails exactly the 9 normative checks.
-Hosted CI pending.
+Hosted run 37392899167 repeated the 92 checks with identical IDs and
+callbacks ([receipt](shared-touches/hosted-ci.json)).
 
 The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's
 shared iOS/macOS Switch descriptor and a custom-drawn Godot switch: 108/108
