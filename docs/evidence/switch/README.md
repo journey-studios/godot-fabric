@@ -191,3 +191,15 @@ Ativação por teclado e foco, acessibilidade (`accessibilityRole="switch"`),
 animação e arrasto do polegar, cores e tamanhos padrão por alvo do Godot, o
 caminho Android, hardware, exports mobile e performance seguem abertos. Nenhum
 GF, checkpoint, peso ou denominador fecha.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em f165b82 (run
+37390584578), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-switch` do job nativo repete os **108 checks headless**; o oráculo
+independente aceita de novo o relatório baixado, o bundle é o da segunda mescla
+registrada em `mergeReverifications` e as observações fixadas se repetem, exceto o
+`topClick` que a síntese de click (#29) acrescenta aos dois estágios desabilitados.
+Os 72 arquivos rastreados batem com a árvore do checkout; 17 diferem de `a10b19e`
+porque commits da `main` os mudaram depois, como lista o recibo. O
+[Pages](publication.json) (run 37390584738) implantou exatamente os dados commitados
+de f165b82; o site público já foi substituído pelo deploy seguinte da `main`. Nenhum
+GF, checkpoint, peso ou denominador fecha.

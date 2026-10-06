@@ -259,7 +259,8 @@ fixed values, disabled input, colors, the 63×28 default frame (RN's iOS 26 size
 `setValue`, removal mid-press and the bubbling `topChange` registry are covered.
 The preceding host fails exactly the 2 mount checks; a retained sabotage of the
 native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
-CI pending.
+run 37390584578 repeated the 108 checks and the oracle accepts its report
+([receipt](switch/hosted-ci.json)).
 
 The [touchables record](touchables/README.md) runs RN's original
 `TouchableWithoutFeedback` and `TouchableHighlight` from the public facade with

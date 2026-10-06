@@ -1870,8 +1870,15 @@ code/configuration inputs match implementation a10b19e via git show/SHA-256
 (battery base 3e2dc2d; the amend touched only test/config files, whose readers
 were rerun). Keyboard activation and focus, accessibility, animation and thumb
 dragging, the Android path, per-target defaults, hardware and mobile exports
-remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+remain open. Hosted Contracts run 37390584578 (the push of main f165b82) passed
+all five jobs in the first attempt; its [audited
+artifact](docs/evidence/switch/hosted-ci.json) repeats the 108 headless checks,
+the independent oracle accepts the downloaded report and the recomputed
+observations equal the pinned ones except the topClick row that main's click
+synthesis adds to the two disabled stages. All 72 tracked inputs match the
+checkout tree (17 differ from a10b19e through commits main gained afterwards).
+[Pages 37390584738](docs/evidence/switch/publication.json) deployed this record
+from main f165b82. No whole GF, checkpoint, weight or denominator closes.
 
 
 ### Original TouchableWithoutFeedback and TouchableHighlight (2026-10-05)

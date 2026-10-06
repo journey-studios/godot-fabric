@@ -237,6 +237,7 @@ over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
 mouse clicks and touch taps toggle it, `onChange`/`onValueChange` follow RN's
 order, and Switch.js's `setValue` restores a value prop that does not change.
 108 headless checks in two roots; the preceding host fails the 2 mount checks.
+Hosted CI repeated the 108 checks ([receipt](docs/evidence/switch/hosted-ci.json)).
 [Evidence](docs/evidence/switch/README.md).
 
 The [touchables example](examples/touchables/README.md) makes
