@@ -128,6 +128,20 @@ O host segue o RN; o W3C fica documentado como diferença conhecida.
 - **Hover após o Up do mouse.** O W3C envia os eventos de fronteira logo depois
   do lost; o RN espera o próximo evento do ponteiro.
 
+## Mescla com a main
+
+Depois da execução, a `main` recebeu o Switch (#33), os toques compartilhados
+(#34), os touchables (#30) e o ActivityIndicator (#36). Ela foi mesclada na
+branch em `803850c` e de novo em `0580af7` (`main` em `54ede87`), sem rebase,
+para manter `6ad77b8` e `c23d928` alcançáveis; os conflitos eram só de anexo. O
+host da árvore mesclada (`348be739…`) e o bundle do SDK mudaram; nele a suíte
+passou de novo nas oito lanes (672 checks, 71 s), com os mesmos IDs, sequências,
+coordenadas, entregas e estados de captura da corrida fixada, e o oráculo aceita
+os oito relatórios. Também passaram o Switch (108), os toques compartilhados
+(92), os touchables (93), o ActivityIndicator (33), `test:recovery` e os três
+gates do job `contracts` (262 testes Node e 13 Python). O recibo registra essa
+corrida em `mergeReverification`.
+
 ## Limites
 
 Offsets de hover (projeção por alvo do host), captura sob transformações, caneta,

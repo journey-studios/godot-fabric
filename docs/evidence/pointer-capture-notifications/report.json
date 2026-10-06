@@ -1039,5 +1039,164 @@
     "verificationSourcePins": 3,
     "mismatches": [],
     "executedOnImplementationCommit": true
+  },
+  "mergeReverification": {
+    "reason": "main moved to 54ede87 (Switch #33, shared touches #34, touchables #30, ActivityIndicator #36) after the slice was executed; merged twice without rebase so 6ad77b8 and c23d928 stay reachable",
+    "mergeCommits": [
+      "803850cd12450dedbd6bffd734f62561d0b08aed",
+      "0580af7dc71699548723e4fdb8c6baf7fedf89bc"
+    ],
+    "mainCommit": "54ede8737eae381b94db45bb31c3f1791718ff76",
+    "executedTree": "0580af7dc71699548723e4fdb8c6baf7fedf89bc",
+    "nativeHostSha256": "348be739e7f6520cb91e88053984e2248eb24c6859f4626a8ee2c87576694496",
+    "nativeHostChangedByMain": true,
+    "sdkBundleChangedByMain": true,
+    "headlessChecks": 672,
+    "lanes": [
+      {
+        "interest": "original",
+        "flagMode": "disabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "361033e09c059e52d682c141a4e8be933f170b67be14495223f09e0092d1f2da",
+        "reportSha256": "97a83f063602b3f089225f3c08cd46a81ea2af8d89c8ff707b686f335caa3f29",
+        "logSha256": "189926dea0fd01cd02f07f13ac917839b4b61d3affbc6df8b759f472b22184f8"
+      },
+      {
+        "interest": "original",
+        "flagMode": "imperative-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "1acc43ff388d97663b48a445469ff75c7e5d1917802431e51e43df1f30d4ad89",
+        "reportSha256": "0f30f09228482661c25c1598aff717a191a28315fe5870099966d12b32bc3d1e",
+        "logSha256": "d34fa3b9ab01dcec4153b4313ff8a756482a413373232c0a1d66c83f08de1828"
+      },
+      {
+        "interest": "original",
+        "flagMode": "internal-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "43ec4652d1c622de21813b8c98c0c1c98346c4f262ca9cf8931f49c96d2094ab",
+        "reportSha256": "0fca7e300d963fb64885c0fe9a29f0e5eb51fa28bb3803624f03cde563654b52",
+        "logSha256": "b008984950536662eaabea621cc5b4c4fc0348e77a3c274795e001ec275a4710"
+      },
+      {
+        "interest": "original",
+        "flagMode": "enabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "9f45c1f5243703c1aa0766f30cddbe95058ee03916243d47bc2b89701995bd5e",
+        "reportSha256": "efc4ed1c403c68e5a923602de52622b2f1f7c9f2356c2dae403a3d1426b20358",
+        "logSha256": "9d39d853bd149d75ca11e20d9259f5d39db95ed795470ec440bffc011a99d5d0"
+      },
+      {
+        "interest": "current",
+        "flagMode": "disabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "b5e3c9b8cbae787d043a290453d55bc4f0a4163de65915d182fc8778e2ac6470",
+        "reportSha256": "f24a299631e3bd02a34da8f41a4c6102e9f9510c2d03585c1b6f471022ed2314",
+        "logSha256": "ce432edfc918813dc0c68611c16abbf47065d22b2244cfe865f213e3b66a88a2"
+      },
+      {
+        "interest": "current",
+        "flagMode": "imperative-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "d1e09f1f9c0a5c174b87376857a695be88e576781d2aa3feee4c2aac0bf8b227",
+        "reportSha256": "85be6f62d20f7d5f34b02bcf1afafd05241472361b324526fd512201edc6fa0c",
+        "logSha256": "acad32f49ce7abd49fc4ecaf541f65490d0f698c6c411ab5dfea94986092b82d"
+      },
+      {
+        "interest": "current",
+        "flagMode": "internal-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "34aa06e2f5af88f7196345e62ed8223b96fd30e51493d1c1e9107365dcb3fec3",
+        "reportSha256": "ec552caa934d9abbf3e5fc9499c5c4cb7352f0023a821ce2a74bac76bd1fff7d",
+        "logSha256": "1c5feea60540dbf9d955453eda66cf9f375ea06fdd49422021769d08fe28a999"
+      },
+      {
+        "interest": "current",
+        "flagMode": "enabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "18ac057cd1c05dd3456426d9a114933ebd26877decfede2a18d3f1f46d6e21e4",
+        "reportSha256": "615b7de66e75ee1008294aec8087340667c3c30d7253e34abcb59c43b94db328",
+        "logSha256": "5ed9859b490bc1d173ec0d88e6d5f5c1e6cb138fe94ee68c33bc3e2ef0d97af8"
+      }
+    ],
+    "sameCheckIdsAsPinnedRun": true,
+    "sameSequencesDeliveriesAndCaptureStatesAsPinnedRun": true,
+    "comparedFields": "per case: raw type, target, relative pointer identity, client point, offset and buttons; callback name, label, kind, phase, target and pending owner; capture counts per step; capture method results",
+    "comparisonSha256": "958923f01f60b8a4c9b2ddd603c02c42b320dda9752e8a0d852158060674be09",
+    "oracleAcceptsMergedReports": {
+      "reports": 8,
+      "logSha256": "085cd459f8fe1b14f05bc59e3ef4745fe7deb25882bda1c341af39d070588732"
+    },
+    "mergedInSuites": {
+      "test:switch": 108,
+      "test:responders:shared-touches": 92,
+      "test:touchables": 93,
+      "test:activity-indicator": 33
+    },
+    "nodeContractChecks": 262,
+    "pythonContractChecks": 13,
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 36,
+        "logSha256": "8fc53e4ae30fdf7df9b1ce8088cb3abb96c3bcac2bde250656deedbcb139005f"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "072d7b78573a1d342110be5c61e16107ab3a5a1fe1a9155c13956112e74ad784"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "e9e0c6aa0274a9e345627c63976dc90bea5bffb8da1b700478340c0b4293382e"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "1d8f8f1f33bb4833a39a9dbd15b6f2882329c158d71135ca53abe467fbb04bc9"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 71,
+        "logSha256": "02110e218c95697e2e50f48a3de9c077e8c9fa8467a3c0319b3a93b69355c591"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "5791597ade89d2c3c33499a8ee6cf1c7be7b6e1dea0e0dbadcfa1762d4aeaaf7"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 22,
+        "logSha256": "9e4270ed7888deb16e8d40888803ec7bd3a722ba078072eece7daf3206ac0100"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "f2391cf26f99759f44760437b90b60f294154c75d699c9c77b1dd12320bfa898"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "765f7c66f8c907dd244d8e85d8d540d87dedb064242de6f00affcbdfe1a027d4"
+      }
+    },
+    "buildLogSha256": "148d6fcb02c032f12abf73e7391ea6adbdaa8f70af7221cbf35491e006a5840f"
   }
 }

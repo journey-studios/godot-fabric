@@ -2012,8 +2012,10 @@ other native suites were not rerun because only tests, CI and configuration
 changed. Hover offsets, transformed capture, imperative hover listeners while
 captured, capture across roots, pen, hardware and mobile exports remain open. All
 23 executed code/configuration inputs match implementation 6ad77b8 via git
-show/SHA-256 (executed on that commit). Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+show/SHA-256 (executed on that commit). After main reached 54ede87, the merged
+tree 0580af7 repeated the 672 checks on its own host with identical IDs and
+results. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+denominator closes.
 
 ## M1 — Complete the native UI tree
 
