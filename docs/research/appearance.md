@@ -1,10 +1,12 @@
 # Appearance and useColorScheme from Godot's system theme
 
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
-Godot 4.7.2. The [evidence](../evidence/appearance/README.md) owns the 67 headless
-checks, the preceding-host control (the same bundle fails exactly its 45 normative
-checks) and a retained sabotage of the change rule. The headless DisplayServer has
-no system theme, so real OS theme changes are not certified.
+Godot 4.7.2. The [evidence](../evidence/appearance/README.md) owns the 79 headless
+checks, the preceding-host control (the same bundle fails exactly its 56 normative
+checks), the control on the host from before the shared system theme callback (it
+fails exactly the 9 checks where two applications observe at once) and a retained
+sabotage of the change rule. The headless DisplayServer has no system theme, so
+real OS theme changes are not certified.
 
 ## What RN does
 
@@ -55,15 +57,17 @@ not render.
 ## What Godot reports
 
 `DisplayServer` exposes `is_dark_mode_supported()`, `is_dark_mode()` and one
-system theme callback slot, `set_system_theme_change_callback(Callable)`, called
-with no arguments on the main thread (`call_deferred` on Android). The base and
-headless DisplayServers return `false` and ignore the callback
-(`servers/display/display_server.h`). macOS calls it on
-`AppleInterfaceThemeChangedNotification` and `AppleColorPreferencesChangedNotification`
-and reads `AppleInterfaceStyle`; Windows calls it on every `WM_SETTINGCHANGE` and
-`WM_SYSCOLORCHANGE`; the Linux portal, iOS and Android call it on their theme
-signals. Every platform checks `is_valid()` first. In the engine only the editor's
-`EditorNode` registers the slot, and only in editor processes.
+system theme callback slot for the whole process,
+`set_system_theme_change_callback(Callable)`, which replaces the previous
+Callable and is called with no arguments on the main thread (`call_deferred` on
+Android). The base and headless DisplayServers return `false` and ignore the
+callback (`servers/display/display_server.h`). macOS calls it on
+`AppleInterfaceThemeChangedNotification` and
+`AppleColorPreferencesChangedNotification` and reads `AppleInterfaceStyle`;
+Windows calls it on every `WM_SETTINGCHANGE` and `WM_SYSCOLORCHANGE`; the Linux
+portal, iOS and Android call it on their theme signals. Every platform checks
+`is_valid()` first. In the engine only the editor's `EditorNode` registers the
+slot, and only in editor processes.
 
 ## The mapping
 
@@ -90,12 +94,23 @@ runtime reads it through one native `Appearance` module:
   reads back after `auto` or `unspecified`.
 - **Listeners.** `addListener` and `removeListeners` only count, for
   diagnostics; nothing is gated on the count, as on Android.
-- **System callback.** The module registers `_on_system_theme_changed` on the
-  application with DisplayServer when it starts observing, never in editor
-  processes, and the callback reads the system again. On stop the module
-  releases its observer and sends nothing. The registration stays, pointing at
-  the application: it is inert, and invalid once the application is freed.
-  Clearing it could drop a callback registered later by someone else.
+- **System callback.** DisplayServer holds one callback for the whole process,
+  so one `SystemThemeOwner` serves every application. The first Appearance
+  module to start registers the owner's static Callable, once and never in
+  editor processes; each change is dispatched through it once and delivered to
+  every application whose module observes, which reads the system again. A
+  module joins when it starts and leaves when it is released, on stop or when
+  its application is freed, so a stopped or freed application hears nothing
+  and the others keep hearing. Members are instance IDs resolved through
+  ObjectDB on every change, so none dangles, and the owner's copy of the
+  Callable is released when the extension's scene level terminates. On stop the
+  module also releases its observer and sends nothing. The registration stays
+  when the last application leaves: it is idle, and clearing it could drop a
+  callback registered later by someone else. A game that registers its own
+  callback replaces Fabric's for every application, and Fabric's first module
+  replaces one a game registered before it. The first version registered
+  `_on_system_theme_changed` per application, so a second application displaced
+  the first, which kept a stale scheme (found in review on #35).
 - **Teardown.** `disposeEnvironment()` removes Appearance's device subscription,
   as destroying the VM would, so its JS listeners can no longer be reached; the
   last scheme stays. `environmentStats().appearance` counts that subscription,
@@ -104,24 +119,37 @@ runtime reads it through one native `Appearance` module:
 ## Why the probe is discriminating
 
 The [probe](../../tests/appearance-probe.gd) supplies the system scheme through
-the application's `validation_system_color_scheme` meta and invokes
-`Callable(application, "_on_system_theme_changed")`, the Callable the module
-registers with DisplayServer. Two roots render through `useColorScheme` and paint
-their View with the scheme; each root and a library-style subscription made at
-bundle evaluation listen through `Appearance.addChangeListener`. The steps cover
-an unsupported initial system, a system change, a repeated one, overrides
-against the system, `unspecified`, `auto` without a change, an override equal to
-the system, an unknown override, a removed listener, a root's unmount and the
-application's stop, plus a second application that starts from a supported dark
-system. The [oracle](../../tests/appearance-oracle.mjs) re-derives every event,
-listener, re-render, native color and counter from the probe's actions and RN's
-rules.
+each live application's `validation_system_color_scheme` meta and calls, once
+per change, the Callable the shared owner registered with DisplayServer, read
+through `FabricApplication.validation_system_theme_callback()`: the headless
+DisplayServer drops it, so the probe calls it as DisplayServer would. On a host
+without that seam the probe emulates DisplayServer's single slot with the
+`Callable(application, "_on_system_theme_changed")` of the last application that
+registered. Two roots render through `useColorScheme` and paint their View with
+the scheme; each root and a library-style subscription made at bundle evaluation
+listen through `Appearance.addChangeListener`. The steps cover an unsupported
+initial system, a system change, a repeated one, overrides against the system,
+`unspecified`, `auto` without a change, an override equal to the system, an
+unknown override, a removed listener, a root's unmount and the application's
+stop, a second application that starts from a supported dark system, and two
+applications that observe at once: one change reaches both, stopping one leaves
+the other receiving while the stopped one hears nothing, freeing it leaves
+nothing dangling, and freeing the other while it still observes leaves the
+callback registered and idle. The [oracle](../../tests/appearance-oracle.mjs)
+re-derives every event, listener, re-render, native color and counter from the
+probe's actions and RN's rules, and the owner's single registration, members,
+dispatches and deliveries.
 
-On the preceding host the same bundle mounts and stops both roots, but RN's
+On the preceding host the same bundle mounts and stops every root, but RN's
 Appearance finds no module: it reads `null`, the roots paint the fallback color
-and nothing is emitted. It fails exactly the 45 checks that need the module. A
-host that sends `appearanceChanged` for every callback and override fails 17
-checks, and the oracle rejects its report.
+and nothing is emitted. It fails exactly the 56 checks that need the module. On
+the host from before the shared owner, where each application registered its
+own callback, the other 70 checks pass and exactly the 9 shared-callback checks
+fail: the first application, displaced by the second's registration, never hears
+a change, while the second keeps hearing them after it stops. The oracle rejects
+that report. A host that sent `appearanceChanged` for every callback and
+override failed 17 of the first execution's 67 checks, and the oracle rejected
+its report.
 
 ## Remaining scope
 

@@ -259,11 +259,11 @@ outside the launcher catalog. Its
 headless checks and two retained sabotages.
 
 The [Appearance probe](appearance/README.md) changes the system theme through the
-Callable registered with Godot's `DisplayServer` and overrides it with
-`setColorScheme`, while two roots render through `useColorScheme`:
-`npm run test:appearance`, outside the launcher catalog. Its
-[receipt](../docs/evidence/appearance/README.md) records 67 headless checks, the
-preceding-host control and a retained negative control.
+one Callable registered with Godot's `DisplayServer` and overrides it with
+`setColorScheme`, while two roots render through `useColorScheme` and two
+applications observe at once: `npm run test:appearance`, outside the launcher
+catalog. Its [receipt](../docs/evidence/appearance/README.md) records 79 headless
+checks, the preceding-host and pre-fix controls and a retained negative control.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

@@ -1050,6 +1050,778 @@
         "test-appearance": "5ab1b009472b4cca77f3e8a7ba6863937546fbcf926a2514ab729ade06804d38",
         "test-app-state": "df55e5a234c541d8ce084e3395b588386d68c178a83f5f9a2749a92e4685ec42"
       }
+    },
+    {
+      "reason": "CodeRabbit review on PR 35: every FabricApplication registered its own DisplayServer system theme callback, so with two applications the last registration displaced the others and a displaced application kept a stale scheme; the probe also built a fresh Callable and called it directly, so a registration or dispatch regression would pass",
+      "commit": "b13bcddec7ea5aed48c9a1f0022e0577c110d572",
+      "executionBaseCommit": "4f5b7657d8a76be5d3e45bd906a39b3eef7d1eb0",
+      "mergedMain": "54ede8737eae381b94db45bb31c3f1791718ff76",
+      "executedTreeSha": "bdd167d42503ca7542d62fce5f75dcf56e94b42d",
+      "executedTreeEqualsCommitTree": true,
+      "sourceDirtyDuringExecution": false,
+      "rule": "DisplayServer keeps one system theme callback per process. One SystemThemeOwner registers a static Callable (callable_mp_static) once, when the first Appearance module starts and never in editor processes, and forwards each change to every application whose module observes. A module joins when it starts and leaves when it is released, on stop or when its application is freed; members are instance IDs resolved through ObjectDB on every change, and the owner's Callable copy is released when the extension's scene level terminates. A game's own callback still replaces Fabric's for every application: the last registration wins.",
+      "changedSources": {
+        "native/fabric_application.cpp": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+        "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "native/register.cpp": "876007f930ff1148a654760bc0003d58d6d4641dbab5204aa986b52e3de3685a",
+        "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "scripts/appearance-bundle.mjs": "dea66ffefc03c9e4caac2fa70febba6b88328658aca0080dc47c53c276092a7c",
+        "tests/appearance-native.test.mjs": "c3df37df87d11fdaa714eefce4ff347f2a192990c5b853f687b7371e34e7395b",
+        "tests/appearance-oracle.mjs": "4dda9772fd5c65b68fb4dc686201c3044e69e1d786c5f307c7145f9a28262439",
+        "tests/appearance-probe.gd": "6eb6bb91d53c03b02cb822a59427ea63fd3053770414e941d8633c6c1f203b14"
+      },
+      "systemThemeDelivery": {
+        "callable": "callable_mp_static(dispatch_system_theme), held by SystemThemeOwner",
+        "registeredWith": "DisplayServer.set_system_theme_change_callback, once, when the first Appearance module starts",
+        "probeDispatch": "FabricApplication.validation_system_theme_callback() returns the very Callable registered, called once per change; a host without that seam is driven through DisplayServer's single slot, the last registered Callable(application, \"_on_system_theme_changed\")",
+        "systemValue": "validation_system_color_scheme meta on every live application"
+      },
+      "commands": [
+        "npm run test:appearance",
+        "node tests/appearance-native.test.mjs --allow-original-negative (preceding host installed in addons/)",
+        "node tests/appearance-native.test.mjs --allow-prefix-negative (host before the shared callback installed in addons/)",
+        "node tests/app-state-native.test.mjs --allow-original-negative (AppState's preserved host), then npm run test:app-state"
+      ],
+      "headlessChecks": 79,
+      "normativeChecks": 56,
+      "sharedCallbackChecks": [
+        "two-applications/start/One DisplayServer registration serves both applications",
+        "two-applications/both/One system theme change reaches both applications' listeners and roots once",
+        "two-applications/both/Both native modules read the change once through the one registered callback",
+        "two-applications/second-stopped/The stopped application leaves the callback registered for the other",
+        "two-applications/second-stopped/The running application still follows the system theme",
+        "two-applications/second-stopped/The stopped application receives no later system change",
+        "two-applications/second-freed/A freed application leaves no dangling callback; the other still follows the system",
+        "two-applications/first-freed/Freeing a running application leaves the callback, which stays registered",
+        "two-applications/first-freed/The registered callback still runs and reaches no application"
+      ],
+      "lanes": [
+        {
+          "lane": "current",
+          "meaning": "Fixed host, headless; every check passes and the oracle accepts the report.",
+          "nativeHostSha256": "d2f3becc84ae2bede890436339f238a9b9453b418d82f1c833f34109809f1a01",
+          "checks": 79,
+          "passed": 79,
+          "failed": 0,
+          "checkIdDigestSha256": "609e9534622ce53a0f78e8f70dfb2baf8ebde573ba1dddec4e334a18b1b145f0",
+          "bundleSha256": "02529a16ff48c264f4786c91f6c9eabc8c1661ad0209fa1217d00d94e375d20b",
+          "reportSha256": "bb9bd7c91e7e1db939e9c4b5697e98f556d38644b0f16dd60365e506765b2208",
+          "logSha256": "55bda42c64844c8d5a3a5c0c305a1270a32532648cb1bccf7601664addb3c290"
+        },
+        {
+          "lane": "original",
+          "meaning": "Preceding host (main without the Appearance module) replaying the same SDK bundle.",
+          "nativeHostSha256": "e23bcbabad27adca0c803d29c4a10d47374772681ccf260cc938edd7eb1efa6c",
+          "checks": 79,
+          "passed": 23,
+          "failed": 56,
+          "checkIdDigestSha256": "609e9534622ce53a0f78e8f70dfb2baf8ebde573ba1dddec4e334a18b1b145f0",
+          "bundleSha256": "02529a16ff48c264f4786c91f6c9eabc8c1661ad0209fa1217d00d94e375d20b",
+          "reportSha256": "0f6ab01752de07e0b428fd1c63ded4fc7086c243365a7ae108abe31c8b42774b",
+          "logSha256": "1abdea4d8fa46487ea2e35061b617a02eebc9eb9c20d4db2e95a32ff053b01cd"
+        },
+        {
+          "lane": "prefix",
+          "meaning": "Host before the shared callback (one callback per application) replaying the same SDK bundle; it fails exactly the shared-callback checks and the oracle rejects its report.",
+          "nativeHostSha256": "69ab42c0b01d2384d2552cd53cc72dbeca5560a1570a317e968a29b54e643365",
+          "checks": 79,
+          "passed": 70,
+          "failed": 9,
+          "checkIdDigestSha256": "609e9534622ce53a0f78e8f70dfb2baf8ebde573ba1dddec4e334a18b1b145f0",
+          "bundleSha256": "02529a16ff48c264f4786c91f6c9eabc8c1661ad0209fa1217d00d94e375d20b",
+          "reportSha256": "e9be6236bbbc0fee06032182588b851bd1523e85604e98ce9dbb54db6ff421c6",
+          "logSha256": "7312207e76b5a1cab1f1596f70ed5ebe290824d9c4f3e50a7d2814611a1af3d3"
+        }
+      ],
+      "precedingHostControl": {
+        "nativeHostSha256": "e23bcbabad27adca0c803d29c4a10d47374772681ccf260cc938edd7eb1efa6c",
+        "builtFrom": "54ede8737eae381b94db45bb31c3f1791718ff76",
+        "buildRecordInputs": 60,
+        "buildRecordMatchesBuiltFrom": true,
+        "checks": 79,
+        "normativeFailures": 56,
+        "structuralChecksPassed": 23,
+        "sameSDKBundle": true,
+        "initialColorScheme": null
+      },
+      "preFixHostControl": {
+        "nativeHostSha256": "69ab42c0b01d2384d2552cd53cc72dbeca5560a1570a317e968a29b54e643365",
+        "builtFrom": "4f5b7657d8a76be5d3e45bd906a39b3eef7d1eb0",
+        "buildRecordInputs": 61,
+        "buildRecordMatchesBuiltFrom": true,
+        "checks": 79,
+        "failed": 9,
+        "failedChecks": [
+          "two-applications/both/Both native modules read the change once through the one registered callback",
+          "two-applications/both/One system theme change reaches both applications' listeners and roots once",
+          "two-applications/first-freed/Freeing a running application leaves the callback, which stays registered",
+          "two-applications/first-freed/The registered callback still runs and reaches no application",
+          "two-applications/second-freed/A freed application leaves no dangling callback; the other still follows the system",
+          "two-applications/second-stopped/The running application still follows the system theme",
+          "two-applications/second-stopped/The stopped application leaves the callback registered for the other",
+          "two-applications/second-stopped/The stopped application receives no later system change",
+          "two-applications/start/One DisplayServer registration serves both applications"
+        ],
+        "failuresEqualSharedCallbackChecks": true,
+        "independentOracleRejected": true,
+        "sameSDKBundle": true,
+        "observations": {
+          "start": {
+            "P": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "Q": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "owner": {}
+          },
+          "both": {
+            "P": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "Q": {
+              "colorScheme": "light",
+              "jsChangeRows": 2,
+              "native": {
+                "scheme": "light",
+                "observed": true,
+                "notifications": 1,
+                "events": 1,
+                "unobserved": 0
+              }
+            },
+            "owner": {}
+          },
+          "secondStopped": {
+            "P": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "Q": {
+              "colorScheme": "light",
+              "jsChangeRows": 2,
+              "native": {
+                "scheme": "dark",
+                "observed": false,
+                "notifications": 2,
+                "events": 1,
+                "unobserved": 1
+              }
+            },
+            "owner": {}
+          },
+          "secondFreed": {
+            "P": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "owner": {}
+          },
+          "firstFreed": {
+            "owner": {}
+          }
+        }
+      },
+      "currentObservations": {
+        "initialOwner": {
+          "deliveries": 0,
+          "dispatches": 0,
+          "members": [
+            "26793215443"
+          ],
+          "registered": true,
+          "registrations": 1
+        },
+        "stopOwner": {
+          "before": {
+            "deliveries": 5,
+            "dispatches": 5,
+            "members": [],
+            "registered": true,
+            "registrations": 1
+          },
+          "after": {
+            "deliveries": 5,
+            "dispatches": 6,
+            "members": [],
+            "registered": true,
+            "registrations": 1
+          }
+        },
+        "stoppedApplicationNative": {
+          "callbackRegistered": true,
+          "events": 6,
+          "listeners": 1,
+          "notifications": 5,
+          "observed": false,
+          "observers": 1,
+          "override": "unspecified",
+          "overrides": 6,
+          "scheme": "light",
+          "system": {
+            "dark": false,
+            "supported": true
+          },
+          "unobserved": 0
+        },
+        "twoApplications": {
+          "start": {
+            "P": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "Q": {
+              "colorScheme": "dark",
+              "jsChangeRows": 0,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 0,
+                "events": 0,
+                "unobserved": 0
+              }
+            },
+            "owner": {
+              "deliveries": 5,
+              "dispatches": 6,
+              "members": [
+                "32128370155",
+                "32514246111"
+              ],
+              "registered": true,
+              "registrations": 1
+            }
+          },
+          "both": {
+            "P": {
+              "colorScheme": "light",
+              "jsChangeRows": 2,
+              "native": {
+                "scheme": "light",
+                "observed": true,
+                "notifications": 1,
+                "events": 1,
+                "unobserved": 0
+              }
+            },
+            "Q": {
+              "colorScheme": "light",
+              "jsChangeRows": 2,
+              "native": {
+                "scheme": "light",
+                "observed": true,
+                "notifications": 1,
+                "events": 1,
+                "unobserved": 0
+              }
+            },
+            "owner": {
+              "deliveries": 7,
+              "dispatches": 7,
+              "members": [
+                "32128370155",
+                "32514246111"
+              ],
+              "registered": true,
+              "registrations": 1
+            }
+          },
+          "secondStopped": {
+            "P": {
+              "colorScheme": "dark",
+              "jsChangeRows": 4,
+              "native": {
+                "scheme": "dark",
+                "observed": true,
+                "notifications": 2,
+                "events": 2,
+                "unobserved": 0
+              }
+            },
+            "Q": {
+              "colorScheme": "light",
+              "jsChangeRows": 2,
+              "native": {
+                "scheme": "light",
+                "observed": false,
+                "notifications": 1,
+                "events": 1,
+                "unobserved": 0
+              }
+            },
+            "owner": {
+              "deliveries": 8,
+              "dispatches": 8,
+              "members": [
+                "32128370155"
+              ],
+              "registered": true,
+              "registrations": 1
+            }
+          },
+          "secondFreed": {
+            "P": {
+              "colorScheme": "light",
+              "jsChangeRows": 6,
+              "native": {
+                "scheme": "light",
+                "observed": true,
+                "notifications": 3,
+                "events": 3,
+                "unobserved": 0
+              }
+            },
+            "owner": {
+              "deliveries": 9,
+              "dispatches": 9,
+              "members": [
+                "32128370155"
+              ],
+              "registered": true,
+              "registrations": 1
+            }
+          },
+          "firstFreed": {
+            "owner": {
+              "deliveries": 9,
+              "dispatches": 10,
+              "members": [],
+              "registered": true,
+              "registrations": 1
+            }
+          }
+        },
+        "counts": {
+          "events": 6,
+          "notifications": 5,
+          "overrides": 6,
+          "unobserved": 0
+        }
+      },
+      "refreshedPrecedingHostControls": {
+        "app-state": {
+          "nativeHostSha256": "e626a31dfe7e15b7a61640b7c4a88bb47710596644fba85ddd81c1901a2c3520",
+          "checks": 75,
+          "normativeFailures": 62,
+          "bundleSha256": "87cdc79638e0ce5511157330aed1369b114e2e42eb5dd8d1c63735205b0da5fd",
+          "currentLaneChecks": 75,
+          "currentLanePassed": true,
+          "reportSha256": "ec8a9329aac78fa4c8434824525c811f665edfce6dcbff59377a6ead9a96332c"
+        }
+      },
+      "retainedSabotage": "Not rerun: the emits-every-callback control above belongs to the first execution (67 checks).",
+      "regressions": {
+        "nativeHostSha256": "d2f3becc84ae2bede890436339f238a9b9453b418d82f1c833f34109809f1a01",
+        "steps": {
+          "affine": {
+            "exitCode": 0,
+            "seconds": 0,
+            "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+          },
+          "codegen-native": {
+            "exitCode": 0,
+            "seconds": 20,
+            "logSha256": "6c9bc1ef932640a9db469723e9c34c5e1dd3b171e7c9979b33bcd7f611a2e2e5",
+            "note": "rerun with --out build/codegen-native-compile-review: the battery's first attempt stopped because build/codegen-native-compile already existed"
+          },
+          "sdk-pack": {
+            "exitCode": 0,
+            "seconds": 8,
+            "logSha256": "99155c3b029fdf75b8a8e7bd722cfe573ea16ccf03fe951f7ff75919c60aaa53"
+          },
+          "sdk-verify": {
+            "exitCode": 0,
+            "seconds": 1,
+            "logSha256": "dece29394b74d49f870c2bec5433b38b1c50f3fe4c49e05a9b55e666766a8b36"
+          },
+          "adapters-native": {
+            "exitCode": 0,
+            "seconds": 35,
+            "logSha256": "ff7c71883b0d5e1564996a874656f634364dc2f700fcfc228db64e7c71b0b3a8"
+          },
+          "adapters-loader": {
+            "exitCode": 0,
+            "seconds": 26,
+            "logSha256": "13df95669ba4907dd99313223700dc9151d07737c8edf29b1b59c4e3668a8641"
+          },
+          "test:examples": {
+            "exitCode": 0,
+            "seconds": 131,
+            "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+          },
+          "test:transforms:guards": {
+            "exitCode": 0,
+            "seconds": 6,
+            "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+          },
+          "test:runtime": {
+            "exitCode": 0,
+            "seconds": 10,
+            "logSha256": "08314cf40f16379ef6442f88b605117eea7206569708b126d1b2e323a6dcf82e"
+          },
+          "test:application": {
+            "exitCode": 0,
+            "seconds": 9,
+            "logSha256": "15144d1123c6497a29e139d0cba15f886f69dbc53ef2cf6f7e6e0b90651e826b"
+          },
+          "test:modules": {
+            "exitCode": 0,
+            "seconds": 7,
+            "logSha256": "9c6f616013d261e964ff51a924235c320bb9508438b00839b82533ddfc8ef104"
+          },
+          "test:app-state": {
+            "exitCode": 0,
+            "seconds": 5,
+            "logSha256": "87bbcf9966380a5ebf39fd8c35ea2e6f14d93e532e15c04062077955aae3f624"
+          },
+          "test:appearance": {
+            "exitCode": 0,
+            "seconds": 6,
+            "logSha256": "5c169607cd386936b0fe631ea203e1a25d0b8eab83501b7a25eb91f371e8aec9"
+          },
+          "test:switch": {
+            "exitCode": 0,
+            "seconds": 7,
+            "logSha256": "e7cb2ddbe788d431587b4c446233f12fd7d62da27bbec3dd00beb788833e2f59"
+          },
+          "test:responders:shared-touches": {
+            "exitCode": 0,
+            "seconds": 22,
+            "logSha256": "6ab7cd4a062fcc27500628304ca0770052741078007ce1545fc9c71e93039009"
+          },
+          "test:touchables": {
+            "exitCode": 0,
+            "seconds": 14,
+            "logSha256": "e17183ac0271e3af4350ff84037b6a88a9b694eae3a22bccd4cc9759a1874dd2"
+          },
+          "test:activity-indicator": {
+            "exitCode": 0,
+            "seconds": 7,
+            "logSha256": "8915dc647e9d884e9f80d4d03493eeb20c3120fbf2fd5a771e53d9713ef8d60e"
+          },
+          "test:focus:commands": {
+            "exitCode": 0,
+            "seconds": 20,
+            "logSha256": "265d4668289f442f1c99735f064cb75bb08f91fdd1ec845215fb7f26aa3886e8"
+          },
+          "test:pointers:processor": {
+            "exitCode": 0,
+            "seconds": 50,
+            "logSha256": "b12811ea053b5524b826c0bb3374b4b7e3a1c67b703ed4fe6910f1821aeb54e0"
+          },
+          "test:pointers:geometry": {
+            "exitCode": 0,
+            "seconds": 42,
+            "logSha256": "7e08b42494fe06cc96a12d146c30c6731c4e681aab85403d4c52a679c5144161"
+          },
+          "test:events:original": {
+            "exitCode": 0,
+            "seconds": 19,
+            "logSha256": "9e8d9a959f20d8755a80b16d184cfa059cbf2a4e62ccdd115d18e3e5e4f5f457"
+          },
+          "test:events:ancestry": {
+            "exitCode": 0,
+            "seconds": 8,
+            "logSha256": "7907844d957868d9e932817d66ec8c5d694d8477acce10e32763f0c3cb4d2362"
+          },
+          "test:events:dispatch": {
+            "exitCode": 0,
+            "seconds": 14,
+            "logSha256": "2fca2f55078ce13a8dbbb7815b346a744de95b865fd303dc13d58f3927882590"
+          },
+          "test:events:integrated": {
+            "exitCode": 0,
+            "seconds": 18,
+            "logSha256": "a3ab9496e5c1c2fd7ad31b60d721b9c1221abff0bb22793b50ad98d9e37e83a1"
+          },
+          "test:services": {
+            "exitCode": 0,
+            "seconds": 10,
+            "logSha256": "62a4d85aee2b8cd4b253084ba5238c5dc61baa055a8c2e224334fc9b9d301c56"
+          },
+          "test:pointers:interest": {
+            "exitCode": 0,
+            "seconds": 11,
+            "logSha256": "db19e4fd9220b33c61181ccf7491adfb58f28324f6ad060530e6c3a75b9ea852"
+          },
+          "test:pointers:documents": {
+            "exitCode": 0,
+            "seconds": 64,
+            "logSha256": "ec3c9634f6cfa53cd9eb662c6d6b6f954f1dbbebd0b6860fe92458689689300b"
+          },
+          "test:pointers:query-faults": {
+            "exitCode": 0,
+            "seconds": 5,
+            "logSha256": "8150563e8e6dc7d984cd1106dfbd36a5af3dba29234881cc03716b4ee78c2efd"
+          },
+          "test:pointers:resolver-faults": {
+            "exitCode": 0,
+            "seconds": 4,
+            "logSha256": "64965e04f74ca6cc92010b201d5a061cbd03aeaa146734cb9fcb03d5e6e11745"
+          },
+          "test:pointers:documents:up": {
+            "exitCode": 0,
+            "seconds": 89,
+            "logSha256": "a4e72ccf7a80295aa90a575567f478abf141358a8b722d8f34a7557c06569884"
+          },
+          "test:pointers:up": {
+            "exitCode": 0,
+            "seconds": 5,
+            "logSha256": "b1469e72caa07837265c6f0ddfd2ff4b92e390f2e2a3b9a2f61b3c159d2a4288"
+          },
+          "test:pointers:move": {
+            "exitCode": 0,
+            "seconds": 6,
+            "logSha256": "7a86922d9c267a05f80cfaa8792715a5abbc7ae5bb2724d918dd1cba6a5cb853"
+          },
+          "test:pointers:documents:move": {
+            "exitCode": 0,
+            "seconds": 31,
+            "logSha256": "f6ee2ef166af0b96a252525808b6b4ad63bb697ac58926e95b90bee29dd899a4"
+          },
+          "test:pointers:hover": {
+            "exitCode": 0,
+            "seconds": 4,
+            "logSha256": "8b3c6205ecad3aa37ccbeb3ef37fa6d43bf01fc31d7040c4ce649507c5262e3a"
+          },
+          "test:pointers:root-path": {
+            "exitCode": 0,
+            "seconds": 3,
+            "logSha256": "eb16af85b760a28410ffbffe573cecec56a0ea672c5496f0d3f5dc8eae0567fc"
+          },
+          "test:pointers:documents:hover": {
+            "exitCode": 0,
+            "seconds": 34,
+            "logSha256": "88272617b83beb1f84ac3e7fcd738503ef52eae1e14af79359a846ebc15da66f"
+          },
+          "test:pointers:click": {
+            "exitCode": 0,
+            "seconds": 57,
+            "logSha256": "f1d0f0f0817838ab4433ad20d6a37fe4925d7ac4e6c0cc7e746466760ccdd7ce"
+          },
+          "test:responders:pan": {
+            "exitCode": 0,
+            "seconds": 17,
+            "logSha256": "cfc0cf98d17d2f31ef631f9b6101d467efe84e1408b66bd749d96a339763d82a"
+          },
+          "test:consumer": {
+            "exitCode": 0,
+            "seconds": 102,
+            "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+          },
+          "adapters-runtime": {
+            "exitCode": 0,
+            "seconds": 40,
+            "logSha256": "b3f983f96885e5c87890a0eccb117dabc5e3b29fac1f5bd018c9727a24f65c4d"
+          },
+          "test:cold": {
+            "exitCode": 0,
+            "seconds": 21,
+            "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+          },
+          "parity:godot": {
+            "exitCode": 0,
+            "seconds": 9,
+            "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+          }
+        }
+      },
+      "finalTreeSuites": {
+        "tree": "be6618ca2c992bf702377cb8905c8406259494d0",
+        "mergedMain": "d62bc2788d008cb81d1b52c8f9d9e6850045e4ca",
+        "meaning": "After main was merged again: its new capture notifications suite and this slice's suites, on the same host; no native, SDK or Appearance input changed since the commit above.",
+        "nativeHostSha256": "d2f3becc84ae2bede890436339f238a9b9453b418d82f1c833f34109809f1a01",
+        "steps": {
+          "test:pointers:capture": {
+            "exitCode": 0,
+            "seconds": 101,
+            "logSha256": "78be1df4f1877d67e3d544f85d34c3e501848722d1914c5ce6f2cec584bdfbd5"
+          },
+          "test:appearance": {
+            "exitCode": 0,
+            "seconds": 4,
+            "logSha256": "747fa375304c8efbe7074fee1346f4ba5b51df8c66fb624000fa6dfd69103e29"
+          },
+          "test:app-state": {
+            "exitCode": 0,
+            "seconds": 4,
+            "logSha256": "eb347cb08e86153c0e5683aee40bf2d9a90b5c6a4e3be5045e860f66d854561c"
+          }
+        }
+      },
+      "sourcePins": {
+        "tests/appearance-fixture.jsx": "e3c0c360e8c805640eb5e8404d74eb59960112b5f24798e02b189ab07f9e5dbe",
+        "tests/appearance-probe.gd": "6eb6bb91d53c03b02cb822a59427ea63fd3053770414e941d8633c6c1f203b14",
+        "tests/appearance-native.test.mjs": "c3df37df87d11fdaa714eefce4ff347f2a192990c5b853f687b7371e34e7395b",
+        "tests/appearance-oracle.mjs": "4dda9772fd5c65b68fb4dc686201c3044e69e1d786c5f307c7145f9a28262439",
+        "scripts/appearance-bundle.mjs": "dea66ffefc03c9e4caac2fa70febba6b88328658aca0080dc47c53c276092a7c",
+        "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+        "src/platform-environment.js": "eabdebe8750b9e3963f9330c1481bf5caf205d17f58588120f31f97e869e2b9e",
+        "src/react-native-platform.jsx": "00c05bd59ffce171b6ed8057d024ade7a29f644e78ca977cadecba713dfdc512",
+        "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "native/fabric_application.cpp": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+        "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "native/turbo_module_registry.cpp": "c53e6ec47fbd53835f031a0b8e127457c26091a6a0304b48a4ede5844ae7364a",
+        "native/turbo_module_registry.h": "392299982ab1538d0b426829a453d3898dec904e4d19fe116352238398ce0c2b",
+        "native/application_runtime.cpp": "8f3b65c4b56b614facc2ca6144ac2476e17c6e15797f3db6ce8562092601a5cd",
+        "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+        "native/register.cpp": "876007f930ff1148a654760bc0003d58d6d4641dbab5204aa986b52e3de3685a"
+      },
+      "nativeBuildInputPins": {
+        "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "native/CMakeLists.txt": "0f036ce601940fa9b7c8555d0a6337ed62bd026104ecf3dc2971aea98ad78df3",
+        "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+        "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+        "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "native/affine_transform.h": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+        "native/affine_transform_test.cpp": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+        "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+        "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "native/application_runtime.cpp": "8f3b65c4b56b614facc2ca6144ac2476e17c6e15797f3db6ce8562092601a5cd",
+        "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+        "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "native/fabric_application.cpp": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+        "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "native/godot-profile.json": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+        "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+        "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+        "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "native/pointer_geometry.cpp": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+        "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "native/register.cpp": "876007f930ff1148a654760bc0003d58d6d4641dbab5204aa986b52e3de3685a",
+        "native/scroll_adapter.cpp": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+        "native/scroll_adapter.h": "69587ae4399a87e5085d17343abaa68071d6120dcffccfdf86eb65d9549044ac",
+        "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+        "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+        "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "native/transform_adapter.cpp": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+        "native/transform_adapter.h": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+        "native/turbo_module_registry.cpp": "c53e6ec47fbd53835f031a0b8e127457c26091a6a0304b48a4ede5844ae7364a",
+        "native/turbo_module_registry.h": "392299982ab1538d0b426829a453d3898dec904e4d19fe116352238398ce0c2b",
+        "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+        "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+      },
+      "verificationSourcePins": {
+        ".github/workflows/contracts.yml": "f4699f49547f747d1f861b4bd7b2cefd950f10f68a70daa7809a0f6fd84c58ee",
+        "package.json": "4ff684fecbba9c8b7ce5fe789072d92b5c48865043a30c473406f7f7b8a7f6ce",
+        ".fallowrc.json": "8a81935191e59fc1aa15156e8431a7046b2e01af5bbb9652d01922cfe8f212eb",
+        "types/react-native.ts": "687fd97614153b3a79b02d3c81d2635eea3d676db88d8967ef9a1e7b2924162a",
+        "tests/types/consumer.tsx": "ff889a94384b5ca58ca596529a92b5f05c3c7597033f7a18cd6dbe51468251ce",
+        "scripts/app-state-bundle.mjs": "023d48d68fa7ee099dde21a28481453e1839762cec5af01ea7023889460b414a"
+      },
+      "implementationPinVerification": {
+        "method": "git show <commit>:<path> SHA-256 equals every executed pin",
+        "sourcePins": 17,
+        "nativeBuildInputPins": 61,
+        "verificationSourcePins": 6,
+        "uniqueCodeAndConfigurationInputs": 76,
+        "mismatches": [],
+        "postCommitPinIsNotANewRun": true
+      },
+      "hostedCI": {
+        "status": "pending-appearance-slice"
+      },
+      "finalTreeGates": {
+        "ranAt": "2026-10-06T01:19:55.130505+00:00",
+        "meaning": "Contracts-job gates and test:recovery rerun on the final tree, after main d62bc27 was merged and every doc, example and this entry above were final; this field was appended afterwards. The dashboard is recorded in the following commit.",
+        "steps": {
+          "test:contracts": {
+            "exitCode": 0,
+            "seconds": 18,
+            "logSha256": "91c196961cfb780fcd839f8b0f0c076f84b5a0f37636f0f26f9ac22ac3abcc7b"
+          },
+          "check:static": {
+            "exitCode": 0,
+            "seconds": 0,
+            "logSha256": "f860bcbe0eca0d53b8c5d535eee26b9b2795217efaf99fb49ddc1b4412bbeb99"
+          },
+          "check:publication": {
+            "exitCode": 0,
+            "seconds": 0,
+            "logSha256": "a3453b34e7d95a37c9254ffec49d5715f0b8394e8e789ce969a1667d8204db91"
+          },
+          "test:recovery": {
+            "exitCode": 0,
+            "seconds": 4,
+            "logSha256": "240a01daf99defbdd1f08ad29b7467eb449989a1e8ab00c0bb512fa200d86da7"
+          }
+        }
+      }
     }
   ]
 }

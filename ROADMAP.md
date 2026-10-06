@@ -2025,15 +2025,19 @@ parity and targets remain open. The
 [Appearance evidence](docs/evidence/appearance/README.md) replaces the SDK's
 manual theme with React Native's original `Appearance` and `useColorScheme`,
 read through the public `react-native` import and fed by Godot's system theme and
-the application's `setColorScheme` override: **67 headless checks**, with two
-roots of one Hermes application re-rendering the same scheme.
+the application's `setColorScheme` override: **79 headless checks**, with two
+roots of one Hermes application re-rendering the same scheme and two
+applications that observe at once sharing one system theme callback.
 
 The native `Appearance` TurboModule implements RN's generated
 `NativeAppearanceCxxSpec` and emits `appearanceChanged` through the original
 `TurboModule::emitDeviceEvent`. One system appearance per application reads
-`DisplayServer.is_dark_mode_supported()`/`is_dark_mode()` and, when the module
-starts, registers the application's `_on_system_theme_changed` as DisplayServer's
-system theme callback (never in editor processes). The scheme is an explicit
+`DisplayServer.is_dark_mode_supported()`/`is_dark_mode()`. DisplayServer keeps
+one system theme callback per process, so a shared owner registers a static
+Callable once (never in editor processes) and forwards every change to each
+application whose module observes; a module joins when it starts and leaves
+when it is released, so a stopped or freed application hears nothing and the
+others keep hearing. The scheme is an explicit
 `light`/`dark` override, otherwise the system's, `light` when the system has no
 dark style, as both RN platforms report; `auto` and `unspecified` follow the
 system again and unknown overrides fail with `E_ARGUMENT`. As on iOS and Android,
@@ -2042,26 +2046,50 @@ or overridden system change re-renders nothing. Stop disposes the module without
 an event, `disposeEnvironment()` releases Appearance's device subscription, and
 `useColorScheme` no longer throws, so chart-kit's `ChartKitProvider` can follow
 the system. The headless DisplayServer has no system theme: the probe supplies
-the system scheme through a validation meta and calls the very Callable the
-module registers.
+the system scheme through a validation meta and calls the one Callable the
+owner registered, read through a validation seam.
 
-On the preceding host (main `2ec988e`, whose native tree is `8f80fed`'s) the
-same bundle mounts and stops both roots, but RN's Appearance finds no module and
-reads `null`: exactly the 45 normative checks fail. A retained host that emits
-for every callback and override fails 17 checks, and the independent oracle
-rejects its report. The contracts gates (260 Node/13 Python, static analysis,
-publication scan), `test:recovery`, the 29 native suites (22 examples/2,250
-checks, Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move
-1,940, hover 158, root path 82, Document hover 1,530, click 728, PanResponder
-128, AppState 75, Appearance 67) and the native SDK batch pass on the same host.
-Every bundle that imports `react-native` changes again; the AppState control,
-rerun on its preserved host with the new bundle, still fails exactly 62. Real OS
-theme changes, a game's own DisplayServer theme callback (the last registration
-wins), accent colors, `PlatformColor`, per-window themes and Godot mobile
-exports remain open. All 72 executed code/configuration inputs match
-implementation a402a1f via git show/SHA-256 (execution base 2ec988e; the
-executed tree is the implementation's). Hosted CI for this slice is pending. No
-whole GF, other checkpoint, weight or denominator closes.
+In the first execution, on the preceding host (main `2ec988e`, whose native tree
+is `8f80fed`'s), the same bundle mounts and stops both roots, but RN's
+Appearance finds no module and reads `null`: exactly the 45 normative checks
+fail. A retained host that emits for every callback and override fails 17
+checks, and the independent oracle rejects its report. The contracts gates (260
+Node/13 Python, static analysis, publication scan), `test:recovery`, the 29
+native suites (22 examples/2,250 checks, Down 2,731, Document Up 6,459, View Up
+297, Move 220, Document Move 1,940, hover 158, root path 82, Document hover
+1,530, click 728, PanResponder 128, AppState 75, Appearance 67) and the native
+SDK batch pass on the same host. Every bundle that imports `react-native`
+changes again; the AppState control, rerun on its preserved host with the new
+bundle, still fails exactly 62. Real OS theme changes, a game's own
+DisplayServer theme callback (the last registration wins), accent colors,
+`PlatformColor`, per-window themes and Godot mobile exports remain open. All 72
+executed code/configuration inputs match implementation a402a1f via git
+show/SHA-256 (execution base 2ec988e; the executed tree is the
+implementation's).
+
+Review (CodeRabbit on #35): DisplayServer keeps one system theme callback per
+process, and the first version registered one per application, so a second
+application displaced the first, which kept a stale scheme; the probe also
+called a freshly built Callable, so a registration or dispatch regression would
+have passed. In `b13bcdd` a shared `SystemThemeOwner` registers one static
+Callable once and forwards each change to every observing application, and the
+probe dispatches through the Callable actually registered, read through a
+validation seam, with a stage where two applications observe at once. On the
+merged tree (main `54ede87`) the fixed host passes **79/79**; the preceding host
+fails exactly the 56 normative checks; the host from before the shared callback,
+built from the merge `4f5b765`, passes the other 70 and fails exactly the 9
+shared-callback checks, its displaced application never hearing a change, and
+the independent oracle rejects its report. The AppState control still fails
+exactly 62 with the new bundle. The 33 native suites (22 examples/2,250 checks,
+Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
+158, root path 82, Document hover 1,530, click 728, PanResponder 128, AppState
+75, Switch 108, shared touches 92, touchables 93, ActivityIndicator 33,
+Appearance 79) and the native SDK batch pass on the fixed host, and after
+merging main `d62bc27` the capture notifications suite (672), Appearance,
+AppState, the contracts gates and `test:recovery` pass on the final tree. All 76
+executed code/configuration inputs match `b13bcdd` via git show/SHA-256. Hosted
+CI for this slice is pending. No whole GF, other checkpoint, weight or
+denominator closes.
 
 ## M1 — Complete the native UI tree
 

@@ -293,13 +293,16 @@ bubbling fails 12 or 13 checks per lane and an overlay tracking hover by the
 physical target 33, and the independent oracle rejects both. Hosted CI pending.
 
 The [Appearance record](appearance/README.md) runs RN's original `Appearance` and
-`useColorScheme` in two roots of one application, fed through the Callable the
-module registers with Godot's `DisplayServer` for system theme changes: 67
-headless checks. An override wins over the system, `unspecified` follows it
-again, an unsupported system starts `light`, change events are sent only when the
-effective scheme changes and stop sends nothing. The preceding host fails exactly
-the 45 Appearance checks, and a host that emits for every callback fails 17,
-which the independent oracle rejects. Hosted CI pending.
+`useColorScheme` in two roots of one application, fed through the one Callable
+registered with Godot's `DisplayServer` for system theme changes, which every
+application shares: 79 headless checks. An override wins over the system,
+`unspecified` follows it again, an unsupported system starts `light`, change
+events are sent only when the effective scheme changes, stop sends nothing, and
+two applications that observe at once both receive each change. The preceding
+host fails exactly the 56 Appearance checks, the host from before the shared
+callback fails exactly its 9 two-application checks, and a host that emitted for
+every callback failed 17 of the first 67; the independent oracle rejects both.
+Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
