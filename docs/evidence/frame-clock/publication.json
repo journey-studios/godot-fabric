@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "at": "2026-10-06T22:47:53.552157+00:00",
+  "run": 37538167731,
+  "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37538167731",
+  "event": "push",
+  "branch": "main",
+  "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/43",
+  "jobs": {
+    "build": "success",
+    "deploy": "success"
+  },
+  "buildAndDeployPassed": true,
+  "attempts": 1,
+  "buildCheckout": "0bc016614688cb4034b73e499348428c2f0d3805",
+  "dashboardTestsTap": {
+    "pass": 8,
+    "fail": 0
+  },
+  "dataCommit": "0bc016614688cb4034b73e499348428c2f0d3805",
+  "rendererCommit": "0bc016614688cb4034b73e499348428c2f0d3805",
+  "inMain": true,
+  "mainHeadAtCheck": "0bc016614688cb4034b73e499348428c2f0d3805",
+  "deployment": {
+    "id": 6896379105,
+    "sha": "0bc016614688cb4034b73e499348428c2f0d3805",
+    "state": "success",
+    "at": "2026-10-06T22:04:29Z",
+    "environmentUrl": "https://journey-studios.github.io/godot-fabric/"
+  },
+  "deployedArtifact": {
+    "name": "github-pages",
+    "id": 11447461128,
+    "zipSha256": "2ac981897b3e2f795052378e907ec0ba1219bbf03c754aafdf38c662b7bd8169",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "files": [
+      ".nojekyll",
+      "AGENT_PROMPT.md",
+      "app.mjs",
+      "fonts/JetBrainsMono.ttf",
+      "fonts/NotoSans.ttf",
+      "fonts/OFL-JetBrainsMono.txt",
+      "fonts/OFL-NotoSans.txt",
+      "index.html",
+      "migration.json",
+      "model.mjs",
+      "style.css"
+    ],
+    "migrationJsonSha256": "5bfc3dc0d44d5c763cba6e7e206b0375d105adb12feb8d4ab1b7a162389ce358",
+    "publicationMetadataPresent": false
+  },
+  "deployedJSONEqualsCommittedData": true,
+  "deployedJSONBytesEqualCommittedBytes": true,
+  "committedMigrationJsonSha256": "5bfc3dc0d44d5c763cba6e7e206b0375d105adb12feb8d4ab1b7a162389ce358",
+  "deployedRendererEqualsCommittedDashboard": true,
+  "deployedRendererFiles": [
+    "index.html",
+    "app.mjs",
+    "model.mjs",
+    "style.css",
+    "AGENT_PROMPT.md"
+  ],
+  "deployedFontsEqualCommittedAssets": true,
+  "livePublicSite": {
+    "url": "https://journey-studios.github.io/godot-fabric/migration.json",
+    "state": "latest-deployment",
+    "compared": false,
+    "note": "No later Pages deployment existed at the check; the public site was not fetched."
+  },
+  "findings": []
+}

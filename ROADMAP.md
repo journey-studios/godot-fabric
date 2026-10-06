@@ -2587,9 +2587,21 @@ are in two commits, [`e6d42a4`](https://github.com/journey-studios/godot-fabric/
 [`8fc4627`](https://github.com/journey-studios/godot-fabric/commit/8fc46279d6126b87e4fc6cc1d982f75620dfc3b5)
 (the lanes judged on delivered frames only: the four `tests/` files), and each is pinned to
 its commit by SHA-256 in the `postReview` section of `report.json`, verified against
-`git show <commit>:<path>`. The first hosted CI run failed `test:frame-clock` on a premise
-about the machine, now removed; hosted CI for the revised head is pending. No whole GF,
-checkpoint, weight or denominator closes.
+`git show <commit>:<path>`. The pull request's first hosted run (run
+37521566298, a `pull_request` run on the branch head) failed `test:frame-clock`
+on two checks that assumed 3 ms frames the macOS runner does not deliver; the
+review removed or rewrote them. Hosted Contracts run 37538167415 (the push of
+main 0bc0166) passed all five jobs in the first attempt; its [audited
+artifact](docs/evidence/frame-clock/hosted-ci.json) repeats the 37 headless
+checks of the revised head (29 cadence checks and 8 that hold on every host),
+whose IDs are exactly the 42 of that earlier run minus the 8 the review removed
+plus the 3 it added, with the independent oracle accepting the downloaded report
+and every check the preceding-host control and the three sabotages fail passing;
+the C++ unit test runs through the `test:runtime` step. All 101 tracked inputs
+match the checkout tree (7 differ from e67f82c, exactly the seven files the
+report's `postReview.pins` pin). [Pages
+37538167731](docs/evidence/frame-clock/publication.json) deployed this record
+from main 0bc0166. No whole GF, checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

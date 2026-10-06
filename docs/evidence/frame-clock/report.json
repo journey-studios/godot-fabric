@@ -1442,7 +1442,12 @@
     "React/Base/RCTFrameUpdate.m": "07eb3e66467cf0bea629c22f4b68e0172d1de43e2964b9c522d45656d49e2e30"
   },
   "hostedCI": {
-    "status": "pending-frame-clock-slice"
+    "status": "verified",
+    "run": 37538167415,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37538167731,
+    "publication": "publication.json"
   },
   "limits": [
     "Timers (setTimeout, setInterval) still run on every Godot frame: they are not quantized to ticks, as RN's iOS and Android timers are quantized to display frames. The baseline check 'A zero-delay interval fires once on every Godot frame, tick or not' records it.",

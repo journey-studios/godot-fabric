@@ -418,7 +418,8 @@ ticked at 120.0 per second; V-Sync off, 166 of 2,400 at 114.6 per second;
 `Engine.max_fps` 60, 360 of 360; minimized, the window reports it cannot draw and the clock
 reads `time` from `undrawable`. The clock has no visual output, so there is no capture.
 Open: regular presentation timestamps, timers quantized to ticks, and `ADAPTIVE` and
-`MAILBOX` V-Sync beyond the unit test. Hosted CI pending.
+`MAILBOX` V-Sync beyond the unit test. Hosted run 37538167415 repeated the
+37 checks ([receipt](frame-clock/hosted-ci.json)).
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

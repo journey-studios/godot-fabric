@@ -649,8 +649,7 @@ como história, com uma nota posterior em cada um:
   quadro e um display link entrega um tempo de quadro só, e é isso que o host faz, de
   propósito. É uma partida registrada, não um item aberto.
 - **Escopo.** Nenhum GF, checkpoint, peso ou denominador fecha: o GF-05 e o GF-19 não estão
-  na primeira fatia, então o checkpoint de fatia de cada um, já fechado, não muda. A CI
-  hospedada desta fatia está pendente.
+  na primeira fatia, então o checkpoint de fatia de cada um, já fechado, não muda.
 
 Na execução, as 101 fontes de código e configuração executadas (26 do commit, 19 do bundle
 do probe, 65 entradas do build nativo e 18 de verificação, com sobreposição) correspondem à
@@ -664,3 +663,20 @@ de código e de teste que mudaram (três em `native/` e quatro em `tests/`) est�
 SHA-256 conferido por `git show <commit>:<arquivo>`; as demais fontes executadas seguem as do
 `e67f82c`. Os relatórios brutos, os logs, os
 hosts preservados e os recibos locais das sabotagens ficam em `build/` e não entram no Git.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 0bc0166 (run
+37538167415), com os cinco jobs verdes na primeira tentativa e sem reexecução; é o
+primeiro push da `main` com a revisão. A primeira CI hospedada da branch (run
+37521566298, evento `pull_request`) tinha reprovado dois checks que supunham quadros
+de 3 ms que o runner macOS não entrega; o `8fc4627` os removeu ou reescreveu, e os
+37 IDs desta run são exatamente os 42 daquela menos os 8 removidos mais os 3
+acrescentados. O artefato `native-frame-clock` do job nativo repete os **37 checks
+headless** (29 de cadência e 8 que valem em qualquer host); o oráculo independente
+aceita de novo o relatório baixado, e os 29 checks de cadência que o host anterior
+falha e os 21, 5 e 1 que as três sabotagens retidas falham passam todos no run. O
+teste de unidade em C++ (14 casos) roda no passo `test:runtime`. Os 101 arquivos
+rastreados batem com a árvore do checkout; 7 diferem de `e67f82c`, exatamente os
+sete que o `postReview.pins` do recibo fixa. O [Pages](publication.json) (run
+37538167731) implantou exatamente os dados commitados de 0bc0166; no momento da
+conferência esse era o deploy mais recente do Pages, e o site público não foi
+buscado. Nenhum GF, checkpoint, peso ou denominador fecha.

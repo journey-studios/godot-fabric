@@ -561,7 +561,8 @@ Godot); nem a regra de retomada de timeouts vencidos, intervals e animações de
 suspensão do OS, que segue a especificar. `ADAPTIVE` e `MAILBOX` só têm o teste de
 unidade como cobertura: o renderizador medido os devolve como `ENABLED`. A
 [evidência](evidence/frame-clock/README.md) e a [pesquisa](research/frame-clock.md)
-registram o que foi executado, localmente, com a CI hospedada pendente.
+registram o que foi executado, localmente; a CI hospedada do push da `main` em 0bc0166
+repetiu os 37 checks ([recibo](evidence/frame-clock/hosted-ci.json)).
 
 ### Aceitação do tema 4
 

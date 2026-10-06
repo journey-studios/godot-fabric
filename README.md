@@ -357,7 +357,8 @@ reports; the preceding host fails exactly the 29 cadence checks, and three retai
 sabotages each fail at least one and are rejected by the oracle. The clock has no visual
 output, so there is no example scene or screenshot. Timers are not quantized to ticks,
 presented frames carry CPU time and not the display's regular timestamp, and real displays
-beyond one exploratory headed run are not certified.
+beyond one exploratory headed run are not certified. Hosted CI repeated the 37 checks
+([receipt](docs/evidence/frame-clock/hosted-ci.json)).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
