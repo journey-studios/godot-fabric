@@ -37,9 +37,10 @@ void modifiers(rn::PointerEvent &pointer, const InputEventMouse &mouse) {
 }
 }
 PointerAdapter::PointerAdapter(HitTest hit, HitPath path, InsideRoot inside, LocalPoint local, Project project,
-    Emit emit, EmitPointer emit_pointer)
+    Emit emit, EmitPointer emit_pointer, OtherTouches other_touches)
     : hit_(std::move(hit)), path_(std::move(path)), inside_(std::move(inside)), local_(std::move(local)),
-      project_(std::move(project)), emit_(std::move(emit)), emit_pointer_(std::move(emit_pointer)) {}
+      project_(std::move(project)), emit_(std::move(emit)), emit_pointer_(std::move(emit_pointer)),
+      other_touches_(std::move(other_touches)) {}
 bool PointerAdapter::input(const Ref<InputEvent> &event, int pointer_id, bool primary) {
   invalid_coordinates_ = false;
   if (event.is_null() || pointer_id <= 0) return false;
@@ -231,6 +232,11 @@ std::vector<int> PointerAdapter::pointer_ids() const {
   for (const auto &[id, current] : pointers_) ids.push_back(id);
   return ids;
 }
+std::vector<rn::Touch> PointerAdapter::touches() const {
+  std::vector<rn::Touch> active;
+  for (const auto &[id, touch] : touches_) active.push_back(touch);
+  return active;
+}
 void PointerAdapter::cancel_pointer(int id) {
   auto found = pointers_.find(id);
   if (found == pointers_.end()) return;
@@ -300,6 +306,9 @@ void PointerAdapter::dispatch(const rn::Touch &touch, const std::string &phase) 
     event.touches.insert(current);
     if (current.target == touch.target) event.targetTouches.insert(current);
   }
+  // Another root's active touches keep its responder's gesture alive: RN
+  // releases the responder only when no listed touch remains in it.
+  for (const auto &other : other_touches_()) event.touches.insert(other);
   emit_(touch.target, phase, std::move(event));
 }
 void PointerAdapter::responder(int tag, bool active, bool block) {

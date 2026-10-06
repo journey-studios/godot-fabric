@@ -731,7 +731,11 @@
     "tests/pointer-click-native.test.mjs"
   ],
   "hostedCI": {
-    "status": "pending-pan-responder-slice"
+    "status": "verified",
+    "run": 37385104730,
+    "receipt": "hosted-ci.json",
+    "pages": 37385104756,
+    "publication": "publication.json"
   },
   "limits": [
     "Touches and the left mouse button over two roots, four flag lanes on the same host, headless.",
@@ -863,7 +867,13 @@
       ],
       "sameCheckIdsAndCallbacksAsPinnedRun": true,
       "comparisonSha256": "2684ff22f36ebd322be40ba1db37177c504cf953757ba2d3a963573af03f342c",
-      "runnerLogSha256": "a7f4da468f573da450fb4ba63fcf3115ed5d5f127e1bf043beee5cbbb005698e"
+      "runnerLogSha256": "a7f4da468f573da450fb4ba63fcf3115ed5d5f127e1bf043beee5cbbb005698e",
+      "verificationSourcesAtCommit": {
+        ".github/workflows/contracts.yml": "c19486cc8e866ce3968be7b980bde7dc3f479e0d6454d45aea69295cdd266433",
+        "package.json": "7ebc2d266a4d5ffa436fc207332084e47ebf5c973fffcd39f7007cca7de7e048",
+        ".fallowrc.json": "fa27b5e0fa63071c37bb1839ea8920dbee6f0f308800fc931b3f9723e816155f"
+      },
+      "verificationSourcesChangedBy": "the merge of main 8f80fed (AppState) into the branch, before this rerun"
     }
   ]
 }

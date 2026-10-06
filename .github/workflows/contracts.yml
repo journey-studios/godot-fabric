@@ -351,6 +351,22 @@ jobs:
             build/switch-comparison.json
             build/switch-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:responders:shared-touches
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-shared-touches
+          path: |
+            build/shared-touches-disabled-report.json
+            build/shared-touches-imperative-only-report.json
+            build/shared-touches-internal-only-report.json
+            build/shared-touches-enabled-report.json
+            build/shared-touches-comparison.json
+            build/shared-touches-disabled.log
+            build/shared-touches-imperative-only.log
+            build/shared-touches-internal-only.log
+            build/shared-touches-enabled.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

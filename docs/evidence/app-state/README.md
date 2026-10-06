@@ -145,8 +145,18 @@ rede ou animações pendentes seguem abertos no GF-21. Num export Android o host
 reporta um `inactive` transitório antes de `background`, e no iOS também envia
 `focus`/`blur`. O css-interop do NativeWind só aplica mudanças de Appearance com
 `AppState` em `active`: numa execução com janela e sem foco, uma troca manual de
-tema espera o foco voltar, como no iOS. A CI hospedada desta fatia está
-pendente. Nenhum GF, checkpoint, peso ou denominador fecha.
+tema espera o foco voltar, como no iOS.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 8f80fed (run
+37382633328). Na primeira tentativa o `reference-android` caiu por infraestrutura: o
+`sdkmanager` não conseguiu preparar o pacote do emulador (`Error on ZipFile unknown
+archive`) e o `parity:android` nem começou. O job foi reexecutado e passou, e os
+cinco jobs terminaram verdes. O artefato `native-app-state` do job nativo repete os
+**75 checks headless** com IDs e bundle idênticos aos locais, e as 70 entradas
+rastreadas batem com 7087679 na árvore do checkout. O [Pages](publication.json) (run
+37382633232) implantou exatamente os dados commitados de 8f80fed; o site público já
+foi substituído pelo deploy seguinte da `main`. Nenhum GF, checkpoint, peso ou
+denominador fecha.
 
 As 70 fontes de código e configuração executadas (16 produtoras do bundle, 56
 entradas do build nativo e 5 de verificação, com sobreposição) correspondem à
