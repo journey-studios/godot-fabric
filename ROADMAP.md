@@ -1873,6 +1873,58 @@ dragging, the Android path, per-target defaults, hardware and mobile exports
 remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
 or denominator closes.
 
+
+### Original TouchableWithoutFeedback and TouchableHighlight (2026-10-05)
+
+GF-13 remains **In progress**. The
+[touchables evidence](docs/evidence/touchables/README.md) makes
+`TouchableWithoutFeedback` and `TouchableHighlight` public `react-native` exports
+backed by RN 0.87.1's original modules and Pressability, and certifies them with
+actual Godot mouse and touch input on two roots of one Hermes application and the
+public production bundle: **93/93 headless checks**. With `minPressDuration` 0 a
+tap reports onPressIn, then onPressOut and onPress with one release payload. The
+Highlight shows `underlayColor` and the child's `activeOpacity` on the native
+Controls while pressed, shows them again for onPress and hides them from its
+`delayPressOut` timer; `delayPressOut` defers onPressOut with the persisted release
+event. `delayLongPress` fires with the persisted grant event and suppresses
+onPress, and a 15 px move cancels only the long press. Native hit testing honors
+`hitSlop`, and Pressability's retention region (rect + `hitSlop` +
+`pressRetentionOffset`) deactivates and reactivates on move out and back.
+
+A disabled touchable is never granted and lets an enabled ancestor claim the
+press; disabling a granted press lets it complete, as Pressability only reads
+`disabled` when the responder is requested. The inner of nested touchables wins.
+Removing a pressed Highlight cancels its contact without any callback and
+remounts at rest. Two children, no child, a Highlight inside Text and an
+unsupported style fail at render. The facade only adds its Text and style
+contracts; `src/components.jsx`, `src/base-view-config.js` and native code are
+unchanged.
+
+`TouchableOpacity` stays an explicit placeholder whose message now gives the
+reason. RN 0.87.1's Animated props hook flushes the native animated queue in its
+first effect and fails an invariant without `NativeAnimatedModule`, so the
+JS-driven fallback is unreachable; an animated lane mounts the original
+TouchableOpacity (test-only seams for Animated's lazy list getters and platform
+color import) and shows that failure at mount. It depends on GF-19.
+
+The same fixture on the preceding SDK (15e1dda) fails exactly its 19 render
+checks, each with its placeholder's message, and a retained sabotage that imitates
+both touchables over the SDK Pressable fails 42 probe checks while the
+independent oracle rejects 12 of 13 sections.
+
+On the unchanged host the contracts gates (260 Node/13 Python, static analysis,
+publication scan), `test:recovery` and the 26 native suites pass with main's
+counts, including Down 2,731, Document Up 6,459, View Up 297, Move 220, Document
+Move 1,940, hover 158, root path 82, Document hover 1,530, touchables 93 and 22
+examples; codegen, the native SDK pack/verify, adapters (registry 207/11, loader
+89/21, runtime 13 runs/213 checks), consumer (30 + 40) and cold start pass too.
+All 30 executed code/configuration inputs match implementation 0e18060 via git
+show/SHA-256 (execution base 15e1dda/dirty retained). The wrong-root release of
+concurrent presses is fixed in the host by the shared touches slice;
+concurrent presses with the touchables themselves, TouchableNativeFeedback, focus and keyboard activation, accessibility, click
+synthesis, typed declarations and hardware remain open. Hosted CI for this slice
+is pending. No whole GF, checkpoint, weight or denominator closes.
+
 ### Appearance and useColorScheme from the system theme (2026-10-05)
 
 GF-21 remains **In progress**; only its first-slice checkpoint becomes done,

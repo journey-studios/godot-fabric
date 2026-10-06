@@ -239,6 +239,16 @@ order, and Switch.js's `setValue` restores a value prop that does not change.
 108 headless checks in two roots; the preceding host fails the 2 mount checks.
 [Evidence](docs/evidence/switch/README.md).
 
+The [touchables example](examples/touchables/README.md) makes
+`TouchableWithoutFeedback` and `TouchableHighlight` public with RN's original
+modules and Pressability: callback order, native underlay and child opacity,
+`delayPressOut`, long press, hitSlop and retention, nesting, disabled and removal
+mid-press under real mouse and touch on two roots, 93 headless checks. The same
+fixture on the preceding SDK fails exactly its 19 render checks, and a retained
+imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
+Animated needs `NativeAnimatedModule`.
+[Evidence](docs/evidence/touchables/README.md).
+
 The [Appearance example](examples/appearance/README.md) runs React Native's
 original `Appearance` and `useColorScheme` from the public import, fed by Godot's
 system theme and the `setColorScheme` override, with two roots re-rendering the
