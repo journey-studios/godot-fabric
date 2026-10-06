@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Toques compartilhados entre as raízes validados nas quatro lanes; Switch na main; próximos: Touchables (#30), Appearance (#35), ActivityIndicator, listas virtualizadas e notificações de captura"
   },
-  "updatedAt": "2026-10-05T23:40:50.400304+00:00",
+  "updatedAt": "2026-10-06T00:23:27.517034+00:00",
   "source": {
     "commit": "1b7dac52794ffd13257857621942c5df20ca127b",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b7dac52794ffd13257857621942c5df20ca127b",
@@ -1705,7 +1705,7 @@
             },
             {
               "label": "ActivityIndicator: 33 checks em frames reais, controle do host anterior e sabotagem",
-              "url": "https://github.com/journey-studios/godot-fabric/blob/ba2f356badad6c40f2f1c7fecc6b75f1172fe38c/docs/evidence/activity-indicator/README.md"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b334085f30d3b6e2bc0634b3da13d433d7361d93/docs/evidence/activity-indicator/README.md"
             }
           ]
         },
@@ -3368,7 +3368,7 @@
         "GF-17"
       ],
       "message": "ActivityIndicator público: o ActivityIndicator.js original do RN segue o caminho não Android sobre o ActivityIndicatorViewComponentDescriptor gerado (o mesmo do iOS) e um spinner nativo desenhado no Godot. 33/33 checks headless em frames reais do SceneTree em duas roots: padrões do RN (cinza do iOS sem cor), tamanhos small/large/numérico, fase que avança uma vez por frame enquanto anima e congela parada, hidesWhenStopped, cor, remontagem e isolamento entre roots. O host anterior falha exatamente os 2 checks de montagem; a sabotagem do trabalho por frame falha 9 checks e o oráculo rejeita. Contracts 262 Node/13 Python e as suítes nativas passaram; CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/ba2f356badad6c40f2f1c7fecc6b75f1172fe38c/docs/evidence/activity-indicator/README.md"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b334085f30d3b6e2bc0634b3da13d433d7361d93/docs/evidence/activity-indicator/README.md"
     },
     {
       "id": "pan-responder-local-verified-20261005",
