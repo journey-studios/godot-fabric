@@ -222,7 +222,15 @@ deepest mounted view on both hit paths, never a shared root, and a ScrollView
 drag sends its contact one `pointercancel` and then only touches. The preceding
 host fails exactly 31 normative checks; a host clicking the release target fails
 10, an SDK without `topClick` throws in the legacy lane, and the independent
-oracle rejects both controls. Hosted CI pending.
+oracle rejects both controls. Hosted run 37375758262 passed the same 728 checks
+with identical IDs and bundles ([receipt](pointer-click/hosted-ci.json)).
+
+The [PanResponder record](pan-responder/README.md) runs RN's original
+`PanResponder` in four flag lanes, covering the legacy and native-dispatch
+responders: 128 headless checks with identical callbacks and gesture state in
+every lane. The preceding SDK fails at mount when its stub throws, and a
+PanResponder without capture-phase handlers fails 6 checks rejected by the
+independent oracle. Hosted CI pending.
 
 The [AppState record](app-state/README.md) delivers Godot's application focus,
 pause and memory-warning notifications through the running main loop to an actual
@@ -232,6 +240,15 @@ sent, focus changes also send `focus`/`blur`, a paused game tree still delivers
 events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
 checks, and a host whose focus outranks the pause fails 5, which the independent
 oracle rejects. Hosted CI pending.
+
+The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's
+shared iOS/macOS Switch descriptor and a custom-drawn Godot switch: 108/108
+headless checks with actual mouse and touch input in two roots. Controlled and
+fixed values, disabled input, colors, the 63×28 default frame (RN's iOS 26 size),
+`setValue`, removal mid-press and the bubbling `topChange` registry are covered.
+The preceding host fails exactly the 2 mount checks; a retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
+CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

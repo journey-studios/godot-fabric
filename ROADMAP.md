@@ -1698,8 +1698,44 @@ the 26 native suites and the native SDK batch pass on the same host. Captured
 clicks, `auxclick`/`contextmenu`, keyboard and accessibility activation, pen,
 nested or horizontal scroll takeover and surface selection for empty-area input
 remain open. All 28 executed code/configuration inputs match implementation
-8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted CI
-for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted
+Contracts run 37375758262 (the push of main 72155bc) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/pointer-click/hosted-ci.json)
+repeats the 728 headless checks with identical IDs, bundles and stages, and all
+28 tracked inputs match 8948a1c. [Pages 37375758284](docs/evidence/pointer-click/publication.json)
+deployed this record from main 72155bc, and the live public JSON and local API
+match it. No whole GF, checkpoint, weight or denominator closes.
+
+### Original PanResponder (2026-10-05)
+
+GF-13 remains **In progress**. The
+[PanResponder evidence](docs/evidence/pan-responder/README.md) replaces the
+platform's throwing `PanResponder` stub (a chart-example leftover) with RN's
+original module, which is plain JS over the responder events and their touch
+history that this host already delivers; no native code changes. Four flag lanes
+cover both of RN's responder implementations: **128 headless checks**.
+
+Touch and mouse drags grant at the start centroid, accumulate displacement and
+release with the final state; a second finger starts with two active touches
+and each move uses the centroid of both, as `TouchHistoryMath` compares
+inclusively; a parent claims vertical moves from a `Pressable` (which presses
+out without pressing), a pan view that refuses to yield keeps its gesture after
+RN's speculative grant and reject of the parent, and a capture parent wins the
+start. Removing the responder's View cancels the contact without a callback to
+the unmounted responder, and the next gesture is granted normally. The legacy
+plugin and native dispatch produce identical callbacks and gesture state. The
+preceding SDK fails at mount when its stub throws, and a PanResponder that drops
+the capture-phase handlers fails 6 checks rejected by the independent oracle.
+The shared bundler now exports its probe helper, so new probes stop editing a
+producer every preceding-host control pins. Those seven controls were rerun with
+the new SDK bundle and still reproduce 8/12/3/45/32/9/31 failures; the contracts
+gates, `test:recovery`, the 27 native suites and the native SDK batch pass on the
+same host. Pinch zoom through chart libraries, `InteractionManager` handles,
+hardware velocity, nested scroll views and negotiation with native Godot
+controls remain open. All 14 executed code/configuration inputs match
+implementation b3327e4 via git show/SHA-256 (execution base 72155bc/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
 
 ### AppState from the Godot application lifecycle (2026-10-05)
 
@@ -1746,6 +1782,48 @@ with pending work remain open. All 70 executed code/configuration inputs match
 implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
 executed tree is the implementation's). Hosted CI for this slice is pending. No
 whole GF, checkpoint, weight or denominator closes.
+
+### Switch over a native Godot switch (2026-10-05)
+
+GF-17 remains **In progress**. The [Switch evidence](docs/evidence/switch/README.md)
+replaces the public placeholder that threw on render with RN's original
+`Switch.js`, which takes its non-Android path on Godot: the codegen-generated
+`RCTSwitch` ViewConfig, its bubbling `onChange` (`{value, target}`) and the
+`setValue` command. The host compiles the package's generated FBReactNativeSpec
+Props/EventEmitters, registers RN's shared iOS/macOS `SwitchComponentDescriptor`
+with a Godot measurement beside `IOSSwitchShadowNode.mm`, and mounts
+`GodotSwitch`, a custom-drawn Panel: **108/108 headless checks** with actual mouse
+clicks and touch taps in two roots of one Hermes application.
+
+As in `RCTSwitchComponentView`, a tap toggles natively, `value` applies only when
+it changes, and `onChange` is emitted only when the native value differs from the
+committed prop; Switch.js then calls `onChange` and `onValueChange` and restores a
+value prop that does not follow with exactly one `setValue`. During the press the
+Switch is RN's JS responder without blocking native input; Godot's emulated mouse
+for a touch is ignored; disabled input toggles nothing; colors map to
+`tintColor`/`onTintColor`/`thumbTintColor` and `ios_backgroundColor` paints the
+host. A Switch without a style size measures 63×28, RN's own measurement (UISwitch
+plus two points) on the repo's newest iOS reference runtime (iOS 26.3.1; iOS 18.4
+gives 51×31). Once a Switch renders, RN's global registry makes `topChange`
+bubble, so a Godot TextInput change also reaches ancestors' `onChange`, as RN's
+own TextInput configs do.
+
+The preceding host fails exactly the 2 normative mount checks (Fabric's legacy
+interop resolves `Switch`; the mount rejects it). A retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects its report;
+the restored source rebuilds the identical host. The contracts gates (261 Node/13
+Python, static analysis, publication scan), `test:recovery` and the
+native-cold-start suites pass, including Down 2,731, Document Up 6,459, View Up
+297, Move 220, Document Move 1,940, hover 158, root path 82, Document hover 1,530
+and 22 examples; codegen, the native SDK pack/verify (now recording the 5
+generated spec sources), adapters (loader 89 checks/21 cases, runtime 13
+runs/213 checks), consumer (30 + 40) and cold start pass too. All 72 executed
+code/configuration inputs match implementation a10b19e via git show/SHA-256
+(battery base 3e2dc2d; the amend touched only test/config files, whose readers
+were rerun). Keyboard activation and focus, accessibility, animation and thumb
+dragging, the Android path, per-target defaults, hardware and mobile exports
+remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
 
 ## M1 — Complete the native UI tree
 

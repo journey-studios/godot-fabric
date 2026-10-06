@@ -81,6 +81,11 @@ export interface TextInputProps extends Pick<RN.TextInputProps, "onChange" | "on
 export interface ButtonProps extends Pick<RN.ButtonProps, "onPress"> {
   title: string; color?: string; disabled?: boolean; testID?: string;
 }
+/** RN's original Switch.js (non-Android path) over the native Switch component.
+ * The deprecated iOS tint props are omitted: Switch.js overrides them. */
+export type SwitchProps = Pick<RN.SwitchProps, "value" | "disabled" | "onChange" | "onValueChange" |
+  "thumbColor" | "trackColor" | "ios_backgroundColor" | "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
+export type SwitchChangeEvent = RN.SwitchChangeEvent;
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
 export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {
@@ -92,6 +97,7 @@ export declare const TextInput: React.ComponentType<TextInputProps & React.RefAt
   };
 };
 export declare const Button: React.ComponentType<ButtonProps & React.RefAttributes<NativeInstance>>;
+export declare const Switch: React.ComponentType<SwitchProps & React.RefAttributes<NativeInstance>>;
 export declare const StyleSheet: {
   hairlineWidth: number;
   create<T extends Record<string, TextStyle>>(styles: T): T;

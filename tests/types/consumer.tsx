@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, RootTagContext, Button, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, RootTagContext, Button, Switch, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -152,3 +152,22 @@ const invalidPointerId = (instance: ViewInstance) => instance.setPointerCapture(
 // @ts-expect-error original PointerEvent keeps coordinates numeric
 const invalidPointerPosition = (event: import("react-native").PointerEvent): string => event.nativeEvent.clientX;
 void capturePointer; void originalPointerProps; void pointerView; void invalidPointerId; void invalidPointerPosition;
+
+// Public Switch: RN's original props and change event through the facade.
+const switchProps: import("react-native").SwitchProps = {
+  value: true, disabled: false, thumbColor: "#ffffff", trackColor: {false: "#767577", true: "#81b0ff"},
+  ios_backgroundColor: "#3e3e3e", testID: "switch", style: {marginTop: 8},
+  onValueChange: value => { const next: boolean = value; void next; },
+  onChange: (event: SwitchChangeEvent) => {
+    const changed: boolean = event.nativeEvent.value;
+    const target: number = event.nativeEvent.target;
+    void changed; void target;
+  },
+};
+const originalSwitchProps: import("../../node_modules/react-native/types_generated/index").SwitchProps = switchProps;
+const publicSwitch = <Switch {...switchProps} ref={instance => { if (instance) instance.measure(() => {}); }} />;
+// @ts-expect-error Switch.js overrides the deprecated iOS tint props
+const deprecatedTint = <Switch onTintColor="#00ff00" />;
+// @ts-expect-error the value is a boolean
+const textValue = <Switch value="on" />;
+void originalSwitchProps; void publicSwitch; void deprecatedTint; void textValue;
