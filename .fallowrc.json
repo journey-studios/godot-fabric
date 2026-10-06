@@ -47,6 +47,7 @@
     "tests/touchables-fixture.jsx",
     "tests/touchables-animated-fixture.jsx",
     "tests/activity-indicator-fixture.jsx",
+    "tests/pointer-capture-notifications-fixture.jsx",
     "tests/appearance-fixture.jsx"
   ],
   "ignorePatterns": [

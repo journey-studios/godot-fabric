@@ -250,6 +250,14 @@ native spinner. Its [receipt](../docs/evidence/activity-indicator/README.md)
 records 33/33 headless checks, the preceding host's 2 mount failures and a
 retained sabotage.
 
+The [capture notification matrix](pointer-capture-notifications/README.md)
+captures mouse and touch contacts over two roots and observes got/lost on JSX
+props and on original View, documentElement and Document listeners, with hover
+and click while captured, in eight lanes: `npm run test:pointers:capture`,
+outside the launcher catalog. Its
+[receipt](../docs/evidence/pointer-capture-notifications/README.md) records 672
+headless checks and two retained sabotages.
+
 The [Appearance probe](appearance/README.md) changes the system theme through the
 Callable registered with Godot's `DisplayServer` and overrides it with
 `setColorScheme`, while two roots render through `useColorScheme`:
