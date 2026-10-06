@@ -166,6 +166,8 @@ dele é desenhado e o picking do Godot ignora um Control escondido.
 
 ## O que foi verificado
 
+> Nota posterior (2026-10-06): o commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) trocou as condições das pernas animadas (`entrance` e `exit`) que os itens abaixo descrevem (rampa que anda num sentido só, número mínimo de amostras e de quadros desenhados entre as pontas) pelo recálculo, no oráculo, do `FrameAnimationDriver` do RN a partir dos timestamps que o host entregou: a [CI hospedada](https://github.com/journey-studios/godot-fabric/actions/runs/37484991404) mostrou quadros quase duplicados dando um degrau contra a rampa. As frases dos checks `FRAMES_UP` e `FRAMES_DOWN` foram renomeadas (`and intermediate frames were drawn` virou `and the Control changes only on frames the backend delivered`). Os itens abaixo e o [recibo](report.json) seguem como executados na implementação.
+
 O [`singular.gd`](../../../examples/transforms/singular.gd) monta cada caso pelo import
 público, numa aplicação Hermes e num Surface do Godot próprios (grade 4×2 de cards
 215×325), e compara o Control e o que o RN calcula com valores derivados da declaração

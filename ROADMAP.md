@@ -2324,6 +2324,12 @@ code/configuration inputs match implementation 6fbfb18 via git show/SHA-256 (exe
 from the committed tree, execution base 0157b15). Hosted CI for this slice is pending.
 No whole GF, checkpoint, weight or denominator closes.
 
+Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
+monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
+recomputation of RN's `FrameAnimationDriver` from the delivered timestamps (hosted CI showed
+near-duplicate frames stepping against the ramp) and renamed the `FRAMES` check phrase; the
+executed record above stays as written for implementation `6fbfb18`.
+
 ### Collapsed singular transforms (2026-10-06)
 
 GF-10 stays **In progress**; this is not its first slice, so none of its checkpoints
@@ -2408,6 +2414,12 @@ passed three reruns). All 87 executed code/configuration inputs match implementa
 `ca9f195` via git show/SHA-256 (executed from the committed tree, execution base
 `9e7cc4f`). Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
 denominator closes.
+
+Later, commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) replaced the
+monotonic-ramp, sample-count and drawn-frame conditions of the animated legs with the oracle's
+recomputation of RN's `FrameAnimationDriver` from the delivered timestamps (hosted CI showed
+near-duplicate frames stepping against the ramp) and renamed the `FRAMES_UP` and `FRAMES_DOWN`
+check phrases; the executed record above stays as written for implementation `ca9f195`.
 
 ## M1 — Complete the native UI tree
 

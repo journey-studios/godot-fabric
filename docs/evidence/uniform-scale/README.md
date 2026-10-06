@@ -104,6 +104,8 @@ regra, com o mesmo problema latente.
 
 ## O que foi verificado
 
+> Nota posterior (2026-10-06): o commit [`4d8312d`](https://github.com/journey-studios/godot-fabric/commit/4d8312d98766d8ca44b0020b24e6483e4f572f04) trocou as condições das pernas animadas (a subida e a volta pelo botão Pop) que o item do `Animated.View` abaixo descreve (rampa que anda num sentido só, número mínimo de amostras e de quadros desenhados entre as pontas) pelo recálculo, no oráculo, do `FrameAnimationDriver` do RN a partir dos timestamps que o host entregou: a [CI hospedada](https://github.com/journey-studios/godot-fabric/actions/runs/37484991404) mostrou, no lane dos transforms singulares, quadros quase duplicados dando um degrau contra a rampa, e este lane tinha a mesma condição. A frase do check `FRAMES` foi renomeada (`and intermediate frames were drawn` virou `and the Control changes only on frames the backend delivered`). Os itens abaixo e o [recibo](report.json) seguem como executados na implementação.
+
 O [`uniform-scale.gd`](../../../examples/transforms/uniform-scale.gd) monta cada caso
 pelo import público, numa aplicação Hermes e num Surface do Godot próprios, e compara o
 Control com uma matriz planar derivada da declaração JSX (o
