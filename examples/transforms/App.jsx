@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AppRegistry, View, Text, Pressable, findNodeHandle } from "react-native";
+import { Animated, AppRegistry, Easing, View, Text, Pressable, findNodeHandle, useAnimatedValue } from "react-native";
 
 const refs = new Map();
 const retained = new Map();
@@ -154,6 +154,8 @@ export function TransformGuardCase({ mode }) {
     singular: [{ scaleX: 0 }],
     "rank-one": [{ matrix: [1, 5, 0, 0, 5, 25, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }],
     "3d": [{ perspective: 300 }],
+    "rotate-x": [{ rotateX: "30deg" }],
+    "w-not-one": [{ matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2] }],
     "range-large": [{ scaleX: 1e25 }, { scaleY: 1e25 }],
     "range-small": [{ matrix: [1e-25, 0, 0, 0, 0, 1e-25, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1] }],
     "range-pivot": [{ scaleX: 1e38 }, { scaleY: 1e38 }],
@@ -162,6 +164,103 @@ export function TransformGuardCase({ mode }) {
     backgroundColor: "#0284c7", transform: transforms[mode] }} />;
 }
 AppRegistry.registerComponent("TransformGuardCase", () => TransformGuardCase);
+
+// A uniform scale. RN writes `scale: n` as scale3d(n, n, n); on a planar Control
+// the z factor moves nothing, so the host draws it in the plane. Each case is its
+// own AppRegistry root: uniform-scale.gd mounts them in independent applications,
+// so a host that rejects one cannot hide what it does with another. `width` is
+// the size of the Godot Surface the case runs in and `left` centres the box in it.
+const SCALE_SIZE = { width: 160, height: 100 };
+const SCALE_CASES = {
+  uniform: { title: "scale: 1.5", color: "#0ea5e9", width: 290, left: 65, style: { transform: [{ scale: 1.5 }] } },
+  "uniform-rotate": { title: 'scale: 0.5, then rotate: "30deg"', color: "#f59e0b", width: 290, left: 65,
+    style: { transform: [{ scale: 0.5 }, { rotate: "30deg" }] } },
+  "uniform-origin": { title: 'scale: 1.5 about transformOrigin ["25%", "75%"]', color: "#a855f7", width: 290, left: 65,
+    style: { transformOrigin: ["25%", "75%", 0], transform: [{ scale: 1.5 }] } },
+  "uniform-animated": { title: "Animated scale 1 to 1.5 with useNativeDriver", color: "#22c55e", width: 440, left: 140 },
+  "uniform-press": { title: "Pressable with scale: 1.2, pressed outside its layout box", color: "#ec4899", width: 440, left: 140,
+    style: { transform: [{ scale: 1.2 }] } },
+};
+const scaleBox = mode => ({ position: "absolute", left: SCALE_CASES[mode].left, top: 140, ...SCALE_SIZE });
+const scaleAnimation = { renders: 0, runs: 0, ends: [], target: 1, run: null };
+const pressLog = [];
+globalThis.UniformScale = {
+  run: () => scaleAnimation.run(),
+  state: () => ({ renders: scaleAnimation.renders, runs: scaleAnimation.runs, ends: [...scaleAnimation.ends],
+    presses: pressLog.map(entry => ({ ...entry })) }),
+};
+// `reserve` keeps the caption clear of a button at the card's right edge.
+function ScaleFrame({ mode, caption, reserve = 0, children }) {
+  const { title, width } = SCALE_CASES[mode];
+  return <View testID="scale-root" style={{ flex: 1, backgroundColor: "#16233b" }}>
+    <Text style={{ position: "absolute", left: 16, top: 10, width: width - 32, height: 38,
+      color: "#f8fafc", fontSize: 14, fontWeight: "700" }}>{title}</Text>
+    <Text testID="scale-caption" style={{ position: "absolute", left: 16, top: 288, width: width - 32 - reserve, height: 20,
+      color: "#b5c6e0", fontSize: 12 }}>{caption}</Text>
+    {children}
+    {/* The layout box without the transform: the outline the scale departs from. */}
+    <View testID="scale-layout" pointerEvents="none"
+      style={{ ...scaleBox(mode), borderWidth: 2, borderColor: "#e2e8f0" }} />
+  </View>;
+}
+function StaticScaleCase({ mode }) {
+  const { color, style } = SCALE_CASES[mode];
+  const box = scaleBox(mode);
+  return <ScaleFrame mode={mode} caption="a uniform scale on a planar Control">
+    <View testID="scale-box" style={{ ...box, backgroundColor: color, ...style }} />
+    {mode === "uniform-origin" && <View testID="scale-origin" pointerEvents="none" style={{ position: "absolute",
+      left: box.left + 0.25 * box.width - 5, top: box.top + 0.75 * box.height - 5,
+      width: 10, height: 10, borderRadius: 5, backgroundColor: "#f8fafc" }} />}
+  </ScaleFrame>;
+}
+function AnimatedScaleCase() {
+  const scale = useAnimatedValue(1);
+  const [caption, setCaption] = useState("scale 1");
+  scaleAnimation.renders += 1;
+  scaleAnimation.run = () => {
+    scaleAnimation.target = scaleAnimation.target === 1 ? 1.5 : 1;
+    const toValue = scaleAnimation.target;
+    scaleAnimation.runs += 1;
+    Animated.timing(scale, { toValue, duration: 600, easing: Easing.inOut(Easing.cubic), useNativeDriver: true })
+      .start(({ finished }) => {
+        scaleAnimation.ends.push({ toValue, finished });
+        setCaption(`scale ${toValue} · finished: ${finished}`);
+      });
+  };
+  return <ScaleFrame mode="uniform-animated" caption={caption} reserve={100}>
+    <Animated.View testID="scale-box" style={{ ...scaleBox("uniform-animated"),
+      backgroundColor: SCALE_CASES["uniform-animated"].color, transform: [{ scale }] }} />
+    <Pressable testID="scale-pop" onPress={() => scaleAnimation.run()} style={{ position: "absolute", left: 340, top: 282,
+      width: 80, height: 30, alignItems: "center", justifyContent: "center", backgroundColor: "#0f766e" }}>
+      <Text style={{ color: "#f8fafc", fontSize: 13 }}>Pop</Text>
+    </Pressable>
+  </ScaleFrame>;
+}
+// The Pressable itself carries the scale. Godot's hit testing and RN's responder
+// system see its scaled bounds: a press left of its layout box, where only the
+// scale reaches, is the Pressable's, and so is the target-local point it reports.
+function PressScaleCase() {
+  const { color, style } = SCALE_CASES["uniform-press"];
+  const [caption, setCaption] = useState("a Pressable under a uniform scale");
+  const record = type => event => {
+    const { target, locationX, locationY, pageX, pageY } = event.nativeEvent;
+    pressLog.push({ type, target, locationX, locationY, pageX, pageY });
+    if (type === "press") {
+      setCaption(`pressed at (${locationX.toFixed(1)}, ${locationY.toFixed(1)}) in its own coordinates`);
+    }
+  };
+  return <ScaleFrame mode="uniform-press" caption={caption}>
+    <Pressable testID="scale-box" onPressIn={record("in")} onPressOut={record("out")} onPress={record("press")}
+      style={{ ...scaleBox("uniform-press"), backgroundColor: color, ...style }} />
+  </ScaleFrame>;
+}
+function UniformScaleCase({ mode }) {
+  if (mode === "uniform-animated") {
+    return <AnimatedScaleCase />;
+  }
+  return mode === "uniform-press" ? <PressScaleCase /> : <StaticScaleCase mode={mode} />;
+}
+AppRegistry.registerComponent("UniformScaleCase", () => UniformScaleCase);
 globalThis.GodotTransforms = {
   stats: () => ({ mounts: { ...observations.mounts }, cleanups: { ...observations.cleanups },
     layouts: JSON.parse(JSON.stringify(observations.layouts)), events: [...observations.events],

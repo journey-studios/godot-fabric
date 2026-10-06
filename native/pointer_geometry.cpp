@@ -1,4 +1,5 @@
 #include "pointer_geometry.h"
+#include "affine_transform.h"
 #include "coordinate_transform.h"
 #include <react/renderer/components/root/RootShadowNode.h>
 #include <react/renderer/core/LayoutableShadowNode.h>
@@ -51,10 +52,7 @@ godot::Transform2D local_transform(const rn::LayoutableShadowNode &node) {
   const auto metrics = node.getLayoutMetrics();
   const auto matrix = node.getTransform().matrix;
   for (auto value : matrix) native_value(value);
-  for (auto index : {2, 3, 6, 7, 8, 9, 11, 14})
-    if (matrix[index] != 0)
-      throw std::runtime_error("E_POINTER_GEOMETRY_3D: pointer projection requires a planar affine transform");
-  if (matrix[10] != 1 || matrix[15] != 1)
+  if (planar_violation(matrix) != PlanarViolation::None)
     throw std::runtime_error("E_POINTER_GEOMETRY_3D: pointer projection requires a planar affine transform");
 
   const double center_x = double(metrics.frame.size.width) / 2;
