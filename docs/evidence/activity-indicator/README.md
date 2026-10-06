@@ -144,7 +144,8 @@ sobreposição) correspondem à implementação
 
 A fatia foi feita sobre a branch do Switch. Depois que o Switch (#33) e os toques
 compartilhados (#34) entraram, a `main` foi mesclada duas vezes, sem rebase
-(`99deec8` e `f76c9a7`). O controle do host anterior foi refeito para o bundle novo
+(`99deec8` e `f76c9a7`), e de novo depois dos Touchables (#30, `0929b72`, com o
+controle refeito e ActivityIndicator, Touchables e Switch repetidos). O controle do host anterior foi refeito para o bundle novo
 (as mesmas 2 falhas de montagem), e na árvore mesclada passaram de novo o
 ActivityIndicator (33/33), o Switch, o PanResponder, os toques compartilhados, os
 22 exemplos e os gates do `contracts`. O recibo registra isso em

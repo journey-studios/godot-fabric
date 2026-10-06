@@ -776,12 +776,13 @@
     }
   },
   "mergeReverification": {
-    "reason": "the slice was stacked on the Switch branch; after #33 (f165b82) and #34 (8b87d78) merged, main was merged twice without rebase",
+    "reason": "the slice was stacked on the Switch branch; after #33 (f165b82) and #34 (8b87d78) merged, main was merged again after each without rebase; then #30 (Touchables, 946e624)",
     "mergeCommits": [
       "99deec8",
-      "f76c9a7"
+      "f76c9a7",
+      "0929b72"
     ],
-    "mainCommit": "8b87d78",
+    "mainCommit": "946e624",
     "nativeHostSha256": "27c23ef4546a783fdf8dbbb6706decea5c96ee712c6fe7effc4372561b5a2c8c",
     "activityIndicatorChecks": 33,
     "activityIndicatorReportSha256": "000506e4fcfec4edcd1583fe309de71bfda6c38a4bfe702127f685c1f98eb091",
@@ -840,6 +841,45 @@
       "activity-merge2/test:examples": {
         "exitCode": 0,
         "logSha256": "c12210d2c734cbd9e96e5340b1abdfe0219182045cbada7d2c85c7ea80b40f86"
+      }
+    },
+    "thirdMerge": {
+      "commit": "0929b72",
+      "mainCommit": "946e624",
+      "nativeSourcesChanged": false,
+      "precedingHostControl": {
+        "normativeFailures": [
+          "mount/Each root mounts one native spinner for each of its five RCTActivityIndicatorView elements",
+          "mount/The application reports no host or runtime error"
+        ],
+        "reportSha256": "2b735dfd84c07ed7be3506ce4252de1a90133633d3f568e8ebd0d0fa827ed959",
+        "refreshedBecause": "the SDK bundle changed with the public touchables"
+      },
+      "steps": {
+        "test:contracts": {
+          "exitCode": 0,
+          "logSha256": "2dd727f475ff53c8030987982af78e2b8f81d4bb3e0b5326d52891ecb29c4f06"
+        },
+        "check:static": {
+          "exitCode": 0,
+          "logSha256": "c9c8d08220b24aef98f785dc5d8a80550ac714ab2a9eb5641d01d54c6a74bef8"
+        },
+        "check:publication": {
+          "exitCode": 0,
+          "logSha256": "a254078a3aa650bba83175e7e696109dcc3fe26856db3cbdf45ca72e291565c7"
+        },
+        "test:activity-indicator": {
+          "exitCode": 0,
+          "logSha256": "0bb36d36c133bca740d98d9757ca31c379e57cd10d4c3a3b4c690d93671a7b09"
+        },
+        "test:touchables": {
+          "exitCode": 0,
+          "logSha256": "925ca548c9f840043b61e8b0429e55f3e1ec22d5a5f3f18b30f38df951290522"
+        },
+        "test:switch": {
+          "exitCode": 0,
+          "logSha256": "909452d06a237e7d662d507cdfa5aa879288630d42309437db44b50a0d7a54f2"
+        }
       }
     }
   }
