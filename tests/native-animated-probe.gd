@@ -4,13 +4,13 @@ extends SceneTree
 # through the public react-native import, on two real roots of one application.
 # JS records what it observes (tests/native-animated-fixture.jsx). For the
 # native driver this probe reads, once per Godot frame and before the
-# application's next tick, the frame timestamp the host delivered to RN's
-# AnimationBackend and the opacity and transform of the Godot Controls, which
-# is what that frame applied; the independent oracle recomputes every sample
-# from those timestamps. --allow-original-negative runs the same checks on a
-# host without RN's native module: the checks that need it are normative and
-# must fail there, the JS-driver ones must pass on both hosts. --sabotage runs
-# them on a deliberately broken host and expects failures.
+# application's next frame, the timestamp of the frame-clock tick the host
+# delivered to RN's AnimationBackend and the opacity and transform of the Godot
+# Controls, which is what that tick applied; the independent oracle recomputes
+# every sample from those timestamps. --allow-original-negative runs the same
+# checks on a host without RN's native module: the checks that need it are
+# normative and must fail there, the JS-driver ones must pass on both hosts.
+# --sabotage runs them on a deliberately broken host and expects failures.
 const DEVICE := 1001
 const SIZE := Vector2(400, 570)
 const ORIGINS := {"A": Vector2.ZERO, "B": Vector2(420, 0)}
@@ -92,15 +92,20 @@ func props_of(node: Control) -> Dictionary:
     "rotation": node.rotation + offset, "scale_x": node.scale.x, "scale_y": node.scale.y}
 
 # One observation, taken as a Godot frame starts: the previous frame's application
-# tick has run, so the Controls show what the backend applied for the timestamp
-# the host delivered (lastFrameMs). Counters read -1 on a host without the backend.
+# frame has run, so the Controls show what the backend applied for the timestamp
+# the host delivered (lastFrameMs). ticks counts the frame clock's ticks: the
+# backend only runs on one. Counters read -1 on a host without the backend or
+# the clock.
 func sample(targets: Array) -> Dictionary:
-  var state := animated_state()
+  var snapshot := app_state()
+  var state: Dictionary = snapshot.get("nativeAnimated", {})
+  var clock: Dictionary = snapshot.get("frameClock", {})
   var frames := int(number(state.get("frames")))
   var stamp := number(state.get("lastFrameMs"), 0.0)
   if frames > 0 and origin_ms == 0.0:
     origin_ms = stamp
   var row := {"n": Engine.get_process_frames(), "frames": frames, "ts": (stamp - origin_ms) if frames > 0 else null,
+    "ticks": int(number(clock.get("ticks"))),
     "now": number(state.get("nowMs"), 0.0) - origin_ms, "active": state.get("active", false),
     "resumes": int(number(state.get("resumes"))), "pauses": int(number(state.get("pauses"))),
     "direct": int(number(state.get("directUpdates"))), "stale": int(number(state.get("staleDirectUpdates"))), "controls": {}}
@@ -188,15 +193,16 @@ func distinct(values: Array) -> int:
     seen[value] = true
   return seen.size()
 
-# How many frames an animation takes is the host's frame pacing (a host may deliver
-# them in bursts, a fraction of a millisecond apart and then tens of milliseconds
-# apart) and, for a decay, its own stop rule: it ends at the first step under 0.1,
-# which two frames that close reach before the Control has moved. So the probe never
-# asks for the number of frames or values a regular 60 Hz clock would give. It asks for
-# what holds at any pacing: a driver needs more than one frame, an animation that runs
-# for a duration or to rest changes its target on more than one of them, and the
-# Control changes only on frames the backend delivered. The oracle recomputes every
-# value from the delivered timestamps and owns the rest.
+# How many frames an animation takes is the host's frame pacing (a host may stall
+# and then deliver Godot frames back to back, and under Time pacing, which a headless
+# run always has, the frame clock turns those into ticks no closer than half a refresh
+# period) and, for a decay, its own stop rule: it
+# ends at the first step under 0.1. So the probe never asks for the number of frames
+# or values a regular 60 Hz clock would give. It asks for what holds at any pacing: a
+# driver needs more than one frame, an animation that runs for a duration or to rest
+# changes its target on more than one of them, and the Control changes only on frames
+# the backend delivered. The oracle recomputes every value from the delivered
+# timestamps and owns the rest.
 const FEWEST_CHANGES := 2
 
 # How many times a series took a new value, each entry compared with the one before.
@@ -258,9 +264,11 @@ func native_run(run: Dictionary, name: String, key: String, final: Variant = nul
   var first: Dictionary = steps[0] if not steps.is_empty() else {}
   var request: Dictionary = run.starts[0].request
   var target: String = run.targets[0][0] + "/" + run.targets[0][1]
-  module_check((not first.is_empty() and int(first.n) == int(request.n) + 1 and int(first.frames) == int(request.frames) + 1
-    and first.ts != null),
-    name + "/The request reaches the backend's very next frame, one Godot frame after the call")
+  # The backend wants frames from the call on, so the first tick after it serves the
+  # request: no tick comes between the call and the backend's first frame.
+  module_check((not first.is_empty() and int(first.frames) == int(request.frames) + 1
+    and int(first.ticks) == int(request.ticks) + 1 and first.ts != null),
+    name + "/The request reaches the backend's next frame-clock tick: the first tick after the call delivers its first frame")
   # The native driver ends with RN's {finished, value, offset}; a composite of
   # animations (an XY value) reports only finished. A host without the module
   # silently runs the JS driver instead, which never has frames to count.
@@ -505,7 +513,12 @@ func xy_case() -> void:
 func stop_case() -> void:
   var run := begin([["A", "native-stop"]])
   start_in(run, "A", "native-stop")
-  await advance_for(run, 120)
+  # Two delivered frames, whatever the pacing: the first anchors the animation and the second
+  # moves it, which is all a stop needs to follow. How long that takes is the host's pacing, and
+  # a stall can swallow any fixed span of time before the second one.
+  var started := Time.get_ticks_msec()
+  while delivered(run).size() < 2 and Time.get_ticks_msec() - started < LIMIT_MS:
+    await advance(run)
   mark(run, "stopAnimation")
   act("stopAnimation(%s, %s)" % [quote("A"), quote("native-stop")])
   await advance_for(run, 150)
@@ -517,8 +530,7 @@ func stop_case() -> void:
   module_check((stops.size() == 1 and at > 0 and absf(number(stops[0].get("value")) - opacities[at - 1]) <= 1.2e-7
     and opacities[at - 1] > 0.0 and opacities[at - 1] < 1.0),
     "native-stop/stopAnimation reads exactly the value last applied to the Control")
-  # It moved before the stop, 120 ms in: one change after the first frame, the least a
-  # pacing that delivers a second frame by then can promise.
+  # It moved before the stop: the second delivered frame changes it, as the first only anchors the animation.
   module_check((at > 0 and changes(opacities.slice(0, at)) >= 1
     and opacities.slice(at).all(func(value: float) -> bool: return value == opacities[at - 1])),
     "native-stop/The Control keeps the stopped value on every later frame")
@@ -593,7 +605,7 @@ func unmount_case() -> void:
   var race := begin([["A", "native-race"]])
   start_in(race, "A", "native-race")
   await advance_for(race, 100)
-  act("deferQueueFlush(90)")
+  act("deferQueueFlush(3)")
   mark(race, "hide")
   act("setShown(%s, %s, false)" % [quote("A"), quote("native-race")])
   await advance_for(race, 250)
@@ -772,7 +784,8 @@ func finish_probe() -> void:
     "expectedOriginalFailures": expected_original_failures, "allowOriginalNegative": allow_original_negative,
     "originalNegativeObserved": negative_observed, "sabotage": sabotage, "allCurrentAssertionsPassed": failures.is_empty(),
     "scope": {"publicReactNativeImport": true, "originalAnimatedModules": true, "rnCxxNativeAnimatedAndSharedBackend": true,
-      "actualNativeInput": true, "twoRootsOneApplication": true, "frameClockIsGodotsTick": true, "layoutAnimationCertified": false,
+      "actualNativeInput": true, "twoRootsOneApplication": true, "frameClockIsGodotsTick": false, "frameClockIsDisplayPaced": true,
+      "layoutAnimationCertified": false,
       "animatedEventOnScrollViewCertified": false, "mobileExportsCertified": false, "performanceBudgetsCertified": false}}
   var output := FileAccess.open("res://build/native-animated-report.json", FileAccess.WRITE)
   if not check(output != null, "report/The native-animated report is saved with any normative failure visible"):

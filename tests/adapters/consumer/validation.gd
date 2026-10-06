@@ -12,6 +12,13 @@ func check(value: bool, name: String) -> void:
   if not value: push_error("ADAPTER_CHECK_FAILED: " + name)
 func frames() -> void:
   for i in range(10): await get_tree().process_frame
+# A frame callback runs at the host's next frame-clock tick, which is its pacing and not a number
+# of Godot frames: wait for what the callback does, then give teardown its frames.
+func frames_after(condition: Callable, limit_ms: int = 5000) -> void:
+  var deadline := Time.get_ticks_msec() + limit_ms
+  while Time.get_ticks_msec() < deadline and not condition.call():
+    await get_tree().process_frame
+  await frames()
 func data(owner: Node) -> Dictionary:
   return JSON.parse_string(owner.call("snapshot"))
 func js(source: String) -> Variant:
@@ -101,7 +108,7 @@ func run_reentrant_stop(mode: String) -> void:
   else:
     var schedule := "requestAnimationFrame" if mode == "raf" else "setTimeout"
     app.call("evaluate", "globalThis.afterReentrantStop=0; " + schedule + "(()=>AdapterFixture.focus('first-b'),0); " + schedule + "(()=>globalThis.afterReentrantStop++,0)")
-  await frames()
+  await frames_after(func() -> bool: return reentrant_calls >= 1)
   check(reentrant_calls == 1, "A native signal synchronously requests application stop during " + mode)
   check(retained_during_stop, "Stop retires authority while preserving the Control until the emitting stack returns")
   var after := data(app)
@@ -167,7 +174,7 @@ func run_reentrant_root(mode: String, remount: bool = false, free_host: bool = f
   else:
     var schedule := "requestAnimationFrame" if mode == "raf" else "setTimeout"
     app.call("evaluate", "globalThis.afterRootUnmount=0; " + schedule + "(()=>AdapterFixture.focus('first-b'),0); " + schedule + "(()=>{AdapterFixture.action('second','update');globalThis.afterRootUnmount++;},0)")
-  await frames()
+  await frames_after(func() -> bool: return reentrant_calls >= 1)
   var after := data(app)
   var retired_stats := stats()
   root_retirement.completedApplication = after

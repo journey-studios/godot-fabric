@@ -71,6 +71,14 @@ ordinary JS event is not delivered after retirement. RAF/timer cases prove
 the next callback still runs in the surviving root. Final application stop
 releases every remaining generation.
 
+> Later note: commit [`e67f82c`](https://github.com/journey-studios/godot-fabric/commit/e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d) runs RAF callbacks on the ticks of the
+> [frame clock](../frame-clock/README.md), which are the host's pacing and not a number of
+> Godot frames. The RAF and timer cases of the consumer validation
+> (`tests/adapters/consumer/validation.gd`) therefore wait for the native signal to have
+> requested the retirement (`frames_after`) and then give teardown ten frames, instead of
+> waiting ten Godot frames from the scheduling. Case names, check names and counts above
+> are unchanged and describe the executed record.
+
 Graphical cases save actual viewport readbacks and assert surviving panel/core
 Button colors plus title pixels. The runner fails on engine/script/host errors,
 hangs, missing/excess assertions, or source/artifact drift. Its headless root and

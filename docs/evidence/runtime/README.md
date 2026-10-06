@@ -84,6 +84,16 @@ cross-platform performance guarantees.
   passed cold import, runtime and warm import. Source gates passed 21 Node
   tests, eight Python fixtures, static analysis and the publication scan.
 
+> Later note: since commit [`e67f82c`](https://github.com/journey-studios/godot-fabric/commit/e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d) RAF callbacks run on the ticks of the
+> [frame clock](../frame-clock/README.md) and not on every Godot process frame, so the
+> statements here and under Remaining GF-05 work about real Godot process frames describe
+> this record's executed state. The `runtime_errors` check `A failed callback cannot
+> prevent unrelated queued work` no longer asserts the exact order
+> `["after-frame","timeout","after-timeout"]`: timers run on every Godot frame and frame
+> callbacks only on ticks, so which of them runs first is the host's pacing. It asserts that
+> all three callbacks ran and that the two timers kept their order; the check name and the
+> six callback-failure assertions above are unchanged.
+
 [matrix.json](matrix.json) records fresh per-case counts/report hashes;
 [provenance.json](provenance.json) binds source, upstream modules and captures.
 Raw reports and logs stay in ignored `build/` and hosted artifacts.

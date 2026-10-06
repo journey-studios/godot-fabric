@@ -146,7 +146,8 @@ func run() -> void:
   # release starts the box's own native animation.
   var run_button := control("animated-run")
   await mouse("down", at("animated-run"))
-  await frames(6)
+  # The native driver's frames come at the frame clock's ticks, so wait for what it does.
+  await wait_for(func() -> bool: return is_equal_approx(run_button.modulate.a, 0.4))
   var pressed := snap("pressed")
   verify(is_equal_approx(run_button.modulate.a, 0.4) and is_equal_approx(box.modulate.a, 1.0) and int(animated().get("directUpdates", 0)) > 0,
     "A mouse press dims the TouchableOpacity to its activeOpacity through the native driver")

@@ -1,4 +1,5 @@
 #pragma once
+#include "frame_clock.h"
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 #include <functional>
@@ -17,6 +18,15 @@ struct WindowMetrics {
   godot::Vector2 screen;
   double scale{1};
   uint64_t window_instance_id{};
+  // The refresh rate in Hz that the display reports for the screen showing the
+  // window; not positive when it reports none (the headless DisplayServer has no
+  // screens). It sets the period of the application's frame clock.
+  double refresh_rate{};
+  // How the window's frames reach the screen, which decides what a tick of the
+  // frame clock is, and why the host believes so (a literal: "vsync", "unpaced",
+  // "headless", "validation" or "unknown").
+  FrameClock::Pacing pacing{FrameClock::Pacing::Time};
+  const char *pacing_source{"unknown"};
 };
 class ApplicationRuntime {
  public:

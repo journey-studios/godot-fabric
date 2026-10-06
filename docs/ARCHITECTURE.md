@@ -35,7 +35,9 @@ flowchart LR
   Neither the reconciler nor Yoga receives a patch.
 - **Application owner:** `FabricApplication` holds one `ApplicationRuntime` with
   Hermes, module cache, UIManager, event beats, microtasks, timers, frame callbacks
-  and cleanup. Its process pump runs once per Godot frame.
+  and cleanup. Its process pump runs once per Godot frame; the
+  [frame clock](../native/frame_clock.h) decides which of those frames are ticks
+  that run frame callbacks and native animation.
 - **Surface host:** `FabricSurface` references an application and its AppRegistry
   entry/props. Each root has a ShadowTree, constraints, pointer adapter and native
   Controls. Committed transactions and commands route by surface ID; native
@@ -107,9 +109,11 @@ bound the RAF snapshot or recursively queued Promise jobs.
 [Runtime initialization](../src/runtime.js) imports the original RN portable
 microtask/immediate shims. It is an audited bootstrap subset rather than all of
 `InitializeCore`, whose native OS services are still missing. Godot keeps its
-frame-driven RAF adapter; upstream `TimerManager`'s zero-delay RAF fallback is
-replaced by actual Godot process frames. The shared oracle compares cancellation
-and clock monotonicity, not OS frame cadence or numeric timestamps.
+RAF adapter; upstream `TimerManager`'s zero-delay RAF fallback is replaced by
+the ticks of the host's frame clock, which stands in for the display link RN's
+platforms run frame callbacks on (the [frame clock evidence](evidence/frame-clock/README.md)
+owns the rule and its limits). The shared oracle compares cancellation and clock
+monotonicity, not OS frame cadence or numeric timestamps.
 
 Native input enters the original TouchEventEmitter and responder machinery.
 Upstream Pressability decides press behavior. ScrollView uses the original
@@ -117,8 +121,8 @@ descriptor/state and a Godot ScrollContainer, with responder-mediated transfer
 and native cancellation of a child's pending press. TextInput translates editing,
 selection and event-count confirmation through LineEdit.
 
-Animation frames use monotonic timestamps and pending callbacks do not run
-immediately during input. Named root unmount removes its native tree/tags,
+Animation frames use monotonic timestamps, one per tick of the frame clock, and
+pending callbacks do not run immediately during input. Named root unmount removes its native tree/tags,
 responder state and React effects. Module state and application timers/frames
 remain alive, including when no roots are mounted. Effects own cleanup of their
 subscriptions and clocks. Application shutdown cancels global scheduling and
