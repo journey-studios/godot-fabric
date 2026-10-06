@@ -239,6 +239,16 @@ order, and Switch.js's `setValue` restores a value prop that does not change.
 108 headless checks in two roots; the preceding host fails the 2 mount checks.
 [Evidence](docs/evidence/switch/README.md).
 
+The [touchables example](examples/touchables/README.md) makes
+`TouchableWithoutFeedback` and `TouchableHighlight` public with RN's original
+modules and Pressability: callback order, native underlay and child opacity,
+`delayPressOut`, long press, hitSlop and retention, nesting, disabled and removal
+mid-press under real mouse and touch on two roots, 93 headless checks. The same
+fixture on the preceding SDK fails exactly its 19 render checks, and a retained
+imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
+Animated needs `NativeAnimatedModule`.
+[Evidence](docs/evidence/touchables/README.md).
+
 The [ActivityIndicator example](examples/activity-indicator/README.md) renders
 RN's original `ActivityIndicator.js` over the generated `ActivityIndicatorView`
 descriptor and a native Godot spinner whose phase advances once per actual frame

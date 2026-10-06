@@ -22,8 +22,9 @@ The examples use React and JSX. `react-native` imports resolve to the Godot
 facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
 
-The facade exposes View, Text, Pressable, ScrollView, Button, Switch,
-ActivityIndicator and single-line TextInput for public composition. The [typed form](../examples/form/README.md)
+The facade exposes View, Text, Pressable, TouchableWithoutFeedback,
+TouchableHighlight, ScrollView, Button, Switch, ActivityIndicator and single-line
+TextInput for public composition. The [typed form](../examples/form/README.md)
 exercises the new controls through ordinary RN imports. Internal probes remain
 separate; neither those probes nor the public form certify the complete mobile
 API. NativeWind TextInput interop still requires dedicated validation.
@@ -43,6 +44,7 @@ RN compatibility.
 | ActivityIndicator | RN's original ActivityIndicator.js over the generated ActivityIndicatorView descriptor: animating, hidesWhenStopped, color, small/large/numeric size, testID/ref; the spinner advances with real frame time only while animating | Custom-drawn eight-spoke spinner filling the frame (UIKit keeps its own size); RN's iOS gray without a color; no accessibility or reduced-motion handling |
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, original TextInput.State and native focus/blur coordination, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
+| Touchables | [Original TouchableWithoutFeedback and TouchableHighlight](../examples/touchables/README.md): RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots | TouchableOpacity throws (RN 0.87.1 Animated requires NativeAnimatedModule); no TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events and responder-mediated drag | All children mount; no virtualization, inertia, bounce, paging, zoom or complete nested/multitouch scrolling |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
 | SVG / charts | SVG/G/Defs/ClipPath/Path/Rect/Circle/Line/LinearGradient/Stop and simple SVG text, tested with unmodified Chart Kit | Budget 2048×2048, unscaled viewBox, no arbitrary transforms, nested SVG certification or full SVG typography |
