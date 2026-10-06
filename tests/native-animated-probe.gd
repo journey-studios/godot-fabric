@@ -188,6 +188,40 @@ func distinct(values: Array) -> int:
     seen[value] = true
   return seen.size()
 
+# How many frames an animation takes is the host's frame pacing (a host may deliver
+# them in bursts, a fraction of a millisecond apart and then tens of milliseconds
+# apart) and, for a decay, its own stop rule: it ends at the first step under 0.1,
+# which two frames that close reach before the Control has moved. So the probe never
+# asks for the number of frames or values a regular 60 Hz clock would give. It asks for
+# what holds at any pacing: a driver needs more than one frame, an animation that runs
+# for a duration or to rest changes its target on more than one of them, and the
+# Control changes only on frames the backend delivered. The oracle recomputes every
+# value from the delivered timestamps and owns the rest.
+const FEWEST_CHANGES := 2
+
+# How many times a series took a new value, each entry compared with the one before.
+func changes(values: Array) -> int:
+  var count := 0
+  for index in range(1, values.size()):
+    if values[index] != values[index - 1]:
+      count += 1
+  return count
+
+# How many times a Control property took a new value over a run, from its value at
+# rest: on a sample in which the backend delivered a frame, and on one in which it did not.
+func control_changes(run: Dictionary, target: String, key: String) -> Dictionary:
+  var on_frames := 0
+  var between_frames := 0
+  var previous: Dictionary = run.rest
+  for row: Dictionary in run.samples:
+    if number(row.controls.get(target, {}).get(key)) != number(previous.controls.get(target, {}).get(key)):
+      if int(row.frames) > int(previous.frames):
+        on_frames += 1
+      else:
+        between_frames += 1
+    previous = row
+  return {"on_frames": on_frames, "between_frames": between_frames}
+
 func counter(run: Dictionary, key: String) -> int:
   return int(number(run.final.get(key))) - int(number(run.rest.get(key)))
 
@@ -224,7 +258,6 @@ func native_run(run: Dictionary, name: String, key: String, final: Variant = nul
   var first: Dictionary = steps[0] if not steps.is_empty() else {}
   var request: Dictionary = run.starts[0].request
   var target: String = run.targets[0][0] + "/" + run.targets[0][1]
-  var moved := series(run, target, key)
   module_check((not first.is_empty() and int(first.n) == int(request.n) + 1 and int(first.frames) == int(request.frames) + 1
     and first.ts != null),
     name + "/The request reaches the backend's very next frame, one Godot frame after the call")
@@ -235,7 +268,15 @@ func native_run(run: Dictionary, name: String, key: String, final: Variant = nul
   module_check((result.get("finished") == true and counter(run, "frames") > 0
     and (not rich or (result.has("value") and result.has("offset")))),
     name + "/The end callback reports finished: true with RN's own result once the backend ran the animation")
-  module_check(value_events(run) == 0 and distinct(moved) >= 5,
+  # Over the frames the backend delivered, whatever their pacing: the animation took
+  # more than one frame, the Control changed on frames and never between them, and
+  # JS heard no per-frame value. How far a decay moves the Control is its own stop
+  # rule's and the pacing's (see FEWEST_CHANGES), so only the others must change it on
+  # more than one frame; the oracle recomputes every value for every driver.
+  var kind: String = js("cases()").animations[name].kind
+  var motion := control_changes(run, target, key)
+  module_check((value_events(run) == 0 and steps.size() > 1 and motion.between_frames == 0
+    and (kind == "decay" or motion.on_frames >= FEWEST_CHANGES)),
     name + "/The Control changes on many frames while JS receives no per-frame value event")
   module_check((counter(run, "resumes") == 1 and counter(run, "pauses") == 1 and run.final.active == false
     and one_per_frame(run) and steps.size() == counter(run, "frames")),
@@ -370,7 +411,7 @@ func js_value_case(name: String) -> void:
   # RN's decay ends at the first step below 0.1, and two frames that read the
   # same millisecond make a step of 0: it may end after a few values on a loaded
   # machine, so for it the frames' work, not a count, is what must show.
-  var minimum := 1 if name == "js-decay" else 5
+  var minimum := 1 if name == "js-decay" else FEWEST_CHANGES
   check(finished_flag(events, name) == true and values.size() >= minimum,
     name + "/The JS driver reports its values on frames and ends with finished: true")
   if name == "js-decay":
@@ -428,7 +469,7 @@ func js_view_case() -> void:
   await finish(run, 12)
   stages["js-view"] = run
   var opacities := series(run, "A/js-view", "opacity")
-  module_check(near(opacities.back(), 0.2) and monotone(opacities, true) and distinct(opacities) >= 5,
+  module_check(near(opacities.back(), 0.2) and monotone(opacities, true) and changes(opacities) >= FEWEST_CHANGES,
     "js-view/The JS driver moves an Animated.View's Control from 1 to its final opacity")
   var rest: Dictionary = run.rest.controls["A/js-view"]
   var final: Dictionary = run.final.controls["A/js-view"]
@@ -476,7 +517,9 @@ func stop_case() -> void:
   module_check((stops.size() == 1 and at > 0 and absf(number(stops[0].get("value")) - opacities[at - 1]) <= 1.2e-7
     and opacities[at - 1] > 0.0 and opacities[at - 1] < 1.0),
     "native-stop/stopAnimation reads exactly the value last applied to the Control")
-  module_check((at > 0 and distinct(opacities.slice(0, at)) >= 5
+  # It moved before the stop, 120 ms in: one change after the first frame, the least a
+  # pacing that delivers a second frame by then can promise.
+  module_check((at > 0 and changes(opacities.slice(0, at)) >= 1
     and opacities.slice(at).all(func(value: float) -> bool: return value == opacities[at - 1])),
     "native-stop/The Control keeps the stopped value on every later frame")
   module_check((end_of(run, "native-stop").get("finished") == false and counter(run, "resumes") == 1
@@ -505,7 +548,7 @@ func listener_case() -> void:
   applied = applied.slice(1)
   # RN's end callback also reports the final value to JS listeners, which is why
   # JS hears one value more than the backend sent.
-  module_check((heard.size() >= 6 and value_events(run) == heard.size() - 1 and heard.back() == 1.0
+  module_check((heard.size() > FEWEST_CHANGES and value_events(run) == heard.size() - 1 and heard.back() == 1.0
     and same_sequence(heard.slice(0, -1), applied, 1.2e-7)),
     "native-listener/addListener hears exactly the distinct values the backend applied, in order, and the final value once more")
   module_check(int(run.marks[0].valueEvents) > 0 and int(run.marks[0].valueEvents) == value_events(run),
@@ -526,7 +569,7 @@ func rerender_case() -> void:
   await finish(run, 12)
   stages["native-rerender"] = run
   var opacities := series(run, "A/native-rerender", "opacity")
-  module_check(monotone(opacities, true) and near(opacities.back(), 0.2) and distinct(opacities) >= 5,
+  module_check(monotone(opacities, true) and near(opacities.back(), 0.2) and changes(opacities) >= FEWEST_CHANGES,
     "native-rerender/A re-render in the middle and one after the end never snap the Control back")
   var rest: Dictionary = run.rest.controls["A/native-rerender"]
   module_check((end_of(run, "native-rerender").get("finished") == true and counter(run, "stale") == 0
@@ -575,7 +618,7 @@ func two_roots_case() -> void:
   stages["native-two-roots"] = run
   var overlap: Array = run.samples.filter(func(row: Dictionary) -> bool: return (row.active
     and row.controls["A/native-two"].opacity != 1.0 and row.controls["B/native-two"].opacity != 1.0))
-  module_check((overlap.size() >= 5 and end_of(run, "native-two-a").get("finished") == true
+  module_check((overlap.size() >= FEWEST_CHANGES and end_of(run, "native-two-a").get("finished") == true
     and end_of(run, "native-two-b").get("finished") == true),
     "native-two-roots/Both roots animate at the same time and each ends once with finished: true")
   var rest_a: Dictionary = run.rest.controls["A/native-two"]
@@ -689,7 +732,7 @@ func touchable_case() -> void:
       and int(run.samples[up - 1].frames) > int(run.starts[0].request.frames)),
       label + "/A press moves the TouchableOpacity to activeOpacity through the native driver")
     var back := opacities.slice(up)
-    module_check((monotone(back, false) and near(back.back(), 1.0) and distinct(back) >= 5 and counter(run, "stale") == 0
+    module_check((monotone(back, false) and near(back.back(), 1.0) and changes(back) >= FEWEST_CHANGES and counter(run, "stale") == 0
       and counter(run, "resumes") == 2 and counter(run, "pauses") == 2 and value_events(run) == 0),
       label + "/Release returns it to rest over RN's 250 ms timing, one backend run per transition")
     module_check(heard == ["in", "out", "press"], label + "/onPress fires once, after onPressIn and onPressOut")

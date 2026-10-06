@@ -114,6 +114,12 @@ const stepWindow = (previous, stamp, started) => ({low: Math.max(0, previous - s
 // while the animation itself ran its full duration.
 const CLOCK_GRANULARITY = 1;
 
+// How many frames a host delivers to an animation is its frame pacing, so no count of
+// values is a property of the driver, except that one which runs for a duration or to
+// rest reports a frame inside the animation and the one that ends it. A decay ends at
+// its first step under 0.1, which a few frames reach (see verifyJsValue).
+const FEWEST_JS_VALUES = 2;
+
 // A JS-driver animation on a bare value: every listener entry is on the curve
 // RN's driver computes for the Date.now() it ran at (see stepWindow), its
 // interpolated outputs follow from the raw value, and the end is as RN's driver
@@ -125,7 +131,7 @@ function verifyJsValue(name, stage) {
   const [end, ...extra] = endsOf(stage.events, name);
   // RN's decay may end after a few values: two frames that read the same
   // millisecond make a step of 0, which is below its 0.1 threshold.
-  assert.ok(start && end && extra.length === 0 && values.length >= (config.kind === "decay" ? 1 : 5), name);
+  assert.ok(start && end && extra.length === 0 && values.length >= (config.kind === "decay" ? 1 : FEWEST_JS_VALUES), name);
   assert.equal(end.result.finished, true, name);
   // RN's spring runs its first step inside start(), before the caller regains control.
   assert.ok(end.sequence > values.at(-1).sequence && values.every(entry => entry.t >= start.before), name);
@@ -424,12 +430,37 @@ export function verifyJsDriverReport(report) {
 // sample is their final props: after every later React commit of the run, the
 // Control must still show them. Derived here from the stages' raw samples.
 const PERSISTENT = ["native-spring", "native-decay", "native-created", "native-xy", "native-stop", "native-listener", "native-rerender"];
+// Whether the driver's own rule moved the box over the frames the host delivered. Every
+// animation that runs for a duration or to rest does; a decay ends at its first step under
+// 0.1, which two frames a fraction of a millisecond apart reach before the Control has
+// moved, so the delivered timestamps decide whether there is a final prop to persist.
+function leavesRest(run, name) {
+  const config = ANIMATIONS[name];
+  if (config.kind !== "decay") {
+    return true;
+  }
+  const model = MODELS.decay(config);
+  let frames = run.rest.frames;
+  for (const row of run.samples) {
+    if (row.frames > frames) {
+      const step = model(row.ts);
+      if (step.value !== config.from) {
+        return true;
+      }
+      if (step.complete) {
+        return false;
+      }
+    }
+    frames = row.frames;
+  }
+  return false;
+}
 export function verifyPersistence(report) {
   const {stages} = report;
   for (const box of PERSISTENT) {
     const final = stages[box].final.controls[`A/${box}`];
     const rest = stages.mount.rest[`A/${box}`];
-    assert.ok(final.present && (final.opacity !== rest.opacity || final.x !== rest.x || final.y !== rest.y),
+    assert.ok(final.present && (final.opacity !== rest.opacity || final.x !== rest.x || final.y !== rest.y || !leavesRest(stages[box], box)),
       `${box} left its rest props in its own run`);
     assert.deepEqual(stages.persistence.props[box], final, `${box} keeps its final props through every later React commit`);
   }
