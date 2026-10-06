@@ -41,7 +41,8 @@
     "tests/pointer-click-fixture.jsx",
     "tests/pan-responder-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx",
-    "tests/app-state-fixture.jsx"
+    "tests/app-state-fixture.jsx",
+    "tests/pointer-capture-notifications-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
