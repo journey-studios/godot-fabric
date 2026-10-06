@@ -1763,6 +1763,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         if (auto *host = roots.at(surface_id)->host()) {
           const auto point = host->get_global_transform_with_canvas().xform(Vector2(args[0].asDouble(), args[1].asDouble()));
           const auto local = fabric_godot::local_coordinate(found->second.control->get_global_transform_with_canvas(), point);
+          // A singular embedding has no local point. Like the input guard, drop
+          // this drag step instead of scrolling by a non-finite delta; the
+          // drag's end still arrives through scrollDragEnd.
+          if (!local.is_finite()) return;
           command_args = folly::dynamic::array(local.x, local.y);
         }
       }
