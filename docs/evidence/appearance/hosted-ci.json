@@ -1,0 +1,1220 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-appearance",
+  "status": "verified-completed-hosted-workflow-and-headless-appearance-artifact",
+  "run": {
+    "id": 37408741652,
+    "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/35",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "success",
+        "startedAt": "2026-10-06T03:23:22Z",
+        "jobs": [
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112092137829,
+            "runAttempt": 1,
+            "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+            "startedAt": "2026-10-06T03:23:25Z",
+            "completedAt": "2026-10-06T03:24:15Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092137829"
+          },
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112092138011,
+            "runAttempt": 1,
+            "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+            "startedAt": "2026-10-06T03:23:31Z",
+            "completedAt": "2026-10-06T03:31:42Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092138011"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112092138014,
+            "runAttempt": 1,
+            "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+            "startedAt": "2026-10-06T03:23:25Z",
+            "completedAt": "2026-10-06T03:28:08Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092138014"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112092138042,
+            "runAttempt": 1,
+            "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+            "startedAt": "2026-10-06T03:23:31Z",
+            "completedAt": "2026-10-06T03:54:05Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092138042"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112099660561,
+            "runAttempt": 1,
+            "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+            "startedAt": "2026-10-06T03:54:27Z",
+            "completedAt": "2026-10-06T03:54:46Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112099660561"
+          }
+        ]
+      }
+    ],
+    "reruns": [],
+    "jobs": [
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112092137829,
+        "runAttempt": 1,
+        "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+        "startedAt": "2026-10-06T03:23:25Z",
+        "completedAt": "2026-10-06T03:24:15Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092137829"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112092138011,
+        "runAttempt": 1,
+        "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+        "startedAt": "2026-10-06T03:23:31Z",
+        "completedAt": "2026-10-06T03:31:42Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092138011"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112092138014,
+        "runAttempt": 1,
+        "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+        "startedAt": "2026-10-06T03:23:25Z",
+        "completedAt": "2026-10-06T03:28:08Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092138014"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112092138042,
+        "runAttempt": 1,
+        "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+        "startedAt": "2026-10-06T03:23:31Z",
+        "completedAt": "2026-10-06T03:54:05Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112092138042"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112099660561,
+        "runAttempt": 1,
+        "headSha": "1607044cbdecdae1ff374c40eaf316262535b412",
+        "startedAt": "2026-10-06T03:54:27Z",
+        "completedAt": "2026-10-06T03:54:46Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37408741652/job/112099660561"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "1607044cbdecdae1ff374c40eaf316262535b412",
+      "native-cold-start": "1607044cbdecdae1ff374c40eaf316262535b412",
+      "parity-comparison": "1607044cbdecdae1ff374c40eaf316262535b412",
+      "reference-android": "1607044cbdecdae1ff374c40eaf316262535b412",
+      "reference-ios": "1607044cbdecdae1ff374c40eaf316262535b412"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "contractsJob": {
+      "nodeContractTests": {
+        "tests": 264,
+        "pass": 264,
+        "fail": 0
+      },
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 30.57
+  },
+  "implementationCommit": "a402a1f9f74ec6e4426f108ff93fe731afa3a4a0",
+  "committedStateExercised": {
+    "source": "reviewReruns[1]",
+    "commit": "b13bcddec7ea5aed48c9a1f0022e0577c110d572",
+    "headlessChecks": 79,
+    "note": "the report's top level describes the implementation commit; the hosted run exercises the tree after review, which the report records in reviewReruns[1]"
+  },
+  "runHeadIsPostCommitSourcePin": true,
+  "pullRequest": {
+    "number": 35,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/35",
+    "title": "feat(appearance): Drive Appearance from Godot's system theme",
+    "headSha": "54b73898e7e5a22be0ccae2c41f2f8bbbd20262f",
+    "squashMergeCommit": "1607044cbdecdae1ff374c40eaf316262535b412",
+    "mergedAt": "2026-10-06T03:23:19Z",
+    "headTreeSha": "fa2f980f1a4b58eb94dadc7afa75ffb7c29bc109",
+    "mainTreeSha": "fa2f980f1a4b58eb94dadc7afa75ffb7c29bc109",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 15,
+    "stackedBranchCommitsBeforeImplementation": [],
+    "commitsAfterImplementation": [
+      {
+        "commit": "80d79da",
+        "subject": "docs(appearance): Pin executed appearance evidence"
+      },
+      {
+        "commit": "a911ffc",
+        "subject": "docs(dashboard): Record the appearance slice"
+      },
+      {
+        "commit": "15e8da4",
+        "subject": "fix(appearance): Compare listener counts before converting them"
+      },
+      {
+        "commit": "93f0baf",
+        "subject": "docs(appearance): Record the listener-count fix rerun"
+      },
+      {
+        "commit": "194b793",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/appearance-color-scheme",
+        "merge": [
+          "93f0baf",
+          "f165b82"
+        ]
+      },
+      {
+        "commit": "d2a5bd3",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/appearance-color-scheme",
+        "merge": [
+          "194b793",
+          "8b87d78"
+        ]
+      },
+      {
+        "commit": "b5c8df8",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/appearance-color-scheme",
+        "merge": [
+          "d2a5bd3",
+          "946e624"
+        ]
+      },
+      {
+        "commit": "4f5b765",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/appearance-color-scheme",
+        "merge": [
+          "b5c8df8",
+          "54ede87"
+        ]
+      },
+      {
+        "commit": "b13bcdd",
+        "subject": "fix(appearance): Share one system theme callback across applications"
+      },
+      {
+        "commit": "be6618c",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/appearance-color-scheme",
+        "merge": [
+          "b13bcdd",
+          "d62bc27"
+        ]
+      },
+      {
+        "commit": "d2fed26",
+        "subject": "docs(appearance): Record the shared system theme callback rerun"
+      },
+      {
+        "commit": "c9567c8",
+        "subject": "docs(dashboard): Record the Appearance shared callback review"
+      },
+      {
+        "commit": "20626a7",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/appearance-color-scheme",
+        "merge": [
+          "c9567c8",
+          "c8f0e4b"
+        ]
+      },
+      {
+        "commit": "54b7389",
+        "subject": "docs(dashboard): Point the source at the Appearance delivery"
+      }
+    ],
+    "trackedPathsChangedAfterImplementation": 22
+  },
+  "actualCheckout": {
+    "sha": "1607044cbdecdae1ff374c40eaf316262535b412",
+    "parents": [
+      "c8f0e4bf16771cb6f091dc0227dddb0532f63196"
+    ],
+    "treeSha": "fa2f980f1a4b58eb94dadc7afa75ffb7c29bc109",
+    "treeEntries": 1074,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree is compared with the local tree and every blob of the run head; each tracked path's run-head bytes are compared with the pinned bytes of the implementation commit, and every difference is traced to the commits that introduced it",
+    "trackedPinSetCounts": {
+      "sourcePins": 16,
+      "nativeSourcePins": 57,
+      "verificationSourcePins": 6
+    },
+    "allCuratedTrackedPathsVerified": 72,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "trackedPathsEqualToImplementationCommitAtRunHead": 50,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementation": [
+      ".fallowrc.json",
+      ".github/workflows/contracts.yml",
+      "native/CMakeLists.txt",
+      "native/application_runtime.cpp",
+      "native/fabric_application.cpp",
+      "native/fabric_application.h",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/register.cpp",
+      "native/scroll_adapter.cpp",
+      "native/scroll_adapter.h",
+      "native/system_appearance.h",
+      "package.json",
+      "scripts/appearance-bundle.mjs",
+      "scripts/native-sdk.mjs",
+      "sdk/toolchain/platform-plugin.mjs",
+      "src/react-native-platform.jsx",
+      "tests/appearance-native.test.mjs",
+      "tests/appearance-oracle.mjs",
+      "tests/appearance-probe.gd",
+      "tests/types/consumer.tsx",
+      "types/react-native.ts"
+    ],
+    "allDifferencesTracedToCommits": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11387998772,
+    "name": "native-appearance",
+    "zipSizeBytes": 35258,
+    "zipSha256": "228cd0dd130d4cc46808ef5615c7f4c24fef249d1138f3ba29a6a69da8604577",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-06T03:33:11Z",
+    "expiresAt": "2027-01-04T03:23:22Z",
+    "fileCount": 5,
+    "filesMatchTheWorkflowUploadPaths": true,
+    "files": {
+      "appearance-comparison.json": "d5665723e70b5e3c99066632b33190efae042f3e8040472a4b0a8c82a7aa1704",
+      "appearance-current-report.json": "ff54c8b378c9070d384ca9805ffd484db0bd85d382efd7b23f9f3ece1a063d07",
+      "appearance-current.log": "dfa503f2b8263062e5c5445124a816cc9945166e8908bcafd4b77fee22859352",
+      "appearance-probe-bundle.json": "ffb05c2d586c6fa7b2be15aef11c6eeb090008336d2dc9b053a1ec3f8b73ece7",
+      "appearance-report.json": "ddb53f8a772dcb2fa0f1cf77ab6aebdf8c912985a7b948eb0e4cd55706e377a1"
+    }
+  },
+  "verification": {
+    "headlessChecks": 79,
+    "committedHeadlessChecks": 79,
+    "lanes": [
+      {
+        "lane": "current",
+        "reportFile": "appearance-current-report.json",
+        "logFile": "appearance-current.log",
+        "checks": 79,
+        "passed": 79,
+        "uniqueCheckIds": true,
+        "committedChecks": 79,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "609e9534622ce53a0f78e8f70dfb2baf8ebde573ba1dddec4e334a18b1b145f0",
+        "checkIdDigestFormula": "sha256 of the check names joined by a newline",
+        "committedCheckIdDigestSha256": "609e9534622ce53a0f78e8f70dfb2baf8ebde573ba1dddec4e334a18b1b145f0",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "d2446e4dc999a8514157f483e14ff525b96bd4cd758fb98975b3cfe4a7df480f",
+        "bundleInputCount": 213,
+        "bundleEqualsHashRecordedInCommittedReportAt": [],
+        "pinnedBundleSha256": "02529a16ff48c264f4786c91f6c9eabc8c1661ad0209fa1217d00d94e375d20b",
+        "bundleEqualsPinnedBundle": false,
+        "nativeHostSha256": "802854562f60ea632c18cfdf89e1de391f4e927fe64f6407f7864fa42a0f1b1f",
+        "node": "v22.23.2",
+        "reportSha256": "ff54c8b378c9070d384ca9805ffd484db0bd85d382efd7b23f9f3ece1a063d07",
+        "logSha256": "dfa503f2b8263062e5c5445124a816cc9945166e8908bcafd4b77fee22859352",
+        "passedMarker": "APPEARANCE_PASSED: 79",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "pointerRegistryWarningLines": 0,
+        "pinnedProducersChangedSinceTheCommittedState": [
+          "native/application_runtime.cpp",
+          "sdk/toolchain/platform-plugin.mjs",
+          "src/react-native-platform.jsx"
+        ]
+      }
+    ],
+    "independentOracle": [
+      {
+        "module": "tests/appearance-oracle.mjs",
+        "atCommit": "1607044cbdecdae1ff374c40eaf316262535b412",
+        "export": "verifyAppearanceReport",
+        "lane": "current",
+        "acceptsDownloadedReport": true,
+        "modulesLoaded": [
+          "tests/appearance-oracle.mjs"
+        ],
+        "result": null
+      }
+    ],
+    "rawProbeReportEqualsCurrentReportWithoutProvenance": true,
+    "probeBundleReceiptEqualsReportProvenanceBundle": true,
+    "comparison": {
+      "controlsAbsent": true,
+      "controlFlags": {
+        "originalControlPresent": false,
+        "prefixControlPresent": false
+      },
+      "intentionalNativeProducerDifferences": [
+        "native/system_appearance.h",
+        "native/fabric_application.cpp",
+        "native/fabric_application.h",
+        "native/turbo_module_registry.cpp",
+        "native/turbo_module_registry.h",
+        "native/application_runtime.cpp",
+        "native/application_runtime.h",
+        "native/register.cpp"
+      ],
+      "intentionalNativeProducersArePinned": true,
+      "currentRecord": "equals the current report"
+    },
+    "twoApplicationsAtOnce": true,
+    "scope": {
+      "headlessDisplayServerThemeSupported": false,
+      "mobileExportsCertified": false,
+      "originalAppearanceModule": true,
+      "originalUseColorScheme": true,
+      "publicReactNativeImport": true,
+      "realSystemThemeCertified": false,
+      "systemThemeDeliveredThrough": "the one Callable registered with DisplayServer, called once per change; system value from validation meta",
+      "twoApplicationsAtOnce": true,
+      "twoRootsOneApplication": true
+    },
+    "controlsAgainstTheHostedLanes": {
+      "preceding-host": {
+        "checksFailingInTheCommittedControl": 56,
+        "presentInHostedLane": 56,
+        "passingInHostedLane": 56,
+        "listEqualsCommittedNormativeCount": true
+      },
+      "prefix": {
+        "checksFailingInTheCommittedControl": 9,
+        "presentInHostedLane": 9,
+        "passingInHostedLane": 9,
+        "listEqualsCommittedFailedChecks": true
+      },
+      "emits-every-callback (first execution)": {
+        "checksFailingInTheCommittedControl": 17,
+        "presentInHostedLane": 16,
+        "passingInHostedLane": 16,
+        "absentFromHostedLane": [
+          "stop/The stopped application keeps counting system changes without emitting"
+        ],
+        "absentBecauseReviewRemovedOrRenamedThem": 1
+      }
+    },
+    "declaredNativeHostSha256": "802854562f60ea632c18cfdf89e1de391f4e927fe64f6407f7864fa42a0f1b1f",
+    "sameDeclaredNativeHostAcrossLanes": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "committedNode": "v22.23.3",
+    "producerPins": {
+      "tests/appearance-fixture.jsx": "e3c0c360e8c805640eb5e8404d74eb59960112b5f24798e02b189ab07f9e5dbe",
+      "tests/appearance-probe.gd": "6eb6bb91d53c03b02cb822a59427ea63fd3053770414e941d8633c6c1f203b14",
+      "tests/appearance-native.test.mjs": "c3df37df87d11fdaa714eefce4ff347f2a192990c5b853f687b7371e34e7395b",
+      "tests/appearance-oracle.mjs": "4dda9772fd5c65b68fb4dc686201c3044e69e1d786c5f307c7145f9a28262439",
+      "scripts/appearance-bundle.mjs": "dea66ffefc03c9e4caac2fa70febba6b88328658aca0080dc47c53c276092a7c",
+      "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+      "src/platform-environment.js": "eabdebe8750b9e3963f9330c1481bf5caf205d17f58588120f31f97e869e2b9e",
+      "src/react-native-platform.jsx": "49e15dcf3118ab9a61179f251b1ac874162bbcefd40b0466278536ab0266fa70",
+      "sdk/toolchain/platform-plugin.mjs": "6292742c9fef4cd550521713db4b2b90b9a927cc97483c896c21e29df653180c",
+      "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+      "native/fabric_application.cpp": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+      "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+      "native/turbo_module_registry.cpp": "c53e6ec47fbd53835f031a0b8e127457c26091a6a0304b48a4ede5844ae7364a",
+      "native/turbo_module_registry.h": "392299982ab1538d0b426829a453d3898dec904e4d19fe116352238398ce0c2b",
+      "native/application_runtime.cpp": "60016cd5d6793afacde3bf6d2d5cf36058c49b3f25a2f01834f26bed818b2c39",
+      "native/application_runtime.h": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+      "native/register.cpp": "876007f930ff1148a654760bc0003d58d6d4641dbab5204aa986b52e3de3685a"
+    },
+    "producerPinsEqualRunHeadBytes": true,
+    "producerPinsDifferingFromImplementationPins": [
+      "native/application_runtime.cpp",
+      "native/fabric_application.cpp",
+      "native/fabric_application.h",
+      "native/system_appearance.h",
+      "scripts/appearance-bundle.mjs",
+      "sdk/toolchain/platform-plugin.mjs",
+      "src/react-native-platform.jsx",
+      "tests/appearance-native.test.mjs",
+      "tests/appearance-oracle.mjs",
+      "tests/appearance-probe.gd"
+    ],
+    "producerPinsDifferingFromTheCommittedState": [
+      "native/application_runtime.cpp",
+      "sdk/toolchain/platform-plugin.mjs",
+      "src/react-native-platform.jsx"
+    ],
+    "producerPinsOutsideTheReportsSourcePins": [],
+    "producerPinsNotInAnyCommittedPinSet": [],
+    "producerPinsAddedBy": {},
+    "originalReactNativeSources": {
+      "Libraries/Utilities/Appearance.js": "460b787a14bbd9f106caa351fc64cf8c367ac401759ddf10410fe746ba62483f",
+      "Libraries/Utilities/NativeAppearance.js": "aa0f6f3cd560314b713b997e4888dd2c2ea1fb3590f3cf96ce90a0b94328ccd6",
+      "src/private/specs_DEPRECATED/modules/NativeAppearance.js": "80b41cdb495b6e18585fbd01dbdee819dc6b9918b2bff6e4e4a363f3a709f81a",
+      "Libraries/Utilities/useColorScheme.js": "a8f6a4ca58c67f8f295d195f80b176ec2ac35c4419b1bb35c1b2825b3c916fc6",
+      "Libraries/EventEmitter/NativeEventEmitter.js": "132e1d5314fde128d56724d26f96b13eb0bbfe56a69e5ac9d17fd6ce297b6d91",
+      "Libraries/EventEmitter/RCTDeviceEventEmitter.js": "a24e33cbb6272ecd5ca580c348434b6444c8a5a36ecdbfca7ae8c3e5ba498ed1",
+      "Libraries/vendor/emitter/EventEmitter.js": "adb61a5de47f0b89f72da0f27a69a9631cf60257beb9b0bc7b5830c081c0e221",
+      "Libraries/TurboModule/TurboModuleRegistry.js": "433e760b8dde773c9f5aaa8832d06f58fe758e83966b2377bb4f240d62820195",
+      "index.js": "5e03e5233650531810ef3129db116e1e534bbf30d85fccf6a10248ef9a088538",
+      "React/CoreModules/RCTAppearance.mm": "c2220b1b6c62acf0e5ca23b678f897fe8f32fb36159b78654caa1bc10d3b72c1",
+      "React/Base/RCTConvert.mm": "2bb1ca67b54c2bb4540217c77e17aef0a5bfa59aa780b989bd5a848f271a1697",
+      "React/Modules/RCTEventEmitter.m": "8dc3fd5e7da3b617970edaa2368c786b5a7edc88c401549da0aafef57f9ab995",
+      "ReactAndroid/src/main/java/com/facebook/react/modules/appearance/AppearanceModule.kt": "be25f7b7a3ee4bea7193a313cf61895dd401aac97d5be0cbda3f2d55ea27ec38",
+      "ReactAndroid/src/main/java/com/facebook/react/views/common/UiModeUtils.kt": "cce7662878eb64850854b744e3896e1d0e562637b2cf461a7edd3ee3426a3dd1",
+      "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86",
+      "ReactCommon/react/nativemodule/core/ReactCommon/TurboModule.cpp": "35454614a9dd58c7d5da95bb824d7d6de3749f2e69aa4258bf7b8b6e99b9aed4"
+    },
+    "originalReactNativeInputCount": 16,
+    "originalReactNativeSourcesEqualCommitted": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "3fc1d3d70c1e60ec2a3d9edb4fd16882a700bc2264329f0b2168126e2bf84244",
+        "gitBlobSha1": "64d8709ea0fcde6226cff74d79a252de834faeae",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "e6bdc85a983162cdf4e6a31a06587a65baf1a4244b8947ab1034301c511e8913",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "d62bc27",
+            "subject": "test(events): Certify pointer capture notifications for listeners (#37)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "946e624",
+            "subject": "feat(touchables): Back public touchables with RN's original modules (#30)"
+          },
+          {
+            "commit": "8b87d78",
+            "subject": "fix(responders): Share every root's touches with RN's one responder (#34)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "fb27204561c9aa2a1544097c7d55daa5aa991f0d4c5055a9e085337d6169db0a",
+        "gitBlobSha1": "468ec00c46a465f958eb9ade9772ae5d82e89d8f",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "2be32824d5471783ad69d4eefe62985b49aca80a5d2ff97f6710529cc228537b",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "d62bc27",
+            "subject": "test(events): Certify pointer capture notifications for listeners (#37)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "946e624",
+            "subject": "feat(touchables): Back public touchables with RN's original modules (#30)"
+          },
+          {
+            "commit": "8b87d78",
+            "subject": "fix(responders): Share every root's touches with RN's one responder (#34)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "dependencies.json": {
+        "sha256": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+        "gitBlobSha1": "f0480c2a65061b3bfc7d6350e07d5189d3b8dda9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "0f036ce601940fa9b7c8555d0a6337ed62bd026104ecf3dc2971aea98ad78df3",
+        "gitBlobSha1": "f885ef3fcefa70f122eea8b90f3ea9e69480d049",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "5ee2ab7e567dd94592e825ad41a7d074c21e4aae723101ea8e2643d84b675a68",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].nativeBuildInputPins.native/CMakeLists.txt"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "gitBlobSha1": "b72cd2f29399e1c85f8b49cbc6bae3bbb1c26355",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform.h": {
+        "sha256": "023f859e2199dc809308df2bad96af777f25922604b29234814777bf1ede9e0e",
+        "gitBlobSha1": "9d5f274ad58504550d49b34e5ad72ffe05bfed81",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "7f17f90c2c9ec7bce46b588b15b04469fb129566d4baf5db65f49a06087419f9",
+        "gitBlobSha1": "1d14a7e8eb4edfd1811909c2541e42ed50612b34",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/app_lifecycle.h": {
+        "sha256": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+        "gitBlobSha1": "bbc5295c158d6b856a12aa96c47db3ffb4936e9a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "60016cd5d6793afacde3bf6d2d5cf36058c49b3f25a2f01834f26bed818b2c39",
+        "gitBlobSha1": "4ea0fa838903f6dec5b7592ccba20825b3b19929",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "81ff622b20db5f8eb2e05bb347a030cec85fdb7cbff7eedfd8b6d168b19dcea9",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "8b87d78",
+            "subject": "fix(responders): Share every root's touches with RN's one responder (#34)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/application_runtime.h": {
+        "sha256": "d1ce8ff72c20b68fe445f7f901bead4150b08949e9ba8707f734c498815d8289",
+        "gitBlobSha1": "2b17f3416f46667256a0a0bf95322fd98fae35e6",
+        "pinSet": "sourcePins"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "6c96ed51830f2b0a956b225446e21c0bc547b25b8472b8579e4a83a8b8e94a7c",
+        "gitBlobSha1": "9f446f0c634ee229b84aace559069a8c01ed3641",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "9583db8c8a95c926c0f09d59a11706bfbd3bf7a8bb6d86492721181f89c542e9",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.native/fabric_application.cpp"
+      },
+      "native/fabric_application.h": {
+        "sha256": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "gitBlobSha1": "6491975833295fc096a250bd12d46b0d43243534",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "e642bda8a528f206e81c74e38737f707f4276fcf231725c1e6cc25125b2deb16",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.native/fabric_application.h"
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "gitBlobSha1": "7236f0fa2dcc99a0b116b9106c5875a704ece920",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot-profile.json": {
+        "sha256": "577a10790b26d03ed68a621f6ed128984201df5c59e305c1f2153b0fe8610e24",
+        "gitBlobSha1": "668bd0863459c8f7f10112740a251a5d90b5172f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "gitBlobSha1": "f5b738bf9ac46cbbc28d0fffe121bd905ad6983b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.h": {
+        "sha256": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "gitBlobSha1": "0fa395d405c49add5db2aa13d81e56883cce5daf",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "gitBlobSha1": "7412ebe6f12f3e9a5c7b02ffa18538c11aa9c4eb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "gitBlobSha1": "83600b2957d39833353c6045b0d2cf85ff13a6f7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+        "gitBlobSha1": "0d18cc8f8f2096f48ba2a558fbf1e383a5ea52d6",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "8b87d78",
+            "subject": "fix(responders): Share every root's touches with RN's one responder (#34)"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].nativeBuildInputPins.native/pointer_adapter.cpp"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+        "gitBlobSha1": "d5b79148e62e992c6d2366822841961a6e5c7b63",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "a44aa78379206bfd77afb8fe468fa73e7c5d75e20d68662b3c29f4a2cdcb1588",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "8b87d78",
+            "subject": "fix(responders): Share every root's touches with RN's one responder (#34)"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].nativeBuildInputPins.native/pointer_adapter.h"
+      },
+      "native/pointer_event.h": {
+        "sha256": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "gitBlobSha1": "1fded160c6d93d439ff2775cf32679394ddb4501",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "1df07c3c28c89a5ca9276bfe745f14ae627479352722f056bb85fe7fceeae9cf",
+        "gitBlobSha1": "cfad3573a78bef9d8ecb4349f45e6e43ea231aa0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "gitBlobSha1": "ac6ec4d84af956672279ec8f7099a764a55c7e89",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/register.cpp": {
+        "sha256": "876007f930ff1148a654760bc0003d58d6d4641dbab5204aa986b52e3de3685a",
+        "gitBlobSha1": "1d9572e51858e969cc156bf3c7e26351bb208ba6",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "a3a86cdad5023306188a788720e129808f07955305218993a9c5073221271874",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.native/register.cpp"
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+        "gitBlobSha1": "bf147a008d79af29178bd9fce09bed9eb0bb749b",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "580178350f319ff8919a577d235c1d204bf6df41c30dcefdc8422001a6d36a25",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+        "gitBlobSha1": "9bf853c26868c0327ceb4b5bbc6953be114bbdc9",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "69587ae4399a87e5085d17343abaa68071d6120dcffccfdf86eb65d9549044ac",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/system_appearance.h": {
+        "sha256": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "gitBlobSha1": "f8faf4cf5e0ec942dfeff10bbeb2e1c3040f3656",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "0673d71d92968c6dd335a4bed1d63e9a3e55683e4102d5bd54c7dd7276f48dcd",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          },
+          {
+            "commit": "15e8da4",
+            "subject": "fix(appearance): Compare listener counts before converting them"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.native/system_appearance.h"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "487e55986109a9f2b11e7001ce9cf95fc99dca7842a7eb317674ac63bf48a29d",
+        "gitBlobSha1": "2bd6b1ed6e2970b91f87ef521f78ea232b2a0bf9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "5963fc2fdc0f2d83b96c456589c4c92611eb3c2fd0104c0c6c3c6f3f343a92d2",
+        "gitBlobSha1": "46f1ebb22aad93543d09657d5d8dc2b5d139d819",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "c53e6ec47fbd53835f031a0b8e127457c26091a6a0304b48a4ede5844ae7364a",
+        "gitBlobSha1": "904d3dc317cbd7d3f7432af6bf88e43414162b16",
+        "pinSet": "sourcePins"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "392299982ab1538d0b426829a453d3898dec904e4d19fe116352238398ce0c2b",
+        "gitBlobSha1": "22fad4100e6cd40c3ee9b0ad7d0afed5e12e4c2c",
+        "pinSet": "sourcePins"
+      },
+      "package.json": {
+        "sha256": "3e9bfa3a297ef26129831710f69070b19a526797515efb7baa0a922b66173984",
+        "gitBlobSha1": "90e6db69b9466be9b949e3bb3fa8ee0be5a3286d",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "b77dbcf55094e929a69734caf8734a187ebaa90b3f09162a1a76575ec9c540cc",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "d62bc27",
+            "subject": "test(events): Certify pointer capture notifications for listeners (#37)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "946e624",
+            "subject": "feat(touchables): Back public touchables with RN's original modules (#30)"
+          },
+          {
+            "commit": "8b87d78",
+            "subject": "fix(responders): Share every root's touches with RN's one responder (#34)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "scripts/app-state-bundle.mjs": {
+        "sha256": "023d48d68fa7ee099dde21a28481453e1839762cec5af01ea7023889460b414a",
+        "gitBlobSha1": "0cb8822b99cfee68c28979c612aa2c97ca037c61",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/appearance-bundle.mjs": {
+        "sha256": "dea66ffefc03c9e4caac2fa70febba6b88328658aca0080dc47c53c276092a7c",
+        "gitBlobSha1": "07771cc8d8acdf32b11528a5fddf77e1aa952194",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "ad742e61603ddd54092b1f8577a44ee2fa83b2e78708e6387fe60636b9823793",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.scripts/appearance-bundle.mjs"
+      },
+      "scripts/codegen-contract.mjs": {
+        "sha256": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+        "gitBlobSha1": "82e8e7fdac887d69c6f233132dbe26acdac6fbe2",
+        "pinSet": "nativeSourcePins"
+      },
+      "scripts/native-probe-bundle.mjs": {
+        "sha256": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+        "gitBlobSha1": "9b23a853fc52d88e1d190b769c33c8b44216d284",
+        "pinSet": "sourcePins"
+      },
+      "scripts/native-sdk.mjs": {
+        "sha256": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+        "gitBlobSha1": "e0e8469f4c498b6c2a063a93fdb56eeb1b286e01",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "ad2d27d4af775161a69d5be4099f634c13aefd01e4767b34edc64cc633e04141",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].nativeBuildInputPins.scripts/native-sdk.mjs"
+      },
+      "scripts/rn-pointer-overlay.mjs": {
+        "sha256": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af",
+        "gitBlobSha1": "5f832f5f73490ce8a2eb7e62d9ce559a8e7a3d4f",
+        "pinSet": "nativeSourcePins"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "6292742c9fef4cd550521713db4b2b90b9a927cc97483c896c21e29df653180c",
+        "gitBlobSha1": "a307aa1750a6d16af1ad1334a95c506f18ee4b71",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "src/platform-environment.js": {
+        "sha256": "eabdebe8750b9e3963f9330c1481bf5caf205d17f58588120f31f97e869e2b9e",
+        "gitBlobSha1": "526be144f6a565086bc4f03f09f42c61c1f40703",
+        "pinSet": "sourcePins"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "49e15dcf3118ab9a61179f251b1ac874162bbcefd40b0466278536ab0266fa70",
+        "gitBlobSha1": "45fd9d5faeb9e83c65b390a1d61061046d9436c3",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "4d1c46746be0c5d52046933f0b36e235cd1c704e24fcd728e6f63e37275a4a18",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "946e624",
+            "subject": "feat(touchables): Back public touchables with RN's original modules (#30)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "tests/appearance-fixture.jsx": {
+        "sha256": "e3c0c360e8c805640eb5e8404d74eb59960112b5f24798e02b189ab07f9e5dbe",
+        "gitBlobSha1": "1300031324e50a5ba761122495062fa1ce62d9f6",
+        "pinSet": "sourcePins"
+      },
+      "tests/appearance-native.test.mjs": {
+        "sha256": "c3df37df87d11fdaa714eefce4ff347f2a192990c5b853f687b7371e34e7395b",
+        "gitBlobSha1": "1014a7dc37e9b3857405218318335a5f07849a0f",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "bec76d6a9ab7a0e0ca64b8969271f5ad0d8d38527027343e6071da6477c0937f",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.tests/appearance-native.test.mjs"
+      },
+      "tests/appearance-oracle.mjs": {
+        "sha256": "4dda9772fd5c65b68fb4dc686201c3044e69e1d786c5f307c7145f9a28262439",
+        "gitBlobSha1": "ceffa3414dee6b4aca197607bcae5f1e72bb0521",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "78ce14365357655acbe0458b38f018dbfd52e6ac8c5ac0514146ee46b7b8e546",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.tests/appearance-oracle.mjs"
+      },
+      "tests/appearance-probe.gd": {
+        "sha256": "6eb6bb91d53c03b02cb822a59427ea63fd3053770414e941d8633c6c1f203b14",
+        "gitBlobSha1": "18775b096b07b97e1cc6842dc0f7a14db00279e0",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "c56e32330722a99870abff6bdc2d49ca8911751a6a7b67846c618dcc13f208e2",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "b13bcdd",
+            "subject": "fix(appearance): Share one system theme callback across applications"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[1].changedSources.tests/appearance-probe.gd"
+      },
+      "tests/types/consumer.tsx": {
+        "sha256": "fcd7550a7f5ab46a3d6e331c41de7eb8885e16e623178d20be67f9b0d6cda56d",
+        "gitBlobSha1": "3ba8f178da3abb445d8e01315b696bb459f57b5b",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "4a7e1fde2ef66f942e059bc01825bc854bc75db475cffd620b915e073cd4a49d",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "types/react-native.ts": {
+        "sha256": "980c9c509e4a528df947ddb0e2d00a5ef0c43c0547de07cec4ff097c18d31321",
+        "gitBlobSha1": "33df0782e0c9f496d28c0fe15bf91510acc9a184",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "3d601531914a8943fbb0d1e7a2dd34a2e47fad2bd71d879863d8d4b9263879de",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "c8f0e4b",
+            "subject": "feat(lists): Run RN's original virtualized lists on the SDK ScrollView (#38)"
+          },
+          {
+            "commit": "54ede87",
+            "subject": "feat(widgets): Run RN's original ActivityIndicator over a Godot spinner (#36)"
+          },
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the final attempt; this artifact audit certifies only the headless current Appearance lane (79 checks, the state after the review).",
+    "The preceding-host control (56 normative failures), the host from before the shared callback (9) and the retained emit-every-callback sabotage (17 failures of the first 67 checks) remain local evidence; this audit only shows that every check they fail and still exist passes in the hosted run. The report's top level and its first review rerun describe earlier trees; the hosted run exercises the state of the second review rerun.",
+    "Bundle hashes and the native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
+    "The slice's own committed limits are unchanged and still apply:",
+    "The headless DisplayServer has no system theme: the system scheme comes from a validation meta and the change is delivered through the Callable the module registers with DisplayServer.",
+    "Real OS theme changes on macOS, Windows, Linux, Android and iOS are not executed.",
+    "DisplayServer keeps one system theme callback: a game that registers its own replaces Fabric's, or is replaced by it, whichever registers last.",
+    "Accent and base colors, PlatformColor/DynamicColorIOS, per-window themes and Godot mobile exports are not covered.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "findings": [
+    "explained, non-blocking: .fallowrc.json: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), d62bc27 (#37), 54ede87 (#36), 946e624 (#30), 8b87d78 (#34), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: .github/workflows/contracts.yml: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), d62bc27 (#37), 54ede87 (#36), 946e624 (#30), 8b87d78 (#34), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/CMakeLists.txt: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: 54ede87 (#36), f165b82 (#33); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].nativeBuildInputPins.native/CMakeLists.txt",
+    "explained, non-blocking: native/application_runtime.cpp: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), 54ede87 (#36), 8b87d78 (#34), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/fabric_application.cpp: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.native/fabric_application.cpp",
+    "explained, non-blocking: native/fabric_application.h: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.native/fabric_application.h",
+    "explained, non-blocking: native/pointer_adapter.cpp: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: 8b87d78 (#34); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].nativeBuildInputPins.native/pointer_adapter.cpp",
+    "explained, non-blocking: native/pointer_adapter.h: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: 8b87d78 (#34); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].nativeBuildInputPins.native/pointer_adapter.h",
+    "explained, non-blocking: native/register.cpp: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications), 54ede87 (#36), f165b82 (#33); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.native/register.cpp",
+    "explained, non-blocking: native/scroll_adapter.cpp: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/scroll_adapter.h: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/system_appearance.h: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications), 15e8da4 (fix(appearance): Compare listener counts before converting them); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.native/system_appearance.h",
+    "explained, non-blocking: package.json: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), d62bc27 (#37), 54ede87 (#36), 946e624 (#30), 8b87d78 (#34), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: scripts/appearance-bundle.mjs: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.scripts/appearance-bundle.mjs",
+    "explained, non-blocking: scripts/native-sdk.mjs: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: f165b82 (#33); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].nativeBuildInputPins.scripts/native-sdk.mjs",
+    "explained, non-blocking: sdk/toolchain/platform-plugin.mjs: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: src/react-native-platform.jsx: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), 54ede87 (#36), 946e624 (#30), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: tests/appearance-native.test.mjs: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.tests/appearance-native.test.mjs",
+    "explained, non-blocking: tests/appearance-oracle.mjs: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.tests/appearance-oracle.mjs",
+    "explained, non-blocking: tests/appearance-probe.gd: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: b13bcdd (fix(appearance): Share one system theme callback across applications); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[1].changedSources.tests/appearance-probe.gd",
+    "explained, non-blocking: tests/types/consumer.tsx: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), 54ede87 (#36), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: types/react-native.ts: the run-head bytes differ from the a402a1f pin; the PR branch gained commits that touch this path after the pinned run: c8f0e4b (#38), 54ede87 (#36), f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: lane current: the bundle differs from the committed state's; 3 of the producers the bundle pins changed with commits main gained after the committed state: native/application_runtime.cpp, sdk/toolchain/platform-plugin.mjs, src/react-native-platform.jsx"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 112092138042,
+    "sha256": "961002c274ea4c6beb630aa8c348d5f9344f704e424eadbca11b8da361bb3182",
+    "checkoutVerified": true,
+    "step": "npm run test:appearance",
+    "stepTap": {
+      "ok": "Godot's system theme and setColorScheme drive RN's original Appearance and useColorScheme",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 118,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

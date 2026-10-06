@@ -985,7 +985,12 @@
     "types/react-native.ts"
   ],
   "hostedCI": {
-    "status": "pending-appearance-slice"
+    "status": "verified",
+    "run": 37408741652,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37408741641,
+    "publication": "publication.json"
   },
   "limits": [
     "The headless DisplayServer has no system theme: the system scheme comes from a validation meta and the change is delivered through the Callable the module registers with DisplayServer.",
@@ -1794,7 +1799,12 @@
         "postCommitPinIsNotANewRun": true
       },
       "hostedCI": {
-        "status": "pending-appearance-slice"
+        "status": "verified",
+        "run": 37408741652,
+        "attempts": 1,
+        "receipt": "hosted-ci.json",
+        "pages": 37408741641,
+        "publication": "publication.json"
       },
       "finalTreeGates": {
         "ranAt": "2026-10-06T01:19:55.130505+00:00",

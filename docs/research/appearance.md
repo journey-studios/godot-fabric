@@ -7,6 +7,8 @@ checks), the control on the host from before the shared system theme callback (i
 fails exactly the 9 checks where two applications observe at once) and a retained
 sabotage of the change rule. The headless DisplayServer has no system theme, so
 real OS theme changes are not certified.
+Hosted run 37408741652 repeated the 79 checks and the independent oracle accepts
+its report ([receipt](../evidence/appearance/hosted-ci.json)).
 
 ## What RN does
 

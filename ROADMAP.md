@@ -2188,8 +2188,16 @@ Appearance 79) and the native SDK batch pass on the fixed host, and after
 merging main `d62bc27` the capture notifications suite (672), Appearance,
 AppState, the contracts gates and `test:recovery` pass on the final tree. All 76
 executed code/configuration inputs match `b13bcdd` via git show/SHA-256. Hosted
-CI for this slice is pending. No whole GF, other checkpoint, weight or
-denominator closes.
+Contracts run 37408741652 (the push of main 1607044) passed all five jobs in the
+first attempt; its [audited artifact](docs/evidence/appearance/hosted-ci.json)
+repeats the 79 headless checks of the state after the review with identical IDs,
+the independent oracle accepts the downloaded report and every check the
+preceding-host and pre-shared-callback controls fail passes (16 of the 17 the
+first sabotage failed; the 17th no longer exists under that name). All 72
+tracked inputs match the checkout tree (22 differ from a402a1f through the
+review commits and commits main gained afterwards). [Pages
+37408741641](docs/evidence/appearance/publication.json) deployed this record
+from main 1607044. No whole GF, other checkpoint, weight or denominator closes.
 
 ### Animated and TouchableOpacity on RN's C++ Native Animated (2026-10-06)
 

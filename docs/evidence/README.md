@@ -326,7 +326,8 @@ two applications that observe at once both receive each change. The preceding
 host fails exactly the 56 Appearance checks, the host from before the shared
 callback fails exactly its 9 two-application checks, and a host that emitted for
 every callback failed 17 of the first 67; the independent oracle rejects both.
-Hosted CI pending.
+Hosted run 37408741652 repeated the 79 checks with identical IDs and the oracle
+accepts its report ([receipt](appearance/hosted-ci.json)).
 
 The [Animated record](native-animated/README.md) runs RN's original `Animated`,
 `Easing`, `useAnimatedValue(XY)` and `TouchableOpacity` in two roots of one

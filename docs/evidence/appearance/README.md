@@ -183,10 +183,9 @@ probe. Mudanças reais de tema em cada sistema, um jogo que registre o próprio
 callback de tema no `DisplayServer` (ele substitui o do Fabric para todas as
 aplicações, ou é substituído por ele: vale o último registro), cores de
 destaque, `PlatformColor`/`DynamicColorIOS`, temas por janela, exports Android e
-iOS do Godot e configuração do dispositivo seguem abertos no GF-21. A CI
-hospedada desta fatia está pendente. Só o checkpoint de primeira fatia do GF-21
-fecha, porque o AppState (#31) foi a primeira fatia verificada dele; nenhum GF,
-outro checkpoint, peso ou denominador fecha.
+iOS do Godot e configuração do dispositivo seguem abertos no GF-21. Só o checkpoint
+de primeira fatia do GF-21 fecha, porque o AppState (#31) foi a primeira fatia
+verificada dele; nenhum GF, outro checkpoint, peso ou denominador fecha.
 
 Na execução original, as 72 fontes de código e configuração executadas (16
 produtoras do bundle, 57 entradas do build nativo e 6 de verificação, com
@@ -226,3 +225,18 @@ oito lanes), de novo o Appearance e o AppState, os gates do job `contracts` e o
 do bundle, 61 entradas do build nativo e 6 de verificação, com sobreposição)
 correspondem a `b13bcdd` por `git show`/SHA-256; o recibo registra a corrida em
 `reviewReruns`.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 1607044 (run
+37408741652), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-appearance` do job nativo repete os **79 checks headless** do
+estado depois da revisão (a segunda entrada de `reviewReruns`), com IDs idênticos
+aos fixados; o oráculo independente aceita de novo o relatório baixado, e os 56
+checks que o host anterior falha, os 9 do host antes do callback compartilhado e 16
+dos 17 da sabotagem original passam todos no run (o 17º, sobre o stop, não existe
+mais com esse nome depois da revisão). O bundle da run difere do registrado porque a
+`main` mudou arquivos que ele inclui: dos 72 arquivos rastreados, 22 diferem de
+`a402a1f`, entre eles os que a revisão (`15e8da4` e `b13bcdd`) e os merges da `main`
+mudaram, como lista o recibo. O [Pages](publication.json) (run 37408741641)
+implantou exatamente os dados commitados de 1607044; o site público já foi
+substituído pelo deploy seguinte da `main`. Esses recibos não fecham GF, checkpoint,
+peso ou denominador.

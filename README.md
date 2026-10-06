@@ -290,6 +290,7 @@ system theme and the `setColorScheme` override, with two roots re-rendering the
 same scheme and two applications sharing one system theme callback: 79 headless
 checks. The preceding host fails exactly its 56 Appearance checks, and the host
 from before the shared callback its 9 two-application checks.
+Hosted CI repeated the 79 checks ([receipt](docs/evidence/appearance/hosted-ci.json)).
 [Evidence](docs/evidence/appearance/README.md).
 
 The [Animated example](examples/animated/README.md) runs React Native's original
