@@ -207,8 +207,27 @@ Hosted CI repeated the 1,530 checks ([receipt](docs/evidence/pointer-document-ho
 The [click example](examples/pointer-click/README.md) certifies `click` on a
 primary release, targeted at the deepest view the press and the release share,
 and the ScrollView drag that cancels its contact, in eight lanes: 728 headless
-checks. The preceding host fails exactly 31 of them.
+checks. The preceding host fails exactly 31 of them. Hosted CI repeated the 728
+checks ([receipt](docs/evidence/pointer-click/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-click/README.md).
+
+The [PanResponder example](examples/pan-responder/README.md) runs RN's original
+`PanResponder` on actual Godot touches and mouse drags, including two-finger
+gestures, parent claims, refused termination and removal mid-gesture, in four
+flag lanes: 128 headless checks. [Evidence](docs/evidence/pan-responder/README.md).
+
+The [AppState example](examples/app-state/README.md) runs React Native's original
+`AppState` from the public import, fed by the focus, pause and memory-warning
+notifications Godot delivers to the `FabricApplication`, with two roots sharing
+one state: 75 headless checks. The preceding host fails exactly its 62
+lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
+
+The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
+over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
+mouse clicks and touch taps toggle it, `onChange`/`onValueChange` follow RN's
+order, and Switch.js's `setValue` restores a value prop that does not change.
+108 headless checks in two roots; the preceding host fails the 2 mount checks.
+[Evidence](docs/evidence/switch/README.md).
 
 The [touchables example](examples/touchables/README.md) makes
 `TouchableWithoutFeedback` and `TouchableHighlight` public with RN's original

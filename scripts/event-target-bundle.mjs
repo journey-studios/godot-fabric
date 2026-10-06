@@ -35,7 +35,8 @@ const upstreamFiles = [
 
 // Each output is a separate Hermes runtime's immutable flag configuration.
 // This helper never writes build/app.js and performs no native build or run.
-async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", nativeDispatchMode = "original", pointerInterestMode = "original", defines = {}, sources, extraUpstreamFiles = []}) {
+// Runners may call it directly, so a new probe never edits this shared producer.
+export async function bundleProbe({entryPoint, modes, prefix, parentMode, rendererTagMode = "original", nativeDispatchMode = "original", pointerInterestMode = "original", defines = {}, sources, extraUpstreamFiles = []}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundles = {};

@@ -1698,8 +1698,132 @@ the 26 native suites and the native SDK batch pass on the same host. Captured
 clicks, `auxclick`/`contextmenu`, keyboard and accessibility activation, pen,
 nested or horizontal scroll takeover and surface selection for empty-area input
 remain open. All 28 executed code/configuration inputs match implementation
-8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted CI
-for this slice is pending. No whole GF, checkpoint, weight or denominator closes.
+8948a1c via git show/SHA-256 (execution base 15e1dda/dirty retained). Hosted
+Contracts run 37375758262 (the push of main 72155bc) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/pointer-click/hosted-ci.json)
+repeats the 728 headless checks with identical IDs, bundles and stages, and all
+28 tracked inputs match 8948a1c. [Pages 37375758284](docs/evidence/pointer-click/publication.json)
+deployed this record from main 72155bc, and the live public JSON and local API
+match it. No whole GF, checkpoint, weight or denominator closes.
+
+### Original PanResponder (2026-10-05)
+
+GF-13 remains **In progress**. The
+[PanResponder evidence](docs/evidence/pan-responder/README.md) replaces the
+platform's throwing `PanResponder` stub (a chart-example leftover) with RN's
+original module, which is plain JS over the responder events and their touch
+history that this host already delivers; no native code changes. Four flag lanes
+cover both of RN's responder implementations: **128 headless checks**.
+
+Touch and mouse drags grant at the start centroid, accumulate displacement and
+release with the final state; a second finger starts with two active touches
+and each move uses the centroid of both, as `TouchHistoryMath` compares
+inclusively; a parent claims vertical moves from a `Pressable` (which presses
+out without pressing), a pan view that refuses to yield keeps its gesture after
+RN's speculative grant and reject of the parent, and a capture parent wins the
+start. Removing the responder's View cancels the contact without a callback to
+the unmounted responder, and the next gesture is granted normally. The legacy
+plugin and native dispatch produce identical callbacks and gesture state. The
+preceding SDK fails at mount when its stub throws, and a PanResponder that drops
+the capture-phase handlers fails 6 checks rejected by the independent oracle.
+The shared bundler now exports its probe helper, so new probes stop editing a
+producer every preceding-host control pins. Those seven controls were rerun with
+the new SDK bundle and still reproduce 8/12/3/45/32/9/31 failures; the contracts
+gates, `test:recovery`, the 27 native suites and the native SDK batch pass on the
+same host. Pinch zoom through chart libraries, `InteractionManager` handles,
+hardware velocity, nested scroll views and negotiation with native Godot
+controls remain open. All 14 executed code/configuration inputs match
+implementation b3327e4 via git show/SHA-256 (execution base 72155bc/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
+
+### AppState from the Godot application lifecycle (2026-10-05)
+
+GF-21 moves to **In progress**. The
+[AppState evidence](docs/evidence/app-state/README.md) replaces the SDK's fixed
+`AppState` with React Native's original module, read through the public
+`react-native` import and fed by the lifecycle notifications Godot delivers to
+the `FabricApplication`: **75 headless checks**, with two roots of one Hermes
+application sharing one state.
+
+The native `AppState` TurboModule implements RN's generated
+`NativeAppStateCxxSpec` and emits through the original
+`TurboModule::emitDeviceEvent`. One lifecycle per application takes
+`NOTIFICATION_APPLICATION_FOCUS_IN/OUT`, `PAUSED/RESUMED` and
+`OS_MEMORY_WARNING`, including notifications that arrive before the runtime
+exists. The state is `background` while paused, `inactive` while unfocused and
+`active` otherwise: on iOS, where Godot sends FOCUS_OUT on `WillResignActive` and
+PAUSED on `DidEnterBackground`, this reproduces RCTAppState's sequence, and a
+desktop application that loses focus is `inactive`, iOS's state for a foreground
+application that receives no events. Only a new state is sent; every actual
+focus change also sends Android's `appStateFocusChange` (`focus`/`blur`) after
+the state event, and each memory warning sends `memoryWarning`. A paused game
+tree is not the lifecycle (V2-D11) and keeps delivering events. Stopping the
+application disposes the module without an event, as Android's `onHostDestroy`
+does; `disposeEnvironment()` no longer invents `inactive` and only releases the
+AppState listeners. A CommonJS getter keeps RN's lazy `AppState` export, so
+bundles that never read it still run on hosts without the module.
+
+On the preceding host (main `72155bc`) the same bundle mounts and stops both
+roots but fails its first AppState read with `'AppState' could not be found`:
+exactly the 62 normative checks fail. A retained host whose focus outranks the
+pause fails 5 checks, and the independent oracle rejects its report. The
+contracts gates (260 Node/13 Python, static analysis, publication scan),
+`test:recovery`, the 27 native suites (22 examples, Down 2,731, Document Up
+6,459, View Up 297, Move 220, Document Move 1,940, hover 158, root path 82,
+Document hover 1,530, click 728, AppState 75) and the native SDK batch pass on
+the same host. Every bundle that imports `react-native` changes, so the
+preceding-host controls that pin the SDK bundle need new bundles; the click
+suite's new bundles still pass its 728 checks on the preceding host, which has
+no AppState module. Window minimization, real OS focus, Godot Android/iOS
+exports (Android would report a transitional `inactive`, iOS also
+`focus`/`blur`), Appearance/`useColorScheme`, device configuration and resume
+with pending work remain open. All 70 executed code/configuration inputs match
+implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
+executed tree is the implementation's). Hosted CI for this slice is pending. No
+whole GF, checkpoint, weight or denominator closes.
+
+### Switch over a native Godot switch (2026-10-05)
+
+GF-17 remains **In progress**. The [Switch evidence](docs/evidence/switch/README.md)
+replaces the public placeholder that threw on render with RN's original
+`Switch.js`, which takes its non-Android path on Godot: the codegen-generated
+`RCTSwitch` ViewConfig, its bubbling `onChange` (`{value, target}`) and the
+`setValue` command. The host compiles the package's generated FBReactNativeSpec
+Props/EventEmitters, registers RN's shared iOS/macOS `SwitchComponentDescriptor`
+with a Godot measurement beside `IOSSwitchShadowNode.mm`, and mounts
+`GodotSwitch`, a custom-drawn Panel: **108/108 headless checks** with actual mouse
+clicks and touch taps in two roots of one Hermes application.
+
+As in `RCTSwitchComponentView`, a tap toggles natively, `value` applies only when
+it changes, and `onChange` is emitted only when the native value differs from the
+committed prop; Switch.js then calls `onChange` and `onValueChange` and restores a
+value prop that does not follow with exactly one `setValue`. During the press the
+Switch is RN's JS responder without blocking native input; Godot's emulated mouse
+for a touch is ignored; disabled input toggles nothing; colors map to
+`tintColor`/`onTintColor`/`thumbTintColor` and `ios_backgroundColor` paints the
+host. A Switch without a style size measures 63×28, RN's own measurement (UISwitch
+plus two points) on the repo's newest iOS reference runtime (iOS 26.3.1; iOS 18.4
+gives 51×31). Once a Switch renders, RN's global registry makes `topChange`
+bubble, so a Godot TextInput change also reaches ancestors' `onChange`, as RN's
+own TextInput configs do.
+
+The preceding host fails exactly the 2 normative mount checks (Fabric's legacy
+interop resolves `Switch`; the mount rejects it). A retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects its report;
+the restored source rebuilds the identical host. The contracts gates (261 Node/13
+Python, static analysis, publication scan), `test:recovery` and the
+native-cold-start suites pass, including Down 2,731, Document Up 6,459, View Up
+297, Move 220, Document Move 1,940, hover 158, root path 82, Document hover 1,530
+and 22 examples; codegen, the native SDK pack/verify (now recording the 5
+generated spec sources), adapters (loader 89 checks/21 cases, runtime 13
+runs/213 checks), consumer (30 + 40) and cold start pass too. All 72 executed
+code/configuration inputs match implementation a10b19e via git show/SHA-256
+(battery base 3e2dc2d; the amend touched only test/config files, whose readers
+were rerun). Keyboard activation and focus, accessibility, animation and thumb
+dragging, the Android path, per-target defaults, hardware and mobile exports
+remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
 
 
 ### Original TouchableWithoutFeedback and TouchableHighlight (2026-10-05)
@@ -1780,7 +1904,7 @@ observe the real system and retain the original event/callback contracts.
 | --- | --- | --- | --- |
 | GF-19 · P1 · Animated and layout animation | Planned | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
 | GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
-| GF-21 · P1 · System environment and app lifecycle | Planned | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
+| GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | Planned | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
 | GF-23 · P1 · Shared device services | Planned | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
 | GF-24 · P1 · OS-specific public contracts | Planned | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |

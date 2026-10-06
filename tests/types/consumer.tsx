@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { AppRegistry, RootTagContext, Button, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, RootTagContext, Button, Switch, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -79,6 +79,18 @@ const nativeSubscription = nativeEmitter.addListener("GodotFabricFixtureValue", 
 nativeSubscription.remove();
 void nativeSum;
 
+// AppState is the original pinned module and keeps its event contract.
+const appState: AppStateStatus | null | undefined = AppState.currentState === "active" ? "active" : null;
+const appStateSubscription = AppState.addEventListener("change", (state: AppStateStatus) => { void state; });
+const memorySubscription = AppState.addEventListener("memoryWarning", () => {});
+const blurEvent: AppStateEvent = "blur";
+appStateSubscription.remove(); memorySubscription.remove();
+void appState; void blurEvent;
+// @ts-expect-error change handlers receive the original AppStateStatus
+AppState.addEventListener("change", (state: number) => { void state; });
+// @ts-expect-error unknown AppState events are rejected
+AppState.addEventListener("suspend", () => {});
+
 // DOM traversal comes from the original pinned public instance types.
 function readTree(element: ViewInstance) {
   const identifier: string = element.id;
@@ -120,3 +132,22 @@ const invalidPointerId = (instance: ViewInstance) => instance.setPointerCapture(
 // @ts-expect-error original PointerEvent keeps coordinates numeric
 const invalidPointerPosition = (event: import("react-native").PointerEvent): string => event.nativeEvent.clientX;
 void capturePointer; void originalPointerProps; void pointerView; void invalidPointerId; void invalidPointerPosition;
+
+// Public Switch: RN's original props and change event through the facade.
+const switchProps: import("react-native").SwitchProps = {
+  value: true, disabled: false, thumbColor: "#ffffff", trackColor: {false: "#767577", true: "#81b0ff"},
+  ios_backgroundColor: "#3e3e3e", testID: "switch", style: {marginTop: 8},
+  onValueChange: value => { const next: boolean = value; void next; },
+  onChange: (event: SwitchChangeEvent) => {
+    const changed: boolean = event.nativeEvent.value;
+    const target: number = event.nativeEvent.target;
+    void changed; void target;
+  },
+};
+const originalSwitchProps: import("../../node_modules/react-native/types_generated/index").SwitchProps = switchProps;
+const publicSwitch = <Switch {...switchProps} ref={instance => { if (instance) instance.measure(() => {}); }} />;
+// @ts-expect-error Switch.js overrides the deprecated iOS tint props
+const deprecatedTint = <Switch onTintColor="#00ff00" />;
+// @ts-expect-error the value is a boolean
+const textValue = <Switch value="on" />;
+void originalSwitchProps; void publicSwitch; void deprecatedTint; void textValue;

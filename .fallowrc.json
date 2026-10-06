@@ -39,7 +39,10 @@
     "tests/pointer-root-path-fixture.jsx",
     "tests/pointer-document-hover-fixture.jsx",
     "tests/pointer-click-fixture.jsx",
+    "tests/pan-responder-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx",
+    "tests/app-state-fixture.jsx",
+    "tests/switch-fixture.jsx",
     "tests/touchables-fixture.jsx",
     "tests/touchables-animated-fixture.jsx"
   ],
@@ -208,6 +211,8 @@
             "Text",
             "TextInput",
             "Button",
+            "Switch",
+            "SwitchChangeEvent",
             "StyleSheet",
             "AppRegistry",
             "RootTagContext",
@@ -223,7 +228,10 @@
             "EmitterSubscription",
             "HostComponent",
             "codegenNativeComponent",
-            "codegenNativeCommands"
+            "codegenNativeCommands",
+            "AppState",
+            "AppStateStatus",
+            "AppStateEvent"
           ]
         },
         {

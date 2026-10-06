@@ -90,6 +90,18 @@ jobs:
       - run: npm run test:runtime
       - run: npm run test:application
       - run: npm run test:modules
+      - run: npm run test:app-state
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-app-state
+          path: |
+            build/app-state-report.json
+            build/app-state-current-report.json
+            build/app-state-comparison.json
+            build/app-state-current.log
+            build/app-state-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
@@ -302,6 +314,30 @@ jobs:
             build/pointer-click-old-host-comparison.json
             build/pointer-click-original-*.log
             build/pointer-click-current-*.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:responders:pan
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-pan-responder
+          path: |
+            build/pan-responder-*-report.json
+            build/pan-responder-comparison.json
+            build/pan-responder-disabled.log
+            build/pan-responder-imperative-only.log
+            build/pan-responder-internal-only.log
+            build/pan-responder-enabled.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:switch
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-switch
+          path: |
+            build/switch-report.json
+            build/switch-current-report.json
+            build/switch-comparison.json
+            build/switch-current.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:touchables
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

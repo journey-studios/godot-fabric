@@ -5,6 +5,7 @@ import { ScrollView as GodotScrollView } from "./scroll-view";
 import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
 import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
+import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import {
   Pressable as GodotPressable,
   Button as GodotButton,
@@ -144,7 +145,14 @@ function unavailable(name, reason) {
   };
 }
 export const Image = unavailable("Image");
-export const Switch = unavailable("Switch");
+// RN's original Switch.js takes its non-Android path: the generated
+// SwitchNativeComponent ViewConfig, its onChange event and setValue command.
+export function Switch({ style, ...props }) {
+  if (useTextAncestor()) {
+    throw new Error("Inline Controls are not implemented in Godot Text");
+  }
+  return <OriginalSwitch {...props} style={nativeStyle(style, "Switch")} />;
+}
 // RN's original touchables own Pressability, their timers and feedback state.
 // The facade only keeps its host contract: no Controls inside Text and
 // validated styles on the View a touchable renders itself.
@@ -201,13 +209,9 @@ export function ScrollView(props) {
     throw new Error("Inline Controls are not implemented in Godot Text");
   return <GodotScrollView {...props} />;
 }
-export const PanResponder = {
-  create() {
-    throw new Error(
-      "Chart platform PanResponder/pinch zoom is not implemented",
-    );
-  },
-};
+// Upstream PanResponder: gesture state from the original responder events and
+// their touch history, including multi-touch centroids.
+export { default as PanResponder } from "react-native/Libraries/Interaction/PanResponder";
 export function useColorScheme() {
   throw new Error(
     "Chart platform system color scheme is not implemented; use an explicit chart theme",
