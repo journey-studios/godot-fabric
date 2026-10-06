@@ -250,6 +250,15 @@ The preceding host fails exactly the 2 mount checks; a retained sabotage of the
 native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
 CI pending.
 
+The [virtualized-list record](virtualized-list/README.md) scrolls RN's original
+`FlatList`, `SectionList` and `VirtualizedList` on the SDK ScrollView with real
+wheel steps and touch drags in two roots: 44 headless checks. Windows match RN's
+`computeWindowedRenderLimits`, cells outside them unmount and return, and
+viewability, `onEndReached`, scroll commands and failures follow RN. The
+preceding host fails exactly 3 normative checks, the preceding SDK 11, and an SDK
+ScrollView without `onLayout` fails 3, which the independent oracle rejects.
+Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

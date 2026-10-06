@@ -229,6 +229,12 @@ order, and Switch.js's `setValue` restores a value prop that does not change.
 108 headless checks in two roots; the preceding host fails the 2 mount checks.
 [Evidence](docs/evidence/switch/README.md).
 
+The [virtualized-list example](examples/virtualized-list/README.md) runs React
+Native's original `FlatList`, `SectionList` and `VirtualizedList` from the public
+import on the SDK ScrollView, windowed by real wheel and touch input in two roots:
+44 headless checks. The preceding host fails exactly its 3 ScrollView checks.
+[Evidence](docs/evidence/virtualized-list/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining
