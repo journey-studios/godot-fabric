@@ -3,7 +3,9 @@
 Status: executed isolated macOS validation against pinned RN 0.87.1 and official
 Godot 4.7.2. The [evidence](../evidence/pan-responder/README.md) owns the 128
 headless checks in four flag lanes, the preceding-SDK control and a retained
-sabotage. Public EventTarget flags remain disabled.
+sabotage. Public EventTarget flags remain disabled. Hosted run 37385104730
+repeated the 128 checks with identical IDs and callbacks
+([receipt](../evidence/pan-responder/hosted-ci.json)).
 
 ## What RN's PanResponder needs
 
