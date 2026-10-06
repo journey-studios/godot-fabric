@@ -1964,6 +1964,59 @@ show/SHA-256. Accessibility, reduced motion, UIKit's exact timing and geometry,
 pixel captures, hardware and mobile exports remain open. Hosted CI for this slice
 is pending. No whole GF, checkpoint, weight or denominator closes.
 
+### Pointer capture notifications for listeners (2026-10-05)
+
+GF-06/GF-07/GF-08/GF-13 remain **In progress**. The
+[capture notification evidence](docs/evidence/pointer-capture-notifications/README.md)
+certifies `gotpointercapture` and `lostpointercapture` for JSX props and original
+EventTarget listeners, and hover and click while a pointer is captured, in eight
+lanes (original/current interest × four flag configurations): **672 headless
+checks** with actual Godot mouse and touch input over two roots. No native or SDK
+code changes: the host already follows RN's `PointerEventsProcessor`.
+
+A capture requested in a Down's listener is pending at once (`hasPointerCapture`
+is true) and notified at that pointer's next event: lost to the previous owner,
+then got, both retargeted and Discrete, before that event's hover and the event
+itself, which reaches the owner with an owner-local offset over a sibling, an
+empty root point, outside the surface or over the other root. RN emits both
+without a listener check, so Document listeners (native dispatch) and
+documentElement/View listeners (both flags) receive them in either interest mode,
+even for an owner whose path listens to nothing, whose retargeted Move and Up RN
+drops. Got/lost bubble and are cancelable: Document and documentElement capture
+listeners, the container's capture prop, the target's capture prop before its
+added capture listener and its bubble prop before its added bubble listener, then
+the ancestors, documentElement and Document; legacy lanes run the JSX props only.
+Inside got, `hasPointerCapture` names the owner; inside lost, the next owner or
+none. A transfer to a sibling sends lost, got, then out/leave of the former owner
+and over/enter of the new one; an explicit release notifies lost and the hover's
+return at the next event. Up and Cancel release after their own dispatch (after a
+touch's out/leave); a released mouse keeps hovering the former owner until it
+moves. Click keeps the physical Down/Up hit paths after the lost, so a capture
+held by a third view never moves it. Removing an owner while the pointer survives
+clears it without a notification; removing the view that captured its own contact
+cancels the contact by the host's lifetime rule, and no listener sees a cancel or
+a lost. Two fingers keep separate captures, and a touch is never captured
+implicitly.
+
+Where W3C differs (click at the capture target, implicit touch capture,
+`lostpointercapture` at the document after a removal, lost before a touch's
+out/leave, immediate boundary events after a release) the host keeps RN's
+behavior; the [research](docs/research/pointer-capture-notifications.md) records
+why. An SDK declaring got/lost with `skipBubbling` fails 12 or 13 delivery checks
+per lane, and an overlay that tracks hover by the physical target fails 33 per
+lane; the independent oracle, a model of RN's processor, rejects all 16 reports
+and accepts the final 8. The preserved preceding host is byte-identical to the
+executed one, so no preceding-host control applies. The contracts gates (260
+Node/13 Python, static analysis, publication scan) and `test:recovery` pass; the
+other native suites were not rerun because only tests, CI and configuration
+changed. Hover offsets, transformed capture, imperative hover listeners while
+captured, capture across roots, pen, hardware and mobile exports remain open. All
+23 executed code/configuration inputs match implementation 6ad77b8 via git
+show/SHA-256 (executed on that commit). After main reached 54ede87, the merged
+tree 0580af7 repeated the 672 checks on its own host with identical IDs and
+results. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+denominator closes.
+
 ### Virtualized lists on the SDK ScrollView (2026-10-05)
 
 GF-15 moves to **In progress** with only its first-slice checkpoint done. The

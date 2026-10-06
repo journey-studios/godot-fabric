@@ -1,0 +1,1202 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pointer-capture-notifications",
+  "status": "verified-local-eight-lanes-two-retained-sabotages-no-native-change",
+  "at": "2026-10-06T00:29:41.106976+00:00",
+  "executionBaseCommit": "6ad77b811cbb9cbd49ada1fd575deeb15301fda6",
+  "sourceDirtyDuringExecution": false,
+  "implementationCommit": "6ad77b811cbb9cbd49ada1fd575deeb15301fda6",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de",
+    "nativeHostBuiltFrom": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+    "nativeCodeChanged": false,
+    "sdkCodeChanged": false
+  },
+  "commands": [
+    "npm run test:pointers:capture",
+    "node tests/pointer-capture-notifications-native.test.mjs --oracle-report=<report> (final reports: accept)",
+    "node tests/pointer-capture-notifications-native.test.mjs --oracle-report=<report> --expect-reject (controls)"
+  ],
+  "headlessChecks": 672,
+  "checksPerLane": 84,
+  "checkIdDigestMethod": "SHA-256 of the compact JSON array of check names in report order",
+  "cases": [
+    "B/mouse/capture-self",
+    "mouse/cancel",
+    "mouse/capture-elsewhere",
+    "mouse/capture-self",
+    "mouse/capture-up",
+    "mouse/listener-free-target",
+    "mouse/no-buttons",
+    "mouse/release",
+    "mouse/remove-captured-origin",
+    "mouse/remove-target",
+    "mouse/transfer",
+    "touch/cancel",
+    "touch/capture-self",
+    "touch/no-capture",
+    "touch/two-fingers"
+  ],
+  "rawSequences": {
+    "B/mouse/capture-self": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "up@L1",
+      "lost@L1",
+      "click@G"
+    ],
+    "mouse/cancel": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "cancel@L1",
+      "out@L1",
+      "leave@L1",
+      "lost@L1",
+      "over@L2#p1",
+      "enter@L2#p1",
+      "move@L2#p1"
+    ],
+    "mouse/capture-elsewhere": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@S",
+      "out@L1",
+      "leave@L1",
+      "up@S",
+      "lost@S",
+      "click@L1",
+      "over@L1",
+      "enter@L1",
+      "move@L1"
+    ],
+    "mouse/capture-self": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "move@L1",
+      "move@L1",
+      "move@L1",
+      "move@L1",
+      "move@L1",
+      "up@L1",
+      "lost@L1",
+      "click@G",
+      "out@L1",
+      "leave@L1",
+      "over@L2",
+      "enter@L2",
+      "move@L2"
+    ],
+    "mouse/capture-up": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L1",
+      "up@L1",
+      "lost@L1",
+      "click@L1"
+    ],
+    "mouse/listener-free-target": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@X",
+      "out@L1",
+      "leave@L1",
+      "lost@X",
+      "click@G",
+      "over@L2",
+      "enter@L2",
+      "move@L2"
+    ],
+    "mouse/no-buttons": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "out@L1",
+      "leave@L1",
+      "over@L2",
+      "enter@L2",
+      "move@L2"
+    ],
+    "mouse/release": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "lost@L1",
+      "out@L1",
+      "leave@L1",
+      "over@L2",
+      "enter@L2",
+      "move@L2",
+      "up@L2",
+      "click@G"
+    ],
+    "mouse/remove-captured-origin": [
+      "over@L2",
+      "enter@L2",
+      "move@L2",
+      "down@L2",
+      "got@L2",
+      "move@L2",
+      "over@L1#p1",
+      "enter@L1#p1",
+      "move@L1#p1"
+    ],
+    "mouse/remove-target": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L2",
+      "out@L1",
+      "leave@L1",
+      "over@L2",
+      "enter@L2",
+      "move@L2",
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "up@L1",
+      "click@L1"
+    ],
+    "mouse/transfer": [
+      "over@L1",
+      "enter@L1",
+      "move@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "lost@L1",
+      "got@L2",
+      "out@L1",
+      "leave@L1",
+      "over@L2",
+      "enter@L2",
+      "move@L2",
+      "move@L2",
+      "up@L2",
+      "lost@L2",
+      "click@L1",
+      "out@L2",
+      "leave@L2",
+      "over@L1",
+      "enter@L1",
+      "move@L1"
+    ],
+    "touch/cancel": [
+      "over@L1",
+      "enter@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "cancel@L1",
+      "out@L1",
+      "leave@L1",
+      "lost@L1"
+    ],
+    "touch/capture-self": [
+      "over@L1",
+      "enter@L1",
+      "down@L1",
+      "got@L1",
+      "move@L1",
+      "move@L1",
+      "move@L1",
+      "up@L1",
+      "out@L1",
+      "leave@L1",
+      "lost@L1",
+      "click@G"
+    ],
+    "touch/no-capture": [
+      "over@L1",
+      "enter@L1",
+      "down@L1",
+      "out@L1",
+      "leave@L1",
+      "over@L2",
+      "enter@L2",
+      "move@L2",
+      "up@L2",
+      "out@L2",
+      "leave@L2",
+      "click@G"
+    ],
+    "touch/two-fingers": [
+      "over@L1",
+      "enter@L1",
+      "down@L1",
+      "over@L2#p1",
+      "enter@L2#p1",
+      "down@L2#p1",
+      "got@L1",
+      "move@L1",
+      "got@L2#p1",
+      "move@L2#p1",
+      "up@L2#p1",
+      "out@L2#p1",
+      "leave@L2#p1",
+      "lost@L2#p1",
+      "up@L1",
+      "out@L1",
+      "leave@L1",
+      "lost@L1",
+      "click@G"
+    ]
+  },
+  "rawSequenceNotation": "type@target; #pN marks the case's (N+1)th pointer identity",
+  "lanes": [
+    {
+      "interest": "original",
+      "flagMode": "disabled",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "35f8e5bb0cf0e9936fa2e9b378575df9354cc0736ee98582a984279e3036a491",
+      "reportSha256": "778ef7ebaa951851667817d01eaf5fcf43483fd95fe1b42a299a2f4dc73269db",
+      "logSha256": "aed96878f583c33ae1c0732cbbb003731eca26c682687378ad3cb39598266e3c",
+      "gotOnL1": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ],
+      "gotOnListenerFreeX": [],
+      "lostOnL1AtUp": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ]
+    },
+    {
+      "interest": "original",
+      "flagMode": "imperative-only",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "c131a9c3a0876eeb1d4b00686c3b73bd56eaa6d13b4d9bd99d42a56998be0857",
+      "reportSha256": "71404834fcd21ce45a6905f8efd7d8da137a5e65f26b571c9f6139d721ad12e0",
+      "logSha256": "0a5ca41de62ded55f3efed83563413d1755d99725e54cd483f3572fd1f521af3",
+      "gotOnL1": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ],
+      "gotOnListenerFreeX": [],
+      "lostOnL1AtUp": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ]
+    },
+    {
+      "interest": "original",
+      "flagMode": "internal-only",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstalled": false,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "c3422a727106f649abbededffbd0ab6f47f8f3d0519e3062079cb6e492f1f3f7",
+      "reportSha256": "f7360f176e857df5e4f0b957dd9f023b476b3bd2580ccb38a6338b92fdafb963",
+      "logSha256": "303f345dbdf15938836c212d10b3fc112e66d1b5927fef526dbaa377e27b1dd2",
+      "gotOnL1": [
+        "DocC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1@2",
+        "G@3",
+        "C@3",
+        "DocB@3"
+      ],
+      "gotOnListenerFreeX": [
+        "DocC@1",
+        "DocB@3"
+      ],
+      "lostOnL1AtUp": [
+        "DocC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1@2",
+        "G@3",
+        "C@3",
+        "DocB@3"
+      ]
+    },
+    {
+      "interest": "original",
+      "flagMode": "enabled",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstalled": false,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "d7e5fc34435a4838960a7e41448d18fce7178b463477f7d8ea589aea7bdca099",
+      "reportSha256": "b1589072ef840f1240ce147e5b6275ff0bd8642054356b652cdb8875aaff6b76",
+      "logSha256": "ef4dbf5fb9dc3a88da08b4656c808aa207e03cd5e6d123106638fa6fd92a8024",
+      "gotOnL1": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1C@2",
+        "L1@2",
+        "L1B@2",
+        "G@3",
+        "GB@3",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "gotOnListenerFreeX": [
+        "DocC@1",
+        "RootC@1",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "lostOnL1AtUp": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1C@2",
+        "L1@2",
+        "L1B@2",
+        "G@3",
+        "GB@3",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "disabled",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "451b4e98ff3bf60afb7fc295840d155968eccc1eafb61931fc02be27990bf34c",
+      "reportSha256": "b91ca9c5fca19a57c6ce179103f46985afb728c820032ef348e124ad0d5cf510",
+      "logSha256": "051032c34ce0d5523ee36865c763accff0103fe36b3bd0b7bba898700a0ed9a5",
+      "gotOnL1": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ],
+      "gotOnListenerFreeX": [],
+      "lostOnL1AtUp": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "imperative-only",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": false
+      },
+      "queryInstalled": false,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "e1e92658a47a0f9becfda3c3143f31316ac3bd279b9ab6c7c367d9c9b1522bad",
+      "reportSha256": "1f6c8db02a3ec47755139de5835e8a5f979af19904fa4be18f0f14583671b926",
+      "logSha256": "52a09fb6a9506c125cdda095e43d6570242848b16a3750cd2da21722ff475f9e",
+      "gotOnL1": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ],
+      "gotOnListenerFreeX": [],
+      "lostOnL1AtUp": [
+        "C-capture",
+        "L1-capture",
+        "L1",
+        "G",
+        "C"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "internal-only",
+      "flags": {
+        "imperative": false,
+        "nativeDispatch": true
+      },
+      "queryInstalled": true,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "1397ea8408507e2ea97979cfe760866f5c3ca521acf7c2f6564e4065e3602b64",
+      "reportSha256": "868532954f4c4582a3f7fd75dfcff48285879da5268e29eb8808ba784e150f4d",
+      "logSha256": "05dc847a9c56739eb96412cf8e7ee02d7a96f63a12eb6040e4896f7cb25ab20a",
+      "gotOnL1": [
+        "DocC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1@2",
+        "G@3",
+        "C@3",
+        "DocB@3"
+      ],
+      "gotOnListenerFreeX": [
+        "DocC@1",
+        "DocB@3"
+      ],
+      "lostOnL1AtUp": [
+        "DocC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1@2",
+        "G@3",
+        "C@3",
+        "DocB@3"
+      ]
+    },
+    {
+      "interest": "current",
+      "flagMode": "enabled",
+      "flags": {
+        "imperative": true,
+        "nativeDispatch": true
+      },
+      "queryInstalled": true,
+      "checks": 84,
+      "passed": 84,
+      "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+      "bundleSha256": "14119d7e6f0c4a7136f595789091c3054a378be6793078883712a685deb63efc",
+      "reportSha256": "0d812eb266a27f9c8bd3704446773ea6fe09624b7486d256b602dfbed3ab5cb9",
+      "logSha256": "c926a036b391fd310babe8cb93e0e00f5637c5189f43cba8043f63b451c7ee9f",
+      "gotOnL1": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1C@2",
+        "L1@2",
+        "L1B@2",
+        "G@3",
+        "GB@3",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "gotOnListenerFreeX": [
+        "DocC@1",
+        "RootC@1",
+        "RootB@3",
+        "DocB@3"
+      ],
+      "lostOnL1AtUp": [
+        "DocC@1",
+        "RootC@1",
+        "C-capture@1",
+        "L1-capture@2",
+        "L1C@2",
+        "L1@2",
+        "L1B@2",
+        "G@3",
+        "GB@3",
+        "C@3",
+        "RootB@3",
+        "DocB@3"
+      ]
+    }
+  ],
+  "crossLane": {
+    "sameRawSequenceInAllLanes": true,
+    "originalAndCurrentInterestDeliverIdentically": true,
+    "comparisonSha256": "49e7af5decbb7d4c70daa92d94705e5ff9d2f9b2c4ec851b31c0b9d4f5b89499",
+    "runnerLogSha256": "a36b73fd9ac91ef2c077beb1b049a5f55c74e5a2466ce07729fecc0197025d17"
+  },
+  "oracleAcceptsFinalReports": {
+    "reports": 8,
+    "logSha256": "4e41249751757fd02ea47fc08011b0c7c73e14d504db5a352e4de89c679e90d0"
+  },
+  "precedingHostControl": {
+    "applicable": false,
+    "reason": "no native, SDK or shared bundler source changed: the preserved preceding host is byte-identical to the executed host",
+    "preservedHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de",
+    "builtFrom": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38"
+  },
+  "negativeControls": {
+    "sdkCaptureNotificationsSkipBubbling": {
+      "sabotage": "src/base-view-config.js declared topGotPointerCapture/topLostPointerCapture with skipBubbling, as for enter/leave",
+      "patchSha256": "21d090c925a508e74259da5e30271229c509a6f85fb687d876d3fad2fb2f00c5",
+      "failedPerLane": {
+        "original-disabled": 12,
+        "original-imperative-only": 12,
+        "original-internal-only": 13,
+        "original-enabled": 13,
+        "current-disabled": 12,
+        "current-imperative-only": 12,
+        "current-internal-only": 13,
+        "current-enabled": 13
+      },
+      "failingCheck": "Listeners receive each event in RN's propagation order for this lane",
+      "failingCases": [
+        "B/mouse/capture-self",
+        "mouse/cancel",
+        "mouse/capture-elsewhere",
+        "mouse/capture-self",
+        "mouse/capture-up",
+        "mouse/listener-free-target",
+        "mouse/release",
+        "mouse/remove-captured-origin",
+        "mouse/remove-target",
+        "mouse/transfer",
+        "touch/cancel",
+        "touch/capture-self",
+        "touch/two-fingers"
+      ],
+      "failureSets": [
+        {
+          "lanes": [
+            "original-disabled",
+            "original-imperative-only",
+            "current-disabled",
+            "current-imperative-only"
+          ],
+          "failures": [
+            "B/mouse/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/cancel/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-elsewhere/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-up/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/release/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/transfer/Listeners receive each event in RN's propagation order for this lane",
+            "touch/cancel/Listeners receive each event in RN's propagation order for this lane",
+            "touch/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "touch/two-fingers/Listeners receive each event in RN's propagation order for this lane"
+          ]
+        },
+        {
+          "lanes": [
+            "original-internal-only",
+            "original-enabled",
+            "current-internal-only",
+            "current-enabled"
+          ],
+          "failures": [
+            "B/mouse/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/cancel/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-elsewhere/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-up/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/listener-free-target/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/release/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/transfer/Listeners receive each event in RN's propagation order for this lane",
+            "touch/cancel/Listeners receive each event in RN's propagation order for this lane",
+            "touch/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "touch/two-fingers/Listeners receive each event in RN's propagation order for this lane"
+          ]
+        }
+      ],
+      "lanes": [
+        {
+          "lane": "original-disabled",
+          "checks": 84,
+          "failed": 12,
+          "failureSetSha256": "10988646bec0b6ca7ef04917bde79a2671228a69177847e5ddded3e17bebe845",
+          "reportSha256": "56e43b90bd3ca646294a7057a00547290fc494dd388539a631cfc8c7cfb59a64",
+          "logSha256": "0736bcb8a84c48140830822f89b39c7d07ec9d8c580d81426af2b54767a930c7",
+          "bundleSha256": "d9093d56d99077dcfc2839e369c4c1d63c5f64f558ac9aea5b683ec87f3e813f",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "original-imperative-only",
+          "checks": 84,
+          "failed": 12,
+          "failureSetSha256": "10988646bec0b6ca7ef04917bde79a2671228a69177847e5ddded3e17bebe845",
+          "reportSha256": "b961d4b81820e26c29ced38b95e8984513e0fc15fa9c3938f7700777fc21845b",
+          "logSha256": "58e0b72f92a459c7ac2828de532d8e3f901709cbeb71578dc075f193a289ce82",
+          "bundleSha256": "7a01305baf9b74333a106cc7a35dbd12e8e4a64ce419450a63c851ab5fe90702",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "original-internal-only",
+          "checks": 84,
+          "failed": 13,
+          "failureSetSha256": "db6ab7c217180e222b623da9e8ea8293b72f64f63f9c25310a7d265b2ecfea7b",
+          "reportSha256": "c38f3b7e01f612be685d3d32b9d3294058b37b509f4b3956c717e1fdd675ae19",
+          "logSha256": "4785a4f3cc34bf9b8f4b6b839213d39932ebcd88224efdd065c63092e5fbf703",
+          "bundleSha256": "929f4330dc3826f827cfa3db316b6c0ba82b3c59429801190a7745962540db99",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "original-enabled",
+          "checks": 84,
+          "failed": 13,
+          "failureSetSha256": "db6ab7c217180e222b623da9e8ea8293b72f64f63f9c25310a7d265b2ecfea7b",
+          "reportSha256": "e8cf4f3aecfc3981846feb2c97ffe3c4d50dfd1b757cb0abda01edc09a56164e",
+          "logSha256": "01c32c1e97f4ec3246b1c6546de6194eee74219e1b75982b77dd698cd3d16d74",
+          "bundleSha256": "b8ea955ecd5bea4c4cef657a108c6b1df7e9cc687252acafa2c5fe67fdf6c7b3",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "current-disabled",
+          "checks": 84,
+          "failed": 12,
+          "failureSetSha256": "10988646bec0b6ca7ef04917bde79a2671228a69177847e5ddded3e17bebe845",
+          "reportSha256": "f5d6da3b65c96a312478ab97cbea05ac58b9a4d9a3f5d1ebc41ab0cbf3326363",
+          "logSha256": "1f166ef2477fe0cda13c29b402b432f74bd402d48d637243deadaca7c90f03a5",
+          "bundleSha256": "b80f26511c93dcdbb80af0ea3582905fa1bc17f9b9d335211b21a1bd41555b51",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "current-imperative-only",
+          "checks": 84,
+          "failed": 12,
+          "failureSetSha256": "10988646bec0b6ca7ef04917bde79a2671228a69177847e5ddded3e17bebe845",
+          "reportSha256": "a36973eb34b772dddcdc230fb1da4964e84f72c5c673175aeb9e1b1484f774f0",
+          "logSha256": "284c9f59ddd5270ccd50780f13ab03367ffa0226c07be8a438b1102ae0e297c8",
+          "bundleSha256": "d1bb7f6debcd11bd6ddde9522271d9d723f020e16f55491faeaf402454a46d5a",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "current-internal-only",
+          "checks": 84,
+          "failed": 13,
+          "failureSetSha256": "db6ab7c217180e222b623da9e8ea8293b72f64f63f9c25310a7d265b2ecfea7b",
+          "reportSha256": "4a960a73338cb45f04381c1e486ee3dd4cce9ed13c6ea80dc1ace553d93625cb",
+          "logSha256": "223b33aab74d151adc51fc6b5f4a8694f26ef91b1a8fdb364f5ac75792006d49",
+          "bundleSha256": "da5172b6986222e6106123ac05fdcfe915457e0ed3d1886506deef0c050785de",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        },
+        {
+          "lane": "current-enabled",
+          "checks": 84,
+          "failed": 13,
+          "failureSetSha256": "db6ab7c217180e222b623da9e8ea8293b72f64f63f9c25310a7d265b2ecfea7b",
+          "reportSha256": "3748e9aa5ec9a90def5f4e7f703ed5c1b009b94278c3505694d5b0826d6100cd",
+          "logSha256": "8961911273b1d4a8d9ce9124f9a840d794889518f28632df375e20ff8ebe9faa",
+          "bundleSha256": "390533eca73a4564287312ee7f5e6206c11a3aee83bc6f59439a919f7b138d07",
+          "nativeHostSha256": "a1a7604e44e858867676c5a0f646cb8fbb7a7677c642fc97d96fc3a707d183de"
+        }
+      ],
+      "independentNodeOracle": {
+        "rejected": 8,
+        "firstRejection": [
+          "mouse/capture-self got@L1"
+        ],
+        "nodeTestFailures": 0,
+        "logSha256": "156e322a1f22746334f44b27cf4500aa9e853be1b0953eac0160aa5ef6f5b9b2"
+      },
+      "oracleRunBypassedProbeStatusGates": true,
+      "runnerLogSha256": "4eb37eaa1086352f6e2a232103c0510b985ffa01d5748c1923bee5368a2295fe",
+      "sdkFileRestoredToPreSabotageBytes": true,
+      "restoredSha256": "2257af812c0673c71f59c9b8afcfa46e6953b084b07f2deb5d3f7d9086b1eada"
+    },
+    "overlayHoverOnPhysicalTarget": {
+      "sabotage": "scripts/rn-pointer-overlay.mjs made interceptPointerEvent track hover against the physical target instead of the retargeted one",
+      "patchSha256": "30c89abedde2986ce6583db3fb97640d8fd22209835b737ad8e4baadcb0f1ad5",
+      "sabotagedHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4",
+      "failedPerLane": {
+        "original-disabled": 33,
+        "original-imperative-only": 33,
+        "original-internal-only": 33,
+        "original-enabled": 33,
+        "current-disabled": 33,
+        "current-imperative-only": 33,
+        "current-internal-only": 33,
+        "current-enabled": 33
+      },
+      "failingCases": [
+        "B/mouse/capture-self",
+        "mouse/cancel",
+        "mouse/capture-elsewhere",
+        "mouse/capture-self",
+        "mouse/listener-free-target",
+        "mouse/release",
+        "mouse/remove-target",
+        "mouse/transfer",
+        "touch/cancel",
+        "touch/capture-self",
+        "touch/two-fingers"
+      ],
+      "unaffectedCases": [
+        "mouse/capture-up",
+        "mouse/no-buttons",
+        "mouse/remove-captured-origin",
+        "touch/no-capture"
+      ],
+      "failureSets": [
+        {
+          "lanes": [
+            "original-disabled",
+            "original-imperative-only",
+            "original-internal-only",
+            "original-enabled",
+            "current-disabled",
+            "current-imperative-only",
+            "current-internal-only",
+            "current-enabled"
+          ],
+          "failures": [
+            "B/mouse/capture-self/Each event carries its own sample, retargeted to its target with a local offset",
+            "B/mouse/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "B/mouse/capture-self/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/cancel/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/cancel/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/cancel/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/capture-elsewhere/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/capture-elsewhere/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-elsewhere/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/capture-self/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/capture-self/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/listener-free-target/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/listener-free-target/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/listener-free-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/release/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/release/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/release/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "mouse/transfer/Each event carries its own sample, retargeted to its target with a local offset",
+            "mouse/transfer/Listeners receive each event in RN's propagation order for this lane",
+            "mouse/transfer/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "touch/cancel/Each event carries its own sample, retargeted to its target with a local offset",
+            "touch/cancel/Listeners receive each event in RN's propagation order for this lane",
+            "touch/cancel/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "touch/capture-self/Each event carries its own sample, retargeted to its target with a local offset",
+            "touch/capture-self/Listeners receive each event in RN's propagation order for this lane",
+            "touch/capture-self/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+            "touch/two-fingers/Each event carries its own sample, retargeted to its target with a local offset",
+            "touch/two-fingers/Listeners receive each event in RN's propagation order for this lane",
+            "touch/two-fingers/RN's processor emits exactly the expected pointer, boundary, capture and click sequence"
+          ]
+        }
+      ],
+      "lanes": [
+        {
+          "lane": "original-disabled",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "01bf7eae678d4af01d7b1a460082e4b577845f5e1b12a0e40c402bd17b0e3e19",
+          "logSha256": "288c11654a6964e840267d287968068ce813a0f077216abb0acedbd7e2fd59fa",
+          "bundleSha256": "35f8e5bb0cf0e9936fa2e9b378575df9354cc0736ee98582a984279e3036a491",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "original-imperative-only",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "a482e6b69b20b44bd69047cd3581932c8401f1ccededc38433dcce295692e2d0",
+          "logSha256": "8c1d2b78d588519af5344d0d932ea158b67b91a8b5f5afaaf09287f9d9080aae",
+          "bundleSha256": "c131a9c3a0876eeb1d4b00686c3b73bd56eaa6d13b4d9bd99d42a56998be0857",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "original-internal-only",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "c0e15d933f5aef25fa78e7b9a209317f52a6bfc68d36ee589d6130ffb793b5c3",
+          "logSha256": "b91a09d3902b7ea3cc4e71ba4a08b12086a0a7d51cf2de275a46b1a8d0baf7b6",
+          "bundleSha256": "c3422a727106f649abbededffbd0ab6f47f8f3d0519e3062079cb6e492f1f3f7",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "original-enabled",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "505fb42f775add77ba3fb888cff5194956a0476e409ace2927fd2b3872d6fb94",
+          "logSha256": "995e1b1e99d4a15c83c9f8d68bfd1677322399e331743a13ad687a88525632bb",
+          "bundleSha256": "d7e5fc34435a4838960a7e41448d18fce7178b463477f7d8ea589aea7bdca099",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "current-disabled",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "487101b7ed42b13719eaf79dd1ff27566200d9c9856133b3eb098880f7884770",
+          "logSha256": "a40fec581a32a2b04316974cd5baa024450e76bbb351aefd87a021594a5807b5",
+          "bundleSha256": "451b4e98ff3bf60afb7fc295840d155968eccc1eafb61931fc02be27990bf34c",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "current-imperative-only",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "c013d82508011cd256125449ca47a6e82484970ba80fc14b1af9fb0e3225c1cd",
+          "logSha256": "9437b0ed5a43fab8c259f4f21e300f815af908468cc59a348aded0ca50415d34",
+          "bundleSha256": "e1e92658a47a0f9becfda3c3143f31316ac3bd279b9ab6c7c367d9c9b1522bad",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "current-internal-only",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "1152c548c839ccd2fb7e3c65f878b867e43765f16c5eff904f430e26d81dca2b",
+          "logSha256": "39672e9a0ca15d17e2cb15a25e68f2d238805956f9517a44555d3c8cd151f2a5",
+          "bundleSha256": "1397ea8408507e2ea97979cfe760866f5c3ca521acf7c2f6564e4065e3602b64",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        },
+        {
+          "lane": "current-enabled",
+          "checks": 84,
+          "failed": 33,
+          "failureSetSha256": "c256c5793d420c00dca458b4528d86e1137d2acc1a552945a2961bff4a15b2eb",
+          "reportSha256": "9c6798d237f7dd30839d9effa07750c822fd195d931c58733129c3c351dca122",
+          "logSha256": "e815ce9a3bab8cdb7b74c02386864bc9350fd99df0d7e9f6fffd5747452d73af",
+          "bundleSha256": "14119d7e6f0c4a7136f595789091c3054a378be6793078883712a685deb63efc",
+          "nativeHostSha256": "4e5c2d0a859c267441e19c96e056e89195706752e5c334b7124a29918eb3d9b4"
+        }
+      ],
+      "independentNodeOracle": {
+        "rejected": 8,
+        "firstRejection": [
+          "mouse/capture-self"
+        ],
+        "nodeTestFailures": 0,
+        "logSha256": "910a1ed2511380ae9cb18f8c9840962c39db7a4f0e9ea47e959531d5e2b8ba45"
+      },
+      "oracleRunBypassedProbeStatusGates": true,
+      "runnerLogSha256": "6d4d0f206d2192e07d0b272196c2c6a37b6ded4858d5b7c92a24de22e2e350a4",
+      "buildLogSha256": "37df776711913ad4604e73388394446e300f505150cbacd440fbdcddf6d113e6",
+      "generatorRestoredToPreSabotageBytes": true,
+      "rebuiltHostSha256MatchesExecutedHost": true,
+      "restoreBuildLogSha256": "55dccede8431ee7f08f25c38abf4faade2d0c14c3b1cd65e3e88437a0d17e102"
+    },
+    "controlsExecutedWithImplementationSources": true
+  },
+  "regressions": {
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "9001f28ab2d1add712cca998b97cf44522e23f56b91146124f88c5198b6525a5"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "7e51b009a7cf63672c26b9d94d8a7fe789e2ec979848753cbeedea7438078c69"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "8618c2d1cfc4bb7b2c56673ef7119cff4ddaf4f7d2e4bbc8e1ffc3529b9afe53"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "380b5131ac2935771ccd6a62bfbd037ae1b4e5a0080f8fcbb857bb5a48fddf05"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "a36b73fd9ac91ef2c077beb1b049a5f55c74e5a2466ce07729fecc0197025d17"
+      }
+    },
+    "nodeContractChecks": 260,
+    "pythonContractChecks": 13,
+    "staticCheckPassed": true,
+    "publicationScanPassed": true,
+    "otherNativeSuites": "not rerun: only tests, CI and configuration changed; no native, SDK or shared bundler source changed and the host is byte-identical"
+  },
+  "sourcePins": {
+    "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+    "tests/pointer-document-bootstrap.js": "3a5ebd4c1bdc7a9c4bf07cd62561bcd9746624f2c2b946e15892b484ff5cc37c",
+    "tests/pointer-capture-notifications-fixture.jsx": "8ccc3990b9a54ea14e7ff473e03d50198c1bed453ab731c79f524b0ddc23a660",
+    "tests/pointer-capture-notifications-probe.gd": "bf85183e81990d7acc9253c9c0e7fc6a11c1cadfcfe2290be4afcf5f842f57e4",
+    "tests/pointer-capture-notifications-native.test.mjs": "9ca079484de3fc772191eec856e403aa6c047ae9dcf8b01f121e8d24caddfc76",
+    "scripts/event-target-bundle.mjs": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "sdk/toolchain/rn-event-target-overlay.mjs": "e7e89e646e0c6ca569e029e8a89fcf4bbd76fb79f6c1149753c24778dd93bfaa",
+    "sdk/toolchain/rn-renderer-tag-overlay.mjs": "7e6258d8b6d0936eca8083f7d3d6d738a059b829db57fb34b48da10f6ef11f29",
+    "sdk/toolchain/rn-pointer-interest-overlay.mjs": "e90e57c83911b90018d913aeb0ed31b225a0c2519fef64eff9f5590284fc7dcf",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "src/base-view-config.js": "2257af812c0673c71f59c9b8afcfa46e6953b084b07f2deb5d3f7d9086b1eada",
+    "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+    "native/application_runtime.cpp": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+    "native/pointer_adapter.cpp": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+    "native/pointer_adapter.h": "a44aa78379206bfd77afb8fe468fa73e7c5d75e20d68662b3c29f4a2cdcb1588",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+    "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+    "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+    "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+    "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+    "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+    "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+    "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+    "src/private/renderer/events/LegacySyntheticEvent.js": "5f7f6f5318524d63e77c95b8d255e364fb0d64e3dea1192ac9b794df5b4b0e91",
+    "src/private/renderer/events/ReactNativeEventTypeMapping.js": "f9602d91c0d1e2e4d9945cc9b75fad5ce64154007d5247ac17f6517c8a14b85f",
+    "src/private/webapis/dom/nodes/ReadOnlyElement.js": "e5fcfb3ee01c99f358052c5a77dbd4c2c65d76b1bac06dce9fd255b2a553a731",
+    "src/private/webapis/dom/nodes/ReactNativeDocument.js": "dcafb922a27f7dac28f3d6079af34c90dfb047ea42f519d6a45fc16a671a4394",
+    "Libraries/NativeComponent/BaseViewConfig.android.js": "af222c895a62461986affcfd0957488a132d97bb8aab9aa177b0de367890c94b",
+    "Libraries/NativeComponent/BaseViewConfig.ios.js": "957a3dbf606155b1664ea04a0f1888cc2a41bdcc1fd4db8c9c7932395e0dc394",
+    "ReactAndroid/src/main/java/com/facebook/react/uimanager/JSPointerDispatcher.kt": "873574688e2abc3f7693b8dc4249ec88975e8e1c39ba1b399af8bf5b797c78da",
+    "React/Fabric/RCTSurfacePointerHandler.mm": "402bd6a1e1f97b3eabd3f6a7cc8944dd5dd59859a2cd6deb800fc8b6b43c0e8f",
+    "ReactCommon/react/nativemodule/dom/NativeDOM.cpp": "8c7f21b1f0acf057a2115595066fbc27204bc6d75cecbd1ade02bb42861d3e3d",
+    "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp": "b0f33a89e1c812112e1457076667863226b4f42247aa35c2b367e577195dd6b7",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.cpp": "5b7c58cab65034fab387db19c299905fae18d22b85c9d75038bcd40bd3dad739",
+    "ReactCommon/react/renderer/uimanager/PointerEventsProcessor.h": "e730cf3d93f5bb494d8503ea28a153f476535eb44d6c65ec51dd358c90f9672b",
+    "ReactCommon/react/renderer/uimanager/PointerHoverTracker.cpp": "1652ac4a624a22e9de2e21f01408718289d4aaee66887599d07fb9ef02e77fff",
+    "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+    "ReactCommon/react/renderer/core/EventQueueProcessor.cpp": "0c91f3a8442cd2d16302843ef723fab845bdd5a2dfa05d9a8072737540a1a219"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "d03104e9abb6c306fd800be2397c59455a21f4856e3ca7a8b2b9752abbdb729b",
+    "package.json": "383143e5d2e5f44410c7af4350b813fe4cf2ef1d15a27d38304aee96e0fe3148",
+    ".fallowrc.json": "36d201916fef9aa8b3a0dda20bade16c72538afc9322deede3a7e50e91b1f63e"
+  },
+  "changedFilesSinceExecutionBase": [],
+  "hostedCI": {
+    "status": "pending-capture-notifications-slice"
+  },
+  "limits": [
+    "Mouse left button and touches over two roots of one application, eight original/current x flag lanes on one host, headless.",
+    "Hover offsets follow the host's per-target projection (pointer geometry) and are not certified here; capture under transforms, pen, multiple windows, hardware and Godot mobile exports are not exercised.",
+    "Removing a capture target clears it without lostpointercapture (RN 0.87.1 has no path to the Document and crashes when a retained owner is removed); W3C's lostpointercapture at the document is not adopted.",
+    "A contact whose hit view or origin is removed is canceled by the host's earlier lifetime rule; listeners see neither pointercancel nor lostpointercapture, and the held mouse button stays inert until released.",
+    "Imperative hover listeners while captured, capture by a view of another root, wrong-owner release and stopPropagation/once/AbortSignal on capture listeners are not separately exercised.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin",
+    "sourcePins": 20,
+    "verificationSourcePins": 3,
+    "mismatches": [],
+    "executedOnImplementationCommit": true
+  },
+  "mergeReverification": {
+    "reason": "main moved to 54ede87 (Switch #33, shared touches #34, touchables #30, ActivityIndicator #36) after the slice was executed; merged twice without rebase so 6ad77b8 and c23d928 stay reachable",
+    "mergeCommits": [
+      "803850cd12450dedbd6bffd734f62561d0b08aed",
+      "0580af7dc71699548723e4fdb8c6baf7fedf89bc"
+    ],
+    "mainCommit": "54ede8737eae381b94db45bb31c3f1791718ff76",
+    "executedTree": "0580af7dc71699548723e4fdb8c6baf7fedf89bc",
+    "nativeHostSha256": "348be739e7f6520cb91e88053984e2248eb24c6859f4626a8ee2c87576694496",
+    "nativeHostChangedByMain": true,
+    "sdkBundleChangedByMain": true,
+    "headlessChecks": 672,
+    "lanes": [
+      {
+        "interest": "original",
+        "flagMode": "disabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "361033e09c059e52d682c141a4e8be933f170b67be14495223f09e0092d1f2da",
+        "reportSha256": "97a83f063602b3f089225f3c08cd46a81ea2af8d89c8ff707b686f335caa3f29",
+        "logSha256": "189926dea0fd01cd02f07f13ac917839b4b61d3affbc6df8b759f472b22184f8"
+      },
+      {
+        "interest": "original",
+        "flagMode": "imperative-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "1acc43ff388d97663b48a445469ff75c7e5d1917802431e51e43df1f30d4ad89",
+        "reportSha256": "0f30f09228482661c25c1598aff717a191a28315fe5870099966d12b32bc3d1e",
+        "logSha256": "d34fa3b9ab01dcec4153b4313ff8a756482a413373232c0a1d66c83f08de1828"
+      },
+      {
+        "interest": "original",
+        "flagMode": "internal-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "43ec4652d1c622de21813b8c98c0c1c98346c4f262ca9cf8931f49c96d2094ab",
+        "reportSha256": "0fca7e300d963fb64885c0fe9a29f0e5eb51fa28bb3803624f03cde563654b52",
+        "logSha256": "b008984950536662eaabea621cc5b4c4fc0348e77a3c274795e001ec275a4710"
+      },
+      {
+        "interest": "original",
+        "flagMode": "enabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "9f45c1f5243703c1aa0766f30cddbe95058ee03916243d47bc2b89701995bd5e",
+        "reportSha256": "efc4ed1c403c68e5a923602de52622b2f1f7c9f2356c2dae403a3d1426b20358",
+        "logSha256": "9d39d853bd149d75ca11e20d9259f5d39db95ed795470ec440bffc011a99d5d0"
+      },
+      {
+        "interest": "current",
+        "flagMode": "disabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "b5e3c9b8cbae787d043a290453d55bc4f0a4163de65915d182fc8778e2ac6470",
+        "reportSha256": "f24a299631e3bd02a34da8f41a4c6102e9f9510c2d03585c1b6f471022ed2314",
+        "logSha256": "ce432edfc918813dc0c68611c16abbf47065d22b2244cfe865f213e3b66a88a2"
+      },
+      {
+        "interest": "current",
+        "flagMode": "imperative-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "d1e09f1f9c0a5c174b87376857a695be88e576781d2aa3feee4c2aac0bf8b227",
+        "reportSha256": "85be6f62d20f7d5f34b02bcf1afafd05241472361b324526fd512201edc6fa0c",
+        "logSha256": "acad32f49ce7abd49fc4ecaf541f65490d0f698c6c411ab5dfea94986092b82d"
+      },
+      {
+        "interest": "current",
+        "flagMode": "internal-only",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "34aa06e2f5af88f7196345e62ed8223b96fd30e51493d1c1e9107365dcb3fec3",
+        "reportSha256": "ec552caa934d9abbf3e5fc9499c5c4cb7352f0023a821ce2a74bac76bd1fff7d",
+        "logSha256": "1c5feea60540dbf9d955453eda66cf9f375ea06fdd49422021769d08fe28a999"
+      },
+      {
+        "interest": "current",
+        "flagMode": "enabled",
+        "checks": 84,
+        "passed": 84,
+        "checkIdDigestSha256": "e5878a90ed2d050a66934b0262776d06d8191b2f85bcb5fddfe3db4186759ef3",
+        "bundleSha256": "18ac057cd1c05dd3456426d9a114933ebd26877decfede2a18d3f1f46d6e21e4",
+        "reportSha256": "615b7de66e75ee1008294aec8087340667c3c30d7253e34abcb59c43b94db328",
+        "logSha256": "5ed9859b490bc1d173ec0d88e6d5f5c1e6cb138fe94ee68c33bc3e2ef0d97af8"
+      }
+    ],
+    "sameCheckIdsAsPinnedRun": true,
+    "sameSequencesDeliveriesAndCaptureStatesAsPinnedRun": true,
+    "comparedFields": "per case: raw type, target, relative pointer identity, client point, offset and buttons; callback name, label, kind, phase, target and pending owner; capture counts per step; capture method results",
+    "comparisonSha256": "958923f01f60b8a4c9b2ddd603c02c42b320dda9752e8a0d852158060674be09",
+    "oracleAcceptsMergedReports": {
+      "reports": 8,
+      "logSha256": "085cd459f8fe1b14f05bc59e3ef4745fe7deb25882bda1c341af39d070588732"
+    },
+    "mergedInSuites": {
+      "test:switch": 108,
+      "test:responders:shared-touches": 92,
+      "test:touchables": 93,
+      "test:activity-indicator": 33
+    },
+    "nodeContractChecks": 262,
+    "pythonContractChecks": 13,
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 36,
+        "logSha256": "8fc53e4ae30fdf7df9b1ce8088cb3abb96c3bcac2bde250656deedbcb139005f"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "072d7b78573a1d342110be5c61e16107ab3a5a1fe1a9155c13956112e74ad784"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "e9e0c6aa0274a9e345627c63976dc90bea5bffb8da1b700478340c0b4293382e"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "1d8f8f1f33bb4833a39a9dbd15b6f2882329c158d71135ca53abe467fbb04bc9"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 71,
+        "logSha256": "02110e218c95697e2e50f48a3de9c077e8c9fa8467a3c0319b3a93b69355c591"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "5791597ade89d2c3c33499a8ee6cf1c7be7b6e1dea0e0dbadcfa1762d4aeaaf7"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 22,
+        "logSha256": "9e4270ed7888deb16e8d40888803ec7bd3a722ba078072eece7daf3206ac0100"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "f2391cf26f99759f44760437b90b60f294154c75d699c9c77b1dd12320bfa898"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "765f7c66f8c907dd244d8e85d8d540d87dedb064242de6f00affcbdfe1a027d4"
+      }
+    },
+    "buildLogSha256": "148d6fcb02c032f12abf73e7391ea6adbdaa8f70af7221cbf35491e006a5840f"
+  }
+}
