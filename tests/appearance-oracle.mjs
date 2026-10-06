@@ -59,14 +59,125 @@ function byRoot(entries) {
   return result;
 }
 
+// DisplayServer holds one system theme callback for the whole process. One
+// owner registers it once; every system change is dispatched through it once
+// and delivered to each application whose module observes, from the module's
+// start until its stop. Members are listed by instance ID in join order.
+function verifyOwner(snapshot, members, owner, label) {
+  assert.deepEqual(snapshot, {registered: true, registrations: 1, members, dispatches: owner.dispatches,
+    deliveries: owner.deliveries}, label);
+}
+
+// Two applications at once, re-derived from the probe's actions: each starts
+// from the system theme, receives every change while it observes, sends a
+// change only when its own effective scheme changes, and receives nothing
+// after it stops or is freed.
+function verifyTwoApplications(stage, processSystem, owner) {
+  assert.deepEqual(stage.actions.map(action => [action.kind, action.value]), [["start", "P"], ["start", "Q"],
+    ["system", "light"], ["stop", "Q"], ["system", "dark"], ["free", "Q"], ["system", "light"], ["free", "P"],
+    ["system", "dark"]]);
+  const ids = stage.applications;
+  assert.notEqual(ids.P, ids.Q);
+  let system = processSystem;
+  const apps = {};
+  let cursor = 0;
+  const advance = count => {
+    for (const action of stage.actions.slice(cursor, cursor + count)) {
+      if (action.kind === "start") {
+        const scheme = new Scheme();
+        scheme.system = {...system};
+        scheme.sent = scheme.current;
+        apps[action.value] = {scheme, member: true, notifications: 0, events: 0, log: [], renders: [scheme.sent]};
+      } else if (action.kind === "stop") {
+        const app = apps[action.value];
+        app.member = false;
+        app.log.push([action.value, "cleanup", null, app.scheme.sent]);
+      } else if (action.kind === "free") {
+        // Freeing stops a running application first; either way it has left.
+        apps[action.value].member = false;
+      } else if (action.kind === "system") {
+        system = {supported: true, dark: action.value === "dark"};
+        owner.dispatches += 1;
+        for (const [root, app] of Object.entries(apps)) {
+          if (!app.member) {
+            continue;
+          }
+          owner.deliveries += 1;
+          app.notifications += 1;
+          app.scheme.apply(action);
+          const sent = app.scheme.flush();
+          if (sent != null) {
+            app.events += 1;
+            app.log.push(["library", "change", sent, sent], [root, "change", sent, sent]);
+            app.renders.push(sent);
+          }
+        }
+      }
+    }
+    cursor += count;
+  };
+  const application = (root, state, label) => {
+    const app = apps[root];
+    assert.deepEqual(rows(state.js.log), app.log, label + ": " + root);
+    assert.deepEqual(byRoot(state.js.renders), {[root]: app.renders}, label + ": " + root);
+    assert.equal(state.js.colorScheme, app.scheme.sent, label + ": " + root);
+    if (state.background !== undefined) {
+      assert.equal(state.background, colors[app.scheme.sent], label + ": " + root);
+    }
+    assert.deepEqual(state.native, {scheme: app.scheme.current, override: "unspecified", system: app.scheme.system,
+      observed: app.member, observers: 1, listeners: 1, callbackRegistered: true, notifications: app.notifications,
+      overrides: 0, events: app.events, unobserved: 0}, label + ": " + root);
+  };
+  const members = label => {
+    const joined = Object.entries(apps).filter(([, app]) => app.member).map(([root]) => ids[root]);
+    return snapshot => verifyOwner(snapshot, joined, owner, label);
+  };
+  advance(2);
+  application("P", stage.start.P, "start");
+  application("Q", stage.start.Q, "start");
+  members("start")(stage.start.owner);
+  assert.deepEqual(stage.both.before, stage.start);
+  advance(1);
+  application("P", stage.both.after.P, "both");
+  application("Q", stage.both.after.Q, "both");
+  members("both")(stage.both.after.owner);
+  const stopped = stage["second-stopped"];
+  advance(1);
+  application("Q", stopped.stopped, "second-stopped");
+  application("P", stopped.before.P, "second-stopped");
+  members("second-stopped")(stopped.before.owner);
+  advance(1);
+  application("P", stopped.after.P, "second-stopped");
+  application("Q", stopped.after.Q, "second-stopped");
+  members("second-stopped")(stopped.after.owner);
+  const freed = stage["second-freed"];
+  advance(1);
+  application("P", freed.before.P, "second-freed");
+  members("second-freed")(freed.before.owner);
+  advance(1);
+  application("P", freed.after.P, "second-freed");
+  members("second-freed")(freed.after.owner);
+  const idle = stage["first-freed"];
+  advance(1);
+  members("first-freed")(idle.before);
+  advance(1);
+  members("first-freed")(idle.after);
+  assert.equal(cursor, stage.actions.length);
+}
+
 // Re-derives every step of a current-host report from the probe's actions and
 // the fixture's own subscription records; throws on any difference.
 export function verifyAppearanceReport(report) {
   const scheme = new Scheme();
   const totals = {events: 0, notifications: 0, overrides: 0, unobserved: 0};
+  const owner = {dispatches: 0, deliveries: 0};
   const log = report.stages.stop.late.log;
   const renders = report.stages.stop.late.renders;
   const initial = report.stages.initial;
+  // The first module to start registered the one callback.
+  assert.equal(initial.owner.members?.length, 1, "One owner holds the system theme callback");
+  const main = initial.owner.members[0];
+  verifyOwner(initial.owner, [main], owner, "initial");
   assert.equal(initial.js.colorScheme, "light");
   assert.equal(initial.js.nativeModule, true);
   assert.equal(initial.js.deviceListeners, 1);
@@ -87,6 +198,8 @@ export function verifyAppearanceReport(report) {
         rejected += 1;
       } else if (action.kind === "system") {
         totals.notifications += 1;
+        owner.dispatches += 1;
+        owner.deliveries += 1;
       } else if (action.kind === "override") {
         totals.overrides += 1;
       }
@@ -124,24 +237,25 @@ export function verifyAppearanceReport(report) {
     for (const key of Object.keys(totals)) {
       assert.equal(stage.native[key], totals[key], name + ": " + key);
     }
+    verifyOwner(stage.owner, [main], owner, name);
     if (rejected) {
       assert.match(stage.result.error, /E_ARGUMENT: Appearance\.setColorScheme expects light, dark, auto or unspecified/);
       assert.equal(stage.result.colorScheme, scheme.sent);
     }
   }
-  // Stop runs B's cleanup and nothing else; the later system change is counted
-  // natively but reaches no listener, not even the library's.
+  // Stop runs B's cleanup and nothing else. The stopped application has left
+  // the callback: the later system change is dispatched, reaches no
+  // application and no listener, not even the library's, and the stopped
+  // module keeps the system it last read.
   const stop = report.stages.stop;
   assert.deepEqual(rows(log.slice(logCursor)), [["B", "cleanup", null, scheme.sent]]);
   assert.equal(renders.length, renderCursor);
   const delivered = scheme.sent;
-  for (const action of stop.actions) {
-    assert.ok(scheme.apply(action));
-    totals.notifications += 1;
-  }
-  if (scheme.flush() != null) {
-    totals.unobserved += 1;
-  }
+  assert.deepEqual(stop.actions, [{kind: "system", value: "dark"}]);
+  verifyOwner(stop.ownerBefore, [], owner, "stop");
+  owner.dispatches += 1;
+  verifyOwner(stop.ownerAfter, [], owner, "stop");
+  const processSystem = {supported: true, dark: stop.actions[0].value === "dark"};
   assert.equal(stop.late.log.length, stop.after.log.length);
   assert.deepEqual(stop.native, {scheme: scheme.current, override: scheme.style, system: scheme.system,
     observed: false, observers: 1, listeners: 1, callbackRegistered: true, ...totals});
@@ -163,4 +277,11 @@ export function verifyAppearanceReport(report) {
   assert.equal(dark.native.scheme, "dark");
   assert.equal(dark.native.events, 0);
   assert.deepEqual(dark.backgrounds, {C: colors.dark});
+  // It joined the same registration instead of registering again, and left
+  // it when it stopped.
+  assert.equal(dark.owner.members?.length, 1);
+  assert.notEqual(dark.owner.members[0], main);
+  verifyOwner(dark.owner, dark.owner.members, owner, "initial-dark");
+  verifyOwner(dark.ownerAfterStop, [], owner, "initial-dark");
+  verifyTwoApplications(report.stages["two-applications"], processSystem, owner);
 }

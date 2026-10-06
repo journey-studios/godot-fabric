@@ -10,9 +10,34 @@ import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 import {verifyAppearanceReport} from "./appearance-oracle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
+// The preceding host has no Appearance module; the pre-fix host registered one
+// system theme callback per application, so the last one displaced the others.
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
-const lane = allowOriginalNegative ? "original" : "current";
+const allowPrefixNegative = process.argv.includes("--allow-prefix-negative");
+const lane = allowOriginalNegative ? "original" : allowPrefixNegative ? "prefix" : "current";
+const negative = allowOriginalNegative || allowPrefixNegative;
 const digest = value => createHash("sha256").update(value).digest("hex");
+
+async function optionalReport(file) {
+  const bytes = await optionalFile(file);
+  return bytes == null ? null : JSON.parse(bytes);
+}
+
+// A control replays the same SDK bundle and reproducer; only the compiled
+// native producers differ, and their bundle-time pins say nothing about it.
+function assertSameReproducer(control, report, bundle, label) {
+  assert.deepEqual(control.checks.map(row => row.name), report.checks.map(row => row.name), label);
+  assert.deepEqual(control.expectedOriginalFailures, report.expectedOriginalFailures, label);
+  assert.deepEqual(control.expectedPreFixFailures, report.expectedPreFixFailures, label);
+  assert.deepEqual(control.provenance.bundle.originalReactNativeSources, bundle.originalReactNativeSources, label);
+  assert.equal(control.provenance.bundle.bundle.sha256, bundle.bundle.sha256, label);
+  for (const [file, sha] of Object.entries(bundle.sources)) {
+    if (!appearanceNativeProducers.includes(file)) {
+      assert.equal(control.provenance.bundle.sources[file], sha, label + " shares the reproducer and SDK producer: " + file);
+    }
+  }
+  assert.notEqual(control.provenance.nativeHostSha256, report.provenance.nativeHostSha256, label);
+}
 
 async function optionalFile(file) {
   try {
@@ -28,7 +53,7 @@ async function optionalFile(file) {
 async function runProbe(binary, bundle, label) {
   await rm(path.join(root, "build/appearance-report.json"), {force: true});
   const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/appearance-probe.gd", "--",
-    ...(allowOriginalNegative ? ["--allow-original-negative"] : [])],
+    ...(allowOriginalNegative ? ["--allow-original-negative"] : []), ...(allowPrefixNegative ? ["--allow-prefix-negative"] : [])],
   {encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024});
   const log = (result.stdout ?? "") + (result.stderr ?? "");
   await writeFile(path.join(root, "build/appearance-" + label + ".log"), log);
@@ -46,8 +71,8 @@ test("Godot's system theme and setColorScheme drive RN's original Appearance and
   const bundle = await bundleAppearanceProbe();
   const binary = await ensureGodotBinary();
   const {result, log, report} = await runProbe(binary, bundle, lane);
-  // Artifacts are saved before assertions. The old-host flag never accepts
-  // unrelated failures or removes the normative failures from the report.
+  // Artifacts are saved before assertions. The old-host flags never accept
+  // unrelated failures or remove the declared failures from the report.
   assert.equal(result.error, undefined, log);
   assert.equal(result.signal, null, log);
   assert.equal(result.status, 0, log);
@@ -59,16 +84,21 @@ test("Godot's system theme and setColorScheme drive RN's original Appearance and
   assert.equal(report.scope.headlessDisplayServerThemeSupported, false);
   assert.equal(report.allowOriginalNegative, allowOriginalNegative);
   assert.equal(report.originalNegativeObserved, allowOriginalNegative);
-  assert.equal(report.allCurrentAssertionsPassed, !allowOriginalNegative);
+  assert.equal(report.allowPrefixNegative, allowPrefixNegative);
+  assert.equal(report.prefixNegativeObserved, allowPrefixNegative);
+  assert.equal(report.allCurrentAssertionsPassed, !negative);
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   assert.equal(new Set(report.expectedOriginalFailures).size, report.expectedOriginalFailures.length);
+  assert.equal(new Set(report.expectedPreFixFailures).size, report.expectedPreFixFailures.length);
   const failures = report.checks.filter(row => !row.passed).map(row => row.name);
-  assert.deepEqual([...failures].sort(), allowOriginalNegative ? [...report.expectedOriginalFailures].sort() : [],
-    "Only the normative Appearance failures qualify as the old-host control");
+  const expectedFailures = allowOriginalNegative ? report.expectedOriginalFailures : allowPrefixNegative ? report.expectedPreFixFailures : [];
+  assert.deepEqual([...failures].sort(), [...expectedFailures].sort(),
+    "Only the declared failures qualify as a control: the normative ones or the shared-callback ones");
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual([...checkErrors].sort(), [...failures].sort());
   assert.equal([...log.matchAll(/^ERROR:/gm)].length, checkErrors.length, "No native diagnostic, script or engine error is hidden");
-  assert.match(log, allowOriginalNegative ? new RegExp(`APPEARANCE_ORIGINAL_NEGATIVE: ${failures.length}`) : /APPEARANCE_PASSED: \d+/);
+  assert.match(log, allowOriginalNegative ? new RegExp(`APPEARANCE_ORIGINAL_NEGATIVE: ${failures.length}`)
+    : allowPrefixNegative ? new RegExp(`APPEARANCE_PREFIX_NEGATIVE: ${failures.length}`) : /APPEARANCE_PASSED: \d+/);
   for (const file of ["tests/appearance-fixture.jsx", "tests/appearance-probe.gd", "tests/appearance-native.test.mjs",
     "tests/appearance-oracle.mjs", "scripts/appearance-bundle.mjs", "scripts/native-probe-bundle.mjs",
     "src/platform-environment.js", "src/react-native-platform.jsx", "sdk/toolchain/platform-plugin.mjs",
@@ -81,8 +111,30 @@ test("Godot's system theme and setColorScheme drive RN's original Appearance and
     assert.match(bundle.originalReactNativeSources[file], /^[0-9a-f]{64}$/);
   }
   // Every check that needs the native module is normative; the remaining
-  // checks hold on both hosts.
+  // checks hold on both hosts. The shared-callback checks are normative too,
+  // and all belong to the stage where two applications observe at once.
   assert.ok(report.expectedOriginalFailures.length > 0 && report.expectedOriginalFailures.length < report.checks.length);
+  assert.ok(report.expectedPreFixFailures.length > 0);
+  for (const name of report.expectedPreFixFailures) {
+    assert.ok(report.expectedOriginalFailures.includes(name), name);
+    assert.match(name, /^two-applications\//);
+  }
+  if (allowPrefixNegative) {
+    // The second application's registration displaced the first's: the first
+    // never hears a change, while the second keeps hearing them after it stops.
+    const pair = report.stages["two-applications"];
+    assert.deepEqual(report.stages.initial.owner, {});
+    assert.equal(report.stages.initial.native.callbackRegistered, true);
+    assert.equal(pair.both.after.P.native.notifications, 0);
+    assert.equal(pair.both.after.P.js.colorScheme, "dark");
+    assert.equal(pair.both.after.Q.native.notifications, 1);
+    assert.equal(pair.both.after.Q.js.colorScheme, "light");
+    assert.equal(pair["second-stopped"].after.Q.native.notifications, 2);
+    assert.equal(pair["second-stopped"].after.Q.native.observed, false);
+    assert.equal(pair["second-freed"].after.P.native.notifications, 0);
+    assert.throws(() => verifyAppearanceReport(report), assert.AssertionError, "The independent oracle rejects the pre-fix host");
+    return;
+  }
   if (allowOriginalNegative) {
     // The preceding host has no Appearance module: RN's Appearance reads null
     // and emits nothing, while both roots still mount and stop.
@@ -94,24 +146,17 @@ test("Godot's system theme and setColorScheme drive RN's original Appearance and
     return;
   }
   verifyAppearanceReport(report);
-  const originalBytes = await optionalFile("build/appearance-original-report.json");
-  const original = originalBytes == null ? null : JSON.parse(originalBytes);
+  const original = await optionalReport("build/appearance-original-report.json");
   if (original != null) {
     assert.ok(original.originalNegativeObserved);
-    assert.deepEqual(original.checks.map(row => row.name), report.checks.map(row => row.name));
-    assert.deepEqual(original.expectedOriginalFailures, report.expectedOriginalFailures);
-    assert.deepEqual(original.provenance.bundle.originalReactNativeSources, bundle.originalReactNativeSources);
-    // The same SDK bundle runs on both hosts; only the compiled native
-    // producers differ, and their bundle-time pins say nothing about it.
-    assert.equal(original.provenance.bundle.bundle.sha256, bundle.bundle.sha256);
-    for (const [file, sha] of Object.entries(bundle.sources)) {
-      if (!appearanceNativeProducers.includes(file)) {
-        assert.equal(original.provenance.bundle.sources[file], sha, "Old/new hosts share the reproducer and SDK producer: " + file);
-      }
-    }
-    assert.notEqual(original.provenance.nativeHostSha256, report.provenance.nativeHostSha256);
+    assertSameReproducer(original, report, bundle, "preceding host");
+  }
+  const prefix = await optionalReport("build/appearance-prefix-report.json");
+  if (prefix != null) {
+    assert.ok(prefix.prefixNegativeObserved);
+    assertSameReproducer(prefix, report, bundle, "pre-fix host");
   }
   await writeFile(path.join(root, "build/appearance-comparison.json"), JSON.stringify({scenario: report.scenario,
-    originalControlPresent: original != null, sameSDKBundleRequired: true, intentionalNativeProducerDifferences: appearanceNativeProducers,
-    original, current: report}, null, 2) + "\n");
+    originalControlPresent: original != null, prefixControlPresent: prefix != null, sameSDKBundleRequired: true,
+    intentionalNativeProducerDifferences: appearanceNativeProducers, original, prefix, current: report}, null, 2) + "\n");
 });

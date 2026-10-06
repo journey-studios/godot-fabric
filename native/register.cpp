@@ -20,7 +20,9 @@ void initialize_fabric(godot::ModuleInitializationLevel level) {
     godot::ClassDB::register_class<FabricSurface>();
   }
 }
-void terminate_fabric(godot::ModuleInitializationLevel) {}
+void terminate_fabric(godot::ModuleInitializationLevel level) {
+  if (level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) FabricApplication::release_system_theme_callback();
+}
 extern "C" GDExtensionBool GDE_EXPORT fabric_library_init(
     GDExtensionInterfaceGetProcAddress get_proc_address, GDExtensionClassLibraryPtr library,
     GDExtensionInitialization *initialization) {

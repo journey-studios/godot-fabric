@@ -11,10 +11,12 @@
 #include <godot_cpp/classes/viewport.hpp>
 #include <godot_cpp/classes/window.hpp>
 #include <godot_cpp/core/object.hpp>
+#include <godot_cpp/variant/callable_method_pointer.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <folly/json.h>
 #include <stdexcept>
 #include <filesystem>
+#include <optional>
 
 using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
@@ -32,31 +34,54 @@ static fabric_godot::SystemAppearance::System read_system_appearance(uint64_t id
   const bool supported = display->call("is_dark_mode_supported");
   return {supported, supported && static_cast<bool>(display->call("is_dark_mode"))};
 }
-// DisplayServer keeps a single system theme callback. Editor processes leave it
-// to the editor; at runtime the Appearance module takes it while it observes.
-static bool watch_system_appearance(uint64_t id) {
+// The Callable the shared owner handed to DisplayServer. It calls a static
+// function, so DisplayServer's copy never refers to an application; this copy
+// is released when the extension's scene level terminates, before the engine.
+static std::optional<Callable> &system_theme_callable() {
+  static std::optional<Callable> callable;
+  return callable;
+}
+static fabric_godot::SystemThemeOwner &system_theme_owner();
+static void dispatch_system_theme() { system_theme_owner().changed(); }
+// Editor processes leave DisplayServer's slot to the editor.
+static bool register_system_theme_callback() {
   if (Engine::get_singleton()->is_editor_hint()) return false;
-  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
   auto *display = Engine::get_singleton()->get_singleton("DisplayServer");
-  if (!application || !display) return false;
-  display->call("set_system_theme_change_callback", Callable(application, "_on_system_theme_changed"));
+  if (!display) return false;
+  system_theme_callable() = callable_mp_static(&dispatch_system_theme);
+  display->call("set_system_theme_change_callback", *system_theme_callable());
   return true;
 }
+static bool deliver_system_theme(uint64_t id) {
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  if (!application) return false;
+  application->system_theme_changed();
+  return true;
+}
+// One owner per process, shared by every application (see SystemThemeOwner).
+static fabric_godot::SystemThemeOwner &system_theme_owner() {
+  static fabric_godot::SystemThemeOwner owner(register_system_theme_callback, deliver_system_theme);
+  return owner;
+}
+void FabricApplication::release_system_theme_callback() { system_theme_callable().reset(); }
 
 FabricApplication::FabricApplication() : game_services(std::make_shared<fabric_godot::GameServiceRegistry>()),
     app_state(std::make_shared<fabric_godot::AppLifecycle>()) {
   set_process_mode(PROCESS_MODE_ALWAYS); set_process(true);
   // Resolved by ID: the module may outlive this Node until the VM is released.
+  // The module joins the shared system theme callback when it starts and
+  // leaves it when it is released.
   const uint64_t id = get_instance_id();
   appearance = std::make_shared<fabric_godot::SystemAppearance>(
-      [id] { return read_system_appearance(id); }, [id] { return watch_system_appearance(id); });
+      [id] { return read_system_appearance(id); }, [id] { return system_theme_owner().join(id); },
+      [id] { system_theme_owner().leave(id); });
 }
 FabricApplication::~FabricApplication() { stop(); }
 void FabricApplication::_bind_methods() {
   ClassDB::bind_method(D_METHOD("evaluate", "source"), &FabricApplication::evaluate);
   ClassDB::bind_method(D_METHOD("snapshot"), &FabricApplication::snapshot);
   ClassDB::bind_method(D_METHOD("stop"), &FabricApplication::stop);
-  ClassDB::bind_method(D_METHOD("_on_system_theme_changed"), &FabricApplication::_on_system_theme_changed);
+  ClassDB::bind_method(D_METHOD("validation_system_theme_callback"), &FabricApplication::validation_system_theme_callback);
   ClassDB::bind_method(D_METHOD("invoke_callable", "name", "method", "args"), &FabricApplication::invoke_callable);
   ClassDB::bind_method(D_METHOD("bind_signal", "name", "signal", "arg_schema", "options"), &FabricApplication::bind_signal, DEFVAL(Dictionary()));
   ClassDB::bind_method(D_METHOD("bind_state", "name", "getter", "changed", "value_schema", "options"), &FabricApplication::bind_state, DEFVAL(Dictionary()));
@@ -154,7 +179,12 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
 }
 void FabricApplication::_process(double) { if (runtime) runtime->pump(true); }
 void FabricApplication::_exit_tree() { stop(); }
-void FabricApplication::_on_system_theme_changed() { appearance->system_changed(); }
+void FabricApplication::system_theme_changed() { appearance->system_changed(); }
+// The headless DisplayServer drops the Callable it is handed, so validation
+// calls this copy of it as DisplayServer would; empty before registration.
+Callable FabricApplication::validation_system_theme_callback() const {
+  return system_theme_callable().value_or(Callable());
+}
 void FabricApplication::_notification(int what) {
   // The platform layers call MainLoop::notification for these OS events and
   // SceneTree::_notification propagates them to every node in the tree.
@@ -187,6 +217,7 @@ String FabricApplication::snapshot() {
   result["initializationAttempted"] = initialization_attempted;
   result["appState"] = app_state->snapshot();
   result["systemAppearance"] = appearance->snapshot();
+  result["systemThemeCallback"] = system_theme_owner().snapshot();
   if (adapter_loader) result["adapterLoader"] = adapter_loader->snapshot();
   for (const auto &error : pre_runtime_errors) result["errors"].push_back(error);
   return gd(folly::toJson(result));

@@ -1,10 +1,11 @@
 import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 
 // Executed producers of the Appearance slice: the reproducer, the public SDK
-// seam and the native module fed by Godot's system theme.
+// seam and the native module fed by Godot's system theme through the system
+// theme callback every application shares (released by register.cpp).
 export const appearanceNativeProducers = ["native/system_appearance.h", "native/fabric_application.cpp",
   "native/fabric_application.h", "native/turbo_module_registry.cpp", "native/turbo_module_registry.h",
-  "native/application_runtime.cpp", "native/application_runtime.h"];
+  "native/application_runtime.cpp", "native/application_runtime.h", "native/register.cpp"];
 
 export function bundleAppearanceProbe() {
   return bundleNativeProbe({name: "appearance", entryPoint: "tests/appearance-fixture.jsx",

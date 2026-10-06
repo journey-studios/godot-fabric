@@ -16,8 +16,14 @@ class FabricApplication : public godot::Node {
   void _process(double delta) override;
   void _exit_tree() override;
   void _notification(int what);
-  // The DisplayServer system theme callback the Appearance module registers.
-  void _on_system_theme_changed();
+  // A system theme change from the callback every application shares, while
+  // this application's Appearance module observes.
+  void system_theme_changed();
+  // Validation seam: the very Callable the shared owner registered with
+  // DisplayServer, which the headless DisplayServer never calls.
+  godot::Callable validation_system_theme_callback() const;
+  // Releases that Callable before the engine shuts down.
+  static void release_system_theme_callback();
   godot::String evaluate(const godot::String &source);
   godot::String snapshot();
   void stop();
