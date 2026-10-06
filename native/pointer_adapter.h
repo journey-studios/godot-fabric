@@ -25,11 +25,14 @@ class PointerAdapter {
   struct Coordinates { godot::Vector2 page, screen; };
   using Project = std::function<Coordinates(godot::Vector2)>;
   using Emit = std::function<void(int, const std::string &, rn::TouchEvent)>;
+  // Active touches of the application's other roots. RN has one JS responder
+  // per runtime, so every TouchEvent lists every touch that runtime sees.
+  using OtherTouches = std::function<std::vector<rn::Touch>()>;
   // Target tag (0 without a hit view) and whether that empty point is inside the root.
   using EmitPointer = std::function<void(int, bool, const std::string &, rn::PointerEvent, godot::Vector2,
       std::shared_ptr<PointerGeometryHistory>)>;
   PointerAdapter(HitTest hit, HitPath path, InsideRoot inside, LocalPoint local, Project project, Emit emit,
-      EmitPointer emit_pointer);
+      EmitPointer emit_pointer, OtherTouches other_touches);
   bool input(const godot::Ref<godot::InputEvent> &event, int pointer_id, bool primary);
   void responder(int tag, bool active, bool block);
   void cancel();
@@ -38,6 +41,7 @@ class PointerAdapter {
   void takeover(int tag);
   void leave_mouse(int pointer_id, const godot::Vector2 *position = nullptr);
   std::vector<int> pointer_ids() const;
+  std::vector<rn::Touch> touches() const;
   bool owns(int tag) const { return responder_tag_ == tag; }
   bool blocks_native() const { return responder_tag_ && block_native_; }
   bool invalid_coordinates() const { return invalid_coordinates_; }
@@ -50,6 +54,7 @@ class PointerAdapter {
   Project project_;
   Emit emit_;
   EmitPointer emit_pointer_;
+  OtherTouches other_touches_;
   struct PointerSample {
     rn::PointerEvent event{};
     godot::Vector2 viewport_point;

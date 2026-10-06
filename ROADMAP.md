@@ -1734,8 +1734,12 @@ same host. Pinch zoom through chart libraries, `InteractionManager` handles,
 hardware velocity, nested scroll views and negotiation with native Godot
 controls remain open. All 14 executed code/configuration inputs match
 implementation b3327e4 via git show/SHA-256 (execution base 72155bc/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+retained). Hosted Contracts run 37385104730 (the push of main 2ec988e) passed all
+five jobs in the first attempt; its [audited artifact](docs/evidence/pan-responder/hosted-ci.json)
+repeats the 128 headless checks with identical IDs and callbacks and the review
+rerun's merged-tree bundles. [Pages 37385104756](docs/evidence/pan-responder/publication.json)
+deployed this record from main 2ec988e and the live public JSON matches it. No
+whole GF, checkpoint, weight or denominator closes.
 
 ### AppState from the Godot application lifecycle (2026-10-05)
 
@@ -1780,8 +1784,146 @@ exports (Android would report a transitional `inactive`, iOS also
 `focus`/`blur`), Appearance/`useColorScheme`, device configuration and resume
 with pending work remain open. All 70 executed code/configuration inputs match
 implementation 7087679 via git show/SHA-256 (execution base 72155bc; the
-executed tree is the implementation's). Hosted CI for this slice is pending. No
-whole GF, checkpoint, weight or denominator closes.
+executed tree is the implementation's). Hosted Contracts run 37382633328 (the push
+of main 8f80fed) passed all five jobs after `reference-android` was rerun for an
+emulator download failure; its [audited artifact](docs/evidence/app-state/hosted-ci.json)
+repeats the 75 headless checks with identical IDs and bundle, and all 70
+tracked inputs match 7087679. [Pages 37382633232](docs/evidence/app-state/publication.json)
+deployed this record from main 8f80fed. No whole GF, checkpoint, weight or
+denominator closes.
+
+### Touches shared by every root (2026-10-05)
+
+GF-13 remains **In progress**. The
+[shared touches evidence](docs/evidence/shared-touches/README.md) makes every
+TouchEvent list the active touches of all roots of the application, because
+they share one Hermes runtime and so RN's one JS responder and touch history:
+**92 headless checks** in four flag lanes over two roots' original
+`Pressable`s, with actual Godot touches and the mouse.
+
+Before, each root listed only its own touches: with root A pressed, a touch
+ending in root B looked like the last touch of A's gesture, RN released A's
+responder and A's `Pressable` pressed with B's touch, a defect every public
+responder consumer shared (`Pressable`, `PanResponder`, the touchables). Each
+root's pointer adapter now adds the other roots' active touches to `touches`;
+`changedTouches` and `targetTouches` keep the touch's own target, and a touch in
+another root still cannot claim (no common ancestor). RN's iOS and Android
+surfaces each keep their own list (`RCTSurfaceTouchHandler`,
+`JSTouchDispatcher`), so this is a deliberate departure in favor of the
+single-surface semantics RN's responder is written for. When the responder's own
+touch ends while another root's touch is down, the legacy plugin releases at
+once, while `ReactNativeResponder` (native-dispatch flags) waits until no touch
+remains, as on one RN surface; the lanes of each implementation agree and the
+two differ only there. The integrated dispatch probe and the pointer-geometry
+example pinned per-root lists and now expect the application's list.
+
+The preceding host (main's PanResponder tree) runs the same bundle and fails
+exactly the 9 normative checks. The seven preceding-host controls that pin the
+SDK bundle were rerun with the merged bundles and still reproduce
+8/12/3/45/32/9/31 failures; the contracts gates (260 Node/13 Python, static
+analysis, publication scan), `test:recovery`, the native suites (22 examples,
+Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
+158, root path 82, Document hover 1,530, click 728, PanResponder 128, AppState
+75, shared touches 92, `parity:godot`) and the native SDK batch pass on the same
+host. Pointer capture across roots, several touch devices, hardware and mobile
+exports remain open. All 16 executed code/configuration inputs match
+implementation 1b7dac5 via git show/SHA-256 (execution base 283065d/dirty
+retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
+
+### Switch over a native Godot switch (2026-10-05)
+
+GF-17 remains **In progress**. The [Switch evidence](docs/evidence/switch/README.md)
+replaces the public placeholder that threw on render with RN's original
+`Switch.js`, which takes its non-Android path on Godot: the codegen-generated
+`RCTSwitch` ViewConfig, its bubbling `onChange` (`{value, target}`) and the
+`setValue` command. The host compiles the package's generated FBReactNativeSpec
+Props/EventEmitters, registers RN's shared iOS/macOS `SwitchComponentDescriptor`
+with a Godot measurement beside `IOSSwitchShadowNode.mm`, and mounts
+`GodotSwitch`, a custom-drawn Panel: **108/108 headless checks** with actual mouse
+clicks and touch taps in two roots of one Hermes application.
+
+As in `RCTSwitchComponentView`, a tap toggles natively, `value` applies only when
+it changes, and `onChange` is emitted only when the native value differs from the
+committed prop; Switch.js then calls `onChange` and `onValueChange` and restores a
+value prop that does not follow with exactly one `setValue`. During the press the
+Switch is RN's JS responder without blocking native input; Godot's emulated mouse
+for a touch is ignored; disabled input toggles nothing; colors map to
+`tintColor`/`onTintColor`/`thumbTintColor` and `ios_backgroundColor` paints the
+host. A Switch without a style size measures 63×28, RN's own measurement (UISwitch
+plus two points) on the repo's newest iOS reference runtime (iOS 26.3.1; iOS 18.4
+gives 51×31). Once a Switch renders, RN's global registry makes `topChange`
+bubble, so a Godot TextInput change also reaches ancestors' `onChange`, as RN's
+own TextInput configs do.
+
+The preceding host fails exactly the 2 normative mount checks (Fabric's legacy
+interop resolves `Switch`; the mount rejects it). A retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects its report;
+the restored source rebuilds the identical host. The contracts gates (261 Node/13
+Python, static analysis, publication scan), `test:recovery` and the
+native-cold-start suites pass, including Down 2,731, Document Up 6,459, View Up
+297, Move 220, Document Move 1,940, hover 158, root path 82, Document hover 1,530
+and 22 examples; codegen, the native SDK pack/verify (now recording the 5
+generated spec sources), adapters (loader 89 checks/21 cases, runtime 13
+runs/213 checks), consumer (30 + 40) and cold start pass too. All 72 executed
+code/configuration inputs match implementation a10b19e via git show/SHA-256
+(battery base 3e2dc2d; the amend touched only test/config files, whose readers
+were rerun). Keyboard activation and focus, accessibility, animation and thumb
+dragging, the Android path, per-target defaults, hardware and mobile exports
+remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
+or denominator closes.
+
+
+### Original TouchableWithoutFeedback and TouchableHighlight (2026-10-05)
+
+GF-13 remains **In progress**. The
+[touchables evidence](docs/evidence/touchables/README.md) makes
+`TouchableWithoutFeedback` and `TouchableHighlight` public `react-native` exports
+backed by RN 0.87.1's original modules and Pressability, and certifies them with
+actual Godot mouse and touch input on two roots of one Hermes application and the
+public production bundle: **93/93 headless checks**. With `minPressDuration` 0 a
+tap reports onPressIn, then onPressOut and onPress with one release payload. The
+Highlight shows `underlayColor` and the child's `activeOpacity` on the native
+Controls while pressed, shows them again for onPress and hides them from its
+`delayPressOut` timer; `delayPressOut` defers onPressOut with the persisted release
+event. `delayLongPress` fires with the persisted grant event and suppresses
+onPress, and a 15 px move cancels only the long press. Native hit testing honors
+`hitSlop`, and Pressability's retention region (rect + `hitSlop` +
+`pressRetentionOffset`) deactivates and reactivates on move out and back.
+
+A disabled touchable is never granted and lets an enabled ancestor claim the
+press; disabling a granted press lets it complete, as Pressability only reads
+`disabled` when the responder is requested. The inner of nested touchables wins.
+Removing a pressed Highlight cancels its contact without any callback and
+remounts at rest. Two children, no child, a Highlight inside Text and an
+unsupported style fail at render. The facade only adds its Text and style
+contracts; `src/components.jsx`, `src/base-view-config.js` and native code are
+unchanged.
+
+`TouchableOpacity` stays an explicit placeholder whose message now gives the
+reason. RN 0.87.1's Animated props hook flushes the native animated queue in its
+first effect and fails an invariant without `NativeAnimatedModule`, so the
+JS-driven fallback is unreachable; an animated lane mounts the original
+TouchableOpacity (test-only seams for Animated's lazy list getters and platform
+color import) and shows that failure at mount. It depends on GF-19.
+
+The same fixture on the preceding SDK (15e1dda) fails exactly its 19 render
+checks, each with its placeholder's message, and a retained sabotage that imitates
+both touchables over the SDK Pressable fails 42 probe checks while the
+independent oracle rejects 12 of 13 sections.
+
+On the unchanged host the contracts gates (260 Node/13 Python, static analysis,
+publication scan), `test:recovery` and the 26 native suites pass with main's
+counts, including Down 2,731, Document Up 6,459, View Up 297, Move 220, Document
+Move 1,940, hover 158, root path 82, Document hover 1,530, touchables 93 and 22
+examples; codegen, the native SDK pack/verify, adapters (registry 207/11, loader
+89/21, runtime 13 runs/213 checks), consumer (30 + 40) and cold start pass too.
+All 30 executed code/configuration inputs match implementation 0e18060 via git
+show/SHA-256 (execution base 15e1dda/dirty retained). The wrong-root release of
+concurrent presses is fixed in the host by the shared touches slice;
+concurrent presses with the touchables themselves, TouchableNativeFeedback, focus and keyboard activation, accessibility, click
+synthesis, typed declarations and hardware remain open. Hosted CI for this slice
+is pending. No whole GF, checkpoint, weight or denominator closes.
 
 ### Pointer capture notifications for listeners (2026-10-05)
 

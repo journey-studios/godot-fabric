@@ -217,6 +217,30 @@ loss is `inactive`, a pause is `background`, and stop sends no event. Its
 [receipt](../docs/evidence/app-state/README.md) records 75 headless checks, the
 preceding-host control and a retained negative control.
 
+The [Switch probe](switch/README.md) mounts RN's original `Switch.js` in two roots
+and toggles it with actual mouse clicks and touch taps: `npm run test:switch`,
+outside the launcher catalog. A value prop that does not follow is restored by
+Switch.js's `setValue`, disabled input is ignored and colors reach the native
+switch. Its [receipt](../docs/evidence/switch/README.md) records 108/108
+headless checks, the preceding host's 2 mount failures and a retained sabotage.
+
+The [shared touches matrix](shared-touches/README.md) presses the original
+`Pressable`s of two roots with overlapping touches and the mouse in four flag
+lanes: `npm run test:responders:shared-touches`, outside the launcher catalog.
+Each TouchEvent lists every touch of the application. Its
+[receipt](../docs/evidence/shared-touches/README.md) records 92 headless checks
+and the preceding-host control.
+
+The [touchables probe](touchables/README.md) presses RN's original
+`TouchableWithoutFeedback` and `TouchableHighlight`, imported from `react-native`,
+with real mouse and touch on two roots: `npm run test:touchables`, outside the
+launcher catalog. It checks callback order and payloads, the native underlay and
+child opacity, `delayPressOut`, long press, hitSlop and retention, disabled,
+nesting, removal mid-press and the single-child rule. Its
+[receipt](../docs/evidence/touchables/README.md) records 93/93 headless checks,
+the preceding-SDK and sabotage controls and why `TouchableOpacity` stays
+unavailable.
+
 The [capture notification matrix](pointer-capture-notifications/README.md)
 captures mouse and touch contacts over two roots and observes got/lost on JSX
 props and on original View, documentElement and Document listeners, with hover

@@ -214,13 +214,40 @@ checks ([receipt](docs/evidence/pointer-click/hosted-ci.json)).
 The [PanResponder example](examples/pan-responder/README.md) runs RN's original
 `PanResponder` on actual Godot touches and mouse drags, including two-finger
 gestures, parent claims, refused termination and removal mid-gesture, in four
-flag lanes: 128 headless checks. [Evidence](docs/evidence/pan-responder/README.md).
+flag lanes: 128 headless checks, repeated by hosted CI
+([receipt](docs/evidence/pan-responder/hosted-ci.json)). [Evidence](docs/evidence/pan-responder/README.md).
 
 The [AppState example](examples/app-state/README.md) runs React Native's original
 `AppState` from the public import, fed by the focus, pause and memory-warning
 notifications Godot delivers to the `FabricApplication`, with two roots sharing
 one state: 75 headless checks. The preceding host fails exactly its 62
-lifecycle checks. [Evidence](docs/evidence/app-state/README.md).
+lifecycle checks. Hosted CI repeated the 75 checks
+([receipt](docs/evidence/app-state/hosted-ci.json)). [Evidence](docs/evidence/app-state/README.md).
+
+The [shared touches example](examples/shared-touches/README.md) presses two
+roots of one application at the same time: every TouchEvent lists the whole
+application's touches, as RN's one JS responder expects, so a touch ending in
+one root no longer releases a press held in another while that press's own
+touch is down; a canceled touch still terminates the one responder, as on one RN
+surface. 92 headless checks in four flag lanes; the preceding host fails exactly
+9. [Evidence](docs/evidence/shared-touches/README.md).
+
+The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
+over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
+mouse clicks and touch taps toggle it, `onChange`/`onValueChange` follow RN's
+order, and Switch.js's `setValue` restores a value prop that does not change.
+108 headless checks in two roots; the preceding host fails the 2 mount checks.
+[Evidence](docs/evidence/switch/README.md).
+
+The [touchables example](examples/touchables/README.md) makes
+`TouchableWithoutFeedback` and `TouchableHighlight` public with RN's original
+modules and Pressability: callback order, native underlay and child opacity,
+`delayPressOut`, long press, hitSlop and retention, nesting, disabled and removal
+mid-press under real mouse and touch on two roots, 93 headless checks. The same
+fixture on the preceding SDK fails exactly its 19 render checks, and a retained
+imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
+Animated needs `NativeAnimatedModule`.
+[Evidence](docs/evidence/touchables/README.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original

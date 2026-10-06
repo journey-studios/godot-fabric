@@ -42,6 +42,10 @@
     "tests/pan-responder-fixture.jsx",
     "tests/pointer-document-up-fixture.jsx",
     "tests/app-state-fixture.jsx",
+    "tests/switch-fixture.jsx",
+    "tests/shared-touches-fixture.jsx",
+    "tests/touchables-fixture.jsx",
+    "tests/touchables-animated-fixture.jsx",
     "tests/pointer-capture-notifications-fixture.jsx"
   ],
   "ignorePatterns": [
@@ -209,6 +213,8 @@
             "Text",
             "TextInput",
             "Button",
+            "Switch",
+            "SwitchChangeEvent",
             "StyleSheet",
             "AppRegistry",
             "RootTagContext",

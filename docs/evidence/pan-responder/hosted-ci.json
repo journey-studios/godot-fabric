@@ -1,0 +1,506 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-pan-responder",
+  "status": "verified-completed-hosted-workflow-and-headless-pan-responder-artifact",
+  "run": {
+    "id": 37385104730,
+    "headSha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/32",
+    "status": "completed",
+    "conclusion": "success",
+    "attempts": 1,
+    "jobs": [
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112016337818,
+        "runAttempt": 1,
+        "headSha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+        "startedAt": "2026-10-05T22:51:44Z",
+        "completedAt": "2026-10-05T22:56:52Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730/job/112016337818"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112016338029,
+        "runAttempt": 1,
+        "headSha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+        "startedAt": "2026-10-05T23:02:02Z",
+        "completedAt": "2026-10-05T23:27:20Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730/job/112016338029"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112016338075,
+        "runAttempt": 1,
+        "headSha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+        "startedAt": "2026-10-05T22:51:45Z",
+        "completedAt": "2026-10-05T22:52:48Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730/job/112016338075"
+      },
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112016338155,
+        "runAttempt": 1,
+        "headSha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+        "startedAt": "2026-10-05T23:02:56Z",
+        "completedAt": "2026-10-05T23:12:11Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730/job/112016338155"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112027937840,
+        "runAttempt": 1,
+        "headSha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+        "startedAt": "2026-10-05T23:27:23Z",
+        "completedAt": "2026-10-05T23:27:47Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37385104730/job/112027937840"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+      "native-cold-start": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+      "parity-comparison": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+      "reference-android": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+      "reference-ios": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "nativeJobMinutes": 25.3
+  },
+  "implementationCommit": "b3327e4237b1b7e768b1698194dd5f4f077e5b80",
+  "reviewRerunCommit": "54129b3e1b52e61989fae66b630f4df394331281",
+  "runHeadIsPostCommitSourcePin": true,
+  "actualCheckout": {
+    "sha": "2ec988ea051101e2d66ab3de6bbf7ec5039ebf38",
+    "parents": [
+      "8f80feda8c38512f3608f479da21b7abac5c3e0a"
+    ],
+    "treeSha": "f39cb670a76da69365bd31796ad69096670f69a4",
+    "treeEntries": 992,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "method": "full checkout SHA from native job git-log output (a push of main checks out the pushed commit); immutable GitHub Git tree blob of every tracked path compared with the git blob at 2ec988e, whose SHA-256 is compared with the expected hash (curated sourcePins overridden by reviewReruns[1].changedSourcesSincePins)",
+    "producerPathsVerified": 11,
+    "allCuratedTrackedPathsVerified": 14,
+    "trackedPinSetCounts": {
+      "sourcePins": 11,
+      "verificationSourcePins": 3
+    },
+    "sourcePathsEqualExpectedBytes": 11,
+    "allSourceInputsEqualExpectedBytes": true,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "runHeadTrackedInputsIdenticalToImplementationCommit": false,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementationCommit": [
+      ".fallowrc.json",
+      ".github/workflows/contracts.yml",
+      "native/application_runtime.cpp",
+      "package.json",
+      "tests/pan-responder-native.test.mjs"
+    ],
+    "pathsOverriddenByReviewRerun2": [
+      {
+        "path": "native/application_runtime.cpp",
+        "pinnedSha256": "dd2b491b36219ec89d7978c0c64063008b87a3e939b13096fcbb27384ca909e8",
+        "expectedSha256": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+        "runHeadSha256": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+        "equalsExpected": true
+      },
+      {
+        "path": "tests/pan-responder-native.test.mjs",
+        "pinnedSha256": "070bc1ddb00a017ebbcfe39157d36bc4cfa4df7fefc98a95a8af1a7a6d367876",
+        "expectedSha256": "fa39b4a69a6f2bd67558a427410a4bdf3e73d65a5294a27736a31d93e25abca3",
+        "runHeadSha256": "fa39b4a69a6f2bd67558a427410a4bdf3e73d65a5294a27736a31d93e25abca3",
+        "equalsExpected": true
+      }
+    ],
+    "verificationInputsDifferingFromPinsExplained": {
+      ".fallowrc.json": {
+        "pinnedSha256": "4c8b302aefbb9bba0cbbedc1225ac829fdaa3912094fce680c0a219ab5a2bb8e",
+        "runHeadSha256": "fa27b5e0fa63071c37bb1839ea8920dbee6f0f308800fc931b3f9723e816155f",
+        "conflicts": 1,
+        "unionResolutionEqualsRunHead": true,
+        "runHeadIsValidJSON": true,
+        "resolution": "adjacent-line conflict resolved in merge commit 24869f9 by keeping both sides",
+        "runHeadEquals54129b3": true,
+        "mainAppStateChangedPath": true
+      },
+      ".github/workflows/contracts.yml": {
+        "pinnedSha256": "a127ffcdd172f97d64f73c2722adabd3db3a51707aef0b887b5c12084452765c",
+        "runHeadSha256": "c19486cc8e866ce3968be7b980bde7dc3f479e0d6454d45aea69295cdd266433",
+        "conflicts": 0,
+        "cleanMergeEqualsRunHead": true,
+        "resolution": "clean three-way merge",
+        "runHeadEquals54129b3": true,
+        "mainAppStateChangedPath": true
+      },
+      "package.json": {
+        "pinnedSha256": "f890440b65ad69f7ef9724c5454b2b42c6c97ad7b1e2f77786ab5793c5236d49",
+        "runHeadSha256": "7ebc2d266a4d5ffa436fc207332084e47ebf5c973fffcd39f7007cca7de7e048",
+        "conflicts": 1,
+        "unionResolutionEqualsRunHead": true,
+        "runHeadIsValidJSON": true,
+        "resolution": "adjacent-line conflict resolved in merge commit 24869f9 by keeping both sides",
+        "runHeadEquals54129b3": true,
+        "mainAppStateChangedPath": true
+      }
+    },
+    "allTrackedTreeBlobsEqualRunHeadBlobs": true,
+    "allTrackedRunHeadBlobsEqualReviewRerun2Tree": true,
+    "curatedChangedSourcesSincePinsOmitsMergedVerificationInputs": [
+      ".fallowrc.json",
+      ".github/workflows/contracts.yml",
+      "package.json"
+    ],
+    "treeDifferencesFromReviewRerun2Commit": [
+      "docs/evidence/pan-responder/README.md",
+      "docs/evidence/pan-responder/report.json"
+    ],
+    "nativeDirectoryChangesSinceMainAppState": [],
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11379838769,
+    "name": "native-pan-responder",
+    "zipFile": "work/pan-responder/native-pan-responder.zip",
+    "zipSizeBytes": 105238,
+    "zipSha256": "de2ece2d818f563cd45a3dc2de3459b5e876ddb6aa0d99dfbd25ad5c07b991af",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-05T23:22:23Z",
+    "fileCount": 9,
+    "comparisonSha256": "973756779b46d0199e0c2bb6b8c2d293818929a72de70779bf40bd352c6f0ca1"
+  },
+  "verification": {
+    "headlessChecks": 128,
+    "curatedHeadlessChecks": 128,
+    "lanes": [
+      {
+        "flagMode": "disabled",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "responder": "ResponderEventPlugin",
+        "checks": 32,
+        "passed": 32,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "checkIdsExactlyMatchPinnedRun": true,
+        "bundleSha256": "4c3646bea6f22b4479ac0a4a362bfd71bc1cf2ea892ffe8791f82478bdacd227",
+        "expectedBundleSha256ReviewRerun2": "4c3646bea6f22b4479ac0a4a362bfd71bc1cf2ea892ffe8791f82478bdacd227",
+        "bundleExactlyMatchesReviewRerun2MergedTree": true,
+        "pinnedRunBundleSha256": "d1ea8d0817162dfb358740cd7f4a36d28ef15259cab9d81fbfb07b673042a0c8",
+        "bundleDiffersFromPinnedRunAsExpected": true,
+        "callbacksExactlyMatchPinnedRun": true,
+        "velocitySignAndFinitenessHold": true,
+        "reportSha256": "7c859e27c1bb55f61cc1d2f022edde8eaae064539db8b9a3ea57d04954a26f91",
+        "logSha256": "45f8729859fd70ce055a77696ca8e33b76bc66be2510f4f3c0155298591e0080",
+        "localBaseline": "build/pan-responder-review2 (review rerun 54129b3), report hash equal to the curated reviewReruns[1] reportSha256",
+        "allStagesEqualLocalBaselineExceptEventTimestampsAndVelocities": true,
+        "volatileTimestampOrVelocityLeavesDiffering": 89,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true,
+        "comparisonReportEqualsLaneReport": true
+      },
+      {
+        "flagMode": "imperative-only",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "responder": "ResponderEventPlugin",
+        "checks": 32,
+        "passed": 32,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "checkIdsExactlyMatchPinnedRun": true,
+        "bundleSha256": "0bb6893d96eeca038948e96d9a4ff463836bd4986c1d84c05424a62b8807da5f",
+        "expectedBundleSha256ReviewRerun2": "0bb6893d96eeca038948e96d9a4ff463836bd4986c1d84c05424a62b8807da5f",
+        "bundleExactlyMatchesReviewRerun2MergedTree": true,
+        "pinnedRunBundleSha256": "96bdb5f6c587572400955dc383a68d9df3bc43d9f5746035c47516b800516c24",
+        "bundleDiffersFromPinnedRunAsExpected": true,
+        "callbacksExactlyMatchPinnedRun": true,
+        "velocitySignAndFinitenessHold": true,
+        "reportSha256": "d07d4df54caddd43cca556e104fb2b3a3d3f12b2e1e5ad29042649d2f201d15e",
+        "logSha256": "c65655c494dd3dc6bbd0a0836e20796d3707d2aa114f2357ef21bc346b6478f1",
+        "localBaseline": "build/pan-responder-review2 (review rerun 54129b3), report hash equal to the curated reviewReruns[1] reportSha256",
+        "allStagesEqualLocalBaselineExceptEventTimestampsAndVelocities": true,
+        "volatileTimestampOrVelocityLeavesDiffering": 89,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true,
+        "comparisonReportEqualsLaneReport": true
+      },
+      {
+        "flagMode": "internal-only",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "responder": "ReactNativeResponder",
+        "checks": 32,
+        "passed": 32,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "checkIdsExactlyMatchPinnedRun": true,
+        "bundleSha256": "6f22bfda4459dada284ae3e65fce80649b6599b630c82438834a39b918a98bc9",
+        "expectedBundleSha256ReviewRerun2": "6f22bfda4459dada284ae3e65fce80649b6599b630c82438834a39b918a98bc9",
+        "bundleExactlyMatchesReviewRerun2MergedTree": true,
+        "pinnedRunBundleSha256": "a5a741eb6bf0aa1ccfdc9584282d06d57a3e46c3e81d8139e6b086a373edf24a",
+        "bundleDiffersFromPinnedRunAsExpected": true,
+        "callbacksExactlyMatchPinnedRun": true,
+        "velocitySignAndFinitenessHold": true,
+        "reportSha256": "d09ad3c2c3edd772d951ae562ee318fc23aa0ab4302e75725364a12febd52bb1",
+        "logSha256": "3e059257f2d75bd15c97b8653f13d0e8a63142d57c9e1e82922d5bcd4b337654",
+        "localBaseline": "build/pan-responder-review2 (review rerun 54129b3), report hash equal to the curated reviewReruns[1] reportSha256",
+        "allStagesEqualLocalBaselineExceptEventTimestampsAndVelocities": true,
+        "volatileTimestampOrVelocityLeavesDiffering": 89,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true,
+        "comparisonReportEqualsLaneReport": true
+      },
+      {
+        "flagMode": "enabled",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "responder": "ReactNativeResponder",
+        "checks": 32,
+        "passed": 32,
+        "uniqueCheckIds": true,
+        "checkIdDigestSha256": "4ae0124e5f4b96e15f2e213de86b3de9f5128492994146849b97fa9f88a21f5a",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "checkIdsExactlyMatchPinnedRun": true,
+        "bundleSha256": "e0839b6d35af095e76fb43c3f61b6e03f85647a3e5a01b58f1f9cc09ef48d73e",
+        "expectedBundleSha256ReviewRerun2": "e0839b6d35af095e76fb43c3f61b6e03f85647a3e5a01b58f1f9cc09ef48d73e",
+        "bundleExactlyMatchesReviewRerun2MergedTree": true,
+        "pinnedRunBundleSha256": "76c8517d8879172775dc82e2252d1b43bca71ec46e2cd3b9d70d5dcf0522d1b9",
+        "bundleDiffersFromPinnedRunAsExpected": true,
+        "callbacksExactlyMatchPinnedRun": true,
+        "velocitySignAndFinitenessHold": true,
+        "reportSha256": "2f139ef694d84277c888167e3ff96df02e042b58365900247dcd715bc2d79d5e",
+        "logSha256": "e77bc9c9fa123c67690230511b83d7994d61962160dca7bbd99b81ebb72248e6",
+        "localBaseline": "build/pan-responder-review2 (review rerun 54129b3), report hash equal to the curated reviewReruns[1] reportSha256",
+        "allStagesEqualLocalBaselineExceptEventTimestampsAndVelocities": true,
+        "volatileTimestampOrVelocityLeavesDiffering": 89,
+        "unexplainedDifferences": [],
+        "passedMarkerInLog": true,
+        "comparisonReportEqualsLaneReport": true
+      }
+    ],
+    "crossLaneTrace": {
+      "fields": [
+        "view",
+        "callback",
+        "x0",
+        "y0",
+        "moveX",
+        "moveY",
+        "dx",
+        "dy",
+        "numberActiveTouches"
+      ],
+      "fieldsEqualCuratedReviewRerun1": true,
+      "recomputedFromHostedReportsEqualAcrossFourLanes": true,
+      "cases": 9,
+      "comparisonFilePresent": true,
+      "comparisonWrittenOnlyAfterRunnerAssertedTrace": true,
+      "testResultTap": {
+        "pass": 1,
+        "fail": 0
+      }
+    },
+    "allFourReportsExactlyMatchComparison": true,
+    "onlyDifferencesFromLocalBaseline": [
+      "event timestamp values",
+      "PanResponder vx/vy velocities, which RN derives from event timestamps (signs follow the motion in every lane)",
+      "provenance.nativeHostSha256 (runner-built host)",
+      "provenance.node v22.23.2 on runner versus v22.23.3 locally"
+    ],
+    "producerPins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/pan-responder-fixture.jsx": "035403b15c09de5434832c2b331442ce81fdae6ab05e0d3f6c829be4f0fe9283",
+      "tests/pan-responder-probe.gd": "9e8b86f5bb8de35a55afa2fbefb0195019186f8d4f60cf269d80c61afbc946c0",
+      "tests/pan-responder-native.test.mjs": "fa39b4a69a6f2bd67558a427410a4bdf3e73d65a5294a27736a31d93e25abca3",
+      "scripts/event-target-bundle.mjs": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+      "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+      "src/react-native-platform.jsx": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+      "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+      "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+      "native/application_runtime.cpp": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+      "native/pointer_adapter.cpp": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7"
+    },
+    "producerPinsEqualExpectedSources": true,
+    "originalReactNativeSources": {
+      "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+      "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+      "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+      "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+      "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+      "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+      "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+      "Libraries/Interaction/PanResponder.js": "5d673766984e2b4c27bbf35927ae3cb5a2acd1e8ce6d80c8edea7400ac9f7ec0",
+      "Libraries/Interaction/TouchHistoryMath.js": "8ec88af5a8ba96e6bd87707a6d79a5636adb071d343a6e2ef0ccaa33468f05ec",
+      "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+      "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+      "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5"
+    },
+    "originalReactNativeInputCount": 15,
+    "originalReactNativeSourcesEqualCurated": true,
+    "declaredNativeHostSha256": "6e7fdd76899a160f8a510cac30c60293b79740fde3134e55516af723172c71da",
+    "sameDeclaredNativeHostAcrossFourLanes": true,
+    "declaredNativeHostEqualsAppStateRun37382633328": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "publicBundleSha256SameAcrossLanes": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationAndDestructorWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "fa27b5e0fa63071c37bb1839ea8920dbee6f0f308800fc931b3f9723e816155f",
+        "gitBlobSha1": "743420547acbf75f2490f8872d49276a031b7200",
+        "expectedSha256": "4c8b302aefbb9bba0cbbedc1225ac829fdaa3912094fce680c0a219ab5a2bb8e",
+        "pinnedSha256": "4c8b302aefbb9bba0cbbedc1225ac829fdaa3912094fce680c0a219ab5a2bb8e",
+        "source": "verificationSourcePins"
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "c19486cc8e866ce3968be7b980bde7dc3f479e0d6454d45aea69295cdd266433",
+        "gitBlobSha1": "21564d3732a60909f23c69d5f127f70eb39e4694",
+        "expectedSha256": "a127ffcdd172f97d64f73c2722adabd3db3a51707aef0b887b5c12084452765c",
+        "pinnedSha256": "a127ffcdd172f97d64f73c2722adabd3db3a51707aef0b887b5c12084452765c",
+        "source": "verificationSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+        "gitBlobSha1": "a69ee709ab5b383985c87c131d75f56cd188b62b",
+        "expectedSha256": "b6d41bb531f39cd13dce74e1a95ca10d0013e77a39c58d49004459a2c9b841f7",
+        "pinnedSha256": "dd2b491b36219ec89d7978c0c64063008b87a3e939b13096fcbb27384ca909e8",
+        "source": "reviewReruns[1].changedSourcesSincePins"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+        "gitBlobSha1": "f4e82711c021e61d71184e749cefdc0d37c51e04",
+        "expectedSha256": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+        "pinnedSha256": "3bd67822fcc5a800eaebfde89d287a57579793b861a113736a4470eff54a12e7",
+        "source": "sourcePins"
+      },
+      "package.json": {
+        "sha256": "7ebc2d266a4d5ffa436fc207332084e47ebf5c973fffcd39f7007cca7de7e048",
+        "gitBlobSha1": "bc8c129493a24eb0c267a4498181a24d22ac1a60",
+        "expectedSha256": "f890440b65ad69f7ef9724c5454b2b42c6c97ad7b1e2f77786ab5793c5236d49",
+        "pinnedSha256": "f890440b65ad69f7ef9724c5454b2b42c6c97ad7b1e2f77786ab5793c5236d49",
+        "source": "verificationSourcePins"
+      },
+      "scripts/event-target-bundle.mjs": {
+        "sha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+        "gitBlobSha1": "86978cfeb179f103ec610153954254b5270640ab",
+        "expectedSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+        "pinnedSha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+        "source": "sourcePins"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "gitBlobSha1": "e8bce20845e3645b3adfdb7ed11f6f575b5a9b59",
+        "expectedSha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "pinnedSha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "source": "sourcePins"
+      },
+      "src/components.jsx": {
+        "sha256": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+        "gitBlobSha1": "b6275b8a7e36250af520e09ac15c40d078bf3763",
+        "expectedSha256": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+        "pinnedSha256": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+        "source": "sourcePins"
+      },
+      "src/private-interface.js": {
+        "sha256": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+        "gitBlobSha1": "dbfbcd49e5b894e8006bc2fb08f775e7ca5756f1",
+        "expectedSha256": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+        "pinnedSha256": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+        "source": "sourcePins"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+        "gitBlobSha1": "79f6cdb5230b43952775add951214421b48454cb",
+        "expectedSha256": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+        "pinnedSha256": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+        "source": "sourcePins"
+      },
+      "tests/event-target-bootstrap.js": {
+        "sha256": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "gitBlobSha1": "102550470787757049f07e0710bdcbed795fb5f6",
+        "expectedSha256": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "pinnedSha256": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "source": "sourcePins"
+      },
+      "tests/pan-responder-fixture.jsx": {
+        "sha256": "035403b15c09de5434832c2b331442ce81fdae6ab05e0d3f6c829be4f0fe9283",
+        "gitBlobSha1": "145946f62009c5a0fc4a1c42fea649308320551e",
+        "expectedSha256": "035403b15c09de5434832c2b331442ce81fdae6ab05e0d3f6c829be4f0fe9283",
+        "pinnedSha256": "035403b15c09de5434832c2b331442ce81fdae6ab05e0d3f6c829be4f0fe9283",
+        "source": "sourcePins"
+      },
+      "tests/pan-responder-native.test.mjs": {
+        "sha256": "fa39b4a69a6f2bd67558a427410a4bdf3e73d65a5294a27736a31d93e25abca3",
+        "gitBlobSha1": "9b5bc49725bf1b4a4dac7573a913c7008dfa0160",
+        "expectedSha256": "fa39b4a69a6f2bd67558a427410a4bdf3e73d65a5294a27736a31d93e25abca3",
+        "pinnedSha256": "070bc1ddb00a017ebbcfe39157d36bc4cfa4df7fefc98a95a8af1a7a6d367876",
+        "source": "reviewReruns[1].changedSourcesSincePins"
+      },
+      "tests/pan-responder-probe.gd": {
+        "sha256": "9e8b86f5bb8de35a55afa2fbefb0195019186f8d4f60cf269d80c61afbc946c0",
+        "gitBlobSha1": "cd0eb36f6b96ebcd2953fd38f457f8642ac81933",
+        "expectedSha256": "9e8b86f5bb8de35a55afa2fbefb0195019186f8d4f60cf269d80c61afbc946c0",
+        "pinnedSha256": "9e8b86f5bb8de35a55afa2fbefb0195019186f8d4f60cf269d80c61afbc946c0",
+        "source": "sourcePins"
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the first attempt; this artifact audit certifies only the four headless PanResponder lanes (128 checks).",
+    "The pinned run (b3327e4) predates two review changes to tests/pan-responder-native.test.mjs and the merge of main's AppState (native/application_runtime.cpp and the SDK modules in every bundle); hosted sources and bundles are therefore compared with the curated reviewReruns[1] (54129b3) values, check IDs and callbacks with the pinned run.",
+    "The previous-SDK control and the retained sabotage remain local evidence.",
+    "Bundle hashes and native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "No pinch zoom through chart libraries, InteractionManager handles, hardware velocity, nested scroll views, negotiation with native Godot controls, hardware/export or full RN/GF/ABI.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary."
+  ],
+  "findings": [
+    "explained, non-blocking: .fallowrc.json: verification input differs from its b3327e4 pin (4c8b302aefbb) because 2ec988e merges main's AppState change from 8f80fed; the run-head bytes (fa27b5e0fa63) equal the 54129b3 review-rerun tree and the three-way merge of b3327e4 and 8f80fed over 72155bc with its one adjacent-line conflict resolved by keeping both sides",
+    "explained, non-blocking: .github/workflows/contracts.yml: verification input differs from its b3327e4 pin (a127ffcdd172) because 2ec988e merges main's AppState change from 8f80fed; the run-head bytes (c19486cc8e86) equal the 54129b3 review-rerun tree and the clean three-way merge of b3327e4 and 8f80fed over 72155bc",
+    "explained, non-blocking: package.json: verification input differs from its b3327e4 pin (f890440b65ad) because 2ec988e merges main's AppState change from 8f80fed; the run-head bytes (7ebc2d266a4d) equal the 54129b3 review-rerun tree and the three-way merge of b3327e4 and 8f80fed over 72155bc with its one adjacent-line conflict resolved by keeping both sides"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 112016338029,
+    "file": "work/pan-responder/native-job.log",
+    "sha256": "79faa81dcc9b417bd34d41c2c740f7d1698f404e3b84e05732d53c15d42b823c",
+    "checkoutVerified": true,
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 97,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

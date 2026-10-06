@@ -1,0 +1,1177 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-touchables",
+  "status": "verified-local-headless-preceding-sdk-sabotage-regressions-and-sdk",
+  "at": "2026-10-05T22:01:22.626534+00:00",
+  "executionBaseCommit": "15e1dda2b2daa31650cc0bd427651499a33410eb",
+  "sourceDirtyDuringExecution": true,
+  "implementationCommit": "0e180608d08c4a5071ffee25d7fac61e85d537e8",
+  "dependsOn": "Pressable and original Pressability (docs/evidence/public-controls)",
+  "environment": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "node": "v22.23.3",
+    "platform": "macOS arm64"
+  },
+  "commands": [
+    "npm run test:touchables",
+    "node tests/touchables-native.test.mjs --preceding-sdk --sabotage"
+  ],
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Public production bundle with RN's original TouchableWithoutFeedback/TouchableHighlight, two roots, headless.",
+      "nativeHostSha256": "c30fc8083a9e0a52b86788c229d1090d2c8f178cd0ec52d139f86e7675f77af2",
+      "bundleSha256": "d15dcdd8df490eaf3ea0e4c9e8bff0f981e13a31fefadc2770eba76b9eeb14bc",
+      "platformRoot": "src",
+      "facadeSha256": "e78fd90a0f9b59cedf898ca43851b53a128e4a2393cd6f7e547ae487519e0fb4",
+      "checks": 93,
+      "passed": 93,
+      "failed": 0,
+      "reportSha256": "59fc035069b68d33b83be3c92f8c44bed336f7d763d4690cb8c8f73ebe1b17bd",
+      "logSha256": "d42e1ba78e0ddb30596aba1a528af1293f04e191839ec7a64364d51ec7d8fc4f"
+    },
+    {
+      "lane": "animated",
+      "meaning": "RN's original TouchableOpacity deep-imported with test-only seams for Animated's lazy list getters and platform color import; its Animated.View fails at mount.",
+      "nativeHostSha256": "c30fc8083a9e0a52b86788c229d1090d2c8f178cd0ec52d139f86e7675f77af2",
+      "bundleSha256": "0a15f532b85c28dc72b9932ce64684be60721d51ca48e74021345f9946d2e04f",
+      "platformRoot": "src",
+      "facadeSha256": "e78fd90a0f9b59cedf898ca43851b53a128e4a2393cd6f7e547ae487519e0fb4",
+      "checks": 6,
+      "passed": 6,
+      "failed": 0,
+      "reportSha256": "357aca2e74bb332f895f48154f8b901abca9da4ebe5c353045c64480e242761d",
+      "logSha256": "493a04de61aabadd7688b84fd044c915af612ff0dfa73d43557e954f2c029bc5"
+    },
+    {
+      "lane": "preceding-sdk",
+      "meaning": "Same fixture and probe bundled against the facade of 15e1dda (touchables were placeholders); expected negative control.",
+      "nativeHostSha256": "c30fc8083a9e0a52b86788c229d1090d2c8f178cd0ec52d139f86e7675f77af2",
+      "bundleSha256": "e067f4f2712c85959ed4e07310b064a4ae871bbcd7a0056c57a3401cbde9c7e9",
+      "platformRoot": "build/touchables-preceding-sdk/src",
+      "facadeSha256": "32a54afe21b773defe4853fa26015364845a806d9afab3d51dd2bd8e55d38278",
+      "checks": 25,
+      "passed": 6,
+      "failed": 19,
+      "failedIds": [
+        "mount/twf/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/th/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/long/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/delayed/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/slop/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/disabled/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/nested/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/card/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/removable/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/toggle/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/text/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/caption/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/th-ref/A ref on TouchableHighlight reaches its native host in both roots",
+        "mount/single-two/TouchableHighlight with two children fails at render with React.Children.only",
+        "mount/single-none/TouchableWithoutFeedback without a child fails at render with React.Children.only",
+        "mount/opacity/TouchableOpacity fails at render with its explicit NativeAnimatedModule reason",
+        "mount/inline/TouchableHighlight inside Text fails at render as an inline Control",
+        "mount/style/TouchableHighlight rejects a style its native View does not implement",
+        "mount/render-errors/Only the single-child, contract and TouchableOpacity cases fail at render"
+      ],
+      "reportSha256": "7b6599ea7535764ee93497bacaab87a5041bac9190a0c7161b2082ce1b2cf2ec",
+      "logSha256": "b41c11a4f6d838e514b0d2307a9c15defb67fbd7a2ff218ee0f9ddfa4955d5fc",
+      "commit": "15e1dda2b2daa31650cc0bd427651499a33410eb",
+      "expectedFailures": [
+        "mount/twf/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/th/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/long/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/delayed/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/slop/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/disabled/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/nested/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/card/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/removable/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/toggle/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/text/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/caption/The original touchable commits its hosts at rest in both roots without a render error",
+        "mount/th-ref/A ref on TouchableHighlight reaches its native host in both roots",
+        "mount/single-two/TouchableHighlight with two children fails at render with React.Children.only",
+        "mount/single-none/TouchableWithoutFeedback without a child fails at render with React.Children.only",
+        "mount/opacity/TouchableOpacity fails at render with its explicit NativeAnimatedModule reason",
+        "mount/inline/TouchableHighlight inside Text fails at render as an inline Control",
+        "mount/style/TouchableHighlight rejects a style its native View does not implement",
+        "mount/render-errors/Only the single-child, contract and TouchableOpacity cases fail at render"
+      ],
+      "renderErrors": [
+        [
+          "A",
+          "twf",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "A",
+          "th",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "long",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "delayed",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "slop",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "A",
+          "disabled",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "nested",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "card",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "removable",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "toggle",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "text",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "caption",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "A",
+          "single-two",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "single-none",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "A",
+          "opacity",
+          "Godot platform does not implement TouchableOpacity"
+        ],
+        [
+          "A",
+          "inline",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "A",
+          "style",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "twf",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "B",
+          "th",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "long",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "delayed",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "slop",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "B",
+          "disabled",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "nested",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "card",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "removable",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "toggle",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "text",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "caption",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "B",
+          "single-two",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "single-none",
+          "Godot platform does not implement TouchableWithoutFeedback"
+        ],
+        [
+          "B",
+          "opacity",
+          "Godot platform does not implement TouchableOpacity"
+        ],
+        [
+          "B",
+          "inline",
+          "Godot platform does not implement TouchableHighlight"
+        ],
+        [
+          "B",
+          "style",
+          "Godot platform does not implement TouchableHighlight"
+        ]
+      ],
+      "oracleRejectsMountOnly": true
+    },
+    {
+      "lane": "sabotage",
+      "meaning": "Retained sabotage: both touchables imitated over the SDK Pressable (underlay/opacity from its pressed state); expected rejection.",
+      "nativeHostSha256": "c30fc8083a9e0a52b86788c229d1090d2c8f178cd0ec52d139f86e7675f77af2",
+      "bundleSha256": "7a264155682f0097af78438a8fc212a5c22f845522b66a2c776f8c1c69341ad2",
+      "platformRoot": "build/touchables-sabotage/src",
+      "facadeSha256": "00a1dd0914b8be7f8e2a05056de6ae4112aba1a1f98eb023cc95205e0c1a49b0",
+      "checks": 93,
+      "passed": 51,
+      "failed": 42,
+      "failedIds": [
+        "mount/single-none/TouchableWithoutFeedback without a child fails at render with React.Children.only",
+        "mount/render-errors/Only the single-child, contract and TouchableOpacity cases fail at render",
+        "twf/mouse/Press in fires once on grant with the child as target and responder",
+        "twf/mouse/Release reports press out before press, both with the release payload",
+        "twf/touch/Press in fires once on grant with the child as target and responder",
+        "twf/touch/Release reports press out before press, both with the release payload",
+        "th/A/mouse/Press in shows the underlay, then reports onPressIn for the child target",
+        "th/A/mouse/Release hides, reports press out, shows again for press and hides after the zero-delay timer",
+        "th/A/mouse/Every frame after release shows the pressed or the resting look, ending at rest",
+        "th/A/touch/Press in shows the underlay, then reports onPressIn for the child target",
+        "th/A/touch/Release hides, reports press out, shows again for press and hides after the zero-delay timer",
+        "th/A/touch/Every frame after release shows the pressed or the resting look, ending at rest",
+        "text/label/mouse/Press in shows the underlay, then reports onPressIn for the child target",
+        "text/label/mouse/Release hides, reports press out, shows again for press and hides after the zero-delay timer",
+        "text/label/mouse/Every frame after release shows the pressed or the resting look, ending at rest",
+        "text/caption/touch/Press in fires once on grant with the child as target and responder",
+        "text/caption/touch/Release reports press out before press, both with the release payload",
+        "delayed/mouse/Press in shows the underlay",
+        "delayed/mouse/Release reports press at once, then press out and the hide after delayPressOut",
+        "delayed/mouse/Every frame within 150 ms of release keeps the underlay and child opacity",
+        "delayed/mouse/delayPressOut defers press out with the persisted release event",
+        "long/touch/Press in shows the underlay",
+        "long/touch/onLongPress waits for delayLongPress",
+        "long/touch/onLongPress receives the persisted grant event",
+        "long/touch/Release after a long press reports press out without press",
+        "long/moved/Moving 15 px inside the host cancels the long press but keeps the press",
+        "slop/hit-slop/A press 8 px outside the left edge hits the View through its hitSlop",
+        "slop/retention/Moving 3 px beyond the retention offset deactivates while keeping the responder",
+        "slop/retention/Moving back 3 px inside the retention offset reactivates the press",
+        "slop/retention/Release inside the retention region presses although it is outside the View",
+        "slop/release-outside/Release beyond the retention region never presses",
+        "slop/touch/A touch drag leaves and re-enters through the bottom retention bound",
+        "card/A disabled inner touchable lets the enclosing TouchableHighlight claim the press",
+        "card/Release presses only the enclosing touchable and restores it",
+        "nested/mouse/The inner touchable becomes the responder and alone reports its press",
+        "nested/touch/The inner touchable becomes the responder and alone reports its press",
+        "toggle/Disabling mid-press keeps RN's granted press, which completes on release",
+        "removable/Press in shows the underlay",
+        "removable/The remounted touchable presses normally",
+        "th/B/touch/Press in shows the underlay, then reports onPressIn for the child target",
+        "th/B/touch/Release hides, reports press out, shows again for press and hides after the zero-delay timer",
+        "roots/B's TouchableWithoutFeedback reports B-relative coordinates and only B's callbacks"
+      ],
+      "reportSha256": "cdd93e3025d5bab1eb5c979baaefe04fe81633b268522158c185e387085e3bf9",
+      "logSha256": "dbe3a238bf24704c371587e993070aa31b44a8a0203c3e67f960e888b601f47e",
+      "oracleRejections": {
+        "mount": "Expected values to be strictly deep-equal: + actual - expected ... Skipped lines [ [ 'A', 'single-two', 'React.Children.only expected to receive a single React element child.' ... 'A', - 'single-none', - 'React.Children.only expected to receive a single React element child.' - ], - [ - 'A', 'opacity",
+        "withoutFeedback": "twf/mouse + actual - expected [ - 'out', 'press' ] ",
+        "highlight": "th/A/mouse + actual - expected [ - 'show', 'in', + 'out' ] ",
+        "textChildren": "text/label/mouse + actual - expected [ + 'out', - 'show', 'in' ] ",
+        "delayPressOut": "Expected values to be strictly deep-equal: + actual - expected [ - 'show', 'in', + 'out' ] ",
+        "longPress": "Expected values to be strictly deep-equal: + actual - expected [ - 'show', 'in' ] ",
+        "hitSlopAndRetention": "slop/hit-slop/down + actual - expected + [] - [ - 'in' - ] ",
+        "disabled": "Expected values to be strictly deep-equal: + actual - expected [ - 'card:show', 'card:in' ] ",
+        "nested": "nested/mouse + actual - expected [ 'in', + 'out' ] ",
+        "disabledMidPress": "Expected values to be strictly deep-equal: + actual - expected [ - 'show', 'in', + 'out' ] ",
+        "removal": "Expected values to be strictly deep-equal: + actual - expected [ - 'show', 'in' ] ",
+        "roots": "th/B/touch + actual - expected [ - 'show', 'in', + 'out' ] ",
+        "stop": null
+      }
+    }
+  ],
+  "causalComparison": {
+    "sameNativeHost": true,
+    "nativeHostSha256": "c30fc8083a9e0a52b86788c229d1090d2c8f178cd0ec52d139f86e7675f77af2",
+    "sameFixtureProbeAndRunner": true,
+    "onlyTheBundledFacadeDiffers": {
+      "current": "e78fd90a0f9b59cedf898ca43851b53a128e4a2393cd6f7e547ae487519e0fb4",
+      "preceding-sdk": "32a54afe21b773defe4853fa26015364845a806d9afab3d51dd2bd8e55d38278",
+      "sabotage": "00a1dd0914b8be7f8e2a05056de6ae4112aba1a1f98eb023cc95205e0c1a49b0"
+    },
+    "precedingFacadeSha256": "32a54afe21b773defe4853fa26015364845a806d9afab3d51dd2bd8e55d38278",
+    "comparisonSha256": "ce667ff819b0146d4541e5db525637f6f751023447a574e5c8e76395d8efe15d"
+  },
+  "executedObservations": {
+    "renderErrors": [
+      [
+        "A",
+        "single-two",
+        "React.Children.only expected to receive a single React element child."
+      ],
+      [
+        "A",
+        "single-none",
+        "React.Children.only expected to receive a single React element child."
+      ],
+      [
+        "A",
+        "opacity",
+        "Godot platform does not implement TouchableOpacity: its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet"
+      ],
+      [
+        "A",
+        "inline",
+        "Inline Controls are not implemented in Godot Text"
+      ],
+      [
+        "A",
+        "style",
+        "Godot TouchableHighlight does not implement style shadowColor"
+      ],
+      [
+        "B",
+        "single-two",
+        "React.Children.only expected to receive a single React element child."
+      ],
+      [
+        "B",
+        "single-none",
+        "React.Children.only expected to receive a single React element child."
+      ],
+      [
+        "B",
+        "opacity",
+        "Godot platform does not implement TouchableOpacity: its original Animated.View requires NativeAnimatedModule, which Godot does not provide yet"
+      ],
+      [
+        "B",
+        "inline",
+        "Inline Controls are not implemented in Godot Text"
+      ],
+      [
+        "B",
+        "style",
+        "Godot TouchableHighlight does not implement style shadowColor"
+      ]
+    ],
+    "twf/mouse": {
+      "down": [
+        "twf:in@onResponderGrant"
+      ],
+      "up": [
+        "twf:out@onResponderRelease",
+        "twf:press@onResponderRelease"
+      ],
+      "page": [
+        91,
+        40
+      ],
+      "samePayloadOutPress": true
+    },
+    "th/A/mouse": {
+      "down": [
+        "th:show",
+        "th:in@onResponderGrant"
+      ],
+      "pressedLook": {
+        "background": "dc2626ff",
+        "childOpacity": 0.400000005960464
+      },
+      "up": [
+        "th:hide",
+        "th:out@onResponderRelease",
+        "th:show",
+        "th:press@onResponderRelease",
+        "th:hide"
+      ],
+      "framesAfterRelease": [
+        {
+          "background": "dc2626ff",
+          "childOpacity": 0.400000005960464
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        },
+        {
+          "background": "16a34aff",
+          "childOpacity": 1
+        }
+      ]
+    },
+    "delayed/mouse": {
+      "events": [
+        "delayed:show",
+        "delayed:press@onResponderRelease",
+        "delayed:out@onResponderRelease",
+        "delayed:hide"
+      ],
+      "pressOutAfterPressMs": 160,
+      "pressedFramesWithin150ms": 21
+    },
+    "long/touch": {
+      "down": [
+        "long:show",
+        "long:in@onResponderGrant"
+      ],
+      "hold": [
+        "long:long@onResponderGrant"
+      ],
+      "up": [
+        "long:hide",
+        "long:out@onResponderRelease"
+      ],
+      "longAfterPressInMs": 255
+    },
+    "long/moved": {
+      "hold": [
+        "long:show",
+        "long:in@onResponderGrant"
+      ],
+      "moveAfterMs": 11,
+      "up": [
+        "long:hide",
+        "long:out@onResponderRelease",
+        "long:show",
+        "long:press@onResponderRelease",
+        "long:hide"
+      ]
+    },
+    "slop": {
+      "rect": [
+        56,
+        184,
+        80,
+        32
+      ],
+      "steps": {
+        "slop/hit-slop/down": {
+          "page": [
+            48,
+            200
+          ],
+          "events": [
+            "slop:in@onResponderGrant"
+          ]
+        },
+        "slop/hit-slop/up": {
+          "page": [
+            48,
+            200
+          ],
+          "events": [
+            "slop:out@onResponderRelease",
+            "slop:press@onResponderRelease"
+          ]
+        },
+        "slop/outside/down": {
+          "page": [
+            40,
+            200
+          ],
+          "events": []
+        },
+        "slop/outside/up": {
+          "page": [
+            40,
+            200
+          ],
+          "events": []
+        },
+        "slop/release-outside/down": {
+          "page": [
+            96,
+            200
+          ],
+          "events": [
+            "slop:in@onResponderGrant"
+          ]
+        },
+        "slop/release-outside/far": {
+          "page": [
+            165,
+            200
+          ],
+          "events": [
+            "slop:out@onResponderMove"
+          ]
+        },
+        "slop/release-outside/up": {
+          "page": [
+            165,
+            200
+          ],
+          "events": []
+        },
+        "slop/retention/down": {
+          "page": [
+            96,
+            200
+          ],
+          "events": [
+            "slop:in@onResponderGrant"
+          ]
+        },
+        "slop/retention/far": {
+          "page": [
+            165,
+            200
+          ],
+          "events": [
+            "slop:out@onResponderMove"
+          ]
+        },
+        "slop/retention/near": {
+          "page": [
+            159,
+            200
+          ],
+          "events": [
+            "slop:in@onResponderMove"
+          ]
+        },
+        "slop/retention/up": {
+          "page": [
+            159,
+            200
+          ],
+          "events": [
+            "slop:out@onResponderRelease",
+            "slop:press@onResponderRelease"
+          ]
+        },
+        "slop/touch/down": {
+          "page": [
+            96,
+            200
+          ],
+          "events": [
+            "slop:in@onResponderGrant"
+          ]
+        },
+        "slop/touch/far": {
+          "page": [
+            96,
+            237
+          ],
+          "events": [
+            "slop:out@onResponderMove"
+          ]
+        },
+        "slop/touch/near": {
+          "page": [
+            96,
+            231
+          ],
+          "events": [
+            "slop:in@onResponderMove"
+          ]
+        },
+        "slop/touch/up": {
+          "page": [
+            96,
+            231
+          ],
+          "events": [
+            "slop:out@onResponderRelease",
+            "slop:press@onResponderRelease"
+          ]
+        }
+      }
+    },
+    "disabled": {
+      "down": [],
+      "responderWhileHeld": 0
+    },
+    "card": {
+      "down": [
+        "card:show",
+        "card:in@onResponderGrant"
+      ],
+      "look": {
+        "background": "0ea5e9ff",
+        "buttonOpacity": 1
+      },
+      "up": [
+        "card:hide",
+        "card:out@onResponderRelease",
+        "card:show",
+        "card:press@onResponderRelease",
+        "card:hide"
+      ]
+    },
+    "nested/mouse": {
+      "down": [
+        "inner:in@onResponderGrant"
+      ],
+      "up": [
+        "inner:out@onResponderRelease",
+        "inner:press@onResponderRelease"
+      ],
+      "outerWhileHeld": "1e293bff"
+    },
+    "toggle": {
+      "down": [
+        "toggle:show",
+        "toggle:in@onResponderGrant"
+      ],
+      "afterDisable": [],
+      "up": [
+        "toggle:hide",
+        "toggle:out@onResponderRelease",
+        "toggle:show",
+        "toggle:press@onResponderRelease",
+        "toggle:hide"
+      ],
+      "disabledPress": []
+    },
+    "removable": {
+      "down": [
+        "removable:show",
+        "removable:in@onResponderGrant"
+      ],
+      "remove": {
+        "after": {
+          "activePointers": 0,
+          "activeTouches": 0,
+          "blockNative": false,
+          "cancels": 1,
+          "ends": 20,
+          "grants": 19,
+          "hoverPointers": 1,
+          "moves": 6,
+          "pointerCancels": 1,
+          "pointerDowns": 22,
+          "pointerLeaves": 0,
+          "pointerMoves": 21,
+          "pointerUps": 21,
+          "releases": 19,
+          "responder": 0,
+          "starts": 21
+        },
+        "before": {
+          "activePointers": 1,
+          "activeTouches": 1,
+          "blockNative": false,
+          "cancels": 0,
+          "ends": 20,
+          "grants": 19,
+          "hoverPointers": 1,
+          "moves": 6,
+          "pointerCancels": 0,
+          "pointerDowns": 22,
+          "pointerLeaves": 0,
+          "pointerMoves": 21,
+          "pointerUps": 21,
+          "releases": 18,
+          "responder": 84,
+          "starts": 21
+        },
+        "events": [],
+        "present": false
+      },
+      "late": [],
+      "againUp": [
+        "removable:hide",
+        "removable:out@onResponderRelease",
+        "removable:show",
+        "removable:press@onResponderRelease",
+        "removable:hide"
+      ]
+    },
+    "roots": {
+      "thB": [
+        "th:show",
+        "th:in@onResponderGrant",
+        "th:hide",
+        "th:out@onResponderRelease",
+        "th:show",
+        "th:press@onResponderRelease",
+        "th:hide"
+      ],
+      "twfB": [
+        "twf:in@onResponderGrant",
+        "twf:out@onResponderRelease",
+        "twf:press@onResponderRelease"
+      ],
+      "twfBPage": [
+        91,
+        40
+      ],
+      "twfBGlobal": [
+        511,
+        40
+      ]
+    },
+    "animated": [
+      {
+        "case": "opacity",
+        "message": "Native animated module is not available",
+        "name": "Invariant Violation",
+        "root": "A"
+      },
+      {
+        "hosts": [
+          6,
+          null
+        ]
+      }
+    ]
+  },
+  "regressions": {
+    "steps": {
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 317,
+        "logSha256": "4121c9758a0c9c4f4730f7ddf48af51a946ce1d11ed0730c334a9a01f097c408"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 21,
+        "logSha256": "6a3f650d16baf3e70abb209fba50012e16699c227cb2fc6ad99130019d10a89e"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 53,
+        "logSha256": "359a693e96685999eeef0c9d1cc1d255d7ba86dbae8fbf4f6bee1f5cd569bf0d"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 26,
+        "logSha256": "212277f2e125ebd79d2264cda20874a2fd4a7292468691a8e6f4649700aec027"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 37,
+        "logSha256": "40306bd9b50e2405a5613996c06155075f48e7009c565f96b5d939b3817e40cf"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 51,
+        "logSha256": "0e34fd7976cc0c08e506212f50434caf4c86f627da3b4fe9adc938a83f6af9d1"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 61,
+        "logSha256": "fa7d071f46419dc2ab26a51aa647f268603a4098ceae4b7b44b8089e06f57aac"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "3ba5703e507350f6ce60685abdb9f3eb977459e5c49a944f9c254b13820ceca1"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "62165e609e204b86aa43318314b813b54ad9122fc9a0500778016edfd37569e2"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 13,
+        "logSha256": "bcfde24756e39a3f64c8ae244126b046664b8a980ad3945d480065f5a9a1d58c"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 103,
+        "logSha256": "57594d89eb0730b431c71cc46b6a0362703655ca66a9791224a12ffb631dafb2"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 39,
+        "logSha256": "1744af9beb649b2d4e4623c063c7f92a7508d981c0eac062b1f17587133d0493"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 27,
+        "logSha256": "0a885d372030db8cd92da1ae586a96e3c52b461cb5a7659960b44f0a8d0b2f46"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "10de5dc4c41c4a55f602e31e3989a996e54847d822819770e91e822ef08eafd1"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 232,
+        "logSha256": "2b44d49fa33904ba58c3f443b4dcc738efa539ddfebc03f9a7efdc7aa8658824"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 22,
+        "logSha256": "bb91a33f7b1412b0fb0a14e5e39808d47850f7894aefc17332ae75291e42e3b9"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "0d796f49cae91c793bdd3b811e541bd969109d3d314b04d4ff85dea0996c596e"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 104,
+        "logSha256": "7e0de80e1c854011214030fef80dbc8ec1af9d417e9a1bd74dcd8b0ad535a519"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "4bf0d28234cf7cf3dfd43d9c66f2be5fa0740b315cb34a5a62db6da4e89c25a3"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "8a7b64f1b2cbafb0ac23bf288f198ce47112054a26a889ace5f02cba563b6d4d"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 43,
+        "logSha256": "7248de00b89efb7b4ce4870c34247787eaff92a6fc2a42831ca0a8402e56e4a1"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "3a21c572bf481e52f4a72f1a56f3a751caaec3120cf802a5983fa67ea6c019c2"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "93bef682c3fdfb882174849dd1310b15bf5b169f47b92ef93ed64aaa4b51f9f3"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 31,
+        "logSha256": "3036a70dbef8dba14deac93410f2abb67619da4ab32d4c4bd383319d4b057e18"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "991598826836bacb4db3d81be49a0c79372adf9009b3f51072659dcaec63c180"
+      }
+    },
+    "downChecks": 2731,
+    "documentUpChecks": 6459,
+    "documentMoveChecks": 1940,
+    "documentHoverChecks": 1530,
+    "viewUpChecks": 297,
+    "queryFaultChecks": 187,
+    "resolverFaultChecks": 66,
+    "moveChecks": 220,
+    "hoverChecks": 158,
+    "rootPathChecks": 82,
+    "examples": 22,
+    "nodeContractChecks": 260,
+    "nodeContractRuns": [
+      6,
+      8,
+      260
+    ],
+    "pythonContractChecks": 13
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "bf302cd0195282b933a2e55532a74f93067466c496c2ca665855ab725704b989"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "fc936184716b251cad0f12f58478dc7f21b4b68bea562eecb7a5678bd2b3dbac"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "99155c3b029fdf75b8a8e7bd722cfe573ea16ccf03fe951f7ff75919c60aaa53"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "dece29394b74d49f870c2bec5433b38b1c50f3fe4c49e05a9b55e666766a8b36"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "ff7c71883b0d5e1564996a874656f634364dc2f700fcfc228db64e7c71b0b3a8"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 29,
+        "logSha256": "13df95669ba4907dd99313223700dc9151d07737c8edf29b1b59c4e3668a8641"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 128,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 85,
+        "logSha256": "4ac448e7a35909a8a81b852d3b97e09dc759c06cbb6cac499fdb789f8130a29a"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 52,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    }
+  },
+  "gates": {
+    "test:contracts": {
+      "exitCode": 0,
+      "seconds": 64,
+      "logSha256": "a8bd70c3c612781b39933e251e7638c46b56e0bbc9e31ec2f65786209a23bd76"
+    },
+    "check:static": {
+      "exitCode": 0,
+      "seconds": 0,
+      "logSha256": "fb873a9c0bbf39dc359a37a5cc710617473d11e252f933cdaadfc747f1f515f6"
+    },
+    "check:publication": {
+      "exitCode": 0,
+      "seconds": 1,
+      "logSha256": "5cf7c6d5f6305fd4e50ccb10cec71a41e640312bddf8e2e5165cbe8c95c05e59"
+    },
+    "test:recovery": {
+      "exitCode": 0,
+      "seconds": 7,
+      "logSha256": "5c42f694e689e2135ba589f0794b6e5ca9dd312a6b9cd1f733614cf83267ad54"
+    }
+  },
+  "sourcePins": {
+    "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+    "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+    "src/app-registry.js": "370c319308002e4ab052cb9609348b6f096262ed926a5b60bc8d2faa6da7988b",
+    "src/base-view-config.js": "4b86f3f81ad0e06f935897d13a9ba446c814b0cdc6913831684ddf773fd165d9",
+    "src/components.jsx": "23f3a9ecd5f60be8a8889d94c22539244d134f15720bd64c344928b57b1b884a",
+    "src/control-contracts.mjs": "777e4a764a65265b478631c5d5c53c8dd5750a770eaf8427c99c509e6dd7244b",
+    "src/initialize.js": "0249dbe800e0f39c0f1067086c9ad1ea92b3cb767a53867ba7a23bf12ec2df89",
+    "src/native-module-runtime.js": "2af346160e265ee65892d05fb051d20b8cc06de2a79b655d4f38ac78ad6907f3",
+    "src/native-modules.js": "21f658161bea9c98e95c9f5e0e0ef455cbca9a44c03de560eb5f421ae291d393",
+    "src/platform-environment.js": "6548474d905e5ee9429b15524386e39b7e15f184d13e1d7f4eb65d53089c7f50",
+    "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+    "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+    "src/private-interface.js": "0e72bfe7d222044ce41edb7c9cd29c2e88f93bda40ab21ba7c470f19139ab72f",
+    "src/public-input.jsx": "051dc0be7bdf80eb5464cfd189171f4c7adf65eeb62b349318adac0c07ebebb5",
+    "src/react-native-platform.jsx": "e78fd90a0f9b59cedf898ca43851b53a128e4a2393cd6f7e547ae487519e0fb4",
+    "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+    "src/renderer-proxy.js": "862c448204ea1ea25c7857c0210e8490962e685df93ed8cf077ab16b82b0e760",
+    "src/runtime.js": "3da190a8f7e39baa1b97ea31774ac8db87b914c4167e759c2b85141b8fa1864c",
+    "src/scroll-view.jsx": "3344473085edb8669cfa5a6e61400110cc3cb8dd300fc3c61ff325de1d6a1294",
+    "src/text-input-state.js": "7fc27f7ea5f103750a11a8c0a935238f32c4d29875e2f655917a162c1c513a52",
+    "src/text.jsx": "765834eca6c7c7ba2312f808390244c9aae754d19d3cab414e83a3852df46ff8",
+    "src/ui-manager.js": "74e917cabdd6c61d2255dcd17f744d55a2b85c4dcd69ccdeff812f2b6e53704d",
+    "src/window-dimensions.js": "8846a80c7dcab98fb7b8401b8260415da0e0e64fbf4f93506ae10170ac171e6a",
+    "tests/touchables-animated-fixture.jsx": "5aef9132574cbb1f2ae24145e6c1ffc7ca94701e8c60397d62407d5d5c23998d",
+    "tests/touchables-fixture.jsx": "ea75db5dbe5145aa47188e3b8b81b35b98c1372d0c1d51ff421dbcdf9c052cf6",
+    "tests/touchables-native.test.mjs": "fda86b66699ba1db21c0365ac7c4b394834b47675ff0cd90446e82b51bebf47d",
+    "tests/touchables-probe.gd": "1e261b0a64a248879183ba964a60aaf482f14541b1f9e9485aac92f44f5dc1b0"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Components/Touchable/TouchableWithoutFeedback.js": "94ad7a089f1c9ebdd7e23acd5b1c8135c056fea9bc554f60730c070869ae0080",
+    "Libraries/Components/Touchable/TouchableHighlight.js": "dd942eb6449858048dbad95366d3561839839a48b42c1b62ed6e5902fe7ff6ba",
+    "Libraries/Components/Touchable/TouchableOpacity.js": "d1e90d0d5846866ccb1cc5ab35c6775379c2deb39bcd2c3e38c0a7b0d1fcd4bb",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "Libraries/Pressability/usePressability.js": "6ea47170258ee32adc3b66216c4ed31c09ebf42c07b4b403a3f9d02d82091a2a",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "Libraries/StyleSheet/StyleSheet.js": "f039a664f6fe9e9d9227a39c308d3fee97e7ac3e492330be26776599e6d0635b",
+    "Libraries/Animated/createAnimatedComponent.js": "f43699c7a66ae061efa5658cc8fa72ad9681541bbe2d4a4b55e42d5373a5394d",
+    "src/private/animated/createAnimatedPropsHook.js": "0b4bf4cc0a07b4bcd452fff083b3113d5bb694837c99d97b67de75e500c2310d",
+    "src/private/animated/NativeAnimatedHelper.js": "e431a4b40387635d2c844a435c039f9567613fd97d3397db1944f591ba3aebc9",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda"
+  },
+  "verificationSourcePins": {
+    ".github/workflows/contracts.yml": "ac6516c2ea42bd9ca0dfe953e6bdfc10c3eaf0e0d0c88838ae3a9dd4d21cce87",
+    "package.json": "2d1c4bfbc3d54bbc2becdb6f5c1977a97eadabcf22f1515771115c7996da2066",
+    ".fallowrc.json": "041f096548b6cb87f21b46d47b39b9c2baad8a994fa963f57ecee7c6b6ddf5e1"
+  },
+  "changedFilesSinceExecutionBase": [
+    ".fallowrc.json",
+    ".github/workflows/contracts.yml",
+    "package.json",
+    "src/react-native-platform.jsx",
+    "tests/touchables-animated-fixture.jsx",
+    "tests/touchables-fixture.jsx",
+    "tests/touchables-native.test.mjs",
+    "tests/touchables-probe.gd"
+  ],
+  "hostedCI": {
+    "status": "pending-touchables-slice"
+  },
+  "limits": [
+    "TouchableOpacity stays an explicit placeholder: RN 0.87.1 Animated.View needs NativeAnimatedModule at mount (GF-19).",
+    "Simultaneous presses with these touchables in two roots remain untested; the host's per-root touch lists that let a touch ending in root B release root A's responder were fixed by the shared touches slice (#34), which this merged-host run includes.",
+    "TouchableNativeFeedback/TouchableBounce, focus and keyboard activation, accessibility (GF-20), click synthesis and typed declarations remain open.",
+    "Headless macOS arm64 with injected Godot input only; no hardware, mobile export, dev-mode PressabilityDebugView or performance certification."
+  ],
+  "finalTreeGates": {
+    "ranAt": "2026-10-05T22:03:39.472502+00:00",
+    "meaning": "Contracts-job gates rerun after every doc, dashboard, example and the receipt body above were final; this field was appended afterwards.",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "fdcbc53b3094904f257362a5695bf5e58c2db06acd1579cc74e9fb2c9badf21c"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "7d95ae3cf0b1e9ce3cf5c94cbb67b7be97df334f539739c30de7dcfb011da0d3"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "ab95095d78deedf1beab4a815e7704ec282733c5f5351d55636e6786670668b3"
+      }
+    },
+    "counts": {
+      "nodeContractChecks": 260,
+      "pythonContractChecks": 13
+    }
+  },
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/0e180608d08c4a5071ffee25d7fac61e85d537e8",
+  "sourcePinsVerifiedAgainstCommit": {
+    "uniqueCodeAndConfigurationInputs": 30,
+    "pinSetCounts": {
+      "sourcePins": 27,
+      "verificationSourcePins": 3
+    },
+    "command": "git show <implementationCommit>:<repo-relative source> | sha256",
+    "allMatchExecutedBytes": true,
+    "executionBaseAndDirtyStatePreserved": true
+  },
+  "mergeReverification": {
+    "reason": "main gained AppState, PanResponder, Switch and the shared touches fix (#34) after the slice ran; merged without rebase",
+    "mergeCommits": [
+      "04621d1",
+      "2a500b3"
+    ],
+    "mainCommit": "8b87d78",
+    "nativeHostSha256": "760f381459053b681857b88a7109ae2128e18c27ec135a9b259b0ab440d9b5e0",
+    "touchablesChecks": 93,
+    "touchablesPassed": 93,
+    "touchablesReportSha256": "94805882fcdd05333d64fc5a02731bb15eb5303e32aee83ee3b51dc072a8dbb4",
+    "sharedTouchesFixIncluded": true,
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "logSha256": "2166437c57d191871ad6076568c903872adaf53275bb38f13331623b3bc5f6e8"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "logSha256": "3e9a09d719d48d5050c52f86cb722fb959ab5155cce09d6f3ddb1f695c61ff93"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "logSha256": "06a051f91687c4a7d44302b022afcfaca1d3167509b3f97b6e66c743d7efbf30"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "logSha256": "5c26cb3e1ed8a59f6ec7f9c177a8863072b9a072de57ed4232c3ef1d450607f6"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "logSha256": "7e0aa94d3efd2049d3c7de0af3ed4d8e90359d000821efd2ce83f19c6e989f8e"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "logSha256": "aea541876ae8c4289b180e715ad53f6f870bd85f7bbc2893d5b91ce2245e29ef"
+      }
+    },
+    "concurrentTouchablePressesAsserted": false
+  }
+}

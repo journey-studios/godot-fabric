@@ -227,10 +227,11 @@ with identical IDs and bundles ([receipt](pointer-click/hosted-ci.json)).
 
 The [PanResponder record](pan-responder/README.md) runs RN's original
 `PanResponder` in four flag lanes, covering the legacy and native-dispatch
-responders: 128 headless checks with identical callbacks and gesture state in
-every lane. The preceding SDK fails at mount when its stub throws, and a
+responders: 128 headless checks with identical callbacks and gesture
+coordinates in every lane. The preceding SDK fails at mount when its stub throws, and a
 PanResponder without capture-phase handlers fails 6 checks rejected by the
-independent oracle. Hosted CI pending.
+independent oracle. Hosted run 37385104730 repeated the 128 checks with identical
+IDs and callbacks ([receipt](pan-responder/hosted-ci.json)).
 
 The [AppState record](app-state/README.md) delivers Godot's application focus,
 pause and memory-warning notifications through the running main loop to an actual
@@ -239,7 +240,38 @@ checks. Focus loss is `inactive`, a pause is `background`, only new states are
 sent, focus changes also send `focus`/`blur`, a paused game tree still delivers
 events and stop sends nothing. The preceding host fails exactly the 62 lifecycle
 checks, and a host whose focus outranks the pause fails 5, which the independent
-oracle rejects. Hosted CI pending.
+oracle rejects. Hosted run 37382633328 repeated the 75 checks with identical IDs
+and bundle ([receipt](app-state/hosted-ci.json)).
+
+The [shared touches record](shared-touches/README.md) lists every root's active
+touches in each TouchEvent, because the roots of one application share RN's one
+JS responder: 92 headless checks in four flag lanes over two roots' original
+`Pressable`s. A touch ending in another root no longer releases a held press
+while the press's own touch is down, while a canceled touch still terminates the
+one responder; the two responder implementations differ only where RN's do,
+when the responder's own touch ends first. The preceding host fails exactly the 9 normative checks.
+Hosted CI pending.
+
+The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's
+shared iOS/macOS Switch descriptor and a custom-drawn Godot switch: 108/108
+headless checks with actual mouse and touch input in two roots. Controlled and
+fixed values, disabled input, colors, the 63×28 default frame (RN's iOS 26 size),
+`setValue`, removal mid-press and the bubbling `topChange` registry are covered.
+The preceding host fails exactly the 2 mount checks; a retained sabotage of the
+native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
+CI pending.
+
+The [touchables record](touchables/README.md) runs RN's original
+`TouchableWithoutFeedback` and `TouchableHighlight` from the public facade with
+actual Godot mouse and touch on two roots: 93/93 headless checks. Callbacks keep
+Pressability's order and payloads (press out before press on release), the
+Highlight's underlay and child opacity show on the native Controls with its
+`delayPressOut` timer, and long press, hitSlop and retention, disabled grants,
+nesting and removal mid-press follow RN. The same fixture on the preceding SDK
+fails exactly its 19 render checks; a retained imitation over the SDK Pressable
+fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
+lane shows RN's original TouchableOpacity failing at mount without
+`NativeAnimatedModule`. Hosted CI pending.
 
 The [capture notification record](pointer-capture-notifications/README.md) runs
 `gotpointercapture`/`lostpointercapture` for JSX props and original View,
