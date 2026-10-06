@@ -52,6 +52,14 @@ func wait_since(start: int, elapsed: int) -> void:
   while Time.get_ticks_msec() - start < elapsed:
     await process_frame
 
+# The native driver's frames come at the host's frame-clock ticks, which are its pacing and not a
+# number of Godot frames: wait for what the animation does.
+func wait_until(condition: Callable, limit_ms: int = 5000) -> bool:
+  var deadline := Time.get_ticks_msec() + limit_ms
+  while Time.get_ticks_msec() < deadline and not condition.call():
+    await process_frame
+  return condition.call()
+
 func native(owner: Node) -> Dictionary:
   var value: Variant = JSON.parse_string(owner.call("snapshot"))
   return value if value is Dictionary else {}
@@ -507,7 +515,7 @@ func stop_case() -> void:
 
 # The public TouchableOpacity renders RN's Animated.View: Pressability animates its
 # opacity with the native driver, which RN's C++ NativeAnimatedModule runs on
-# the Godot frame tick. A real press dims the host and release restores it.
+# the frame clock's ticks. A real press dims the host and release restores it.
 func animated_case() -> void:
   await settle(12)
   var app := native(application)
@@ -520,7 +528,9 @@ func animated_case() -> void:
     "animated/RN's TouchableOpacity commits its Animated.View host over RN's native module without a render error")
   var at := center("A", "opacity")
   send("mouse", "down", at)
-  await settle(12)
+  # The press has dimmed the host and the backend has gone idle: the release starts a second run.
+  await wait_until(func() -> bool: return (is_equal_approx(float(view("A", "opacity").get("opacity", -1.0)), 0.5)
+    and native(application).get("nativeAnimated", {}).get("active") == false))
   var pressed := view("A", "opacity")
   var held: Dictionary = native(application).get("nativeAnimated", {})
   stages["animated"].pressed = pressed
@@ -528,7 +538,11 @@ func animated_case() -> void:
   check(is_equal_approx(float(pressed.get("opacity", -1.0)), 0.5) and int(held.get("directUpdates", 0)) > 0,
     "animated/A real press dims the host to activeOpacity through the native driver")
   send("mouse", "up", at)
-  await settle(60)
+  await wait_until(func() -> bool:
+    var backend: Dictionary = native(application).get("nativeAnimated", {})
+    return (is_equal_approx(float(view("A", "opacity").get("opacity", -1.0)), 1.0) and backend.get("active") == false
+      and int(backend.get("resumes", 0)) == 2))
+  await settle(2)
   var released := view("A", "opacity")
   var events: Array = take()
   var finished: Dictionary = native(application).get("nativeAnimated", {})

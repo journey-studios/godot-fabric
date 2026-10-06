@@ -16,19 +16,23 @@ std::string configure_react_native_feature_flags();
 
 // One application's RN Native Animated. RN's own C++ backend (the AnimationBackend
 // its Scheduler creates with useSharedAnimatedBackend) is attached to the
-// application's UIManager, and the application's Godot frame tick is its
-// choreographer, like RCTAnimationChoreographer over CADisplayLink. The module
+// application's UIManager, and the application's frame clock tick (frame_clock.h)
+// is its choreographer, like RCTAnimationChoreographer over CADisplayLink. The module
 // that talks to it is RN's AnimatedModule; the runtime applies the backend's
 // direct prop updates to its Controls and reports each one here.
 class NativeAnimated {
  public:
-  // Null unless both of RN's flags are on. now is the host's frame clock, in
+  // Null unless both of RN's flags are on. now is the host's monotonic clock, in
   // milliseconds: the base of every timestamp frame() receives and of the
   // backend's own now() for the updates it pushes between frames.
   static std::unique_ptr<NativeAnimated> attach(const std::shared_ptr<facebook::react::UIManager> &ui,
       std::function<double()> now);
   ~NativeAnimated();
-  // At most one animation frame per Godot frame, and none while the backend
+  // Whether the backend has an animation to run: it asked for frames and has not
+  // yet asked to pause, and the application is not stopped. The host's frame clock
+  // ticks for it only then.
+  bool active() const;
+  // At most one animation frame per frame-clock tick, and none while the backend
   // has no animation to run or after stop().
   void frame(double timestamp_ms);
   void stop();

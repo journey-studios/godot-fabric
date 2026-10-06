@@ -24,6 +24,13 @@ static String gd(const std::string &value) { return String::utf8(value.c_str());
 // The headless DisplayServer has no system theme and never calls back, so a
 // validation run supplies the system scheme through this meta instead.
 static constexpr const char *validation_system_scheme = "validation_system_color_scheme";
+// Likewise the headless DisplayServer reports no screen refresh rate (-1), the
+// value the frame clock turns into its 60 Hz fallback; a validation run supplies
+// the rate its simulated display would report through this meta instead.
+static constexpr const char *validation_refresh_rate = "validation_refresh_rate";
+// And the headless DisplayServer presents nothing, so a validation run states how its
+// simulated window is presented ("presentation" or "time") through this meta.
+static constexpr const char *validation_frame_pacing = "validation_frame_pacing";
 static fabric_godot::SystemAppearance::System read_system_appearance(uint64_t id) {
   auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
   if (!application) return {};
@@ -153,6 +160,25 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
               const int screen = display->call("window_get_current_screen", window->get_window_id());
               const Vector2i pixels = display->call("screen_get_size", screen);
               metrics.screen = Vector2(pixels) / metrics.scale;
+              // Per screen, so a window moved to another display follows its rate.
+              metrics.refresh_rate = display->call("screen_get_refresh_rate", screen);
+              // And per window: V-Sync makes the display pace its frames, a headless server has none.
+              // The mode is DisplayServer.VSyncMode, an int here (the build's godot-cpp profile has no
+              // DisplayServer); detect_pacing documents the values.
+              const bool headless = String(display->call("get_name")) == "headless";
+              const int vsync = display->call("window_get_vsync_mode", window->get_window_id());
+              const auto detected = fabric_godot::FrameClock::detect_pacing(headless, vsync);
+              metrics.pacing = detected.pacing;
+              metrics.pacing_source = detected.source;
+            }
+            if (has_meta(validation_refresh_rate)) metrics.refresh_rate = get_meta(validation_refresh_rate);
+            if (has_meta(validation_frame_pacing)) {
+              const String requested = get_meta(validation_frame_pacing);
+              if (requested == "presentation" || requested == "time") {
+                metrics.pacing = requested == "presentation" ? fabric_godot::FrameClock::Pacing::Presentation
+                                                             : fabric_godot::FrameClock::Pacing::Time;
+                metrics.pacing_source = "validation";
+              }
             }
             return metrics;
           },

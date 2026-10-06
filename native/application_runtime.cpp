@@ -19,6 +19,7 @@
 #include "switch_view.h"
 #include "activity_indicator_view.h"
 #include "timer_registry.h"
+#include "frame_clock.h"
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
 #include "native_animated.h"
@@ -221,6 +222,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   uint32_t dispatching_timer{};
   std::map<int, jsi::Function> frame_callbacks;
   int frame_callbacks_run{};
+  // Decides which Godot frames are ticks: only a tick runs the frame callbacks and
+  // RN's Native Animated, with one timestamp (frame_clock.h). The rate and pacing
+  // are what the display last reported for the window.
+  fabric_godot::FrameClock frame_clock;
+  double refresh_rate{};
+  fabric_godot::FrameClock::Pacing pacing{fabric_godot::FrameClock::Pacing::Time};
+  const char *pacing_source{"unknown"};
   struct Mounted {
     Control *control;
     rn::ShadowView shadow;
@@ -296,6 +304,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     context->insert("TextLayoutManager", std::shared_ptr<rn::TextLayoutManager>(paragraph_layout));
     host_metrics = read_window();
     viewport_size = host_metrics.size;
+    refresh_rate = host_metrics.refresh_rate;
+    pacing = host_metrics.pacing;
+    pacing_source = host_metrics.pacing_source;
     runtime->global().setProperty(*runtime, "godotScenario", jsi::String::createFromUtf8(*runtime, scenario));
     // RN's ReactInstance sets this before every JS callback its runtime executor
     // runs and never resets it (ReactInstance.cpp:101): on the JS thread, a shadow
@@ -623,6 +634,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const auto next = read_window();
     if (next.window_instance_id != host_metrics.window_instance_id)
       throw std::runtime_error("A live Fabric application cannot migrate between native Windows");
+    refresh_rate = next.refresh_rate;
+    pacing = next.pacing;
+    pacing_source = next.pacing_source;
     if (next.size.x <= 0 || next.size.y <= 0) return;
     const bool density_changed = next.scale != host_metrics.scale;
     for (auto &[id, root] : roots) {
@@ -872,12 +886,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       beat->tick();
       // Finish the preceding JS turn's microtasks before due native timers.
       runtime->drainMicrotasks();
-      // Snapshot the current frame. Callbacks scheduled by a callback, timer,
-      // or React commit are deferred to the next Godot frame, never a tight loop.
-      std::vector<int> frame_ids;
-      if (frame_tick)
-        for (const auto &[id, callback] : frame_callbacks) frame_ids.push_back(id);
+      // The frame clock decides whether this Godot frame is a tick: the display
+      // link RN's frame consumers run on never fires twice within a refresh period.
+      // A consumer is a pending frame callback or a Native Animated backend with an
+      // animation to run. Timers, input and the work queue are not paced by it.
       const double frame_time = now_ms();
+      const bool consumer = !frame_callbacks.empty() || (native_animated && native_animated->active());
+      const bool tick = frame_tick && !stopping && frame_clock.frame(frame_time, refresh_rate, pacing, consumer);
+      // Snapshot the current tick. Callbacks scheduled by a callback, timer, or
+      // React commit are deferred to the next tick, never a tight loop.
+      std::vector<int> frame_ids;
+      if (tick)
+        for (const auto &[id, callback] : frame_callbacks) frame_ids.push_back(id);
       for (int id : frame_ids) {
         if (stop_requested) break;
         auto callback = frame_callbacks.extract(id);
@@ -887,9 +907,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         catch (const std::exception &error) { fail(error.what()); }
         if (!stop_requested) runtime->drainMicrotasks();
       }
-      // One native animation frame per Godot frame, at the frame callbacks'
-      // time: RN's backend runs its queued operations, drivers and prop updates.
-      if (frame_tick && native_animated && !stopping && !stop_requested) {
+      // One native animation frame per tick, at the frame callbacks' time: RN's
+      // backend runs its queued operations, drivers and prop updates.
+      if (tick && native_animated && !stopping && !stop_requested) {
         try { native_animated->frame(frame_time); }
         catch (const std::exception &error) { fail(error.what()); }
       }
@@ -1897,6 +1917,13 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     result["nativeAnimated"] = native_animated ? native_animated->snapshot() : folly::dynamic::object("enabled", false);
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
+    const auto clock = frame_clock.state();
+    result["frameClock"] = folly::dynamic::object("periodMs", clock.period_ms)("refreshRate", clock.refresh_rate)
+        ("rateSource", clock.display_rate ? "display" : "fallback")
+        ("pacing", clock.pacing == fabric_godot::FrameClock::Pacing::Presentation ? "presentation" : "time")
+        ("pacingSource", pacing_source)("frames", static_cast<int64_t>(clock.frames))
+        ("ticks", static_cast<int64_t>(clock.ticks))("skippedFrames", static_cast<int64_t>(clock.skipped))
+        ("lastFrameMs", clock.last_frame_ms)("lastTickMs", clock.last_tick_ms);
     result["hostPhasePending"] = host_phase_pending;
     result["stopRequested"] = stop_requested;
     result["pendingRootRetirements"] = pending_retirements.size();

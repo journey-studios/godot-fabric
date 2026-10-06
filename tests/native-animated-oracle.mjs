@@ -338,8 +338,12 @@ function verifyStart(run, index, stats, options = {}) {
   const target = start.target ?? `${start.root}/${config.box}`;
   const first = run.samples.findIndex(row => row.frames > start.request.frames);
   assert.ok(first >= 0, `${start.name}: the backend delivered a frame after the request`);
-  // A call from JS reaches the very next frame; an input handled by a later tick may take one more.
-  assert.ok(first - start.at >= 0 && first - start.at <= (options.latency ?? 0), `${start.name}: the first frame comes ${first - start.at} samples after the request`);
+  // The backend wants frames from the moment the request runs (a call from JS, or the handler of an
+  // input), and the frame clock ticks for it at the first frame it can: the first tick after the
+  // request delivers the backend's first frame, with no tick between them. Where that tick is
+  // among the Godot frames is the host's pacing.
+  assert.ok(first >= start.at, `${start.name}: the first frame comes after the request`);
+  assert.equal(run.samples[first].ticks - start.request.ticks, 1, `${start.name}: the first frame is the first tick after the request`);
   const xy = box.view === "xy";
   const models = xy ? {x: MODELS.timing({...config, from: config.from.x, to: config.to.x}),
     y: MODELS.timing({...config, from: config.from.y, to: config.to.y})} : {value: MODELS[config.kind](config)};
@@ -352,6 +356,9 @@ function verifyStart(run, index, stats, options = {}) {
     const row = run.samples[at];
     const before = at > 0 ? run.samples[at - 1] : run.rest;
     assert.ok(row.frames - before.frames === 0 || row.frames - before.frames === 1, `${start.name}: at most one frame per Godot frame`);
+    // Only a tick of the frame clock runs the backend, and there is at most one per Godot frame.
+    assert.ok(row.ticks - before.ticks === 0 || row.ticks - before.ticks === 1, `${start.name} sample ${at}: at most one tick per Godot frame`);
+    assert.ok(row.frames - before.frames <= row.ticks - before.ticks, `${start.name} sample ${at}: the backend runs only on a tick`);
     if (row.frames > before.frames) {
       delivered += 1;
       assert.ok(typeof row.ts === "number" && (last === null || row.ts > last), `${start.name}: frame timestamps increase`);
@@ -591,8 +598,8 @@ export function verifyNativeAnimatedReport(report) {
     run.starts[1] = {...run.starts[1], config: release, box, target};
     const statistics = track(`touchable-opacity/${device}`);
     // Each transition from its own request: the press up to the release input.
-    verifyStart(run, 0, statistics, {latency: 2, until: run.marks[1].at});
-    verifyStart(run, 1, statistics, {latency: 2});
+    verifyStart(run, 0, statistics, {until: run.marks[1].at});
+    verifyStart(run, 1, statistics);
     const heard = run.events.filter(entry => entry.kind === "touchable").map(entry => entry.type);
     assert.deepEqual(heard, ["in", "out", "press"]);
   }

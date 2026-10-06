@@ -74,7 +74,8 @@
     "test:activity-indicator": "node --test tests/activity-indicator-native.test.mjs",
     "test:pointers:capture": "node --test tests/pointer-capture-notifications-native.test.mjs",
     "test:appearance": "node --test tests/appearance-native.test.mjs",
-    "test:animated": "node --test tests/native-animated-native.test.mjs"
+    "test:animated": "node --test tests/native-animated-native.test.mjs",
+    "test:frame-clock": "node --test tests/frame-clock-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

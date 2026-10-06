@@ -144,6 +144,18 @@ jobs:
             build/native-animated-current.log
             build/native-animated-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:frame-clock
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-frame-clock
+          path: |
+            build/frame-clock-report.json
+            build/frame-clock-current-report.json
+            build/frame-clock-comparison.json
+            build/frame-clock-current.log
+            build/frame-clock-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

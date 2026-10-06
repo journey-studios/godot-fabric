@@ -14,6 +14,12 @@ test("the native deadline registry bounds dispatch and cannot resurrect cancelle
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /TIMER_REGISTRY_PASSED/);
 });
+test("the frame clock ticks like a display link whatever Godot's pacing", () => {
+  const result = spawnSync(join(root, ".deps", "build", "frame_clock_test"), [], { encoding: "utf8", timeout: 10000 });
+  assert.equal(result.error, undefined);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /FRAME_CLOCK_PASSED/);
+});
 test("real Hermes reports timer, microtask and frame errors while releasing failed callbacks", () => {
   const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/runtime_errors.gd"], {
     encoding: "utf8", timeout: 10000, maxBuffer: 4 * 1024 * 1024,

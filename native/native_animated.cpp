@@ -41,9 +41,9 @@ std::string configure_react_native_feature_flags() {
 }
 
 // The backend's frame source. resume() and pause() come from the backend as its
-// first animation starts and its last one ends; frame() is what the Godot tick
-// calls. The backend's own now() stamps the updates it pushes between frames
-// (event-driven animations), so it reads the host's frame clock: RN's default,
+// first animation starts and its last one ends; frame() is what the frame clock's
+// tick calls. The backend's own now() stamps the updates it pushes between frames
+// (event-driven animations), so it reads the host's monotonic clock: RN's default,
 // HighResTimeStamp, is another clock on some platforms.
 class NativeAnimated::Choreographer final : public rn::AnimationChoreographer {
  public:
@@ -57,6 +57,7 @@ class NativeAnimated::Choreographer final : public rn::AnimationChoreographer {
     ++pauses_;
   }
   rn::AnimationTimestamp now() const override { return rn::AnimationTimestamp(clock_()); }
+  bool active() const { return active_ && !stopped_; }
   void frame(double timestamp_ms) {
     if (!active_ || stopped_) {
       return;
@@ -101,6 +102,7 @@ std::unique_ptr<NativeAnimated> NativeAnimated::attach(const std::shared_ptr<rn:
   return std::unique_ptr<NativeAnimated>(new NativeAnimated(std::move(choreographer)));
 }
 
+bool NativeAnimated::active() const { return choreographer_->active(); }
 void NativeAnimated::frame(double timestamp_ms) { choreographer_->frame(timestamp_ms); }
 void NativeAnimated::stop() { choreographer_->stop(); }
 void NativeAnimated::update_applied() { ++applied_; }

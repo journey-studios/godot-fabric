@@ -18,9 +18,10 @@ const mounted = {};
 const counts = {valueEvents: 0};
 let sequence = 0;
 // The timestamp the host gave the frame callbacks that are running, null outside them. The host runs
-// every callback registered before a frame in that frame, in order, with the one timestamp it took as
-// the frame began, and defers what they register to the next one. Each entry below carries it, so the
-// oracle can tell which frame an entry was recorded in, as the order of the entries cannot.
+// every callback registered before a tick of its frame clock in that tick, in order, with the one
+// timestamp it took as the tick began, and defers what they register to the next one. Each entry
+// below carries it, so the oracle can tell which tick an entry was recorded in, as the order of the
+// entries cannot.
 let frameTime = null;
 const requestFrame = globalThis.requestAnimationFrame;
 globalThis.requestAnimationFrame = callback => requestFrame(timestamp => {
@@ -246,13 +247,34 @@ globalThis.NativeAnimatedProbe = {
   // hide it or show it again.
   rerender(root, box) { registry.get(`${root}/${box}`).setView(view => ({...view, renders: view.renders + 1})); },
   setShown(root, box, shown) { registry.get(`${root}/${box}`).setView(view => ({...view, shown})); },
-  // RN flushes its operation queue in a microtask. Moving that to a timer
-  // models a native side that applies operations later than JS removes a view,
-  // as a separate UI thread does on a device.
-  deferQueueFlush(milliseconds) {
+  // RN flushes its operation queue in a microtask. Moving that to a later tick of
+  // the host's frame clock models a native side that applies operations later than
+  // JS removes a view, as a separate UI thread does on a device. The delay is
+  // counted in ticks, each one a frame callback that is followed by a backend
+  // frame in the same tick: wall-clock time says nothing about how many ticks fit.
+  deferQueueFlush(ticks) {
     const original = {setImmediate: globalThis.setImmediate, clearImmediate: globalThis.clearImmediate};
-    globalThis.setImmediate = callback => setTimeout(callback, milliseconds);
-    globalThis.clearImmediate = handle => clearTimeout(handle);
+    const pending = new Map();
+    let last = 0;
+    globalThis.setImmediate = callback => {
+      const handle = ++last;
+      let remaining = ticks;
+      const step = () => {
+        remaining -= 1;
+        if (remaining > 0) {
+          pending.set(handle, requestAnimationFrame(step));
+          return;
+        }
+        pending.delete(handle);
+        callback();
+      };
+      pending.set(handle, requestAnimationFrame(step));
+      return handle;
+    };
+    globalThis.clearImmediate = handle => {
+      cancelAnimationFrame(pending.get(handle));
+      pending.delete(handle);
+    };
     this.restoreQueueFlush = () => {
       globalThis.setImmediate = original.setImmediate;
       globalThis.clearImmediate = original.clearImmediate;

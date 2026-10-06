@@ -26,7 +26,12 @@ func exercise() -> void:
   verify(Time.get_ticks_msec() < deadline, "Throwing callbacks finish without hanging the pump")
   verify(before_stop.errors.size() == 5, "Each uncaught callback exception reaches the host error channel")
   verify(surface.evaluate("intervalErrors") == "2", "An interval survives a callback exception and can cancel itself on its next invocation")
-  verify(surface.evaluate("JSON.stringify(errorTrace)") == '["after-frame","timeout","after-timeout"]', "A failed callback cannot prevent unrelated queued work")
+  # Timers run in every Godot frame and frame callbacks only in the frame clock's ticks, so
+  # which of them runs first is the host's pacing. What a failed callback must not change:
+  # every other callback still runs, and the two timers keep their order.
+  var trace: Array = JSON.parse_string(surface.evaluate("JSON.stringify(errorTrace)"))
+  verify(trace.size() == 3 and trace.has("after-frame") and trace.find("timeout") >= 0 and trace.find("timeout") < trace.find("after-timeout"),
+    "A failed callback cannot prevent unrelated queued work")
   verify(before_stop.pendingTimers == 0 and before_stop.pendingAnimationFrames == 0, "Failed one-shot callbacks release native registrations")
   surface.stop()
   var stopped: Dictionary = JSON.parse_string(surface.snapshot())
