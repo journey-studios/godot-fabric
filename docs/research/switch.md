@@ -5,6 +5,8 @@ Godot 4.7.2. The [evidence](../evidence/switch/README.md) owns the 108 headless
 checks with actual Godot mouse and touch input, the control on the preceding
 host (exactly 2 normative failures) and a retained sabotage of the `setValue`
 command that the probe and the independent oracle both reject.
+Hosted run 37390584578 repeated the 108 checks and the independent oracle
+accepts its report ([receipt](../evidence/switch/hosted-ci.json)).
 
 ## What RN does
 

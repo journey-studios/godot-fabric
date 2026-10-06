@@ -619,7 +619,12 @@
     "tests/shared-touches-probe.gd"
   ],
   "hostedCI": {
-    "status": "pending-shared-touches-slice"
+    "status": "verified",
+    "run": 37392899167,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37392898967,
+    "publication": "publication.json"
   },
   "limits": [
     "Touches and the mouse over two roots, four flag lanes on the same host, headless.",

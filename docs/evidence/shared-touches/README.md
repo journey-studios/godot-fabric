@@ -118,5 +118,17 @@ arquivos rodaram de novo com elas.
 ## Limites
 
 Captura de ponteiro entre raízes, vários dispositivos de toque, hardware real e
-exports mobile seguem abertos. A CI desta fatia ainda será executada. Nenhum
+exports mobile seguem abertos.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 8b87d78 (run
+37392899167), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-shared-touches` repete os **92 checks headless** nas quatro lanes
+com IDs idênticos aos fixados, callbacks idênticos (inclusive a divergência de
+`touch/a-lifts-first` entre os dois responders) e os mesmos toques crus em todas as
+lanes. Os bundles diferem dos fixados porque a `main` trouxe o Switch (#33) depois
+da bateria (o PanResponder, #32, já estava na branch empilhada). Os 16 arquivos
+rastreados batem com a árvore do checkout; 6 diferem de `1b7dac5` por commits da
+`main` e pela revisão do probe integrado, como lista o recibo. O
+[Pages](publication.json) (run 37392898967) implantou exatamente os dados commitados
+de 8b87d78; o site público já foi substituído pelo deploy seguinte da `main`. Nenhum
 GF, checkpoint, dependência, peso ou denominador fecha.

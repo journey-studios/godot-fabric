@@ -1043,7 +1043,12 @@
     "types/react-native.ts"
   ],
   "hostedCI": {
-    "status": "pending-switch-slice"
+    "status": "verified",
+    "run": 37390584578,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37390584738,
+    "publication": "publication.json"
   },
   "limits": [
     "Mouse left-button clicks and touch taps through Godot's GUI; keyboard activation, focus and accessibility are not implemented.",

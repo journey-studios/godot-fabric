@@ -250,7 +250,8 @@ JS responder: 92 headless checks in four flag lanes over two roots' original
 while the press's own touch is down, while a canceled touch still terminates the
 one responder; the two responder implementations differ only where RN's do,
 when the responder's own touch ends first. The preceding host fails exactly the 9 normative checks.
-Hosted CI pending.
+Hosted run 37392899167 repeated the 92 checks with identical IDs and
+callbacks ([receipt](shared-touches/hosted-ci.json)).
 
 The [Switch record](switch/README.md) runs RN's original `Switch.js` over RN's
 shared iOS/macOS Switch descriptor and a custom-drawn Godot switch: 108/108
@@ -259,7 +260,8 @@ fixed values, disabled input, colors, the 63×28 default frame (RN's iOS 26 size
 `setValue`, removal mid-press and the bubbling `topChange` registry are covered.
 The preceding host fails exactly the 2 mount checks; a retained sabotage of the
 native `setValue` fails 13 checks and the independent oracle rejects it. Hosted
-CI pending.
+run 37390584578 repeated the 108 checks and the oracle accepts its report
+([receipt](switch/hosted-ci.json)).
 
 The [touchables record](touchables/README.md) runs RN's original
 `TouchableWithoutFeedback` and `TouchableHighlight` from the public facade with
@@ -271,7 +273,8 @@ nesting and removal mid-press follow RN. The same fixture on the preceding SDK
 fails exactly its 19 render checks; a retained imitation over the SDK Pressable
 fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
 lane shows RN's original TouchableOpacity failing at mount without
-`NativeAnimatedModule`. Hosted CI pending.
+`NativeAnimatedModule`. Hosted run 37394073082 repeated the 93 checks and the
+animated lane's 6 ([receipt](touchables/hosted-ci.json)).
 
 The [ActivityIndicator record](activity-indicator/README.md) runs RN's original
 `ActivityIndicator.js` over the generated `ActivityIndicatorView` descriptor and
@@ -280,7 +283,8 @@ frames in two roots. Defaults, small/large/numeric sizes, the phase advancing on
 per frame while animating and frozen when stopped, `hidesWhenStopped`, color,
 remount and root isolation are covered. The preceding host fails exactly the 2
 mount checks; a retained sabotage that stops the per-frame work fails 9 checks
-and the independent oracle rejects it. Hosted CI pending.
+and the independent oracle rejects it. Hosted run 37395264445 repeated the
+33 checks and the oracle accepts its report ([receipt](activity-indicator/hosted-ci.json)).
 
 The [capture notification record](pointer-capture-notifications/README.md) runs
 `gotpointercapture`/`lostpointercapture` for JSX props and original View,
@@ -290,7 +294,9 @@ retargeted and Discrete), Up and Cancel release it after their own dispatch,
 hover follows the owner, removal clears it without a notification and click keeps
 the physical hit paths. No native or SDK code changed; an SDK without got/lost
 bubbling fails 12 or 13 checks per lane and an overlay tracking hover by the
-physical target 33, and the independent oracle rejects both. Hosted CI pending.
+physical target 33, and the independent oracle rejects both. Hosted run
+37396999119 repeated the 672 checks with identical IDs and raw sequences
+([receipt](pointer-capture-notifications/hosted-ci.json)).
 
 The [virtualized-list record](virtualized-list/README.md) scrolls RN's original
 `FlatList`, `SectionList` and `VirtualizedList` on the SDK ScrollView with real
@@ -299,6 +305,8 @@ wheel steps and touch drags in two roots: 44 headless checks. Windows match RN's
 viewability, `onEndReached`, scroll commands and failures follow RN. The
 preceding host fails exactly 3 normative checks, the preceding SDK 11, and an SDK
 ScrollView without `onLayout` fails 3, which the independent oracle rejects.
+Hosted run 37401008543 repeated the 44 checks with identical IDs
+([receipt](virtualized-list/hosted-ci.json)).
 
 The [Appearance record](appearance/README.md) runs RN's original `Appearance` and
 `useColorScheme` in two roots of one application, fed through the one Callable

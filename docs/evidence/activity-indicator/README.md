@@ -156,3 +156,15 @@ ActivityIndicator (33/33), o Switch, o PanResponder, os toques compartilhados, o
 Acessibilidade, movimento reduzido, a velocidade e a geometria exatas do UIKit,
 capturas de pixel, hardware, exports mobile e performance seguem abertos. Nenhum
 GF, checkpoint, peso ou denominador fecha.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 54ede87 (run
+37395264445), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-activity-indicator` repete os **33 checks headless**; o oráculo
+independente aceita de novo o relatório baixado e as observações fixadas se repetem,
+exceto os 24 valores de `turns`, que dependem do tempo real de cada quadro. O bundle
+difere do fixado porque a `main` trouxe o PanResponder, os toques compartilhados e
+os Touchables depois da bateria. Os 74 arquivos rastreados batem com a árvore do
+checkout; 7 diferem de `a652343` por commits da `main`. O [Pages](publication.json)
+(run 37395264170) implantou exatamente os dados commitados de 54ede87; o site
+público já foi substituído pelo deploy seguinte da `main`. Nenhum GF, checkpoint,
+peso ou denominador fecha.

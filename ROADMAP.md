@@ -1828,8 +1828,14 @@ Down 2,731, Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover
 host. Pointer capture across roots, several touch devices, hardware and mobile
 exports remain open. All 16 executed code/configuration inputs match
 implementation 1b7dac5 via git show/SHA-256 (execution base 283065d/dirty
-retained). Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+retained). Hosted Contracts run 37392899167 (the push of main 8b87d78) passed
+all five jobs in the first attempt; its [audited
+artifact](docs/evidence/shared-touches/hosted-ci.json) repeats the 92 headless
+checks with identical IDs and callbacks, including the responders' documented
+divergence. All 16 tracked inputs match the checkout tree (6 differ from 1b7dac5
+through commits main gained afterwards). [Pages
+37392898967](docs/evidence/shared-touches/publication.json) deployed this record
+from main 8b87d78. No whole GF, checkpoint, weight or denominator closes.
 
 ### Switch over a native Godot switch (2026-10-05)
 
@@ -1870,8 +1876,15 @@ code/configuration inputs match implementation a10b19e via git show/SHA-256
 (battery base 3e2dc2d; the amend touched only test/config files, whose readers
 were rerun). Keyboard activation and focus, accessibility, animation and thumb
 dragging, the Android path, per-target defaults, hardware and mobile exports
-remain open. Hosted CI for this slice is pending. No whole GF, checkpoint, weight
-or denominator closes.
+remain open. Hosted Contracts run 37390584578 (the push of main f165b82) passed
+all five jobs in the first attempt; its [audited
+artifact](docs/evidence/switch/hosted-ci.json) repeats the 108 headless checks,
+the independent oracle accepts the downloaded report and the recomputed
+observations equal the pinned ones except the topClick row that main's click
+synthesis adds to the two disabled stages. All 72 tracked inputs match the
+checkout tree (17 differ from a10b19e through commits main gained afterwards).
+[Pages 37390584738](docs/evidence/switch/publication.json) deployed this record
+from main f165b82. No whole GF, checkpoint, weight or denominator closes.
 
 
 ### Original TouchableWithoutFeedback and TouchableHighlight (2026-10-05)
@@ -1922,8 +1935,15 @@ All 30 executed code/configuration inputs match implementation 0e18060 via git
 show/SHA-256 (execution base 15e1dda/dirty retained). The wrong-root release of
 concurrent presses is fixed in the host by the shared touches slice;
 concurrent presses with the touchables themselves, TouchableNativeFeedback, focus and keyboard activation, accessibility, click
-synthesis, typed declarations and hardware remain open. Hosted CI for this slice
-is pending. No whole GF, checkpoint, weight or denominator closes.
+synthesis, typed declarations and hardware remain open. Hosted Contracts run
+37394073082 (the push of main 946e624) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/touchables/hosted-ci.json) repeats
+the 93 headless checks and the 6 of the animated lane; every check the
+preceding-SDK control and the sabotage fail passes. All 30 tracked inputs match
+the checkout tree (7 differ from 0e18060 through commits main gained
+afterwards). [Pages 37394074068](docs/evidence/touchables/publication.json)
+deployed this record from main 946e624. No whole GF, checkpoint, weight or
+denominator closes.
 
 ### ActivityIndicator over a native Godot spinner (2026-10-05)
 
@@ -1961,8 +1981,15 @@ examples; codegen, the native SDK pack/verify, adapters (loader 89 checks/21
 cases, runtime 13 runs/213 checks), consumer (30 + 40) and cold start pass too.
 All 74 executed code/configuration inputs match implementation a652343 via git
 show/SHA-256. Accessibility, reduced motion, UIKit's exact timing and geometry,
-pixel captures, hardware and mobile exports remain open. Hosted CI for this slice
-is pending. No whole GF, checkpoint, weight or denominator closes.
+pixel captures, hardware and mobile exports remain open. Hosted Contracts run
+37395264445 (the push of main 54ede87) passed all five jobs in the first
+attempt; its [audited artifact](docs/evidence/activity-indicator/hosted-ci.json)
+repeats the 33 headless checks, the independent oracle accepts the downloaded
+report and the recomputed observations equal the pinned ones except the spinner
+phases, which depend on frame time. All 74 tracked inputs match the checkout
+tree (7 differ from a652343 through commits main gained afterwards). [Pages
+37395264170](docs/evidence/activity-indicator/publication.json) deployed this
+record from main 54ede87. No whole GF, checkpoint, weight or denominator closes.
 
 ### Pointer capture notifications for listeners (2026-10-05)
 
@@ -2014,7 +2041,15 @@ captured, capture across roots, pen, hardware and mobile exports remain open. Al
 23 executed code/configuration inputs match implementation 6ad77b8 via git
 show/SHA-256 (executed on that commit). After main reached 54ede87, the merged
 tree 0580af7 repeated the 672 checks on its own host with identical IDs and
-results. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or
+results. Hosted Contracts run 37396999119 (the push of main d62bc27) passed all
+five jobs in the first attempt; its [audited
+artifact](docs/evidence/pointer-capture-notifications/hosted-ci.json) repeats
+the 672 headless checks with identical IDs, raw sequences and capture
+notifications and the bundles of the merged tree. All 23 tracked inputs match
+the checkout tree (6 differ from 6ad77b8 through commits main gained
+afterwards). [Pages
+37396999274](docs/evidence/pointer-capture-notifications/publication.json)
+deployed this record from main d62bc27. No whole GF, checkpoint, weight or
 denominator closes.
 
 ### Virtualized lists on the SDK ScrollView (2026-10-05)
@@ -2064,8 +2099,15 @@ the four lanes again. Animated scrolling, momentum, sticky headers, refresh,
 fixture, hardware and mobile exports remain open; GF-14 stays Planned. All 73
 executed code/configuration inputs match implementation 3e9ec49 via git
 show/SHA-256 (execution base 8f80fed; the executed tree is the implementation's).
-Hosted CI for this slice is pending. Only GF-15's first-slice checkpoint closes;
-no whole GF, other checkpoint, weight or denominator closes.
+Hosted Contracts run 37401008543 (the push of main c8f0e4b) passed all five jobs
+in the first attempt; its [audited
+artifact](docs/evidence/virtualized-list/hosted-ci.json) repeats the 44 headless
+checks with identical IDs and the independent oracle accepts the downloaded
+report. All 73 tracked inputs match the checkout tree (13 differ from 3e9ec49
+through commits main gained afterwards). [Pages
+37401008504](docs/evidence/virtualized-list/publication.json) deployed this
+record from main c8f0e4b. Only GF-15's first-slice checkpoint closes, with the
+slice itself; no whole GF, other checkpoint, weight or denominator closes.
 
 ### Appearance and useColorScheme from the system theme (2026-10-05)
 

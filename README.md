@@ -230,13 +230,15 @@ application's touches, as RN's one JS responder expects, so a touch ending in
 one root no longer releases a press held in another while that press's own
 touch is down; a canceled touch still terminates the one responder, as on one RN
 surface. 92 headless checks in four flag lanes; the preceding host fails exactly
-9. [Evidence](docs/evidence/shared-touches/README.md).
+9. Hosted CI repeated the 92 checks ([receipt](docs/evidence/shared-touches/hosted-ci.json)).
+[Evidence](docs/evidence/shared-touches/README.md).
 
 The [Switch example](examples/switch/README.md) renders RN's original `Switch.js`
 over RN's shared iOS/macOS Switch descriptor and a native Godot switch: actual
 mouse clicks and touch taps toggle it, `onChange`/`onValueChange` follow RN's
 order, and Switch.js's `setValue` restores a value prop that does not change.
 108 headless checks in two roots; the preceding host fails the 2 mount checks.
+Hosted CI repeated the 108 checks ([receipt](docs/evidence/switch/hosted-ci.json)).
 [Evidence](docs/evidence/switch/README.md).
 
 The [touchables example](examples/touchables/README.md) makes
@@ -246,7 +248,8 @@ modules and Pressability: callback order, native underlay and child opacity,
 mid-press under real mouse and touch on two roots, 93 headless checks. The same
 fixture on the preceding SDK fails exactly its 19 render checks, and a retained
 imitation over Pressable fails. `TouchableOpacity` stays unavailable: RN 0.87.1's
-Animated needs `NativeAnimatedModule`.
+Animated needs `NativeAnimatedModule`. Hosted CI repeated the 93 checks
+([receipt](docs/evidence/touchables/hosted-ci.json)).
 [Evidence](docs/evidence/touchables/README.md).
 
 The [ActivityIndicator example](examples/activity-indicator/README.md) renders
@@ -254,6 +257,7 @@ RN's original `ActivityIndicator.js` over the generated `ActivityIndicatorView`
 descriptor and a native Godot spinner whose phase advances once per actual frame
 while `animating`, freezes when stopped and hides with `hidesWhenStopped`. 33
 headless checks in two roots; the preceding host fails the 2 mount checks.
+Hosted CI repeated the 33 checks ([receipt](docs/evidence/activity-indicator/hosted-ci.json)).
 [Evidence](docs/evidence/activity-indicator/README.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
@@ -261,13 +265,15 @@ certifies `gotpointercapture`/`lostpointercapture` for JSX props and original
 View, documentElement and Document listeners, and hover and click while a pointer
 is captured, in eight original/current × flag lanes: 672 headless checks. RN
 notifies a capture at the pointer's next event, retargeted to its owner, and the
-host already matches it; two retained sabotages fail.
+host already matches it; two retained sabotages fail. Hosted CI repeated
+the 672 checks ([receipt](docs/evidence/pointer-capture-notifications/hosted-ci.json)).
 [Evidence](docs/evidence/pointer-capture-notifications/README.md).
 
 The [virtualized-list example](examples/virtualized-list/README.md) runs React
 Native's original `FlatList`, `SectionList` and `VirtualizedList` from the public
 import on the SDK ScrollView, windowed by real wheel and touch input in two roots:
 44 headless checks. The preceding host fails exactly its 3 ScrollView checks.
+Hosted CI repeated the 44 checks ([receipt](docs/evidence/virtualized-list/hosted-ci.json)).
 [Evidence](docs/evidence/virtualized-list/README.md).
 
 The [Appearance example](examples/appearance/README.md) runs React Native's

@@ -200,10 +200,22 @@ os scroll views nativos do Android. Listas aninhadas na mesma orientação
 (`measureLayout`), `initialScrollIndex`, `numColumns`, RTL horizontal,
 `onStartReached`, `viewAreaCoveragePercentThreshold`/`minimumViewTime`, a fixture
 de 10.000 linhas com quadros e memória medidos, hardware e exports móveis seguem
-abertos no GF-15, e o contrato completo do ScrollView no GF-14. A CI hospedada
-desta fatia está pendente. Esta é a primeira fatia verificada do GF-15: só o
-checkpoint `slice` dele fecha e o GF-15 passa a em andamento; nenhum outro
-checkpoint, GF, peso ou denominador fecha.
+abertos no GF-15, e o contrato completo do ScrollView no GF-14. Esta é a primeira
+fatia verificada do GF-15: só o checkpoint `slice` dele fecha e o GF-15 passa a em
+andamento; nenhum outro checkpoint, GF, peso ou denominador fecha.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em c8f0e4b (run
+37401008543), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-virtualized-list` repete os **44 checks headless** com IDs
+idênticos aos fixados; o oráculo independente aceita de novo o relatório baixado, e
+os 3 checks que o host anterior falha, os 11 do SDK anterior e os 3 da sabotagem
+passam todos no run. O bundle difere do fixado porque a `main` e a revisão do #38
+mudaram arquivos depois da bateria: dos 73 arquivos rastreados, 13 diferem de
+`3e9ec49`, entre eles o `application_runtime.cpp` da correção de revisão `bb38440`,
+cujo hash o recibo registra em `reviewReruns`. O [Pages](publication.json) (run
+37401008504) implantou exatamente os dados commitados de c8f0e4b; o site público já
+foi substituído pelo deploy seguinte da `main`. Esses recibos não fecham GF,
+checkpoint, peso ou denominador.
 
 As 73 fontes de código e configuração executadas (13 produtoras do bundle, 56
 entradas do build nativo registradas pelo pack do SDK e 7 de verificação, com

@@ -150,8 +150,17 @@ imperativos de hover durante a captura, captura por uma View de outra raiz,
 liberação pelo dono errado e `stopPropagation`/`once`/`AbortSignal` nos listeners
 de captura não foram exercitados separadamente.
 
-A CI desta fatia ainda será executada. Nenhum GF, checkpoint, dependência, peso
-ou denominador foi fechado.
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em d62bc27 (run
+37396999119), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-pointer-capture-notifications` repete os **672 checks headless**
+nas oito lanes com IDs idênticos aos fixados, as 15 sequências cruas e as listas
+got/lost idênticas às fixadas em todas as lanes e bundles iguais aos da árvore
+mesclada que a revisão registrou em `mergeReverification`. As 23 fontes rastreadas
+batem com a árvore do checkout; 6 diferem de `6ad77b8` porque a `main` trouxe
+commits depois da bateria (a fatia não muda código nativo nem do SDK). O
+[Pages](publication.json) (run 37396999274) implantou exatamente os dados commitados
+de d62bc27; o site público já foi substituído pelo deploy seguinte da `main`. Nenhum
+GF, checkpoint, dependência, peso ou denominador foi fechado.
 
 As 20 fontes de código/configuração do bundle e as 3 de verificação executadas
 correspondem à implementação `6ad77b811cbb9cbd49ada1fd575deeb15301fda6` por

@@ -161,9 +161,19 @@ repetiu os 93 checks sobre o host com a correção, mas pressões simultâneas c
 os próprios touchables não são afirmadas separadamente. Também seguem abertos o `TouchableOpacity`
 (GF-19), `TouchableNativeFeedback` e `TouchableBounce`, foco e ativação por
 teclado, acessibilidade (GF-20), síntese de click, declarações tipadas, o
-`PressabilityDebugView` de desenvolvimento, hardware e exports mobile. A CI
-hospedada desta fatia está pendente. Nenhum GF, checkpoint, peso ou denominador
-foi fechado.
+`PressabilityDebugView` de desenvolvimento, hardware e exports mobile.
+
+A [CI hospedada](hosted-ci.json) desta fatia é o push da `main` em 946e624 (run
+37394073082), com os cinco jobs verdes na primeira tentativa e sem reexecução. O
+artefato `native-touchables` repete os **93 checks headless** da lane `current` e os
+6 da lane `animated`; os 19 checks que o SDK anterior falha e os 42 que a sabotagem
+falha passam todos no run. A fachada e o bundle do relatório são os da árvore
+mesclada, não os fixados, porque a `main` trouxe AppState, PanResponder e Switch
+depois da bateria. Os 30 arquivos rastreados batem com a árvore do checkout; 7
+diferem de `0e18060` por commits da `main`, e `src/app-state.js` entrou nos pins do
+bundle com o AppState (#31). O [Pages](publication.json) (run 37394074068) implantou
+exatamente os dados commitados de 946e624; o site público já foi substituído pelo
+deploy seguinte da `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
 
 As 30 fontes de código/configuração executadas (27 do harness e do SDK
 empacotado e 3 de verificação) correspondem à implementação

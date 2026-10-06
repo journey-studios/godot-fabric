@@ -1,0 +1,751 @@
+{
+  "schemaVersion": 1,
+  "scenario": "native-shared-touches",
+  "status": "verified-completed-hosted-workflow-and-headless-shared-touches-artifact",
+  "run": {
+    "id": 37392899167,
+    "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/34",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "success",
+        "startedAt": "2026-10-06T00:13:58Z",
+        "jobs": [
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112041922796,
+            "runAttempt": 1,
+            "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+            "startedAt": "2026-10-06T00:40:07Z",
+            "completedAt": "2026-10-06T00:46:37Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041922796"
+          },
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112041923071,
+            "runAttempt": 1,
+            "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+            "startedAt": "2026-10-06T00:14:01Z",
+            "completedAt": "2026-10-06T00:15:02Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041923071"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112041923105,
+            "runAttempt": 1,
+            "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+            "startedAt": "2026-10-06T00:14:01Z",
+            "completedAt": "2026-10-06T00:20:20Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041923105"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112041923119,
+            "runAttempt": 1,
+            "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+            "startedAt": "2026-10-06T00:18:43Z",
+            "completedAt": "2026-10-06T00:44:00Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041923119"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 112051168148,
+            "runAttempt": 1,
+            "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+            "startedAt": "2026-10-06T00:46:41Z",
+            "completedAt": "2026-10-06T00:46:59Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112051168148"
+          }
+        ]
+      }
+    ],
+    "reruns": [],
+    "jobs": [
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112041922796,
+        "runAttempt": 1,
+        "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+        "startedAt": "2026-10-06T00:40:07Z",
+        "completedAt": "2026-10-06T00:46:37Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041922796"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112041923071,
+        "runAttempt": 1,
+        "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+        "startedAt": "2026-10-06T00:14:01Z",
+        "completedAt": "2026-10-06T00:15:02Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041923071"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112041923105,
+        "runAttempt": 1,
+        "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+        "startedAt": "2026-10-06T00:14:01Z",
+        "completedAt": "2026-10-06T00:20:20Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041923105"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112041923119,
+        "runAttempt": 1,
+        "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+        "startedAt": "2026-10-06T00:18:43Z",
+        "completedAt": "2026-10-06T00:44:00Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112041923119"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 112051168148,
+        "runAttempt": 1,
+        "headSha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+        "startedAt": "2026-10-06T00:46:41Z",
+        "completedAt": "2026-10-06T00:46:59Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37392899167/job/112051168148"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+      "native-cold-start": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+      "parity-comparison": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+      "reference-android": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+      "reference-ios": "8b87d784d189baa585ca6b00736de7ddece1ba21"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "contractsJob": {
+      "nodeContractTests": {
+        "tests": 261,
+        "pass": 261,
+        "fail": 0
+      },
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 25.28
+  },
+  "implementationCommit": "1b7dac52794ffd13257857621942c5df20ca127b",
+  "runHeadIsPostCommitSourcePin": true,
+  "pullRequest": {
+    "number": 34,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/34",
+    "title": "fix(responders): Share every root's touches with RN's one responder",
+    "headSha": "ad2e53dd34df4cec94ae1fea96d0c356cc144fde",
+    "squashMergeCommit": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+    "mergedAt": "2026-10-06T00:13:55Z",
+    "headTreeSha": "795c8056bbc4371f220247aaf1c2769851488beb",
+    "mainTreeSha": "795c8056bbc4371f220247aaf1c2769851488beb",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 22,
+    "stackedBranchCommitsBeforeImplementation": [
+      {
+        "commit": "b3327e4",
+        "subject": "feat(responders): Run the original PanResponder on Godot input"
+      },
+      {
+        "commit": "c1c95cd",
+        "subject": "docs(events): Record click hosted CI and Pages receipts"
+      },
+      {
+        "commit": "0a19e39",
+        "subject": "docs(responders): Pin executed PanResponder evidence"
+      },
+      {
+        "commit": "13c408a",
+        "subject": "docs(dashboard): Record the PanResponder slice"
+      },
+      {
+        "commit": "81c25b1",
+        "subject": "fix(responders): Share every root's touches with RN's one responder"
+      },
+      {
+        "commit": "9a6ee3e",
+        "subject": "test(responders): Compare gesture coordinates across flag lanes"
+      },
+      {
+        "commit": "8210025",
+        "subject": "docs(responders): Record the cross-lane coordinate rerun"
+      },
+      {
+        "commit": "24869f9",
+        "subject": "Merge remote-tracking branch 'origin/main' into feat/original-pan-responder"
+      },
+      {
+        "commit": "54129b3",
+        "subject": "test(responders): Require all 32 checks in each pan lane"
+      },
+      {
+        "commit": "3edd80c",
+        "subject": "docs(responders): Record the lane-count rerun on the merged tree"
+      },
+      {
+        "commit": "152d12c",
+        "subject": "Merge branch 'feat/original-pan-responder' into fix/application-wide-touches"
+      },
+      {
+        "commit": "283065d",
+        "subject": "test(responders): Require all 20 shared-touches checks per run"
+      },
+      {
+        "commit": "412c703",
+        "subject": "test(responders): Cover a root lifting its own touch first"
+      }
+    ],
+    "commitsAfterImplementation": [
+      {
+        "commit": "0c6c19d",
+        "subject": "Merge remote-tracking branch 'origin/main' into fix/application-wide-touches",
+        "merge": [
+          "1b7dac5",
+          "2ec988e"
+        ]
+      },
+      {
+        "commit": "417d08a",
+        "subject": "docs(responders): Pin executed shared-touches evidence"
+      },
+      {
+        "commit": "3daf1d4",
+        "subject": "docs(dashboard): Record the shared-touches slice"
+      },
+      {
+        "commit": "a906ab6",
+        "subject": "test(events): Label the integrated probe's touches application-wide"
+      },
+      {
+        "commit": "5fe7d00",
+        "subject": "docs(responders): Record the integrated probe rerun"
+      },
+      {
+        "commit": "d614148",
+        "subject": "docs(events): Record AppState and PanResponder hosted receipts"
+      },
+      {
+        "commit": "13f16b9",
+        "subject": "Merge remote-tracking branch 'origin/main' into fix/application-wide-touches",
+        "merge": [
+          "d614148",
+          "f165b82"
+        ]
+      },
+      {
+        "commit": "ad2e53d",
+        "subject": "docs(responders): Keep the cancel exception in shared-touch summaries"
+      }
+    ],
+    "trackedPathsChangedAfterImplementation": 6
+  },
+  "actualCheckout": {
+    "sha": "8b87d784d189baa585ca6b00736de7ddece1ba21",
+    "parents": [
+      "f165b82d835a9cd23f508f37cb29140b38a79f09"
+    ],
+    "treeSha": "795c8056bbc4371f220247aaf1c2769851488beb",
+    "treeEntries": 1017,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree is compared with the local tree and every blob of the run head; each tracked path's run-head bytes are compared with the pinned bytes of the implementation commit, and every difference is traced to the commits that introduced it",
+    "trackedPinSetCounts": {
+      "sourcePins": 11,
+      "verificationSourcePins": 5
+    },
+    "allCuratedTrackedPathsVerified": 16,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "trackedPathsEqualToImplementationCommitAtRunHead": 10,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementation": [
+      ".fallowrc.json",
+      ".github/workflows/contracts.yml",
+      "native/application_runtime.cpp",
+      "package.json",
+      "src/react-native-platform.jsx",
+      "tests/event-dispatch-integrated-probe.gd"
+    ],
+    "allDifferencesTracedToCommits": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11382587183,
+    "name": "native-shared-touches",
+    "zipSizeBytes": 84313,
+    "zipSha256": "3b44192a768418806008452074e321be88a1671033bd243d3c7974f4ed55fb6a",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-06T00:39:20Z",
+    "expiresAt": "2027-01-04T00:13:58Z",
+    "fileCount": 9,
+    "filesMatchTheWorkflowUploadPaths": true,
+    "files": {
+      "shared-touches-comparison.json": "e1dbcb66427d9c58551d169de7baa89735103d9241f1a8fd08afc18909face91",
+      "shared-touches-disabled-report.json": "0dc69cb9e5534285e1fe7551c9504da6f611bbee18940352d6225ccd8b459e03",
+      "shared-touches-disabled.log": "bbe82591d9e4674b55c79e92777f8dee55694fc1733c988350e3dc712329a8b1",
+      "shared-touches-enabled-report.json": "b2f59801d4122d3723672f73b6fc4b5a6863374a34f5805ae8a4089a761061df",
+      "shared-touches-enabled.log": "a705448ffa15ba34b760bb909f5fae032298246c444442cea111ad3208b95f52",
+      "shared-touches-imperative-only-report.json": "6f54a64872baeeba06133610369536700c888bdf556c1bf539be55d6e1e679f1",
+      "shared-touches-imperative-only.log": "25c034ced40d244db2082bbb9a068e652a55066687d7a37e180ea287c7acb3ac",
+      "shared-touches-internal-only-report.json": "f14e311036018baf2d36ee4619b88af0c55deb1e7ed47a077ea1435104226c2a",
+      "shared-touches-internal-only.log": "625d3b534a18b2d381b733e7b79d63987938731583a368ab51735554bc6dbd16"
+    }
+  },
+  "verification": {
+    "headlessChecks": 92,
+    "committedHeadlessChecks": 92,
+    "lanes": [
+      {
+        "lane": "disabled",
+        "flagMode": "disabled",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": false
+        },
+        "responder": "ResponderEventPlugin",
+        "reportFile": "shared-touches-disabled-report.json",
+        "logFile": "shared-touches-disabled.log",
+        "checks": 23,
+        "passed": 23,
+        "uniqueCheckIds": true,
+        "committedChecks": 23,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "committedCheckIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "24d844b94192be139b84cbb1b32659e8f604e3914eef11fcfdd47350f82db667",
+        "bundleInputCount": 186,
+        "bundleEqualsHashRecordedInCommittedReportAt": [],
+        "pinnedRunBundleSha256": "0a6a775689fbe21b695e2f693f7d674823795382af887d61cad17f28fe25fdb5",
+        "bundleDiffersFromPinnedRun": true,
+        "pinnedProducersChangedSincePinnedRun": [
+          "native/application_runtime.cpp",
+          "src/react-native-platform.jsx"
+        ],
+        "reportSha256": "0dc69cb9e5534285e1fe7551c9504da6f611bbee18940352d6225ccd8b459e03",
+        "logSha256": "bbe82591d9e4674b55c79e92777f8dee55694fc1733c988350e3dc712329a8b1",
+        "passedMarker": "SHARED_TOUCHES_PASSED: 23",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "controlsAgainstThisLane": {},
+        "nativeHostSha256": "25104cb0726460a146dafe9b28ba6108a9dbdbf532497ee13199c84db4a7dbc6",
+        "node": "v22.23.2"
+      },
+      {
+        "lane": "imperative-only",
+        "flagMode": "imperative-only",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": false
+        },
+        "responder": "ResponderEventPlugin",
+        "reportFile": "shared-touches-imperative-only-report.json",
+        "logFile": "shared-touches-imperative-only.log",
+        "checks": 23,
+        "passed": 23,
+        "uniqueCheckIds": true,
+        "committedChecks": 23,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "committedCheckIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "344a8631fe81e4ac5ec9f4a5d0a6fc75a771160231d02960bb82ae77d5792c81",
+        "bundleInputCount": 186,
+        "bundleEqualsHashRecordedInCommittedReportAt": [],
+        "pinnedRunBundleSha256": "fb99a6d48e23ffa57ab299ec8da668a2e5c8afd4976d4ba8e58de48f30f72a8b",
+        "bundleDiffersFromPinnedRun": true,
+        "pinnedProducersChangedSincePinnedRun": [
+          "native/application_runtime.cpp",
+          "src/react-native-platform.jsx"
+        ],
+        "reportSha256": "6f54a64872baeeba06133610369536700c888bdf556c1bf539be55d6e1e679f1",
+        "logSha256": "25c034ced40d244db2082bbb9a068e652a55066687d7a37e180ea287c7acb3ac",
+        "passedMarker": "SHARED_TOUCHES_PASSED: 23",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "controlsAgainstThisLane": {},
+        "nativeHostSha256": "25104cb0726460a146dafe9b28ba6108a9dbdbf532497ee13199c84db4a7dbc6",
+        "node": "v22.23.2"
+      },
+      {
+        "lane": "internal-only",
+        "flagMode": "internal-only",
+        "flags": {
+          "imperative": false,
+          "nativeDispatch": true
+        },
+        "responder": "ReactNativeResponder",
+        "reportFile": "shared-touches-internal-only-report.json",
+        "logFile": "shared-touches-internal-only.log",
+        "checks": 23,
+        "passed": 23,
+        "uniqueCheckIds": true,
+        "committedChecks": 23,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "committedCheckIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "768604622389e70809905eede2e4651255a077da342a43d1f925462c27351ce4",
+        "bundleInputCount": 186,
+        "bundleEqualsHashRecordedInCommittedReportAt": [],
+        "pinnedRunBundleSha256": "57d4de0081dd470142cb2d4fce1a7678cc2f6dc44674997804a91fbea1a13792",
+        "bundleDiffersFromPinnedRun": true,
+        "pinnedProducersChangedSincePinnedRun": [
+          "native/application_runtime.cpp",
+          "src/react-native-platform.jsx"
+        ],
+        "reportSha256": "f14e311036018baf2d36ee4619b88af0c55deb1e7ed47a077ea1435104226c2a",
+        "logSha256": "625d3b534a18b2d381b733e7b79d63987938731583a368ab51735554bc6dbd16",
+        "passedMarker": "SHARED_TOUCHES_PASSED: 23",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "controlsAgainstThisLane": {},
+        "nativeHostSha256": "25104cb0726460a146dafe9b28ba6108a9dbdbf532497ee13199c84db4a7dbc6",
+        "node": "v22.23.2"
+      },
+      {
+        "lane": "enabled",
+        "flagMode": "enabled",
+        "flags": {
+          "imperative": true,
+          "nativeDispatch": true
+        },
+        "responder": "ReactNativeResponder",
+        "reportFile": "shared-touches-enabled-report.json",
+        "logFile": "shared-touches-enabled.log",
+        "checks": 23,
+        "passed": 23,
+        "uniqueCheckIds": true,
+        "committedChecks": 23,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestFormula": "sha256 of JSON.stringify(names) with separators (',', ':')",
+        "committedCheckIdDigestSha256": "f884dc6dc5ab68a15a6c5f2d8e2dbf89b7afcb062a56a47c3f185a33cac933c7",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "b3d8066288eade7de0d5304aa233e8f912610cd766b43ee5b8e869b96a240e43",
+        "bundleInputCount": 186,
+        "bundleEqualsHashRecordedInCommittedReportAt": [],
+        "pinnedRunBundleSha256": "3b67f46c2ecedaf1023af3c20d1c684fb20dd52c89c4fbf62970e745b7ae9e1e",
+        "bundleDiffersFromPinnedRun": true,
+        "pinnedProducersChangedSincePinnedRun": [
+          "native/application_runtime.cpp",
+          "src/react-native-platform.jsx"
+        ],
+        "reportSha256": "b2f59801d4122d3723672f73b6fc4b5a6863374a34f5805ae8a4089a761061df",
+        "logSha256": "a705448ffa15ba34b760bb909f5fae032298246c444442cea111ad3208b95f52",
+        "passedMarker": "SHARED_TOUCHES_PASSED: 23",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [],
+        "errorLines": [],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "controlsAgainstThisLane": {},
+        "nativeHostSha256": "25104cb0726460a146dafe9b28ba6108a9dbdbf532497ee13199c84db4a7dbc6",
+        "node": "v22.23.2"
+      }
+    ],
+    "callbacksEqualCommittedPerLane": {
+      "disabled": true,
+      "imperative-only": true,
+      "internal-only": true,
+      "enabled": true
+    },
+    "sameRawTouchEventsInEveryLane": true,
+    "comparison": {
+      "modes": true,
+      "originalControlPresent": false,
+      "reportsEqualLaneReports": true,
+      "nativeHostEqualsLanes": true
+    },
+    "responderDivergence": {
+      "cases": [
+        "touch/a-lifts-first"
+      ],
+      "committed": true,
+      "differingCasesObserved": [
+        "touch/a-lifts-first"
+      ]
+    },
+    "declaredNativeHostSha256": "25104cb0726460a146dafe9b28ba6108a9dbdbf532497ee13199c84db4a7dbc6",
+    "sameDeclaredNativeHostAcrossLanes": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "committedNode": "v22.23.3",
+    "producerPins": {
+      "tests/event-target-bootstrap.js": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+      "tests/shared-touches-fixture.jsx": "441b4a29a2619163de99a58503ca8b8daa006cb6310bc91ca33ec7348a8761de",
+      "tests/shared-touches-probe.gd": "f56314e4e587d0c6747bb3aef28703f53704b9361cf74c665d15bc3f0304cc7d",
+      "tests/shared-touches-native.test.mjs": "57d0ca2b9310ea0d42252e9d825f7fd6b45c92a5df330730b466502f2fbbfc43",
+      "scripts/event-target-bundle.mjs": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+      "sdk/toolchain/platform-plugin.mjs": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+      "src/react-native-platform.jsx": "6de2dc5315e32a195acf0888db444f17d3a51cfbf6496506c191958781b92d4b",
+      "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+      "native/application_runtime.cpp": "eceb2e859a8d10c3401b3a22c9f292448d64b1bdbc4cf71c1c05d33c91f96f84",
+      "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+      "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932"
+    },
+    "producerPinsEqualRunHeadBytes": true,
+    "producerPinsDifferingFromImplementationPins": [
+      "native/application_runtime.cpp",
+      "src/react-native-platform.jsx"
+    ],
+    "producerPinsAddedSincePinnedRun": [],
+    "producerPinsAddedBy": {},
+    "originalReactNativeSources": {
+      "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+      "src/private/featureflags/ReactNativeFeatureFlagsBase.js": "5903862a6e75bca8343b102333cfed1bb19566b7d7ab2400d228b0e8a018f265",
+      "src/private/webapis/dom/events/Event.js": "f91da7a2638cabf9570a86b2eca15f715e45c1939917513ad34458a684947e1c",
+      "src/private/webapis/dom/events/CustomEvent.js": "f62351d2994e060c7a93e5486888efc8b6dd098c2efa15cb7cbab5949710b33b",
+      "src/private/webapis/dom/events/EventTarget.js": "9ef4ad5d04667a3e786de5008f3a3da76920215b16b6605549db4f3b206b0e53",
+      "src/private/webapis/dom/events/internals/EventTargetInternals.js": "61c16160ee0eb896f670154fb6d16c7f146e5c78c94b857533a4dd917d2a4171",
+      "src/private/webapis/dom/nodes/ReadOnlyNode.js": "a8f76b52ea437f4a8d8bb0044fe2f45c21da0be76594a0aa2ca9a2d5e47b290b",
+      "src/private/webapis/dom/nodes/ReactNativeElement.js": "828cc7370323aefb1a31ceabce1e1d1bbe0c8b119605941b538dfd760bbb21d8",
+      "src/private/webapis/dom/nodes/specs/NativeDOM.js": "f2c52937519e4dd2dee8bc30881e7a9f9ab826d3a481b57a90efce8b9d131234",
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+      "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+      "src/private/renderer/events/ReactNativeResponder.js": "68d09ae425d630bebe21f900d373d899d4da4843b5ee54e8b3a3fc60992ae163",
+      "src/private/renderer/events/dispatchNativeEvent.js": "ad6e1e1e93425b1af165cc78ed5478ac38a84ae6d6d321989ceb4db36ed820b5",
+      "ReactCommon/react/renderer/components/view/TouchEventEmitter.cpp": "b0f33a89e1c812112e1457076667863226b4f42247aa35c2b367e577195dd6b7"
+    },
+    "originalReactNativeInputCount": 14,
+    "originalReactNativeSourcesEqualCommitted": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "da8401ae42d004964720c38f48595626c2fa2173982497b4e6fa15dc251c4129",
+        "gitBlobSha1": "b9e893712344fd574939be72c962cafda9a65379",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "38a8c4b5aa389b642bce0539caaffaa046b5c20abbd006e89c502ac4155d243c",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          },
+          {
+            "commit": "2ec988e",
+            "subject": "feat(responders): Run the original PanResponder on Godot input (#32)",
+            "alreadyInPinnedRunThroughStackedBranch": true
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "92fd7b1d883482872b8b71e0b54898cd30219c02610fb0495653484328f2bf92",
+        "gitBlobSha1": "d4ea3d893a7eed53267dce2d40f948ac22ac2569",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "2fcab791c26772821958a64e66ac3482d296e8a5a800d6388a85c8fcc0d6bbef",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          },
+          {
+            "commit": "2ec988e",
+            "subject": "feat(responders): Run the original PanResponder on Godot input (#32)",
+            "alreadyInPinnedRunThroughStackedBranch": true
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "examples/pointer-geometry/validation.gd": {
+        "sha256": "2d0978a465d5cae64d3295bcad127ab44b4d60fc401197ca931cc46699d14f1c",
+        "gitBlobSha1": "fa3618427b14608cb7d3f68c4f462f2b39a5cdf3",
+        "pinSet": "verificationSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "eceb2e859a8d10c3401b3a22c9f292448d64b1bdbc4cf71c1c05d33c91f96f84",
+        "gitBlobSha1": "a0fce0400176a46c9dffe5ce3bebae1e8589cf7e",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "d322b41f9dfe67f070061f2d13a571f5082f1b145882cc0e0d9878f1cdb2d5ac",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+        "gitBlobSha1": "0d18cc8f8f2096f48ba2a558fbf1e383a5ea52d6",
+        "pinSet": "sourcePins"
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+        "gitBlobSha1": "d5b79148e62e992c6d2366822841961a6e5c7b63",
+        "pinSet": "sourcePins"
+      },
+      "package.json": {
+        "sha256": "5c38b8b5c872f2bda0207ec1d91dd1e5b653e8fba6d16b0130e96c9b5885a5be",
+        "gitBlobSha1": "86c52ec034cb60be958e038cf0142f09ca51f89e",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "0eb674af4e81a63018c73dcfd9a9cb57afcee9f451523f00262acaf9605db9f2",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          },
+          {
+            "commit": "2ec988e",
+            "subject": "feat(responders): Run the original PanResponder on Godot input (#32)",
+            "alreadyInPinnedRunThroughStackedBranch": true
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "scripts/event-target-bundle.mjs": {
+        "sha256": "a2591a612a28c9d6df593518d6048465e7ab46c4dc553017e3a36995570b820b",
+        "gitBlobSha1": "86978cfeb179f103ec610153954254b5270640ab",
+        "pinSet": "sourcePins"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "e3ba37ee0153f979561e61b93815b978b3f2cd3400dcdfa5bb5a766e11873636",
+        "gitBlobSha1": "e8bce20845e3645b3adfdb7ed11f6f575b5a9b59",
+        "pinSet": "sourcePins"
+      },
+      "src/components.jsx": {
+        "sha256": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+        "gitBlobSha1": "b6275b8a7e36250af520e09ac15c40d078bf3763",
+        "pinSet": "sourcePins"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "6de2dc5315e32a195acf0888db444f17d3a51cfbf6496506c191958781b92d4b",
+        "gitBlobSha1": "cb8357ede6192754b8280b69e1d314e892657578",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "ad5821097db29a60062190ad9a0370ef255e99bbcd57085b7747544c9d76c7a9",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "f165b82",
+            "subject": "feat(widgets): Run RN's original Switch over a native Godot switch (#33)"
+          },
+          {
+            "commit": "2ec988e",
+            "subject": "feat(responders): Run the original PanResponder on Godot input (#32)",
+            "alreadyInPinnedRunThroughStackedBranch": true
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "tests/event-dispatch-integrated-probe.gd": {
+        "sha256": "25a60526b07d3d84e3cff6389331818b0aa2abda42fa8dcba9d86484041ef2bb",
+        "gitBlobSha1": "f9e112c40c2d821eaca8d5b6155cb61fa3faed2e",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "9e8f0341a138984e7081df3e274e872aa4eaa0af468eab57d748c18090c3341a",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "a906ab6",
+            "subject": "test(events): Label the integrated probe's touches application-wide"
+          }
+        ],
+        "equalsHashRecordedAt": "reviewReruns[0].changedSource.tests/event-dispatch-integrated-probe.gd"
+      },
+      "tests/event-target-bootstrap.js": {
+        "sha256": "8a2fe539bae2174905be2e41a4430425ccc8323dc1f24f57d775c7ea75afbb24",
+        "gitBlobSha1": "102550470787757049f07e0710bdcbed795fb5f6",
+        "pinSet": "sourcePins"
+      },
+      "tests/shared-touches-fixture.jsx": {
+        "sha256": "441b4a29a2619163de99a58503ca8b8daa006cb6310bc91ca33ec7348a8761de",
+        "gitBlobSha1": "cf889338fc0af14e9b9f604917c6463b005b95e3",
+        "pinSet": "sourcePins"
+      },
+      "tests/shared-touches-native.test.mjs": {
+        "sha256": "57d0ca2b9310ea0d42252e9d825f7fd6b45c92a5df330730b466502f2fbbfc43",
+        "gitBlobSha1": "6a0123761d9cc5fdce558c32352ecf585f1eaaeb",
+        "pinSet": "sourcePins"
+      },
+      "tests/shared-touches-probe.gd": {
+        "sha256": "f56314e4e587d0c6747bb3aef28703f53704b9361cf74c665d15bc3f0304cc7d",
+        "gitBlobSha1": "d88a1e2f86ca251d6c7474011de159f27b1d50b7",
+        "pinSet": "sourcePins"
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the first attempt (no rerun); this artifact audit certifies only the four headless shared-touches lanes (92 checks).",
+    "The preceding-host control and the seven refreshed preceding-host controls remain local evidence.",
+    "Bundle hashes and the native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
+    "The slice's own committed limits are unchanged and still apply:",
+    "Touches and the mouse over two roots, four flag lanes on the same host, headless.",
+    "RN's platforms keep one touch list per surface; this host lists the application's touches on purpose.",
+    "Pointer capture across roots, several touch devices, hardware and mobile exports are not exercised.",
+    "No whole GF, checkpoint, dependency, weight or denominator closed."
+  ],
+  "findings": [
+    "explained, non-blocking: .fallowrc.json: the run-head bytes differ from the 1b7dac5 pin; the PR branch gained commits that touch this path after the pinned run: f165b82 (#33), 2ec988e (#32, already in the pinned run through the stacked branch); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: .github/workflows/contracts.yml: the run-head bytes differ from the 1b7dac5 pin; the PR branch gained commits that touch this path after the pinned run: f165b82 (#33), 2ec988e (#32, already in the pinned run through the stacked branch); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/application_runtime.cpp: the run-head bytes differ from the 1b7dac5 pin; the PR branch gained commits that touch this path after the pinned run: f165b82 (#33); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: package.json: the run-head bytes differ from the 1b7dac5 pin; the PR branch gained commits that touch this path after the pinned run: f165b82 (#33), 2ec988e (#32, already in the pinned run through the stacked branch); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: src/react-native-platform.jsx: the run-head bytes differ from the 1b7dac5 pin; the PR branch gained commits that touch this path after the pinned run: f165b82 (#33), 2ec988e (#32, already in the pinned run through the stacked branch); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: tests/event-dispatch-integrated-probe.gd: the run-head bytes differ from the 1b7dac5 pin; the PR branch gained commits that touch this path after the pinned run: a906ab6 (test(events): Label the integrated probe's touches application-wide); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at reviewReruns[0].changedSource.tests/event-dispatch-integrated-probe.gd"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 112041923119,
+    "sha256": "6fcbf48e49797d982bab9f69dc1f0f1c0f2a0764946722d7969c46784880a543",
+    "checkoutVerified": true,
+    "step": "npm run test:responders:shared-touches",
+    "stepTap": {
+      "ok": "roots of one application share RN's single responder over every touch",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 103,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

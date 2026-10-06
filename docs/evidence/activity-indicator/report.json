@@ -738,7 +738,12 @@
     "types/react-native.ts"
   ],
   "hostedCI": {
-    "status": "pending-activity-indicator-slice"
+    "status": "verified",
+    "run": 37395264445,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37395264170,
+    "publication": "publication.json"
   },
   "limits": [
     "Headless SceneTree frames: the phase and per-frame work are measured natively; no pixel capture certifies the drawing.",
