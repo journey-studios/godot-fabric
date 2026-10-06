@@ -12,7 +12,8 @@
   "source": {
     "commit": "d96383c46dde79fb9d242f89e68360d49a81663a",
     "url": "https://github.com/journey-studios/godot-fabric/commit/d96383c46dde79fb9d242f89e68360d49a81663a",
-    "scope": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público react-native: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls com o tick de quadros do Godot como relógio, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. 75 checks headless em duas roots; o host anterior falha exatamente as 59 normativas; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2 e o oráculo independente rejeita as duas. Dois contratos antigos mudam de propósito: o TouchableOpacity passa a montar e a animar, e um commit só com filhos mantém o ID nativo imperativo do exemplo tree. CI desta fatia pendente. Fecha só o checkpoint de fatia do GF-19."
+    "scope": "Animated, Easing, useAnimatedValue(XY) e TouchableOpacity originais do RN pelo import público react-native: o driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do próprio RN animam os Controls com o tick de quadros do Godot como relógio, sem commit do React; a referência de runtime da thread JS é ligada uma vez por aplicação, como o ReactInstance faz, e as props animadas sobrevivem aos commits seguintes do React. 75 checks headless em duas roots; o host anterior falha exatamente as 59 normativas; as sabotagens retidas (timestamps em segundos e sem a referência de runtime) falham 32 e 2 e o oráculo independente rejeita as duas. Dois contratos antigos mudam de propósito: o TouchableOpacity passa a montar e a animar, e um commit só com filhos mantém o ID nativo imperativo do exemplo tree. CI desta fatia pendente. Fecha só o checkpoint de fatia do GF-19.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/40"
   },
   "phases": [
     {
@@ -1896,7 +1897,7 @@
           "evidence": [
             {
               "label": "Animated: 75 checks headless, host anterior com 59 falhas normativas e duas sabotagens retidas rejeitadas pelo oráculo (implementação d96383c)",
-              "url": "https://github.com/journey-studios/godot-fabric/commit/d96383c46dde79fb9d242f89e68360d49a81663a"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/b14617e2997579e839e25128b99204f3ad10b8a2/docs/evidence/native-animated/README.md"
             }
           ]
         },
@@ -3448,7 +3449,7 @@
         "GF-08"
       ],
       "message": "Animated e TouchableOpacity sobre o NativeAnimated C++ do RN: 75 headless em duas roots. O driver JS roda em requestAnimationFrame e, com useNativeDriver, o AnimatedModule C++ e o AnimationBackend compartilhado do RN animam os Controls com o tick de quadros do Godot, sem commit do React; um oráculo independente refaz cada amostra a partir dos timestamps entregues. O host anterior falha exatamente 59 checks; a sabotagem que entrega segundos ao backend falha 32 e a que deixa a referência de runtime da thread JS desligada falha 2, ambas rejeitadas pelo oráculo. Os contratos dos touchables (o TouchableOpacity monta e anima) e do exemplo tree (o commit só com filhos mantém o ID imperativo, como o RN) mudam de propósito. Primeira fatia do GF-19: fecha só o checkpoint de fatia; CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/commit/d96383c46dde79fb9d242f89e68360d49a81663a"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/b14617e2997579e839e25128b99204f3ad10b8a2/docs/evidence/native-animated/README.md"
     },
     {
       "id": "virtualized-list-hosted-ci-and-pages-20261006",
