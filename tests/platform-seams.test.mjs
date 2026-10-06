@@ -332,3 +332,41 @@ test("public Switch is RN's original Switch.js over the generated RCTSwitch View
     assert.ok(inputs.some(input => input.endsWith(suffix)), suffix);
   }
 });
+
+test("public ActivityIndicator is RN's original module over the generated RCTActivityIndicatorView ViewConfig", async t => {
+  const directory = fixture(t, {"App.js":
+    'export {default as Native} from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicatorViewNativeComponent";\n'
+    + 'export {get as viewConfig} from "react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry";'});
+  // RN's codegen Babel plugin compiles the original spec; the static ViewConfig
+  // path never reads the legacy UIManager.
+  const result = await build({absWorkingDir: directory, entryPoints: ["App.js"], bundle: true,
+    write: false, format: "cjs", platform: "neutral", mainFields: ["main"],
+    define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"}, metafile: true,
+    plugins: [{name: "indicator-boundaries", setup(builder) {
+      builder.onLoad({filter: /\/src\/ui-manager\.js$/}, () => ({contents:
+        'export default new Proxy({}, {get(_, name) { throw new Error("legacy UIManager." + String(name)); }});', loader: "js"}));
+    }}, ...plugins()]});
+  const host = {RN$Bridgeless: true, nativeModuleProxy: {
+    SourceCode: {getConstants: () => ({scriptURL: "file:///unit-fixture.js"})},
+    DeviceInfo: {getConstants: () => ({Dimensions: {
+      window: {width: 800, height: 600, scale: 1, fontScale: 1},
+      screen: {width: 800, height: 600, scale: 1, fontScale: 1},
+    }})},
+  }, RN$registerCallableModule() {}};
+  const {Native, viewConfig} = execute(result, {global: host, ...host});
+  assert.equal(Native, "RCTActivityIndicatorView");
+  const config = viewConfig("RCTActivityIndicatorView");
+  assert.equal(config.uiViewClassName, "RCTActivityIndicatorView");
+  for (const name of ["hidesWhenStopped", "animating", "size"]) {
+    assert.equal(config.validAttributes[name], true, name);
+  }
+  assert.equal(typeof config.validAttributes.color.process("#999999"), "number");
+  assert.deepEqual(Object.keys(config.validAttributes.style).sort(), Object.keys(controlViewConfig.validAttributes.style).sort());
+  assert.ok(config.bubblingEventTypes.topTouchStart && config.directEventTypes.topLayout);
+  const publicEntry = fixture(t, {"Public.js": 'export {ActivityIndicator} from "react-native";'});
+  const inputs = Object.keys((await compile(publicEntry, "Public.js")).metafile.inputs);
+  for (const suffix of ["react-native/Libraries/Components/ActivityIndicator/ActivityIndicator.js",
+    "react-native/src/private/components/activityindicator/specs/ActivityIndicatorViewNativeComponent.js"]) {
+    assert.ok(inputs.some(input => input.endsWith(suffix)), suffix);
+  }
+});

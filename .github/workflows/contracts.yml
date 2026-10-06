@@ -379,6 +379,17 @@ jobs:
             build/touchables-current.log
             build/touchables-animated.log
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:activity-indicator
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: native-activity-indicator
+          path: |
+            build/activity-indicator-report.json
+            build/activity-indicator-current-report.json
+            build/activity-indicator-comparison.json
+            build/activity-indicator-current.log
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:

@@ -273,6 +273,15 @@ fails 42 probe checks and the oracle rejects 12 of 13 sections; an animated
 lane shows RN's original TouchableOpacity failing at mount without
 `NativeAnimatedModule`. Hosted CI pending.
 
+The [ActivityIndicator record](activity-indicator/README.md) runs RN's original
+`ActivityIndicator.js` over the generated `ActivityIndicatorView` descriptor and
+a custom-drawn Godot spinner: 33/33 headless checks across actual SceneTree
+frames in two roots. Defaults, small/large/numeric sizes, the phase advancing once
+per frame while animating and frozen when stopped, `hidesWhenStopped`, color,
+remount and root isolation are covered. The preceding host fails exactly the 2
+mount checks; a retained sabotage that stops the per-frame work fails 9 checks
+and the independent oracle rejects it. Hosted CI pending.
+
 The [virtualized-list record](virtualized-list/README.md) scrolls RN's original
 `FlatList`, `SectionList` and `VirtualizedList` on the SDK ScrollView with real
 wheel steps and touch drags in two roots: 44 headless checks. Windows match RN's
