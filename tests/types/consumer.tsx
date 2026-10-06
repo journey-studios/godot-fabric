@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, RootTagContext, Button, Switch, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, RootTagContext, Button, Switch, ActivityIndicator, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, SwitchChangeEvent, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -151,3 +151,13 @@ const deprecatedTint = <Switch onTintColor="#00ff00" />;
 // @ts-expect-error the value is a boolean
 const textValue = <Switch value="on" />;
 void originalSwitchProps; void publicSwitch; void deprecatedTint; void textValue;
+
+// Public ActivityIndicator: RN's original props through the facade.
+const indicatorProps: ActivityIndicatorProps = {
+  animating: true, hidesWhenStopped: false, color: "#0a84ff", size: "large", testID: "spinner", style: {margin: 4},
+};
+const originalIndicatorProps: import("../../node_modules/react-native/types_generated/index").ActivityIndicatorProps = indicatorProps;
+const numericIndicator = <ActivityIndicator size={48} ref={instance => { if (instance) instance.measure(() => {}); }} />;
+// @ts-expect-error size is small, large or a number
+const invalidIndicatorSize = <ActivityIndicator size="medium" />;
+void originalIndicatorProps; void numericIndicator; void invalidIndicatorSize;
