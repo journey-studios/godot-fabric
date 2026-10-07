@@ -2063,7 +2063,7 @@
           "evidence": [
             {
               "label": "Networking: 100 checks headless, host anterior com 84 falhas normativas e duas sabotagens retidas rejeitadas pelo oráculo (implementação 83a3557)",
-              "url": "https://github.com/journey-studios/godot-fabric/commit/83a3557eb200b2bbaa337f2e302fb4c2aaf767f5"
+              "url": "https://github.com/journey-studios/godot-fabric/blob/7d05dce2f663726fc303b3fafea1776d6301960b/docs/evidence/networking/README.md"
             }
           ]
         },
@@ -3470,7 +3470,7 @@
         "GF-25"
       ],
       "message": "fetch e XMLHttpRequest do RN sobre o HTTPClient do Godot: 100 headless em duas roots de uma aplicação contra um servidor Node determinístico sobre HTTP e HTTPS. O RN instala seus globais de rede pelo setUpXHR e o host os apoia em três TurboModules C++ (Networking no contrato Android do RN, BlobModule e FileReaderModule) sobre um transporte do HTTPClient com redirecionamentos e tempo limite do host; um oráculo independente confere as 137 requisições que o servidor registrou e os contadores nativos. O host anterior falha exatamente 84 checks; a sabotagem que não segue redirecionamentos falha 8 e a que não une cabeçalhos repetidos falha 2, ambas rejeitadas pelo oráculo. O WebSocket continua falhando no primeiro uso até a próxima fatia. Primeira fatia do GF-22: fecha só o checkpoint de fatia; GF-05 e GF-25 não mudam de checkpoint; CI pendente.",
-      "url": "https://github.com/journey-studios/godot-fabric/commit/83a3557eb200b2bbaa337f2e302fb4c2aaf767f5"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/7d05dce2f663726fc303b3fafea1776d6301960b/docs/evidence/networking/README.md"
     },
     {
       "id": "root-retirement-hosted-ci-receipt-20261006",
