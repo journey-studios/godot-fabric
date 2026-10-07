@@ -1,8 +1,12 @@
 // Pure agent-board rules shared by the browser and the Node CLI/server (no fs, no DOM).
 export const AGENT_SLOTS = 5;
 export const AGENT_STATES = { planning: "Planejando", implementing: "Implementando", testing: "Testando", ci: "Aguardando CI", review: "Em revisão", blocked: "Bloqueado" };
-// Appended to by every delivery and merged sequentially by the orchestrator: never reservable.
-export const SHARED_PATHS = ["ROADMAP.md", "dashboard/migration.json", "package.json", "package-lock.json", ".github/workflows/contracts.yml", ".fallowrc.json", "examples/catalog.json", "docs/evidence/README.md"];
+// Wired by every delivery and merged sequentially by the orchestrator: never exclusive. They are cut out of every
+// area (reserving one is accepted, ignored and warned about) and only warn when 2+ agents change them.
+export const SHARED_PATHS = [
+  "ROADMAP.md", "dashboard/migration.json", "package.json", "package-lock.json", ".github/workflows/contracts.yml", ".fallowrc.json", "examples/catalog.json", "docs/evidence/README.md",
+  "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts",
+];
 export const STALE_MINUTES = 30;
 export const MAX_MESSAGES = 20;
 
@@ -50,11 +54,6 @@ function validateArea(area) {
   const segments = (area.endsWith("/") ? area.slice(0, -1) : area).split("/");
   if (area.startsWith("/") || /[\\*?[]/.test(area) || segments.some(segment => !segment || segment === "." || segment === "..")) {
     fail(`areas: caminho relativo POSIX inválido (${area}); use diretorio/ ou arquivo, sem / inicial, .., *, ? ou \\`);
-  }
-  for (const shared of SHARED_PATHS) {
-    if (pathsOverlap(area, shared)) {
-      fail(`areas: ${area} sobrepõe ${shared}, que é compartilhado e entra por merge sequencial do orquestrador`);
-    }
   }
 }
 
@@ -139,6 +138,9 @@ const label = agent => `Agente ${agent.slot}`;
 const branchOf = agent => agent.git?.branch ?? agent.branch;
 const changedOf = agent => agent.git?.changed ?? [];
 const within = (file, areas) => areas.some(area => pathsOverlap(file, area));
+const isShared = path => SHARED_PATHS.includes(path);
+// Areas an agent really holds: shared files are never exclusive, wherever they are reserved.
+const exclusiveAreas = agent => agent.areas.filter(area => !isShared(area));
 
 function comparePair(a, b, add) {
   const slots = [a.slot, b.slot];
@@ -152,8 +154,8 @@ function comparePair(a, b, add) {
   if (branchOf(a) === branchOf(b)) {
     add("branch", "conflict", slots, branchOf(a), `${both} estão na mesma branch (${branchOf(a)}); cada agente precisa da própria branch.`);
   }
-  for (const x of a.areas) {
-    for (const y of b.areas) {
+  for (const x of exclusiveAreas(a)) {
+    for (const y of exclusiveAreas(b)) {
       if (pathsOverlap(x, y)) {
         const subject = x.length >= y.length ? x : y;
         add("area", "conflict", slots, subject, `${both} reservaram áreas que se sobrepõem em ${subject}.`);
@@ -164,15 +166,15 @@ function comparePair(a, b, add) {
     add("resource", "conflict", slots, resource, `${both} declararam o recurso ${resource}; usem valores diferentes ou combinem o uso.`);
   }
   for (const [offender, owner] of [[a, b], [b, a]]) {
-    for (const file of changedOf(offender).filter(item => within(item, owner.areas))) {
+    for (const file of changedOf(offender).filter(item => !isShared(item) && within(item, exclusiveAreas(owner)))) {
       add("trespass", "conflict", slots, file, `${label(offender)} alterou ${file} na área reservada pelo ${label(owner)}.`);
     }
   }
   const other = new Set(changedOf(b));
   for (const file of changedOf(a).filter(item => other.has(item))) {
-    if (SHARED_PATHS.includes(file)) {
+    if (isShared(file)) {
       add("shared", "warning", slots, file, `${both} alteraram ${file}, arquivo compartilhado: merge sequencial pelo orquestrador; mantenham os dois lados.`);
-    } else if (!within(file, a.areas) && !within(file, b.areas)) {
+    } else if (!within(file, exclusiveAreas(a)) && !within(file, exclusiveAreas(b))) {
       add("file", "conflict", slots, file, `${both} alteraram o mesmo arquivo (${file}) fora de áreas reservadas.`);
     }
   }
@@ -185,6 +187,10 @@ function checkAgent(agent, now, add) {
   const idle = now - Date.parse(agent.updatedAt);
   if (idle > STALE_MINUTES * 60000) {
     add("stale", "warning", [agent.slot], `slot ${agent.slot}`, `${label(agent)} sem sinal há ${Math.floor(idle / 60000)} min; áreas continuam reservadas até release.`);
+  }
+  const reserved = agent.areas.filter(isShared);
+  if (reserved.length) {
+    add("shared-area", "warning", [agent.slot], `slot ${agent.slot}`, `${label(agent)} reservou arquivos compartilhados (${reserved.join(", ")}): a reserva não é exclusiva; merge sequencial pelo orquestrador. Remova-os das áreas no próximo update.`);
   }
   if (agent.git?.exists === false) {
     add("missing", "warning", [agent.slot], agent.worktree, `${label(agent)}: worktree não encontrada (${agent.worktree}); libere o slot.`);

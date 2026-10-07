@@ -160,12 +160,17 @@ Regras:
 - O git é a verdade: branch, HEAD, ahead/behind de `origin/main` e arquivos
   alterados são lidos ao vivo da worktree. Conflitos usam o que foi declarado e
   o que realmente mudou.
-- Arquivos compartilhados por toda entrega (`ROADMAP.md`,
+- Arquivos compartilhados, que toda entrega altera (`ROADMAP.md`,
   `dashboard/migration.json`, `package.json`, `package-lock.json`,
   `.github/workflows/contracts.yml`, `.fallowrc.json`, `examples/catalog.json`,
-  `docs/evidence/README.md`) não podem ser reservados. Quando 2 ou mais agentes
-  os alteram o painel só avisa: o orquestrador faz o merge sequencial e todos
-  mantêm os dois lados.
+  `docs/evidence/README.md`, `native/application_runtime.cpp`,
+  `native/CMakeLists.txt`, `native/register.cpp`, `src/react-native-platform.jsx`,
+  `types/react-native.ts`), nunca são exclusivos: ficam fora de toda área. Reservá-los
+  é aceito, mas ignorado, com o aviso `shared-area` (tire-os das áreas no próximo
+  `update`); diretórios que os contêm (`native/`, `dashboard/`) são áreas normais,
+  e alterar um compartilhado dentro da área de outro agente não é conflito.
+  Quando 2 ou mais agentes os alteram o painel só avisa: o orquestrador faz o
+  merge sequencial e todos mantêm os dois lados.
 - Recursos `tipo:valor` (`port:4318`, `build:modal-consumer`) são exclusivos.
   O mesmo GF em dois agentes é só aviso: fatias diferentes de um GF podem andar
   em paralelo, mas combinem a divisão.

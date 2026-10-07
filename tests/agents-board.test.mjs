@@ -49,11 +49,36 @@ test("the same file outside any area is a file conflict", () => {
   assert.deepEqual(result.issues.map(issue => [issue.kind, issue.severity, issue.slots, issue.subject]), [["file", "conflict", [1, 2], "src/loose.js"]]);
 });
 
-test("shared files only warn, and cannot be reserved", () => {
-  assert.ok(SHARED_PATHS.includes("ROADMAP.md"));
+test("shared files only warn when 2+ agents change them", () => {
+  for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts"]) {
+    assert.ok(SHARED_PATHS.includes(shared), shared);
+  }
   const result = coordinate([live(record(1), ["ROADMAP.md", "package.json"]), live(record(2), ["ROADMAP.md"])], start);
   assert.deepEqual(result.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["shared", "warning", "ROADMAP.md"]]);
   assert.match(result.issues[0].message, /merge sequencial pelo orquestrador/);
+});
+
+test("shared files are cut out of every area: reserving one is allowed, never exclusive", () => {
+  // Two agents reserving the very same shared file do not conflict; each only gets the shared-area warning.
+  const both = coordinate([record(1, { areas: ["native/register.cpp"] }), record(2, { areas: ["native/register.cpp", "native/CMakeLists.txt"] })], start);
+  assert.deepEqual(both.issues.map(issue => [issue.kind, issue.severity, issue.slots, issue.subject]), [["shared-area", "warning", [1], "slot 1"], ["shared-area", "warning", [2], "slot 2"]]);
+  // A shared file reserved by one agent and a directory containing it reserved by another is not an area conflict.
+  const inside = coordinate([record(1, { areas: ["native/register.cpp"] }), record(2, { areas: ["native/"] })], start);
+  assert.deepEqual(inside.issues.map(issue => [issue.kind, issue.slots]), [["shared-area", [1]]]);
+  // Directories that contain a shared file still conflict with each other.
+  const directories = coordinate([record(1, { areas: ["native/"] }), record(2, { areas: ["native/modal/"] })], start);
+  assert.deepEqual(directories.issues.map(issue => [issue.kind, issue.severity, issue.slots, issue.subject]), [["area", "conflict", [1, 2], "native/modal/"]]);
+  // Changing a shared file inside another agent's area is neither trespass nor a file conflict...
+  const changed = coordinate([live(record(1, { areas: ["native/"] })), live(record(2), ["native/register.cpp", "src/react-native-platform.jsx"])], start);
+  assert.deepEqual(changed.issues, []);
+  // ...it only warns once both changed it, while other files in that area are still trespass.
+  const warned = coordinate([live(record(1, { areas: ["native/"] }), ["native/register.cpp"]), live(record(2), ["native/register.cpp", "native/other.cpp"])], start);
+  assert.deepEqual(warned.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["trespass", "conflict", "native/other.cpp"], ["shared", "warning", "native/register.cpp"]]);
+  // One shared-area warning per agent, listing every shared file it reserved and none of its exclusive areas.
+  const reserved = coordinate([record(1, { areas: ["src/a/", "native/register.cpp", "native/CMakeLists.txt", "ROADMAP.md"] })], start);
+  assert.equal(reserved.issues.length, 1);
+  assert.deepEqual([reserved.issues[0].kind, reserved.issues[0].severity, reserved.issues[0].subject], ["shared-area", "warning", "slot 1"]);
+  assert.equal(reserved.issues[0].message, "Agente 1 reservou arquivos compartilhados (native/register.cpp, native/CMakeLists.txt, ROADMAP.md): a reserva não é exclusiva; merge sequencial pelo orquestrador. Remova-os das áreas no próximo update.");
 });
 
 test("the same GF in two agents is a warning", () => {
@@ -107,6 +132,9 @@ test("issue order is deterministic: conflicts first, then slots and subject", ()
 test("validateAgent accepts a complete record and rejects invalid ones with Portuguese messages", () => {
   const ok = record(1, { areas: ["src/a/", "src/b.js"], resources: ["port:4318"], pr: "https://example.com/pr/1", state: "blocked", blocker: "aguardando CI", messages: [{ at: iso(1), to: null, text: "oi" }, { at: iso(2), to: 2, text: "olá" }] });
   assert.equal(validateAgent(ok), ok);
+  // Shared files and the directories that contain them are valid areas (they are just never exclusive).
+  const withShared = record(1, { areas: ["native/register.cpp", "native/", "dashboard/", "ROADMAP.md"] });
+  assert.equal(validateAgent(withShared), withShared);
   const rejected = {
     "slot 0": [{ slot: 0 }, /slot/],
     "slot 6": [{ slot: 6 }, /slot/],
@@ -115,8 +143,6 @@ test("validateAgent accepts a complete record and rejects invalid ones with Port
     "area with *": [{ areas: ["src/*.js"] }, /areas/],
     "backslash area": [{ areas: ["src\\a\\"] }, /areas/],
     "duplicate area": [{ areas: ["src/a/", "src/a/"] }, /duplicados/],
-    "area over a shared file": [{ areas: ["dashboard/"] }, /dashboard\/migration\.json/],
-    "shared file as area": [{ areas: ["ROADMAP.md"] }, /ROADMAP\.md/],
     "blocked without blocker": [{ state: "blocked" }, /blocker/],
     "unknown state": [{ state: "sleeping" }, /state/],
     "malformed GF": [{ taskIds: ["GF-2"] }, /taskIds/],
@@ -383,6 +409,14 @@ test("agents coordinate through the CLI: claim, conflict, trespass, messages and
   const freed = await cli(b, directory, "claim", "--task", "GF-23", "--title", "WebSocket", "--area", "src/b/");
   assert.equal(freed.code, 0, freed.stderr);
   assert.deepEqual((await readdir(directory)).sort(), ["slot-1.json", "slot-2.json"], "the freed slot is reused");
+
+  // Reserving shared files is not refused; the warning is printed like any other.
+  const shared = await cli(a, directory, "update", "--area", "src/a/", "--area", "native/register.cpp");
+  assert.equal(shared.code, 0, shared.stderr);
+  assert.match(shared.stdout, /AVISO \[shared-area\] Agente 1 reservou arquivos compartilhados \(native\/register\.cpp\)/);
+  const nativeDirectory = await cli(b, directory, "update", "--area", "src/b/", "--area", "native/");
+  assert.equal(nativeDirectory.code, 0, nativeDirectory.stderr);
+  assert.doesNotMatch(nativeDirectory.stdout, /shared-area/);
 
   const onMain = await cli(main, directory, "claim", "--task", "GF-24", "--title", "Na main");
   assert.equal(onMain.code, 1);

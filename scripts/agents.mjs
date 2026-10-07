@@ -218,12 +218,14 @@ async function update({ options, context }) {
   const others = context.board.agents.filter(agent => agent !== mine);
   // Only conflicts this update creates block it, so a heartbeat still works while an older conflict is being resolved.
   const known = new Set(conflictsOf(coordinate(context.board.agents).issues, mine.slot).map(issueKey));
-  const created = conflictsOf(coordinate([...others, { ...next, git: info }]).issues, next.slot).filter(issue => !known.has(issueKey(issue)));
+  const { issues } = coordinate([...others, { ...next, git: info }]);
+  const created = conflictsOf(issues, next.slot).filter(issue => !known.has(issueKey(issue)));
   if (created.length) {
     refuse(created, others, next.slot);
   }
   await writeRecord(context.directory, mine.file, next);
   console.log(`Agente ${next.slot} atualizado.`);
+  printIssues(issues.filter(issue => issue.severity === "warning" && issue.slots.includes(next.slot)));
 }
 
 async function say({ positionals, options, context }) {
