@@ -32,7 +32,7 @@ const compilerOptionKeys = new Set([
 
 function actionableCompilerError(error) {
   const detail = error instanceof Error ? error.message : String(error);
-  if (/Unable to resolve @tsc-rs\/|Executable not found|spawn .*ENOENT|not found/i.test(detail))
+  if (/Unable to resolve @tsc-rs\/|Executable not found|spawn .*ENOENT/i.test(detail))
     return new Error(`E_NATIVE_TYPECHECK: tsc-rs@0.1.0 native compiler is unavailable (${detail}). Install the pinned tsc-rs package with its platform binary for ${process.platform}-${process.arch}.`);
   if (/unsupported|unknown compiler option|invalid compiler option/i.test(detail))
     return new Error(`E_NATIVE_TYPECHECK: tsc-rs@0.1.0 cannot use this project's effective compiler options (${detail}).`);
@@ -43,8 +43,7 @@ function adaptDiagnostic(diagnostic) {
   return {...diagnostic, messageText: diagnostic.messageChain?.length
     ? {messageText: diagnostic.text, category: diagnostic.category, code: diagnostic.code,
       next: diagnostic.messageChain.map(adaptDiagnostic)}
-    : diagnostic.text, start: diagnostic.pos, end: diagnostic.end,
-    category: diagnostic.category === 1 ? 1 : diagnostic.category};
+    : diagnostic.text, start: diagnostic.pos, end: diagnostic.end};
 }
 
 export function checkNativeTypes({rootFiles, compilerOptions, projectReferences, resolveModuleName, cwd}) {

@@ -57,6 +57,27 @@ test("native checker refuses effective compiler options outside its supported pr
   assert.throws(() => run(f), /E_NATIVE_TYPECHECK:.*unrecognizedProjectOption/);
 });
 
+test("native checker only classifies missing compiler binaries as compiler unavailable", t => {
+  const source = "import value from './missing';\nexport {value};\n";
+  for (const message of ["Module not found: ./missing", "Source file not found: ./missing"]) {
+    const f = fixture(t, source);
+    const expected = new Error(message);
+    assert.throws(() => checkNativeTypes({rootFiles: [f.filename], compilerOptions: f.options,
+      resolveModuleName: () => { throw expected; } }), error => error.message.includes(message)
+        && !error.message.includes("native compiler is unavailable"),
+    `expected ${message} to retain its general classification`);
+  }
+
+  for (const message of ["Unable to resolve @tsc-rs/darwin-arm64", "Executable not found: tsc",
+    "spawn tsc ENOENT"]) {
+    const f = fixture(t, source);
+    assert.throws(() => checkNativeTypes({rootFiles: [f.filename], compilerOptions: f.options,
+      resolveModuleName: () => { throw new Error(message); }}),
+    error => error.message.startsWith("E_NATIVE_TYPECHECK: tsc-rs@0.1.0 native compiler is unavailable"),
+    `expected ${message} to remain actionable`);
+  }
+});
+
 test("native checker reports a removed TypeScript option instead of silently dropping it", t => {
   const f = fixture(t, "export const value = 1;", {allowSyntheticDefaultImports: false});
   const result = run(f);
