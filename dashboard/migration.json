@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "WebSocket: ajuste do gate HTTP; CI final pendente. Próximo: Modal."
+    "focusTitle": "WebSocket: CI 5/5; integração da main em validação. Próximo: Modal."
   },
-  "updatedAt": "2026-10-07T16:17:26.070Z",
+  "updatedAt": "2026-10-07T16:57:03.264Z",
   "source": {
     "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
     "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "Backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay: prova local 95/60/53; byte budget de 1 MiB compartilhado entre sockets WebSocket e admissão de 256 eventos canônicos após HTTP. CI passou 5/5 no head fixado 422c2ee. O head 3b57e72 falhou somente no diagnóstico exato de um erro HTTP; a correção local passou100/100 e exige nova CI. GF-22 segue parcial.",
+    "scope": "Backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay: prova local 95/60/53; byte budget de 1 MiB compartilhado entre sockets WebSocket e admissão de 256 eventos canônicos após HTTP. CI passou 5/5 no head fixado e8dd7b0, incluindo a correção dos dois diagnósticos exatos de erro HTTP. Integração com main a608ccf e tsc-rs exige nova CI antes do merge. GF-22 segue parcial.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
   },
   "phases": [
@@ -3473,6 +3473,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "websocket-e8-ci-green-main-integration-20261007",
+      "at": "2026-10-07T16:57:03.264Z",
+      "taskIds": [
+        "GF-22"
+      ],
+      "message": "PR #48: head e8dd7b0 passou os cinco jobs hospedados, incluindo HTTP100/100, WebSocket95/60/53, carga e lifetime; artefatos conferidos independentemente. CodeRabbit aprovou sem novas threads. Enquanto isso, main recebeu o compilador tsc-rs em a608ccf. Integração preserva os comandos WebSocket e o novo compilador; os dois testes de typecheck entram no gate obrigatório, corrigindo a ausência constatada no comando de contratos da main. Gates locais281Node/13Python, static206 entradas e publicação1136 passaram antes desta atualização documental; consumidor real e CI do head integrado permanecem etapas separadas. Nenhum checkpoint ou item concluído:23/156 e0/39; GF-22 parcial.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057"
+    },
     {
       "id": "websocket-ci-http-diagnostic-20261007",
       "at": "2026-10-07T16:17:26.070Z",

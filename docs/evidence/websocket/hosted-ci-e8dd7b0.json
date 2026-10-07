@@ -1,0 +1,148 @@
+{
+  "format": "godot-fabric.websocket-hosted-ci/v1",
+  "source": {
+    "repository": "journey-studios/godot-fabric",
+    "headSha": "e8dd7b09ad6c3cf5e6e53254c245ed6c3fe63253",
+    "runId": 37651052057,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057",
+    "event": "pull_request",
+    "branch": "feat/networking-websocket",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "jobs": [
+    {
+      "name": "reference-ios",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057/job/112894165623"
+    },
+    {
+      "name": "native-cold-start",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057/job/112894165899"
+    },
+    {
+      "name": "reference-android",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057/job/112894166191"
+    },
+    {
+      "name": "contracts",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057/job/112894166195"
+    },
+    {
+      "name": "parity-comparison",
+      "conclusion": "success",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37651052057/job/112907735468"
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "native-websocket",
+      "id": 11497740415,
+      "sizeBytes": 265812,
+      "githubApiDigest": "sha256:4036b3039152126df7787e3a5ee5f81118db89057e1c83ea72241be1b8d95e98"
+    },
+    {
+      "name": "parity-comparison",
+      "id": 11497029966,
+      "sizeBytes": 1553,
+      "githubApiDigest": "sha256:a68d9eec64faf60eb38ec79f2fe7d73cfc52ce305c7b2524562218dcdac70537"
+    }
+  ],
+  "rawReportsSha256": {
+    "websocket-current-report.json": "40ec490cd3c326a7bffc5962e3893b780c5e0095712ba3281b150b93678549f1",
+    "websocket-comparison.json": "33d1f6e66b57e035583d6cb8b803b02053c901ebcd95b82f5a47ad8959e81b6a",
+    "websocket-load.json": "e49bbfbde43d91e2f4b36c4a90026f0abf297257a9bcc5aab00bdb6365154aa8",
+    "websocket-transport-lifetime.json": "6ac75bb029b44baa833017b5323d4bd46b2436df98a6be3267ee6878eecd5ce1",
+    "parity-comparison.json": "4dcba19a18f52e71fef31c164451f3aa6d7892ac07dc2f084059a20a5cc8086c"
+  },
+  "independentVerification": {
+    "productWireOracleRecomputed": true,
+    "sourceHashesMatchedHostedCheckout": true,
+    "distinctRepositoryInputsChecked": 46,
+    "githubApiArtifactDigestsAreMetadata": true,
+    "archiveBytesDigestIndependentlyChecked": false
+  },
+  "runtime": {
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.2",
+    "platform": "macOS arm64 hosted native-cold-start job",
+    "display": "headless",
+    "nativeHostSha256": "51db8dfaf32694257b48970e63ae81418e109a8f331c91143028d895c9882540",
+    "bundleSha256": "5f51967a7ee343db09690ae58ae4c45bc19880bac3ad9545f8aa68546631845a"
+  },
+  "product": {
+    "passedChecks": 95,
+    "wireOracle": {
+      "connections": 60,
+      "compared": 53,
+      "serverMessages": 48,
+      "clientMessages": 34,
+      "started": 66,
+      "connects": 72
+    },
+    "originalControlPresent": false,
+    "negativeControlScope": "Hosted CI omits preceding-host and mutation controls; local execution.json retains those."
+  },
+  "load": [
+    {
+      "bytesPerMessage": 8192,
+      "sockets": 8,
+      "messagesPerSocket": 128,
+      "deliveredMessages": 1024,
+      "pendingEvents": 0,
+      "peakPendingEvents": 132,
+      "maxWireBytesPerPoll": 1048576,
+      "maxEventsAdmittedPerPoll": 132,
+      "maxMessagesPerPoll": 128,
+      "firstProgressSpreadFrames": 1,
+      "timerTicks": 10,
+      "renders": 10,
+      "nativeHostSha256": "51db8dfaf32694257b48970e63ae81418e109a8f331c91143028d895c9882540",
+      "bundleSha256": "5f51967a7ee343db09690ae58ae4c45bc19880bac3ad9545f8aa68546631845a"
+    },
+    {
+      "bytesPerMessage": 512,
+      "sockets": 8,
+      "messagesPerSocket": 128,
+      "deliveredMessages": 1024,
+      "pendingEvents": 0,
+      "peakPendingEvents": 256,
+      "maxWireBytesPerPoll": 132096,
+      "maxEventsAdmittedPerPoll": 256,
+      "maxMessagesPerPoll": 256,
+      "firstProgressSpreadFrames": 0,
+      "timerTicks": 7,
+      "renders": 6,
+      "nativeHostSha256": "51db8dfaf32694257b48970e63ae81418e109a8f331c91143028d895c9882540",
+      "bundleSha256": "5f51967a7ee343db09690ae58ae4c45bc19880bac3ad9545f8aa68546631845a"
+    }
+  ],
+  "lifetime": {
+    "passedCases": 8,
+    "activeConnectionsAfterEachCase": 0,
+    "terminalCallbacksAfterCancelOrStop": 0,
+    "drainedEchoWireClose1001": 4,
+    "unreadGreetingTcpDropsWithoutCloseFrame": 4,
+    "closeDelivery": "best effort",
+    "loadedTestLibrarySha256": "569bb1615b4456c2a6aac0b2c67c11555b15bfdb57cba07fe9267e491e810857"
+  },
+  "parity": {
+    "fixture": "core-ui-v2",
+    "status": "matched_subset",
+    "cases": 13,
+    "referencePlatforms": [
+      "android",
+      "ios"
+    ],
+    "scope": "These 13 core-ui-v2 cases only; not WebSocket differential parity or Godot mobile runtime/export proof."
+  },
+  "limits": [
+    "This receipt applies to the pinned hosted head; later PR heads require their own green checks before merge.",
+    "Hosted native execution is macOS headless. Local graphical screenshots remain in execution.json.",
+    "Android/iOS/Web Godot WebSocket runtime, exports and complete GF-22 acceptance remain open."
+  ]
+}

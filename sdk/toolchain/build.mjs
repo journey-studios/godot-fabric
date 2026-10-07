@@ -10,6 +10,7 @@ import { transformAsync } from "@babel/core";
 import { platformPlugin } from "./platform-plugin.mjs";
 import { prepareProjectResolution } from "./project-resolution.mjs";
 import { selectedAdapterInputs, prepareAdapterBuild } from "./adapter-plugin.mjs";
+import { resolveNativeCompiler } from "./native-compiler.mjs";
 
 const toolchain = path.dirname(fileURLToPath(import.meta.url));
 const sdk = path.dirname(toolchain);
@@ -40,6 +41,13 @@ async function main() {
   if (entry === outfile) throw new Error("Entry and output must differ");
   const manifest = JSON.parse(await readFile(path.join(sdk, "manifest.json"), "utf8"));
   if (process.version !== "v" + manifest.node) throw new Error("Use the provisioned private Node " + manifest.node);
+  const typeCompiler = resolveNativeCompiler();
+  if (!manifest.typeChecker || manifest.typeChecker.name !== "tsc-rs"
+      || manifest.typeChecker.version !== typeCompiler.packageVersion
+      || manifest.typeChecker.typescriptVersion !== typeCompiler.typescriptVersion
+      || manifest.typeChecker.platformPackage !== typeCompiler.platformPackage
+      || manifest.typeChecker.executableSha256 !== createHash("sha256").update(await readFile(typeCompiler.executable)).digest("hex"))
+    throw new Error("E_TYPESCRIPT_COMPILER: provisioned checker differs from the addon manifest; provision the locked SDK again");
   const packageFile = path.join(project, "package.json");
   const dependencies = existsSync(packageFile) ? JSON.parse(readFileSync(packageFile, "utf8")) : {};
   for (const name of ["react", "react-native"]) {
@@ -115,6 +123,8 @@ async function main() {
   await writeFile(path.join(path.dirname(outfile), "build-report.json"), JSON.stringify({
     schemaVersion: 1, entry: entryArg, bundle: bundleArg, sdkSourceCommit: manifest.sourceCommit,
     sha256: bundleSha256, inputs,
+    typeChecker: {name: "tsc-rs", version: typeCompiler.packageVersion,
+      typescriptVersion: typeCompiler.typescriptVersion},
     adapterSelection: packetText ? {path: path.relative(project, packetPath).split(path.sep).join("/"),
       sha256: createHash("sha256").update(packetText).digest("hex"), adapters: records.length,
       specs: adapterBuild.specCount} : null,

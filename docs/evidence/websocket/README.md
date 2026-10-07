@@ -18,13 +18,24 @@ Its parity job covers 13
 `core-ui-v2` cases on Android/iOS, not WebSocket differential or Godot mobile runtime behavior.
 Changes after that pinned head need their own green CI before merge.
 
+The HTTP diagnostic correction passed all five jobs at `e8dd7b0`
+([receipt](hosted-ci-e8dd7b0.json),
+[GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37651052057)).
+Independent inspection again recomputed 95/60/53, checked 46 WebSocket inputs,
+verified both load phases and all eight lifetime cases, and checked the 13-case
+parity subset. The HTTP artifact separately passed 100 checks; 51 distinct inputs
+across the HTTP and WebSocket bundles matched that hosted checkout. This run used
+base `afa5d875`; integration with the later `a608ccf` main tooling updates still
+requires fresh green CI before merge.
+
 The later `3b57e72` run failed in the HTTP regression suite before WebSocket ran.
 Its truncated-body XHR emitted the expected error sequence, but Godot reported
 connection loss instead of EOF. The [diagnostic receipt](ci-http-diagnostic.json)
 records both exact permitted reasons, the corrected 100-check local run and five
 rejected oracle mutations. The main baseline passed six times; that failure was
 not reproduced there. The failed hosted run remains failed, and the correction
-requires fresh green hosted checks before merge.
+was verified by the pinned `e8dd7b0` run above. Later heads still require their own
+green hosted checks before merge.
 
 Negative controls are also retained in the execution receipt: the preceding main host
 (`afa5d875`) passed only 12 of 95 checks and made zero server connections; the Origin
