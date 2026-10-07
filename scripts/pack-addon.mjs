@@ -5,6 +5,8 @@ import { existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { verifyNativeSdk } from "./native-sdk.mjs";
+import { createRequire } from "node:module";
+import { resolveNativeCompiler } from "../sdk/toolchain/native-compiler.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const lock = JSON.parse(await readFile(path.join(root, "dependencies.json"), "utf8"));
@@ -88,7 +90,10 @@ async function main() {
   const {nativeHashes} = await verifyAddonNativeInputs({nativeSdk});
   const output = path.resolve(outputArg ?? path.join(root, "build", "sdk", "godot_fabric"));
   if (existsSync(output)) throw new Error("Use a new output directory; existing addon files are preserved");
-  await access(path.join(root, "node_modules/typescript/bin/tsc"));
+  const compiler = resolveNativeCompiler({resolvePackage: createRequire(path.join(root, "package.json")).resolve});
+  if (run(compiler.executable, ["--version"]) !== "Version " + compiler.typescriptVersion)
+    throw new Error("E_TYPESCRIPT_COMPILER: installed native compiler differs from its package metadata");
+  const compilerSha256 = hash(await readFile(compiler.executable));
   await access(nativeSdk ? path.join(nativeSdk, "lib/fabric_godot.dylib") : path.join(root, "addons/fabric_godot.dylib"));
   await access(nativeSdk ? path.join(nativeSdk, "lib/frameworks/hermesvm.framework") : path.join(root, "addons/frameworks/hermesvm.framework"));
   const archive = path.join(root, ".deps", `node-v${lock.node.version}-darwin-arm64.tar.gz`);
@@ -124,7 +129,8 @@ async function main() {
   const provenanceFiles = new Set(run("git", ["-C", root, "ls-files", "-z", "sdk", "src", "types", "native", "dependencies.json", "package-lock.json", "fabric.gdextension"]).split("\0").filter(Boolean));
   for (const file of ["scripts/codegen.mjs", "scripts/codegen-contract.mjs", "scripts/adapter-manifest.mjs", "scripts/pack-addon.mjs",
     "sdk/toolchain/adapter-plugin.mjs", "sdk/toolchain/project-config.mjs",
-    "sdk/toolchain/project-typecheck.mjs", "src/base-view-config.js"]) provenanceFiles.add(file);
+    "sdk/toolchain/project-typecheck.mjs", "sdk/toolchain/native-compiler.mjs",
+    "sdk/toolchain/native-typecheck.mjs", "src/base-view-config.js"]) provenanceFiles.add(file);
   for (const file of [...provenanceFiles].sort())
     sourceFiles[file] = hash(await readFile(path.join(root, file)));
   await verifyAddonNativeInputs({nativeSdk});
@@ -132,6 +138,10 @@ async function main() {
       || hash(await readFile(path.join(output, "native/frameworks/hermesvm.framework/hermesvm"))) !== nativeHashes.hermes
       || hash(await readFile(path.join(output, "native/frameworks/ReactNativeDependencies.framework/ReactNativeDependencies"))) !== nativeHashes.dependencies)
     throw new Error("Copied native dependencies differ from the verified native build receipt");
+  const copiedCompiler = resolveNativeCompiler({resolvePackage: createRequire(path.join(output, "toolchain/package.json")).resolve});
+  if (hash(await readFile(copiedCompiler.executable)) !== compilerSha256
+      || run(copiedCompiler.executable, ["--version"]) !== "Version " + compiler.typescriptVersion)
+    throw new Error("E_TYPESCRIPT_COMPILER: copied native compiler differs from the locked toolchain");
   await writeFile(path.join(output, "manifest.json"), JSON.stringify({
     schemaVersion: 1, experimental: true, host: "macOS arm64", godot: lock.godot.version,
     react: lock.react, "react-native": lock["react-native"].version, node: lock.node.version,
@@ -141,6 +151,9 @@ async function main() {
     sourceFiles,
     nativeSha256: hash(await readFile(path.join(output, "native/fabric_godot.dylib"))),
     lockfileSha256: hash(await readFile(path.join(root, "package-lock.json"))),
+    typeChecker: {name: "tsc-rs", version: compiler.packageVersion,
+      typescriptVersion: compiler.typescriptVersion, platformPackage: compiler.platformPackage,
+      executableSha256: compilerSha256},
     ...(nativeSdk ? {nativeCombinationSha256: hash(await readFile(path.join(output, "native/native-combination.json"))),
       nativeSdkManifestSha256: hash(await readFile(path.join(nativeSdk, "manifest.json")))} : {}),
   }, null, 2) + "\n");

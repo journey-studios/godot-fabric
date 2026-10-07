@@ -69,13 +69,29 @@ applies the original RN Babel transforms. It publishes the JS file after those
 steps succeed. Syntax/type, Resource, missing-tool and dependency failures
 preserve the previous bundle; Play is blocked instead of silently using it.
 
-The type checker and esbuild both receive the project's `tsconfig.json`
-explicitly. The builder uses that file's supported JSX/strict settings and
+The checker and esbuild both receive the project's `tsconfig.json` explicitly.
+Semantic and syntax checking uses the pinned `tsc-rs` 0.1.0 native compiler
+(upstream compiler version `7.1.0-dev`) through its unstable synchronous API.
+Its checker binaries support Linux x64 and macOS arm64. The provisioned Godot SDK remains supported on
+macOS arm64. The builder uses the project's supported JSX/strict settings and
 inheritance, rather than letting the first import of an SDK facade determine
-them. A facade reached through both an ESM import and a CommonJS native-module
-alias previously acquired different strict directives depending on resolution
-order. Recovery keeps the exact-byte bundle assertion; see the
+them. TypeScript 6.0.3 remains installed for configuration parsing, scoped
+module lookup and the existing parity AST inventory; it is not the semantic or
+syntax checker for consumer builds.
+
+A facade reached through both an ESM import and a CommonJS native-module alias
+previously acquired different strict directives depending on resolution order.
+Recovery keeps the exact-byte bundle assertion; see the
 [executed determinism regression](../docs/evidence/bundle-determinism/README.md).
+The npm lockfile pins the checker and its platform package. There is no silent
+fallback to another checker, and Play does not install or download compiler
+packages. The compiler ships in the installed dependency graph used by setup
+and SDK provisioning. The existing esbuild bundle and RN Babel transform
+pipeline continues after checking; this migration changes the checker only.
+The addon manifest binds the package/compiler versions and native executable
+SHA-256. A missing or mismatched checker record blocks the build; reprovision
+older addons to adopt the new toolchain. See the
+[measured comparison and consumer checks](../docs/evidence/ts-rust/README.md).
 This proof covers unchanged inputs in one project, not byte-identical bundles
 across different installation paths or every TypeScript compiler option.
 

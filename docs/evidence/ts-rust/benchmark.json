@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-07T14:21:01.025Z",
+  "baseCommit": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+  "machine": {
+    "cpu": "Apple M3 Pro",
+    "logicalCpus": 11,
+    "memoryGiB": 18,
+    "platform": "darwin",
+    "arch": "arm64",
+    "node": "v22.23.3"
+  },
+  "versions": {
+    "typescript": "6.0.3",
+    "tscRs": "0.1.0",
+    "nativeTypeScript": "7.1.0-dev"
+  },
+  "method": {
+    "warmupsPerCommand": 1,
+    "measuredRunsPerCommand": 7,
+    "execution": "serial; alternate old and new in each pair",
+    "metric": "wall clock including process startup",
+    "installationAndFixtureSetupExcluded": true,
+    "filesystem": "warm OS file cache; fresh process each run",
+    "scope": "Root typecheck and current minimal consumer JS builder; no Godot startup or native host build",
+    "npmBeforeReplay": "Original tsc command replayed in a private package against the same absolute root tsconfig and TypeScript binary; current npm script uses the repository package"
+  },
+  "sourceSha256": {
+    "package.json": "858056a7efcb502b3b6457c6214fa2a81d4eda29a95516c4aa610387478ee3fc",
+    "package-lock.json": "1230bb2c426a69b480197b02ed238621eabd549a8684594267eeb4ebeb047ed5",
+    "sdk/toolchain/build.mjs": "c05f0a23b6400dba387f9528a42f7c4bd7cd3d870cf2931b90e1371788570d76",
+    "sdk/toolchain/native-compiler.mjs": "c69c82581496dce152a64a9c788d4cbe6deb3fb48042608254f45e95eaab2eec",
+    "sdk/toolchain/native-typecheck.mjs": "5460dd7ca7c33711b2affa6e571ccd747c0a6e4c93fe2755e81db5b11778d761",
+    "sdk/toolchain/project-resolution.mjs": "85cbf2aa73e9412bd60cc0c35fa035639d4563d4d679b44a47b247d4b1747bfb",
+    "sdk/toolchain/project-typecheck.mjs": "fb283a0bfa55a080eb8a11308dbd5c4e8d2db977b889ca7c7d6af2b153782131",
+    "scripts/pack-addon.mjs": "b2afc589c4c93f66b061f273b379d05e18bb09cc2371b159af556802d28c7788"
+  },
+  "measurements": [
+    {
+      "name": "root-typecheck-direct",
+      "warmupMs": {
+        "old": 738.4972499999994,
+        "new": 55.612333000000035
+      },
+      "before": {
+        "runsMs": [
+          723.4691670000002,
+          701.8407920000009,
+          649.6678749999992,
+          588.1776659999996,
+          576.3224159999991,
+          587.0960840000007,
+          549.1556249999994
+        ],
+        "medianMs": 588.1776659999996,
+        "minMs": 549.1556249999994,
+        "maxMs": 723.4691670000002
+      },
+      "after": {
+        "runsMs": [
+          53.49341600000025,
+          48.141750000000684,
+          46.39645799999926,
+          44.81949999999961,
+          40.72829199999978,
+          42.67675000000054,
+          41.671040999999605
+        ],
+        "medianMs": 44.81949999999961,
+        "minMs": 40.72829199999978,
+        "maxMs": 53.49341600000025
+      },
+      "savedMs": 543.358166,
+      "speedup": 13.123253628443083
+    },
+    {
+      "name": "root-typecheck-npm",
+      "warmupMs": {
+        "old": 701.7501669999983,
+        "new": 133.51004099999955
+      },
+      "before": {
+        "runsMs": [
+          621.1669169999986,
+          640.3576670000002,
+          662.2057499999992,
+          637.6540000000005,
+          655.5709580000002,
+          641.8847089999999,
+          673.104041999999
+        ],
+        "medianMs": 641.8847089999999,
+        "minMs": 621.1669169999986,
+        "maxMs": 673.104041999999
+      },
+      "after": {
+        "runsMs": [
+          132.84029199999895,
+          140.73775000000023,
+          136.03200000000106,
+          155.34558300000026,
+          149.90641700000015,
+          149.27987499999654,
+          158.40087499999936
+        ],
+        "medianMs": 149.27987499999654,
+        "minMs": 132.84029199999895,
+        "maxMs": 158.40087499999936
+      },
+      "savedMs": 492.6048340000034,
+      "speedup": 4.2998743735551415
+    },
+    {
+      "name": "consumer-sdk-typecheck",
+      "warmupMs": {
+        "old": 812.2925410000025,
+        "new": 1812.0398749999986
+      },
+      "before": {
+        "runsMs": [
+          673.8998749999992,
+          706.4850420000002,
+          693.5934579999994,
+          720.9467920000025,
+          695.695667,
+          695.6766250000001,
+          749.6025829999999
+        ],
+        "medianMs": 695.695667,
+        "minMs": 673.8998749999992,
+        "maxMs": 749.6025829999999
+      },
+      "after": {
+        "runsMs": [
+          407.8863330000022,
+          416.6727080000019,
+          415.270916999998,
+          401.53329099999974,
+          424.99291599999924,
+          407.9459999999999,
+          433.36562499999854
+        ],
+        "medianMs": 415.270916999998,
+        "minMs": 401.53329099999974,
+        "maxMs": 433.36562499999854
+      },
+      "savedMs": 280.42475000000195,
+      "speedup": 1.6752814572853973
+    },
+    {
+      "name": "consumer-sdk-ui-build",
+      "warmupMs": {
+        "old": 3623.2244580000006,
+        "new": 3450.4704999999994
+      },
+      "before": {
+        "runsMs": [
+          3310.6544580000045,
+          3197.5713749999995,
+          3168.8778329999986,
+          3165.734500000006,
+          3161.2274590000015,
+          3159.635374999998,
+          3208.3485000000073
+        ],
+        "medianMs": 3168.8778329999986,
+        "minMs": 3159.635374999998,
+        "maxMs": 3310.6544580000045
+      },
+      "after": {
+        "runsMs": [
+          3146.404999999999,
+          3010.2342500000013,
+          2962.296957999999,
+          3018.017040999999,
+          2973.0333330000067,
+          3190.6015409999964,
+          3025.571750000003
+        ],
+        "medianMs": 3018.017040999999,
+        "minMs": 2962.296957999999,
+        "maxMs": 3190.6015409999964
+      },
+      "savedMs": 150.8607919999995,
+      "speedup": 1.0499867263671954
+    }
+  ],
+  "validation": {
+    "allRunsExitCode": 0,
+    "bundleBeforeSha256": "e0be1c5c3301f93520656716b5a4030307cbd36a548966f72a217ecf6dfa7ca3",
+    "bundleAfterSha256": "e0be1c5c3301f93520656716b5a4030307cbd36a548966f72a217ecf6dfa7ca3",
+    "identicalBundleBytes": true,
+    "frozenBaselineFiles": {
+      "sdk/toolchain/build.mjs": "fbbb98dc08ca95e826954d3081a5af3e6344c2eae02337a40200a3b7114bffca",
+      "sdk/toolchain/project-typecheck.mjs": "f548cd0a3c331dfeb788a18e1bbfbef4cc90692d0f471c68fab501ec5aa92754",
+      "sdk/toolchain/project-resolution.mjs": "dbfae5774239772f44890419f7c84d880d76cbcb8710dd91c450bcc1ebd93db9"
+    },
+    "contracts": {
+      "passed": true,
+      "nodeTests": 279,
+      "pythonTests": 13,
+      "parityAndDashboardPassed": true
+    },
+    "additionalConsumerIntegration": {
+      "passed": true,
+      "tests": 7,
+      "copiedNativeCompiler": true,
+      "noGlobalPath": true,
+      "preservedBundleOnTypeSyntaxManifestAndExecutableFailures": true
+    },
+    "staticAnalysisPassed": true,
+    "publicationScanPassed": true
+  }
+}

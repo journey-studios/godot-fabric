@@ -6,6 +6,7 @@ import ts from "typescript";
 import {isSdkOwnedSpecifier} from "./platform-plugin.mjs";
 import {godotExtensions} from "./platform-resolution.mjs";
 import {projectCompilerProfiles} from "./project-config.mjs";
+import {checkNativeTypes} from "./native-typecheck.mjs";
 
 const suffixes = [".godot", ".native", ""];
 const facades = new Map([
@@ -190,19 +191,18 @@ export function prepareProjectResolution({project, sdk, dependencies, resolveSdk
   }
   function checkTypes() {
     const compilerOptions = {...profiles.appOptions, noEmit: true};
-    const host = ts.createCompilerHost(compilerOptions);
-    host.resolveModuleNameLiterals = (literals, containingFile, redirectedReference, options, sourceFile) => {
-      const privateOwner = privateImporter(containingFile);
-      const lookupOptions = privateOwner ? profiles.packageOptions : profiles.appOptions;
-      const cache = privateOwner ? packageTypeCache : appTypeCache;
-      return literals.map(literal => ts.resolveModuleName(literal.text, containingFile, lookupOptions,
-        host, cache, redirectedReference, ts.getModeForUsageLocation(sourceFile, literal, options)));
-    };
-    const program = ts.createProgram({rootNames: parsed.fileNames, options: compilerOptions,
-      projectReferences: parsed.projectReferences, host});
-    const diagnostics = ts.getPreEmitDiagnostics(program);
+    const result = checkNativeTypes({rootFiles: parsed.fileNames, compilerOptions,
+      projectReferences: parsed.projectReferences, cwd: project,
+      resolveModuleName(moduleName, containingFile, resolutionMode) {
+        const privateOwner = privateImporter(containingFile);
+        const lookupOptions = privateOwner ? profiles.packageOptions : profiles.appOptions;
+        const cache = privateOwner ? packageTypeCache : appTypeCache;
+        const resolved = ts.resolveModuleName(moduleName, containingFile, lookupOptions,
+          ts.sys, cache, undefined, resolutionMode).resolvedModule;
+        return resolved ? {resolvedModule: resolved} : undefined;
+      }});
     assertUnchanged();
-    return {diagnostics, errorCount: diagnostics.filter(item => item.category === ts.DiagnosticCategory.Error).length};
+    return result;
   }
 
   const skip = Symbol("project-resolution-recursion");

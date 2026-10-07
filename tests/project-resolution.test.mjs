@@ -70,6 +70,7 @@ function declaration(f, folder, contents) {
 
 function assertTypes(resolution, errorCode) {
   const result = resolution.checkTypes();
+  assert.equal(result.backend, "tsc-rs", "project typechecks must use the native compiler backend");
   if (errorCode === undefined) assert.equal(result.errorCount, 0,
     result.diagnostics.map(d => ts.flattenDiagnosticMessageText(d.messageText, "\n")).join("\n"));
   else {
@@ -350,6 +351,22 @@ test("the scoped original checker rejects treating the library's type as the app
   assertTypes(await prepare(f), 2322);
 });
 
+test("an application alias cannot satisfy a missing import in an installed library declaration", async t => {
+  const f = fixture(t, {dependencies: {library: "1.0.0"},
+    compilerOptions: {types: [], paths: {leaf: ["./ui/local-leaf.ts"]}}});
+  f.write("ui/local-leaf.ts", "export const answer: string = 'application alias';");
+  const library = installed(f, "library", "exports.answer = 'runtime value';");
+  declaration(f, library, "export {answer} from 'leaf';");
+  f.write("ui/index.ts", "import {answer} from 'library'; const value: string = answer;");
+
+  assert.equal(originalDiagnostics(f).length, 0,
+    "The unscoped TypeScript resolver falls back to the application's alias");
+  const result = (await prepare(f)).checkTypes();
+  assert.equal(result.backend, "tsc-rs");
+  assert.ok(result.diagnostics.some(diagnostic => diagnostic.code === 2307),
+    "The library's missing import must remain unresolved in the native checker");
+});
+
 test("application aliases coexist with private SDK runtime and declaration imports", async t => {
   const f = fixture(t, {compilerOptions: {types: [], paths: {
     "@react-native/normalize-colors": ["./ui/colors.ts"],
@@ -586,6 +603,7 @@ test("the typecheck worker accepts the builder's captured config without emittin
   const resolution = await prepare(f);
   const result = checkProjectTypes({project: f.project, sdk: f.sdk,
     expectedConfigFingerprint: resolution.configFingerprint});
+  assert.equal(result.backend, "tsc-rs");
   assert.equal(result.errorCount, 0);
   assert.equal(result.configFingerprint, resolution.configFingerprint);
   assert.equal(fs.existsSync(path.join(f.project, "ui/index.js")), false);

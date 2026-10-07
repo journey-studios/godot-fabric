@@ -2,10 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import {createRequire} from "node:module";
 import {fileURLToPath} from "node:url";
-import ts from "typescript";
 import {prepareProjectResolution} from "./project-resolution.mjs";
+import {formatNativeDiagnostics} from "./native-typecheck.mjs";
 
-// Original TypeScript, with only module lookup scoped to the importing owner.
+// Native tsc-rs checking with module lookup scoped to the importing owner.
 // No program emit, package installation, project scripts, or config JS runs.
 export function checkProjectTypes({project, sdk, expectedConfigFingerprint}) {
   project = fs.realpathSync(project);
@@ -25,7 +25,7 @@ function main() {
   const [project, sdk, expectedConfigFingerprint, ...extra] = process.argv.slice(2);
   if (!project || !sdk || extra.length) throw new Error("Expected project, SDK and optional config fingerprint");
   const result = checkProjectTypes({project, sdk, expectedConfigFingerprint});
-  if (result.diagnostics.length) process.stdout.write(ts.formatDiagnostics(result.diagnostics, {
+  if (result.diagnostics.length) process.stdout.write(formatNativeDiagnostics(result.diagnostics, {
     getCanonicalFileName: filename => filename, getCurrentDirectory: () => project, getNewLine: () => "\n",
   }));
   if (result.errorCount) process.exitCode = 1;
