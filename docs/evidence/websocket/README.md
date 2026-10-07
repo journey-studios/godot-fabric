@@ -23,17 +23,13 @@ it does not certify WebSocket differential parity or Godot mobile execution.
 The [dashboard capture after merge](dashboard-merged-main.jpg) records 23/156
 checkpoints and 0/39 completed release items. This slice does not add a checkpoint.
 
-The separate [post-merge main run](https://github.com/journey-studios/godot-fabric/actions/runs/37663778397)
-also passed all five jobs at `ebcb292`. Its job conclusions were checked after
-merge; artifact verification above remains attributed to final PR head `55980ac`.
-
 Historical receipts remain pinned to the sources they actually measured.
-Hosted CI passed all five jobs for implementation commit `422c2ee` only ([receipt](hosted-ci.json),
+Hosted CI passed all five jobs for implementation commit `422c2ee` ([receipt](hosted-ci.json),
 [GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)). Independent
 inspection of the native artifact recomputed the product oracle and matched 46 repository inputs.
 Its parity job covers 13
 `core-ui-v2` cases on Android/iOS, not WebSocket differential or Godot mobile runtime behavior.
-Later heads were checked separately; the final-head receipt above is the merge evidence.
+Changes after commit `422c2ee` need their own green CI before merge. The main push at `ebcb292`, the squash merge of #48, passed all five jobs in run [37663778397](https://github.com/journey-studios/godot-fabric/actions/runs/37663778397) ([receipt](hosted-ci-ebcb292.json)); changes after that commit need their own green CI.
 
 The separate HTTP diagnostic correction receipt covers commit `e8dd7b0` and passed all five jobs
 ([receipt](hosted-ci-e8dd7b0.json),
@@ -41,8 +37,17 @@ The separate HTTP diagnostic correction receipt covers commit `e8dd7b0` and pass
 Independent inspection again recomputed 95/60/53, checked 46 WebSocket inputs,
 verified both load phases and all eight lifetime cases, and checked the 13-case
 parity subset. The HTTP artifact separately passed 100 checks; 51 distinct inputs
-across the HTTP and WebSocket bundles matched that hosted checkout. This historical run used
-base `afa5d875`; the later integrated final head is covered by the final receipt above.
+across the HTTP and WebSocket bundles matched that hosted checkout. This run
+used base `afa5d875`; main at
+[`ebcb292`](https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f),
+the squash merge of #48, passed all five jobs in push run
+[37663778397](https://github.com/journey-studios/godot-fabric/actions/runs/37663778397)
+([receipt](hosted-ci-ebcb292.json)). Its native job ran `npm run test:websocket`
+(its four test files, 4 of 4 TAP tests passing) on the bundle `5f51967a…` that
+[execution.json](execution.json) records. The hosted report matched that
+record's 95 checks, 60 server connections and 53 oracle comparisons; both load
+phases delivered 1024 messages, and the eight lifetime cases ended with no
+active connection.
 
 The later `3b57e72` run failed in the HTTP regression suite before WebSocket ran.
 Its truncated-body XHR emitted the expected error sequence, but Godot reported
@@ -50,8 +55,9 @@ connection loss instead of EOF. The [diagnostic receipt](ci-http-diagnostic.json
 records both exact permitted reasons, the corrected 100-check local run and five
 rejected oracle mutations. The main baseline passed six times; that failure was
 not reproduced there. The failed hosted run remains failed, and the correction
-was verified by the `e8dd7b0` run above. The later final integrated head
-passed its own five hosted jobs before merge, as recorded above.
+was verified by the `e8dd7b0` run above. The push of main at
+[`ebcb292`](https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f)
+repeated this record in run 37663778397 ([receipt](hosted-ci-ebcb292.json)).
 
 Negative controls are also retained in the execution receipt: the preceding main host
 (`afa5d875`) passed only 12 of 95 checks and made zero server connections; the Origin
@@ -113,12 +119,12 @@ The verified macOS native SDK pack and provisioned addon include the pinned wsla
 license. The iOS simulator arm64 build passed and its combined archive link retains both Fabric
 and wslay symbols. That link proof did not execute on an iOS runtime or export a consumer app;
 ABI certification remains open. Hosted native execution is headless macOS for receipt
-commits `422c2ee`, `e8dd7b0` and final head `55980ac`; it is not mobile runtime evidence.
+commits `422c2ee`, `e8dd7b0`, final head `55980ac`, and for the main push `ebcb292` (run 37663778397); it is not mobile runtime evidence.
 
 ## Boundaries
 
 The product and graphical captures are local macOS arm64 evidence; hosted native execution
-covers receipt commits `422c2ee`, `e8dd7b0` and `55980ac`. Android, iOS-device and Web runtime behavior remain separate.
+covers receipt commits `422c2ee`, `e8dd7b0`, `55980ac`, and the main push `ebcb292` (run 37663778397). Android, iOS-device and Web runtime behavior remain separate.
 The fixtures do not certify `permessage-deflate`, other
 extensions, cookies, proxies, system trust integration, HTTP/2, long-duration or
 hardware load, offline reconnection, or the complete GF-22 acceptance. This PR

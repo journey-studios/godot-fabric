@@ -2699,8 +2699,17 @@ their sources when a signal ends them, through `scripts/sabotage-sources.mjs`
 dead server ([`8b7c890`](https://github.com/journey-studios/godot-fabric/commit/8b7c890c6d6458bb0500f3132402275149c28f43)), and a sabotage run past its
 timeout kills a child that ignores SIGTERM instead of waiting on it ([`57bc3e8`](https://github.com/journey-studios/godot-fabric/commit/57bc3e897f7d92a0002e12586fed4ad140d5bf85)); the counts above are
 those executed at `83a3557`, and the `postReview` section of `report.json` pins the changed files
-to these commits. Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint
-closes; no whole GF, other checkpoint, weight or denominator closes.
+to these commits. Hosted Contracts run 37571237096 (the push of main
+[`afa5d87`](https://github.com/journey-studios/godot-fabric/commit/afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea))
+passed all five jobs in its first attempt; its [audited
+artifact](docs/evidence/networking/hosted-ci.json) repeats the 100 headless
+checks with identical IDs, and the independent oracle accepts the downloaded
+report. The producer `src/react-native-platform.jsx`, which the committed pins
+do not list, has the same SHA-256 at
+[`83a3557`](https://github.com/journey-studios/godot-fabric/commit/83a3557eb200b2bbaa337f2e302fb4c2aaf767f5)
+and at `afa5d87`, and the bundle SHA-256 equality shows that the same bundle
+ran. [Pages 37571237256](docs/evidence/networking/publication.json) deployed
+this record from main `afa5d87`. Only GF-22's first-slice checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 
 ### WebSocket transport review (2026-10-07)
 

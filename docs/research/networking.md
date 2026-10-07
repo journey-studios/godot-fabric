@@ -10,7 +10,10 @@ does not join repeated response headers fails 2). WebSocket (certified afterward
 [WebSocket record](../evidence/websocket/README.md) and its [research note](websocket.md)),
 cookies, compressed responses, HTTP/2, upload and download progress, incremental
 streaming, `uri` and file bodies, connection pooling and every target but macOS are not
-certified. Hosted CI is pending.
+certified. Hosted run 37571237096 (the push of main afa5d87) passed all five
+jobs in its first attempt; its native job ran `npm run test:networking` (1 of 1
+TAP test passing) and its artifact repeated the 100 checks; the independent
+oracle accepts its report ([receipt](../evidence/networking/hosted-ci.json)).
 
 ## What RN does
 
