@@ -18,15 +18,51 @@ Redirect, Slow and Abort) that call `fetch` against a small HTTP server the scen
 starts on loopback, with a status badge, the final URL, the content type, the body
 and a log of the operations. Nothing reaches the network.
 
-`npm run test:networking` is the evidence suite, outside the catalog: RN's APIs
-against a deterministic Node server over HTTP and HTTPS, in two roots of one
-application, with the preceding host as the control and retained sabotages.
+`npm run test:networking` is the [evidence](../../docs/evidence/networking/README.md)
+suite, outside the catalog: RN's APIs against a deterministic Node server over HTTP and
+HTTPS, in two roots of one application, with the preceding host as the control and
+retained sabotages.
 
 ## Use the example
 
 The scene starts a server on an ephemeral loopback port and passes its address to
 the root as `baseUrl`. Click a button, read the badge, and click Slow, then Abort,
-to end a request the server never answers.
+to end a request the server never answers. The port in the URL line changes on every run.
+
+![The screen before any request](../../docs/evidence/networking/networking-idle.png)
+
+**Idle** is the screen before any request: a gray badge reading `No request yet`,
+dashes for the URL and the Content-Type, and an empty log.
+
+![GET JSON: status 200 and the parsed body](../../docs/evidence/networking/networking-json.png)
+
+**GET JSON** calls `fetch` on `/api/profile` and reads `response.json()`: a green badge
+`GET JSON: 200`, the response URL, `application/json; charset=utf-8` and the message
+of the body. The server received exactly one GET.
+
+![POST form: the server found both multipart parts](../../docs/evidence/networking/networking-form.png)
+
+**POST form** sends a `FormData` with two string parts, `name` and `note`, as
+`multipart/form-data`. The server parses the parts and echoes them, so the body line
+reads `POST · name=Ana · note=olá, servidor`, accents included.
+
+![Redirect: the URL after the 302](../../docs/evidence/networking/networking-redirect.png)
+
+**Redirect** requests a path the server answers with a 302. The host follows it
+itself, the badge shows `200` and the URL line the final address,
+`/api/profile?from=redirect`; the server saw two requests.
+
+![Slow: a request the server never answers](../../docs/evidence/networking/networking-pending.png)
+
+**Slow** stays in flight: the badge turns amber, the body reads `Waiting for the
+answer`, and the application's networking module counts one request in flight while
+the server holds it.
+
+![Abort: AbortError and nothing left in flight](../../docs/evidence/networking/networking-aborted.png)
+
+**Abort** ends it through an `AbortController`: a red badge reading `GET slow:
+AbortError`, the body `Aborted`, the connection closed at the server, and nothing in
+flight in the module.
 
 ## What the validation establishes
 
@@ -66,4 +102,5 @@ answer fails explicitly), requests use HTTP/1.1 on one connection each, upload a
 download progress events are not sent, and `FormData` file parts and `uri` bodies
 fail explicitly. WebSocket is a separate slice: until it lands its first use fails
 with RN's own `'WebSocketModule' could not be found`. See the
-[research](../../docs/research/networking.md).
+[research](../../docs/research/networking.md) and the
+[evidence](../../docs/evidence/networking/README.md).

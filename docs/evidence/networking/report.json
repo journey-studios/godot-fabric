@@ -1,0 +1,1380 @@
+{
+  "schemaVersion": 1,
+  "scenario": "networking",
+  "status": "verified-local-headless-preceding-host-control-retained-sabotages-and-regressions",
+  "at": "2026-10-07T03:14:25.239769Z",
+  "executionBaseCommit": "99216e296d2e6284e25a8e492d1121079f683940",
+  "executedTreeSha": "61cc30a41b3ef48bee9dd58a4a6245ce1df1c25a",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "documentsEditedDuringExecution": "ROADMAP.md, README.md, docs/ and examples/ READMEs were edited while the battery ran; no executed input changed (the pins below equal git show of the implementation commit)",
+  "implementationCommit": "83a3557eb200b2bbaa337f2e302fb4c2aaf767f5",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/83a3557eb200b2bbaa337f2e302fb4c2aaf767f5",
+  "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/47",
+  "dependsOn": "The shared-application runtime and its native module registry (docs/evidence/shared-roots, docs/evidence/runtime), the AppState and Appearance records (docs/evidence/app-state, docs/evidence/appearance), whose device-subscription disposal this slice extends, and the frame pump of the frame clock record (docs/evidence/frame-clock)",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "whatwgFetch": "3.6.20",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the capture lane: macOS native renderer)",
+    "nativeHostSha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+    "precedingHostSha256": "f96d9dfc9d16d96b52754a70199631bf4ae61f371618a858b20ef42f21644f37"
+  },
+  "commands": [
+    "npm run test:networking",
+    "node tests/networking-native.test.mjs --allow-original-negative (the preceding host installed in addons/)",
+    "node scripts/networking-sabotage.mjs",
+    "npm run example -- networking --headless",
+    "npm run example -- networking --capture",
+    ".deps/build/http_core_test"
+  ],
+  "headlessChecks": 100,
+  "normativeChecks": 84,
+  "structuralChecks": 16,
+  "exampleChecks": {
+    "headless": 15,
+    "capture": 27
+  },
+  "unitTest": {
+    "file": "native/http_core_test.cpp",
+    "target": "http_core_test",
+    "groups": 10,
+    "assertions": 81,
+    "marker": "HTTP_CORE_PASSED",
+    "coverage": "URL parsing and canonicalization, reference resolution, OkHttp's redirect rules, header validation, media types, BOM-aware charset decoding, base64, multipart and the blob store"
+  },
+  "scope": {
+    "compressionCertified": false,
+    "cookiesCertified": false,
+    "fileBodiesCertified": false,
+    "http2Certified": false,
+    "originalRNJavaScript": true,
+    "publicReactNativeImport": true,
+    "serverIsLoopbackNode": true,
+    "tlsAuthorityThroughValidationSeam": true,
+    "twoRootsOneApplication": true,
+    "uploadProgressCertified": false,
+    "webSocketCertified": false
+  },
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: two roots of one application against the Node server, HTTP and HTTPS, the independent oracle over the report.",
+      "nativeHostSha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+      "bundleSha256": "84d5ee49fd1412c4777b84ca0b660573e7d3d0c71d75141a70b7c2dbb9ef7af5",
+      "checks": 100,
+      "passed": 100,
+      "failed": 0,
+      "checkIdDigestSha256": "064a925e99ec0b5fc2bcb29a031ea05fee61d21626da2dcf45f5497c11cd3d9a",
+      "reportSha256": "465ccd6b529ed7311be22378df4abebf1ae53b7bb1cb5b521ba530d0bb1275fa",
+      "logSha256": "13ba8c95c3f9aa855de04274b413df9b0e63b432b3c38139f6f611fee9137f69"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host built from main 99216e2 (no networking modules); expected negative control (--allow-original-negative).",
+      "nativeHostSha256": "f96d9dfc9d16d96b52754a70199631bf4ae61f371618a858b20ef42f21644f37",
+      "bundleSha256": "84d5ee49fd1412c4777b84ca0b660573e7d3d0c71d75141a70b7c2dbb9ef7af5",
+      "checks": 100,
+      "passed": 16,
+      "failed": 84,
+      "checkIdDigestSha256": "064a925e99ec0b5fc2bcb29a031ea05fee61d21626da2dcf45f5497c11cd3d9a",
+      "reportSha256": "410b89fd017e91e9e5dbd6e3943a0543163bbc6531ce66f4b9ba08f6893c5e53",
+      "logSha256": "7021415c020b2dea08ec93b12aef826cc24a38e9e7094e4ea603c35a06687af1",
+      "failedIds": [
+        "modules/RN's Networking, BlobModule and FileReaderModule load from the native host",
+        "modules/XMLHttpRequest and FileReader are RN's, installed by the host's initialization over its native modules",
+        "modules/The application's networking runs on the Godot transport with nothing in flight",
+        "fetch/GET returns the status, the final URL, the headers and the parsed JSON body",
+        "fetch/A multi-byte body reads back as text and its blob counts bytes, not characters",
+        "fetch/The Content-Type charset reaches the blob, and FileReader decodes ISO-8859-1 with it",
+        "fetch/Android's paths differ on a byte order mark: FileReader keeps it and XMLHttpRequest's text drops it",
+        "fetch/Invalid UTF-8 becomes U+FFFD on both paths",
+        "fetch/arrayBuffer returns every byte of a binary body",
+        "fetch/A megabyte body arrives complete over several budgeted polls",
+        "fetch/A server that closes the connection right after its answer still delivers the whole body, sized or chunked",
+        "fetch/HTTP errors are responses, and 204, 304 and HEAD carry no body",
+        "fetch/Request headers reach the server: joined repeats, Host from the URL and UTF-8 values as bytes",
+        "fetch/Repeated response headers are joined with a comma, and names match case-insensitively",
+        "fetch/Cookies are neither stored nor sent, and clearCookies has nothing to clear",
+        "fetch/A string body is sent as UTF-8 with the caller's content type",
+        "fetch/A string body without a content type gets whatwg-fetch's own",
+        "fetch/A typed array body travels as base64 and arrives byte for byte",
+        "fetch/A binary body without a content type is refused, as on Android",
+        "fetch/FormData is sent as multipart with a boundary and its parts",
+        "fetch/A FormData file part fails explicitly",
+        "fetch/A Blob body is sent with its bytes and its type",
+        "redirect/302 turns a POST into a GET without a body and reports the final URL",
+        "redirect/307 keeps the method and the body",
+        "redirect/Twenty follow-ups succeed",
+        "redirect/The twenty-first follow-up fails",
+        "redirect/A redirect loop ends in a network error",
+        "redirect/Authorization crosses no origin and Host follows the new URL",
+        "redirect/A redirect to a scheme the host cannot follow is delivered as the response",
+        "redirect/The server saw 21 requests for each chain and for the loop: the request and 20 follow-ups",
+        "redirect/The server saw the POST and then the GET that replaced it",
+        "failure/A compressed response fails explicitly instead of delivering raw bytes",
+        "failure/A refused connection and a reset one reject like Android's",
+        "failure/A body cut short after the headers ends in an error, not a load",
+        "failure/An unsupported scheme, an invalid URL and an unsupported method are network errors",
+        "failure/Every failed request left the in-flight set",
+        "https/A server certified by the authority the validation seam trusts answers over TLS",
+        "https/A certificate from an authority that is not trusted is a network error",
+        "https/Without the seam only Godot's default roots are trusted, and the test authority is not among them",
+        "https/Trust follows the configured authority: the other server's certificate verifies and the first one's does not",
+        "https/Trust that is not valid PEM refuses the request instead of trusting everything",
+        "xhr/The states and events follow RN's order, with the response URL and headers",
+        "xhr/getAllResponseHeaders lists the headers RN's way",
+        "xhr/A request without readystatechange or progress listeners still loads",
+        "xhr/Asking for incremental updates still delivers the body",
+        "xhr/The arraybuffer, json and text response types return the body",
+        "xhr/The blob response type returns a blob of the body, an empty one for 204 and for a failure",
+        "xhr/4xx and 5xx statuses are loads, never errors",
+        "contract/A response arrives as didReceiveNetworkResponse [id, status, headers, url], didReceiveNetworkData and didCompleteNetworkResponse in order",
+        "contract/The data event carries the decoded text and a success completes with a null error",
+        "contract/The base64 response type delivers the body as base64 text",
+        "contract/A failure before any response is a single didCompleteNetworkResponse [id, message]",
+        "contract/A time-out completes with [id, message, true]",
+        "blob/A Blob counts the bytes of its parts and FileReader reads them back",
+        "blob/readAsDataURL, readAsArrayBuffer and slices read the right bytes",
+        "blob/File and URL.createObjectURL work over the native store",
+        "blob/Unreadable blobs, ranges and encodings reject the FileReader's promise",
+        "blob/Every blob the case made is closed by JS and released from the store, and the store's books balance",
+        "blob/XMLHttpRequest announced itself to the BlobModule",
+        "blob/fetch makes a native blob for every response, and the case never closes them",
+        "blob/The garbage collector releases the response blobs nothing closed, so the native store does not grow",
+        "roots/Root A receives only its own responses from four requests in flight at once",
+        "roots/Root B receives only its own responses from four requests in flight at once",
+        "abort/The server received the request and holds it",
+        "abort/AbortController rejects the fetch with an AbortError",
+        "abort/Aborting closes the connection the server was holding",
+        "abort/The headers of a response whose body is still coming reach XMLHttpRequest",
+        "abort/XMLHttpRequest.abort() dispatches readystatechange, abort and loadend and never load or error",
+        "abort/Aborting an XMLHttpRequest in its body closes the connection",
+        "abort/A request that outlives its timeout ends with a timeout event and no status",
+        "abort/The timed out request closes its connection",
+        "abort/A request to a port that never answers times out on the real clock",
+        "abort/Aborting a blob request makes no blob",
+        "abort/The native side counted the aborts and the time-out, and holds nothing",
+        "abort/Every accepted request ended exactly one way: completed, failed or aborted",
+        "stop/Three requests, a fetch, an XMLHttpRequest in its body and a blob request, are in flight at the server",
+        "stop/The application counts them in flight and JS has seen the headers of one",
+        "stop/Stopping cancels the requests in flight, releases the blobs and leaves nothing active",
+        "stop/The server saw each connection closed by the client",
+        "stop/Stop runs the roots' cleanups and nothing else reaches JS: no load, error, abort or timeout of the requests in flight",
+        "stop/No device event was delivered by the stopped application, and every queued one is accounted for",
+        "stop/Retained module methods and a new lookup are refused after stop",
+        "stop/Late cleanup, abortRequest and release, stays harmless",
+        "stop/disposeEnvironment releases the device subscriptions of the requests that were still in flight"
+      ]
+    },
+    {
+      "lane": "sabotage-redirects",
+      "meaning": "The same bundle on a host whose transport never follows a redirect (scripts/networking-sabotage.mjs).",
+      "nativeHostSha256": "d010013bccd4c6bcf295d8a7860c0f5d6d6417e9514710965e7fc83d9b1d5a35",
+      "bundleSha256": "84d5ee49fd1412c4777b84ca0b660573e7d3d0c71d75141a70b7c2dbb9ef7af5",
+      "checks": 100,
+      "passed": 92,
+      "failed": 8,
+      "checkIdDigestSha256": "064a925e99ec0b5fc2bcb29a031ea05fee61d21626da2dcf45f5497c11cd3d9a",
+      "reportSha256": "7256cfb71fda2e2da7a55eacbd103718de7e6b3aa8952bf041711785928daafd",
+      "logSha256": "3623b6286e4b4ae2df7567064a8ddacab4c5c077bd1f35dbba182d48d7f1407e",
+      "failedIds": [
+        "redirect/302 turns a POST into a GET without a body and reports the final URL",
+        "redirect/307 keeps the method and the body",
+        "redirect/Twenty follow-ups succeed",
+        "redirect/The twenty-first follow-up fails",
+        "redirect/A redirect loop ends in a network error",
+        "redirect/Authorization crosses no origin and Host follows the new URL",
+        "redirect/The server saw 21 requests for each chain and for the loop: the request and 20 follow-ups",
+        "redirect/The server saw the POST and then the GET that replaced it"
+      ]
+    },
+    {
+      "lane": "sabotage-headers",
+      "meaning": "The same bundle on a host whose transport keeps repeated response headers apart instead of joining them.",
+      "nativeHostSha256": "83aed3682f8147c59a02bccc69e057ecec86ad0731018c1cbf132d29a46fa96c",
+      "bundleSha256": "84d5ee49fd1412c4777b84ca0b660573e7d3d0c71d75141a70b7c2dbb9ef7af5",
+      "checks": 100,
+      "passed": 98,
+      "failed": 2,
+      "checkIdDigestSha256": "064a925e99ec0b5fc2bcb29a031ea05fee61d21626da2dcf45f5497c11cd3d9a",
+      "reportSha256": "dcc9d182ddd93c0c96c9a8de17a0e650d11ec82ab2f430125913ba1fe133b293",
+      "logSha256": "be48cd7cc77c2cf15ca54fe64900ec8a3e7dbda01aca90c0ec941cd05a2c1267",
+      "failedIds": [
+        "fetch/Repeated response headers are joined with a comma, and names match case-insensitively",
+        "fetch/Cookies are neither stored nor sent, and clearCookies has nothing to clear"
+      ]
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "f96d9dfc9d16d96b52754a70199631bf4ae61f371618a858b20ef42f21644f37",
+      "bytes": 5494944
+    },
+    "current": {
+      "sha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+      "bytes": 5687728,
+      "rebuiltFromCommittedSources": true,
+      "note": "Touching networking_modules.cpp, godot_http_transport.cpp, application_runtime.cpp, fabric_application.cpp and http_core_test.cpp and rebuilding reproduced the same hash"
+    },
+    "sabotage-redirects": {
+      "sha256": "d010013bccd4c6bcf295d8a7860c0f5d6d6417e9514710965e7fc83d9b1d5a35"
+    },
+    "sabotage-headers": {
+      "sha256": "83aed3682f8147c59a02bccc69e057ecec86ad0731018c1cbf132d29a46fa96c"
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "f96d9dfc9d16d96b52754a70199631bf4ae61f371618a858b20ef42f21644f37",
+    "provenance": {
+      "builtFrom": "main 99216e2, whose native and SDK sources are the execution base's",
+      "kept": "build/networking-previous-host/fabric_godot.dylib (local, not in Git)"
+    },
+    "checks": 100,
+    "normativeFailures": 84,
+    "structuralChecksPassed": 16,
+    "sameBundle": true,
+    "normativeFailureIds": [
+      "modules/RN's Networking, BlobModule and FileReaderModule load from the native host",
+      "modules/XMLHttpRequest and FileReader are RN's, installed by the host's initialization over its native modules",
+      "modules/The application's networking runs on the Godot transport with nothing in flight",
+      "fetch/GET returns the status, the final URL, the headers and the parsed JSON body",
+      "fetch/A multi-byte body reads back as text and its blob counts bytes, not characters",
+      "fetch/The Content-Type charset reaches the blob, and FileReader decodes ISO-8859-1 with it",
+      "fetch/Android's paths differ on a byte order mark: FileReader keeps it and XMLHttpRequest's text drops it",
+      "fetch/Invalid UTF-8 becomes U+FFFD on both paths",
+      "fetch/arrayBuffer returns every byte of a binary body",
+      "fetch/A megabyte body arrives complete over several budgeted polls",
+      "fetch/A server that closes the connection right after its answer still delivers the whole body, sized or chunked",
+      "fetch/HTTP errors are responses, and 204, 304 and HEAD carry no body",
+      "fetch/Request headers reach the server: joined repeats, Host from the URL and UTF-8 values as bytes",
+      "fetch/Repeated response headers are joined with a comma, and names match case-insensitively",
+      "fetch/Cookies are neither stored nor sent, and clearCookies has nothing to clear",
+      "fetch/A string body is sent as UTF-8 with the caller's content type",
+      "fetch/A string body without a content type gets whatwg-fetch's own",
+      "fetch/A typed array body travels as base64 and arrives byte for byte",
+      "fetch/A binary body without a content type is refused, as on Android",
+      "fetch/FormData is sent as multipart with a boundary and its parts",
+      "fetch/A FormData file part fails explicitly",
+      "fetch/A Blob body is sent with its bytes and its type",
+      "redirect/302 turns a POST into a GET without a body and reports the final URL",
+      "redirect/307 keeps the method and the body",
+      "redirect/Twenty follow-ups succeed",
+      "redirect/The twenty-first follow-up fails",
+      "redirect/A redirect loop ends in a network error",
+      "redirect/Authorization crosses no origin and Host follows the new URL",
+      "redirect/A redirect to a scheme the host cannot follow is delivered as the response",
+      "redirect/The server saw 21 requests for each chain and for the loop: the request and 20 follow-ups",
+      "redirect/The server saw the POST and then the GET that replaced it",
+      "failure/A compressed response fails explicitly instead of delivering raw bytes",
+      "failure/A refused connection and a reset one reject like Android's",
+      "failure/A body cut short after the headers ends in an error, not a load",
+      "failure/An unsupported scheme, an invalid URL and an unsupported method are network errors",
+      "failure/Every failed request left the in-flight set",
+      "https/A server certified by the authority the validation seam trusts answers over TLS",
+      "https/A certificate from an authority that is not trusted is a network error",
+      "https/Without the seam only Godot's default roots are trusted, and the test authority is not among them",
+      "https/Trust follows the configured authority: the other server's certificate verifies and the first one's does not",
+      "https/Trust that is not valid PEM refuses the request instead of trusting everything",
+      "xhr/The states and events follow RN's order, with the response URL and headers",
+      "xhr/getAllResponseHeaders lists the headers RN's way",
+      "xhr/A request without readystatechange or progress listeners still loads",
+      "xhr/Asking for incremental updates still delivers the body",
+      "xhr/The arraybuffer, json and text response types return the body",
+      "xhr/The blob response type returns a blob of the body, an empty one for 204 and for a failure",
+      "xhr/4xx and 5xx statuses are loads, never errors",
+      "contract/A response arrives as didReceiveNetworkResponse [id, status, headers, url], didReceiveNetworkData and didCompleteNetworkResponse in order",
+      "contract/The data event carries the decoded text and a success completes with a null error",
+      "contract/The base64 response type delivers the body as base64 text",
+      "contract/A failure before any response is a single didCompleteNetworkResponse [id, message]",
+      "contract/A time-out completes with [id, message, true]",
+      "blob/A Blob counts the bytes of its parts and FileReader reads them back",
+      "blob/readAsDataURL, readAsArrayBuffer and slices read the right bytes",
+      "blob/File and URL.createObjectURL work over the native store",
+      "blob/Unreadable blobs, ranges and encodings reject the FileReader's promise",
+      "blob/Every blob the case made is closed by JS and released from the store, and the store's books balance",
+      "blob/XMLHttpRequest announced itself to the BlobModule",
+      "blob/fetch makes a native blob for every response, and the case never closes them",
+      "blob/The garbage collector releases the response blobs nothing closed, so the native store does not grow",
+      "roots/Root A receives only its own responses from four requests in flight at once",
+      "roots/Root B receives only its own responses from four requests in flight at once",
+      "abort/The server received the request and holds it",
+      "abort/AbortController rejects the fetch with an AbortError",
+      "abort/Aborting closes the connection the server was holding",
+      "abort/The headers of a response whose body is still coming reach XMLHttpRequest",
+      "abort/XMLHttpRequest.abort() dispatches readystatechange, abort and loadend and never load or error",
+      "abort/Aborting an XMLHttpRequest in its body closes the connection",
+      "abort/A request that outlives its timeout ends with a timeout event and no status",
+      "abort/The timed out request closes its connection",
+      "abort/A request to a port that never answers times out on the real clock",
+      "abort/Aborting a blob request makes no blob",
+      "abort/The native side counted the aborts and the time-out, and holds nothing",
+      "abort/Every accepted request ended exactly one way: completed, failed or aborted",
+      "stop/Three requests, a fetch, an XMLHttpRequest in its body and a blob request, are in flight at the server",
+      "stop/The application counts them in flight and JS has seen the headers of one",
+      "stop/Stopping cancels the requests in flight, releases the blobs and leaves nothing active",
+      "stop/The server saw each connection closed by the client",
+      "stop/Stop runs the roots' cleanups and nothing else reaches JS: no load, error, abort or timeout of the requests in flight",
+      "stop/No device event was delivered by the stopped application, and every queued one is accounted for",
+      "stop/Retained module methods and a new lookup are refused after stop",
+      "stop/Late cleanup, abortRequest and release, stays harmless",
+      "stop/disposeEnvironment releases the device subscriptions of the requests that were still in flight"
+    ],
+    "serverRecords": 0,
+    "modulesFound": {
+      "BlobModule": false,
+      "FileReaderModule": false,
+      "Networking": false,
+      "WebSocketModule": false
+    },
+    "firstErrors": {
+      "XMLHttpRequest": "throws: TurboModuleRegistry.getEnforcing(...): 'Networking' could not be found. Verify that a module by this name is registered in the native binary.",
+      "FileReader": "throws: TurboModuleRegistry.getEnforcing(...): 'FileReaderModule' could not be found. Verify that a module by this name is registered in the native binary."
+    },
+    "oracleRejectsTheReport": true
+  },
+  "retainedSabotages": {
+    "receiptFormat": "godot-fabric.networking-sabotage/v1",
+    "sourceSha256": {
+      "genuine": {
+        "native/godot_http_transport.cpp": "e161ab13deda5259bc9c46fe6762fc9c1ddadec19be616e95319e764220c49a4",
+        "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198"
+      },
+      "restored": {
+        "native/godot_http_transport.cpp": "e161ab13deda5259bc9c46fe6762fc9c1ddadec19be616e95319e764220c49a4",
+        "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198"
+      }
+    },
+    "hostSha256": {
+      "genuine": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+      "restored": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0"
+    },
+    "variants": [
+      {
+        "name": "redirects",
+        "file": "native/godot_http_transport.cpp",
+        "find": "if (auto redirect = http::plan_redirect(x.request.method, status, x.url, x.request.headers, headers)) {",
+        "replace": "if (auto redirect = std::optional<http::Redirect>()) {",
+        "sourceSha256": "f158c372533917731a73eb635cb6e2ba96ded41fc06685029ac5e1c77b5fb21a",
+        "hostSha256": "d010013bccd4c6bcf295d8a7860c0f5d6d6417e9514710965e7fc83d9b1d5a35",
+        "runStatus": 0,
+        "failedChecks": [
+          "redirect/302 turns a POST into a GET without a body and reports the final URL",
+          "redirect/307 keeps the method and the body",
+          "redirect/Twenty follow-ups succeed",
+          "redirect/The twenty-first follow-up fails",
+          "redirect/A redirect loop ends in a network error",
+          "redirect/Authorization crosses no origin and Host follows the new URL",
+          "redirect/The server saw 21 requests for each chain and for the loop: the request and 20 follow-ups",
+          "redirect/The server saw the POST and then the GET that replaced it"
+        ],
+        "serverRecords": 72
+      },
+      {
+        "name": "headers",
+        "file": "native/http_core.h",
+        "find": "    else existing->second += \", \" + value;",
+        "replace": "    else joined.emplace_back(name, value);",
+        "sourceSha256": "04afdf77490858fd7190448977cf49ce405d29c788342836935490247cc88166",
+        "hostSha256": "83aed3682f8147c59a02bccc69e057ecec86ad0731018c1cbf132d29a46fa96c",
+        "runStatus": 0,
+        "failedChecks": [
+          "fetch/Repeated response headers are joined with a comma, and names match case-insensitively",
+          "fetch/Cookies are neither stored nor sent, and clearCookies has nothing to clear"
+        ],
+        "serverRecords": 137
+      }
+    ],
+    "oracleRejections": {
+      "redirects": "networking oracle: the server received exactly the requests the cases cause, no more and no fewer",
+      "headers": "networking oracle: cookies are not stored and there is nothing to clear"
+    }
+  },
+  "oracle": {
+    "file": "tests/networking-oracle.mjs",
+    "independence": "Derives the multiset of requests the cases must have caused from the server's own definitions and reads each recorded request as it arrived (raw header names, order and duplicates, body hash, how the connection ended); it never reads the probe's pass flags, and the runner also feeds it a copy of the report with every check forced to passed, which a wrong host must still fail",
+    "expectedRequests": 137,
+    "byListener": {
+      "http": 134,
+      "other": 1,
+      "https": 1,
+      "https-untrusted": 1
+    },
+    "counterArithmetic": [
+      "every request the transport started ended exactly one way: completed, failed or cancelled",
+      "64 redirects followed = 1 + 1 + 20 + 20 + 20 + 1 + 1",
+      "the server's record - the redirects followed + the 6 started requests that never spoke HTTP (a refused port, three refused certificates and two to the port that never answers) = the requests started",
+      "events queued = delivered + dropped, and none dropped",
+      "the blob store's books balance"
+    ],
+    "runnerAsserts": [
+      "the failing checks equal the probe's normative list, by name",
+      "every ERROR line is a failed check or one of the three handshake errors the engine prints for the negative TLS cases",
+      "no script, native or engine diagnostic is hidden",
+      "the oracle rejects the preceding host's and both sabotaged reports",
+      "every executed producer is pinned in the bundle receipt"
+    ]
+  },
+  "executedObservations": {
+    "server": {
+      "records": 137,
+      "byListener": {
+        "http": 134,
+        "other": 1,
+        "https": 1,
+        "https-untrusted": 1
+      },
+      "byMethod": {
+        "GET": 125,
+        "HEAD": 1,
+        "POST": 11
+      },
+      "byEnd": {
+        "responded": 126,
+        "closed-by-server": 4,
+        "closed-by-client": 7
+      }
+    },
+    "modules": {
+      "BlobModule": true,
+      "FileReaderModule": true,
+      "Networking": true,
+      "WebSocketModule": false
+    },
+    "transportAtTheEnd": {
+      "started": 79,
+      "completed": 58,
+      "failed": 15,
+      "cancelled": 6,
+      "timedOut": 3,
+      "redirectsFollowed": 64,
+      "responses": 61,
+      "bytesReceived": 1202142,
+      "active": 0
+    },
+    "requestsAtTheEnd": {
+      "aborted": 3,
+      "clearedCookies": 1,
+      "completions": 58,
+      "failures": 21,
+      "inFlight": 0,
+      "refused": 6,
+      "responses": 61,
+      "sent": 79
+    },
+    "eventsAtTheEnd": {
+      "delivered": 198,
+      "dropped": 0,
+      "queued": 198
+    },
+    "blobsAtTheEnd": {
+      "count": 0,
+      "bytes": 0,
+      "stored": 53,
+      "closedByJs": 8,
+      "collectedAndReleasedNote": "the number the garbage collector released depends on when it runs: the check asserts the books balance (stored = held + closed + collected) and that the response blobs nothing closed are released"
+    },
+    "fileReaderAtTheEnd": {
+      "failures": 2,
+      "reads": 50
+    },
+    "engineHandshakeErrorsTheRunnerAllows": 3,
+    "json": {
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "body": {
+        "list": [
+          1,
+          2,
+          3
+        ],
+        "message": "hello",
+        "nested": {
+          "ok": true
+        },
+        "unicode": "ação"
+      }
+    },
+    "utf8": {
+      "text": "Olá, mundo — ação 日本語 😀 Zażółć gęślą jaźń",
+      "blobBytes": 64,
+      "blobType": "text/plain; charset=utf-8"
+    },
+    "latin1": {
+      "blobSize": 4,
+      "blobType": "text/plain; charset=iso-8859-1",
+      "text": "ação"
+    },
+    "byteOrderMark": {
+      "viaFetchBeginsWithU+FEFF": true,
+      "viaXhr": "com BOM"
+    },
+    "invalidUtf8": {
+      "viaFetch": "a�b�",
+      "viaXhr": "a�b�"
+    },
+    "largeBody": {
+      "length": 1048576,
+      "declared": "1048576",
+      "sha256": "06b7bbfb7824aa03382051691630eb26de85102d1b08a81e907ec0744cd8a286"
+    },
+    "serverClosesAfterTheAnswer": {
+      "chunked": {
+        "fnv": 1702766661,
+        "length": 70000
+      },
+      "sized": {
+        "fnv": 1702766661,
+        "length": 70000
+      }
+    },
+    "statuses": {
+      "204": {
+        "ok": true,
+        "status": 204,
+        "text": ""
+      },
+      "304": {
+        "ok": false,
+        "status": 304,
+        "text": ""
+      },
+      "404": {
+        "ok": false,
+        "status": 404,
+        "text": "status 404"
+      },
+      "500": {
+        "ok": false,
+        "status": 500,
+        "text": "status 500"
+      },
+      "head": {
+        "contentType": "text/plain",
+        "ok": true,
+        "status": 200,
+        "text": ""
+      }
+    },
+    "redirects": {
+      "302": {
+        "method": "GET",
+        "bodyBytes": 0,
+        "finalUrlPath": "/echo?case=redirect-302-A"
+      },
+      "307": {
+        "method": "POST",
+        "bodyBytes": 11
+      },
+      "twentyFollowUps": 200,
+      "twentyFirstFollowUp": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      },
+      "loop": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      },
+      "authorizationSameOrigin": "Bearer secret",
+      "authorizationOtherOrigin": null,
+      "ftpScheme": {
+        "status": 302,
+        "location": "ftp://127.0.0.1/file"
+      }
+    },
+    "responseHeaders": {
+      "setCookieJoined": "a=1, b=2",
+      "multiJoined": "one, two, three",
+      "cookiesSent": null,
+      "clearCookiesCalledBack": false
+    },
+    "failures": {
+      "gzipFetch": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      },
+      "gzipXhrMessage": "Unsupported Content-Encoding \"gzip\": this host does not decode compressed respon",
+      "unsupportedMethodXhrMessage": "Unsupported HTTP method: CONNECT",
+      "fileFormDataPart": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      }
+    },
+    "https": {
+      "trusted": {
+        "status": 200,
+        "url": "https://127.0.0.1:<port>/json?case=trusted"
+      },
+      "untrustedAuthority": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      },
+      "withoutTheSeam": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      },
+      "invalidPem": {
+        "message": "Network request failed",
+        "name": "TypeError"
+      }
+    },
+    "timeouts": {
+      "viaTheClockSeam": {
+        "status": 0,
+        "events": [
+          "readystatechange",
+          "readystatechange",
+          "timeout",
+          "loadend"
+        ],
+        "message": "The request timed out."
+      },
+      "viaTheRealClock": {
+        "status": 0,
+        "events": [
+          "readystatechange",
+          "readystatechange",
+          "timeout",
+          "loadend"
+        ]
+      },
+      "clockOffsetMs": 120000.0,
+      "realTimeoutMs": 150
+    },
+    "aborts": {
+      "fetch": {
+        "message": "Aborted",
+        "name": "AbortError"
+      },
+      "xhrEvents": [
+        [
+          "readystatechange",
+          1
+        ],
+        [
+          "readystatechange",
+          2
+        ],
+        [
+          "readystatechange",
+          4
+        ],
+        [
+          "abort",
+          4
+        ],
+        [
+          "loadend",
+          4
+        ]
+      ]
+    },
+    "stop": {
+      "inFlightBeforeStop": 3,
+      "cancelledByStop": 3,
+      "inFlightAfterStop": 0,
+      "blobsAfterStop": 0,
+      "eventsDeliveredBeforeAndAfter": [
+        198,
+        198
+      ],
+      "eventsDropped": 0
+    }
+  },
+  "refreshedControlsOfOtherSlices": {
+    "reason": "src/initialize.js (an import of RN's setUpXHR), sdk/toolchain/platform-plugin.mjs and src/platform-environment.js are pinned by the bundle receipts of other suites; their local controls and sabotage receipts in build/ went stale",
+    "suites": [
+      "test:animated",
+      "test:frame-clock",
+      "test:transforms:guards (uniform scale and singular lanes)"
+    ],
+    "procedure": "each control lane rerun on its preserved preceding host (swapped into addons/ and restored by hash), each retained sabotage script rerun, then the current lane",
+    "staleReceiptsKept": "build/stale-controls-for-networking/ (26 receipts, local)",
+    "hostedCi": "not affected: the job has no controls, and the current lanes pass without them"
+  },
+  "contractUpdates": {
+    "none": "No earlier suite or example contract changed on purpose. The environment snapshot gained a `networking` count and `disposeEnvironment` removes six more device subscriptions"
+  },
+  "exploratoryObservationsOutsideTheReceipt": [
+    "Fetches from the development machine on 2026-10-07 to public servers, over Godot's default roots with no validation seam: https://example.com/ and http://example.com/ answered 200 with text/html and 577 characters each, http://www.wikipedia.org/ was followed through one redirect to https://www.wikipedia.org/ (200, text/html, 91,853 characters) and https://api.github.com/zen answered 200 with 36 characters of text/plain; the transport counted 4 started, 4 completed, 0 failed and 1 redirect followed (scratch script, not asserted: the servers' answers can change).",
+    "Three renderer capture runs of the example produced the same bytes for the idle and aborted frames and different bytes for the other four, whose URL line shows the ephemeral port of the loopback server.",
+    "The suite passed 9 of 9 runs under 14 busy loops on the 11-core machine (6 before the commit and 3 from the committed tree), and passes with the control receipts absent, as in CI."
+  ],
+  "captures": {
+    "command": "npm run example -- networking --capture",
+    "exampleChecks": {
+      "headless": 15,
+      "capture": 27
+    },
+    "files": [
+      {
+        "path": "docs/evidence/networking/networking-idle.png",
+        "sha256": "a127811319575026ca54e7ab336cb6472f36b6fbe662116b040df77149fcc72d",
+        "bytes": 43223,
+        "width": 900,
+        "height": 680,
+        "shows": "gray badge 'No request yet', dashes for the URL and the Content-Type, empty log",
+        "bytesStableAcrossRuns": true,
+        "reason": null
+      },
+      {
+        "path": "docs/evidence/networking/networking-json.png",
+        "sha256": "4f308cce2649462230f4d891627b39391b392002828caa7a17aa7d22c50bc0e1",
+        "bytes": 48753,
+        "width": 900,
+        "height": 680,
+        "shows": "green badge 'GET JSON: 200', the response URL, application/json; charset=utf-8 and the parsed body",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line shows the ephemeral port of the loopback server"
+      },
+      {
+        "path": "docs/evidence/networking/networking-form.png",
+        "sha256": "d7346b98b9c3a0961f74a5a9c946a09824c6af10692ed1e39c883615e264cd5d",
+        "bytes": 53009,
+        "width": 900,
+        "height": 680,
+        "shows": "green badge 'POST form: 200' and the echo of both multipart parts",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line shows the ephemeral port of the loopback server"
+      },
+      {
+        "path": "docs/evidence/networking/networking-redirect.png",
+        "sha256": "5e038e0f12bf05a7a7adc25addc1f6e71b2c54821ecc47cfc4728608fc921479",
+        "bytes": 56414,
+        "width": 900,
+        "height": 680,
+        "shows": "green badge 'GET redirect: 200' and the final URL after the 302",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line shows the ephemeral port of the loopback server"
+      },
+      {
+        "path": "docs/evidence/networking/networking-pending.png",
+        "sha256": "79d149fa2e58f73ccedef721a9286fced207e291a82842c53a1fb72154d1aab6",
+        "bytes": 50495,
+        "width": 900,
+        "height": 680,
+        "shows": "amber badge 'GET slow ...' and the body 'Waiting for the answer'",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line shows the ephemeral port of the loopback server"
+      },
+      {
+        "path": "docs/evidence/networking/networking-aborted.png",
+        "sha256": "2d0991289d022c6593fcd81b258e602ad0ff3823f46687abef3660e67074754d",
+        "bytes": 49315,
+        "width": 900,
+        "height": 680,
+        "shows": "red badge 'GET slow: AbortError' and the body 'Aborted'",
+        "bytesStableAcrossRuns": true,
+        "reason": null
+      }
+    ]
+  },
+  "regressions": {
+    "steps": {
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 155,
+        "logSha256": "f50dd2a890c8261304e4ca0a8c7c49867fe2c5297768ecc8bb4f4ac74dda7da7"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "71e789c6cd758781af56b4830280b24a4386b04da8a2bdb44363214bb1500d68"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "c23ca9cc81706a1b78375c88ad7f9cfcb619a02c02fb21c19b7c734f57cde2a0"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "8975e8e76f110d2c7bb7648c74048f2c74f5b2e67c40fb4a68b999582df3fb28"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "c75629d56746521ef126d696efcefb02e21ce095cbdc630d28dbeb4e47927098"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "0707971cda3a755e6d9d032f6ced42a13869749d51e25d62052fcc3b09d1b326"
+      },
+      "test:lists": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "7234779e28f73a19b51e6fd506adedc20c13e6ee47dc3cd582132ef217525d3c"
+      },
+      "test:appearance": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "2d22ac500e31f6ddf3a341f63d72cface75abcf128ac3b7f9f9893aa16946a28"
+      },
+      "test:animated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "2c4dd1a94956409d2135c58d469e17951b3281d4638d5c346b6e1cae1a9bbfb3"
+      },
+      "test:frame-clock": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "951c251c743c2b21bce023b16b90dd999397d62ba9573b8049fe3eb44f19291d"
+      },
+      "test:networking": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "fe947ca1684ccef2b545135465360455001dad669e46388aac5a2456541c93e8"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "e13080456a64added268a4851be0ba7b23db84aca8a3fd111bd94e5eb0dcfca7"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "be19b8f9952e4014d5bdc5ccc4ce015c5249fa8516c777ef8850b09e1c020039"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "dedb3aafb9dd6cc586cfabb64dfee4b1d10913afcecb12065f32d99e7f91f51f"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "74af14bf77f376cdf3c5cef8ac0394f1397205f2d644c881c7aa5798260d1899"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "101ad1f61ce5a03e597bfef992b7f1bfe60d80ebdad9dd80b26d9b20896368e1"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "d8ae1444f1c063593ea788ba759a29e27a72f917ac0f8081fd794d162c057555"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "7e224552e4927c37a0233d04087ab1c1e954daf2ed5c0b680a0dc57072f7c76b"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "96a1e3dc85854830abf527f05b22df0fc87ef70c19831f726c47f84ae007025b"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "8fdddd154cd352d7c189cf06fffdbfb53df71967c15f96e8c4f582b64f05a650"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 43,
+        "logSha256": "42071b09507da48547e0c4419f93e9781f3f936c908d99715cd752218b77a065"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "e2f47b936b4bf44bdc2a611de90b2a2c5c4ecb8eb27205c1a15cdfd9309f6543"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "1924d7f80f1dead5b34954bc41ad340feb0435a635868d9ade8b9597afedf87d"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 70,
+        "logSha256": "860afb0d6222c87692829a29ede3953718166a3ce17f82d7514056d2dedda73d"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "73b1266bdb12404803c0e293782a5b43e89c2b633ba0485798fe8e1bfde38982"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "2d9d93cbf9603442fc5d7590cd836972111e21fa7e104fb2875230011d66c23d"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 39,
+        "logSha256": "a091b33a97aba1f5d74fdfb67c6c2f5abcc631652ff38a9d21f600a9f93b1b81"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "2a18332e6c250f3cd4233b22d3e4019aa3a7490e124d12f7916f6a5c86a65558"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "a49356c35b6c7ab674dacf393c19fb25138369c8d7285decfe1fcaa92701d9d4"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 34,
+        "logSha256": "19832237f1f464296b51ba8308c849e3d47c3de10de91c162222721bee5ffeb4"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 63,
+        "logSha256": "31a92a96f6f6a79f98ec082462bdd527396ca388139e4c84e61bab2dea9cac3a"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "9540b8e6e06f74a9bd3a3a8946ac1bfa8efe86a705a5edce8c7b8399476103c3"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "6a575ceef33201b8d06aad4dd73bf2b658d6704853a7cb3b2c47022ccee52d6d"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 22,
+        "logSha256": "0796e181068e74402e95d79ab2de1e76ad0030c606129cd87bc52ff5c6e90512"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "1f1af9566620a89d98bf343caaceca1611ad0ba0e65b454502a58a47006df2cb"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "b119030f900db3a0ec4e001ba35bfb0bf37ed1422a73075c9a516c3ca2b88558"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 69,
+        "logSha256": "ea2cf172f4e21f3c98935be24b1f2cd6c82d190936589b6dadce5f4db79dd8e9"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "6b9382cbe5733915f62229a61eca326b506010cd4eb76ebf6326c38d0276cbb3"
+      }
+    },
+    "counts": {
+      "examples": 2363,
+      "examplesCount": 30,
+      "animatedExample": 12,
+      "transformsExample": 309,
+      "networkingExample": 15,
+      "down": 2731,
+      "documentUp": 6459,
+      "documentMove": 1940,
+      "documentHover": 1530,
+      "click": 728,
+      "captureNotifications": 672,
+      "viewUp": 297,
+      "move": 220,
+      "hover": 158,
+      "rootPath": 82,
+      "queryFaults": 187,
+      "resolverFaults": 66,
+      "panResponder": 128,
+      "sharedTouches": 92,
+      "appState": 75,
+      "virtualizedList": 44,
+      "appearance": 79,
+      "switch": 108,
+      "activityIndicator": 33,
+      "touchables": 93,
+      "touchablesAnimatedLane": 7,
+      "animated": 75,
+      "frameClock": 37,
+      "networking": 100,
+      "focusCommands": 112,
+      "nativeModules": 76,
+      "eventDispatch": 647,
+      "eventDispatchIntegrated": 206,
+      "transformGuards": 61,
+      "transformInputGuards": 25,
+      "uniformScaleHeadless": 29,
+      "singularHeadless": 49,
+      "http_core_test": {
+        "groups": 10,
+        "assertions": 81
+      },
+      "affineFactorChecks": 57703,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6
+    },
+    "note": "Every native-cold-start suite step after Godot install and npm run setup, plus test:recovery, from the committed tree on the host built from it"
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ab306e6f54980a8a5a833feb49add3b8ec8c87f087ad54107e9826873b20cbca"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "573ffab39e473cab9519a2bde0811eecd2ca75ef7ec827be801ac7c86496093f"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "2b6a8bac2695ea2c0f93eb8afe542a175c8c0fe626261356f919d73145d2b427"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "e6e055ce8fbc3719ccc13ca2d058bcacf7cb59aa204d75dbd5b9740d724ba46c"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "387a9cf082d9268a39212036b689ddd43f6bbcd54297e53f6c6820343214fd8d"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 17,
+        "logSha256": "880f1720b43ea86239095bfc10f47528e418eae8458eccbc4e503ce971f7aaee"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 107,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 39,
+        "logSha256": "175ad0bc44208002dde10fca666ee2731997819e79ede5dda04e0d969e7b288b"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 21,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    },
+    "counts": {
+      "affineFactorChecks": 57703,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6
+    },
+    "freshOutputDirectories": "the SDK, codegen, adapter registry, loader and runtime outputs of the run were written to a directory made for it and deleted afterwards"
+  },
+  "networkingLanesFromTheCommittedTree": {
+    "steps": {
+      "http-core": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "1ddbd36156e30fef40d19a795d8ec2291f75e07e7419b3c4c02830af78d4560c"
+      },
+      "networking-control": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "a809dab9d61fa1f09175b574a09cd2338bda5c0b83c1ae235510921a077af412"
+      },
+      "networking-sabotage": {
+        "exitCode": 0,
+        "seconds": 41,
+        "logSha256": "4e0ea5b91b5c5049cf43f6c68d9bd923a32ab0360156712fa042c6fde8877ca9"
+      },
+      "networking-ci-like": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "097bd1d56ef220e0504c9bb2bf9ace3d93b31aec2fe68da97b75bf5b8894da6e"
+      },
+      "networking-current": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "2f86761fc90011a23b4eb41a4cf227cbc8b8fce6fad172497c518807e108ed6a"
+      },
+      "example-headless": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "64e94025a6ddcc8f9f121e06943eedb169f5e2b1fa5c84e90e15a8e34ab9c533"
+      },
+      "example-capture": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "dd7a50f1afa6344fdc45a547bd5847e2efcefeaa5cbf57799038d702dded689f"
+      }
+    },
+    "note": "control, both sabotages, the lane without control receipts and the lane with them, in this order, rerun from the committed tree so the local receipts describe this commit"
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+    "inputsMatchCommit": true,
+    "inputs": 73,
+    "compiler": {
+      "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    }
+  },
+  "sourcePins": {
+    "tests/networking-fixture.jsx": "cc489722a72ec0a77ec066d7f48ae16d6c53ed6d17ca2c02f84a419913885e58",
+    "tests/networking-probe.gd": "54c55b697911adc102f4f2bbce9eef603d055d21d6fb4c2a3dce2e1c4369e25c",
+    "tests/networking-native.test.mjs": "613c9f290d39993685ffcd4cd4b0de540448f61f04aa825ad72df0507f181156",
+    "tests/networking-oracle.mjs": "c661a0ce69a30b15f0b6ee3ab80711879f4c23525515053cef9a1013f6843a79",
+    "tests/networking-server.mjs": "b384897baa66253733786d43f381f1f919bc6daabc73ef378a1c7491345e64ca",
+    "tests/networking-certificates.mjs": "ac310e2d2fcbddf3104c9ee7b2e551fabc1bafbe3f21cbc24350f5e8789937c6",
+    "scripts/networking-bundle.mjs": "a3f86de15a68a0401b0a3bf1dc1d519fae783bf6ef9a3198680702754a034978",
+    "scripts/networking-sabotage.mjs": "6feb96900dbc106b159850955c6989953fa5f0a529457fc081b865dbb9cbc278",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/initialize.js": "fec416522ddf321e095904a7570e0680f7a66f8fa118f73516dde2d5d13cdbab",
+    "src/platform-environment.js": "9313aa82bf6b99f68d8fe8c727c0c8f7488bdc089a46520a6c89c8b2503ccfc2",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+    "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+    "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+    "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+    "native/godot_http_transport.cpp": "e161ab13deda5259bc9c46fe6762fc9c1ddadec19be616e95319e764220c49a4",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/networking_modules.h": "2530f387f469213e870eb2f1a4a831fc79cf1d941300d85a9e16d9c64ae1283e",
+    "native/networking_modules.cpp": "e1bd6d8b00719297d787c6aae456b873c2f4c3658a6074bbbb6b82dfda47ab05",
+    "native/application_runtime.h": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+    "native/application_runtime.cpp": "a1ad7d912c5b780706a467c0baa9f83915b31189bb3588cf11807f118dea7ca0",
+    "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+    "native/godot-profile.json": "ce635ff8a62f48afdf8b13e8e656260d7b1e0c5cd47907b5277286e4d14008a0",
+    "native/CMakeLists.txt": "0cbec528d780c8d3c558d16fa5b870379b004b24d756a028b76289f089c2e549"
+  },
+  "verificationSourcePins": {
+    "package.json": "dfa089a8b6e28965f12fcdff2d9e404647b65b608dd4c0e7d18aecb176939598",
+    ".fallowrc.json": "de3c5347afc17a58c8817f89950e79c499bd42495d6114f7cd51162149a77d98",
+    ".github/workflows/contracts.yml": "a2a616f10de41a6043e6a49c4a1667a2c2240424deb96316467159c3f3ceda1c",
+    "examples/catalog.json": "fd4b3d94220795d8b89eb90bb3258724cf8ac8bba27567a52905799b586eee95",
+    "examples/entry.jsx": "769113ef2a16e1f1956a2ffdc4ecd775b641f8b3588200053f3fd48f9c229e9a",
+    "examples/networking/App.jsx": "6cbd05acbdc19d19b94c3d2eac4e10e9b0b5c347d2132c88b10da44d6b287d01",
+    "examples/networking/local_server.gd": "d79141db2fd45bf8be68c30daba8405a298d15dd2589633b3ea8227b3855ad59",
+    "examples/networking/scene.tscn": "039980a466568695d292832e144a18df74c6e40edaeb3d11a461e6a6a532bb64",
+    "examples/networking/validation.gd": "fdca39140029ed7b882cd6f0f2b7ff5b5d9dbe738bf2edfa93cb4a60876656e5",
+    "tests/platform-seams.test.mjs": "8be53680bed22e83000bc387cf797bcaf25be7bc164e9ed1b54e452fc6baa707",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "0cbec528d780c8d3c558d16fa5b870379b004b24d756a028b76289f089c2e549",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+    "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "a1ad7d912c5b780706a467c0baa9f83915b31189bb3588cf11807f118dea7ca0",
+    "native/application_runtime.h": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+    "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "ce635ff8a62f48afdf8b13e8e656260d7b1e0c5cd47907b5277286e4d14008a0",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/godot_http_transport.cpp": "e161ab13deda5259bc9c46fe6762fc9c1ddadec19be616e95319e764220c49a4",
+    "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+    "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+    "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "native/networking_modules.cpp": "e1bd6d8b00719297d787c6aae456b873c2f4c3658a6074bbbb6b82dfda47ab05",
+    "native/networking_modules.h": "2530f387f469213e870eb2f1a4a831fc79cf1d941300d85a9e16d9c64ae1283e",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+    "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Blob/Blob.js": "050bc512a24749ec3d91a45832549e9b78dd3717de716bda17782ff36917dc0a",
+    "Libraries/Blob/BlobManager.js": "aeaa78b92cb1d5a58773a9deeb44f85f98b3255f8099b2a6b9551e8a70e87ee1",
+    "Libraries/Blob/BlobRegistry.js": "eee107ecded210d45b4c8f26e10e0738dc56bb6fd44d07ae5560b0d33bfa4267",
+    "Libraries/Blob/File.js": "d5245d78e47d325ab854fff5c34641eb046e57222787b6a25650f2c579b92a80",
+    "Libraries/Blob/FileReader.js": "a0a1244ea1bd20007bdef6b4b9279ac12a3ad93576dc7914c1e573d3a55c904b",
+    "Libraries/Blob/NativeBlobModule.js": "71ed77bf0eae95820839faa04c498822fa7e3f44f1214b908f0929d8672dbe72",
+    "Libraries/Blob/NativeFileReaderModule.js": "c2e7745b591f30c57d1866ffcab6f9d8dbf5babc18c548f0e9002601eb142d28",
+    "Libraries/Blob/RCTBlobManager.mm": "f05c7e27a60330690aefd3d3d128450b9e80f7eead0cb3b31028529e0d20009c",
+    "Libraries/Blob/RCTFileReaderModule.mm": "a5d38077d9612cd75341cf967f041ef93bb6f1a349f7b1d7a2c74bc9862bcde8",
+    "Libraries/Blob/URL.js": "8d5ee781805c74a16a5a04b0eb069d3bb69a7705e4a0c9ad1e2c8a96d20929db",
+    "Libraries/Core/setUpXHR.js": "290697c07f2afc79a8b6a7fdac6cf77bc3d660a68efb4777dee252b533162a9c",
+    "Libraries/EventEmitter/NativeEventEmitter.js": "132e1d5314fde128d56724d26f96b13eb0bbfe56a69e5ac9d17fd6ce297b6d91",
+    "Libraries/EventEmitter/RCTDeviceEventEmitter.js": "a24e33cbb6272ecd5ca580c348434b6444c8a5a36ecdbfca7ae8c3e5ba498ed1",
+    "Libraries/Network/FormData.js": "c3536931abde38d5b4cd49934f281f942c80a92575b3ae15f7006c9d32ca70af",
+    "Libraries/Network/NativeNetworkingAndroid.js": "333a32ed1625c5f17e45e2176092c734de1f46d56bd3764bf5a397e910a4227d",
+    "Libraries/Network/RCTNetworking.android.js": "0cf21588e1357e057aae3fb932477c22ab8d94dbda624709c622368f51d9e40a",
+    "Libraries/Network/RCTNetworking.ios.js": "50a770779387c39c0bd68d0b8f40a039a6e53977f9b379e8d775a18685dc5fe8",
+    "Libraries/Network/RCTNetworking.js": "660e670c5442c43782590371a89cc88f97d09729cea795fa636ec07a5035f459",
+    "Libraries/Network/RCTNetworking.mm": "6a087d1a0744c5987f6653d21051d0f1ef023e6f9c5afa51746fbe2f50c3cedc",
+    "Libraries/Network/RCTNetworkingEventDefinitions.flow.js": "6ad8c7f488fbef8016c077cbab2150d713e1f56d158c6122082d65dd956f1c93",
+    "Libraries/Network/XMLHttpRequest.js": "588f2f39bde35c1cc0aef12f1e2d64ef5b37039542a28f469c504e34182eaca3",
+    "Libraries/Network/convertRequestBody.js": "538a98838d32b3ea2bd12250e7cbab6628b8f4efc0793b61c9a7a748e6cb5d0d",
+    "Libraries/Network/fetch.js": "b626a9897d7476825c89924b692dd33b5ae36634e1b90f40e59b16f3749be873",
+    "Libraries/Utilities/PolyfillFunctions.js": "c00e1ba8f8f668a7a710688e2c0e5d36b63df18a52fdf4bb8691cd436c9720ca",
+    "Libraries/WebSocket/WebSocket.js": "722508694e0fb0d7cd7878421801d3e9df2b119b79775320ee832870628f2569",
+    "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/blob/BlobModule.kt": "65adac5b201eeef3bd84bf6ca2955b3e15583c9d697f79a7c2a55e8ce0b34d2c",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/blob/FileReaderModule.kt": "83cf8e6ed5d1c71c89e5ffd0b198d4b761e6732717d1da5ffd82427c1af19db6",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/network/HeaderUtil.kt": "84409c5c09bf65a961ad1fe4990440b34ae4e708ef0f4d73bba1deeda0ad06f5",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/network/NetworkEventUtil.kt": "e3836d4ef579b85e46f19e946dbc81b968b4bec523d3cc1b5089dcb2eb63a0a4",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/network/NetworkingModule.kt": "31200e6ba3e50aaaa418e84ee924ff4836939610bd735d6b2bdbfcc74ed02e2a",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/network/RequestBodyUtil.kt": "e5e0d4978ae984141d13b836f1b1dfed869ae8e41c0e727a258e591209dfdac3",
+    "ReactCommon/react/nativemodule/core/ReactCommon/TurboModule.cpp": "35454614a9dd58c7d5da95bb824d7d6de3749f2e69aa4258bf7b8b6e99b9aed4",
+    "src/private/specs_DEPRECATED/modules/NativeBlobModule.js": "cd22553a309f2f2912fd10a1225f4000a14d308c8be8cca2b048bfbe06ee4f25",
+    "src/private/specs_DEPRECATED/modules/NativeFileReaderModule.js": "af12fda7ca8b5e607b891b5c5c9c7f1a9340d5a35d2c88c25f3ed7796359107b",
+    "src/private/specs_DEPRECATED/modules/NativeNetworkingAndroid.js": "31269a59001b502a305b221dba4592bf439c083c97808fcd45dbd4561e432821",
+    "src/private/webapis/dom/abort-api/AbortController.js": "03082ec42dfbb3de1fc5270b3c6fe7addf7be85ba595f877a0d5f3768c84963a",
+    "src/private/webapis/dom/abort-api/AbortSignal.js": "c0791a70fa3dd97652736b74b789b2bc162709822815405624155c0bb48b8d3e"
+  },
+  "polyfillSources": {
+    "node_modules/whatwg-fetch/fetch.js": "5edbcbfbde9540d067d6bbbc9f2747afc4e6323b2a5d38eeaf394bc7261c5447"
+  },
+  "hostedCI": {
+    "status": "pending-networking-slice"
+  },
+  "limits": [
+    "WebSocket is the next slice: the global is RN's and fails on first use with 'WebSocketModule' could not be found, and BlobModule's socket methods throw E_UNSUPPORTED.",
+    "Cookies are neither stored nor sent: withCredentials has no effect and clearCookies calls back false. OkHttp and NSURLSession keep a cookie jar.",
+    "A response with a Content-Encoding other than identity fails explicitly (OkHttp and NSURLSession decode it); a string request body with Content-Encoding gzip also fails, and that path has no check of its own.",
+    "The body is buffered and delivered once: no incremental text updates, no upload or download progress events; a 1 MiB body arrives over several budgeted polls.",
+    "uri bodies and FormData file parts fail explicitly; PUT, DELETE, OPTIONS, TRACE and PATCH map to Godot's client with no check of their own.",
+    "HTTP/1.1, one connection per request: no pooling, keep-alive, HTTP/2, proxy configuration or system trust configuration; outside the validation seam TLS trusts Godot's roots, with no revocation or pinning.",
+    "The contract is Android's: RN's iOS wrapper would need a second native module over another spec; failure texts are this host's, not OkHttp's; BlobModule's constants are iOS's.",
+    "The react-native facade gains no export: Networking stays missing, and the globals are RN's own.",
+    "Only macOS arm64 was executed: Godot Android (INTERNET permission), iOS and Web (CORS) exports, hardware, offline and reconnect behavior are not covered.",
+    "GF-22 is open: only its first-slice checkpoint closes, and no whole GF, other checkpoint, dependency, weight or denominator closes."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin and the working tree",
+    "sourcePins": 25,
+    "nativeSourcePins": 73,
+    "verificationSourcePins": 11,
+    "uniqueCodeAndConfigurationInputs": 96,
+    "mismatches": [],
+    "originalReactNativeSources": 38,
+    "executedFromTheCommittedTree": true
+  },
+  "gates": {
+    "ranAt": "2026-10-07T03:14:23.087757Z",
+    "meaning": "Contracts-job gates, test:recovery and the dashboard checks on the tree with this record's documents, the dashboard entry and the receipt body (this field is appended afterwards).",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "5ac7909a425f20923cbe1168a98ea4b9b02e37b1db46bb1ca44103c76e18bab4"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "8aede226bd82e0e8954980c3855934a42a55103c420f8354a80d04b570c5e7a2"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "c2550447dad4b411b1eeec7c77350026b5ab51d695ed1045abdbf6ef6e0e7349"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "73f3c8c51dd4f153fedf1b0a44f79a2631ca7f61bad1e74955bf640d5395a1b7"
+      },
+      "dashboard:check": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "c211cce36c861ad9a4e5bbc84899c1bcf3761b18603e3800084380e30f1f4110"
+      },
+      "test:dashboard": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "1f7970733fd7e99e9c523629f3d9268ce668f0035f058074088cee77e07c7b15"
+      },
+      "type-check": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "386165be90e955da25ceaec961c4cb36e9f86f8107c5c74c2df0cde6983d51e0"
+      }
+    },
+    "counts": {
+      "nodeContractRuns": [
+        7,
+        8,
+        265
+      ],
+      "nodeContractChecks": 265,
+      "pythonContractChecks": 13,
+      "nodeFailures": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}
