@@ -18,6 +18,14 @@ Its parity job covers 13
 `core-ui-v2` cases on Android/iOS, not WebSocket differential or Godot mobile runtime behavior.
 Changes after that pinned head need their own green CI before merge.
 
+The later `3b57e72` run failed in the HTTP regression suite before WebSocket ran.
+Its truncated-body XHR emitted the expected error sequence, but Godot reported
+connection loss instead of EOF. The [diagnostic receipt](ci-http-diagnostic.json)
+records both exact permitted reasons, the corrected 100-check local run and five
+rejected oracle mutations. The main baseline passed six times; that failure was
+not reproduced there. The failed hosted run remains failed, and the correction
+requires fresh green hosted checks before merge.
+
 Negative controls are also retained in the execution receipt: the preceding main host
 (`afa5d875`) passed only 12 of 95 checks and made zero server connections; the Origin
 sabotage failed exactly four checks, and the stop-close-code sabotage failed exactly two.

@@ -516,8 +516,11 @@ func failure_stage() -> void:
   network_check(is_failed_fetch(result.get("refused")) and is_failed_fetch(result.get("reset")),
     "failure/A refused connection and a reset one reject like Android's")
   var truncated := section(result, "truncated")
+  var truncated_host := "127.0.0.1:%d" % int(ports.http)
+  var truncated_reason := str(truncated.get("responseText"))
   network_check(event_states(truncated.get("events")) == [["readystatechange", 1, 0], ["readystatechange", 2, 200], ["readystatechange", 4, 200], ["error", 4, 200], ["loadend", 4, 200]]
-    and str(truncated.get("responseText")).contains("unexpected end of stream"),
+    and ["unexpected end of stream from " + truncated_host,
+      "Connection to " + truncated_host + " was lost while receiving the response"].has(truncated_reason),
     "failure/A body cut short after the headers ends in an error, not a load")
   network_check(is_failed_fetch(result.get("unsupported")) and is_failed_fetch(result.get("invalid"))
     and event_types(section(result, "method").get("events")).has("error"),

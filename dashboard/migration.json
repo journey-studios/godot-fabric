@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "WebSocket: CI verificada; revisão documental final. Próximo: Modal."
+    "focusTitle": "WebSocket: ajuste do gate HTTP; CI final pendente. Próximo: Modal."
   },
-  "updatedAt": "2026-10-07T15:50:06Z",
+  "updatedAt": "2026-10-07T16:17:26.070Z",
   "source": {
     "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
     "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "Backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay: prova local 95/60/53; byte budget de 1 MiB compartilhado entre sockets WebSocket e admissão de 256 eventos canônicos após o poll HTTP. CI passou 5/5 no head fixado 422c2ee; o head com revisão documental final ainda requer sua CI. GF-22 segue parcial.",
+    "scope": "Backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay: prova local 95/60/53; byte budget de 1 MiB compartilhado entre sockets WebSocket e admissão de 256 eventos canônicos após HTTP. CI passou 5/5 no head fixado 422c2ee. O head 3b57e72 falhou somente no diagnóstico exato de um erro HTTP; a correção local passou100/100 e exige nova CI. GF-22 segue parcial.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
   },
   "phases": [
@@ -3473,6 +3473,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "websocket-ci-http-diagnostic-20261007",
+      "at": "2026-10-07T16:17:26.070Z",
+      "taskIds": [
+        "GF-22"
+      ],
+      "message": "PR #48: CodeRabbit aprovou o head 3b57e72 sem novas threads, mas a CI falhou no texto exato de um erro HTTP de corpo truncado. O XHR manteve a sequência correta de erro, sem load. Oracle/probe corrigidos para os dois diagnósticos exatos do Godot na porta real; prova local100/100 com duas variantes aceitas e cinco mutações rejeitadas. Baseline main passou seis vezes; não se afirma falha reproduzida nele. Transporte nativo permanece igual, e o novo head requer CI verde antes do merge. Checkpoints, pesos e denominadores preservados:23/156 e0/39; GF-22 parcial.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37647347004"
+    },
     {
       "id": "websocket-hosted-reviewed-20261007",
       "at": "2026-10-07T15:50:06Z",

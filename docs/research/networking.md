@@ -231,8 +231,12 @@ passes with the control receipts absent, as in CI, and under heavy CPU load.
   budgeted polls but is delivered once.
 - **No files.** `uri` bodies and `FormData` file parts fail explicitly.
 - **HTTP/1.1, one connection per request.** No pooling, no HTTP/2, no proxy configuration.
-- **Messages.** Failure messages are this host's (for example "Unable to resolve host",
-  "unexpected end of stream from host:port"), not OkHttp's exceptions' text.
+- **Messages.** Failure messages are this host's, not OkHttp's exception text. In the local
+  truncated-body fixture, the exact observed reason is either `unexpected end of stream
+  from 127.0.0.1:<server-port>` or `Connection to 127.0.0.1:<server-port> was lost while
+  receiving the response`. Godot's `HTTPClient::poll()` and
+  `read_response_body_chunk()` can observe the close in different phases; both remain an
+  XHR `error` after the headers, never a `load`.
 - **`BlobModule`'s constants** are iOS's (`blob`, no host), because Android's depend on a
   content provider this host has none of; `URL.createObjectURL` therefore reads
   `blob:<id>?offset=..&size=..`. Its WebSocket methods threw `E_UNSUPPORTED` until the
