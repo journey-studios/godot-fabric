@@ -143,11 +143,54 @@ test("RN's original ModalHostView mounts in a host-sized embedded Window", async
   assert.equal(ownership.foreignStopped.stopped, true);
   assert.equal(ownership.foreignBeforeStop.modalWindow.id,
     ownership.foreignNativeAfterStop.nodes.find(row => row.testID === "foreign-modal")?.modalWindow.id);
-  for (const file of ["tests/modal-host-fixture.jsx", "tests/modal-host-probe.gd", "tests/modal-host-native.test.mjs",
+  for (const file of ["tests/modal-host-fixture.jsx", "tests/modal-host-probe.gd", "tests/modal-surface-lifetime-probe.gd", "tests/modal-host-native.test.mjs",
     "scripts/modal-host-bundle.mjs", "src/react-native-platform.jsx", ...modalHostNativeProducers])
     assert.match(bundle.sources[file], /^[0-9a-f]{64}$/, "Pin every executed producer: " + file);
   for (const file of ["Libraries/Modal/Modal.js", "Libraries/Modal/RCTModalHostViewNativeComponent.js",
     "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js",
     "Libraries/Components/SafeAreaView/SafeAreaView.js", "Libraries/Components/View/View.js"])
     assert.match(bundle.originalReactNativeSources[file], /^[0-9a-f]{64}$/);
+});
+
+test("hidden FabricSurface keeps DOM geometry while input authority is inactive and unmount releases reentrantly", {timeout: 120000}, async () => {
+  const bundle = await bundleModalHostProbe();
+  const binary = await ensureGodotBinary();
+  const reportPath = path.join(root, "build/modal-surface-lifetime-report.json");
+  const logPath = path.join(root, "build/modal-surface-lifetime.log");
+  await rm(reportPath, {force: true});
+  const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/modal-surface-lifetime-probe.gd"],
+    {encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024});
+  const log = (result.stdout ?? "") + (result.stderr ?? "");
+  await writeFile(logPath, log);
+  assert.equal(result.error, undefined, log);
+  assert.equal(result.signal, null, log);
+  assert.equal(result.status, 0, log);
+  assert.doesNotMatch(log, /SCRIPT ERROR|(^|\n)ERROR:|Program crashed|ObjectDB instances leaked|Resources still in use/);
+  const report = JSON.parse(await readFile(reportPath, "utf8"));
+  report.provenance = {bundleSha256: bundle.bundle.sha256,
+    nativeHostSha256: digest(await readFile(path.join(root, "addons/fabric_godot.dylib")))};
+  await writeFile(reportPath, JSON.stringify(report, null, 2) + "\n");
+  assert.equal(report.scenario, "modal-surface-unmount-and-reentrant-free");
+  const checks = new Map(report.checks.map(row => [row.id, row.passed]));
+  assert.equal(checks.size, 9);
+  assert.equal(checks.get("hidden/connected Surface keeps DOM measurement coordinates when its native visibility is false"), true);
+  assert.equal(checks.get("hidden/a hidden Surface does not receive newly injected pointer input"), true);
+  assert.equal(checks.get("teardown/test Surface owns ordinary RN content and a live Modal Window"), true);
+  assert.equal(checks.get("teardown/unmount detaches the ordinary RN root before visibility_changed queues Surface release"), true);
+  assert.equal(checks.get("teardown/queued Surface release completes after unmount returns"), true);
+  assert.equal(checks.get("teardown/freeing the Surface retires its Fabric root without stale Control access or runtime errors"), true);
+  assert.equal(checks.get("teardown/JS hide control starts with ordinary RN content and a visible Modal"), true);
+  assert.equal(checks.get("teardown/JS visibility callback synchronously frees its Surface while ordinary content remains alive"), true);
+  assert.equal(checks.get("teardown/JS callback Surface.free retires the Fabric root without runtime errors"), true);
+  assert.equal(report.freeCallback.ordinaryRootAlive, true);
+  assert.equal(report.freeCallback.ordinaryRootDetached, true);
+  assert.equal(report.freeCallback.surfaceWasAlive, true);
+  assert.equal(report.freeCallback.releaseQueued, true);
+  assert.equal(report.jsHide.called, true);
+  assert.equal(report.jsHide.surfaceWasAlive, true);
+  assert.equal(report.jsHide.ordinaryWasAlive, true);
+  assert.deepEqual(report.retiredApplication.errors, []);
+  assert.equal(report.retiredApplication.rootCount, 0);
+  assert.deepEqual(report.callbackRetiredApplication.errors, []);
+  assert.equal(report.callbackRetiredApplication.rootCount, 0);
 });

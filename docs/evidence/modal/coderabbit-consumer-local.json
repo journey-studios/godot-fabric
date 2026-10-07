@@ -1,0 +1,40 @@
+{
+  "format": "godot-fabric.modal-coderabbit-consumer/v1",
+  "hostSha256": "45ba095b7584224c550f4f453b7ee12e092606212fe6d57e41abbd2e78c6163d",
+  "nativeSdkProducerPinsVerified": 95,
+  "addonProducerPinsVerified": 153,
+  "sdkReceiptSha256": "04c51c5b51895628236a7348793dedc2646c38a62dbffaeb0827be20725ad658",
+  "addonManifestSha256": "6d7294fde80f08ec2424c48ad4e3f2c71b2441fe5e56321b819a98527cd2a328",
+  "fixtureSha256": "44a27037ad2be368fd9e8795272087f392e363bd2a4d973721414246220f47d2",
+  "fixtureByteIdentical": true,
+  "probeSha256": "515a1d1376b3c6f337a71bc81ff4e1e9e4102e7616ee96df88a9e56121092b03",
+  "probeChange": "only resource bundle path points to canonical SDK CLI output",
+  "bundleSha256": "5a64fecb8a2beba470f708384d0bf66d971509bf65212215a01efd106ffad511",
+  "buildLogSha256": "429792a98d5e9493caf362e7b9bd99f247f94623e885d636b58797b137b71c7c",
+  "buildExitCode": 0,
+  "consumerSourceCommit": "a32235dc9b5ed932bb7942e50fc33e7abe04f1e3",
+  "consumerSourceDirty": true,
+  "abiCertified": false,
+  "hardwareInput": false,
+  "mobile": false,
+  "export": false,
+  "runtime": {
+    "godot": "4.7.2-stable (official)",
+    "displayServer": "headless",
+    "checks": 68,
+    "passed": 68,
+    "reportSha256": "d8f86080d725d81fdd90b59a12fffca09f1576f5a3bdaf28d89c63e7f3e9b048",
+    "logSha256": "8e62b04c9578c66e0b9ebdab7b5acb3af1249ff8af1db21b5dfef6e5a19b9b31",
+    "exitCode": 0,
+    "scriptOrEngineErrors": false
+  },
+  "registry": {
+    "checks": 213,
+    "cases": 11,
+    "passed": true,
+    "reportSha256": "5cf2fec995e6287e4fd1918252084ba35d6007ef875dc8b0d4f7c4ae611e3e3c",
+    "componentMounted": false,
+    "abiCertified": false
+  },
+  "fullGF18Acceptance": false
+}

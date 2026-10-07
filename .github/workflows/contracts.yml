@@ -200,6 +200,10 @@ jobs:
             build/modal-sibling-order.log
             build/modal-owner-windows-report.json
             build/modal-owner-windows.log
+            build/modal-owner-windows-target-missing-report.json
+            build/modal-owner-windows-target-missing.log
+            build/modal-surface-lifetime-report.json
+            build/modal-surface-lifetime.log
             build/modal-stack-membership-report.json
             build/modal-stack-membership.log
             build/modal-stack-membership-probe.js

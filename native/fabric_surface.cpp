@@ -148,11 +148,6 @@ String FabricSurface::snapshot() {
 }
 void FabricSurface::_input(const Ref<InputEvent> &event) {
   if (!surface_id) return;
-  if (has_meta("validation_input_device") &&
-      (event->is_class("InputEventMouse") || event->is_class("InputEventScreenTouch") || event->is_class("InputEventScreenDrag")) &&
-      event->get_device() != static_cast<int>(get_meta("validation_input_device"))) {
-    get_viewport()->set_input_as_handled(); return;
-  }
   const auto viewport_id = get_viewport()->get_instance_id();
   if (auto *owner = application(); owner && owner->get_runtime() && owner->get_runtime()->input(surface_id, event))
     // Input may synchronously remove/free this surface. Do not access this

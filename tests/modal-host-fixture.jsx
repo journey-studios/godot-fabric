@@ -37,7 +37,7 @@ function ModalHostProbe() {
     state.mounts = (state.mounts ?? 0) + 1;
     return () => { state.unmounts = (state.unmounts ?? 0) + 1; };
   }, []);
-  return <View testID="small-root" onPointerMove={() => { state.modalAncestorMoves += 1; }}
+  return <View testID="small-root" collapsable={false} onPointerMove={() => { state.modalAncestorMoves += 1; }}
     onPointerUp={() => { state.modalAncestorUps += 1; }}
     onGotPointerCapture={() => { state.modalAncestorCaptureGots += 1; }}
     onLostPointerCapture={() => { state.modalAncestorCaptureLosts += 1; }} onLayout={() => {
@@ -263,6 +263,11 @@ globalThis.ModalHostProbe = {
     state.retainedZeroConnected = retainedZeroRef?.isConnected ?? null;
     if (retainedZeroRef) retainedZeroRef.measureInWindow((x, y, width, height) =>
       state.staleMeasurements.push({x, y, width, height}));
+  },
+  measureZeroNow: () => {
+    state.liveMeasurements = [];
+    if (zeroRef) zeroRef.measureInWindow((x, y, width, height) =>
+      state.liveMeasurements.push({x, y, width, height}));
   },
 };
 globalThis.ForeignModalProbe = {

@@ -1,11 +1,16 @@
 extends SceneTree
 
 var checks: Array = []
+var interlopers: Array = []
 func check(ok: bool, id: String) -> void:
   checks.append({"id": id, "passed": ok})
   if not ok: push_error("FABRIC_CHECK_FAILED: " + id)
 func settle(frames: int = 12) -> void:
   for frame in range(frames): await process_frame
+func retire_applications(first: Node, second: Node) -> void:
+  first.call("stop")
+  second.call("stop")
+  await settle(24)
 func native(target: Object) -> Dictionary:
   var value: Variant = JSON.parse_string(target.call("snapshot"))
   return value if value is Dictionary else {}
@@ -29,6 +34,16 @@ func click(owner: Window, target: Control) -> void:
   down.pressed = true
   owner.push_input(down, true)
   await settle(3)
+  var interloper_position := Vector2(owner.size) - Vector2(4, 4)
+  var interloper := InputEventMouseMotion.new()
+  interloper.device = 4243
+  interloper.position = interloper_position
+  interloper.relative = Vector2(1, 0)
+  interlopers.append({"ownerWindowId": owner.get_instance_id(), "device": interloper.device,
+    "position": [interloper_position.x, interloper_position.y],
+    "insideOwner": Rect2(Vector2.ZERO, Vector2(owner.size)).has_point(interloper_position),
+    "outsideTarget": not target.get_global_rect().has_point(interloper_position)})
+  owner.push_input(interloper, true)
   var up := down.duplicate() as InputEventMouseButton
   up.pressed = false
   owner.push_input(up, true)
@@ -42,6 +57,7 @@ func run_probe() -> void:
   var surface_a: Control = ClassDB.instantiate("FabricSurface")
   surface_a.name = "WindowASurface"
   surface_a.size = Vector2(110, 90)
+  surface_a.set_meta("validation_input_device", 4242)
   surface_a.set("application_path", NodePath("../WindowAApplication"))
   surface_a.set("component_name", "ModalLifecycleProbe")
   root.add_child(surface_a)
@@ -63,6 +79,7 @@ func run_probe() -> void:
   var surface_b: Control = ClassDB.instantiate("FabricSurface")
   surface_b.name = "WindowBSurface"
   surface_b.size = Vector2(130, 100)
+  surface_b.set_meta("validation_input_device", 4242)
   surface_b.set("application_path", NodePath("../WindowBApplication"))
   surface_b.set("component_name", "ModalLifecycleProbe")
   owner_b.add_child(surface_b)
@@ -74,16 +91,37 @@ func run_probe() -> void:
   var window_a := instance_from_id(int(modal_a.get("modalWindow", {}).get("id", 0))) as Window
   var window_b := instance_from_id(int(modal_b.get("modalWindow", {}).get("id", 0))) as Window
   if window_a == null or window_b == null:
+    var missing_window_errors := [native(app_a).errors, native(app_b).errors]
+    var missing_window_ids := [0 if window_a == null else window_a.get_instance_id(),
+      0 if window_b == null else window_b.get_instance_id()]
+    await retire_applications(app_a, app_b)
     var failed := {"scenario": "modal-two-native-owner-windows", "displayServer": DisplayServer.get_name(),
-      "checks": checks, "errors": [native(app_a).errors, native(app_b).errors],
-      "modalWindowIds": [0 if window_a == null else window_a.get_instance_id(),
-        0 if window_b == null else window_b.get_instance_id()]}
+      "checks": checks, "errors": missing_window_errors,
+      "cleanup": [native(app_a), native(app_b)],
+      "modalWindowIds": missing_window_ids}
     var failed_output := FileAccess.open("res://build/modal-owner-windows-report.json", FileAccess.WRITE)
     failed_output.store_string(JSON.stringify(failed, "  ") + "\n")
     quit(1)
     return
   var target_a := control(native(surface_a), "lifecycle-target")
   var target_b := control(native(surface_b), "lifecycle-target")
+  var targets_mounted := target_a != null and target_b != null
+  check(targets_mounted, "owners/targets-are-present-before-native-input")
+  if not targets_mounted:
+    var missing_target_errors := [native(app_a).errors, native(app_b).errors]
+    var missing_target_ids := [0 if target_a == null else target_a.get_instance_id(),
+      0 if target_b == null else target_b.get_instance_id()]
+    var failed_modal_window_ids := [window_a.get_instance_id(), window_b.get_instance_id()]
+    await retire_applications(app_a, app_b)
+    var failed := {"scenario": "modal-two-native-owner-windows", "displayServer": DisplayServer.get_name(),
+      "checks": checks, "errors": missing_target_errors,
+      "cleanup": [native(app_a), native(app_b)],
+      "targetIds": missing_target_ids,
+      "modalWindowIds": failed_modal_window_ids}
+    var failed_output := FileAccess.open("res://build/modal-owner-windows-report.json", FileAccess.WRITE)
+    failed_output.store_string(JSON.stringify(failed, "  ") + "\n")
+    quit(1)
+    return
   check(owner_b.force_native and not owner_b.is_embedded() and owner_b.get_viewport() == owner_b and
     owner_b.get_window() == owner_b, "owners/second-owner-is-a-distinct-native-window")
   check(window_a != null and window_b != null and window_a != window_b and
@@ -129,9 +167,17 @@ func run_probe() -> void:
     "owners/removing-A-presentation-preserves-B-window-stack-and-control-identity")
   if retained_b_target != null: await click(owner_b, retained_b_target)
   var state_b_after_a_remove := react(app_b)
+  var native_a_after_interlopers := native(surface_a)
+  var native_b_after_interlopers := native(surface_b)
   check(int(state_b_after_a_remove.downs) == 2 and int(state_b_after_a_remove.presses) == 2 and
     native(app_a).pointerRouting.stored == 0 and native(app_a).pointerRouting.suppressed == 0,
     "owners/B-remains-interactive-after-A-presentation-is-destroyed")
+  check(interlopers.size() == 3 and interlopers.all(func(row: Dictionary) -> bool:
+      return row.device == 4243 and row.insideOwner and row.outsideTarget) and
+    native_a_after_interlopers.pointer.pointerMoves == 0 and
+    native_b_after_interlopers.pointer.pointerMoves == 0 and
+    state_a_after_b_click.moves == 0 and state_b_after_a_remove.moves == 0,
+    "owners/foreign-device-interlopers-never-reach-native-or-responder-moves")
   app_a.call("stop")
   await settle(8)
   var b_after_stop_a := native(surface_b)
@@ -149,6 +195,7 @@ func run_probe() -> void:
       "A": {"windowId": owner_a.get_instance_id(), "surface": native(surface_a), "state": state_a_after_b_click},
       "B": {"windowId": owner_b.get_instance_id(), "surface": native(surface_b), "state": state_b_after_a_remove}},
     "modalWindowIds": [id_a, id_b], "targetIds": [target_a_id, target_b_id],
+    "interlopers": interlopers,
     "windowStateBeforeClicks": top_state,
     "checks": checks,
     "errors": [native(app_a).errors, native(app_b).errors]}

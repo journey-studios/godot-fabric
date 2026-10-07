@@ -87,13 +87,53 @@ test("Modal capture endpoint retirement and sibling reorder stay bounded", {time
       "owners/second-owner-is-a-distinct-native-window",
       "owners/each-runtime-modal-window-is-embedded-under-its-own-owner",
       "owners/both-independent-modal-stacks-hold-their-own-exclusive-top",
+      "owners/targets-are-present-before-native-input",
       "owners/input-in-owner-A-is-confined-to-runtime-A",
       "owners/input-in-owner-B-is-confined-to-runtime-B",
       "owners/removing-A-presentation-preserves-B-window-stack-and-control-identity",
       "owners/B-remains-interactive-after-A-presentation-is-destroyed",
+      "owners/foreign-device-interlopers-never-reach-native-or-responder-moves",
       "owners/stopping-runtime-A-does-not-retire-owner-B-stack",
       "owners/both-native-owner-runtimes-clean-up-independently",
     ]) assert.equal(passed.get(id), true, `Required native owner invariant: ${id}`);
+    assert.equal(report.interlopers.length, 3);
+    assert.equal(report.interlopers.every(row => row.device === 4243 && row.insideOwner && row.outsideTarget), true);
     assert.deepEqual(report.errors, [[], []]);
+
+    const probePath = path.join(root, "tests/modal-owner-windows-probe.gd");
+    const negativeProbePath = path.join(root, "build/modal-owner-windows-target-missing.gd");
+    const negativeReportPath = path.join(root, "build/modal-owner-windows-target-missing-report.json");
+    const negativeLogPath = path.join(root, "build/modal-owner-windows-target-missing.log");
+    let negativeProbe = await readFile(probePath, "utf8");
+    negativeProbe = negativeProbe
+      .replace('control(native(surface_a), "lifecycle-target")', 'control(native(surface_a), "missing-target")')
+      .replace('control(native(surface_b), "lifecycle-target")', 'control(native(surface_b), "missing-target")')
+      .replaceAll("res://build/modal-owner-windows-report.json", "res://build/modal-owner-windows-target-missing-report.json");
+    assert.match(negativeProbe, /missing-target/);
+    await writeFile(negativeProbePath, negativeProbe);
+    await rm(negativeReportPath, {force: true});
+    const negative = spawnSync(binary, ["--path", root, "--script", "res://build/modal-owner-windows-target-missing.gd"],
+      {encoding: "utf8", timeout: 60000, maxBuffer: 8 * 1024 * 1024});
+    const negativeLog = (negative.stdout ?? "") + (negative.stderr ?? "");
+    await writeFile(negativeLogPath, negativeLog);
+    assert.equal(negative.error, undefined, negativeLog);
+    assert.equal(negative.signal, null, negativeLog);
+    assert.equal(negative.status, 1, negativeLog);
+    assert.doesNotMatch(negativeLog, /SCRIPT ERROR|Cannot call method|Program crashed|ObjectDB instances leaked|Resources still in use/);
+    const errors = negativeLog.split(/\r?\n/).filter(line => line.startsWith("ERROR:"));
+    assert.deepEqual(errors, ["ERROR: FABRIC_CHECK_FAILED: owners/targets-are-present-before-native-input"]);
+    const negativeReport = JSON.parse(await readFile(negativeReportPath, "utf8"));
+    assert.equal(negativeReport.scenario, "modal-two-native-owner-windows");
+    assert.deepEqual(negativeReport.modalWindowIds.length, 2);
+    assert.deepEqual(negativeReport.targetIds, [0, 0]);
+    assert.equal(negativeReport.checks.length, 1);
+    assert.equal(negativeReport.checks[0].id, "owners/targets-are-present-before-native-input");
+    assert.equal(negativeReport.checks[0].passed, false);
+    assert.deepEqual(negativeReport.errors, [[], []]);
+    assert.equal(negativeReport.cleanup.length, 2);
+    for (const application of negativeReport.cleanup) {
+      assert.equal(application.stopped, true);
+      assert.equal(application.rootCount, 0);
+    }
   });
 });
