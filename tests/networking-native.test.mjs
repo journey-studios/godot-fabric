@@ -64,8 +64,15 @@ function fetchLog(port) {
 
 function stopServer({child}) {
   return new Promise(resolve => {
+    // A server that already ended, a crashed one, has no exit event left to wait for: waiting would hang the suite.
+    if (child.exitCode !== null || child.signalCode !== null) {
+      resolve();
+      return;
+    }
     child.removeAllListeners("exit");
     child.on("exit", resolve);
+    // A server that ends between the check and the write leaves a closed pipe, which is not an error here: its exit is.
+    child.stdin.on("error", () => {});
     child.stdin.end();
   });
 }
