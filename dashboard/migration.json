@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "WebSocket: CI 5/5; integração da main em validação. Próximo: Modal."
+    "focusTitle": "Modal: base nativa escolhida; primeira integração RN em preparação. WebSocket #48 mergeado."
   },
-  "updatedAt": "2026-10-07T16:57:03.264Z",
+  "updatedAt": "2026-10-07T18:42:00.851Z",
   "source": {
-    "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "Implementação local fixada em 73a27b0c467884a9bf51dc7b6cb70e4cb198ac78: backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay, prova local 95/60/53, limite global de 1 MiB wire por poll entre sockets WebSocket e capacidade canônica de 256 eventos após HTTP. Recibos CI históricos cobrem 422c2ee e a correção HTTP e8dd7b0; integração com main em 51ad758 aguarda CI própria. GF-22 segue parcial.",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
+    "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48",
+    "scope": "WebSocket #48 mergeado em ebcb292 após cinco jobs verdes no head final55980ac, aprovação CodeRabbit e cinco threads resolvidas. Artefatos verificados independentemente:95checks/60conexões/53traces WebSocket,100checks/137requests HTTP, carga/lifetime e56inputs por SHA-256. Capturas e prova local mantêm pin73a27b0; recibos históricos422c2ee/e8dd7b0 preservados. GF-22 parcial. Modal: investigação desktop escolheu Windows embedded irmãs com somente topo exclusivo; integração RN em preparação, sem checkpoint novo.23/156 checkpoints e0/39 itens completos."
   },
   "phases": [
     {
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Investigação para a primeira fatia: descriptor/state/layout original RN compilado e executado; GUI Godot isolada reexecutada independentemente com56observações. Windows embedded irmãs e só topo exclusivo preservam controles, foco/texto e identidade ao remover modal inferior. Helper global de input e reparent foram rejeitados. Ainda não há Modal RN integrado, prova de geometria/resize/lifetime do produto, paridade, export ou mobile; todos os checkpoints permanecem abertos. Próxima etapa: implementação da primeira integração RN.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2053,7 +2053,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "fetch (com Headers, Request e Response), XMLHttpRequest, FormData, Blob, File, FileReader, URL, URLSearchParams e AbortController originais do RN como globais, instalados pela inicialização do host (setUpXHR) sobre três TurboModules C++ (Networking no contrato do wrapper Android do RN, BlobModule e FileReaderModule) e um transporte sobre o HTTPClient do Godot: HTTP/1.1 e HTTPS, uma conexão por requisição, redirecionamentos (até 20) e tempo limite total do host, respostas text, base64 e blob, corpos string, base64, multipart e blob, aborto, erros de rede e liberação na parada da aplicação. 100 headless em duas roots contra um servidor Node determinístico, com um oráculo independente que confere as 137 requisições registradas; o host anterior falha exatamente 84; as sabotagens retidas (redirecionamentos não seguidos e cabeçalhos repetidos não unidos) falham 8 e 2, rejeitadas pelo oráculo. O WebSocket original do RN roda sobre um quarto TurboModule C++ (WebSocketModule, no contrato Android do RN, com as ligações do BlobModule), usando HTTPClient como connector DNS/TCP/TLS e o StreamPeer público com wslay upstream pinado para framing. 95 checks, 60 conexões e 53 comparações wire/JS; TLS preserva close 1000 e 4002/reason literal e trata drop como falha. Admissão WebSocket: byte budget de 1 MiB por poll compartilhado entre sockets WebSocket; capacidade de 256 eventos canônicos calculada após o poll HTTP, exercitados em duas fases de carga com oito sockets e 1.024 mensagens cada; fairness, pico pendente e drenagem final verificados. Oito casos de cancel/stop reentrante cobrem on_open/on_message: quatro ecos drenados recebem 1001; quatro casos com greeting pendente terminam como TCP drop best-effort, sem alegar handshake completo. Exemplo: 29/29 headless, 51/51 gráfico e 11 capturas macOS. SDK macOS empacotado/verificado, addon provisionado e link iOS simulator arm64 com archive combinado e símbolos Fabric/wslay; sem runtime/export consumidor iOS. Host anterior: 12/95 e zero conexões; sabotagens Origin/stop rejeitadas pelo oráculo em 4/2 checks. Issue godot#115384 e perda do WebSocketPeer são históricos do backend substituído, não limitação observada do adapter atual. Abertos: respostas e corpos comprimidos, progresso de upload/download, streaming incremental, corpos uri e partes de arquivo, pooling, export Networking do react-native, extensões WebSocket (permessage-deflate), cookies, configuração de proxy/trust do sistema, HTTP/2, offline/reconexão, duração/hardware ampliados e runtime/export Android, iOS e Web. Hosted CI passou 5/5 jobs no head fixado 422c2ee (https://github.com/journey-studios/godot-fabric/actions/runs/37640391170); alterações posteriores do PR precisam de sua própria CI verde. O job de parity cobre 13 casos core-ui-v2 Android/iOS, não differential WebSocket nem runtime Godot móvel. Revisão documental final em curso; próxima fatia: Modal. O aceite total do GF-22 continua em andamento; esta fatia não altera checkpoints, peso nem denominador.",
+      "note": "fetch (com Headers, Request e Response), XMLHttpRequest, FormData, Blob, File, FileReader, URL, URLSearchParams e AbortController originais do RN como globais, instalados pela inicialização do host (setUpXHR) sobre três TurboModules C++ (Networking no contrato do wrapper Android do RN, BlobModule e FileReaderModule) e um transporte sobre o HTTPClient do Godot: HTTP/1.1 e HTTPS, uma conexão por requisição, redirecionamentos (até 20) e tempo limite total do host, respostas text, base64 e blob, corpos string, base64, multipart e blob, aborto, erros de rede e liberação na parada da aplicação. 100 headless em duas roots contra um servidor Node determinístico, com um oráculo independente que confere as 137 requisições registradas; o host anterior falha exatamente 84; as sabotagens retidas (redirecionamentos não seguidos e cabeçalhos repetidos não unidos) falham 8 e 2, rejeitadas pelo oráculo. O WebSocket original do RN roda sobre um quarto TurboModule C++ (WebSocketModule, no contrato Android do RN, com as ligações do BlobModule), usando HTTPClient como connector DNS/TCP/TLS e o StreamPeer público com wslay upstream pinado para framing. 95 checks, 60 conexões e 53 comparações wire/JS; TLS preserva close 1000 e 4002/reason literal e trata drop como falha. Admissão WebSocket: byte budget de 1 MiB por poll compartilhado entre sockets WebSocket; capacidade de 256 eventos canônicos calculada após o poll HTTP, exercitados em duas fases de carga com oito sockets e 1.024 mensagens cada; fairness, pico pendente e drenagem final verificados. Oito casos de cancel/stop reentrante cobrem on_open/on_message: quatro ecos drenados recebem 1001; quatro casos com greeting pendente terminam como TCP drop best-effort, sem alegar handshake completo. Exemplo: 29/29 headless, 51/51 gráfico e 11 capturas macOS. SDK macOS empacotado/verificado, addon provisionado e link iOS simulator arm64 com archive combinado e símbolos Fabric/wslay; sem runtime/export consumidor iOS. Host anterior: 12/95 e zero conexões; sabotagens Origin/stop rejeitadas pelo oráculo em 4/2 checks. Issue godot#115384 e perda do WebSocketPeer são históricos do backend substituído, não limitação observada do adapter atual. Abertos: respostas e corpos comprimidos, progresso de upload/download, streaming incremental, corpos uri e partes de arquivo, pooling, export Networking do react-native, extensões WebSocket (permessage-deflate), cookies, configuração de proxy/trust do sistema, HTTP/2, offline/reconexão, duração/hardware ampliados e runtime/export Android, iOS e Web. PR #48 mergeada em ebcb292 após CI5/5 no head final55980ac (https://github.com/journey-studios/godot-fabric/actions/runs/37658942136), aprovação CodeRabbit e cinco threads resolvidas. Recibo final registra56inputs verificados independentemente, HTTP100/137 e WebSocket95/60/53; recibos422c2ee/e8dd7b0 históricos preservados. O job de parity cobre 13 casos core-ui-v2 Android/iOS, não differential WebSocket nem runtime Godot móvel. Revisão e merge desta fatia concluídos; próxima fatia: Modal. O aceite total do GF-22 continua em andamento; esta fatia não altera checkpoints, peso nem denominador.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2076,6 +2076,10 @@
             {
               "label": "WebSocket PR #48: hosted CI 5/5 jobs para head fixado 422c2ee (execução em https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)",
               "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37640391170"
+            },
+            {
+              "label": "WebSocket PR #48: head final55980ac, CI5/5 e merge após revisão",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37658942136"
             }
           ]
         },
@@ -3473,6 +3477,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "websocket-final-merge-modal-design-20261007",
+      "at": "2026-10-07T18:42:00.851Z",
+      "taskIds": [
+        "GF-22",
+        "GF-18"
+      ],
+      "message": "PR #48 mergeada como ebcb292 após CI5/5 do head final55980ac, aprovação CodeRabbit e cinco threads resolvidas. Verificação independente dos artifacts:WebSocket95/60/53, HTTP100/137,56inputs SHA-256, duas fases de carga e oito casos lifetime. CI pós-merge37663778397 passou5/5 no commit ebcb292. Pages da main mergeada publicado e JSON integral comparado ao commit. Modal: bloqueador global de input rejeitado por impedir GUI; reparent rejeitado por perder foco. Investigação GUI56observações escolheu Windows embedded irmãs com topo exclusivo, mantendo controles/foco/texto ao remover inferior. Isso não é Modal RN implementado nem prova mobile. Nenhum checkpoint/aceite/peso/denominador alterado:23/156 e0/39; GF-22 parcial, GF-18 planejado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/48"
+    },
     {
       "id": "websocket-e8-ci-green-main-integration-20261007",
       "at": "2026-10-07T16:57:03.264Z",
