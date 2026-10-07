@@ -7,9 +7,10 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 
 export async function buildDashboardPages(output = path.join(root, "build/dashboard-pages")) {
   // Publish only the dashboard and licensed fonts, never the whole repository.
+  // The agent board needs local worktrees, so agents.json is intentionally absent here.
   const data = validate(JSON.parse(await readFile(path.join(root, "dashboard/migration.json"), "utf8")));
   await mkdir(path.join(output, "fonts"), { recursive: true });
-  for (const file of ["index.html", "style.css", "app.mjs", "model.mjs", "AGENT_PROMPT.md"]) {
+  for (const file of ["index.html", "style.css", "agents.css", "app.mjs", "model.mjs", "agents.mjs", "agents-view.mjs", "format.mjs", "AGENT_PROMPT.md"]) {
     await cp(path.join(root, "dashboard", file), path.join(output, file));
   }
   for (const file of ["NotoSans.ttf", "JetBrainsMono.ttf", "OFL-NotoSans.txt", "OFL-JetBrainsMono.txt"]) {
