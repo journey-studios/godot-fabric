@@ -92,7 +92,9 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
 - **Runtime globals:** RN's own web-standard globals, installed by the host's
   initialization and backed by native networking: the original
   [fetch, XMLHttpRequest, FormData, Blob, FileReader and AbortController](evidence/networking/README.md)
-  (100 checks against a local server over HTTP and HTTPS; its hosted CI run is pending).
+  (100 checks against a local server over HTTP and HTTPS; its hosted CI run is pending), and
+  the original [WebSocket](evidence/websocket/README.md) over Godot's `WebSocketPeer` (93
+  checks against a local RFC 6455 server over ws and wss; its hosted CI run is pending).
   They are globals, not names of the `react-native` root: the facade's counts above do not
   change, and RN's `Networking` export stays among the missing 53.
 

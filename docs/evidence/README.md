@@ -439,9 +439,33 @@ covered. The preceding host fails exactly the 84 normative checks (the first use
 API fails where RN looks up its module, and no request reaches the server); a transport
 that never follows a redirect fails 8 checks and one that does not join repeated response
 headers fails 2, and the oracle rejects each. Six captures of the example and a C++ test of
-the HTTP core (81 assertions). The `WebSocket` global is RN's and fails on first use until
-the next slice; cookies, compressed responses, HTTP/2, progress events, incremental
-streaming, `uri` and file bodies, and every target but macOS are open. Hosted CI pending.
+the HTTP core (81 assertions). Cookies, compressed responses, HTTP/2, progress events,
+incremental streaming, `uri` and file bodies, and every target but macOS are open (the
+`WebSocket` global got its module in the record below). Hosted CI pending.
+
+The [WebSocket record](websocket/README.md) runs React Native's own `WebSocket` over a fourth
+C++ TurboModule with the contract of RN's Android `WebSocketModule` (and the socket hooks of
+`BlobModule`) and a transport on Godot's `WebSocketPeer`: one peer per socket, polled on the
+main thread in the same networking poll as the HTTP transport, with 16 MiB rings, the 60-second
+closing deadline OkHttp has and the 1001 of an application stop that Android sends. Two roots
+of one application run 93 headless checks against a Node server that implements RFC 6455 by
+hand and records every handshake and frame as it crossed the wire, over ws and over wss with the
+CA generated at runtime; an independent oracle checks all 59 connections the server recorded
+against what each case must have caused, compares what JS observed on 52 of them and ties the
+native counters to the frame log (every connect ended as a refusal, a close, a failure or the
+stop; the transport sent and read what the server received and sent but for what the engine
+drops). Text and binary messages (`arraybuffer` and `blob`), subprotocols, the default Origin
+and the caller's headers, close codes and reasons, refused handshakes, cut connections,
+megabyte messages, fragmentation and ping, certificates the engine must refuse, closing while
+connecting and the stop of the application with sockets in flight are covered. The preceding
+host fails exactly the 81 normative checks (no `WebSocketModule` to look up, and no
+connection reaches the server); a module that never sends the default Origin fails 4 checks and
+a stop that closes with 1000 instead of 1001 fails 2, and the oracle rejects each. Eleven
+captures of the two-card example and a C++ test of the WebSocket core (47 assertions). The
+engine loses the messages a server writes in the same poll as its close frame
+(godotengine/godot#115384) and merges a ping between fragments into the message, which the suite
+reproduces without requiring; `permessage-deflate`, cookies, a connect time-out and every target
+but macOS are open. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

@@ -52,7 +52,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [virtualized-list](virtualized-list/README.md) | Original RN FlatList and SectionList windowed by the mouse wheel | Public | [App](virtualized-list/App.jsx) · [scene](virtualized-list/scene.tscn) |
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
 | [pan-responder](pan-responder/README.md) | Original RN PanResponder dragging a box with the mouse | Public | [App](pan-responder/App.jsx) · [scene](pan-responder/scene.tscn) |
-| [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, against a server the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
+| [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, and WebSocket over Godot's WebSocketPeer, against servers the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -325,6 +325,15 @@ to the launcher entry (`npm run example -- networking` clicks six buttons agains
 server the scene starts). Its [receipt](../docs/evidence/networking/README.md) records 100
 headless checks, six captures, the preceding-host control, which fails exactly 84, and two
 retained sabotages, which fail 8 and 2.
+
+The [WebSocket probe](../docs/evidence/websocket/README.md) runs RN's original `WebSocket` in two
+roots of one application against a deterministic RFC 6455 server over ws and wss, and an
+independent oracle compares the server's frame log with what JS observed: `npm run
+test:websocket`, next to the second card of the same launcher entry (`npm run example --
+networking` clicks Connect, Send, Binary, Server close, Drop and Close against an echo server the
+scene starts). Its receipt records 93 headless checks, the preceding-host control, which fails
+exactly 81, and two retained sabotages, which fail 4 and 2. The example now has two cards, so
+its captures, 11 in all, were taken again and live with that record.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

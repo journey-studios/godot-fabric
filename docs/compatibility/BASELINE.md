@@ -77,10 +77,11 @@ slice's own suite, not a coverage percentage.
 | Transforms | View `transform`: singular matrices and `scale: 0` | [Singular transforms](../evidence/singular-transforms/README.md) | 49, or 58 with the capture; the preceding host fails exactly 37, a sabotage of the pointer projection 2 | run 37499277022 ([receipt](../evidence/singular-transforms/hosted-ci.json)) |
 | Frame pacing | `requestAnimationFrame` and RN's Native Animated frames | [Frame clock](../evidence/frame-clock/README.md) | 37 over eight loop paces; the preceding host fails exactly 29, three retained sabotages each fail at least one | run 37538167415 ([receipt](../evidence/frame-clock/hosted-ci.json)) |
 | Runtime globals | none: `fetch`, `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal` are globals, not names of the root (`Networking` stays missing) | [Networking](../evidence/networking/README.md) | 100 against a local server over HTTP and HTTPS, with an independent oracle; the preceding host fails exactly 84, two retained sabotages 8 and 2 | pending |
+| Runtime globals | none: `WebSocket` is a global, not a name of the root | [WebSocket](../evidence/websocket/README.md) | 93 against a local RFC 6455 server over ws and wss, with an independent oracle that checks the server's frame log; the preceding host fails exactly 81, two retained sabotages 4 and 2 | pending |
 
-The last row is not a facade area: RN installs those names as globals, so the 39, 5
-and 53 above do not move, and the root's `Networking` export is still missing. Its
-hosted CI run is pending.
+The last two rows are not facade areas: RN installs those names as globals, so the 39, 5
+and 53 above do not move, and the root's `Networking` export is still missing. Their
+hosted CI runs are pending.
 
 ## Original native oracle
 

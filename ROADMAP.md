@@ -2669,10 +2669,11 @@ The suite also passes without the control receipts, as in CI, and under heavy CP
 An interactive example (`examples/networking`) clicks six buttons against a loopback
 server it starts and its six renderer captures are in the evidence.
 
-Open: `WebSocket` (its first use fails with RN's own "'WebSocketModule' could not be
-found", and `BlobModule`'s socket methods throw), cookies and `withCredentials`, compressed
-responses (OkHttp and NSURLSession decode them) and gzip request bodies (RN's two modules
-compress them), HTTP/2, upload and download progress, incremental streaming of text, `uri`
+Open: `WebSocket` (at that point its first use failed with RN's own "'WebSocketModule' could
+not be found", and `BlobModule`'s socket methods threw; the next section covers it), cookies and
+`withCredentials`, compressed responses
+(OkHttp and NSURLSession decode them) and gzip request bodies (RN's two modules compress
+them), HTTP/2, upload and download progress, incremental streaming of text, `uri`
 and file bodies, connection pooling and keep-alive, proxy and system trust configuration,
 the `Networking` export of `react-native`, offline and reconnect behavior, hardware, and
 Godot Android (the `INTERNET` permission), iOS and Web exports (CORS).
@@ -2700,6 +2701,109 @@ timeout kills a child that ignores SIGTERM instead of waiting on it ([`57bc3e8`]
 those executed at `83a3557`, and the `postReview` section of `report.json` pins the changed files
 to these commits. Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint
 closes; no whole GF, other checkpoint, weight or denominator closes.
+
+### WebSocket over Godot's WebSocketPeer (2026-10-07)
+
+GF-22 stays **In progress**. This is its second slice, so no checkpoint changes: the
+first-slice checkpoint closed with the networking record, and the full item, contract, parity
+and targets remain open. The [WebSocket evidence](docs/evidence/websocket/README.md) runs
+React Native's own `WebSocket` over a native `WebSocketModule` backed by Godot's
+`WebSocketPeer`: **93 headless checks** in two roots of one Hermes application against a
+deterministic local RFC 6455 server over ws and wss.
+
+The networking slice already imported RN's `setUpXHR`, so the `WebSocket` global existed and
+failed on first use at "'WebSocketModule' could not be found", and `BlobModule`'s socket methods
+threw. A fourth C++ TurboModule, `WebSocketModule` (RN's generated
+`NativeWebSocketModuleCxxSpec`), now implements the contract of RN's Android module
+(`WebSocketModule.kt`), and `BlobModule`'s `addWebSocketHandler`, `removeWebSocketHandler` and
+`sendOverSocket` work over the shared blob store, so `binaryType = 'blob'` and `'arraybuffer'` are
+both covered. It lives in its own translation unit (`native/websocket_module.{h,cpp}`) beside the
+three networking modules, which share one state with it (`native/networking_state.h`: the blob
+store, one stoppable call invoker and the event queue). It follows Android where JS can see it:
+an Origin made of the URL when the caller gives none; the subprotocol list trimmed, filtered and
+joined as Android joins it; OkHttp 4.9.2's validation of header names and values and of close codes
+and reasons (a code outside 1000-4999, a reserved one or a reason over 123 bytes is refused with a
+warning and leaves the socket as it was); `close()` defaulting to 1000 and `''` (RN's JS); a close
+frame without a status reported as 1005; `send`, `sendBinary` and `ping` for a socket that is not
+open raising Android's "client is null" failure and close; base64 that decodes to nothing as
+Android's "bytes == null" failure; `ping` as an empty binary message; a message that does not
+fit OkHttp's 16 MiB queue closing the socket with 1001; and the stop of the application closing
+every open socket with 1001 and then emitting nothing. Every `connect` ends in one
+`websocketClosed` or one `websocketFailed`, and a failure is the last event. One deliberate
+departure: `close()` while the socket is still CONNECTING fails it (`websocketFailed`, "WebSocket
+is closed before the connection is established."), as a browser's does, where Android's module
+returns without doing anything and the socket opens anyway.
+
+The transport is behind its own interface (`native/websocket_transport.h`: `start`, `send`,
+`close`, `cancel`, `poll`, `stop` and a listener), all on Godot's main thread, which is the JS
+thread. `native/godot_websocket_transport.cpp` is the first implementation: one `WebSocketPeer`
+per socket, advanced from `ApplicationRuntime::pump` in the same networking poll as the HTTP
+transport (the runtime change is the second transport handed to `Networking`), reading at most 256
+messages per socket per pump within the byte budget. The engine's defaults do not suit RN: 64 KiB
+rings cannot hold a 1 MiB message, so the host sets both to 16 MiB (OkHttp's queue limit) and
+`max_queued_packets` to 16,384 and checks the outbound size itself so the engine never has to
+refuse a message; the engine never gives up on an unanswered close, so the host adds OkHttp's 60
+seconds on the clock the HTTP transport uses; over TLS the engine ends a client-initiated close
+without the server's close frame, so the host takes it as complete with the code and reason it
+sent. The pure parts (URLs read as OkHttp reads them, the default Origin, the subprotocol list,
+header and close validation) live in `native/websocket_core.h` with a C++ test of 47 assertions in
+6 groups; `native/godot_tls.h` builds the TLS options both transports use, and `WebSocketPeer` joins
+the Godot class profile. The `react-native` facade gains nothing: `WebSocket` is RN's global.
+
+A Node child process serves the cases on `node:http`, `node:https` and `node:net` and implements
+RFC 6455 by hand (the handshake, masked and unmasked frames, fragmentation, ping, pong and close):
+echo, subprotocol choice, a handshake report, closes with and without a status, refused and wrongly
+answered handshakes, dropped and reset connections, a megabyte each way, invalid text,
+fragmentation with and without a ping inside, a server that never answers a close, and wss with a
+CA and a leaf signed at runtime; it records every handshake and every frame as it crossed the wire
+and never waits on a clock (a held handshake is released by a control request). The probe waits on
+conditions only, and an independent oracle states what the server must have received and sent for
+each of the 59 connections the cases open, compares the server's frame log with what JS observed on
+52 of them, and ties the native counters to the log by arithmetic (the transport sent and read what
+the server received and sent but for what the engine drops; every connect ended as a refusal, a
+close, a failure or the stop that ended four). The same bundle on the preceding host (built from
+`afa5d87`) fails exactly the 81 normative checks, the 12 that need no native module hold, and no
+connection reaches the server; two retained sabotages (a module that never sends the default
+Origin, a stop that closes with 1000) fail 4 and 2 checks and the oracle rejects each. The suite
+also passes without the control receipts, as in CI, and under heavy CPU load. The networking
+example gained a second card, a WebSocket echo against a server the scene starts, and its 11
+renderer captures (the six of the fetch card taken again, and five of the socket) are in the
+evidence. The networking suite's own control now fails 86 of its 100 checks, two of them need the
+new module, instead of 84; the [networking evidence](docs/evidence/networking/README.md) carries a
+dated note.
+
+Engine limits, characterized and documented ([research note](docs/research/websocket.md), with
+the sources in Godot 4.7.2 and OkHttp 4.9.2): the engine loses the messages a server writes in the
+same poll as its close frame and those that arrive after the client's own close frame
+([godotengine/godot#115384](https://github.com/godotengine/godot/issues/115384); no host mitigation
+exists, and the suite reproduces the loss as an observation, not a requirement); it merges a ping
+sent between the fragments of a message into the message; it fails a handshake whose subprotocol is
+not exactly one it offered (OkHttp accepts it); it fails invalid UTF-8 text with 1007; it reports no
+HTTP status for a failed handshake; and a close reason over 123 bytes leaves it closing forever (the
+module refuses it first). The 16 MiB rings reserve about 48 MiB of address space per open socket and
+about 6 MB of resident memory for 40 of them in a scratch run.
+
+Open: `permessage-deflate` and the other extensions (OkHttp offers it, the engine none), cookies, a
+connect time-out (Android's is 10 seconds), a ring size the application can choose, HTTP/2, proxy
+and system trust configuration, OkHttp's failure texts, the iOS module's contract (no event for a
+missing socket, a real ping frame, `clean`), recovery of the messages the engine drops (it needs the
+engine fixed), reconnect and offline behavior, hardware, and Godot Android (the `INTERNET`
+permission), iOS and Web exports.
+
+On the committed tree the contracts gates (265 Node/13 Python, static analysis, publication
+scan), `test:recovery`, the 38 native suites (30 examples/2,377 checks, transform guards 61 plus 25
+input checks and the 29- and 49-check uniform scale and singular lanes, Down 2,731, Document Up
+6,459, View Up 297, Move 220, Document Move 1,940, hover 158, root path 82, Document hover 1,530,
+click 728, capture notifications 672, PanResponder 128, AppState 75, lists 44, Appearance 79, Switch
+108, shared touches 92, touchables 93, ActivityIndicator 33, Animated 75, frame clock 37,
+networking 100, websocket 93) and the native SDK batch pass, each suite with the count of the
+preceding slice (the examples went from 2,364 to 2,377 checks with the second card of the networking
+example, whose own count went from 16 headless and 28 capture checks to 29 and 51). All 109 executed code and configuration inputs match implementation `16dd2be` via git
+show/SHA-256 (executed from the committed tree, execution base `afa5d87`). The local controls and
+sabotages of the Animated, frame clock and transform guard suites pin a file this slice touched, so
+they were rebuilt on their preserved preceding hosts before the commit; hosted CI has no controls and
+is not affected. Hosted CI for this slice is pending. No whole GF, checkpoint, weight or denominator
+closes.
 
 ## M1 — Complete the native UI tree
 

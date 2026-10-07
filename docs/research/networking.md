@@ -6,10 +6,11 @@ checks against a deterministic local server over HTTP and HTTPS, the independent
 oracle that compares the 137 requests the server recorded with what JS observed, the
 preceding-host control (the same bundle fails exactly its 84 normative checks) and two
 retained sabotages (a transport that never follows a redirect fails 8 checks, one that
-does not join repeated response headers fails 2). WebSocket, cookies, compressed
-responses, HTTP/2, upload and download progress, incremental streaming, `uri` and file
-bodies, connection pooling and every target but macOS are not certified. Hosted CI is
-pending.
+does not join repeated response headers fails 2). WebSocket (certified afterwards, see the
+[WebSocket record](../evidence/websocket/README.md) and its [research note](websocket.md)),
+cookies, compressed responses, HTTP/2, upload and download progress, incremental
+streaming, `uri` and file bodies, connection pooling and every target but macOS are not
+certified. Hosted CI is pending.
 
 ## What RN does
 
@@ -234,7 +235,8 @@ passes with the control receipts absent, as in CI, and under heavy CPU load.
   "unexpected end of stream from host:port"), not OkHttp's exceptions' text.
 - **`BlobModule`'s constants** are iOS's (`blob`, no host), because Android's depend on a
   content provider this host has none of; `URL.createObjectURL` therefore reads
-  `blob:<id>?offset=..&size=..`. Its WebSocket methods throw `E_UNSUPPORTED`.
+  `blob:<id>?offset=..&size=..`. Its WebSocket methods threw `E_UNSUPPORTED` until the
+  [WebSocket record](../evidence/websocket/README.md) implemented them.
 
 ## Exploratory observations outside the receipt
 
@@ -254,8 +256,9 @@ with the control receipts absent, as in CI.
 
 ## Remaining scope
 
-`WebSocket` (its first use fails with RN's own "'WebSocketModule' could not be found",
-and `BlobModule`'s socket methods throw), cookies and `withCredentials`, compression of
+`WebSocket` (its first use failed with RN's own "'WebSocketModule' could not be found", and
+`BlobModule`'s socket methods threw, until the [WebSocket record](../evidence/websocket/README.md)),
+cookies and `withCredentials`, compression of
 either direction, HTTP/2, upload and download progress, incremental streaming of text,
 `uri` and file bodies, connection pooling and keep-alive, proxy and system trust
 configuration, the `Networking` export of `react-native`, offline and reconnect

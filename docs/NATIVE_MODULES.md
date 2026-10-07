@@ -56,6 +56,17 @@ application cancels the requests in flight, releases the blobs and makes retaine
 fail with `E_MODULE_DISPOSED`. The bundler plugin aliases RN's `RCTNetworking` to its
 Android wrapper; the `react-native` facade exports no `Networking`.
 
+The [WebSocket record](evidence/websocket/README.md) registers a fourth, `WebSocketModule`
+(RN's generated Android spec), in its own translation unit (`native/websocket_module.cpp`)
+over the same application state (`native/networking_state.h`): it queues its events through
+the same stoppable invoker, keeps the phase of every socket that has not ended, and also
+implements the socket hooks of `BlobModule` (binary messages as blobs in the shared store, a
+blob sent as one binary message). Its sockets run on a transport over Godot's `WebSocketPeer`
+(`native/websocket_transport.h` is the seam) that the runtime polls on each frame in the same
+networking poll as the HTTP transport. Stopping the application closes the open sockets with
+1001, forgets all of them and makes retained methods fail with `E_MODULE_DISPOSED`; nothing
+reaches JS afterwards.
+
 ## Original logical tree and IDs
 
 The later [tree checkpoint](evidence/tree/README.md) adds View `id`/`nativeID`,

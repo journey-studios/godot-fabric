@@ -371,10 +371,26 @@ multipart and blob bodies. 100 headless checks in two roots of one application a
 deterministic local server over HTTP and HTTPS (a CA generated at runtime, trusted through a
 validation seam), with an independent oracle that compares the 137 requests the server
 recorded with what JS observed. The preceding host fails exactly its 84 normative checks, and
-retained sabotages (redirects not followed, repeated headers not joined) fail 8 and 2. The
-`WebSocket` global is RN's and fails on first use until the next slice; cookies,
-compressed responses, HTTP/2, progress events, `uri` and file bodies are open. Hosted CI is
-pending. [Evidence](docs/evidence/networking/README.md).
+retained sabotages (redirects not followed, repeated headers not joined) fail 8 and 2. Cookies,
+compressed responses, HTTP/2, progress events, `uri` and file bodies are open (the `WebSocket`
+global got its module in the next record, below). Hosted CI is pending.
+[Evidence](docs/evidence/networking/README.md).
+
+The same example's second card runs React Native's own `WebSocket` against an echo server the
+scene starts: the host registers a fourth C++ TurboModule, `WebSocketModule`, with the contract
+of RN's Android module (and the socket hooks of `BlobModule`), and runs each socket on Godot's
+`WebSocketPeer`, polled on the main thread together with the HTTP transport. It covers ws and
+wss, text and binary messages (`arraybuffer` and `blob`), subprotocols, the default Origin, close
+codes, errors, and the stop of the application with sockets open (closed with 1001, then
+silence). 93 headless checks in two roots of one application against a deterministic RFC 6455
+server written for the suite, whose own frame log an independent oracle compares with what JS
+observed on 52 of the 59 connections it recorded. The preceding host fails exactly its 81
+normative checks, and retained sabotages (no default Origin, the wrong close code at stop) fail
+4 and 2. The engine loses the messages a server writes in the same poll as its close frame
+([godot#115384](https://github.com/godotengine/godot/issues/115384)); `permessage-deflate`,
+cookies and a connect time-out are open; closing a socket that is still connecting fails it, as
+browsers do, where Android's module does nothing. Hosted CI is pending.
+[Evidence](docs/evidence/websocket/README.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.

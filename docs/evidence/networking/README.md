@@ -38,6 +38,24 @@ hashes, capturas e resultados.
 > execução em `83a3557`; a seção `postReview` do recibo fixa os arquivos mudados a esses quatro
 > commits.
 
+> Nota posterior (2026-10-07), depois da fatia de WebSocket: o
+> [recibo do WebSocket](../websocket/README.md) deu ao `WebSocket` o módulo que faltava e aos
+> métodos de socket do `BlobModule` a sua implementação (commit
+> [`16dd2be`](https://github.com/journey-studios/godot-fabric/commit/16dd2be4a440a81f311a68fe8258e9d8c717bff4)),
+> de modo que as frases desta página sobre o `WebSocket` (o primeiro uso falha com o erro de
+> busca do RN e os métodos de socket do `BlobModule` lançam `E_UNSUPPORTED`) descrevem o estado
+> de `83a3557`. Dois checks da suíte de networking passaram a valer só com o módulo
+> (`modules/WebSocketModule is provided by the native host` e `modules/RN's own WebSocket
+> constructs over the native module`): a suíte segue com os mesmos 100 checks, mas o controle do
+> host anterior, refeito a partir da árvore commitada `16dd2be`, falha 86 deles, e não os 84 desta
+> página, e 14 valem nos dois hosts, e não 16. O código também mudou de lugar: o
+> `WebSocketModule` e as ligações do `BlobModule` com sockets ficam em
+> `native/websocket_module.{h,cpp}`, o estado que os quatro módulos compartilham (armazém de
+> blobs, invoker interrompível e a fila de eventos) em `native/networking_state.h`, e
+> `native/networking_modules.cpp` ficou com `Networking`, `BlobModule` e `FileReaderModule`.
+> Os números executados desta página, os arquivos que ela fixa e o recibo seguem os de
+> `83a3557`.
+
 As lanes executam o mesmo bundle, com as mesmas fontes de teste e SDK; só os
 produtores nativos diferem. O host anterior foi compilado a partir da main `99216e2`
 (o merge do quadro de paridade), antes de a árvore receber o trabalho desta fatia: as

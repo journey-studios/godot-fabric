@@ -58,7 +58,7 @@ from planned RN compatibility.
 | Touchables | [Original TouchableWithoutFeedback, TouchableHighlight](../examples/touchables/README.md) and TouchableOpacity: RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots; TouchableOpacity dims through RN's native animated driver (0 ms on the grant, 250 ms back) | No TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |
 | PanResponder | [RN's original PanResponder](evidence/pan-responder/README.md) over Godot mouse and touch input: `panHandlers`, the gesture state (`dx`, `dy`, `x0`, `y0`, `moveX`, `moveY`, velocity, active touches), a free pan view, parents that claim a gesture or capture every start, a child that refuses to yield and a view removed mid-gesture, in the four responder flag lanes | Pinch zoom through chart libraries, `InteractionManager` handles, velocity on real hardware, nested scroll views and negotiation with native Godot controls remain open |
 | Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by the ticks of the host's frame clock ([frame clock record](evidence/frame-clock/README.md)) | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; a uniform `transform: [{ scale }]`, animated or not, renders as a planar uniform scale ([uniform scale record](evidence/uniform-scale/README.md)); `scale: 0` and other singular transforms, animated or not, collapse their View as RN does ([singular transforms record](evidence/singular-transforms/README.md)) |
-| Networking | [RN's own `fetch` (with Headers, Request and Response), `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal`](../examples/networking/README.md) as lazy globals: the host's initialization imports RN's `setUpXHR` and three native modules (`Networking`, with the contract of RN's Android wrapper, `BlobModule` and `FileReaderModule`) give them HTTP/1.1 and HTTPS over Godot's `HTTPClient`; redirects (up to 20) and the total time-out are the host's; `text`, `base64` and `blob` responses; string, base64, multipart and blob bodies; abort, network errors and disposal at application stop ([record](evidence/networking/README.md)) | The `WebSocket` global is RN's and fails on first use with `'WebSocketModule' could not be found` until the next slice; no cookies (`withCredentials` has no effect, `clearCookies` calls back `false`); compressed responses fail explicitly; no HTTP/2, pooling, proxy or system trust configuration, upload or download progress, incremental streaming, `uri` bodies or `FormData` file parts; `Networking` is not exported from `react-native`; only macOS arm64 was executed |
+| Networking | [RN's own `fetch` (with Headers, Request and Response), `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal`](../examples/networking/README.md) as lazy globals: the host's initialization imports RN's `setUpXHR` and three native modules (`Networking`, with the contract of RN's Android wrapper, `BlobModule` and `FileReaderModule`) give them HTTP/1.1 and HTTPS over Godot's `HTTPClient`; redirects (up to 20) and the total time-out are the host's; `text`, `base64` and `blob` responses; string, base64, multipart and blob bodies; abort, network errors and disposal at application stop ([record](evidence/networking/README.md)). RN's own `WebSocket` runs over a fourth native module, `WebSocketModule` (the contract of RN's Android module) with BlobModule's socket hooks, and Godot's `WebSocketPeer`: ws and wss, text and binary messages (`arraybuffer` and `blob`), subprotocols, handshake headers and the default Origin, close codes and reasons, errors and the stop of the application with sockets open ([record](evidence/websocket/README.md)) | WebSocket: no extensions such as `permessage-deflate`, no cookies, no connect time-out; the engine drops the messages a server writes in the same poll as its close frame (godot#115384) and merges a ping sent between fragments into the message; a server that selects no subprotocol, or one that was not offered, fails the socket where Android's OkHttp would open it; closing a socket that is still connecting fails it, as a browser does, where Android's module does nothing. HTTP: no cookies (`withCredentials` has no effect, `clearCookies` calls back `false`); compressed responses fail explicitly; no HTTP/2, pooling, proxy or system trust configuration, upload or download progress, incremental streaming, `uri` bodies or `FormData` file parts; `Networking` is not exported from `react-native`; only macOS arm64 was executed |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated drag in the ScrollView's own coordinates | All children mount; no inertia/momentum, bounce, paging, zoom, sticky headers, refresh, indicators or complete nested/multitouch scrolling |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
 | AppState and Appearance | [RN's original AppState](evidence/app-state/README.md), fed by the Godot application lifecycle: focus loss is `inactive`, a pause is `background`, `change`, `focus`, `blur` and `memoryWarning` are sent, the roots of an application share one state and stop sends nothing. [RN's original Appearance and useColorScheme](evidence/appearance/README.md), fed by Godot's system theme: `getColorScheme`, `addChangeListener`, `setColorScheme` overrides that win over the system and `unspecified` following it again, a change event only when the effective scheme changes, one theme callback shared by every application | Minimizing or hiding a desktop window sends no Godot notification; real OS focus and theme changes on each system, resume with pending timers or network, accent colors, `PlatformColor`/`DynamicColorIOS`, per-window themes and Godot mobile exports remain open |
@@ -539,17 +539,23 @@ exist and load on first read: `fetch`, `Headers`, `Request`, `Response`, `XMLHtt
 `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController`,
 `AbortSignal` and `WebSocket`. They are RN's JavaScript, unchanged. The host supplies the
 native side RN asks for: the SDK's bundler plugin aliases RN's `RCTNetworking` to its
-Android wrapper (RN ships it only as `.ios.js` and `.android.js`), and three C++
-TurboModules, `Networking` (RN's generated Android spec), `BlobModule` and
-`FileReaderModule`, share one blob store and run their requests on Godot's `HTTPClient`
-(`native/http_transport.h` is the seam a platform transport can replace). Everything runs
-on the main thread, which is the JS thread, and ends with the application: a stop cancels
-the requests in flight and refuses retained module methods with `E_MODULE_DISPOSED`, and no
-event reaches JS afterwards. The `react-native` facade gains no export: `Networking` is
+Android wrapper (RN ships it only as `.ios.js` and `.android.js`), and four C++
+TurboModules, `Networking` (RN's generated Android spec), `BlobModule`,
+`FileReaderModule` and `WebSocketModule`, share one application state (a blob store and one
+stoppable call invoker). The first three run their requests on Godot's `HTTPClient`
+(`native/http_transport.h` is the seam a platform transport can replace) and the fourth runs
+its sockets on Godot's `WebSocketPeer` (`native/websocket_transport.h` is the seam for
+that one). Everything runs on the main thread, which is the JS thread, and ends with the
+application: a stop cancels the requests in flight, closes the sockets that are open with
+1001 and refuses retained module methods with `E_MODULE_DISPOSED`, and no event reaches JS
+afterwards. The `react-native` facade gains no export: `Networking` is
 still missing, and the globals are the supported surface. The
 [record](evidence/networking/README.md) has the 100 headless checks, the preceding-host
 control and two retained sabotages; [the research note](research/networking.md) explains
-the contract and where this host departs from RN.
+the contract and where this host departs from RN. The
+[WebSocket record](evidence/websocket/README.md) has the 93 checks of the sockets and
+[its research note](research/websocket.md) the Android contract, the engine's behavior with
+sources and the departures.
 
 What the checks cover, against a local Node server over HTTP and over HTTPS with a test CA
 (macOS arm64):
@@ -577,6 +583,17 @@ What the checks cover, against a local Node server over HTTP and over HTTPS with
 - **HTTPS.** Godot's default roots verify certificates. The suite's CA reaches the
   host only through a validation seam (`validation_tls_trusted_authorities`, never set by
   a product); an untrusted or malformed authority is a network error.
+- **WebSocket.** RN's own `WebSocket` opens `ws:` and `wss:` URLs (an `http:` or `https:` URL
+  connects too, as OkHttp reads it), with the subprotocols and `options.headers` RN passes
+  and, when the caller sets none, an Origin made of the URL; the server's choice of
+  subprotocol is `protocol`. Text, `ArrayBuffer`, views and `Blob`s go out; binary messages
+  arrive as `ArrayBuffer`s or, with `binaryType = 'blob'`, as blobs in native memory. Close
+  codes and reasons are sent and received as given (OkHttp's rules apply: a code outside
+  1000-4999, a reserved one or a reason over 123 bytes is refused with a warning and the
+  socket stays open), a server's close frame without a status is `1005`, a refused handshake,
+  a lost connection or a close the server never answers within 60 seconds is an `error` and a
+  `close` with `1006`, and `send` or `ping` while CONNECTING throw as in RN. The stop of the
+  application closes every open socket with 1001 and nothing reaches JS afterwards.
 
 Explicit limits: cookies are neither stored nor sent (`withCredentials` has no effect and
 `clearCookies` calls back `false`); a response with a `Content-Encoding` other than
@@ -584,11 +601,18 @@ Explicit limits: cookies are neither stored nor sent (`withCredentials` has no e
 has no check of its own; the header is dropped for other bodies, as on Android); the body is
 buffered and delivered once (no incremental updates, no upload or download progress events);
 `uri` bodies and `FormData` file parts fail explicitly; there is no pooling, keep-alive,
-HTTP/2, proxy or system trust configuration, offline or reconnect behavior; the `WebSocket`
-global fails on first use with RN's own `'WebSocketModule' could not be found`, and
-`BlobModule`'s socket methods throw `E_UNSUPPORTED`, until the next slice. Godot Android
-exports need the `INTERNET` permission and a Web export is bound by CORS; neither is
-exercised.
+HTTP/2, proxy or system trust configuration, offline or reconnect behavior. For
+`WebSocket`: no extensions (OkHttp offers `permessage-deflate`, the engine none), no cookies and
+no connect time-out; a caller's `Host`, `Upgrade`, `Connection`, key, version, extensions and
+protocol headers are dropped, because the handshake is the engine's; the engine drops the
+messages a server writes in the same poll as its close frame (godotengine/godot#115384) and
+merges a ping sent between the fragments of a message into the message; a server that selects
+no subprotocol, or one that was not offered, fails the socket where Android's OkHttp opens it;
+invalid UTF-8 text fails it with 1007 where OkHttp delivers replacement characters; a close
+over TLS that the client began is taken as complete with the code and reason it sent; closing
+a socket that is still connecting fails it, as a browser does, where Android's module does
+nothing; failure texts are the host's and the engine's, not OkHttp's. Godot Android exports
+need the `INTERNET` permission and a Web export is bound by CORS; neither is exercised.
 
 Native runtime acceptance currently targets macOS arm64. The experimental
 [iOS build path](IOS_BUILD.md) has arm64 device/simulator build and link proof;
