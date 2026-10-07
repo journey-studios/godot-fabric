@@ -2690,8 +2690,16 @@ and configuration inputs match implementation `83a3557` via git show/SHA-256 (ex
 the committed tree, execution base `99216e2`). The local controls and sabotages of the
 Animated, frame clock and transform guard suites pin files this slice changed, so they were
 rebuilt on their preserved preceding hosts; hosted CI has no controls and is not affected.
-Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint closes; no whole
-GF, other checkpoint, weight or denominator closes.
+After the review of #47 the example checks the server for the text step (16 headless and 28
+capture checks, 2,364 for the examples) and keeps its newest request
+([`155d35b`](https://github.com/journey-studios/godot-fabric/commit/155d35b1cb3e0cddf8f4e3daada74c701779b4ae)), the four sabotage scripts restore
+their sources when a signal ends them, through `scripts/sabotage-sources.mjs`
+([`7f45f24`](https://github.com/journey-studios/godot-fabric/commit/7f45f2413dea2762ca6242d3b5d085bc1c1a5118)), the runner no longer waits on a
+dead server ([`8b7c890`](https://github.com/journey-studios/godot-fabric/commit/8b7c890c6d6458bb0500f3132402275149c28f43)), and a sabotage run past its
+timeout kills a child that ignores SIGTERM instead of waiting on it ([`57bc3e8`](https://github.com/journey-studios/godot-fabric/commit/57bc3e897f7d92a0002e12586fed4ad140d5bf85)); the counts above are
+those executed at `83a3557`, and the `postReview` section of `report.json` pins the changed files
+to these commits. Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint
+closes; no whole GF, other checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

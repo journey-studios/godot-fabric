@@ -19,6 +19,25 @@ hashes, capturas e resultados.
 | Sabotagem `headers`, host `83aed368` | 98/100 | Exatamente 2 falhas: os cabeçalhos repetidos da resposta ficam separados e o JS só vê o último `Set-Cookie` e `X-Multi`; o oráculo rejeita o relatório |
 | Host atual `36f25f04`, headless | 100/100 | Duas roots, HTTP e HTTPS, `fetch` e `XMLHttpRequest`, corpos string, base64, `FormData` e `Blob`, redirecionamentos, tempo limite, aborto, erros de rede, blobs e parada da aplicação com requisições em voo |
 
+> Nota posterior (2026-10-07): depois da revisão do PR #47, o commit
+> [`155d35b`](https://github.com/journey-studios/godot-fabric/commit/155d35b1cb3e0cddf8f4e3daada74c701779b4ae) fez o exemplo conferir, pelo
+> registro do servidor, que o passo de texto enviou exatamente um GET a `/api/text` (16 checks
+> headless e 28 com captura, e os 30 exemplos somam 2.364 checks) e mostrar só o resultado do
+> pedido mais novo (uma resposta ou um erro tardio entra no log, mas não troca a tela, e um segundo
+> Slow aborta o anterior); o commit
+> [`7f45f24`](https://github.com/journey-studios/godot-fabric/commit/7f45f2413dea2762ca6242d3b5d085bc1c1a5118) fez os quatro scripts de sabotagem
+> restaurarem as fontes também quando um sinal encerra a execução, por
+> `scripts/sabotage-sources.mjs`; o commit
+> [`8b7c890`](https://github.com/journey-studios/godot-fabric/commit/8b7c890c6d6458bb0500f3132402275149c28f43) fez o runner deixar de esperar por um
+> servidor que já morreu; e o commit [`57bc3e8`](https://github.com/journey-studios/godot-fabric/commit/57bc3e897f7d92a0002e12586fed4ad140d5bf85) fez o `run` desse auxiliar, passado o
+> tempo limite, derrubar com SIGKILL, 5 s depois do SIGTERM, o filho que ignora o SIGTERM, em vez
+> de esperar por ele com a fonte sabotada na árvore (o script de sabotagem do networking rodou de
+> ponta a ponta com ele e gerou o mesmo recibo). A suíte segue com os mesmos 100 checks, e o
+> controle e as sabotagens foram refeitos depois das mudanças. Esta página, as contagens (15 e 27
+> checks do exemplo, 2.363 nos exemplos) e o restante do [recibo](report.json) descrevem a
+> execução em `83a3557`; a seção `postReview` do recibo fixa os arquivos mudados a esses quatro
+> commits.
+
 As lanes executam o mesmo bundle, com as mesmas fontes de teste e SDK; só os
 produtores nativos diferem. O host anterior foi compilado a partir da main `99216e2`
 (o merge do quadro de paridade), antes de a árvore receber o trabalho desta fatia: as

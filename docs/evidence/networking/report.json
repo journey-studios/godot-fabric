@@ -1376,5 +1376,193 @@
         0
       ]
     }
+  },
+  "postReview": {
+    "at": "2026-10-07T04:17:51.000353Z",
+    "base": {
+      "commit": "57bc3e897f7d92a0002e12586fed4ad140d5bf85",
+      "note": "The receipt above is what 83a3557 executed, with the counts of that run: 15 headless and 27 capture checks of the example, 2,363 checks for the examples, and the 100 checks of the suite. This section describes the tree after the review of PR #47: the four review commits listed in implementation, which change eight files, one of them (scripts/sabotage-sources.mjs) in two commits, so its pin names the later; pins name, for each of them, the commit that holds its content and the SHA-256 of the file, equal to git show <commit>:<path>"
+    },
+    "implementation": [
+      {
+        "changeSet": "A",
+        "commit": "155d35b1cb3e0cddf8f4e3daada74c701779b4ae",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/155d35b1cb3e0cddf8f4e3daada74c701779b4ae",
+        "subject": "fix(examples): Keep the networking example on its newest request",
+        "files": [
+          "examples/networking/App.jsx",
+          "examples/networking/validation.gd"
+        ]
+      },
+      {
+        "changeSet": "B",
+        "commit": "7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+        "subject": "fix(scripts): Restore sabotaged sources when a signal ends a run",
+        "files": [
+          "scripts/sabotage-sources.mjs",
+          "scripts/networking-sabotage.mjs",
+          "scripts/native-animated-sabotage.mjs",
+          "scripts/transform-singular-sabotage.mjs",
+          "scripts/frame-clock-sabotage.mjs"
+        ]
+      },
+      {
+        "changeSet": "C",
+        "commit": "8b7c890c6d6458bb0500f3132402275149c28f43",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/8b7c890c6d6458bb0500f3132402275149c28f43",
+        "subject": "test(networking): Stop the test server without waiting on a dead child",
+        "files": [
+          "tests/networking-native.test.mjs"
+        ]
+      },
+      {
+        "changeSet": "D",
+        "commit": "57bc3e897f7d92a0002e12586fed4ad140d5bf85",
+        "url": "https://github.com/journey-studios/godot-fabric/commit/57bc3e897f7d92a0002e12586fed4ad140d5bf85",
+        "subject": "fix(scripts): Kill a sabotage child that ignores its timeout",
+        "files": [
+          "scripts/sabotage-sources.mjs"
+        ]
+      }
+    ],
+    "causes": [
+      {
+        "source": "CodeRabbit on PR #47, examples/networking/App.jsx",
+        "finding": "A late answer or error could replace the view of a newer request, and a second Slow left the first request in flight where Abort could not reach it"
+      },
+      {
+        "source": "CodeRabbit on PR #47, examples/networking/validation.gd",
+        "finding": "The text step was checked only through the screen: nothing asserted from the server's log that exactly one GET reached /api/text"
+      },
+      {
+        "source": "CodeRabbit on PR #47, scripts/networking-sabotage.mjs (the same pattern in the three other sabotage scripts)",
+        "finding": "The sabotaged sources were restored only in finally blocks, which do not run when SIGINT or SIGTERM ends the process, so an interrupted build could leave a broken native source in the tree"
+      },
+      {
+        "source": "CodeRabbit on PR #47, tests/networking-native.test.mjs, stopServer",
+        "finding": "stopServer always waited for a new exit event, so a server that had already crashed hung the suite until the job timeout, and a closed stdin pipe could raise an unhandled EPIPE"
+      },
+      {
+        "source": "CodeRabbit on PR #47, scripts/sabotage-sources.mjs, run",
+        "finding": "The timeout of run sent SIGTERM to the child's process group once and never escalated, so a child (or a grandchild holding the output pipes) that ignores SIGTERM kept the call pending and the script hung with the sabotaged source in the tree"
+      }
+    ],
+    "changes": {
+      "example": "A late answer or error is logged but no longer replaces the view of a newer request (the newest request owns the screen), a second Slow aborts the previous slow request, and the validation also checks from the server's log that the text step sent exactly one GET to /api/text",
+      "sabotageScripts": "scripts/sabotage-sources.mjs swaps and restores the sources, checks the restored hashes, and runs the builds and the probes as awaited children in process groups of their own; on SIGINT or SIGTERM it forwards the signal to the group, waits for the children (SIGKILL after 5 s, at once on a second signal), restores the sources synchronously and exits with 128 plus the signal; all four sabotage scripts use it and their receipts keep their formats",
+      "runner": "stopServer resolves at once for a child whose exitCode or signalCode is set and ignores an error on its stdin",
+      "sabotageTimeout": "the timeout of run in scripts/sabotage-sources.mjs sends SIGTERM to the child's group and SIGKILL after the same 5 s grace period as on a signal; both timers are cleared when the child closes, so a child past its timeout comes back with status null instead of the script waiting on it"
+    },
+    "countsAfterTheReview": {
+      "example": {
+        "headless": 16,
+        "capture": 28
+      },
+      "examples": {
+        "examples": 30,
+        "checks": 2364,
+        "networking": 16
+      },
+      "unchanged": "the suite's 100 checks, the preceding host's 84 normative failures, the retained sabotages' 8 and 2 failures and the 137 requests the oracle derives",
+      "capturesOfTheReceipt": "idle and aborted are byte for byte what the example saves now; the other four differ only in the digits of the loopback port in the URL line (197 to 264 pixels in a box of at most 37 by 9), so the receipt's copies and SHA-256 stay"
+    },
+    "pins": {
+      "examples/networking/App.jsx": {
+        "commit": "155d35b1cb3e0cddf8f4e3daada74c701779b4ae",
+        "sha256": "0a9a3d469e6255c05e713c2ec97795be499cab64d802c0e5306c3a3c778703b8"
+      },
+      "examples/networking/validation.gd": {
+        "commit": "155d35b1cb3e0cddf8f4e3daada74c701779b4ae",
+        "sha256": "baf55979278803f3f35d6089e4fea92d17073f6f5098010b7729dc899694d94d"
+      },
+      "scripts/sabotage-sources.mjs": {
+        "commit": "57bc3e897f7d92a0002e12586fed4ad140d5bf85",
+        "sha256": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3"
+      },
+      "scripts/networking-sabotage.mjs": {
+        "commit": "7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+        "sha256": "aaeb10a59e33bbceee97fe77efc0ed75cbe7d25a33918afbdc370d8b1e86212d"
+      },
+      "scripts/native-animated-sabotage.mjs": {
+        "commit": "7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+        "sha256": "511d3abce98743bdf7966525cb54bd236c30605b24076e75fc84bd12125d89ab"
+      },
+      "scripts/transform-singular-sabotage.mjs": {
+        "commit": "7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+        "sha256": "f90c4c831ecd2d623c09578f19bd5cb3035c5481ad4d12b53049abb370cff93e"
+      },
+      "scripts/frame-clock-sabotage.mjs": {
+        "commit": "7f45f2413dea2762ca6242d3b5d085bc1c1a5118",
+        "sha256": "be03d7d8759cce84810b9719656a3cbdce7cdd114a421fb508e1f8812ee93644"
+      },
+      "tests/networking-native.test.mjs": {
+        "commit": "8b7c890c6d6458bb0500f3132402275149c28f43",
+        "sha256": "ad2064b1b25b46ec2c189e2dcfa55853b77e4b54cf5fae168565f56e0a49318f"
+      }
+    },
+    "pinVerification": {
+      "method": "git show <commit>:<path> SHA-256 equals every pin and the file in the tree the checks ran on; git log of each path after 83a3557 lists its pinned commit (scripts/sabotage-sources.mjs lists that one and 7f45f24, which created it, and its pin names the later one)",
+      "pins": 8,
+      "byCommit": {
+        "155d35b1cb3e0cddf8f4e3daada74c701779b4ae": 2,
+        "7f45f2413dea2762ca6242d3b5d085bc1c1a5118": 4,
+        "8b7c890c6d6458bb0500f3132402275149c28f43": 1,
+        "57bc3e897f7d92a0002e12586fed4ad140d5bf85": 1
+      },
+      "mismatches": [],
+      "uncommittedCodeOrTestFiles": []
+    },
+    "verifiedOnTheSameFiles": {
+      "note": "Run before the review commits, on a tree whose files had these SHA-256 except scripts/sabotage-sources.mjs, which was the one of 7f45f24 in these runs; the timeout fix of that helper is verified in timeoutFix; the gates of the tree with this section are in gates",
+      "runs": [
+        "npm run example -- networking --headless: 16 acceptance checks; --capture: 28",
+        "npm run test:examples: 30 examples, 2,364 checks",
+        "The networking lanes in order: the preceding host fails exactly the 84 normative checks, both sabotages are rejected (8 and 2 failures), the current lane passes its 100 checks with and without the control receipts and 3 of 3 times under CPU load",
+        "The four sabotage scripts end to end with the helper: exit 0, receipts with their formats, sources and host restored equal to the genuine ones",
+        "SIGINT in the middle of a sabotaged build and SIGTERM during the sabotaged host's probe: exit 130 and 143, both sources equal to their genuine SHA-256, no process left (the host in addons/ stays the interrupted build's until rebuilt)",
+        "stopServer before and after, against a running, a crashed and a signal-killed server: the old one hangs on the last two, the new one resolves at once"
+      ],
+      "timeoutFix": {
+        "note": "Run on the tree that holds D's helper, with the SHA-256 pinned above",
+        "runs": [
+          "A scratch harness over temporary files (outside the repository) with 14 scenarios, five of them new for the timeout of run: a child that ignores SIGTERM under a 300 ms timeout, a child whose grandchild ignores SIGTERM and holds the output pipes, a child that obeys it, a child that handles it itself a second later, and a SIGINT during the grace period. Before the fix 12 pass and 2 fail (the first two: the script was still waiting for the child after 15 s, with the source still sabotaged). After it 14 pass: run returns after 5.3 s (300 ms plus the 5 s grace period) with the child killed, the source is restored and no process is left",
+          "A variant of the fix that does not clear the escalation timer is rejected by two scenarios: the script lives 5.4 s after its last line instead of 0.4 s and 1.4 s",
+          "node scripts/networking-sabotage.mjs end to end with the fixed helper: exit 0 in 46 s, both sabotages rejected, the receipt byte for byte the one of the run before, sources and host (36f25f04) restored equal to the genuine ones"
+        ]
+      }
+    },
+    "executedRecord": "Every other field of this receipt, the counts and the pins of the sources, stays as executed at 83a3557",
+    "gates": {
+      "ranAt": "2026-10-07T04:18:11.252509Z",
+      "meaning": "check:publication and test:contracts on the tree with this section, the post-review note of the README and the ROADMAP sentence (this field is appended afterwards)",
+      "steps": {
+        "check:publication": {
+          "exitCode": 0,
+          "seconds": 0,
+          "logSha256": "b16925e34af6868677c3f768a5f39d592fc00addbeb195fc1f83d6a950a2e126"
+        },
+        "test:contracts": {
+          "exitCode": 0,
+          "seconds": 20,
+          "logSha256": "a3f9061d58aea9d2c6b0b0737b8370fee724f0fa53240a3529fda1bb71bf8071"
+        }
+      },
+      "counts": {
+        "publicationScanFiles": 1085,
+        "nodeContractRuns": [
+          7,
+          8,
+          265
+        ],
+        "nodeContractChecks": 265,
+        "pythonContractChecks": 13,
+        "nodeFailures": [
+          0,
+          0,
+          0
+        ]
+      }
+    }
   }
 }
