@@ -91,6 +91,9 @@ file(GLOB_RECURSE YOGA CONFIGURE_DEPENDS "${RN}/yoga/yoga/*.cpp")
 list(FILTER YOGA EXCLUDE REGEX "/tests/")
 list(APPEND SOURCES ${MOUNT_INTERNAL} ${YOGA})
 list(APPEND SOURCES "${RN}/react/renderer/textlayoutmanager/platform/cxx/react/renderer/textlayoutmanager/TextLayoutManager.cpp")
+list(APPEND SOURCES
+  "${RN}/react/renderer/components/modal/ModalHostViewShadowNode.cpp"
+  "${RN}/react/renderer/components/modal/platform/cxx/ModalHostViewUtils.cpp")
 # RN's generated core-component Props/EventEmitters/ShadowNodes (the package's
 # codegen output). The host registers only the shared non-Android Switch and
 # the generated ActivityIndicatorView descriptors.
@@ -118,6 +121,7 @@ target_include_directories(fabric_core PUBLIC
   "${RN}/react/renderer/components/view/platform/cxx"
   "${RN}/react/renderer/components/scrollview/platform/cxx"
   "${RN}/react/renderer/components/text/platform/cxx"
+  "${RN}/react/renderer/components/modal/platform/cxx"
   "${RN}/react/renderer/components/switch/iosswitch"
   "${RN}/react/renderer/textlayoutmanager/platform/cxx"
   "${RN}/react/renderer/graphics/platform/cxx"
@@ -182,7 +186,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
 target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is

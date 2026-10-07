@@ -1,0 +1,102 @@
+{
+  "format": "godot-fabric.modal-sdk-consumer-review/v1",
+  "reviewer": "root",
+  "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+  "nativeSourcePinsVerified": 95,
+  "sdkReceiptSha256": "311021af0971b656629145f2d9a3eeee5193854e3ca768a5d027c1acb78c71f8",
+  "registry": {
+    "passed": true,
+    "checks": 213,
+    "cases": 11,
+    "nativeClientLinked": true,
+    "registryExecuted": true,
+    "componentMounted": false,
+    "abiCertified": false,
+    "reportSha256": "e52921760a01c928e8568a1d6de6636659ab51589acff14ca3fe89f262d6d9da"
+  },
+  "consumerProducerReceiptSha256": "54b1f15ef52fe746459612fd65d581c9ee7096b5a429ca82fe6732eda9abb34a",
+  "consumer": {
+    "schemaVersion": 1,
+    "consumer": {
+      "path": "external-consumer/project",
+      "externalToRepository": true,
+      "template": "consumers/minimal",
+      "addonPath": "addons/godot_fabric"
+    },
+    "source": {
+      "commit": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+      "dirty": true,
+      "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+      "nativeCombinationSha256": "95fc80a3af95d19b0f0ffb1b334343cd125d7f564604a7b641e0d3cdeeb67566"
+    },
+    "nativeSdk": {
+      "path": "build/modal-review-native-sdk",
+      "manifestSha256": "1c9849fd389d3d07c77e270748f341b67c492ac7aa30dad759742e58f617975f",
+      "receiptSha256": "311021af0971b656629145f2d9a3eeee5193854e3ca768a5d027c1acb78c71f8",
+      "buildReceiptSha256": "967cfb88f9ac588273070722897b4cbe106238b071f6fb4b2ebff665a1422fcb",
+      "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+      "sourceFiles": 95,
+      "abiCertified": false,
+      "runtimeExecuted": false
+    },
+    "addonPackage": {
+      "path": "build/modal-consumer-validation/addon-package",
+      "fileCount": 25143,
+      "treeSha256": "0e370d56fceff420136d35007c723ec62ef8d38d66d94836637b9ec4b0d113a7",
+      "manifestSha256": "b76e5ee3f8dcc3bceaf55cd4b1969b25888267906595dca8319b9df4297ff926",
+      "nativeBinarySha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+      "typeChecker": {
+        "name": "tsc-rs",
+        "version": "0.1.0",
+        "typescriptVersion": "7.1.0-dev",
+        "platformPackage": "@tsc-rs/darwin-arm64",
+        "executableSha256": "3a2736e002cdeaa7a7514adb9c5b2f367021fd8253d1fdfb4058f135ead04b49"
+      },
+      "archive": null,
+      "archiveNote": "Canonical pack-addon.mjs outputs a directory; no archive is produced."
+    },
+    "bundle": {
+      "path": "build/modal-discriminators-probe.js",
+      "sha256": "f4f937ef767ce5ccd062c2690263b1b4531b443852ebec4af88c9312ea45f4c0",
+      "expectedSha256": "f4f937ef767ce5ccd062c2690263b1b4531b443852ebec4af88c9312ea45f4c0",
+      "frozenProbeSha256": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26"
+    },
+    "typecheck": {
+      "command": "packaged toolchain/node + toolchain/node_modules/tsc-rs/bin/tsc-rs -p tsconfig.json",
+      "positiveExit": 0,
+      "positiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "negativeExit": 2,
+      "negativeSha256": "21e4e615799d3db65d73da0a34d3ee098186be14caf7f492aa67725489d665d4",
+      "negativeExpected": "animationType=\"slide\" rejected as not assignable to \"none\""
+    },
+    "runtime": {
+      "command": "Godot 4.7.2 --headless --path <external consumer> --script res://tests/modal-capture-lifetime-probe.gd",
+      "exitCode": 0,
+      "checks": 65,
+      "failed": [],
+      "runtimeErrors": [],
+      "logSha256": "fc64af46948ed89111a5a9eb314f38f2f5b1344c6c2d99f6e8e0ee17eb5b0e8c",
+      "reportSha256": "76dc387e6629f799502b55162cb60602d9f6d0e73f985704703cb3740a56175b"
+    },
+    "frozenProducer": {
+      "path": "build/modal-discriminators-final/run-receipt.json",
+      "sha256": "1ae68d33631b30272de242a81ee837b87db45e8c93f9086a15d4930becd166e2",
+      "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+      "bundleSha256": "f4f937ef767ce5ccd062c2690263b1b4531b443852ebec4af88c9312ea45f4c0"
+    },
+    "limitations": [
+      "This is a macOS arm64 headless consumer check, not an editor/graphical check or mobile ABI certification.",
+      "The SDK receipt marks abiCertified=false and runtimeExecuted=false; the separate consuming Godot run proves the packaged host loads and executes this scenario.",
+      "The canonical pack command emits a package directory, not a tar/zip archive."
+    ]
+  },
+  "rootVerifiedConsumerArtifactHashes": true,
+  "limits": {
+    "graphicalConsumer": false,
+    "mobile": false,
+    "export": false,
+    "hostedCI": false,
+    "fullGF18Acceptance": false
+  },
+  "publicPathsUseLogicalLocations": true
+}

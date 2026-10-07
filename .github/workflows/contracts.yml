@@ -184,6 +184,29 @@ jobs:
             build/websocket-transport-lifetime.json
             build/websocket-transport-lifetime-*
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:modal
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-modal
+          path: |
+            build/modal-host-report.json
+            build/modal-host-current-report.json
+            build/modal-host-current.log
+            build/modal-host-probe-bundle.json
+            build/modal-capture-lifetime-report.json
+            build/modal-capture-lifetime.log
+            build/modal-sibling-order-report.json
+            build/modal-sibling-order.log
+            build/modal-owner-windows-report.json
+            build/modal-owner-windows.log
+            build/modal-stack-membership-report.json
+            build/modal-stack-membership.log
+            build/modal-stack-membership-probe.js
+            build/modal-stack-membership-probe-bundle.json
+            build/modal-discriminators-probe.js
+            build/modal-discriminators-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Modal: base nativa escolhida; primeira integração RN em preparação. WebSocket #48 mergeado."
+    "focusTitle": "Modal: nested/Pressability/cancelamento comprovados; ref0×0 e autoridade entre owners em correção. WebSocket #48 mergeado."
   },
-  "updatedAt": "2026-10-07T18:42:00.851Z",
+  "updatedAt": "2026-10-07T21:48:19.032982+00:00",
   "source": {
     "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
     "url": "https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48",
-    "scope": "WebSocket #48 mergeado em ebcb292 após cinco jobs verdes no head final55980ac, aprovação CodeRabbit e cinco threads resolvidas. Artefatos verificados independentemente:95checks/60conexões/53traces WebSocket,100checks/137requests HTTP, carga/lifetime e56inputs por SHA-256. Capturas e prova local mantêm pin73a27b0; recibos históricos422c2ee/e8dd7b0 preservados. GF-22 parcial. Modal: investigação desktop escolheu Windows embedded irmãs com somente topo exclusivo; integração RN em preparação, sem checkpoint novo.23/156 checkpoints e0/39 itens completos."
+    "scope": "WebSocket #48 mergeado em ebcb292 após cinco jobs verdes no head final55980ac, aprovação CodeRabbit e cinco threads resolvidas. Artefatos verificados independentemente:95checks/60conexões/53traces WebSocket,100checks/137requests HTTP, carga/lifetime e56inputs por SHA-256. Capturas e prova local mantêm pin73a27b0; recibos históricos422c2ee/e8dd7b0 preservados. GF-22 parcial. Modal: investigação desktop escolheu Windows embedded irmãs com somente topo exclusivo; primeira montagem RN local validada e documentada; implementação do draft #51 em andamento, sem checkpoint novo.23/156 checkpoints e0/39 itens completos."
   },
   "phases": [
     {
@@ -1831,7 +1831,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Modals and safe areas",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation",
       "dependencies": [
         "GF-07",
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Investigação para a primeira fatia: descriptor/state/layout original RN compilado e executado; GUI Godot isolada reexecutada independentemente com56observações. Windows embedded irmãs e só topo exclusivo preservam controles, foco/texto e identidade ao remover modal inferior. Helper global de input e reparent foram rejeitados. Ainda não há Modal RN integrado, prova de geometria/resize/lifetime do produto, paridade, export ou mobile; todos os checkpoints permanecem abertos. Próxima etapa: implementação da primeira integração RN.",
+      "note": "Revisão thermo-nuclear da Modal no draft #51: três P1 e dois P2 corrigidos, com simplificação de ownership e geometria. Root confirma 68/68 headless, 73/73 gráficos, 65/65 lifecycle, 31/31 membership e 9/9 reorder e owners; controle de device dedicado passa nos dois hosts. Consumer externo via SDK: 68/68 e tipos positivos/negativos. Causa completa das falhas anteriores de input permanece indeterminada. CI/CodeRabbit da implementação pendentes. Orientação/insets e mobile/export abertos; quatro checkpoints false, 23/156 e 0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3477,6 +3477,87 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-thermonuclear-local-review-closed-20261007",
+      "at": "2026-10-07T21:48:19.032982+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Cinco achados corrigidos e revisão estrutural local aprovada para revisão hospedada. Root: 68/68 headless, 73/73 gráficos, 65/65 lifecycle, 31/31 membership e 9/9 reorder/owners. Device dedicado mantém as nove asserções e passa nos dois binários; falhas históricas preservadas com causa completa indeterminada. Consumer externo usa CLI do SDK e passa 68/68. CI/CodeRabbit da implementação seguem pendentes; sem alterar checkpoints ou completude.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-membership-fixed-owner-input-review-20261007",
+      "at": "2026-10-07T21:37:32.468664+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root confirmou membership31/31 com um observador persistente; revision duplicada de membership foi eliminada. Lifecycle65, reorder9 e cenário68headless passam no host37. Comparação gráfica com os mesmos inputs revelou onPress ausente em B; trace prova motions nativas intercaladas em parte dos casos, mas a causa completa segue indeterminada. Cinco achados fechados; merge bloqueado pelo input gráfico e verificação hospedada. Sem alterar checkpoints.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-thermonuclear-endpoint-fixed-membership-review-20261007",
+      "at": "2026-10-07T21:16:06.541836+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root confirmou a correção P2 do endpoint com o mesmo negativo (44/44) e preservação do contrato em Window viva (84/84 × oito lanes). Reexecução final 68/73, lifecycle/reorder/dois owners 65/9/9, SDK/registry e consumer externo verdes. Auditoria estrutural encontrou membership de runtime sem unregister no último unmount; correção e controle delimitados no mesmo Luna. Merge bloqueado por esse vínculo e gates/CI/review finais. Sem elevar completude.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-thermonuclear-retired-endpoint-p2-20261007",
+      "at": "2026-10-07T20:54:41.147317+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou a expansão final (68 headless/73 gráficos, 41 observações) e encontrou outro bloqueio P2: após 10 capturas/unmounts, 10 rotas permanecem presas a Windows destruídas. Negativo congelado e reproduzido; solução exige retirement canônico do endpoint físico, preservando supressão em Window viva. Oito suites nativas verdes e platform-seams 15/15 após alinhar production defines. Docs/receipts e duas capturas atualizados; sem checkpoint inflado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-thermonuclear-same-input-fixes-20261007",
+      "at": "2026-10-07T20:46:04.521577+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root confirmou as três correções P1 com os mesmos probes/bundles e host c9fd78de: View 0×0 mede 37,55; parar owner inferior preserva contato/foco/texto do topo e entrega onPress; captura entre roots restaura got/move/up/lost. Freeze final reexecutado: 68/68 headless. Simplificações de Stack/embedding/TouchContact revisadas; faltam provas finais de reorder, unmount/captura reentrante e dois owners nativos. Sem checkpoint ou completude inflados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-local-nested-contact-zero-review-20261007",
+      "at": "2026-10-07T20:24:48.109773+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou46headless/51gráficos no host9c2e43ef, recomputou31observações e inspecionouduascapturas. NestedWindows,Pressability,canceldecontato e screenorigemreal+scale1.5 comprovados; não capture explícito. Nova negativa0×0 retorna5,7 em vezde37,55, semerrors. Correção do sentinel e autoridade/foco/owners em andamento no únicoLuna; head74preparatório não testa isso. Todos4GF18checkpointsfalse;23/156 e0/39 mantidos.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-local-embedding-pressability-20261007",
+      "at": "2026-10-07T20:07:27.411910+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou37headless/41gráficos do host730fcbe9 e recomputou22observações. measureInWindow inicial/resize começa em0,0; RN Down entregue. Probe Pressability independente idêntico comprova onPress0→1 entre hosts, fundo preservado. Capturas/recibo positivos e negativos históricos preservados; manifest incompleto declarado. Código local posterior ao head74fdb6d, sem certificação SDK/CI. Nested, escala/origem, focus/owners/capture seguem abertos;23/156 checkpoints e0/39 itens, todos4GF18false.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-local-interaction-resize-lifetime-20261007",
+      "at": "2026-10-07T19:34:10.486359+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Root reexecutou independentemente 30 checks headless e34 gráficos do Modal original RN, recomputou44 observações e inspecionou capturas420x320/500x350. First onLayout/resize viaState, controles públicos Godot, requestClose semdismiss e stop em callback de visibilidade passaram. Receipt ce3079a1 registra a versão local pré-extração, semcertificação SDK. Ainda pendentes geometry/DOM/RNpointer/foco/stack entre apps/capture e aceite completo. #51draft; todos quatro checkpointsfalse,23/156 e0/39 preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
+    {
+      "id": "modal-first-local-rn-mount-20261007",
+      "at": "2026-10-07T19:13:47.557Z",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Modal saiu de planejado para em implementação após a primeira execução integrada original RN. Root confirmou 10 checks headless e 12 gráficos no host macOS, captura 420x320 e stop sem leaks. Evidência identifica esta versão local inicial, não o head publicado 74fdb6d. Revisão da pilha e contratos de interação/resize/geometry seguem no único Luna reutilizado; #51 permanece draft e nenhum checkpoint foi aceito. 23/156 checkpoints e 0/39 itens completos permanecem.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
     {
       "id": "websocket-final-merge-modal-design-20261007",
       "at": "2026-10-07T18:42:00.851Z",

@@ -1,0 +1,328 @@
+{
+  "format": "godot-fabric.modal-capture-local/v1",
+  "checkedAt": "2026-10-07T20:49:01.262239+00:00",
+  "implementationPublished": false,
+  "publishedHead": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+  "execution": {
+    "nativeHostSha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1",
+    "bundleSha256": "dbdd8194b4ee8181cf894f60ac78abec87e89e85a024f25078e8130adf81a1b8",
+    "headlessChecks": 68,
+    "graphicalChecks": 73,
+    "independentStageObservations": 41,
+    "files": {
+      "headless-report.json": "a61ff3ba744f0112e603427848d1bdb0742e78a243df45d8d102fa9e398877d4",
+      "headless.log": "bed0e135b93b7ab0edb71959412e1647780dad6ae9f8b2289ac71999fa30a818",
+      "graphical-report.json": "ba3af93d5992e1ccc3dbae6a683c0be4b569ae2fb2c3c1753264cb5f20451033",
+      "graphical.log": "6b9f8a65afed8bd4d31d1c585831eab83209783dd33b69f90792819f7a531933",
+      "tests/graphical-probe.gd": "186a26c07da6e5936ebb8e8821cea0dd95795986db4ee569847c4350306dc227",
+      "initial.png": "e5b69974b0a3e8b93da74f176ca50544cdc0de358fb91aee0c735080b00e0719",
+      "resized.png": "78fdebae3d6d45fa85c25d3d338dd8705539c5ff0bf6be15f72beabd25f15d5c",
+      "source-snapshot.json": "0877291c74a841d4845e6c66ca699ee7fa7ae89557c522b94a0dd87aad0999c3"
+    }
+  },
+  "producerManifest": {
+    "format": "godot-fabric.modal-final-producer/v1",
+    "scenario": "native-original-modal-host",
+    "checks": {
+      "total": 68,
+      "passed": 68
+    },
+    "frozenAt": "2026-10-07T20:41:54.058Z",
+    "host": {
+      "path": "host/fabric_godot.dylib",
+      "sha256": "c9fd78ded179c016ffea7d6c4f2998975ad95dbe913908c007b71aee8657ead1"
+    },
+    "bundle": {
+      "path": "bundle/modal-host-probe.js",
+      "sha256": "dbdd8194b4ee8181cf894f60ac78abec87e89e85a024f25078e8130adf81a1b8",
+      "receipt": "bundle-receipt.json",
+      "receiptSha256": "42c53231d348213a4db50d614dd37698ae948fa905cc9c43a5b5002d16f2067a"
+    },
+    "report": {
+      "path": "evidence/modal-host-current-report.json",
+      "sha256": "02dec9adb9432ef0016b65b8304fed702fd4ee93a0a04fb7162ad38d6392a4b3"
+    },
+    "log": {
+      "path": "evidence/modal-host-current.log",
+      "sha256": "65136e0ef34a3235f5838c13f631945dcf1ddb5f60484cb1ff337ad7b80994a2"
+    },
+    "producerPins": {
+      "native/application_runtime.cpp": "3e1a23764b4e3f1a4c3bbea1131fe48a1543ed8f0b66bdbc97e5a182a1c79016",
+      "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+      "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+      "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+      "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+      "native/modal_window_stack.cpp": "ed3de5d1e5f8ac8e26cde9951c3e7eaf9badbde4097f77ae806e3f3f7b5b9ca8",
+      "native/modal_window_stack.h": "529c3481d5252d6e52f150ad332ca00b48d1f582634033d73f319a5eec9088ef",
+      "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+      "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+      "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+      "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+      "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+      "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+      "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+      "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+      "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+      "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+      "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+      "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+      "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535",
+      "tests/modal-host-fixture.jsx": "55f7010c141789bcd8fe64bbc3dbe93f0e73c80994ca63ca6d936da9afe35114",
+      "tests/modal-host-probe.gd": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b",
+      "tests/modal-host-native.test.mjs": "e41fdf1b4af1e98f750eb37f7c73b36d6ce27acdffffc44f1fe89088369112d3",
+      "scripts/modal-host-bundle.mjs": "c622223e866b23e111edce75aabe7d08a0de8f6a45e33a887e1a2620ac29f957",
+      "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+      "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+      "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7"
+    },
+    "nativeSources": [
+      "native/application_runtime.cpp",
+      "native/application_runtime.h",
+      "native/godot_dom.cpp",
+      "native/godot_dom.h",
+      "native/modal_host_view_component_descriptor.h",
+      "native/modal_window_stack.cpp",
+      "native/modal_window_stack.h",
+      "native/modal_presentation.cpp",
+      "native/modal_presentation.h",
+      "native/window_metrics.h",
+      "native/physical_embedding.cpp",
+      "native/physical_embedding.h",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "native/pointer_geometry.cpp",
+      "native/pointer_geometry.h",
+      "native/adapter_registry.cpp",
+      "native/CMakeLists.txt",
+      "native/register.cpp"
+    ],
+    "note": "The report bundles its own producer/source pins and states that they do not certify the native build; host binary and source copies are retained separately."
+  },
+  "observations": [
+    {
+      "execution": "headless",
+      "name": "all expected check IDs unique and executed successfully",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "all runtime and engine diagnostics empty",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "Surface remains 90 by 70",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "initial Modal measurement uses its own physical origin",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "captured Pressability exits then returns and presses once",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "explicit got and lost notifications expose correct capture state",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "captured outside moves and Up delivered",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "Modal physical boundary preserves logical RN bubbling",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "native Button on background remains blocked",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "nested presentations share native owner",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "nested original pointer and Pressability path works",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "actual authority change delivers one PointerCancel and TouchCancel",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "stale Up does not press; hiding top restores authority",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "foreign top capture survives lower runtime stop",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "foreign top focus Window identity and text survive",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "foreign contact completes Up Press Lost once",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "cross-root capture exact target trace with RN ancestor notifications",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "capture suppresses Up on origin and releases",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "target viewport offset independently checked",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "all Modal and cross-root application roots stop cleanly",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "all expected check IDs unique and executed successfully",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "all runtime and engine diagnostics empty",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "Surface remains 90 by 70",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "initial Modal measurement uses its own physical origin",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "captured Pressability exits then returns and presses once",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "explicit got and lost notifications expose correct capture state",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "captured outside moves and Up delivered",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "Modal physical boundary preserves logical RN bubbling",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "native Button on background remains blocked",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "nested presentations share native owner",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "nested original pointer and Pressability path works",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "actual authority change delivers one PointerCancel and TouchCancel",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "stale Up does not press; hiding top restores authority",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "foreign top capture survives lower runtime stop",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "foreign top focus Window identity and text survive",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "foreign contact completes Up Press Lost once",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "cross-root capture exact target trace with RN ancestor notifications",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "capture suppresses Up on origin and releases",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "target viewport offset independently checked",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "all Modal and cross-root application roots stop cleanly",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "canonical Godot transform matches actual nonzero origin and scale",
+      "passed": true
+    }
+  ],
+  "visuallyInspected": [
+    "capture-final-initial.png",
+    "capture-final-resized.png"
+  ],
+  "rootSetupFailures": {
+    "featureAssertion": false,
+    "reason": "Isolated project initially omitted .godot/extension_list.cfg; FabricApplication was unavailable. Both setup logs retained, then explicit extension registration installed before successful sequential runs."
+  },
+  "sourceReceiptDoesNotCertifyNativeBuild": true,
+  "limits": {
+    "fullGF18Acceptance": false,
+    "sdkBuildCertified": false,
+    "mobile": false,
+    "export": false,
+    "siblingReorder": false,
+    "activeCaptureOwnerRemoval": false,
+    "twoNativeOwnerWindows": false,
+    "subsequentEdits": false
+  }
+}
