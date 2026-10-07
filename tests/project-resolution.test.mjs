@@ -609,6 +609,18 @@ test("the typecheck worker accepts the builder's captured config without emittin
   assert.equal(fs.existsSync(path.join(f.project, "ui/index.js")), false);
 });
 
+test("native typechecking preserves tsconfig identity for incremental projects without emitting", async t => {
+  const f = fixture(t, {compilerOptions: {incremental: true, types: []}});
+  f.write("ui/index.ts", "export const answer: number = 42;");
+  const resolution = await prepare(f);
+  const result = resolution.checkTypes();
+  assert.equal(result.backend, "tsc-rs");
+  assert.equal(result.errorCount, 0,
+    result.diagnostics.map(diagnostic => diagnostic.messageText ?? diagnostic.text).join("\n"));
+  assert.equal(fs.existsSync(path.join(f.project, "ui/index.js")), false);
+  assert.equal(fs.existsSync(path.join(f.project, "tsconfig.tsbuildinfo")), false);
+});
+
 test("the typecheck worker rejects configuration saved after the builder's preflight", async t => {
   const f = fixture(t, {compilerOptions: {types: []}});
   f.write("ui/index.ts", "export const answer: number = 42;");

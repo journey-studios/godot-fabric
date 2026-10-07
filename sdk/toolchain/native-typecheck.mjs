@@ -56,7 +56,7 @@ export function checkNativeTypes({rootFiles, compilerOptions, projectReferences,
     const compiler = resolveNativeCompiler();
     const nativeOptions = Object.fromEntries(Object.entries(compilerOptions)
       .filter(([key, value]) => value !== undefined && compilerOptionKeys.has(key)
-        && key !== "pathsBasePath" && key !== "configFilePath"));
+        && key !== "pathsBasePath"));
     api = new API({cwd, tsserverPath: compiler.executable});
     resolver = api.createModuleResolver(nativeOptions, {
       resolveModuleName(moduleName, containingDirectory, resolutionMode) {

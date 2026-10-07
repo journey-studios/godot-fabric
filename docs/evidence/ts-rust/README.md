@@ -15,10 +15,10 @@ The frozen SDK checker/builder sources match base commit `afa5d875` by SHA-256.
 
 | Stage | Before median | After median | Difference |
 | --- | ---: | ---: | ---: |
-| Compiler directly | 588 ms | 45 ms | 543 ms / 92% |
-| Repository npm type-check | 642 ms | 149 ms | 493 ms / 77% |
-| Minimal consumer checker | 696 ms | 415 ms | 280 ms / 40% |
-| Minimal consumer JS build, including checker | 3,169 ms | 3,018 ms | 151 ms / 5% |
+| Compiler directly | 514 ms | 39 ms | 475 ms / 92% |
+| Repository npm type-check | 605 ms | 131 ms | 474 ms / 78% |
+| Minimal consumer checker | 668 ms | 402 ms | 266 ms / 40% |
+| Minimal consumer JS build, including checker | 3,164 ms | 2,991 ms | 173 ms / 5% |
 
 The old npm command is replayed through a private package against the same
 original compiler and absolute repository configuration; the new command runs
@@ -32,7 +32,7 @@ This comparison does not measure Godot startup, rendering or a native host build
 
 ## Validation
 
-The contract command passed its parity/dashboard checks, 279 Node tests and
+The contract command passed its parity/dashboard checks, 280 Node tests and
 13 Python tests. Static analysis and publication scanning passed. The included
 relocated-consumer test passed seven checks with an empty `PATH`: successful
 build and recovery, native type/syntax diagnostics, missing manifest identity,
@@ -41,7 +41,7 @@ preserved the last valid bundle. These tests are included in `test:contracts`.
 
 Resolution tests exercise app/library alias collisions, missing library imports,
 SDK type identity, import/require conditions, inherited JSX/strict settings,
-configuration fingerprints and no emission. Native diagnostic tests also cover
+configuration fingerprints, incremental config metadata and no emission. Native diagnostic tests also cover
 UTF-16 positions, removed TS6 compiler options, duplicate binder diagnostics
 and unsupported/missing/mismatched compiler packages.
 
