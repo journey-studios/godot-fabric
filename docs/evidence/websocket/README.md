@@ -11,12 +11,12 @@ and its exact reason. A TLS drop after the client's close remains an abnormal
 failure. See the curated [execution receipt](execution.json). Raw per-run reports remain
 local and ignored.
 
-Hosted CI passed all five jobs for implementation commit `422c2ee` only ([receipt](hosted-ci.json),
+Hosted CI passed all five jobs for implementation commit `422c2ee` ([receipt](hosted-ci.json),
 [GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)). Independent
 inspection of the native artifact recomputed the product oracle and matched 46 repository inputs.
 Its parity job covers 13
 `core-ui-v2` cases on Android/iOS, not WebSocket differential or Godot mobile runtime behavior.
-Changes after commit `422c2ee` need their own green CI before merge.
+Changes after commit `422c2ee` need their own green CI before merge. The main push at `ebcb292`, the squash merge of #48, passed all five jobs in run [37663778397](https://github.com/journey-studios/godot-fabric/actions/runs/37663778397) ([receipt](hosted-ci-ebcb292.json)); changes after that commit need their own green CI.
 
 The separate HTTP diagnostic correction receipt covers commit `e8dd7b0` and passed all five jobs
 ([receipt](hosted-ci-e8dd7b0.json),
@@ -106,12 +106,12 @@ The verified macOS native SDK pack and provisioned addon include the pinned wsla
 license. The iOS simulator arm64 build passed and its combined archive link retains both Fabric
 and wslay symbols. That link proof did not execute on an iOS runtime or export a consumer app;
 ABI certification remains open. Hosted native execution is headless macOS for receipt
-commits `422c2ee` and `e8dd7b0`; it is not mobile runtime evidence.
+commits `422c2ee` and `e8dd7b0` and for the main push `ebcb292` (run 37663778397); it is not mobile runtime evidence.
 
 ## Boundaries
 
 The product and graphical captures are local macOS arm64 evidence; hosted native execution
-covers receipt commits `422c2ee` and `e8dd7b0`. Android, iOS-device and Web runtime behavior remain separate.
+covers receipt commits `422c2ee` and `e8dd7b0` and the main push `ebcb292` (run 37663778397). Android, iOS-device and Web runtime behavior remain separate.
 The fixtures do not certify `permessage-deflate`, other
 extensions, cookies, proxies, system trust integration, HTTP/2, long-duration or
 hardware load, offline reconnection, or the complete GF-22 acceptance. This PR

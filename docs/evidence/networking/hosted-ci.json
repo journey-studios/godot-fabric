@@ -321,6 +321,7 @@
         "sha256AtImplementation": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
         "sha256AtRunHead": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
         "equalAtImplementation": true,
+        "changedAfterImplementationBy": [],
         "declaredByTheHostedProvenance": true
       }
     },
@@ -1033,7 +1034,7 @@
     "explained, non-blocking: examples/networking/validation.gd: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 155d35b (fix(examples): Keep the networking example on its newest request); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.examples/networking/validation.gd.sha256",
     "explained, non-blocking: scripts/networking-sabotage.mjs: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 7f45f24 (fix(scripts): Restore sabotaged sources when a signal ends a run); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.scripts/networking-sabotage.mjs.sha256",
     "explained, non-blocking: tests/networking-native.test.mjs: the run-head bytes differ from the 83a3557 pin; the PR branch gained commits that touch this path after the pinned run: 8b7c890 (test(networking): Stop the test server without waiting on a dead child); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/networking-native.test.mjs.sha256",
-    "explained, non-blocking: src/react-native-platform.jsx: not pinned by the committed state and added by no commit after the implementation commit; recorded by content: SHA-256 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the run head and 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the implementation commit (equal: True); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran"
+    "explained, non-blocking: src/react-native-platform.jsx: not pinned by the committed state and not added after the implementation commit; changed by no commit after the implementation commit; recorded by content: SHA-256 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the run head and 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the implementation commit (equal: True); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran"
   ],
   "blockingFindings": [],
   "nativeJobLog": {

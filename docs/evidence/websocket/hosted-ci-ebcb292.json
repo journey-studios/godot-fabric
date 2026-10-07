@@ -364,30 +364,63 @@
         "sha256AtImplementation": "c9d47d19b7ac071079c2e602087a33febad497107fea36699268d3ab9f6a6a36",
         "sha256AtRunHead": "ab71c2ae92b73d9de2891500663ed00e0bb785d5cce660ae456795d9c740dcc6",
         "equalAtImplementation": false,
+        "changedAfterImplementationBy": [
+          {
+            "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+            "subject": "feat(networking): Run RN WebSocket over bounded Godot streams (#48)"
+          },
+          {
+            "commit": "cc7c3997be8d8627bc84a229b2124b3fc00a0311",
+            "subject": "build(typecheck): Use the pinned ts-rust compiler (#49)"
+          }
+        ],
         "declaredByTheHostedProvenance": true
       },
       "scripts/ios-build.py": {
         "sha256AtImplementation": "b607edd970bce2be71cedbe7e241d952eeb82491dfd4845d96eb7837521d1bdd",
         "sha256AtRunHead": "c8b8f182573b17466ca535eb8cf7583f71a38238bf257dea76ff669113b94e92",
         "equalAtImplementation": false,
+        "changedAfterImplementationBy": [
+          {
+            "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+            "subject": "feat(networking): Run RN WebSocket over bounded Godot streams (#48)"
+          }
+        ],
         "declaredByTheHostedProvenance": true
       },
       "scripts/pack-addon.mjs": {
         "sha256AtImplementation": "981fb23b05ad7b24d3a789fe1945866742a6bf2a72e88033907933e84753ec6f",
         "sha256AtRunHead": "b7f9e7e5209283aa9ac0e401652dd40ae15a88d998dca4bdbbe8fef01e269485",
         "equalAtImplementation": false,
+        "changedAfterImplementationBy": [
+          {
+            "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+            "subject": "feat(networking): Run RN WebSocket over bounded Godot streams (#48)"
+          },
+          {
+            "commit": "cc7c3997be8d8627bc84a229b2124b3fc00a0311",
+            "subject": "build(typecheck): Use the pinned ts-rust compiler (#49)"
+          }
+        ],
         "declaredByTheHostedProvenance": true
       },
       "scripts/setup.py": {
         "sha256AtImplementation": "db2304da8dc8f1e29d6297846ed431f502bc14ce981f5614223525c622f626b6",
         "sha256AtRunHead": "a7fb0ce2ca7781d970dfbdeae1401c53fc9fd01449de5ac0c8c6e4f69a97f891",
         "equalAtImplementation": false,
+        "changedAfterImplementationBy": [
+          {
+            "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
+            "subject": "feat(networking): Run RN WebSocket over bounded Godot streams (#48)"
+          }
+        ],
         "declaredByTheHostedProvenance": true
       },
       "src/react-native-platform.jsx": {
         "sha256AtImplementation": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
         "sha256AtRunHead": "7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f",
         "equalAtImplementation": true,
+        "changedAfterImplementationBy": [],
         "declaredByTheHostedProvenance": true
       }
     },
@@ -1484,17 +1517,12 @@
     "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
     "Deployment/Pages is separate.",
     "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
-    "The slice's own committed limits are unchanged and still apply:",
-    "Messages the server writes in the same poll as its close frame, and those that arrive after the client's own close frame, are lost by Godot 4.7.2 (godotengine/godot#115384): the host cannot recover them, and the suite reproduces the loss without requiring it.",
-    "A ping between the fragments of a message is merged into the message by the engine; the suite records it and checks that a pong with the payload went back.",
-    "No extensions (permessage-deflate: OkHttp offers it, the engine none), no cookies and no connect time-out; a caller's Host, Upgrade, Connection, Sec-WebSocket-Key, -Version, -Extensions and -Protocol headers are dropped, and only the Host, Upgrade and protocol cases have a check of their own.",
-    "The engine is stricter than OkHttp about subprotocols (a server that selects none, or one that was not offered, fails the socket) and fails invalid UTF-8 text with 1007; a failed handshake carries no HTTP status.",
-    "Closing a socket that is still connecting fails it, as a browser does, where Android's module does nothing (deliberate).",
-    "Over TLS a client-initiated close is taken as complete with the code and reason sent, because the engine ends it without the server's close frame.",
-    "The 16 MiB rings reserve about 48 MiB of address space per open socket (about 6 MB resident for 40 sockets in a scratch run); the application cannot choose a smaller size.",
-    "The contract is Android's: iOS's module (no event for a missing socket, a real ping frame, a clean flag) would need a second module; failure texts are the host's and the engine's, not OkHttp's.",
-    "Only macOS arm64 was executed: Godot Android (INTERNET permission), iOS and Web (a browser WebSocket cannot add headers) exports, hardware, offline and reconnect behavior are not covered.",
-    "GF-22 is open: no whole GF, checkpoint, dependency, weight or denominator closes."
+    "The limitations recorded in docs/evidence/websocket/execution.json (the record after commit 73a27b0) apply:",
+    "Local macOS/headless evidence; hosted CI and other export targets are separate.",
+    "Immediate reentrant cancellation with unread /greeting data may end as TCP drop before a 1001 frame reaches the peer; it is not counted as a completed close handshake.",
+    "30-second connection-plus-upgrade deadline is a host policy, not inherited Android/OkHttp behavior.",
+    "Extensions, cookies, proxy/system trust, HTTP/2, and non-macOS exports remain outside this proof.",
+    "This PR is a slice of GF-22; it does not complete GF-22 or change roadmap checkpoints."
   ],
   "findings": [
     "explained, non-blocking: .github/workflows/contracts.yml: the run-head bytes differ from the 16dd2be pin; the PR branch gained commits that touch this path after the pinned run: 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls); the run head's tree equals the final PR head's tree",
@@ -1519,15 +1547,15 @@
     "explained, non-blocking: tests/websocket-oracle.mjs: the run-head bytes differ from the 16dd2be pin; the PR branch gained commits that touch this path after the pinned run: dc6e3ae (docs(tests): Correct the TLS handshake failure count), 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls); the run head's tree equals the final PR head's tree",
     "explained, non-blocking: tests/websocket-probe.gd: the run-head bytes differ from the 16dd2be pin; the PR branch gained commits that touch this path after the pinned run: dc6e3ae (docs(tests): Correct the TLS handshake failure count), 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls); the run head's tree equals the final PR head's tree",
     "explained, non-blocking: tests/websocket-server.mjs: the run-head bytes differ from the 16dd2be pin; the PR branch gained commits that touch this path after the pinned run: 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls); the run head's tree equals the final PR head's tree",
-    "explained, non-blocking: THIRD_PARTY_NOTICES.md: not pinned by the committed state and added by no commit after the implementation commit; recorded by content: SHA-256 ab71c2ae92b73d9de2891500663ed00e0bb785d5cce660ae456795d9c740dcc6 at the run head and c9d47d19b7ac071079c2e602087a33febad497107fea36699268d3ab9f6a6a36 at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
+    "explained, non-blocking: THIRD_PARTY_NOTICES.md: not pinned by the committed state and not added after the implementation commit; changed after the implementation commit by ebcb292969d7214bcd2651c22b44776859d83b2f (feat(networking): Run RN WebSocket over bounded Godot streams (#48)), cc7c3997be8d8627bc84a229b2124b3fc00a0311 (build(typecheck): Use the pinned ts-rust compiler (#49)); recorded by content: SHA-256 ab71c2ae92b73d9de2891500663ed00e0bb785d5cce660ae456795d9c740dcc6 at the run head and c9d47d19b7ac071079c2e602087a33febad497107fea36699268d3ab9f6a6a36 at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
     "explained, non-blocking: native/godot_websocket_connection.cpp: a producer the hosted bundle pins that the committed state did not list; added after the implementation commit by 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls)",
     "explained, non-blocking: native/godot_websocket_connection.h: a producer the hosted bundle pins that the committed state did not list; added after the implementation commit by 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls)",
     "explained, non-blocking: native/websocket_handshake.h: a producer the hosted bundle pins that the committed state did not list; added after the implementation commit by 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls)",
     "explained, non-blocking: native/websocket_handshake_test.cpp: a producer the hosted bundle pins that the committed state did not list; added after the implementation commit by 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls)",
-    "explained, non-blocking: scripts/ios-build.py: not pinned by the committed state and added by no commit after the implementation commit; recorded by content: SHA-256 c8b8f182573b17466ca535eb8cf7583f71a38238bf257dea76ff669113b94e92 at the run head and b607edd970bce2be71cedbe7e241d952eeb82491dfd4845d96eb7837521d1bdd at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
-    "explained, non-blocking: scripts/pack-addon.mjs: not pinned by the committed state and added by no commit after the implementation commit; recorded by content: SHA-256 b7f9e7e5209283aa9ac0e401652dd40ae15a88d998dca4bdbbe8fef01e269485 at the run head and 981fb23b05ad7b24d3a789fe1945866742a6bf2a72e88033907933e84753ec6f at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
-    "explained, non-blocking: scripts/setup.py: not pinned by the committed state and added by no commit after the implementation commit; recorded by content: SHA-256 a7fb0ce2ca7781d970dfbdeae1401c53fc9fd01449de5ac0c8c6e4f69a97f891 at the run head and db2304da8dc8f1e29d6297846ed431f502bc14ce981f5614223525c622f626b6 at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
-    "explained, non-blocking: src/react-native-platform.jsx: not pinned by the committed state and added by no commit after the implementation commit; recorded by content: SHA-256 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the run head and 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the implementation commit (equal: True); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
+    "explained, non-blocking: scripts/ios-build.py: not pinned by the committed state and not added after the implementation commit; changed after the implementation commit by ebcb292969d7214bcd2651c22b44776859d83b2f (feat(networking): Run RN WebSocket over bounded Godot streams (#48)); recorded by content: SHA-256 c8b8f182573b17466ca535eb8cf7583f71a38238bf257dea76ff669113b94e92 at the run head and b607edd970bce2be71cedbe7e241d952eeb82491dfd4845d96eb7837521d1bdd at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
+    "explained, non-blocking: scripts/pack-addon.mjs: not pinned by the committed state and not added after the implementation commit; changed after the implementation commit by ebcb292969d7214bcd2651c22b44776859d83b2f (feat(networking): Run RN WebSocket over bounded Godot streams (#48)), cc7c3997be8d8627bc84a229b2124b3fc00a0311 (build(typecheck): Use the pinned ts-rust compiler (#49)); recorded by content: SHA-256 b7f9e7e5209283aa9ac0e401652dd40ae15a88d998dca4bdbbe8fef01e269485 at the run head and 981fb23b05ad7b24d3a789fe1945866742a6bf2a72e88033907933e84753ec6f at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
+    "explained, non-blocking: scripts/setup.py: not pinned by the committed state and not added after the implementation commit; changed after the implementation commit by ebcb292969d7214bcd2651c22b44776859d83b2f (feat(networking): Run RN WebSocket over bounded Godot streams (#48)); recorded by content: SHA-256 a7fb0ce2ca7781d970dfbdeae1401c53fc9fd01449de5ac0c8c6e4f69a97f891 at the run head and db2304da8dc8f1e29d6297846ed431f502bc14ce981f5614223525c622f626b6 at the implementation commit (equal: False); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
+    "explained, non-blocking: src/react-native-platform.jsx: not pinned by the committed state and not added after the implementation commit; changed by no commit after the implementation commit; recorded by content: SHA-256 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the run head and 7613a6a4d42fab8ccacd646fb2efb70acb2bedac5e8cbc5d1681fe22836c9e4f at the implementation commit (equal: True); the hosted provenance declares the run-head bytes, and the hosted bundle SHA equals the reference bundle SHA, so the same bundle ran",
     "explained, non-blocking: tests/websocket-transport-smoke.test.mjs: a producer the hosted bundle pins that the committed state did not list; added after the implementation commit by 73a27b0 (fix(networking): Preserve WebSocket frames with bounded stream polls)"
   ],
   "blockingFindings": [],
