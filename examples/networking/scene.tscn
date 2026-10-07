@@ -9,10 +9,10 @@ script = ExtResource("1")
 metadata/scenario = "networking"
 
 [node name="Surface" type="FabricSurface" parent="."]
-offset_left = 170.0
-offset_top = 40.0
-offset_right = 730.0
-offset_bottom = 640.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 876.0
+offset_bottom = 656.0
 application_path = NodePath("../Application")
 component_name = "NetworkingExample"
 initial_props = {}

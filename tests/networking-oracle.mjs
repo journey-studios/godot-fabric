@@ -311,7 +311,7 @@ function verifyRedirectResults(report) {
   same([scheme.status, scheme.ok, scheme.location, scheme.text], [302, false, "ftp://127.0.0.1/file", "elsewhere"], "an unfollowable redirect is the response");
 }
 
-function verifyFailures(report) {
+function verifyFailures(report, ports) {
   const stages = report.stages;
   const gzip = resultOf(stages.gzip);
   failedFetch(gzip.fetched);
@@ -323,7 +323,12 @@ function verifyFailures(report) {
   same(errors.truncated.events.map(event => [event.type, event.readyState, event.status]),
     [["readystatechange", 1, 0], ["readystatechange", 2, 200], ["readystatechange", 4, 200], ["error", 4, 200], ["loadend", 4, 200]],
     "a body cut short is an error after the headers, never a load");
-  check(/^unexpected end of stream from 127\.0\.0\.1:\d+$/.test(errors.truncated.responseText), "with its reason: " + errors.truncated.responseText);
+  // HTTPClient::poll and read_response_body_chunk can observe this close in different phases.
+  const truncatedReasons = [
+    `unexpected end of stream from 127.0.0.1:${ports.http}`,
+    `Connection to 127.0.0.1:${ports.http} was lost while receiving the response`,
+  ];
+  check(truncatedReasons.includes(errors.truncated.responseText), "with its reason: " + errors.truncated.responseText);
   equal(errors.method.events.some(event => event.type === "error"), true, "an unsupported method is an error event");
 }
 
@@ -462,7 +467,7 @@ export function verifyNetworkingReport(report, serverLog = report.server) {
   verifyHolds(records, serverLog.holds);
   verifyFetchResults(report, records);
   verifyRedirectResults(report);
-  verifyFailures(report);
+  verifyFailures(report, ports);
   verifyHttps(report, records);
   verifyXhr(report);
   verifyBlobs(report);

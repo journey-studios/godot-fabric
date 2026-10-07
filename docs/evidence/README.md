@@ -439,9 +439,26 @@ covered. The preceding host fails exactly the 84 normative checks (the first use
 API fails where RN looks up its module, and no request reaches the server); a transport
 that never follows a redirect fails 8 checks and one that does not join repeated response
 headers fails 2, and the oracle rejects each. Six captures of the example and a C++ test of
-the HTTP core (81 assertions). The `WebSocket` global is RN's and fails on first use until
-the next slice; cookies, compressed responses, HTTP/2, progress events, incremental
-streaming, `uri` and file bodies, and every target but macOS are open. Hosted CI pending.
+the HTTP core (81 assertions). Cookies, compressed responses, HTTP/2, progress events,
+incremental streaming, `uri` and file bodies, and every target but macOS are open (the
+`WebSocket` global got its module in the record below). Hosted CI pending.
+
+The [WebSocket record](websocket/README.md) now describes the HTTPClient/StreamPeer adapter
+with pinned wslay; the prior `WebSocketPeer` report remains available as explicit history.
+Its current local macOS arm64/headless product run passed 95 checks across 60 server
+connections and 53 independent JS/wire comparisons. Exact TLS close 1000 and peer-selected
+4002/reason are preserved, while a post-client-close drop remains abnormal. Data-before-close
+and interleaved-ping behavior pass. Two real RN load phases independently reach the shared
+1 MiB wire-byte and 256 pending-event limits across eight sockets, delivering 1,024 messages
+with a bounded pending-event peak and zero pending events at finish. The previous host made zero
+connections; both retained source sabotages were rejected by the oracle. Eight reentrant lifetime
+cases end with no active sockets; quiescent echo peers record 1001, while greeting with unread
+input records a TCP drop as best-effort cancellation. The curated load, lifetime and execution measurements are in the evidence record; raw per-run reports remain ignored. The native SDK pack/addon provision and iOS simulator arm64 build-link pass, with no runtime
+or consumer export claimed. [Hosted CI](websocket/hosted-ci.json) passed all five jobs for pinned
+head `422c2ee`; later PR-head changes require their own green run. Its 13 `core-ui-v2` Android/iOS
+parity cases are not WebSocket differential or Godot mobile runtime proof. This does not complete
+GF-22 or add a checkpoint. The networking example separately passes 29/29 headless
+and 51/51 graphical checks, with all 11 current captures linked from the record.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

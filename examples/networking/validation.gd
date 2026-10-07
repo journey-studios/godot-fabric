@@ -1,12 +1,13 @@
 extends Node
 
-# The public networking example under real mouse input. The scene starts a small HTTP server on loopback and
-# hands its address to the React screen, whose buttons call RN's own fetch, FormData and AbortController. Each
-# state is read from the native tree (the labels and the status badge the host drew), from what React observed,
-# from the requests the server received and from the application's networking module; with --capture the
-# renderer's frame is saved and the badge's color sampled in it.
+# The public networking example under real mouse input. The scene starts a small HTTP server and a WebSocket echo
+# server on loopback and hands their addresses to the React screen, whose buttons call RN's own fetch, FormData,
+# AbortController and WebSocket. Each state is read from the native tree (the labels and the status badge the host
+# drew), from what React observed, from what the servers received and from the application's networking module;
+# with --capture the renderer's frame is saved and the badge's color sampled in it.
 const DEVICE := 1001
-const BUTTONS := ["net-json", "net-text", "net-form", "net-redirect", "net-slow", "net-abort"]
+const BUTTONS := ["net-json", "net-text", "net-form", "net-redirect", "net-slow", "net-abort",
+  "ws-connect", "ws-send", "ws-binary", "ws-close", "ws-server-close", "ws-drop"]
 const BADGE_IDLE := "475569ff"
 const BADGE_PENDING := "d97706ff"
 const BADGE_OK := "16a34aff"
@@ -24,7 +25,7 @@ var capturing := false
 func _enter_tree() -> void:
   if server.start() != OK:
     push_error("FABRIC_ERROR: The example's local server could not listen on loopback")
-  get_node("Surface").set("initial_props", {"baseUrl": "http://127.0.0.1:%d" % server.port})
+  get_node("Surface").set("initial_props", {"baseUrl": "http://127.0.0.1:%d" % server.port, "socketUrl": "ws://127.0.0.1:%d/echo" % server.socket_port})
 
 func _process(_delta: float) -> void:
   server.poll()
@@ -36,7 +37,7 @@ func verify(condition: bool, name: String) -> bool:
   checks.append({"name": name, "passed": condition})
   if not condition:
     push_error("FABRIC_CHECK_FAILED: " + name)
-    print("FAILED_SCREEN: ", ["net-status", "net-url", "net-type", "net-body", "net-log"].map(func(id: String) -> String: return id + "=" + text(id)))
+    print("FAILED_SCREEN: ", ["net-status", "net-url", "net-type", "net-body", "net-log", "ws-status", "ws-protocol", "ws-last", "ws-log"].map(func(id: String) -> String: return id + "=" + text(id)))
   return condition
 
 func frames(count: int = 1) -> void:
@@ -79,8 +80,8 @@ func node_of(id: String) -> Dictionary:
 func text(id: String) -> String:
   return str(node_of(id).get("nativeText", ""))
 
-func badge() -> String:
-  var appearance: Variant = node_of("net-badge").get("appearance")
+func badge(id := "net-badge") -> String:
+  var appearance: Variant = node_of(id).get("appearance")
   return str(appearance.get("background")) if appearance is Dictionary else ""
 
 func control(id: String) -> Control:
@@ -120,13 +121,13 @@ func close(a: Color, b: Color) -> bool:
   return absf(a.r - b.r) < 6.0 / 255.0 and absf(a.g - b.g) < 6.0 / 255.0 and absf(a.b - b.b) < 6.0 / 255.0
 
 # The badge's own pixels, a few inside its rectangle, show the state's color in the renderer's frame.
-func capture(stage: String, expected: String) -> void:
+func capture(stage: String, expected: String, badge_id := "net-badge", prefix := "networking") -> void:
   if not capturing:
     return
   await RenderingServer.frame_post_draw
   var image := get_viewport().get_texture().get_image()
-  verify(image.save_png("res://build/networking-%s.png" % stage) == OK, "Renderer capture saved: " + stage)
-  var area := region(control("net-badge"))
+  verify(image.save_png("res://build/%s-%s.png" % [prefix, stage]) == OK, "Renderer capture saved: " + stage)
+  var area := region(control(badge_id))
   var frame := Rect2i(Vector2i.ZERO, image.get_size())
   var inside := area.has_area() and frame.encloses(area)
   var sampled := image.get_pixelv(area.position + Vector2i(3, area.size.y / 2)) if inside else Color()
@@ -146,13 +147,14 @@ func _ready() -> void:
 func run() -> void:
   var base := "http://127.0.0.1:%d" % server.port
   var mounted := await wait_for(func() -> bool: return control("net-root") != null and BUTTONS.all(func(id: String) -> bool: return control(id) != null))
-  verify(mounted, "The public example mounts its screen and six buttons")
+  verify(mounted, "The public example mounts its screen with its HTTP and WebSocket buttons")
   await frames(10)
   stages.idle = {"example": example(), "module": module()}
   verify(text("net-status") == "No request yet" and badge() == BADGE_IDLE and text("net-log") == "No requests yet" and server.requests.is_empty(),
     "Nothing has been requested: the badge is idle and the server has seen nothing")
-  verify(not module().is_empty() and section(module(), "transport").get("transport") == "godot-http-client",
-    "The application's networking module runs on the Godot transport")
+  verify(not module().is_empty() and section(module(), "transport").get("transport") == "godot-http-client"
+    and section(section(module(), "webSocket"), "transport").get("transport") == "godot-httpclient-wslay",
+    "The application's networking module runs on the Godot transports, for HTTP and for sockets")
   await capture("idle", BADGE_IDLE)
 
   # GET JSON: RN's fetch(), Response.json() and headers over a real HTTP exchange.
@@ -221,15 +223,103 @@ func run() -> void:
   verify(int(requests.get("sent", 0)) == 5 and int(requests.get("completions", 0)) == 4 and int(transport.get("redirectsFollowed", 0)) == 1
     and example().get("operations", []).size() == 5 and native_state().get("errors", []).is_empty(),
     "Five requests were sent, four completed, one redirect was followed and the run raised no host error")
+  await run_sockets()
   await finish()
+
+# The WebSocket card: connect (with two subprotocols offered), echo a text and a binary message, and end the socket the
+# three ways it can end: by the server's close, by a cut connection, and by its own close.
+func web_socket() -> Dictionary:
+  return section(module(), "webSocket")
+
+func socket_events() -> Array:
+  var value: Variant = example().get("socket", {}).get("events", [])
+  return value if value is Array else []
+
+func run_sockets() -> void:
+  var url := "ws://127.0.0.1:%d/echo" % server.socket_port
+  stages.socketIdle = {"example": example(), "module": web_socket()}
+  verify(text("ws-status") == "No socket yet" and badge("ws-badge") == BADGE_IDLE and text("ws-url") == url and text("ws-log") == "No messages yet"
+    and server.socket_events.is_empty() and server.open_sockets() == 0 and int(web_socket().get("connects", -1)) == 0,
+    "No socket has been opened: the WebSocket badge is idle and the server has seen nothing")
+
+  # Connect: the handshake offers echo.v2 and echo.v1, and the server speaks echo.v1.
+  await click("ws-connect")
+  var opened := await wait_for(func() -> bool: return text("ws-status") == "WebSocket: open")
+  stages.socketOpen = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
+  verify(opened and text("ws-protocol") == "echo.v1" and text("ws-last") == "Connected: send something" and badge("ws-badge") == BADGE_OK
+    and text("ws-log") == "1. open (echo.v1)", "Connect opens the socket: the server chose echo.v1 of the two protocols offered, and the badge turns green")
+  verify(server.socket_events == [{"event": "open", "protocol": "echo.v1"}] and section(web_socket(), "sockets").get("open") == 1
+    and section(web_socket(), "transport").get("opened") == 1, "The server accepted one socket and the module counts it open")
+  await capture("open", BADGE_OK, "ws-badge", "websocket")
+
+  # Send: a text message with accents comes back from the server, byte for byte.
+  await click("ws-send")
+  var echoed := await wait_for(func() -> bool: return text("ws-last") == "olá, servidor")
+  stages.socketEcho = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
+  verify(echoed and text("ws-log").begins_with("3. echo ← olá, servidor") and badge("ws-badge") == BADGE_OK,
+    "Send shows the text the server echoed, accents included")
+  verify(server.socket_events.size() == 2 and server.socket_events[1] == {"event": "message", "text": true, "bytes": "olá, servidor".to_utf8_buffer().size(), "value": "olá, servidor"},
+    "The server received that one text message")
+  await capture("echo", BADGE_OK, "ws-badge", "websocket")
+
+  # Binary: four bytes, one of them over 127, are echoed as an ArrayBuffer.
+  await click("ws-binary")
+  var binary_echoed := await wait_for(func() -> bool: return text("ws-last") == "4 bytes: 1 2 3 250")
+  stages.socketBinary = {"example": example(), "serverEvents": server.socket_events.duplicate(true)}
+  verify(binary_echoed and server.socket_events.size() == 3 and server.socket_events[2] == {"event": "message", "text": false, "bytes": 4, "value": ""},
+    "Binary sends four bytes, the server receives them as a binary message and they come back as the same four bytes")
+
+  # Server close: the server ends the socket with 4001 and a reason, and the page shows that exact close.
+  await click("ws-server-close")
+  var server_closed := await wait_for(func() -> bool: return text("ws-status") == "WebSocket: closed 4001")
+  var server_close_finished := await wait_for(func() -> bool: return server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed").size() == 1 and section(web_socket(), "sockets").get("open") == 0)
+  stages.socketServerClose = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
+  verify(server_closed and text("ws-last") == "closed by the server" and badge("ws-badge") == BADGE_IDLE and socket_events().slice(-1) == ["close 4001 closed by the server"],
+    "A close the server starts arrives with its code and reason, and the badge goes back to gray")
+  var closed_events := server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed")
+  verify(server_close_finished and closed_events.size() == 1 and closed_events[0].code == 4001 and closed_events[0].reason == "closed by the server",
+    "The server recorded the completed 4001 close handshake and exact reason")
+  await capture("server-close", BADGE_IDLE, "ws-badge", "websocket")
+
+  # Drop: the server cuts the connection with no close frame, which is an error and a close with code 1006.
+  await click("ws-connect")
+  await wait_for(func() -> bool: return text("ws-status") == "WebSocket: open")
+  await click("ws-drop")
+  var dropped := await wait_for(func() -> bool: return text("ws-status") == "WebSocket: failed")
+  stages.socketDropped = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
+  var dropped_log := socket_events().slice(-2)
+  verify(dropped and badge("ws-badge") == BADGE_FAILED and dropped_log == ["error", "close 1006"]
+    and text("ws-last").contains("ended without exposing a close frame"), "A connection the server cuts ends with an error and a close with code 1006, and the badge turns red")
+  verify(int(section(web_socket(), "transport").get("failed", 0)) == 1 and int(web_socket().get("failed", 0)) == 1,
+    "The module counted one failed socket")
+  await capture("dropped", BADGE_FAILED, "ws-badge", "websocket")
+
+  # Close: the page's own close(1000, "done") ends the socket cleanly, and the server sees that code and reason.
+  await click("ws-connect")
+  await wait_for(func() -> bool: return text("ws-status") == "WebSocket: open")
+  await click("ws-close")
+  var closed := await wait_for(func() -> bool: return text("ws-status") == "WebSocket: closed 1000")
+  var server_ended := await wait_for(func() -> bool: return server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed").size() == 3)
+  stages.socketClosed = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
+  verify(closed and text("ws-last") == "done" and badge("ws-badge") == BADGE_IDLE, "Close ends the socket with 1000 and the reason the page gave")
+  closed_events = server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed")
+  verify(server_ended and not closed_events.is_empty() and closed_events.back().code == 1000 and closed_events.back().reason == "done",
+    "The server received that close frame")
+  await capture("closed", BADGE_IDLE, "ws-badge", "websocket")
+  var state := web_socket()
+  verify(int(state.get("connects", 0)) == 3 and int(state.get("opened", 0)) == 3 and int(state.get("closed", 0)) == 2 and int(state.get("failed", 0)) == 1
+    and section(state, "sockets").get("open") == 0 and int(state.get("programmerErrors", -1)) == 0 and native_state().get("errors", []).is_empty(),
+    "Three sockets were opened, two ended in a close and one in a failure, and the run raised no host error")
+  await frames()
 
 func finish() -> void:
   application.call("stop")
   await frames(8)
   var stopped := native_state()
   verify(stopped.get("stopped", false) and stopped.get("rootCount", -1) == 0 and stopped.get("errors", []).is_empty()
-    and section(stopped.get("networking", {}), "transport").get("stopped") == true,
-    "Stop releases the root and the networking module without a host error")
+    and section(stopped.get("networking", {}), "transport").get("stopped") == true
+    and section(section(stopped.get("networking", {}), "webSocket"), "transport").get("stopped") == true,
+    "Stop releases the root and the networking module, its HTTP and its WebSocket transports, without a host error")
   var report := {"scenario": "networking", "godot": Engine.get_version_info().string, "react": "19.2.3", "reactNative": "0.87.1",
     "engine": "hermes", "renderer": "fabric", "displayServer": DisplayServer.get_name(), "checks": checks, "stages": stages,
     "pages": pages, "applicationStopped": stopped}

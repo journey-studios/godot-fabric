@@ -1,7 +1,6 @@
 #include "godot_http_transport.h"
+#include "godot_tls.h"
 #include <godot_cpp/classes/http_client.hpp>
-#include <godot_cpp/classes/tls_options.hpp>
-#include <godot_cpp/classes/x509_certificate.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
 #include <godot_cpp/variant/packed_string_array.hpp>
 #include <algorithm>
@@ -136,17 +135,7 @@ class GodotHttpTransport final : public HttpTransport {
   std::optional<std::string> connect(Exchange &x) {
     Ref<godot::TLSOptions> tls;
     if (x.url.tls()) {
-      const auto authorities = trusted_authorities_ ? trusted_authorities_() : std::string();
-      if (authorities.empty()) {
-        tls = godot::TLSOptions::client();
-      } else {
-        // Text that is no certificate at all is refused here: the engine would parse it and print an error.
-        Ref<godot::X509Certificate> chain;
-        chain.instantiate();
-        if (authorities.find("-----BEGIN CERTIFICATE-----") == std::string::npos || chain->load_from_string(gd(authorities)) != godot::OK)
-          return "E_TLS_TRUST: the trusted certificate authorities are not valid PEM";
-        tls = godot::TLSOptions::client(chain);
-      }
+      if (auto error = client_tls_options(trusted_authorities_ ? trusted_authorities_() : std::string(), tls)) return error;
     }
     x.client.instantiate();
     if (x.client->connect_to_host(gd(x.url.host), x.url.port, tls) != godot::OK) return "Failed to connect to " + endpoint(x);

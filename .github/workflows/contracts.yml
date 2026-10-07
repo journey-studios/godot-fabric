@@ -168,6 +168,22 @@ jobs:
             build/networking-current.log
             build/networking-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:websocket
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-websocket
+          path: |
+            build/websocket-report.json
+            build/websocket-current-report.json
+            build/websocket-comparison.json
+            build/websocket-current.log
+            build/websocket-probe-bundle.json
+            build/websocket-load.json
+            build/websocket-load-*
+            build/websocket-transport-lifetime.json
+            build/websocket-transport-lifetime-*
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

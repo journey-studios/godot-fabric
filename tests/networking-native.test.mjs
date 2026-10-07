@@ -95,6 +95,50 @@ function oracleRejection(report, serverLog) {
   return null;
 }
 
+function assertTruncatedBodyOracleMutations(report, serverLog) {
+  const port = report.server.ports.http;
+  const reasons = [
+    `unexpected end of stream from 127.0.0.1:${port}`,
+    `Connection to 127.0.0.1:${port} was lost while receiving the response`,
+  ];
+  for (const reason of reasons) {
+    const candidate = structuredClone(report);
+    candidate.stages.networkErrors.result.truncated.responseText = reason;
+    assert.doesNotThrow(() => verifyNetworkingReport(candidate, serverLog), "the exact short-body error is accepted");
+  }
+
+  const load = structuredClone(report);
+  load.stages.networkErrors.result.truncated.events[3].type = "load";
+  assert.throws(() => verifyNetworkingReport(load, serverLog), /networking oracle: a body cut short is an error/, "a short body cannot finish with load");
+
+  const missingError = structuredClone(report);
+  missingError.stages.networkErrors.result.truncated.events = missingError.stages.networkErrors.result.truncated.events
+    .filter(event => event.type !== "error");
+  assert.throws(() => verifyNetworkingReport(missingError, serverLog), /networking oracle: a body cut short is an error/, "a short body must dispatch error");
+
+  const deliveredBody = structuredClone(report);
+  const xhr = deliveredBody.stages.networkErrors.result.truncated;
+  xhr.responseText = "only ten b";
+  xhr.events = [
+    {type: "readystatechange", readyState: 1, status: 0},
+    {type: "readystatechange", readyState: 2, status: 200},
+    {type: "readystatechange", readyState: 3, status: 200},
+    {type: "progress", readyState: 3, status: 200},
+    {type: "readystatechange", readyState: 4, status: 200},
+    {type: "load", readyState: 4, status: 200},
+    {type: "loadend", readyState: 4, status: 200},
+  ];
+  assert.throws(() => verifyNetworkingReport(deliveredBody, serverLog), /networking oracle: a body cut short is an error/, "ten partial bytes cannot be delivered as a success");
+
+  const wrongPort = structuredClone(report);
+  wrongPort.stages.networkErrors.result.truncated.responseText = `unexpected end of stream from 127.0.0.1:${port + 1}`;
+  assert.throws(() => verifyNetworkingReport(wrongPort, serverLog), /networking oracle: with its reason/, "the reported endpoint must be this server's port");
+
+  const arbitraryReason = structuredClone(report);
+  arbitraryReason.stages.networkErrors.result.truncated.responseText = `arbitrary failure from 127.0.0.1:${port}`;
+  assert.throws(() => verifyNetworkingReport(arbitraryReason, serverLog), /networking oracle: with its reason/, "an unrelated message is not a short-body result");
+}
+
 function assertSameReproducer(control, report, bundle, name) {
   assert.deepEqual(control.checks.map(row => row.name), report.checks.map(row => row.name), name);
   assert.deepEqual(control.expectedOriginalFailures, report.expectedOriginalFailures, name);
@@ -197,6 +241,7 @@ test("RN's own fetch, XMLHttpRequest, FormData, Blob and AbortController run ove
   assert.equal(report.allCurrentAssertionsPassed, true);
   assert.match(log, /NETWORKING_PASSED: \d+/);
   const verified = verifyNetworkingReport(report, serverLog);
+  assertTruncatedBodyOracleMutations(report, serverLog);
   const original = await optionalJson("build/networking-original-report.json");
   if (original != null) {
     assert.ok(original.originalNegativeObserved);

@@ -1,28 +1,79 @@
 extends RefCounted
 
-# A small HTTP/1.1 server for the networking example: it listens on loopback, answers a few routes and
-# remembers what it saw, so the example needs no network and no other process. The scene polls it on every
-# frame. Each answer closes its connection; /api/slow never answers, to be aborted.
+# A small HTTP/1.1 server and a WebSocket echo server for the networking example: they listen on loopback,
+# answer a few routes and remember what they saw, so the example needs no network and no other process. The
+# scene polls them on every frame. Each HTTP answer closes its connection; /api/slow never answers, to be
+# aborted. The WebSocket side has a port of its own and the engine's own WebSocketPeer as the server: it echoes
+# every message in the mode it came in, chooses the subprotocol echo.v1 when the client offers it, and obeys two
+# commands: the text "!close" makes it close with 4001 and a reason, "!drop" makes it cut the connection.
 const SLOW := "/api/slow"
+const SOCKET_PROTOCOL := "echo.v1"
 var server := TCPServer.new()
 var connections: Array = []
 var requests: Array = []
 # Slow requests whose client closed the connection before any answer.
 var abandoned := 0
 var port := 0
+var socket_server := TCPServer.new()
+var socket_port := 0
+var sockets: Array = []
+# What the WebSocket server saw, in order: {"event": "open" | "message" | "closed", ...}.
+var socket_events: Array = []
 
 func start() -> Error:
   var error := server.listen(0, "127.0.0.1")
   port = server.get_local_port()
+  if error == OK:
+    error = socket_server.listen(0, "127.0.0.1")
+    socket_port = socket_server.get_local_port()
   return error
 
 func stop() -> void:
   for connection: Dictionary in connections:
     connection.peer.disconnect_from_host()
   connections.clear()
+  for socket: WebSocketPeer in sockets:
+    socket.close(1001)
+  sockets.clear()
   server.stop()
+  socket_server.stop()
+
+# The sockets the server has accepted and not yet seen end.
+func open_sockets() -> int:
+  return sockets.size()
+
+func poll_sockets() -> void:
+  while socket_server.is_connection_available():
+    var socket := WebSocketPeer.new()
+    socket.supported_protocols = PackedStringArray([SOCKET_PROTOCOL])
+    socket.accept_stream(socket_server.take_connection())
+    sockets.append(socket)
+  for socket: WebSocketPeer in sockets.duplicate():
+    socket.poll()
+    match socket.get_ready_state():
+      WebSocketPeer.STATE_OPEN:
+        if not socket.has_meta("opened"):
+          socket.set_meta("opened", true)
+          socket_events.append({"event": "open", "protocol": socket.get_selected_protocol()})
+        while socket.get_available_packet_count() > 0:
+          var packet := socket.get_packet()
+          var is_text := socket.was_string_packet()
+          var message := packet.get_string_from_utf8() if is_text else ""
+          socket_events.append({"event": "message", "text": is_text, "bytes": packet.size(), "value": message})
+          if is_text and message == "!close":
+            socket.close(4001, "closed by the server")
+          elif is_text and message == "!drop":
+            socket.close(-1)
+          elif is_text:
+            socket.send_text(message)
+          else:
+            socket.send(packet, WebSocketPeer.WRITE_MODE_BINARY)
+      WebSocketPeer.STATE_CLOSED:
+        socket_events.append({"event": "closed", "code": socket.get_close_code(), "reason": socket.get_close_reason()})
+        sockets.erase(socket)
 
 func poll() -> void:
+  poll_sockets()
   while server.is_connection_available():
     connections.append({"peer": server.take_connection(), "buffer": PackedByteArray(), "held": false})
   for connection: Dictionary in connections.duplicate():

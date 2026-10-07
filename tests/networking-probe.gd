@@ -303,11 +303,11 @@ func module_stage() -> void:
   native_available = modules.get("Networking") == true
   network_check(modules.get("Networking") == true and modules.get("BlobModule") == true and modules.get("FileReaderModule") == true,
     "modules/RN's Networking, BlobModule and FileReaderModule load from the native host")
-  check(modules.get("WebSocketModule") == false, "modules/WebSocketModule is not provided yet")
+  # WebSocket has a suite of its own; here it is only seen to be there, where this slice's first version saw it fail.
+  network_check(modules.get("WebSocketModule") == true, "modules/WebSocketModule is provided by the native host")
   var socket: Dictionary = js("NetworkingProbe.webSocket()")
   stages.webSocket = socket
-  check(socket.get("created") == false and str(socket.get("message")).contains("'WebSocketModule' could not be found"),
-    "modules/The first use of WebSocket fails with RN's own module lookup error")
+  network_check(socket.get("created") == true, "modules/RN's own WebSocket constructs over the native module")
   var globals := await run_case("A", "globals")
   stages.globals = globals
   network_check(result_of(globals).get("XMLHttpRequest") == "function" and result_of(globals).get("FileReader") == "function",
@@ -516,8 +516,11 @@ func failure_stage() -> void:
   network_check(is_failed_fetch(result.get("refused")) and is_failed_fetch(result.get("reset")),
     "failure/A refused connection and a reset one reject like Android's")
   var truncated := section(result, "truncated")
+  var truncated_host := "127.0.0.1:%d" % int(ports.http)
+  var truncated_reason := str(truncated.get("responseText"))
   network_check(event_states(truncated.get("events")) == [["readystatechange", 1, 0], ["readystatechange", 2, 200], ["readystatechange", 4, 200], ["error", 4, 200], ["loadend", 4, 200]]
-    and str(truncated.get("responseText")).contains("unexpected end of stream"),
+    and ["unexpected end of stream from " + truncated_host,
+      "Connection to " + truncated_host + " was lost while receiving the response"].has(truncated_reason),
     "failure/A body cut short after the headers ends in an error, not a load")
   network_check(is_failed_fetch(result.get("unsupported")) and is_failed_fetch(result.get("invalid"))
     and event_types(section(result, "method").get("events")).has("error"),

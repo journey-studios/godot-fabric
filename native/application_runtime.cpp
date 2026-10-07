@@ -25,6 +25,7 @@
 #include "native_animated.h"
 #include "networking_modules.h"
 #include "godot_http_transport.h"
+#include "godot_websocket_transport.h"
 #include <react/runtime/TimerManager.h>
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
 #include <react/renderer/components/view/primitives.h>
@@ -199,7 +200,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::shared_ptr<rn::ContextContainer> context;
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
-  // RN's networking stack over Godot's HTTP client, polled from pump() and ended by stop().
+  // RN's networking stack over Godot's HTTP client and WebSocket peer, polled from pump() and ended by stop().
   std::unique_ptr<fabric_godot::Networking> networking;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   std::shared_ptr<fabric_godot::AdapterRegistry> adapters;
@@ -394,8 +395,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add_app_state(lifecycle);
     native_modules->add_appearance(appearance);
     // The deadlines of timed requests run on the monotonic clock plus the validation seam's offset, which is 0 outside validation.
-    networking = std::make_unique<fabric_godot::Networking>(fabric_godot::make_godot_http_transport(
-        std::move(trusted_authorities), [offset = std::move(clock_offset_ms)] { return now_ms() + (offset ? offset() : 0); }));
+    // The close handshake of a socket has a deadline too, so the sockets run on the same clock, and wss trusts the same authorities.
+    const auto clock = [offset = std::move(clock_offset_ms)] { return now_ms() + (offset ? offset() : 0); };
+    networking = std::make_unique<fabric_godot::Networking>(fabric_godot::make_godot_http_transport(trusted_authorities, clock),
+        fabric_godot::make_godot_websocket_transport(trusted_authorities, clock));
     networking->install(*native_modules);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,

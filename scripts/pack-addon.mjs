@@ -113,6 +113,7 @@ async function main() {
     [".deps/hermes/LICENSE", "native/HERMES-LICENSE"],
     [".deps/package/LICENSE", "native/REACT-NATIVE-LICENSE"],
     [".deps/godot-cpp-da26c1732ee8656ef9ccad587cbdd55acf8637c8/LICENSE.md", "native/GODOT-CPP-LICENSE.md"],
+    [nativeSdk ? path.join(nativeSdk, "licenses/Wslay-LICENSE") : path.join(".deps", lock.wslay.directory, "COPYING"), "native/WSLAY-LICENSE"],
   ]) await cp(path.isAbsolute(from) ? from : path.join(root, from), path.join(output, to), { recursive: true, verbatimSymlinks: true });
   await mkdir(path.join(output, "toolchain/scripts"), {recursive: true});
   for (const name of ["codegen.mjs", "codegen-contract.mjs", "adapter-manifest.mjs"])

@@ -1,0 +1,141 @@
+{
+  "format": "websocket-ci-http-diagnostic/v1",
+  "recordedAt": "2026-10-07T16:17:26.070Z",
+  "failedHostedRun": {
+    "head": "3b57e72f5686ea9c028ba22a231c1fb39e12f759",
+    "runId": 37647347004,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37647347004",
+    "conclusion": "failure",
+    "step": "npm run test:networking",
+    "artifact": {
+      "name": "native-networking",
+      "id": 11495901753,
+      "reportSha256": "ddb2769df9b85828cd95e699ccd26893f9e4cca4d8de9741a03ceda30eaac5c7"
+    },
+    "failedCheck": [
+      "failure/A body cut short after the headers ends in an error, not a load"
+    ],
+    "observedEvents": [
+      {
+        "readyState": 1,
+        "status": 0,
+        "type": "readystatechange"
+      },
+      {
+        "readyState": 2,
+        "status": 200,
+        "type": "readystatechange"
+      },
+      {
+        "readyState": 4,
+        "status": 200,
+        "type": "readystatechange"
+      },
+      {
+        "readyState": 4,
+        "status": 200,
+        "type": "error"
+      },
+      {
+        "readyState": 4,
+        "status": 200,
+        "type": "loadend"
+      }
+    ],
+    "observedError": "Connection to 127.0.0.1:49243 was lost while receiving the response",
+    "recomputedOracle": {
+      "requests": 137,
+      "byListener": {
+        "http": 134,
+        "other": 1,
+        "https": 1,
+        "https-untrusted": 1
+      }
+    }
+  },
+  "mainBaseline": {
+    "head": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+    "nativeHostSha256": "e09690f527db883af1efdc641103ef7fdaab355974221876c90f1ed1154fd790",
+    "attempts": [
+      {
+        "attempt": 1,
+        "exitCode": 0,
+        "failedChecks": 0,
+        "reportSha256": "f86b8d489c4bf055cdf488fa5a3b833e7d347c23a4b7fdf164014e0a3bad6a21",
+        "errorKind": "unexpected end of stream"
+      },
+      {
+        "attempt": 2,
+        "exitCode": 0,
+        "failedChecks": 0,
+        "reportSha256": "f2b87c9f3ceccef76a269e1ff147474c5b90a65b8356fb5ae2818997cf285187",
+        "errorKind": "unexpected end of stream"
+      },
+      {
+        "attempt": 3,
+        "exitCode": 0,
+        "failedChecks": 0,
+        "reportSha256": "7a0133a1f6e84d6fbb0c0283472747b6dd3ada629a64f0a0665ea8b8b4ae8875",
+        "errorKind": "unexpected end of stream"
+      },
+      {
+        "attempt": 4,
+        "exitCode": 0,
+        "failedChecks": 0,
+        "reportSha256": "6fcd3684b45d2ecd3ad5bd258692eb5b06c9637cb3258209a0f8f28b2628a7fe",
+        "errorKind": "unexpected end of stream"
+      },
+      {
+        "attempt": 5,
+        "exitCode": 0,
+        "failedChecks": 0,
+        "reportSha256": "07ea4b3d8db3ba3376cbfbe6288e029abcfafb00c5e005589edc8a29d4fe7ec6",
+        "errorKind": "unexpected end of stream"
+      },
+      {
+        "attempt": 6,
+        "exitCode": 0,
+        "failedChecks": 0,
+        "reportSha256": "74ce6502f90c5f26c1ca94464d296fae0c2804b542c0f3b7dc19fd41c2607ec0",
+        "errorKind": "unexpected end of stream"
+      }
+    ],
+    "hostedFailureReproduced": false
+  },
+  "correctedLocalRun": {
+    "baseCommit": "3b57e72f5686ea9c028ba22a231c1fb39e12f759",
+    "workingTreeDirty": true,
+    "sourceSha256": {
+      "tests/networking-native.test.mjs": "e624a4d39c8c6ed3418444ea04a8f17db3dfe29eb74c22ea9315220a559c3e5a",
+      "tests/networking-oracle.mjs": "9c6fea06e8ceab65d31ee8eaff537aabaa1d94a5820a542c4cf9d7f772a62e13",
+      "tests/networking-probe.gd": "5df24181a6e837ae9580c5b4bd1b853f544a2d74e3bd0b8d294e8007a52b9337",
+      "docs/research/networking.md": "f017b3a5a33d735297abe28251b887515275a0fc5802cf242dd47048d75ba451"
+    },
+    "command": "npm run test:networking",
+    "exitCode": 0,
+    "checks": 100,
+    "failedChecks": 0,
+    "reportSha256": "b00b7952d73c682c1374dab203534d06fb0e6dcdea5d0cb78f7993d85bf530d4",
+    "nativeHostSha256": "7994cc0fe7780d7759bc05d10152d8b37ea0c81a7615939f88284d94d499f352",
+    "nativeExecutableChanged": false,
+    "oracleMutations": {
+      "accepted": [
+        "exact EOF error for the server port",
+        "exact lost-connection error for the server port"
+      ],
+      "rejected": [
+        "load replaces error",
+        "error event is missing",
+        "ten partial bytes delivered as success",
+        "error names the wrong port",
+        "arbitrary error message"
+      ]
+    }
+  },
+  "limits": [
+    "The main baseline passed six times; the hosted failure was not reproduced there.",
+    "The prior single-message assertion and HTTP close classification predate this PR; that does not establish the origin of a runtime failure.",
+    "Both accepted diagnostics require the same exact XHR state/event sequence and the real server port.",
+    "The failed hosted run remains failed. The correction requires fresh hosted CI before merge."
+  ]
+}

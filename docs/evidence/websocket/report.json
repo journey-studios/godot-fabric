@@ -1,0 +1,1720 @@
+{
+  "schemaVersion": 1,
+  "scenario": "websocket",
+  "status": "verified-local-headless-preceding-host-control-retained-sabotages-and-regressions",
+  "at": "2026-10-07T07:39:20.437903Z",
+  "executionBaseCommit": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+  "executedTreeSha": "f8a10638b8e68a722c8037f3ac1e1e68e985a1d8",
+  "executedTreeEqualsImplementationTree": true,
+  "sourceDirtyDuringExecution": false,
+  "documentsEditedDuringExecution": "docs/research/websocket.md, README.md, ROADMAP.md, docs/ and examples/ READMEs were edited while the battery ran; no executed input changed (the pins below equal git show of the implementation commit)",
+  "implementationCommit": "16dd2be4a440a81f311a68fe8258e9d8c717bff4",
+  "implementationUrl": "https://github.com/journey-studios/godot-fabric/commit/16dd2be4a440a81f311a68fe8258e9d8c717bff4",
+  "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48",
+  "dependsOn": "The networking record (docs/evidence/networking), whose setUpXHR import gave the WebSocket global to RN's JavaScript, whose modules, blob store, stoppable invoker and validation seams (the trusted authorities and the clock offset) the sockets share, and whose deterministic-server and oracle method this suite extends; the shared-application runtime and its module registry (docs/evidence/shared-roots, docs/evidence/runtime) and the frame pump of the frame clock record (docs/evidence/frame-clock)",
+  "environment": {
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "okhttp": "4.9.2 (the version RN 0.87.1 pins, for the Android contract)",
+    "node": "v22.23.3",
+    "platform": "macOS arm64",
+    "displayServer": "headless (the capture lane: macOS native renderer)",
+    "nativeHostSha256": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9",
+    "precedingHostSha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0"
+  },
+  "commands": [
+    "npm run test:websocket",
+    "node tests/websocket-native.test.mjs --allow-original-negative (the preceding host installed in addons/)",
+    "node scripts/websocket-sabotage.mjs",
+    "npm run test:networking (and its control and sabotages)",
+    "npm run example -- networking --headless",
+    "npm run example -- networking --capture",
+    ".deps/build/websocket_core_test",
+    ".deps/build/http_core_test"
+  ],
+  "headlessChecks": 93,
+  "normativeChecks": 81,
+  "structuralChecks": 12,
+  "exampleChecks": {
+    "headless": 29,
+    "capture": 51
+  },
+  "unitTest": {
+    "file": "native/websocket_core_test.cpp",
+    "target": "websocket_core_test",
+    "groups": 6,
+    "assertions": 47,
+    "marker": "WEBSOCKET_CORE_PASSED",
+    "coverage": "URLs read the way OkHttp reads them (ws, wss, http and https), the default Origin, the subprotocol list, header validation with OkHttp's messages, close parameters and the 1005 of a close frame without a status"
+  },
+  "scope": {
+    "blobMessagesCertified": true,
+    "cookiesCertified": false,
+    "dataWithCloseCertified": false,
+    "extensionsCertified": false,
+    "handshakeStatusCertified": false,
+    "interleavedControlFramesCertified": false,
+    "originalRNJavaScript": true,
+    "publicReactNativeImport": true,
+    "serverIsLoopbackNode": true,
+    "tlsAuthorityThroughValidationSeam": true,
+    "twoRootsOneApplication": true
+  },
+  "lanes": [
+    {
+      "lane": "current",
+      "meaning": "Current host, headless: two roots of one application against the Node server over ws and wss, the independent oracle over the report and the server's frame log.",
+      "nativeHostSha256": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9",
+      "bundleSha256": "906f121626740dfef129161e1feec748f741e2e4057b66479fe16a6e291d8825",
+      "checks": 93,
+      "passed": 93,
+      "failed": 0,
+      "checkIdDigestSha256": "e07fa103c3099e4e33cbc65bd68875e2babbb5f0d79ba29d4329fa524fcb909a",
+      "reportSha256": "777fc4485fafd7253e645fcde4da4ec2926fb373084c2af0825b72a4f2917aba",
+      "logSha256": "eb825edcbe2f939ab7a485670f1c857ef46ffccb584a2d7d7085d0dbee576a51"
+    },
+    {
+      "lane": "preceding-host",
+      "meaning": "The same bundle on the host of main afa5d87 (no WebSocketModule); expected negative control (--allow-original-negative).",
+      "nativeHostSha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+      "bundleSha256": "906f121626740dfef129161e1feec748f741e2e4057b66479fe16a6e291d8825",
+      "checks": 93,
+      "passed": 12,
+      "failed": 81,
+      "checkIdDigestSha256": "e07fa103c3099e4e33cbc65bd68875e2babbb5f0d79ba29d4329fa524fcb909a",
+      "reportSha256": "a9182dc7e0a66912503123428ecf5b73382b920354bb0ff1cf3a4f8314f1cffa",
+      "logSha256": "49859cb7b88f3d2e914c3811c913454db0e7eb83d225b99d38d51de7a35696d8",
+      "failedIds": [
+        "modules/RN's WebSocketModule and BlobModule load from the native host",
+        "modules/RN's own WebSocket constructs over the native module",
+        "modules/The application's sockets run on the Godot WebSocketPeer transport with nothing open",
+        "state/A new WebSocket is CONNECTING with no binaryType",
+        "state/send and ping while CONNECTING throw INVALID_STATE_ERR",
+        "state/binaryType accepts blob and arraybuffer and refuses anything else",
+        "state/readyState goes OPEN, CLOSING, CLOSED, and send refuses data it cannot send",
+        "echo/A socket opens, receives and closes in RN's order, with the states RN reports and no subprotocol",
+        "echo/A multi-byte text message comes back whole, and close(4000, 'bye') is the server's echo of it",
+        "echo/Typed arrays, ArrayBuffers and DataViews are sent with their own offsets and come back as ArrayBuffers",
+        "echo/Without a binaryType a binary message is an ArrayBuffer",
+        "echo/binaryType blob delivers binary messages as blobs, sends a Blob's bytes, keeps text as text, and arraybuffer gives ArrayBuffers back",
+        "echo/BlobModule's WebSocket hooks ran: two messages became blobs and one blob was sent",
+        "echo/The two blobs received and the one made to be sent were all closed by JS and released: the store is back where it was",
+        "echo/The server saw one text frame, a masked client close with 4000 and 'bye', and answered the close",
+        "echo/The server saw the blob's bytes as a binary frame, and every client frame masked",
+        "protocol/The server's choice among the offered subprotocols is the socket's protocol, '' when none was offered",
+        "protocol/The subprotocols travel in one header, trimmed, and empty ones and ones with a comma are not offered",
+        "headers/Without an Origin the socket sends one made of its URL, as Android's module does",
+        "headers/Headers from the options are sent in the handshake, one that is not a string is ignored, and the default Origin is added",
+        "headers/The handshake's own headers stay the engine's: a Host, Upgrade or protocol the caller gave is dropped",
+        "headers/An Origin the caller gave is the only Origin, whatever its case",
+        "headers/The default Origin of a wss URL is its https origin",
+        "headers/An http or https URL connects as ws or wss, as OkHttp reads it, with its own origin",
+        "headers/No cookie is sent, and the engine's own handshake headers are there once",
+        "close/A close the server starts at once arrives as open and then close with the server's code and reason, and no error",
+        "close/A close the server sends after a message arrives the same way",
+        "close/A close frame without a status is reported as 1005 with no reason",
+        "close/close() sends 1000 with no reason, and a code and reason go to the server as given",
+        "close/A reason over 123 bytes, a reserved code and a code out of range are refused as OkHttp refuses them, and the socket stays open",
+        "close/A send after close() fails the socket with Android's 'client is null' before the server answers",
+        "close/The server received the message sent after the refused close, and ended the socket itself",
+        "close/The server saw the close frames with their codes and reasons, and a clean TCP end",
+        "connecting/The server received the handshake and holds it",
+        "connecting/close() while CONNECTING ends the attempt with an error and a close, and no open",
+        "connecting/The attempt's connection is closed, which the server saw while it still held the handshake",
+        "connecting/The module counted the close, and releasing the held handshake opened nothing",
+        "connecting/Nothing reaches the socket after its close",
+        "failure/A handshake the server refuses (403, 401, a wrong accept key) or a port that refuses is an error and a close with code 1006",
+        "limits/The engine is as strict as a browser: a subprotocol the client never offered, or none where some were offered, fails the handshake (OkHttp accepts both)",
+        "failure/A URL OkHttp cannot read fails with OkHttp's words instead of throwing",
+        "failure/A header or subprotocol OkHttp refuses fails the socket with its message",
+        "failure/A connection cut after it opened, by a FIN or a reset, is an error and a close with code 1006 after open",
+        "failure/The server recorded each refusal, and the connection it cut",
+        "large/A megabyte message, binary or text, goes to the server and comes back whole",
+        "large/A megabyte the server sends arrives whole, as an ArrayBuffer and as a blob",
+        "large/The server's own hashes agree with what JS sent and received",
+        "large/The transport counted the megabytes both ways",
+        "large/A message that does not fit in the 16 MiB OkHttp queues closes the socket with 1001, and nothing is sent",
+        "frames/Fragmented messages arrive as one message each",
+        "frames/The engine answers the server's ping with a pong that carries its payload, and JS sees nothing of it",
+        "limits/A text frame that is not UTF-8 fails the socket with 1007, as RFC 6455 says (OkHttp reads it with replacement characters)",
+        "frames/ping() sends an empty binary message, as Android's module does, and the echo of it is an empty ArrayBuffer",
+        "limits/Whether or not the engine delivered the messages written with a close frame, the close arrives with the server's code and reason",
+        "limits/A ping between fragments does not stop the socket from closing",
+        "limits/The server wrote the three messages and the close frame",
+        "tls/A server certified by the authority the validation seam trusts answers over wss",
+        "tls/A certificate from an authority that is not trusted is an error and a close with code 1006",
+        "tls/Without the seam only Godot's default roots are trusted, and the test authority is not among them",
+        "tls/Trust follows the configured authority: the other server's certificate verifies and the first one's does not",
+        "tls/Trust that is not valid PEM refuses the socket instead of trusting everything",
+        "contract/The four device events carry one object each, with RN Android's keys: open {id, protocol}, message {id, type, data}, closed {id, code, reason}",
+        "contract/send, sendBinary and ping for a socket that is not open raise Android's programmer error, a failure and a close that say 'client is null', and close says nothing",
+        "contract/Bytes that are no base64 fail the socket with Android's 'bytes == null', and the failure is its last event: the socket is gone",
+        "contract/A socket id in use and one that is no id are refused by throwing",
+        "contract/Closing a socket that is connecting ends it with one failure",
+        "contract/The server saw the failed socket closed with 1001",
+        "contract/The server saw the text, the three bytes and the empty binary message of ping",
+        "roots/Root A's three sockets, open at once with the other root's, receive only their own messages",
+        "roots/Root B's three sockets, open at once with the other root's, receive only their own messages",
+        "timeout/A close the server never answers ends with an error and a close with code 1006 once the host's deadline passes",
+        "timeout/The server had received the close frame and sent nothing back",
+        "accounting/Every connect ended exactly one way: refused, closed or failed",
+        "accounting/Every socket the transport started ended in a close, a failure or a cancel",
+        "accounting/The module's counts of messages and bytes agree with the transport's",
+        "stop/Four sockets are in flight: two open (one of them with a blob message), one closing at a server that never answers, one connecting",
+        "stop/Stopping closes the sockets in flight, forgets them, releases the blobs and leaves nothing active",
+        "stop/The server saw 1001 on each open socket, the connecting one dropped, and the one closing at a silent server dropped too",
+        "stop/Stop runs the roots' cleanups and nothing else reaches JS: no message, error or close of a socket that was in flight",
+        "stop/Retained module methods that start something and a new lookup are refused after stop",
+        "stop/Late cleanup and late sends stay harmless"
+      ]
+    },
+    {
+      "lane": "sabotage-origin",
+      "meaning": "The same bundle on a host whose module never adds the default Origin header (scripts/websocket-sabotage.mjs).",
+      "nativeHostSha256": "48ce2de158ec860224187366751331b62484400bf659e9ea5fc6100d5773366b",
+      "bundleSha256": "906f121626740dfef129161e1feec748f741e2e4057b66479fe16a6e291d8825",
+      "checks": 93,
+      "passed": 89,
+      "failed": 4,
+      "checkIdDigestSha256": "e07fa103c3099e4e33cbc65bd68875e2babbb5f0d79ba29d4329fa524fcb909a",
+      "reportSha256": "2f8137d308c4c0c2019f0f9d23d363de819a509b206e2f56a3e9a0dd25e0e6f1",
+      "logSha256": "621855407eccefc0fe7895c15d79e4ed2fe331c5066d0bf7b48832329c339c08",
+      "failedIds": [
+        "headers/Without an Origin the socket sends one made of its URL, as Android's module does",
+        "headers/Headers from the options are sent in the handshake, one that is not a string is ignored, and the default Origin is added",
+        "headers/The default Origin of a wss URL is its https origin",
+        "headers/An http or https URL connects as ws or wss, as OkHttp reads it, with its own origin"
+      ]
+    },
+    {
+      "lane": "sabotage-stop",
+      "meaning": "The same bundle on a host whose transport closes with 1000 instead of 1001 the sockets an application stop ends.",
+      "nativeHostSha256": "de98476c3395a7ed4d328bdbc433dfcaf040df548964d4267ed61fbe9f5da3f7",
+      "bundleSha256": "906f121626740dfef129161e1feec748f741e2e4057b66479fe16a6e291d8825",
+      "checks": 93,
+      "passed": 91,
+      "failed": 2,
+      "checkIdDigestSha256": "e07fa103c3099e4e33cbc65bd68875e2babbb5f0d79ba29d4329fa524fcb909a",
+      "reportSha256": "7e346a0624f299118c18bada571160e2933cedc73bef6c2eb70b4095cfa854b5",
+      "logSha256": "670f0095351246bd3f5fc9fc0633ee8fea94f4242d8d53afcac8caf7d629dea0",
+      "failedIds": [
+        "contract/The server saw the failed socket closed with 1001",
+        "stop/The server saw 1001 on each open socket, the connecting one dropped, and the one closing at a silent server dropped too"
+      ]
+    }
+  ],
+  "hostBinaries": {
+    "preceding-host": {
+      "sha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+      "bytes": 5687728,
+      "builtFrom": "the native and SDK sources of main afa5d87 (identical to those of 83a3557, the networking implementation commit)"
+    },
+    "current": {
+      "sha256": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9",
+      "bytes": 5795840,
+      "rebuiltFromCommittedSources": true,
+      "note": "Touching websocket_module.cpp, networking_modules.cpp, godot_websocket_transport.cpp, godot_http_transport.cpp, application_runtime.cpp, fabric_application.cpp, websocket_core_test.cpp and http_core_test.cpp and rebuilding reproduced the same hash; a comment-only edit of networking_modules.h before the commit did too"
+    },
+    "sabotage-origin": {
+      "sha256": "48ce2de158ec860224187366751331b62484400bf659e9ea5fc6100d5773366b"
+    },
+    "sabotage-stop": {
+      "sha256": "de98476c3395a7ed4d328bdbc433dfcaf040df548964d4267ed61fbe9f5da3f7"
+    }
+  },
+  "precedingHostControl": {
+    "nativeHostSha256": "36f25f047b9c6f8f6bd03b33e3b863bbfc1d036aa95c449585e8297f948960d0",
+    "provenance": {
+      "builtFrom": "main afa5d87, which has the networking modules and no WebSocketModule",
+      "kept": "build/websocket-previous-host/fabric_godot.dylib (local, not in Git)"
+    },
+    "checks": 93,
+    "normativeFailures": 81,
+    "structuralChecksPassed": 12,
+    "sameBundle": true,
+    "normativeFailureIds": [
+      "modules/RN's WebSocketModule and BlobModule load from the native host",
+      "modules/RN's own WebSocket constructs over the native module",
+      "modules/The application's sockets run on the Godot WebSocketPeer transport with nothing open",
+      "state/A new WebSocket is CONNECTING with no binaryType",
+      "state/send and ping while CONNECTING throw INVALID_STATE_ERR",
+      "state/binaryType accepts blob and arraybuffer and refuses anything else",
+      "state/readyState goes OPEN, CLOSING, CLOSED, and send refuses data it cannot send",
+      "echo/A socket opens, receives and closes in RN's order, with the states RN reports and no subprotocol",
+      "echo/A multi-byte text message comes back whole, and close(4000, 'bye') is the server's echo of it",
+      "echo/Typed arrays, ArrayBuffers and DataViews are sent with their own offsets and come back as ArrayBuffers",
+      "echo/Without a binaryType a binary message is an ArrayBuffer",
+      "echo/binaryType blob delivers binary messages as blobs, sends a Blob's bytes, keeps text as text, and arraybuffer gives ArrayBuffers back",
+      "echo/BlobModule's WebSocket hooks ran: two messages became blobs and one blob was sent",
+      "echo/The two blobs received and the one made to be sent were all closed by JS and released: the store is back where it was",
+      "echo/The server saw one text frame, a masked client close with 4000 and 'bye', and answered the close",
+      "echo/The server saw the blob's bytes as a binary frame, and every client frame masked",
+      "protocol/The server's choice among the offered subprotocols is the socket's protocol, '' when none was offered",
+      "protocol/The subprotocols travel in one header, trimmed, and empty ones and ones with a comma are not offered",
+      "headers/Without an Origin the socket sends one made of its URL, as Android's module does",
+      "headers/Headers from the options are sent in the handshake, one that is not a string is ignored, and the default Origin is added",
+      "headers/The handshake's own headers stay the engine's: a Host, Upgrade or protocol the caller gave is dropped",
+      "headers/An Origin the caller gave is the only Origin, whatever its case",
+      "headers/The default Origin of a wss URL is its https origin",
+      "headers/An http or https URL connects as ws or wss, as OkHttp reads it, with its own origin",
+      "headers/No cookie is sent, and the engine's own handshake headers are there once",
+      "close/A close the server starts at once arrives as open and then close with the server's code and reason, and no error",
+      "close/A close the server sends after a message arrives the same way",
+      "close/A close frame without a status is reported as 1005 with no reason",
+      "close/close() sends 1000 with no reason, and a code and reason go to the server as given",
+      "close/A reason over 123 bytes, a reserved code and a code out of range are refused as OkHttp refuses them, and the socket stays open",
+      "close/A send after close() fails the socket with Android's 'client is null' before the server answers",
+      "close/The server received the message sent after the refused close, and ended the socket itself",
+      "close/The server saw the close frames with their codes and reasons, and a clean TCP end",
+      "connecting/The server received the handshake and holds it",
+      "connecting/close() while CONNECTING ends the attempt with an error and a close, and no open",
+      "connecting/The attempt's connection is closed, which the server saw while it still held the handshake",
+      "connecting/The module counted the close, and releasing the held handshake opened nothing",
+      "connecting/Nothing reaches the socket after its close",
+      "failure/A handshake the server refuses (403, 401, a wrong accept key) or a port that refuses is an error and a close with code 1006",
+      "limits/The engine is as strict as a browser: a subprotocol the client never offered, or none where some were offered, fails the handshake (OkHttp accepts both)",
+      "failure/A URL OkHttp cannot read fails with OkHttp's words instead of throwing",
+      "failure/A header or subprotocol OkHttp refuses fails the socket with its message",
+      "failure/A connection cut after it opened, by a FIN or a reset, is an error and a close with code 1006 after open",
+      "failure/The server recorded each refusal, and the connection it cut",
+      "large/A megabyte message, binary or text, goes to the server and comes back whole",
+      "large/A megabyte the server sends arrives whole, as an ArrayBuffer and as a blob",
+      "large/The server's own hashes agree with what JS sent and received",
+      "large/The transport counted the megabytes both ways",
+      "large/A message that does not fit in the 16 MiB OkHttp queues closes the socket with 1001, and nothing is sent",
+      "frames/Fragmented messages arrive as one message each",
+      "frames/The engine answers the server's ping with a pong that carries its payload, and JS sees nothing of it",
+      "limits/A text frame that is not UTF-8 fails the socket with 1007, as RFC 6455 says (OkHttp reads it with replacement characters)",
+      "frames/ping() sends an empty binary message, as Android's module does, and the echo of it is an empty ArrayBuffer",
+      "limits/Whether or not the engine delivered the messages written with a close frame, the close arrives with the server's code and reason",
+      "limits/A ping between fragments does not stop the socket from closing",
+      "limits/The server wrote the three messages and the close frame",
+      "tls/A server certified by the authority the validation seam trusts answers over wss",
+      "tls/A certificate from an authority that is not trusted is an error and a close with code 1006",
+      "tls/Without the seam only Godot's default roots are trusted, and the test authority is not among them",
+      "tls/Trust follows the configured authority: the other server's certificate verifies and the first one's does not",
+      "tls/Trust that is not valid PEM refuses the socket instead of trusting everything",
+      "contract/The four device events carry one object each, with RN Android's keys: open {id, protocol}, message {id, type, data}, closed {id, code, reason}",
+      "contract/send, sendBinary and ping for a socket that is not open raise Android's programmer error, a failure and a close that say 'client is null', and close says nothing",
+      "contract/Bytes that are no base64 fail the socket with Android's 'bytes == null', and the failure is its last event: the socket is gone",
+      "contract/A socket id in use and one that is no id are refused by throwing",
+      "contract/Closing a socket that is connecting ends it with one failure",
+      "contract/The server saw the failed socket closed with 1001",
+      "contract/The server saw the text, the three bytes and the empty binary message of ping",
+      "roots/Root A's three sockets, open at once with the other root's, receive only their own messages",
+      "roots/Root B's three sockets, open at once with the other root's, receive only their own messages",
+      "timeout/A close the server never answers ends with an error and a close with code 1006 once the host's deadline passes",
+      "timeout/The server had received the close frame and sent nothing back",
+      "accounting/Every connect ended exactly one way: refused, closed or failed",
+      "accounting/Every socket the transport started ended in a close, a failure or a cancel",
+      "accounting/The module's counts of messages and bytes agree with the transport's",
+      "stop/Four sockets are in flight: two open (one of them with a blob message), one closing at a server that never answers, one connecting",
+      "stop/Stopping closes the sockets in flight, forgets them, releases the blobs and leaves nothing active",
+      "stop/The server saw 1001 on each open socket, the connecting one dropped, and the one closing at a silent server dropped too",
+      "stop/Stop runs the roots' cleanups and nothing else reaches JS: no message, error or close of a socket that was in flight",
+      "stop/Retained module methods that start something and a new lookup are refused after stop",
+      "stop/Late cleanup and late sends stay harmless"
+    ],
+    "serverConnections": 0,
+    "modulesFound": {
+      "BlobModule": true,
+      "Networking": true,
+      "WebSocketModule": false
+    },
+    "firstError": "TurboModuleRegistry.getEnforcing(...): 'WebSocketModule' could not be found. Verify that a module by this name is registered in the native binary.",
+    "oracleRejectsTheReport": true
+  },
+  "retainedSabotages": {
+    "receiptFormat": "godot-fabric.websocket-sabotage/v1",
+    "sourceSha256": {
+      "genuine": {
+        "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+        "native/godot_websocket_transport.cpp": "26f05e73278bd16f3c04f0b2189d382fc713f9b957e15b0e2a3394c883393004"
+      },
+      "restored": {
+        "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+        "native/godot_websocket_transport.cpp": "26f05e73278bd16f3c04f0b2189d382fc713f9b957e15b0e2a3394c883393004"
+      }
+    },
+    "hostSha256": {
+      "genuine": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9",
+      "restored": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9"
+    },
+    "variants": [
+      {
+        "name": "origin",
+        "file": "native/websocket_module.cpp",
+        "find": "    if (!has_origin) request.headers.emplace_back(\"origin\", websocket::default_origin(url));",
+        "replace": "    if (false) request.headers.emplace_back(\"origin\", websocket::default_origin(url));",
+        "sourceSha256": "8287e56b5c500536f07d9069da6295d0d4799947ce9ce4e555c03f0f682bb1ef",
+        "hostSha256": "48ce2de158ec860224187366751331b62484400bf659e9ea5fc6100d5773366b",
+        "runStatus": 0,
+        "failedChecks": [
+          "headers/Without an Origin the socket sends one made of its URL, as Android's module does",
+          "headers/Headers from the options are sent in the handshake, one that is not a string is ignored, and the default Origin is added",
+          "headers/The default Origin of a wss URL is its https origin",
+          "headers/An http or https URL connects as ws or wss, as OkHttp reads it, with its own origin"
+        ],
+        "serverConnections": 59
+      },
+      {
+        "name": "stop",
+        "file": "native/godot_websocket_transport.cpp",
+        "find": "    const bool open = peer->get_ready_state() == WebSocketPeer::STATE_OPEN;\n    peer->close(websocket::close_going_away, \"\");",
+        "replace": "    const bool open = peer->get_ready_state() == WebSocketPeer::STATE_OPEN;\n    peer->close(1000, \"\");",
+        "sourceSha256": "db2f17e8442d19108d261294aea66234623ee20e06974a92aa1c62f0971f2c36",
+        "hostSha256": "de98476c3395a7ed4d328bdbc433dfcaf040df548964d4267ed61fbe9f5da3f7",
+        "runStatus": 0,
+        "failedChecks": [
+          "contract/The server saw the failed socket closed with 1001",
+          "stop/The server saw 1001 on each open socket, the connecting one dropped, and the one closing at a silent server dropped too"
+        ],
+        "serverConnections": 59
+      }
+    ],
+    "oracleRejections": {
+      "origin": "websocket oracle: connection 1 /echo?case=states carries exactly one Origin",
+      "stop": "websocket oracle: contract-bad-base64: the close frame the server received"
+    }
+  },
+  "oracle": {
+    "file": "tests/websocket-oracle.mjs",
+    "independence": "States, for each connection the cases open, what the server must have received and sent (from the server's own constants and byte pattern), reads the handshake's raw header names and order and every frame in both directions as the server recorded them, and compares both with what JS observed; it never reads the probe's pass flags, and the runner also feeds it a copy of the report with every check forced to passed, which a wrong host must still fail",
+    "connectionsChecked": 59,
+    "sessionsComparedWithJs": 52,
+    "serverMessages": 48,
+    "clientMessages": 34,
+    "messagesTheEngineDroppedWithACloseFrame": 3,
+    "transportConnectionsStarted": 65,
+    "moduleConnects": 71,
+    "counterArithmetic": [
+      "the transport sent as many text messages, binary messages and bytes as the server received",
+      "the transport read every message the server sent but the ones the engine dropped with a close frame, the one it refused as invalid UTF-8 and, in bytes, with the payload it merged from a ping between fragments",
+      "the transport started every connection the server saw plus six it could not (two refused ports, one that never answers, three untrusted certificates)",
+      "every connect ended as a refusal by the module, a close, a failure or the stop that ended four sockets",
+      "every started connection ended as a close, a failure or a cancel",
+      "six sends went to a socket that was gone, three closes were refused, two sockets closed while connecting, one close was never answered, four closings over TLS were taken as complete",
+      "no socket, no blob and no transport state is left after the stop, and the two held handshakes saw the client leave"
+    ],
+    "runnerAsserts": [
+      "the failing checks equal the probe's normative list, by name",
+      "every ERROR line is a failed check or one of the five handshake causes (each followed by the engine's 'Invalid response headers.') or the three certificate errors the engine prints for the negative cases",
+      "no script, native or engine diagnostic is hidden",
+      "the oracle rejects the preceding host's and both sabotaged reports",
+      "every executed producer is pinned in the bundle receipt"
+    ]
+  },
+  "executedObservations": {
+    "server": {
+      "connections": 59,
+      "byListener": {
+        "ws": 55,
+        "wss": 3,
+        "wss-untrusted": 1
+      },
+      "byEnd": {
+        "closed": 50,
+        "dropped-by-client-before-open": 2,
+        "refused": 2,
+        "bad-accept": 1,
+        "dropped-by-client": 2,
+        "dropped-by-server": 2
+      },
+      "frames": {
+        "in:binary": 14,
+        "in:close": 50,
+        "in:pong": 2,
+        "in:text": 20,
+        "out:binary": 17,
+        "out:close": 48,
+        "out:continuation": 5,
+        "out:ping": 2,
+        "out:text": 31
+      },
+      "holds": {
+        "close-connecting": "closed-by-client",
+        "stop-connecting": "closed-by-client"
+      },
+      "handshakeStatuses": {
+        "101": 55,
+        "None": 2,
+        "403": 1,
+        "401": 1
+      }
+    },
+    "modules": {
+      "BlobModule": true,
+      "Networking": true,
+      "WebSocketModule": true
+    },
+    "constructs": {
+      "created": true
+    },
+    "oracle": {
+      "connections": 59,
+      "compared": 52,
+      "serverMessages": 48,
+      "clientMessages": 34,
+      "lostWithClose": 3,
+      "started": 65,
+      "connects": 71
+    },
+    "transportAtTheEnd": {
+      "started": 65,
+      "opened": 52,
+      "closedByPeer": 45,
+      "failed": 15,
+      "cancelled": 5,
+      "closeTimeouts": 1,
+      "impliedCloses": 4,
+      "overflows": 1,
+      "sendErrors": 0,
+      "messagesIn": {
+        "binary": 17,
+        "bytes": 4196790,
+        "text": 27
+      },
+      "messagesOut": {
+        "binary": 14,
+        "bytes": 2097891,
+        "text": 20
+      },
+      "active": 0,
+      "stopped": true
+    },
+    "moduleAtTheEnd": {
+      "connects": 71,
+      "refused": 6,
+      "opened": 52,
+      "closed": 45,
+      "failed": 16,
+      "sent": 34,
+      "sentBytes": 2097891,
+      "droppedSends": 0,
+      "overflows": 1,
+      "received": 44,
+      "blobMessages": 4,
+      "programmerErrors": 6,
+      "closeRejections": 3,
+      "connectingCloses": 2,
+      "ignoredHeaders": 1,
+      "droppedHeaders": 3,
+      "blobSends": 1,
+      "blobSendsMissing": 0,
+      "blobHandlerChanges": 7,
+      "sockets": {
+        "blobHandlers": 0,
+        "closing": 0,
+        "connecting": 0,
+        "open": 0
+      }
+    },
+    "blobStoreBooks": {
+      "after": {
+        "bytes": 0,
+        "closed": 3,
+        "collected": 0,
+        "count": 0,
+        "networkingHandlers": 0,
+        "released": 3,
+        "stored": 3
+      },
+      "before": {
+        "bytes": 0,
+        "closed": 0,
+        "collected": 0,
+        "count": 0,
+        "networkingHandlers": 0,
+        "released": 0,
+        "stored": 0
+      }
+    },
+    "engineHandshakeErrorsTheRunnerAllows": 5,
+    "engineTlsErrorsTheRunnerAllows": 3,
+    "readyStates": {
+      "constants": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "initial": 0,
+      "openState": 1,
+      "closingState": 2,
+      "finalState": 3,
+      "sendConnecting": "INVALID_STATE_ERR",
+      "pingConnecting": "INVALID_STATE_ERR",
+      "invalidBinaryType": "binaryType must be either 'blob' or 'arraybuffer'",
+      "unsupportedData": "Unsupported data type",
+      "initialBinaryType": null,
+      "afterBlob": "blob",
+      "afterArrayBuffer": "arraybuffer"
+    },
+    "echoText": [
+      {
+        "type": "open",
+        "protocol": ""
+      },
+      {
+        "type": "message",
+        "kind": "text",
+        "length": 42,
+        "text": "Olá, mundo — ação 日本語 😀 Zażółć gęślą jaźń"
+      },
+      {
+        "type": "close",
+        "code": 4000,
+        "reason": "bye"
+      }
+    ],
+    "serverClose": {
+      "atOnce": [
+        {
+          "type": "open",
+          "protocol": ""
+        },
+        {
+          "type": "close",
+          "code": 4001,
+          "reason": "going away"
+        }
+      ],
+      "empty": [
+        {
+          "type": "open",
+          "protocol": ""
+        },
+        {
+          "type": "close",
+          "code": 1005,
+          "reason": ""
+        }
+      ],
+      "onMessage": [
+        {
+          "type": "open",
+          "protocol": ""
+        },
+        {
+          "type": "close",
+          "code": 4002,
+          "reason": "after a message"
+        }
+      ]
+    },
+    "failures": {
+      "badAccept": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 failed before it opened: refused, or the server did not accept the upgrade (the engine reports no status)"
+        }
+      ],
+      "badHeader": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "Unexpected char 0x0a at 1 in X-Bad value: a\\u000ab"
+        }
+      ],
+      "badProtocol": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "Unexpected char 0x01 at 3 in Sec-WebSocket-Protocol value: bad\\u0001"
+        }
+      ],
+      "badScheme": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "Expected URL scheme 'http' or 'https' but was 'ftp'"
+        }
+      ],
+      "dropped": [
+        {
+          "type": "open",
+          "protocol": ""
+        },
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 was lost without a close frame"
+        }
+      ],
+      "noScheme": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "Expected URL scheme 'http' or 'https' but no scheme was found"
+        }
+      ],
+      "nonAsciiHeader": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "Unexpected char 0xe7 at 1 in X-Unicode value: ação"
+        }
+      ],
+      "refused": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63660 failed before it opened: refused, or the server did not accept the upgrade (the engine reports no status)"
+        }
+      ],
+      "rejected": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 failed before it opened: refused, or the server did not accept the upgrade (the engine reports no status)"
+        }
+      ],
+      "reset": [
+        {
+          "type": "open",
+          "protocol": ""
+        },
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 was lost without a close frame"
+        }
+      ],
+      "unauthorized": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 failed before it opened: refused, or the server did not accept the upgrade (the engine reports no status)"
+        }
+      ],
+      "unmatchedProtocol": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 failed before it opened: refused, or the server did not accept the upgrade (the engine reports no status)"
+        }
+      ],
+      "wrongProtocol": [
+        {
+          "type": "error"
+        },
+        {
+          "type": "close",
+          "code": 1006,
+          "reason": "WebSocket connection to 127.0.0.1:63657 failed before it opened: refused, or the server did not accept the upgrade (the engine reports no status)"
+        }
+      ]
+    },
+    "engineLimits": {
+      "dataWrittenWithTheCloseFrame": {
+        "delivered": 0,
+        "note": "godotengine/godot#115384: data that arrives in the same poll as a close frame is not readable",
+        "sent": 3
+      },
+      "pingBetweenFragments": {
+        "messages": 1,
+        "note": "RFC 6455 allows a ping between the fragments of a message; the engine puts the ping's payload into the message",
+        "text": "fragbetweenmented"
+      },
+      "closeReasonOver123Bytes": "refused by the module before the engine; the hang was seen only in scratch runs"
+    },
+    "largeMessages": {
+      "binary": {
+        "length": 1048576,
+        "fnv": 3269238213,
+        "kind": "arraybuffer"
+      },
+      "blob": {
+        "length": 1048576,
+        "fnv": 3269238213,
+        "kind": "blob"
+      },
+      "fromServer": {
+        "length": 1048576,
+        "fnv": 3269238213,
+        "kind": "arraybuffer"
+      },
+      "text": {
+        "length": 1048576,
+        "fnv": 2153553349,
+        "kind": "text"
+      }
+    },
+    "overflow": [
+      {
+        "type": "open",
+        "protocol": ""
+      },
+      {
+        "type": "close",
+        "code": 1001,
+        "reason": ""
+      }
+    ],
+    "closeTimeout": [
+      {
+        "type": "open",
+        "protocol": ""
+      },
+      {
+        "type": "error"
+      },
+      {
+        "type": "close",
+        "code": 1006,
+        "reason": "WebSocket close timed out: the server did not answer the close frame within 60 seconds"
+      }
+    ],
+    "closeWhileConnecting": [
+      {
+        "type": "error"
+      },
+      {
+        "type": "close",
+        "code": 1006,
+        "reason": "WebSocket is closed before the connection is established."
+      }
+    ],
+    "stop": {
+      "inFlightBeforeStop": {
+        "blobHandlers": 1,
+        "closing": 1,
+        "connecting": 1,
+        "open": 2
+      },
+      "transportActiveBeforeStop": 4,
+      "socketsAfterStop": {
+        "blobHandlers": 0,
+        "closing": 0,
+        "connecting": 0,
+        "open": 0
+      },
+      "transportActiveAfterStop": 0,
+      "blobsAfterStop": 0,
+      "afterStopCalls": {
+        "addHandler": "Exception in HostFunction: E_MODULE_DISPOSED: BlobModule\n\nError: E_MODULE_DISPOSED: BlobMo...",
+        "close": "returned",
+        "connect": "Exception in HostFunction: E_MODULE_DISPOSED: WebSocketModule\n\nError: E_MODULE_DISPOSED: W...",
+        "lookup": "Exception in HostObject::get for prop 'WebSocketModule': E_RUNTIME_STOPPED: native module ...",
+        "ping": "returned",
+        "removeHandler": "returned",
+        "send": "returned",
+        "sendBinary": "returned",
+        "sendOverSocket": "Exception in HostFunction: E_MODULE_DISPOSED: BlobModule\n\nError: E_MODULE_DISPOSED: BlobMo..."
+      }
+    }
+  },
+  "networkingSuiteControl": {
+    "reason": "Two checks of the networking suite exercise the WebSocket global and the module that backs it; with the module they are normative, so the suite is unchanged in size and its control fails two more",
+    "checks": 100,
+    "normativeFailures": 86,
+    "structuralChecksPassed": 14,
+    "previousRecord": {
+      "normativeFailures": 84,
+      "structuralChecksPassed": 16,
+      "record": "docs/evidence/networking/report.json"
+    },
+    "newlyNormative": [
+      "modules/WebSocketModule is provided by the native host",
+      "modules/RN's own WebSocket constructs over the native module"
+    ],
+    "sabotages": {
+      "redirects": 8,
+      "headers": 2
+    },
+    "lanes": {
+      "current": {
+        "nativeHostSha256": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9",
+        "checks": 100,
+        "failed": 0,
+        "bundleSha256": "e3acd55aa9435567a238ba34ff9c002eac03b130c93b30c53cf7209ec3d2e1f2"
+      },
+      "preceding-host": {
+        "nativeHostSha256": "f96d9dfc9d16d96b52754a70199631bf4ae61f371618a858b20ef42f21644f37",
+        "checks": 100,
+        "failed": 86
+      }
+    },
+    "networkingBundleSha256": "e3acd55aa9435567a238ba34ff9c002eac03b130c93b30c53cf7209ec3d2e1f2"
+  },
+  "refreshedControlsOfOtherSlices": {
+    "reason": "src/initialize.js (a comment on its import of RN's setUpXHR) is pinned by the bundle receipts of other suites, and the transforms singular lane also checks that its sabotage receipt is about the host under test: their local controls and sabotage receipts in build/ went stale before the commit",
+    "suites": [
+      "test:animated",
+      "test:frame-clock",
+      "test:transforms:guards (uniform scale and singular lanes)"
+    ],
+    "procedure": "each control lane rerun on its preserved preceding host (swapped into addons/ and restored by hash), each retained sabotage script rerun, then the current lane",
+    "whenRefreshed": "before the commit, against the host built from the committed sources; from the committed tree the three suites passed without another refresh",
+    "hostedCi": "not affected: the job has no controls, and the current lanes pass without them"
+  },
+  "contractUpdates": {
+    "none": "No earlier suite or example contract changed on purpose. The networking example gained a second card, so its counts went from 16 headless and 28 capture checks (after the review of the networking slice) to 29 and 51, and the 30 examples add up to 2,377 checks instead of 2,364; the networking suite's two WebSocket checks became normative",
+    "baseCounts": {
+      "commit": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+      "networkingExampleHeadless": 16,
+      "networkingExampleCapture": 28,
+      "examplesTotal": 2364,
+      "source": "docs/evidence/networking/README.md, the later note on the post-review changes"
+    }
+  },
+  "exploratoryObservationsOutsideTheReceipt": [
+    "Forty WebSocketPeers opened at once against the local server with the host's 16 MiB rings and 16,384 queued packets were all OPEN: the engine's static allocation counter went from 23.2 MB to 1,948.4 MB (about 48 MiB of address space per socket) and the process's resident set from 114.4, 114.6 and 114.7 MB to 120.2, 120.4 and 120.4 MB in three runs (scratch script, not asserted).",
+    "The reproduction of godotengine/godot#115384 delivered none of the three messages written in one write with the close frame in the suite's run, and in 3 of 3 scratch runs; no variation of polling around the close frame recovered them.",
+    "Three renderer capture runs of the example produced three different files for every one of the 11 frames, because the URL line of each card shows the ephemeral port of its loopback server.",
+    "The suite passed 9 of 9 runs under 14 busy loops on the 11-core machine (3 on the tree before the module was split into its own translation unit, 3 after it and 3 from the committed tree), and passes with the control receipts absent, as in CI."
+  ],
+  "captures": {
+    "command": "npm run example -- networking --capture",
+    "exampleChecks": {
+      "headless": 29,
+      "capture": 51
+    },
+    "note": "The six frames of the fetch card were taken again with the two-card layout; the six of docs/evidence/networking stay as the history of the first slice",
+    "files": [
+      {
+        "path": "docs/evidence/websocket/networking-idle.png",
+        "sha256": "8c3e02923322c20343b316721a50b185cfe30e406f7714837366d8ed57eacce3",
+        "bytes": 69507,
+        "width": 900,
+        "height": 680,
+        "shows": "both cards idle: left gray badge 'No request yet', dashes for the URL and the Content-Type, empty log; right gray badge 'No socket yet', the echo URL, a dash for the protocol and 'No messages yet'",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/networking-json.png",
+        "sha256": "81dd7453fe711dc10bbcc9d2f0f08f95ab8faf99b541f298904a91b769768bc6",
+        "bytes": 74871,
+        "width": 900,
+        "height": 680,
+        "shows": "left: green badge 'GET JSON: 200', the response URL, application/json; charset=utf-8, the parsed body 'Olá do servidor local · 3 items' and the first log line; right: idle",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/networking-form.png",
+        "sha256": "a1f82f2b9210701fbe080c69d22dd1acd29e514065160b8e91eda876a9870ef9",
+        "bytes": 79114,
+        "width": 900,
+        "height": 680,
+        "shows": "left: green badge 'POST form: 200' and the echo of both multipart parts (name=Ana, note=olá, servidor), three log lines; right: idle",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/networking-redirect.png",
+        "sha256": "586b4b18fcb41bcd23e5aba7d1c91e49cde7f2f03e31263822d3984ac7de11f2",
+        "bytes": 83093,
+        "width": 900,
+        "height": 680,
+        "shows": "left: green badge 'GET redirect: 200', the final URL /api/profile?from=redirect and 'followed one redirect', four log lines; right: idle",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/networking-pending.png",
+        "sha256": "8c89eca95e9667f6a2c230baffad1fdbe0d7735a156fe3a4286039fcf60a9523",
+        "bytes": 77395,
+        "width": 900,
+        "height": 680,
+        "shows": "left: amber badge 'GET slow …' and the body 'Waiting for the answer'; right: idle",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/networking-aborted.png",
+        "sha256": "37bad2a814e7758117ef846aca7c73e4a0016758f23f8365e2625af64155193a",
+        "bytes": 77646,
+        "width": 900,
+        "height": 680,
+        "shows": "left: red badge 'GET slow: AbortError', a dash for the URL, the body 'Aborted' and five log lines ending in 'GET slow → aborted'; right: idle",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/websocket-open.png",
+        "sha256": "a2734a7f0ee2a9a797ff4d1f6af42b7c9b4c4abc4377313503514cc9d3973a89",
+        "bytes": 77539,
+        "width": 900,
+        "height": 680,
+        "shows": "right: green badge 'WebSocket: open', the protocol echo.v1 the server chose of the two offered, 'Connected: send something' and the log line 'open (echo.v1)'; left: still the aborted fetch",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/websocket-echo.png",
+        "sha256": "b8f932e1b4e721f63531d7b91fd91639241caaf0c3da082f6bbc2d94fe287bed",
+        "bytes": 80176,
+        "width": 900,
+        "height": 680,
+        "shows": "right: green badge 'WebSocket: open', the last message 'olá, servidor' and the log lines open, send and echo",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/websocket-server-close.png",
+        "sha256": "962508b9132b516dc657c9c7df7e47e8faef4fda760847501957ce9111f55081",
+        "bytes": 85943,
+        "width": 900,
+        "height": 680,
+        "shows": "right: gray badge 'WebSocket: closed 4001', the reason 'closed by the server' and the log line 'close 4001 closed by the server' after the binary echo of 4 bytes",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/websocket-dropped.png",
+        "sha256": "284ad4d03aa0fd76afa2e549cd7a89edaa64487603c8309ed1326a1930068668",
+        "bytes": 88646,
+        "width": 900,
+        "height": 680,
+        "shows": "right: red badge 'WebSocket: failed', the message that the connection was lost without a close frame and the log lines 'close 1006', 'error' and 'send → !drop'",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      },
+      {
+        "path": "docs/evidence/websocket/websocket-closed.png",
+        "sha256": "310643df9d7bbcb2c72b4ce26ba237cd25c064ae3964fc15feaa514918fa787b",
+        "bytes": 80837,
+        "width": 900,
+        "height": 680,
+        "shows": "right: gray badge 'WebSocket: closed 1000', the reason 'done' and the log line 'close 1000 done' after the failed socket's 'close 1006'",
+        "bytesStableAcrossRuns": false,
+        "reason": "the URL line of each card shows the ephemeral port of its loopback server: three runs produced three different files for every capture"
+      }
+    ]
+  },
+  "regressions": {
+    "steps": {
+      "test:examples": {
+        "exitCode": 0,
+        "seconds": 147,
+        "logSha256": "625fb3f027b658155e0cb0477ec62e763e6e1dbb8a9a8e5f0167ddf2fe3fb9eb"
+      },
+      "test:transforms:guards": {
+        "exitCode": 0,
+        "seconds": 21,
+        "logSha256": "966e887ec886b6cb2fd9012465a5a55314058a3c9a3755272bfba9e0bb73efe2"
+      },
+      "test:runtime": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "ca49dcedeade5394d366f91e106809bd44d3b320264bde619519bfce31787711"
+      },
+      "test:application": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "7f73856946cac70b8c8b95ff1feeb2beed32a4398c798b4d903a8d1ec64b958d"
+      },
+      "test:modules": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "d6bc6ef5187d81aa01d1e512be19fb51fe388838d51fe9e1c6dc43572e9771f1"
+      },
+      "test:app-state": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "824f502da441085819165123e40f759336e9e14567dd051bfcf39e876b8ecc90"
+      },
+      "test:lists": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "57aa6d4f64a51c297b6713baca351fb8a8399119641c451f7b25e965923ae72d"
+      },
+      "test:appearance": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "b24fed0fa82fd2c186d64a32f767cc286f379a9d96d22bc8ed2d8cbe38888015"
+      },
+      "test:animated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "1661d68acd56aad2bd2d8524918e2000017545dae874fb2f16c2b6a1a49ca236"
+      },
+      "test:frame-clock": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "3fea1038e68f16f048beb9589a3d6487e64d37a37a04876c75cc948564dddc1a"
+      },
+      "test:networking": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "3b72bf71f86cdd9f2ef46a516cef5b4338a888b28b981e865999358b7d17300a"
+      },
+      "test:websocket": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "17bc9f0585fcf5bb923deaa0deda6a39e405a726c2c44367217d762434aad377"
+      },
+      "test:focus:commands": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "fda4f17440b9fc5c095ea8bbaebcd8b1dea25f115921870e5276f6f9b1236ae4"
+      },
+      "test:pointers:processor": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "deee0915082212d9c00413d480ababb6a26c64dd0f1dc19f6006d5f6f3fdcc9a"
+      },
+      "test:pointers:geometry": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "ebb64ee1fffa507ad5454e20bb5100127328e1c097d76e18324243dd32fc02ca"
+      },
+      "test:events:original": {
+        "exitCode": 0,
+        "seconds": 9,
+        "logSha256": "793c6973590fd896905117017881c7d50e8101efba88715c8ae0d0c24f32553e"
+      },
+      "test:events:ancestry": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "268b84259ea2bbbc7776b041ca7b621e42a906d702d7dcc7c5095f664a1e56dc"
+      },
+      "test:events:dispatch": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "d7bf14d45eea032e56891dd60291c743faec710c4e96a90159fe6089fda104d7"
+      },
+      "test:events:integrated": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "ba20ade519f62d4c721317dae81717ef0f4113c79214d8b4701584408eb3ca3a"
+      },
+      "test:services": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "b6ab310e11b4bd78956ddcfe31f5c3b481d0fd795fe22c61d74016e8511682ca"
+      },
+      "test:pointers:interest": {
+        "exitCode": 0,
+        "seconds": 10,
+        "logSha256": "8a1e1aa1b484e2271c8cb9737aa81e9cc215544d1bd60bb46cc50664693468f6"
+      },
+      "test:pointers:documents": {
+        "exitCode": 0,
+        "seconds": 40,
+        "logSha256": "a2536b1a7cff87e3d1f92f4ce3a63dfebbf77d54fda221d7b39afe2a54be665d"
+      },
+      "test:pointers:query-faults": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "d6ce500be5004f12b720ca0838dce6064d9350c5281ab85de040e41dfaaf7afe"
+      },
+      "test:pointers:resolver-faults": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "5dcd930c5d0012282d400dc5ea83ff6e4154f4854b406a8d54fdd588f405dc8a"
+      },
+      "test:pointers:documents:up": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "ab86a9a305c04c929ce8e4eadd3eee4788e37449f777b397c5da3a6e4d46e424"
+      },
+      "test:pointers:up": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "f57a0e8594bd4f609f5ad1db08b16e8945a50c5cb8145ffda319f188e4b00e6d"
+      },
+      "test:pointers:move": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "8c2c2721c2a650e0749ab210caa25a58ff4eb4368f8e64805cb3df3c0a89a8e6"
+      },
+      "test:pointers:documents:move": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "de52159c7ae17fa5818b38b70184254433947d5b518dd20eae93e8d0fd1dbcc0"
+      },
+      "test:pointers:hover": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "878eac16c7f1684a0d546ef871b538efbcf1f3f58a3d7dec50a18ac32e626a86"
+      },
+      "test:pointers:root-path": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "19b33af2fa1aafbf4e9dfeffc89f82aafc60b8ee5e1b3f82cdd85cfcda509e68"
+      },
+      "test:pointers:documents:hover": {
+        "exitCode": 0,
+        "seconds": 32,
+        "logSha256": "be2675817586834176c9b953688a6ddf2b551433e2752d339d4871d98e1d240f"
+      },
+      "test:pointers:click": {
+        "exitCode": 0,
+        "seconds": 61,
+        "logSha256": "c7687d4d29bd6d3e0eed8c57f428bc5c59d53b0feb4ef3e1799da8d141bc9597"
+      },
+      "test:responders:pan": {
+        "exitCode": 0,
+        "seconds": 19,
+        "logSha256": "12b58fca966f74780f068422525bb645910b1fdde77763f91b2ac31a13fb22af"
+      },
+      "test:switch": {
+        "exitCode": 0,
+        "seconds": 6,
+        "logSha256": "de03a68a0c03876d7e49ed40a453e36de279c4df34400bf27038c79ff31df905"
+      },
+      "test:responders:shared-touches": {
+        "exitCode": 0,
+        "seconds": 20,
+        "logSha256": "9e20f64af910b00b4388dc10078df43b64dd4f62a3862f8cf2ca14b9429178ff"
+      },
+      "test:touchables": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "461bf5888e03751bc4fc42a5f0fda68989f17de67dd94876c47049dbc4a448bb"
+      },
+      "test:activity-indicator": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "16150e359b633b8cf3a022f4b7ec5955fa9f7018b7d6fdfceb8d7b399415874c"
+      },
+      "test:pointers:capture": {
+        "exitCode": 0,
+        "seconds": 67,
+        "logSha256": "42201fa19a115518d999d75bdf5010d167a895a5704b0ecf9ee8e5a0bb3f75cf"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 5,
+        "logSha256": "b5eae5b3c6d0c37416fa1516ba13d02421b895ef88a520c44b22ad7367bb836e"
+      }
+    },
+    "counts": {
+      "examples": 2377,
+      "examplesCount": 30,
+      "animatedExample": 12,
+      "transformsExample": 309,
+      "networkingExample": 29,
+      "down": 2731,
+      "documentUp": 6459,
+      "documentMove": 1940,
+      "documentHover": 1530,
+      "click": 728,
+      "captureNotifications": 672,
+      "viewUp": 297,
+      "move": 220,
+      "hover": 158,
+      "rootPath": 82,
+      "queryFaults": 187,
+      "resolverFaults": 66,
+      "panResponder": 128,
+      "sharedTouches": 92,
+      "appState": 75,
+      "virtualizedList": 44,
+      "appearance": 79,
+      "switch": 108,
+      "activityIndicator": 33,
+      "touchables": 93,
+      "touchablesAnimatedLane": 7,
+      "animated": 75,
+      "frameClock": 37,
+      "networking": 100,
+      "websocket": 93,
+      "focusCommands": 112,
+      "nativeModules": 76,
+      "eventDispatch": 647,
+      "eventDispatchIntegrated": 206,
+      "transformGuards": 61,
+      "transformInputGuards": 25,
+      "uniformScaleHeadless": 29,
+      "singularHeadless": 49,
+      "http_core_test": {
+        "groups": 10,
+        "assertions": 81
+      },
+      "websocket_core_test": {
+        "groups": 6,
+        "assertions": 47
+      },
+      "affineFactorChecks": 57703,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6,
+      "networkingExampleCapture": 51
+    },
+    "note": "Every native-cold-start suite step after Godot install and npm run setup, plus test:recovery, from the committed tree on the host built from it"
+  },
+  "sdkAndAdapters": {
+    "steps": {
+      "affine": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ab306e6f54980a8a5a833feb49add3b8ec8c87f087ad54107e9826873b20cbca"
+      },
+      "codegen-native": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "923642e648ebc2a12221af2cdf0c469807230ea5edc0109e38c37d056a1f677b"
+      },
+      "sdk-pack": {
+        "exitCode": 0,
+        "seconds": 2,
+        "logSha256": "9f05330e7f2f94d092acdae25b3437a1571223993f340e8bbd374a325ca0c778"
+      },
+      "sdk-verify": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "55478cf8e0def7d65e13b63b31909f8ba700d0188d853b094108427ffed4bcec"
+      },
+      "adapters-native": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "0f98c4064b78cb7403ca1819227d74dbea4092dd9696530236ddec1a85b67cf1"
+      },
+      "adapters-loader": {
+        "exitCode": 0,
+        "seconds": 14,
+        "logSha256": "de9b076b6426a2c00224f8511e8a7f4c3ea07d7a92d27ba0fe2340db67d061f3"
+      },
+      "consumer": {
+        "exitCode": 0,
+        "seconds": 95,
+        "logSha256": "4a42b10f192b1c8ee507d1de6b0f566b2278803f67413ba7e7ea825dd1277c81"
+      },
+      "adapters-runtime": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "1fe1ff0f7cf94ae582bfe1f3e5652dea5b9b020c458e8172c737a71d5c2f504e"
+      },
+      "test:cold": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "64094187e00398ed39a76801cb840d88bb1f4358f94698a293f3d7d9e9f7c753"
+      },
+      "parity:godot": {
+        "exitCode": 0,
+        "seconds": 7,
+        "logSha256": "745404795ce586a05ca9d1e03179df3144ea92c4d0e646c425d5bc979dcc1dcf"
+      }
+    },
+    "counts": {
+      "affineFactorChecks": 57703,
+      "adapterRegistryChecks": 207,
+      "adapterLoaderChecks": 89,
+      "consumerBuildOwnershipChecks": 30,
+      "consumerNativeChecks": 40,
+      "coldStartFreshImports": 2,
+      "parityGodotCases": 13,
+      "codegenTranslationUnits": 6
+    },
+    "freshOutputDirectories": "the SDK, codegen, adapter registry, loader and runtime outputs of the run were written to a directory made for it and deleted afterwards"
+  },
+  "lanesFromTheCommittedTree": {
+    "steps": {
+      "websocket-core": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "3b763abe3f9f5cad2d2dbf3dc851c6e1b810b9b3a8b0cba17720d304e0942af7"
+      },
+      "http-core": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "1ddbd36156e30fef40d19a795d8ec2291f75e07e7419b3c4c02830af78d4560c"
+      },
+      "websocket-control": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "5e1e84ee9f9a8fb4c11e8308300843b49dac3b94b2491ea1a75aa6f6c1844072"
+      },
+      "websocket-sabotage": {
+        "exitCode": 0,
+        "seconds": 29,
+        "logSha256": "c81262693cb78306a81bc0d23ab274bc76001241c67a3d9d5cdbd53858b039d5"
+      },
+      "websocket-ci-like": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "b002a8417525a283c6dd90ca6dbbdb4dddcec39c5de3a0fb359a78cb325e8e0e"
+      },
+      "websocket-current": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "4f0e7acdd87810866cc7d3e87680178f2e3ade1f42bf2946eeb254d59ef160e6"
+      },
+      "networking-control": {
+        "exitCode": 0,
+        "seconds": 4,
+        "logSha256": "7a881ad986155660a743c44b56cb22ad759aa14f2971e48887d1b6195e7053a1"
+      },
+      "networking-sabotage": {
+        "exitCode": 0,
+        "seconds": 35,
+        "logSha256": "5cace133983dbab51316657f8c6072f2a4ee4aff4338a362596b1ff0d0a7ab82"
+      },
+      "networking-ci-like": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "8b9204c2e45ece30ac1ebb50ca81691e02b9c4e3c4a9fa9953d0f7010296479e"
+      },
+      "networking-current": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "f42e65d54a2dd782fb8395511782b8f44f522ceadba48bdc1e10294d688a7c00"
+      },
+      "example-headless": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "9269bdbeb81bd377966404221c58840d78cdd61cafbfd0ce805e923fca117a63"
+      },
+      "example-capture": {
+        "exitCode": 0,
+        "seconds": 8,
+        "logSha256": "4d312adade80eedc6a814154d4f569500dbab157633980bfe1fda07f238c75d5"
+      },
+      "websocket-load-1": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "4a8308f820ba9c8100dc786709d99de5902b17a1310094f445ec26cd924c3b4f"
+      },
+      "websocket-load-2": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "9a534e4ac013ce3994000a655fb3df793c2ddbd20e33903d715609e94f30b63b"
+      },
+      "websocket-load-3": {
+        "exitCode": 0,
+        "seconds": 15,
+        "logSha256": "5e67556ae2b1d3949addcad447b7cc893243e0842ed1f910f082dada7d8db3be"
+      },
+      "networking-load-1": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "ca3045d10365124aaeef607a91753fa8ed4b7b9de60fc9be6d567b778a30473b"
+      },
+      "networking-load-2": {
+        "exitCode": 0,
+        "seconds": 11,
+        "logSha256": "5ffa06500b64aac03841de6fed3eeffbae33426d5fd9b7f69745e3a83c27e29f"
+      },
+      "networking-load-3": {
+        "exitCode": 0,
+        "seconds": 12,
+        "logSha256": "3401f9665bbd0177ac0bb9b82e5f5d50affdd4250a37d9a1642d1a3fd0cb3a0a"
+      }
+    },
+    "note": "control, both sabotages, the lane without control receipts and the lane with them, in this order, for the WebSocket suite and then for the networking suite, rerun from the committed tree so the local receipts describe this commit; then three runs of each suite under 14 busy loops"
+  },
+  "nativeBuildRecord": {
+    "hostSha256": "40f53ec9e7baf2aa0aa0df5632ec646f6f42c58ac4677f4dcc8eebe690608ee9",
+    "inputsMatchCommit": true,
+    "inputs": 82,
+    "compiler": {
+      "executableSha256": "be5518e9c6736cda8dfc3486ce11e8112a2e08045084260691cf41f57a653f59",
+      "name": "AppleClang",
+      "version": "Apple clang version 17.0.0 (clang-1700.6.3.2)"
+    },
+    "target": {
+      "architecture": "arm64",
+      "configuration": "Release",
+      "minimumOS": "13.0",
+      "platform": "macos"
+    }
+  },
+  "engineSources": {
+    "godot": {
+      "commit": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "tag": "4.7.2-stable",
+      "files": [
+        "modules/websocket/wsl_peer.cpp",
+        "modules/websocket/websocket_peer.h",
+        "modules/websocket/doc_classes/WebSocketPeer.xml"
+      ]
+    },
+    "okhttp": {
+      "commit": "3edf17ca8a5048912d19e84d0fc2a7941a97c07d",
+      "tag": "parent-4.9.2",
+      "files": [
+        "okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt",
+        "okhttp/src/main/kotlin/okhttp3/internal/ws/WebSocketProtocol.kt",
+        "okhttp/src/main/kotlin/okhttp3/Headers.kt",
+        "okhttp/src/main/kotlin/okhttp3/internal/http/BridgeInterceptor.kt"
+      ]
+    },
+    "note": "Read at these commits to cite lines in docs/research/websocket.md; they are not executed inputs and are not pinned by hash"
+  },
+  "sourcePins": {
+    "tests/websocket-fixture.jsx": "670b69485fd924d0c56427a10a7866fde5a68d28f884d4118a0b917e346bdc83",
+    "tests/websocket-probe.gd": "576cab61ad2cc8c5c64dd7367d252370bea3798a3259ee86b993f3a36d1cca9b",
+    "tests/websocket-native.test.mjs": "d999f946fdbdba4ce2efbe6f54db2273348474ebdbe2aec71d753a3e22832999",
+    "tests/websocket-oracle.mjs": "73ab0cdbfdf6866c6895f33981c0c384c78c0e9e263c393a264c77eada1e9366",
+    "tests/websocket-server.mjs": "e697af271e04f31656758b3b341ede37ead9f2f00fcb0ea187062d370dda08be",
+    "tests/networking-certificates.mjs": "ac310e2d2fcbddf3104c9ee7b2e551fabc1bafbe3f21cbc24350f5e8789937c6",
+    "scripts/websocket-bundle.mjs": "536d362b7c420bb2a1d5730379b9324fda51524a57057a242b96ea1e14e98c3c",
+    "scripts/websocket-sabotage.mjs": "5019e14742cfbba7ae901304230fe3ece8084467fa78af76fc698f83c4349923",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "src/initialize.js": "9f375e74c5e76853ed32a0b3a4d1238c132ff79e9a2caff3a9c84012a0785e80",
+    "src/platform-environment.js": "9313aa82bf6b99f68d8fe8c727c0c8f7488bdc089a46520a6c89c8b2503ccfc2",
+    "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+    "native/websocket_core.h": "c7b0c1a3e54fafe6e39596a2da8e7986fc0a8c8bbbae42b21ca1c298b4738c16",
+    "native/websocket_core_test.cpp": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+    "native/websocket_transport.h": "df907a1ce066a59f430cc2adb306e25393c4168e3972c2ce372b214ef3e4ba6f",
+    "native/godot_websocket_transport.h": "74e703e3ec82b921a9cedbc8ed3b5216cf7b686ba32ea8e3ae275d0703ba15e6",
+    "native/godot_websocket_transport.cpp": "26f05e73278bd16f3c04f0b2189d382fc713f9b957e15b0e2a3394c883393004",
+    "native/godot_tls.h": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/networking_modules.h": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+    "native/networking_modules.cpp": "faf9844a0c324e5fac5ea7bd5c3f246eef40610e50635955150323df55ba8ede",
+    "native/networking_state.h": "0a2d60850468cf9349fa33559cc63b6cc9ad119951505f99f4982b6ad052eefb",
+    "native/websocket_module.h": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+    "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+    "native/application_runtime.h": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+    "native/application_runtime.cpp": "ad31cec6315623ad02dfa71088ab6973daa88544e54b6327743014f9529dc7a4",
+    "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+    "native/godot-profile.json": "7d21c82b29a2d7a93d452399a57cd51e190d38930fbed0fc6720e9cf093a6b6f",
+    "native/CMakeLists.txt": "1f85304b10dd08ec6911bc82f1f43af45092be8c98e95b9be929fa20b5e54e8c"
+  },
+  "verificationSourcePins": {
+    "package.json": "45e039826649012fda73c3d110647f9e1d731e4cd8f726b3707ea0e6a7eac171",
+    ".fallowrc.json": "5f400c62bbcb3636d559a0bd2ea44f0e3cbbb32948e41eda982075f8efaa2e93",
+    ".github/workflows/contracts.yml": "cc8ef3d66dc452ca4f2ed3209ea89832042cd4bbcd08a69308a01b4a45d21767",
+    "examples/catalog.json": "fd4b3d94220795d8b89eb90bb3258724cf8ac8bba27567a52905799b586eee95",
+    "examples/entry.jsx": "769113ef2a16e1f1956a2ffdc4ecd775b641f8b3588200053f3fd48f9c229e9a",
+    "examples/networking/App.jsx": "754252f3cff72edb8968ee1148da42111ede00ef54f88011f8bf20eb5b74260e",
+    "examples/networking/local_server.gd": "9a13eefb3d304aa7c782520af0039dbee2b495e78e8b77eb829dff22637b56ef",
+    "examples/networking/scene.tscn": "a9f818f754482aefa5ed577b9d3f953e9172ee2bf965c1f09f86db125347c3b2",
+    "examples/networking/validation.gd": "37d31cac0cddf0d4b82cbb1a98cff55fef11ea0f605cd657580b34b6de6d32be",
+    "tests/networking-fixture.jsx": "3a0d92a52109d828cbd45afe814268353835aec0ce343a892429ce43b0404d6d",
+    "tests/networking-probe.gd": "363ee3b3919baea2d435ffea67ea36c891b3df6b3a682e49f815d18d9f317371",
+    "scripts/networking-bundle.mjs": "e57d3beb7e568f332f54db38c285b038157100fcaf289515a0216b2d23862ece",
+    "tests/platform-seams.test.mjs": "8be53680bed22e83000bc387cf797bcaf25be7bc164e9ed1b54e452fc6baa707",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6"
+  },
+  "nativeSourcePins": {
+    "dependencies.json": "45ed2d065147890bd65c5742375dda58decbeceef8cf3f6659804d8d70a18d1a",
+    "native/CMakeLists.txt": "1f85304b10dd08ec6911bc82f1f43af45092be8c98e95b9be929fa20b5e54e8c",
+    "native/activity_indicator_view.cpp": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+    "native/activity_indicator_view.h": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+    "native/adapter_loader.cpp": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+    "native/adapter_loader.h": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+    "native/adapter_registry.cpp": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+    "native/adapter_registry.h": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+    "native/affine_transform.h": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+    "native/affine_transform_test.cpp": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+    "native/app_lifecycle.h": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+    "native/appearance_adapter.cpp": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+    "native/appearance_adapter.h": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+    "native/application_runtime.cpp": "ad31cec6315623ad02dfa71088ab6973daa88544e54b6327743014f9529dc7a4",
+    "native/application_runtime.h": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+    "native/blob_store.h": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+    "native/coordinate_transform.h": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+    "native/fabric_application.cpp": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+    "native/fabric_application.h": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+    "native/fabric_surface.cpp": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+    "native/fabric_surface.h": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+    "native/frame_clock.h": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+    "native/frame_clock_test.cpp": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+    "native/game_service_registry.cpp": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+    "native/game_service_registry.h": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+    "native/godot-profile.json": "7d21c82b29a2d7a93d452399a57cd51e190d38930fbed0fc6720e9cf093a6b6f",
+    "native/godot_component.h": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+    "native/godot_dom.cpp": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+    "native/godot_dom.h": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+    "native/godot_http_transport.cpp": "dac76dc9f92b7783532635a9a9dc6d4a5ccad40c3eff4275eb22b564235a3353",
+    "native/godot_http_transport.h": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+    "native/godot_tls.h": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+    "native/godot_websocket_transport.cpp": "26f05e73278bd16f3c04f0b2189d382fc713f9b957e15b0e2a3394c883393004",
+    "native/godot_websocket_transport.h": "74e703e3ec82b921a9cedbc8ed3b5216cf7b686ba32ea8e3ae275d0703ba15e6",
+    "native/http_core.h": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+    "native/http_core_test.cpp": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+    "native/http_transport.h": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+    "native/input_adapter.cpp": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+    "native/input_adapter.h": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+    "native/native_animated.cpp": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+    "native/native_animated.h": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+    "native/networking_modules.cpp": "faf9844a0c324e5fac5ea7bd5c3f246eef40610e50635955150323df55ba8ede",
+    "native/networking_modules.h": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+    "native/networking_state.h": "0a2d60850468cf9349fa33559cc63b6cc9ad119951505f99f4982b6ad052eefb",
+    "native/paragraph_layout.cpp": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+    "native/paragraph_layout.h": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/paragraph_view.h": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+    "native/pointer_adapter.cpp": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+    "native/pointer_adapter.h": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+    "native/pointer_event.h": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+    "native/pointer_geometry.cpp": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+    "native/pointer_geometry.h": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+    "native/pointer_geometry_history.h": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+    "native/pointer_geometry_test.cpp": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+    "native/pointer_processor_test.cpp": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+    "native/pointer_projection_test.cpp": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+    "native/register.cpp": "56e8338a3f8f897e403c8a304593591dd0c3ced580f99dc26542a7a806e6c5bf",
+    "native/scroll_adapter.cpp": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+    "native/scroll_adapter.h": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+    "native/smoke.cpp": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+    "native/svg_node.cpp": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+    "native/svg_node.h": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+    "native/switch_view.cpp": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+    "native/switch_view.h": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+    "native/system_appearance.h": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+    "native/text_layout.cpp": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+    "native/text_layout.h": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+    "native/timer_registry.h": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+    "native/timer_registry_test.cpp": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+    "native/transform_adapter.cpp": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+    "native/transform_adapter.h": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+    "native/turbo_module_registry.cpp": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+    "native/turbo_module_registry.h": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+    "native/websocket_core.h": "c7b0c1a3e54fafe6e39596a2da8e7986fc0a8c8bbbae42b21ca1c298b4738c16",
+    "native/websocket_core_test.cpp": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+    "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+    "native/websocket_module.h": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+    "native/websocket_transport.h": "df907a1ce066a59f430cc2adb306e25393c4168e3972c2ce372b214ef3e4ba6f",
+    "scripts/codegen-contract.mjs": "80852b8bc00353357eeb13eca7a6c5496232712f2915cf9cb94e83309e296703",
+    "scripts/native-sdk.mjs": "836b96363c81ba45e03de4f6cb8c7a2cc192f509bed1d967fc1c205cef69a140",
+    "scripts/rn-pointer-overlay.mjs": "b996bfccf09b4484d7c97819b16e8d6848bf10479410fd8d500f0ac3fad6f2af"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Blob/Blob.js": "050bc512a24749ec3d91a45832549e9b78dd3717de716bda17782ff36917dc0a",
+    "Libraries/Blob/BlobManager.js": "aeaa78b92cb1d5a58773a9deeb44f85f98b3255f8099b2a6b9551e8a70e87ee1",
+    "Libraries/Blob/BlobRegistry.js": "eee107ecded210d45b4c8f26e10e0738dc56bb6fd44d07ae5560b0d33bfa4267",
+    "Libraries/Blob/FileReader.js": "a0a1244ea1bd20007bdef6b4b9279ac12a3ad93576dc7914c1e573d3a55c904b",
+    "Libraries/Blob/NativeBlobModule.js": "71ed77bf0eae95820839faa04c498822fa7e3f44f1214b908f0929d8672dbe72",
+    "Libraries/Blob/NativeFileReaderModule.js": "c2e7745b591f30c57d1866ffcab6f9d8dbf5babc18c548f0e9002601eb142d28",
+    "Libraries/Blob/RCTBlobManager.mm": "f05c7e27a60330690aefd3d3d128450b9e80f7eead0cb3b31028529e0d20009c",
+    "Libraries/Core/setUpXHR.js": "290697c07f2afc79a8b6a7fdac6cf77bc3d660a68efb4777dee252b533162a9c",
+    "Libraries/EventEmitter/NativeEventEmitter.js": "132e1d5314fde128d56724d26f96b13eb0bbfe56a69e5ac9d17fd6ce297b6d91",
+    "Libraries/EventEmitter/RCTDeviceEventEmitter.js": "a24e33cbb6272ecd5ca580c348434b6444c8a5a36ecdbfca7ae8c3e5ba498ed1",
+    "Libraries/Utilities/PolyfillFunctions.js": "c00e1ba8f8f668a7a710688e2c0e5d36b63df18a52fdf4bb8691cd436c9720ca",
+    "Libraries/Utilities/binaryToBase64.js": "8d9fbff1adc86d33cca5295b806fa9fb3c3f956b2dd59d6bfde46667d61d84ad",
+    "Libraries/WebSocket/NativeWebSocketModule.js": "f0806eab5cb5a3a261925d08159cb559f75d1f3cea2e473b7f158a37843e03e5",
+    "Libraries/WebSocket/WebSocket.js": "722508694e0fb0d7cd7878421801d3e9df2b119b79775320ee832870628f2569",
+    "Libraries/WebSocket/WebSocketInterceptor.js": "9a6622af7ce7093f1d77c7c441983c7215d236a526f5dec5a57ed3fd8ba66027",
+    "React/CoreModules/RCTWebSocketModule.mm": "a77cbfedc3f000ae14bd7a2f323d2c0c7235836ed3268ab0b48fbc16ce521e62",
+    "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/blob/BlobModule.kt": "65adac5b201eeef3bd84bf6ca2955b3e15583c9d697f79a7c2a55e8ce0b34d2c",
+    "ReactAndroid/src/main/java/com/facebook/react/modules/websocket/WebSocketModule.kt": "a0a6e2f02c8693c616a37d623c66b65d496dff966c22ed252918405f00cf66f4",
+    "ReactCommon/react/nativemodule/core/ReactCommon/TurboModule.cpp": "35454614a9dd58c7d5da95bb824d7d6de3749f2e69aa4258bf7b8b6e99b9aed4",
+    "src/private/specs_DEPRECATED/modules/NativeBlobModule.js": "cd22553a309f2f2912fd10a1225f4000a14d308c8be8cca2b048bfbe06ee4f25",
+    "src/private/specs_DEPRECATED/modules/NativeFileReaderModule.js": "af12fda7ca8b5e607b891b5c5c9c7f1a9340d5a35d2c88c25f3ed7796359107b",
+    "src/private/specs_DEPRECATED/modules/NativeWebSocketModule.js": "804e022406865433e3836757bafc37895873ab8039641e340192ddb5612e8b6a",
+    "src/private/webapis/html/events/MessageEvent.js": "85b5d2fc31e7af89c68b9ceb732dec8dcf1b53c653da0e047f65a6faaa11dfc1",
+    "src/private/webapis/websockets/events/CloseEvent.js": "3e4474982ee0bdcaf1878987bda58aa0da2f968f5bb164d36ebb06717319abfd"
+  },
+  "hostedCI": {
+    "status": "pending-websocket-slice"
+  },
+  "limits": [
+    "Messages the server writes in the same poll as its close frame, and those that arrive after the client's own close frame, are lost by Godot 4.7.2 (godotengine/godot#115384): the host cannot recover them, and the suite reproduces the loss without requiring it.",
+    "A ping between the fragments of a message is merged into the message by the engine; the suite records it and checks that a pong with the payload went back.",
+    "No extensions (permessage-deflate: OkHttp offers it, the engine none), no cookies and no connect time-out; a caller's Host, Upgrade, Connection, Sec-WebSocket-Key, -Version, -Extensions and -Protocol headers are dropped, and only the Host, Upgrade and protocol cases have a check of their own.",
+    "The engine is stricter than OkHttp about subprotocols (a server that selects none, or one that was not offered, fails the socket) and fails invalid UTF-8 text with 1007; a failed handshake carries no HTTP status.",
+    "Closing a socket that is still connecting fails it, as a browser does, where Android's module does nothing (deliberate).",
+    "Over TLS a client-initiated close is taken as complete with the code and reason sent, because the engine ends it without the server's close frame.",
+    "The 16 MiB rings reserve about 48 MiB of address space per open socket (about 6 MB resident for 40 sockets in a scratch run); the application cannot choose a smaller size.",
+    "The contract is Android's: iOS's module (no event for a missing socket, a real ping frame, a clean flag) would need a second module; failure texts are the host's and the engine's, not OkHttp's.",
+    "Only macOS arm64 was executed: Godot Android (INTERNET permission), iOS and Web (a browser WebSocket cannot add headers) exports, hardware, offline and reconnect behavior are not covered.",
+    "GF-22 is open: no whole GF, checkpoint, dependency, weight or denominator closes."
+  ],
+  "implementationPinVerification": {
+    "method": "git show <implementationCommit>:<path> SHA-256 equals every executed pin and the working tree",
+    "sourcePins": 31,
+    "nativeSourcePins": 82,
+    "verificationSourcePins": 14,
+    "uniqueCodeAndConfigurationInputs": 109,
+    "mismatches": [],
+    "originalReactNativeSources": 25,
+    "executedFromTheCommittedTree": true
+  },
+  "gates": {
+    "ranAt": "2026-10-07T07:39:18.241667Z",
+    "meaning": "Contracts-job gates, test:recovery and the dashboard checks on the tree with this record's documents, the dashboard entry and the receipt body (this field is appended afterwards).",
+    "steps": {
+      "test:contracts": {
+        "exitCode": 0,
+        "seconds": 18,
+        "logSha256": "fb8da994800d69b0b5053de29d553fb3cc093a32246013d95f2f825da87a2fc4"
+      },
+      "check:static": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "9715bfe1181d9d7e9c369ebe0e89988f1bae00b24457d6cd5e1121c8cf4bdc03"
+      },
+      "check:publication": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "dda64b5944e0bcb88ee6daadc2d4728ebdadbb9f6e8c480bf045a14b48e06b56"
+      },
+      "test:recovery": {
+        "exitCode": 0,
+        "seconds": 3,
+        "logSha256": "673811f88736bb361c013a7b081d3624598674ce68a980bfd280a42d9b82ae92"
+      },
+      "dashboard:check": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "c211cce36c861ad9a4e5bbc84899c1bcf3761b18603e3800084380e30f1f4110"
+      },
+      "test:dashboard": {
+        "exitCode": 0,
+        "seconds": 0,
+        "logSha256": "ad86607672d13020fd205a82c2285128ac4f609dd6f16a097aa4d9077648ebef"
+      },
+      "type-check": {
+        "exitCode": 0,
+        "seconds": 1,
+        "logSha256": "386165be90e955da25ceaec961c4cb36e9f86f8107c5c74c2df0cde6983d51e0"
+      }
+    },
+    "counts": {
+      "nodeContractRuns": [
+        7,
+        8,
+        265
+      ],
+      "nodeContractChecks": 265,
+      "pythonContractChecks": 13,
+      "nodeFailures": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

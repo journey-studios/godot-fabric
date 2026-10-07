@@ -34,6 +34,14 @@
     "directory": "godot-cpp-da26c1732ee8656ef9ccad587cbdd55acf8637c8",
     "sha256": "35d16951cc1395d2fb13ed02db4d67f6fd0f492b8c92b4dfeee36849fac343b7"
   },
+  "wslay": {
+    "commit": "0e7d106ff89ad6638090fd811a9b2e4c5dda8d40",
+    "url": "https://codeload.github.com/tatsuhiro-t/wslay/tar.gz/0e7d106ff89ad6638090fd811a9b2e4c5dda8d40",
+    "archive": "wslay.tar.gz",
+    "directory": "wslay-0e7d106ff89ad6638090fd811a9b2e4c5dda8d40",
+    "sha256": "ce62e7108b2f281c630ce3b12470703f208bc5c97bc3a5ba61e7591838c52448",
+    "license": "MIT"
+  },
   "cmake": "3.31.6",
   "node": {
     "version": "22.23.3",

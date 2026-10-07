@@ -34,7 +34,12 @@
     "InputEventScreenTouch",
     "InputEventScreenDrag",
     "ProjectSettings",
+    "IP",
+    "Crypto",
+    "HashingContext",
     "HTTPClient",
+    "StreamPeerTCP",
+    "StreamPeerTLS",
     "TLSOptions",
     "X509Certificate"
   ]

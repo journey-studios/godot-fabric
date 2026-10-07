@@ -12,6 +12,7 @@ source/framework archives and verifies SHA-256 before extraction.
 | Hermes | 250829098.0.17 | [MIT](https://github.com/facebook/hermes/blob/main/LICENSE) |
 | Yoga | bundled with React Native 0.87.1 | [MIT](https://github.com/facebook/yoga/blob/main/LICENSE) |
 | godot-cpp | da26c1732ee8656ef9ccad587cbdd55acf8637c8 | [MIT](https://github.com/godotengine/godot-cpp/blob/da26c1732ee8656ef9ccad587cbdd55acf8637c8/LICENSE.md) |
+| wslay | 0e7d106ff89ad6638090fd811a9b2e4c5dda8d40 | [MIT](https://github.com/tatsuhiro-t/wslay/blob/0e7d106ff89ad6638090fd811a9b2e4c5dda8d40/COPYING) |
 | Godot | official 4.7.2, separately installed | [MIT and third-party notices](https://godotengine.org/license/) |
 | Private Node.js | 22.23.3, macOS arm64 provisioning | Complete LICENSE in the downloaded official Node archive, including third-party notices |
 | tsc-rs | 0.1.0 | MIT; npm package metadata is `MIT AND Apache-2.0`. Its installed NOTICE preserves upstream TypeScript Apache-2.0, Go BSD-3-Clause, Unicode and other attribution notices |

@@ -2669,10 +2669,11 @@ The suite also passes without the control receipts, as in CI, and under heavy CP
 An interactive example (`examples/networking`) clicks six buttons against a loopback
 server it starts and its six renderer captures are in the evidence.
 
-Open: `WebSocket` (its first use fails with RN's own "'WebSocketModule' could not be
-found", and `BlobModule`'s socket methods throw), cookies and `withCredentials`, compressed
-responses (OkHttp and NSURLSession decode them) and gzip request bodies (RN's two modules
-compress them), HTTP/2, upload and download progress, incremental streaming of text, `uri`
+Open: `WebSocket` (at that point its first use failed with RN's own "'WebSocketModule' could
+not be found", and `BlobModule`'s socket methods threw; the next section covers it), cookies and
+`withCredentials`, compressed responses
+(OkHttp and NSURLSession decode them) and gzip request bodies (RN's two modules compress
+them), HTTP/2, upload and download progress, incremental streaming of text, `uri`
 and file bodies, connection pooling and keep-alive, proxy and system trust configuration,
 the `Networking` export of `react-native`, offline and reconnect behavior, hardware, and
 Godot Android (the `INTERNET` permission), iOS and Web exports (CORS).
@@ -2701,6 +2702,45 @@ those executed at `83a3557`, and the `postReview` section of `report.json` pins 
 to these commits. Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint
 closes; no whole GF, other checkpoint, weight or denominator closes.
 
+### WebSocket transport review (2026-10-07)
+
+GF-22 remains **In progress**; this transport review adds no checkpoint, weight or denominator.
+The current backend runs RN’s original `WebSocket`/`WebSocketModule` over Godot `HTTPClient`
+for asynchronous DNS/TCP/TLS setup, then its public `StreamPeer` connection with pinned wslay
+for RFC 6455 framing. The earlier `WebSocketPeer` path and its engine findings are retained
+as historical research only; they do not describe this backend.
+
+The [current evidence](docs/evidence/websocket/README.md) records 95 local product checks,
+60 server connections and 53 required wire/JS comparisons. On the preceding host, the same
+suite passed 12 checks, failed 83 and made no server connections. The Origin and stop-close
+code sabotages failed four and two checks and were rejected by the oracle. Product cases
+preserve data before coalesced close and interleaved ping, TLS peer close 1000, peer-selected
+4002 with its exact reason, and report a TLS drop after client close as abnormal close 1006.
+Invalid UTF-8 text receives protocol close 1007 on the wire; RN observes terminal
+error and close 1006. A server selecting no subprotocol is accepted; an unoffered selection
+is rejected.
+
+Hosted CI passed all five jobs for pinned implementation head `422c2ee` ([receipt](docs/evidence/websocket/hosted-ci.json), [run](https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)). Independent inspection of its native artifact recomputed the product oracle and matched 46 repository inputs to that checkout. The parity job covered 13 `core-ui-v2` cases on Android/iOS; it is not WebSocket differential or Godot mobile runtime proof. Later PR-head changes require their own green CI.
+
+One WebSocket poll shares a 1 MiB inbound wire-byte budget across WebSocket sockets. Its
+admission is capped at 256 pending canonical networking events after the HTTP poll. Incomplete
+messages reserve an event slot across polls; rotating poll order gives sockets progress. Two
+eight-socket phases reached the byte and event limits, each delivered 1,024 messages and ended
+with zero pending events. The separate lifetime fixture
+covers eight reentrant cancel/stop cases from open/message callbacks: all end with zero active
+sockets and no later callbacks. The four drained `/echo` cases observed wire close 1001; four
+`/greeting` cases with unread input ended in TCP drops before a close frame arrived, so cancel
+close delivery is best effort. Connection plus HTTP upgrade has an explicit 30-second host
+deadline; the closing handshake has a separate 60-second deadline.
+
+Native SDK pack/verify and addon provisioning include the pinned wslay source and license.
+An iOS simulator arm64 build/link retained both Fabric and wslay symbols in the combined
+archive. This is link evidence only: no iOS runtime or consumer app was executed, and ABI
+certification remains open. The current local product run is macOS arm64; hosted native execution
+is headless macOS for pinned `422c2ee`, with later PR-head gates separate.
+Other open scope includes extensions, cookies, proxy/system trust configuration, HTTP/2,
+reconnect/offline behavior, hardware load and Android/iOS/Web runtime acceptance. GF-22’s
+contract, parity and targets remain open.
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
