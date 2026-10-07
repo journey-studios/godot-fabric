@@ -1842,7 +1842,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   std::optional<PointerKey> pointer_key(const fabric_godot::PointerInputSource &source,
       const Ref<InputEvent> &event, Vector2 &position) {
-    if (event.is_null() || event->get_device() == -1) return std::nullopt;
+    if (event->get_device() == -1) return std::nullopt;
     if (!physical_input_host(source)) return std::nullopt;
     const auto viewport = source.viewport_id;
     const auto window = source.window_id;
@@ -1877,14 +1877,19 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   bool routed_input(int caller, Root &source, const Ref<InputEvent> &event,
       const fabric_godot::PointerInputSource &input_source, bool &blocked) {
-    Vector2 position;
-    auto key = pointer_key(input_source, event, position);
-    if (!key) return false;
+    if (event.is_null()) return false;
+    // Emulated mouse and wheel events can have no RN pointer key, but still
+    // must be consumed before Godot GUI hit-testing a singular Control.
     if (auto *host = source.host(); host && host->has_meta("validation_input_device") &&
+        (event->is_class("InputEventMouse") || event->is_class("InputEventScreenTouch") ||
+            event->is_class("InputEventScreenDrag")) &&
         event->get_device() != static_cast<int>(host->get_meta("validation_input_device"))) {
       blocked = true;
       return true;
     }
+    Vector2 position;
+    auto key = pointer_key(input_source, event, position);
+    if (!key) return false;
     // Godot forwards one InputEvent to several Surface _input callbacks. Keep
     // its one physical sample owned by the first selected root even after Up.
     // A repeated caller starts a new dispatch when a game reuses an event Ref.
