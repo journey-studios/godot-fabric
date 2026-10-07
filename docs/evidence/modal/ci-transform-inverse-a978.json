@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-07T23:05:33.256715+00:00",
+  "head": "a97876b9b680bec90bca9c5f5c8b7c2c5469eadc",
+  "run": {
+    "id": 37698981563,
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37698981563",
+    "conclusion": "failure",
+    "jobs": {
+      "contracts": "success",
+      "reference-ios": "success",
+      "reference-android": "success",
+      "native-cold-start": "failure",
+      "parity-comparison": "skipped"
+    },
+    "failedStep": "npm run test:transforms:guards",
+    "modalStep": "skipped"
+  },
+  "localReproduction": {
+    "command": "npm run test:transforms:guards",
+    "exitCode": 1,
+    "nativeHostSha256": "45ba095b7584224c550f4f453b7ee12e092606212fe6d57e41abbd2e78c6163d",
+    "guardChecks": 61,
+    "inputChecks": 25,
+    "unexpectedDiagnostic": "ERROR: Condition \"det == 0\" is true. at affine_invert (core/math/transform_2d.cpp:51)"
+  },
+  "logs": [
+    {
+      "path": "build/modal-coderabbit-root/ci-a978-failed.log",
+      "sha256": "7b08ed82acaae058b8f5f5b0dacc337e7e6d7e4f50769437f47f74257daaab4f"
+    },
+    {
+      "path": "build/modal-coderabbit-root/transforms-a978-local.log",
+      "sha256": "942ae90bfcd0edcb86baa6bc7b98c2956a272ac9cae5c401b97335d2e2eabecb"
+    }
+  ],
+  "status": "reproduced; diagnosis in progress",
+  "limits": [
+    "Cause and introducing revision not yet established",
+    "Passing assertions do not override unexpected engine errors",
+    "Hosted final Modal step has not executed on this head"
+  ],
+  "dashboardCapture": {
+    "path": "docs/evidence/modal/dashboard-ci-transform-failure.jpg",
+    "sha256": "7f69add2d5fed03fa81382ee95dcf55e4a0e5d12a0ed0c2b976b8dbfa8c8ae2e",
+    "scope": "Local dashboard with integration failure recorded; no acceptance change"
+  },
+  "hostedArtifact": {
+    "id": 11516707509,
+    "name": "native-transform-guards",
+    "inputReportSha256": "76db9c7a1b0f3f161a880ad64ae4d782689886b15b43c7492e6c980c44d82fda",
+    "inputLogSha256": "a3093a11a757964bfbb2f995745bc573646e9735a1739415b9160d24402f7f71",
+    "checkIdsEqualLocal": true,
+    "inputChecks": 25,
+    "allAssertionsPassed": true,
+    "unexpectedEngineErrors": 1
+  },
+  "resolution": {
+    "codeCommit": "3b8ddbcc251a2a136c0708b484d68dad2a0ce60c",
+    "cause": "The dedicated device filter followed pointer_key, which rejects emulated and unsupported mouse keys before filtering. Excluded events then reached singular GUI hit-testing.",
+    "correction": "Filter the original mouse/touch families at routed_input before key classification; keep the null guard at that canonical boundary.",
+    "localProof": "ci-input-filter-final-local.json",
+    "hostedCorrectedHead": "pending"
+  }
+}

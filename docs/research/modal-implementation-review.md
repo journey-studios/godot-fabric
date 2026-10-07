@@ -1,11 +1,20 @@
 # Modal implementation quality review
 
-The desktop first slice is locally approved for renewed hosted review in PR #51.
-Root independently validated the final 45ba095b host after the initial five
-findings, the CodeRabbit corrections and additional fixture/lifetime cleanup.
-The previous a32235d workflow passed all required jobs, but cannot certify these
-new native changes. Merge still requires the final head's CI and CodeRabbit.
-This is not full GF-18 acceptance.
+The desktop slice is locally approved on code commit `3b8ddbcc251a2a136c0708b484d68dad2a0ce60c`
+after the thermo-nuclear review and corrections. The final-head hosted CI and
+CodeRabbit remain required before merge; this is not full GF-18 acceptance.
+
+The previous a97876b integration failed hosted `test:transforms:guards` with
+`det == 0`; its Modal step was skipped. Root reproduced the failure and confirmed
+that the private validation-device filter ran after pointer-key rejection.
+Moving the existing filter before classification preserves the original mouse
+and touch families and consumes emulated events before singular GUI hit-testing.
+The same frozen 25-check inputs and an explicit device -1 witness fail the strict
+error oracle on the regression host and pass on the corrected host. No skip,
+retry, new API or diagnostic relaxation was added.
+[Failed-head receipt](../evidence/modal/ci-transform-inverse-a978.json),
+[corrected local proof](../evidence/modal/ci-input-filter-final-local.json) and
+[dashboard capture](../evidence/modal/dashboard-input-filter-final.jpg).
 
 The review applies the user's thermo-nuclear criteria to the Modal change and
 the shared DOM, pointer, runtime and addon boundaries it affects. It combines
@@ -62,7 +71,7 @@ presentation policy and immutable-tree geometry live in focused modules rather
 than accumulating feature branches throughout shared dispatch. The stack has
 249 lines, presentation 69 and embedding 50. No changed file crosses from below
 1,000 to above 1,000 lines. application_runtime.cpp already exceeded that limit;
-it is now 2,561 lines (main already has 2,141). Its size remains an architectural concern, but the new
+it is now 2,566 lines (main already has 2,141). Its size remains an architectural concern, but the new
 Window arbitration and tree geometry are extracted, while registry/mount and
 endpoint retirement stay with their existing runtime authority. No additional
 pass-through layer is required for this slice.
@@ -125,7 +134,7 @@ The [initial](../evidence/modal/review-coderabbit-initial.png) and
 | P2 | Teardown retained a Surface pointer and attached ordinary content across Modal callbacks | Detach ordinary roots before hide, retain presentation ownership and re-resolve Object IDs after mutations. The callback sees a live detached RN root in the final probe. |
 | P2 | Logical mount/removal scanned all parents and empty Surface entries survived retirement | Maintain child→parent ownership, touch the known parent and forget the root in canonical finalization. Reorder and lifecycle pass; no asymptotic benchmark or linear teardown claim is made. |
 | P2 | Missing targets caused a null dereference; early failure then exposed unsafe quit cleanup | Guard before native access, cache IDs before retirement, stop both runtimes and await cleanup. The negative exits 1 with a durable failed report, zero roots and only its expected failed-assertion diagnostic. |
-| P2 | The existing validation device filter was bypassed by Modal Window input | Move it once to routed_input, reuse its typed key and Root, and delete duplicate Surface/type checks. The same explicit foreign-device inputs fail four checks on the old host and pass 11/11 on the final host. |
+| P2 | The existing validation device filter was bypassed by Modal Window input | Move it once to routed_input and reuse its Root. The later transform guard exposed classification ordering; the filter now retains its original event families before key selection. The same explicit foreign-device inputs fail four checks on the old host and pass 11/11 on the final host. |
 
 The teardown proof distinguishes two engine-supported paths. During a bound
 Surface.unmount call, Godot rejects synchronous Object.free because that Object
@@ -156,6 +165,22 @@ Final required local gates again pass 283 Node and 13 Python tests; see the
 [gate receipt](../evidence/modal/coderabbit-gates-local.json). The
 [source publication pin](../evidence/modal/coderabbit-reviewed-source-publication.json)
 verifies 35 Modal, 95 SDK and 153 addon producer hashes against f95a3e2.
+
+## Final integration correction
+
+| Priority | Finding | Correction |
+| --- | --- | --- |
+| P1 | Pointer classification bypassed the validation-device filter for emulated mouse and wheel events, admitting singular GUI hit-testing | Keep the null guard and original mouse/touch filter in canonical routed_input, before key selection; preserve normal RN key rejection. |
+
+Root independently passes 164 transform checks, all seven Modal Node tests
+(including the headed 11-check two-owner witness), eight 84-check capture lanes,
+283 Node contract tests and 13 Python tests on host `0dd35f6cbf45878ff66bf4c93db0a1c2c12ac1b2bb91e56566072cacef7d86b8`.
+A fresh canonical SDK consumer passes 68/68 headless checks after real resource
+import. All 35 Modal, 95 SDK and 153 addon producer pins match the reviewed code
+commit, including the 21 compiled native producers. The
+[final local receipt](../evidence/modal/ci-input-filter-final-local.json) retains
+the paired controls, report/log hashes, packaging base/dirty provenance and
+preparation corrections. Earlier 45ba095b and 37053a39 proofs remain historical.
 
 ## Acceptance boundary
 

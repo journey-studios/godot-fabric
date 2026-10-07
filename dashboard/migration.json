@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Modal desktop corrigida na PR #51; revisão local concluída. CI/CodeRabbit do head final pendentes; orientação/insets e mobile/export abertos."
+    "focusTitle": "Modal PR #51: revisão thermo-nuclear corrigida e validada localmente; CI e CodeRabbit do novo head pendentes."
   },
-  "updatedAt": "2026-10-07T23:00:40.606493+00:00",
+  "updatedAt": "2026-10-07T23:21:19.665442+00:00",
   "source": {
-    "commit": "f95a3e2ebad4111819a7fa076a86fc4e3e031f98",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51",
-    "scope": "Modal desktop corrigida em f95a3e2: revisão thermo-nuclear/CodeRabbit e provas independentes no host 45ba095b. 35 produtores verificados no commit; 68/68 headless, 73/73 gráficos, Surface 9/9, owners 11/11 com interlopers, cleanup negativo e consumer SDK 68/68. Gates 283 Node+13 Python. CI/CodeRabbit do head final pendentes; GF-18 parcial, orientação/insets, mobile/export e paridade integral abertos. Mantém 23/156 checkpoints e0/39 itens completos."
+    "commit": "3b8ddbcc251a2a136c0708b484d68dad2a0ce60c",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/3b8ddbcc251a2a136c0708b484d68dad2a0ce60c",
+    "scope": "Modal desktop revisada em 3b8ddbc: falha CI a978 reproduzida e corrigida na ordem do filtro existente. Root confirma 164 transform checks, 7 testes Modal sem skips, owners 11/11, oito lanes de capture (672 checks), consumer SDK 68/68, 283 Node + 13 Python. Pins 35/95/153 conferem com a fonte. CI e CodeRabbit do head corrigido pendentes; GF-18 parcial, orientação/insets, hardware, mobile/export e paridade integral abertos. Mantém 23/156 checkpoints e 0/39 itens completos.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51"
   },
   "phases": [
     {
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #51: cinco achados iniciais corrigidos, mais geometria de Surface oculta, teardown por callback, indexação/retirada lógica e guard/cleanup da fixture. Filtro privado de device reutilizado no roteamento canônico; controle de interlopers idêntico falha no host antigo e passa 11/11 no final. Root confirma 35 produtores, 68/68 headless, 73/73 gráficos, Surface 9/9, lifecycle 65/65, membership 31/31, reorder 9/9, capture 84/84 e consumer SDK 68/68. Capturas e recibos duráveis atualizados. Revisão local aprovada; CI/CodeRabbit do head final pendentes. Causa completa do histórico de input permanece indeterminada; hardware/mobile/export, orientação/insets e paridade integral abertos. Quatro checkpoints false; 23/156 e0/39 preservados.",
+      "note": "PR #51: revisão thermo-nuclear e CodeRabbit corrigiu geometria, captura cross-root, stack ownership, lifetime, teardown e indexação lógica. A CI a978 revelou inversão singular: o filtro privado de device vinha após rejeitar a chave do pointer. Controle pareado da raiz reproduz o erro no host 45ba095b e passa no host 0dd35f6c, com as mesmas 25 assertivas e witness device -1. Gates finais: 164 transform, 7 testes Modal (owners 11/11), 672 capture, consumer SDK 68/68, 283 Node + 13 Python; pins 35/95/153 conferidos no commit 3b8ddbc. Provas gráficas 73/73 anteriores permanecem atribuídas ao seu host. CI/CodeRabbit do novo head pendentes. Orientação/insets, hardware/mobile/export e paridade integral abertos; quatro checkpoints false, 23/156 e 0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3493,6 +3493,26 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-ci-input-filter-corrected-3b8ddbc",
+      "at": "2026-10-07T23:21:19.665442+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-13"
+      ],
+      "message": "Regressão CI a978 corrigida sem afrouxar o oracle: filtro existente antes de pointer_key. Mesmo bundle e 25 checks reprovam o host anterior por ERROR e passam no novo, também com evento emulado explícito. Root valida gates transform/Modal/capture/consumer/contratos e pins 35/95/153 em 3b8ddbc. CI e CodeRabbit finais pendentes; nenhuma contagem de aceite alterada.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/3b8ddbcc251a2a136c0708b484d68dad2a0ce60c"
+    },
+    {
+      "id": "modal-ci-transform-inverse-a978",
+      "at": "2026-10-07T23:05:33.256715+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-13"
+      ],
+      "message": "CI 37698981563 falhou em test:transforms:guards antes de executar Modal. Os 61 guards e 25 checks de input passam, mas ERROR det == 0 reprova corretamente o log. Root reproduziu a mesma falha no host 45ba095b; causa e correção em investigação no único Luna. Merge permanece pendente; checkpoints, pesos e denominadores preservados.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37698981563"
+    },
     {
       "id": "websocket-main-hosted-ci-and-pages-20261007",
       "at": "2026-10-07T22:40:19.017Z",
