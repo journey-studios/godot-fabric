@@ -131,6 +131,13 @@ URL/encoding/abort globals, unhandled rejection/error-handler parity and
 microtask starvation protection remain open. The bounded native work pump
 does not bound an infinite chain of Promise jobs or arbitrary blocking JS.
 
+> Later note: since the [networking record](../networking/README.md), RN's own `URL`,
+> `URLSearchParams`, `AbortController` and `AbortSignal` (with the rest of `setUpXHR`'s
+> globals) are installed by `src/initialize.js`. Their contract is certified only as far as
+> that record's checks (an `AbortController` aborts its signal once, `URLSearchParams`
+> decodes, `fetch` honors a signal); the encoding globals are still open, and this
+> record's executed files stay as written.
+
 RAF uses real Godot process frames rather than upstream TimerManager's
 zero-delay fallback. The oracle certifies cancellation and monotonicity; it
 does not require matching frame cadence, exact timestamps or all ordering

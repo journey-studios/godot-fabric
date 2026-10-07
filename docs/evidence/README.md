@@ -421,6 +421,28 @@ Open: regular presentation timestamps, timers quantized to ticks, and `ADAPTIVE`
 `MAILBOX` V-Sync beyond the unit test. Hosted run 37538167415 repeated the
 37 checks ([receipt](frame-clock/hosted-ci.json)).
 
+The [networking record](networking/README.md) runs React Native's own `fetch` (with
+`Headers`, `Request` and `Response`), `XMLHttpRequest`, `FormData`, `Blob`, `File`,
+`FileReader`, `URL`, `URLSearchParams` and `AbortController` as globals, installed from
+the host's initialization (RN's `setUpXHR`) over three C++ TurboModules with the contract of
+RN's Android `RCTNetworking` wrapper (`Networking`, `BlobModule` and `FileReaderModule`)
+and a transport on Godot's `HTTPClient`: one connection per request, polled on the main
+thread with a byte budget, with redirects (up to 20) and the total time-out enforced by the
+host. Two roots of one application run 100 headless checks against a Node server that records
+every request as it arrived, over HTTP and over HTTPS with a CA generated at runtime and
+trusted only through a validation seam; an independent oracle derives the 137 requests the
+cases must have caused and ties the native counters to the server's record (64 redirects
+followed, every started request ended exactly one way, no event after the stop, the blob
+store's books balanced). UTF-8 and charset decoding, repeated headers, redirects, abort,
+time-outs, network errors, blobs and the stop of the application with requests in flight are
+covered. The preceding host fails exactly the 84 normative checks (the first use of each
+API fails where RN looks up its module, and no request reaches the server); a transport
+that never follows a redirect fails 8 checks and one that does not join repeated response
+headers fails 2, and the oracle rejects each. Six captures of the example and a C++ test of
+the HTTP core (81 assertions). The `WebSocket` global is RN's and fails on first use until
+the next slice; cookies, compressed responses, HTTP/2, progress events, incremental
+streaming, `uri` and file bodies, and every target but macOS are open. Hosted CI pending.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

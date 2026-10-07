@@ -17,6 +17,11 @@ const dimensionSubscriptions = new Set();
 // internal listeners. Counting them never constructs either module.
 const appStateEvents = ["appStateDidChange", "appStateFocusChange", "memoryWarning"];
 const appearanceEvent = "appearanceChanged";
+// The device events RN's XMLHttpRequest subscribes to for each request in flight.
+const networkEvents = [
+  "didSendNetworkData", "didReceiveNetworkResponse", "didReceiveNetworkData",
+  "didReceiveNetworkIncrementalData", "didReceiveNetworkDataProgress", "didCompleteNetworkResponse",
+];
 function subscription(listeners, listener) {
   listeners.add(listener);
   return { remove: () => listeners.delete(listener) };
@@ -54,16 +59,21 @@ export function environmentStats() {
       (count, type) => count + RCTDeviceEventEmitter.listenerCount(type),
       0,
     ),
+    networking: networkEvents.reduce(
+      (count, type) => count + RCTDeviceEventEmitter.listenerCount(type),
+      0,
+    ),
     reduceMotion: motionListeners.size,
     window: windowSnapshot(),
   };
 }
 export function disposeEnvironment() {
-  // RN sends no AppState or Appearance event on teardown (Android's
+  // RN sends no AppState, Appearance or networking event on teardown (Android's
   // onHostDestroy, iOS invalidation), and the native modules stop with the
   // application. Release their device subscriptions as destroying the VM
-  // would; Appearance's own change listeners hang off its single one.
-  for (const type of [...appStateEvents, appearanceEvent]) {
+  // would; Appearance's own change listeners hang off its single one, and a
+  // request still in flight holds six of the networking ones.
+  for (const type of [...appStateEvents, appearanceEvent, ...networkEvents]) {
     RCTDeviceEventEmitter.removeAllListeners(type);
   }
   for (const remove of dimensionSubscriptions) remove();

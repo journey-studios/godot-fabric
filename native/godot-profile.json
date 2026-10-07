@@ -33,6 +33,9 @@
     "InputEventMouseMotion",
     "InputEventScreenTouch",
     "InputEventScreenDrag",
-    "ProjectSettings"
+    "ProjectSettings",
+    "HTTPClient",
+    "TLSOptions",
+    "X509Certificate"
   ]
 }

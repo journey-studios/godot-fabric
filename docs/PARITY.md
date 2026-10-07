@@ -89,6 +89,12 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   (29) and [singular transforms](evidence/singular-transforms/README.md) (49) on
   planar Controls, and the [frame clock](evidence/frame-clock/README.md) (37) that
   paces `requestAnimationFrame` and the native animation like a display link.
+- **Runtime globals:** RN's own web-standard globals, installed by the host's
+  initialization and backed by native networking: the original
+  [fetch, XMLHttpRequest, FormData, Blob, FileReader and AbortController](evidence/networking/README.md)
+  (100 checks against a local server over HTTP and HTTPS; its hosted CI run is pending).
+  They are globals, not names of the `react-native` root: the facade's counts above do not
+  change, and RN's `Networking` export stays among the missing 53.
 
 None of these is an original-native differential: the 13-case core-ui-v2
 comparison with iOS and Android remains the only one. They complete no GF item

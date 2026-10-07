@@ -66,6 +66,16 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
           return { path: path.join(rnRoot, "src/private/featureflags/ReactNativeFeatureFlags.js") };
         }
       });
+      builder.onResolve({ filter: /(?:^|\/)RCTNetworking$/ }, args => {
+        // RN ships this wrapper only as .ios.js and .android.js (RCTNetworking.js
+        // merely imports itself for deep imports), and this host resolves neither
+        // extension. The Android wrapper is the one whose native contract the
+        // Godot Networking module implements: sendRequest(..., data, responseType,
+        // incrementalUpdates, timeout, withCredentials), abortRequest, clearCookies.
+        if (args.path === "react-native/Libraries/Network/RCTNetworking" || args.importer.startsWith(rnRoot + path.sep)) {
+          return { path: path.join(rnRoot, "Libraries/Network/RCTNetworking.android.js") };
+        }
+      });
       builder.onResolve({ filter: /(?:^|\/)renderApplication$/ }, ({ importer }) => {
         if (importer === path.join(rnRoot, "Libraries/ReactNative/AppRegistryImpl.js"))
           return { path: path.join(platformRoot, "render-application.jsx") };

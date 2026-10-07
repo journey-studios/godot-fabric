@@ -360,6 +360,22 @@ presented frames carry CPU time and not the display's regular timestamp, and rea
 beyond one exploratory headed run are not certified. Hosted CI repeated the 37 checks
 ([receipt](docs/evidence/frame-clock/hosted-ci.json)).
 
+The [Networking example](examples/networking/README.md) runs React Native's own `fetch`
+(with `Headers`, `Request` and `Response`), `XMLHttpRequest`, `FormData`, `Blob`,
+`FileReader`, `URL` and `AbortController` as globals: the host's initialization imports
+RN's `setUpXHR`, and three C++ TurboModules (`Networking` with the contract of RN's Android
+wrapper, `BlobModule` and `FileReaderModule`) give them a transport on Godot's `HTTPClient`,
+one connection per request, polled on the main thread. The host follows redirects (up to 20)
+and enforces the time-out itself, decodes text by its charset and sends string, base64,
+multipart and blob bodies. 100 headless checks in two roots of one application against a
+deterministic local server over HTTP and HTTPS (a CA generated at runtime, trusted through a
+validation seam), with an independent oracle that compares the 137 requests the server
+recorded with what JS observed. The preceding host fails exactly its 84 normative checks, and
+retained sabotages (redirects not followed, repeated headers not joined) fail 8 and 2. The
+`WebSocket` global is RN's and fails on first use until the next slice; cookies,
+compressed responses, HTTP/2, progress events, `uri` and file bodies are open. Hosted CI is
+pending. [Evidence](docs/evidence/networking/README.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

@@ -31,6 +31,22 @@ static constexpr const char *validation_refresh_rate = "validation_refresh_rate"
 // And the headless DisplayServer presents nothing, so a validation run states how its
 // simulated window is presented ("presentation" or "time") through this meta.
 static constexpr const char *validation_frame_pacing = "validation_frame_pacing";
+// Godot's default roots cannot vouch for the private authority of a local test server, so
+// a validation run states the PEM text of the authorities an HTTPS request trusts, instead
+// of those roots, through this meta.
+static constexpr const char *validation_tls_authorities = "validation_tls_trusted_authorities";
+static std::string read_validation_tls_authorities(uint64_t id) {
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  if (!application || !application->has_meta(validation_tls_authorities)) return {};
+  return utf8(String(application->get_meta(validation_tls_authorities)));
+}
+// A request's deadline would otherwise need a real wait to pass, so a validation run moves the
+// clock the deadlines are measured on forward by this many milliseconds through this meta.
+static constexpr const char *validation_clock_offset = "validation_clock_offset_ms";
+static double read_validation_clock_offset(uint64_t id) {
+  auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
+  return application && application->has_meta(validation_clock_offset) ? static_cast<double>(application->get_meta(validation_clock_offset)) : 0;
+}
 static fabric_godot::SystemAppearance::System read_system_appearance(uint64_t id) {
   auto *application = Object::cast_to<FabricApplication>(ObjectDB::get_instance(id));
   if (!application) return {};
@@ -187,6 +203,8 @@ int FabricApplication::mount(FabricSurface &host, const String &component, const
             return metrics;
           },
           utf8(scenario), get_instance_id(), game_services, app_state, appearance,
+          [id = get_instance_id()] { return read_validation_tls_authorities(id); },
+          [id = get_instance_id()] { return read_validation_clock_offset(id); },
           adapter_loader ? adapter_loader->registry() : nullptr);
     }
     int legacy_id = 0;

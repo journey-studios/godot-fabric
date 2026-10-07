@@ -46,6 +46,16 @@ eager loading starts a public-instance initialization cycle, while named
 export copying loses methods populated later. Both laboratory and external
 consumer entry orders must reach the same completed renderer exports.
 
+The [networking record](evidence/networking/README.md) registers three more C++
+TurboModules in the same registry: `Networking` (RN's generated Android spec), `BlobModule`
+and `FileReaderModule`, created when JS first asks for them. They share one application
+state: a blob store, one stoppable call invoker (so every device event and promise
+settlement leaves through the RN scheduler in order and is dropped after the stop) and a
+transport over Godot's `HTTPClient` that the runtime polls on each frame. Stopping the
+application cancels the requests in flight, releases the blobs and makes retained methods
+fail with `E_MODULE_DISPOSED`. The bundler plugin aliases RN's `RCTNetworking` to its
+Android wrapper; the `react-native` facade exports no `Networking`.
+
 ## Original logical tree and IDs
 
 The later [tree checkpoint](evidence/tree/README.md) adds View `id`/`nativeID`,

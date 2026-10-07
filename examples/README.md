@@ -52,6 +52,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [virtualized-list](virtualized-list/README.md) | Original RN FlatList and SectionList windowed by the mouse wheel | Public | [App](virtualized-list/App.jsx) · [scene](virtualized-list/scene.tscn) |
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
 | [pan-responder](pan-responder/README.md) | Original RN PanResponder dragging a box with the mouse | Public | [App](pan-responder/App.jsx) · [scene](pan-responder/scene.tscn) |
+| [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, against a server the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -315,6 +316,15 @@ with values derived from the JSX by an independent oracle:
 [receipt](../docs/evidence/singular-transforms/README.md) records 49 headless checks, 58
 with the renderer capture, the preceding-host control, which fails exactly 37, and a
 retained sabotage of the pointer projection, which fails exactly 2.
+
+The [networking probe](networking/README.md) runs RN's original `fetch`, `XMLHttpRequest`,
+`FormData`, `Blob`, `FileReader` and `AbortController` in two roots of one application
+against a deterministic Node server over HTTP and HTTPS, and an independent oracle compares
+the 137 requests the server recorded with what JS observed: `npm run test:networking`, next
+to the launcher entry (`npm run example -- networking` clicks six buttons against a loopback
+server the scene starts). Its [receipt](../docs/evidence/networking/README.md) records 100
+headless checks, six captures, the preceding-host control, which fails exactly 84, and two
+retained sabotages, which fail 8 and 2.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

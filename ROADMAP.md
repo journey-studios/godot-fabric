@@ -2603,6 +2603,104 @@ report's `postReview.pins` pin). [Pages
 37538167731](docs/evidence/frame-clock/publication.json) deployed this record
 from main 0bc0166. No whole GF, checkpoint, weight or denominator closes.
 
+### Fetch and XMLHttpRequest over Godot's HTTP client (2026-10-06)
+
+GF-22 becomes **In progress**; only its first-slice checkpoint becomes done, and the
+full item, contract, parity and targets remain open. The
+[networking evidence](docs/evidence/networking/README.md) installs React Native's own
+web-standard globals (`fetch` with `Headers`, `Request` and `Response`, `XMLHttpRequest`,
+`FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and
+`AbortSignal`) and backs them with native modules over Godot's `HTTPClient`: **100
+headless checks** in two roots of one Hermes application against a deterministic local
+server over HTTP and HTTPS. GF-05, GF-21 and GF-25 are not at their first slice, so none
+of their checkpoints changes.
+
+The host's initialization replaced RN's `InitializeCore`, so `Libraries/Core/setUpXHR.js`
+never ran and none of those globals existed. `src/initialize.js` now imports it (each
+global loads on first read), and the SDK's esbuild plugin aliases RN's `RCTNetworking` to
+`RCTNetworking.android.js`: RN ships the wrapper only as `.ios.js` and `.android.js`, which
+this host's resolver never picks, and the Android wrapper is the contract the host
+implements (JS assigns the request id and calls back synchronously, `sendRequest` takes
+positional arguments and a header array, a failure event has two elements and a third,
+`true`, only for a time-out). Three C++ TurboModules implement it: `Networking` (RN's
+generated `NativeNetworkingAndroidCxxSpec`), `BlobModule` and `FileReaderModule`, over one
+blob store (`native/networking_modules.{h,cpp}`, `native/blob_store.h`). Without a
+`BlobModule`, whatwg-fetch falls back to `arraybuffer` and decodes the bytes as Latin-1;
+with it, `fetch` reads bodies through `FileReader` as RN does, and the collector provider
+RN's `BlobManager` asks for releases the response blobs nothing closed.
+
+The transport is behind its own interface (`native/http_transport.h`): `start`, `cancel`,
+`poll`, `stop` and a listener, all on Godot's main thread, which is the JS thread.
+`native/godot_http_transport.cpp` is the first implementation: one `HTTPClient` and one
+connection per request, advanced from `ApplicationRuntime::pump` before the work queue
+drains (the runtime change is wiring: the poll, the stop and a snapshot), with 1 MiB of body
+bytes per pump shared by every request. Godot's client does no redirects, total time-out,
+decompression, cookies, pooling or HTTP/2, so the transport follows redirects with
+OkHttp's rules (301, 302 and 303 become a GET without a body, 307 and 308 keep method and
+body, at most 20 follow-ups, across origins with `Authorization` dropped, a scheme it
+cannot follow delivered as the response) and enforces `callTimeout`'s semantics with its own
+clock; a compressed response fails explicitly. The pure parts (URLs, redirect planning,
+headers, charsets with BOM, base64, multipart) live in `native/http_core.h` with a C++ test of
+81 assertions in 10 groups. Request bodies are `string`, `base64`, `formData` (string
+parts) and `blob`; `uri` bodies and file parts fail explicitly; nothing is stored or sent
+as a cookie; response types are `text` (the Content-Type charset, UTF-8 by default, a BOM
+first), `base64` and `blob`. The facade gains no `react-native` export: the `Networking`
+export stays missing. Two validation seams on the application node keep the suite
+deterministic: `validation_tls_trusted_authorities` (the PEM an HTTPS request trusts in
+place of Godot's roots) and `validation_clock_offset_ms` (moves the clock the deadlines
+run on, so a time-out needs no wait). On stop the transport ends first, the blobs are
+released and no event reaches JS afterwards.
+
+A Node child process serves the cases (status codes, a raw header echo, repeated headers,
+JSON, UTF-8, ISO-8859-1, BOM and invalid UTF-8, byte patterns, a megabyte in chunks,
+answers followed by a close, a compressed answer, redirect chains and loops, a cross-origin
+and a cross-scheme redirect, resets, truncations, a port that never answers, and HTTPS
+with a CA and a leaf signed at runtime, no private key written) and records every request
+as it arrived; held requests are released by control requests, never by sleeping. The
+probe waits on conditions only, and an independent oracle derives the 137 requests the
+cases must have caused, reads bodies, headers and connection ends from the server's
+record and ties the native counters to it by arithmetic (64 redirects followed, every
+started request ended exactly one way, no event after the stop, the blob store's books
+balance). The same bundle on the preceding host (built from `99216e2`) fails exactly the 84
+normative checks, the 16 that need no native module hold, and no request reaches the
+server; two retained sabotages (a transport that never follows a redirect, one that
+does not join repeated response headers) fail 8 and 2 checks and the oracle rejects each.
+The suite also passes without the control receipts, as in CI, and under heavy CPU load.
+An interactive example (`examples/networking`) clicks six buttons against a loopback
+server it starts and its six renderer captures are in the evidence.
+
+Open: `WebSocket` (its first use fails with RN's own "'WebSocketModule' could not be
+found", and `BlobModule`'s socket methods throw), cookies and `withCredentials`, compressed
+responses (OkHttp and NSURLSession decode them) and gzip request bodies (RN's two modules
+compress them), HTTP/2, upload and download progress, incremental streaming of text, `uri`
+and file bodies, connection pooling and keep-alive, proxy and system trust configuration,
+the `Networking` export of `react-native`, offline and reconnect behavior, hardware, and
+Godot Android (the `INTERNET` permission), iOS and Web exports (CORS).
+
+On the committed tree the contracts gates (265 Node/13 Python, static analysis, publication
+scan), `test:recovery`, the 37 native suites (30 examples/2,363 checks, transform guards 61
+plus 25 input checks and the 29- and 49-check uniform scale and singular lanes, Down 2,731,
+Document Up 6,459, View Up 297, Move 220, Document Move 1,940, hover 158, root path 82,
+Document hover 1,530, click 728, capture notifications 672, PanResponder 128, AppState 75,
+lists 44, Appearance 79, Switch 108, shared touches 92, touchables 93, ActivityIndicator 33,
+Animated 75, frame clock 37, networking 100) and the native SDK batch pass, each suite with
+the count of the preceding slice (the networking's own aside; the examples went from 2,262
+to 2,363 checks with the six launchable examples of #45 and this one). All 96 executed code
+and configuration inputs match implementation `83a3557` via git show/SHA-256 (executed from
+the committed tree, execution base `99216e2`). The local controls and sabotages of the
+Animated, frame clock and transform guard suites pin files this slice changed, so they were
+rebuilt on their preserved preceding hosts; hosted CI has no controls and is not affected.
+After the review of #47 the example checks the server for the text step (16 headless and 28
+capture checks, 2,364 for the examples) and keeps its newest request
+([`155d35b`](https://github.com/journey-studios/godot-fabric/commit/155d35b1cb3e0cddf8f4e3daada74c701779b4ae)), the four sabotage scripts restore
+their sources when a signal ends them, through `scripts/sabotage-sources.mjs`
+([`7f45f24`](https://github.com/journey-studios/godot-fabric/commit/7f45f2413dea2762ca6242d3b5d085bc1c1a5118)), the runner no longer waits on a
+dead server ([`8b7c890`](https://github.com/journey-studios/godot-fabric/commit/8b7c890c6d6458bb0500f3132402275149c28f43)), and a sabotage run past its
+timeout kills a child that ignores SIGTERM instead of waiting on it ([`57bc3e8`](https://github.com/journey-studios/godot-fabric/commit/57bc3e897f7d92a0002e12586fed4ad140d5bf85)); the counts above are
+those executed at `83a3557`, and the `postReview` section of `report.json` pins the changed files
+to these commits. Hosted CI for this slice is pending. Only GF-22's first-slice checkpoint
+closes; no whole GF, other checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
@@ -2632,7 +2730,7 @@ observe the real system and retain the original event/callback contracts.
 | GF-19 · P1 · Animated and layout animation | In progress | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
 | GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
-| GF-22 · P1 · Networking and web-standard runtime APIs | Planned | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
+| GF-22 · P1 · Networking and web-standard runtime APIs | In progress | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
 | GF-23 · P1 · Shared device services | Planned | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
 | GF-24 · P1 · OS-specific public contracts | Planned | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |
 
