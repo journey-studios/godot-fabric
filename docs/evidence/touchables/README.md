@@ -139,6 +139,51 @@ depende do GF-19.
   underlay e o responder é uma View a mais. Os dois controles são gerados pelo
   runner em `build/` e nunca editam `src/`.
 
+## Capturas
+
+O exemplo interativo [`touchables`](../../../examples/touchables/README.md) abre no launcher com
+`npm run example -- touchables`, e `npm run example -- touchables --capture` salva cinco quadros
+do renderizador nativo, de 900 × 680, enquanto a validação dele segura o botão do mouse sobre
+cada touchable (13 checks headless, 27 com o renderizador). O
+[recibo de capturas](captures.json) registra o caminho, o SHA-256 e as dimensões de cada quadro,
+e os bytes se repetiram em duas execuções seguidas.
+
+![Os três touchables em repouso, cada legenda com idle e 0 presses](touchables-rest.png)
+
+**Em repouso.** O `TouchableOpacity` azul, o `TouchableHighlight` verde-azulado e o
+`TouchableWithoutFeedback` roxo, cada legenda com `idle · 0 presses`.
+
+![O TouchableOpacity esmaecido enquanto o mouse é mantido sobre ele](touchables-opacity-pressed.png)
+
+**TouchableOpacity pressionado.** Mouse mantido no primeiro: ele esmaece até o
+`activeOpacity` (0,35) pelo driver nativo e a legenda diz `pressed · 0 presses`; os outros dois
+não mudam.
+
+![O TouchableHighlight com o underlay âmbar e o filho esmaecido enquanto o mouse é mantido sobre ele](touchables-highlight-pressed.png)
+
+**TouchableHighlight pressionado.** Mouse mantido no segundo, depois de o primeiro ter sido
+solto (`released · 1 press`, de volta à opacidade total): o `underlayColor` âmbar substitui o
+fundo e o filho esmaece até 0,55.
+
+![O TouchableWithoutFeedback sem mudança enquanto o mouse é mantido sobre ele, só a legenda diz pressed](touchables-feedback-pressed.png)
+
+**TouchableWithoutFeedback pressionado.** Mouse mantido no terceiro: nada nele muda, porque o
+RN não lhe dá feedback visual; só a legenda, que vem do estado do React, diz `pressed · 0 presses`.
+
+![Os três touchables de volta ao repouso, cada legenda com released e 1 press](touchables-released.png)
+
+**Soltos.** Depois da terceira soltura, os três com a aparência de repouso e cada legenda com
+`released · 1 press`.
+
+A validação compara o SHA-256 da região de cada touchable em cada quadro: enquanto o
+`TouchableOpacity` ou o `TouchableHighlight` é mantido, só ele difere do repouso; enquanto o
+`TouchableWithoutFeedback` é mantido, os três são desenhados como no repouso; e depois das soltas
+os três voltam a ser desenhados como no repouso. Não há oráculo independente de pixels.
+
+Estas execuções são locais: o recibo de [CI hospedada](hosted-ci.json) desta fatia não cobre o
+exemplo, que o `npm run test:examples` do job `native-cold-start` passa a repetir (sem captura)
+quando ele entra na `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
+
 ## Regressões
 
 No mesmo host, o da `main` (sem mudança nativa), passaram os gates do job

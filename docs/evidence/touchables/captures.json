@@ -1,0 +1,57 @@
+{
+  "example": "touchables",
+  "command": "npm run example -- touchables --capture",
+  "godot": "4.7.2-stable (official)",
+  "displayServer": "macOS",
+  "exampleChecks": {
+    "headless": 13,
+    "nativeRenderer": 27
+  },
+  "files": [
+    {
+      "stage": "rest",
+      "path": "docs/evidence/touchables/touchables-rest.png",
+      "sha256": "dabb7b2ae0663702f499218fe1546659273cfcf729a424b56329c5a80342cf5d",
+      "bytes": 44409,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "opacity-pressed",
+      "path": "docs/evidence/touchables/touchables-opacity-pressed.png",
+      "sha256": "1cc47043f3395f2add55e7fe8d916e4c74901da44623c17c218b8b76cb5162bb",
+      "bytes": 45633,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "highlight-pressed",
+      "path": "docs/evidence/touchables/touchables-highlight-pressed.png",
+      "sha256": "09b24cd41e3dd4a08da7d976a80960a7501c9a0a9e76c8369523ad8c5c36a258",
+      "bytes": 46428,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "feedback-pressed",
+      "path": "docs/evidence/touchables/touchables-feedback-pressed.png",
+      "sha256": "5d9b604aa2ae94ef1a05898d023a511040649d1a3bae5ac6ab8d4ef1c1f328f0",
+      "bytes": 46067,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "released",
+      "path": "docs/evidence/touchables/touchables-released.png",
+      "sha256": "9ec207b5d0c1faa3acb2b4ba7e2ca8d5b29a597dbc17e8a987fb169b983effd2",
+      "bytes": 44666,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    }
+  ]
+}

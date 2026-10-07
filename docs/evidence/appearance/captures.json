@@ -1,0 +1,39 @@
+{
+  "example": "appearance",
+  "command": "npm run example -- appearance --capture",
+  "godot": "4.7.2-stable (official)",
+  "displayServer": "macOS",
+  "exampleChecks": {
+    "headless": 14,
+    "nativeRenderer": 20
+  },
+  "files": [
+    {
+      "stage": "light",
+      "path": "docs/evidence/appearance/appearance-light.png",
+      "sha256": "accfc673ba7a5e0736694124e392b404f0a97beb10ab867bc8bcaf4f36143f64",
+      "bytes": 42966,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "dark",
+      "path": "docs/evidence/appearance/appearance-dark.png",
+      "sha256": "eb7eb054f44c048bce0dbfa166b2b8f33971ee031ec12e47e1ab8cf6f30313aa",
+      "bytes": 43536,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "system-dark",
+      "path": "docs/evidence/appearance/appearance-system-dark.png",
+      "sha256": "03ea6ed30249eb23ee2a825ab5225f90552fe021dab0a317e306a6647e7cc787",
+      "bytes": 41302,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    }
+  ]
+}

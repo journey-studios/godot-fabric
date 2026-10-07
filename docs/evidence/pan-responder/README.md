@@ -54,6 +54,40 @@ todo início e uma View removida no meio do gesto.
   consegue reivindicar. O oráculo independente do runner, sem os gates de status
   do probe, rejeita o relatório sabotado e aceita os finais.
 
+## Capturas
+
+O exemplo interativo [`pan-responder`](../../../examples/pan-responder/README.md) abre no launcher
+com `npm run example -- pan-responder`, e `npm run example -- pan-responder --capture` salva três
+quadros do renderizador nativo, de 900 × 680, enquanto a validação dele pressiona a caixa, a
+arrasta em quatro passos e a solta com o mouse (11 checks headless, 18 com o renderizador). O
+[recibo de capturas](captures.json) registra o caminho, o SHA-256 e as dimensões de cada quadro,
+e os bytes se repetiram em duas execuções seguidas.
+
+![A caixa na posição inicial, com a leitura idle e no gesture yet](pan-responder-before.png)
+
+**Antes.** A caixa na posição inicial (x 24, y 24), em verde-água; o React não guarda gesto e a
+leitura diz `idle` e `no gesture yet`.
+
+![A caixa âmbar no meio do arrasto, com dx 80 e dy 30](pan-responder-dragging.png)
+
+**Arrastando.** O quadro depois do segundo de quatro passos do arrasto, com o botão esquerdo
+mantido: a caixa âmbar acompanha o ponteiro pelo `dx` e `dy` do gesto (80 e 30, um toque ativo),
+em x 104, y 54.
+
+![A caixa de novo em verde-água onde foi solta, com a leitura released e dx 160 e dy 60](pan-responder-after.png)
+
+**Depois.** Depois da soltura: a caixa ficou onde foi solta (x 184, y 84), de novo em
+verde-água, e a leitura diz `released` com `dx 160 · dy 60 · touches 0`.
+
+A validação compara o SHA-256 das regiões das duas posições que a caixa ocupa: as duas mudam
+entre antes e depois, então o renderizador desenhou a caixa onde ela foi solta e não mais onde
+começou. Não há oráculo independente de pixels, e as quatro lanes acima continuam sendo o que
+este recibo certifica.
+
+Estas execuções são locais: o recibo de [CI hospedada](hosted-ci.json) desta fatia não cobre o
+exemplo, que o `npm run test:examples` do job `native-cold-start` passa a repetir (sem captura)
+quando ele entra na `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
+
 ## Regressões
 
 No mesmo host passaram os três gates do job `contracts` (260 testes Node e 13

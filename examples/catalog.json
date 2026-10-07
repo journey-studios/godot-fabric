@@ -161,6 +161,48 @@
     "scene": "examples/animated/scene.tscn"
   },
   {
+    "id": "switch",
+    "title": "Original RN Switch with controlled values, colors and disabled input",
+    "api": "public",
+    "source": "examples/switch/App.jsx",
+    "scene": "examples/switch/scene.tscn"
+  },
+  {
+    "id": "activity-indicator",
+    "title": "Original RN ActivityIndicator: sizes, colors, animating and hidesWhenStopped",
+    "api": "public",
+    "source": "examples/activity-indicator/App.jsx",
+    "scene": "examples/activity-indicator/scene.tscn"
+  },
+  {
+    "id": "touchables",
+    "title": "Original RN touchables: the opacity, the underlay and the absence of feedback while pressed",
+    "api": "public",
+    "source": "examples/touchables/App.jsx",
+    "scene": "examples/touchables/scene.tscn"
+  },
+  {
+    "id": "virtualized-list",
+    "title": "Original RN FlatList and SectionList windowed by the mouse wheel",
+    "api": "public",
+    "source": "examples/virtualized-list/App.jsx",
+    "scene": "examples/virtualized-list/scene.tscn"
+  },
+  {
+    "id": "appearance",
+    "title": "Original RN Appearance and useColorScheme: setColorScheme and the system theme",
+    "api": "public",
+    "source": "examples/appearance/App.jsx",
+    "scene": "examples/appearance/scene.tscn"
+  },
+  {
+    "id": "pan-responder",
+    "title": "Original RN PanResponder dragging a box with the mouse",
+    "api": "public",
+    "source": "examples/pan-responder/App.jsx",
+    "scene": "examples/pan-responder/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",
