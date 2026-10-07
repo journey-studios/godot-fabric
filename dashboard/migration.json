@@ -6,14 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Modal: nested/Pressability/cancelamento comprovados; ref0×0 e autoridade entre owners em correção. WebSocket #48 mergeado."
+    "focusTitle": "Modal desktop corrigida na PR #51; revisão local concluída. CI/CodeRabbit do head final pendentes; orientação/insets e mobile/export abertos."
   },
-  "updatedAt": "2026-10-07T21:53:11.031797+00:00",
+  "updatedAt": "2026-10-07T22:51:55.974532+00:00",
   "source": {
-    "commit": "dd66069eb7b5923c416fa11276b0224cf97e08fe",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/dd66069eb7b5923c416fa11276b0224cf97e08fe",
+    "commit": "f95a3e2ebad4111819a7fa076a86fc4e3e031f98",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51",
-    "scope": "Modal desktop publicada em dd66069 após revisão thermo-nuclear e cinco achados corrigidos. Root verifica 33 produtores no commit, 68/68 headless, 73/73 gráficos, lifecycle/membership/reorder/owners e consumer externo via SDK. CI/CodeRabbit da implementação pendentes. Causa completa das falhas históricas de input indeterminada; input final usa device dedicado. GF-18 parcial; orientação/insets, mobile/export e paridade integral abertos. WebSocket #48 já mergeado em ebcb292. Preserva 23/156 checkpoints e 0/39 itens completos."
+    "scope": "Modal desktop corrigida em f95a3e2: revisão thermo-nuclear/CodeRabbit e provas independentes no host 45ba095b. 35 produtores verificados no commit; 68/68 headless, 73/73 gráficos, Surface 9/9, owners 11/11 com interlopers, cleanup negativo e consumer SDK 68/68. Gates 283 Node+13 Python. CI/CodeRabbit do head final pendentes; GF-18 parcial, orientação/insets, mobile/export e paridade integral abertos. Mantém 23/156 checkpoints e0/39 itens completos."
   },
   "phases": [
     {
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Revisão thermo-nuclear da Modal na PR #51: três P1 e dois P2 corrigidos, com simplificação de ownership e geometria. Root confirma 68/68 headless, 73/73 gráficos, 65/65 lifecycle, 31/31 membership e 9/9 reorder e owners; controle de device dedicado passa nos dois hosts. Consumer externo via SDK: 68/68 e tipos positivos/negativos. Causa completa das falhas anteriores de input permanece indeterminada. Implementação publicada em dd66069; CI/CodeRabbit pendentes. Orientação/insets e mobile/export abertos; quatro checkpoints false, 23/156 e 0/39 preservados.",
+      "note": "PR #51: cinco achados iniciais corrigidos, mais geometria de Surface oculta, teardown por callback, indexação/retirada lógica e guard/cleanup da fixture. Filtro privado de device reutilizado no roteamento canônico; controle de interlopers idêntico falha no host antigo e passa 11/11 no final. Root confirma 35 produtores, 68/68 headless, 73/73 gráficos, Surface 9/9, lifecycle 65/65, membership 31/31, reorder 9/9, capture 84/84 e consumer SDK 68/68. Capturas e recibos duráveis atualizados. Revisão local aprovada; CI/CodeRabbit do head final pendentes. Causa completa do histórico de input permanece indeterminada; hardware/mobile/export, orientação/insets e paridade integral abertos. Quatro checkpoints false; 23/156 e0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3477,6 +3477,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-coderabbit-a32235d-findings-20261007",
+      "at": "2026-10-07T22:09:00.522424+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "CodeRabbit solicitou mudanças em a32235d. Revalidar DOM de root oculto, reentrância de host no unmount e scans de listas lógicas; corrigir falha rápida da fixture e título de foco. Teste headed fica obrigatório; comprovação hospedada pendente. Cinco achados anteriores preservados; aceites integrais não alterados.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+    },
     {
       "id": "modal-reviewed-source-published-dd66069",
       "at": "2026-10-07T21:53:11.031797+00:00",
@@ -5337,6 +5346,15 @@
       ],
       "message": "Artefato hospedado ffcc027 confirma 112 checks, 40 owners, oito rejeições exatas e nove registros liberados. CI ffcc concluída: contracts/native/Android passaram; iOS teve timeout simctl de 60 s antes do build e comparação pulou. Referência iOS 956 passou 13 checks em oito inputs idênticos; toda essa execução tem status separado. GF-08/GF-12 continuam ativos, sem novo checkpoint concluído.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37178884084"
+    },
+    {
+      "id": "modal-coderabbit-corrections-f95a3e2",
+      "at": "2026-10-07T22:51:55.974532+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
     }
   ]
 }

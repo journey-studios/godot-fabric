@@ -4,6 +4,12 @@ Investigation on 2026-10-07 for RN 0.87.1 and Godot 4.7.2-stable, at the start o
 integration. GF-18 is now being implemented; no checkpoint is completed by
 this study or the initial local mounting evidence below.
 
+The latest [implementation quality review](modal-implementation-review.md) and
+[correction receipt](../evidence/modal/coderabbit-final-local.json) supersede
+intermediate implementation-status statements in the historical milestones
+below. Root validated the final desktop host and fresh canonical consumer;
+final-head CI/CodeRabbit, orientation/insets and mobile/export remain open.
+
 ## Physical ownership
 
 Use sibling embedded Godot Windows owned by their common host Window, with only

@@ -1,8 +1,10 @@
 # Modal implementation quality review
 
-The local implementation is approved for hosted review of the desktop first
-slice in PR #51. Five high-confidence defects were found and corrected before
-this verdict. Merge still requires CI and CodeRabbit on the implementation head.
+The desktop first slice is locally approved for renewed hosted review in PR #51.
+Root independently validated the final 45ba095b host after the initial five
+findings, the CodeRabbit corrections and additional fixture/lifetime cleanup.
+The previous a32235d workflow passed all required jobs, but cannot certify these
+new native changes. Merge still requires the final head's CI and CodeRabbit.
 This is not full GF-18 acceptance.
 
 The review applies the user's thermo-nuclear criteria to the Modal change and
@@ -60,12 +62,12 @@ presentation policy and immutable-tree geometry live in focused modules rather
 than accumulating feature branches throughout shared dispatch. The stack has
 249 lines, presentation 69 and embedding 50. No changed file crosses from below
 1,000 to above 1,000 lines. application_runtime.cpp already exceeded that limit;
-it is now 2,521 lines. Its size remains an architectural concern, but the new
+it is now 2,561 lines (main already has 2,141). Its size remains an architectural concern, but the new
 Window arbitration and tree geometry are extracted, while registry/mount and
 endpoint retirement stay with their existing runtime authority. No additional
 pass-through layer is required for this slice.
 
-## Final independent evidence
+## Initial desktop evidence
 
 Root verifies 33 producer pins against the checkout on host SHA-256
 `37053a3992cfd8cdb512933c26b80ef6efb7711487b149c4b840b31c42386eae`.
@@ -106,12 +108,68 @@ The final required contracts pass 283 Node tests plus 13 Python tests. Static,
 publication and diff validation are recorded in the
 [local gate receipt](../evidence/modal/thermonuclear-gates-local.json).
 
+## Additional review corrections and final evidence
+
+The [final correction receipt](../evidence/modal/coderabbit-final-local.json)
+pins 35 producers and matches all 21 changed/related native producers to the
+compiled build receipt. Root repeated 68/68 headless and 73/73 graphical checks,
+65/65 lifecycle, 31/31 membership, 9/9 reorder and 84/84 current/enabled capture
+checks on host SHA-256
+`45ba095b7584224c550f4f453b7ee12e092606212fe6d57e41abbd2e78c6163d`.
+The [initial](../evidence/modal/review-coderabbit-initial.png) and
+[resized](../evidence/modal/review-coderabbit-resized.png) captures were inspected.
+
+| Priority | Additional finding | Correction and evidence |
+| --- | --- | --- |
+| P1 | Hidden connected Surfaces lost DOM coordinates because geometry required native visibility | Keep connected geometry independent of visibility; use the typed physical_input_host boundary for input. Identical old/new 9-check probes show 34.5,55.5→0,0 before correction and stable 34.5,55.5 afterward. |
+| P2 | Teardown retained a Surface pointer and attached ordinary content across Modal callbacks | Detach ordinary roots before hide, retain presentation ownership and re-resolve Object IDs after mutations. The callback sees a live detached RN root in the final probe. |
+| P2 | Logical mount/removal scanned all parents and empty Surface entries survived retirement | Maintain child→parent ownership, touch the known parent and forget the root in canonical finalization. Reorder and lifecycle pass; no asymptotic benchmark or linear teardown claim is made. |
+| P2 | Missing targets caused a null dereference; early failure then exposed unsafe quit cleanup | Guard before native access, cache IDs before retirement, stop both runtimes and await cleanup. The negative exits 1 with a durable failed report, zero roots and only its expected failed-assertion diagnostic. |
+| P2 | The existing validation device filter was bypassed by Modal Window input | Move it once to routed_input, reuse its typed key and Root, and delete duplicate Surface/type checks. The same explicit foreign-device inputs fail four checks on the old host and pass 11/11 on the final host. |
+
+The teardown proof distinguishes two engine-supported paths. During a bound
+Surface.unmount call, Godot rejects synchronous Object.free because that Object
+is locked; the historical diagnostic is retained and is not a reproduced crash
+or use-after-free. The final callback confirms ordinary content is alive and
+already detached, then queue_free completes after return. A separate JS-hide
+callback performs immediate Surface.free with ordinary content alive. Both
+retire to zero roots with no runtime errors; the final probe passes 9/9.
+
+The final two-owner probe retains all nine original assertions and their frame
+waits, adds the target guard and a controlled interloper assertion. Both Surfaces
+select device 4242 through the preexisting private validation metadata; three
+explicit device 4243 moves are inside their owners and outside their targets.
+The old host admits one/two native and responder moves and loses Pressability
+presses. The corrected host delivers all original Press/Up/capture assertions
+with zero foreign native/responder moves. No skip, retry or weakened assertion
+was introduced. The [earlier observation](../evidence/modal/coderabbit-input-observation.json)
+remains inconclusive about the complete cause of ambient desktop interference.
+This certifies an isolated engine-injected witness, not hardware input.
+
+A fresh [canonical consumer](../evidence/modal/coderabbit-consumer-local.json)
+uses the final host, the byte-identical fixture and provisioned SDK CLI; root
+passes 68/68 headless checks. All 153 addon and 95 native SDK hashes match the
+checkout. The linked registry passes 213 checks in 11 cases without mounting a
+component or certifying ABI. The existing type positive/negative proof remains
+attributed to its original host; this change does not modify public types.
+Final required local gates again pass 283 Node and 13 Python tests; see the
+[gate receipt](../evidence/modal/coderabbit-gates-local.json). The
+[source publication pin](../evidence/modal/coderabbit-reviewed-source-publication.json)
+verifies 35 Modal, 95 SDK and 153 addon producer hashes against f95a3e2.
+
 ## Acceptance boundary
 
-No unresolved high-confidence implementation defect remains from this review.
-The published preparation's green CI cannot certify the new native implementation.
-Review and merge require the implementation commit's hosted results and resolved
-CodeRabbit comments. GF-18 remains in progress with all four checkpoints false.
+Local structural and behavioral review of this desktop slice is approved.
+The final implementation head still needs hosted CI and CodeRabbit approval
+before merge. GF-18 remains in progress with all four checkpoints false here.
 Orientation/insets, mobile/export, complete pinned RN parity and hardware input
-remain explicit acceptance work. The dashboard does not increase completeness
-based on this local first-slice verdict.
+remain explicit acceptance work. Local approval does not increase the dashboard
+completeness or certify all previous Luna implementations.
+
+## Hosted runner control
+
+The [a32235d hosted artifact](../evidence/modal/hosted-runner-control-a32235d.json)
+confirms the required macos-15 owner-window probe passes 9/9 with display server
+macOS. Core Modal passes 68/68, lifecycle 65/65, reorder 9/9 and membership 31/31.
+No display skip was introduced. This establishes runner support; it does not
+certify the later CodeRabbit corrections. A subsequent live check confirms all five required workflow jobs passed on a32235d.
