@@ -24,8 +24,17 @@ The separate HTTP diagnostic correction receipt covers commit `e8dd7b0` and pass
 Independent inspection again recomputed 95/60/53, checked 46 WebSocket inputs,
 verified both load phases and all eight lifetime cases, and checked the 13-case
 parity subset. The HTTP artifact separately passed 100 checks; 51 distinct inputs
-across the HTTP and WebSocket bundles matched that hosted checkout. This run used
-base `afa5d875`; integration with main at `51ad758` still requires its own green CI before merge.
+across the HTTP and WebSocket bundles matched that hosted checkout. This run
+used base `afa5d875`; main at
+[`ebcb292`](https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f),
+the squash merge of #48, passed all five jobs in push run
+[37663778397](https://github.com/journey-studios/godot-fabric/actions/runs/37663778397)
+([receipt](hosted-ci-ebcb292.json)). Its native job ran `npm run test:websocket`
+(its four test files, 4 of 4 TAP tests passing) on the bundle `5f51967a…` that
+[execution.json](execution.json) records. The hosted report matched that
+record's 95 checks, 60 server connections and 53 oracle comparisons; both load
+phases delivered 1024 messages, and the eight lifetime cases ended with no
+active connection.
 
 The later `3b57e72` run failed in the HTTP regression suite before WebSocket ran.
 Its truncated-body XHR emitted the expected error sequence, but Godot reported
@@ -33,8 +42,9 @@ connection loss instead of EOF. The [diagnostic receipt](ci-http-diagnostic.json
 records both exact permitted reasons, the corrected 100-check local run and five
 rejected oracle mutations. The main baseline passed six times; that failure was
 not reproduced there. The failed hosted run remains failed, and the correction
-was verified by the `e8dd7b0` run above. The later integration commit `51ad758` still
-requires its own green hosted check before merge.
+was verified by the `e8dd7b0` run above. The push of main at
+[`ebcb292`](https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f)
+repeated this record in run 37663778397 ([receipt](hosted-ci-ebcb292.json)).
 
 Negative controls are also retained in the execution receipt: the preceding main host
 (`afa5d875`) passed only 12 of 95 checks and made zero server connections; the Origin

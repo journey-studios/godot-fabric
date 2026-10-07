@@ -1298,7 +1298,12 @@
     "node_modules/whatwg-fetch/fetch.js": "5edbcbfbde9540d067d6bbbc9f2747afc4e6323b2a5d38eeaf394bc7261c5447"
   },
   "hostedCI": {
-    "status": "pending-networking-slice"
+    "status": "verified",
+    "run": 37571237096,
+    "attempts": 1,
+    "receipt": "hosted-ci.json",
+    "pages": 37571237256,
+    "publication": "publication.json"
   },
   "limits": [
     "WebSocket is the next slice: the global is RN's and fails on first use with 'WebSocketModule' could not be found, and BlobModule's socket methods throw E_UNSUPPORTED.",

@@ -441,7 +441,9 @@ that never follows a redirect fails 8 checks and one that does not join repeated
 headers fails 2, and the oracle rejects each. Six captures of the example and a C++ test of
 the HTTP core (81 assertions). Cookies, compressed responses, HTTP/2, progress events,
 incremental streaming, `uri` and file bodies, and every target but macOS are open (the
-`WebSocket` global got its module in the record below). Hosted CI pending.
+`WebSocket` global got its module in the record below). Hosted run 37571237096
+repeated the 100 checks with identical IDs, and the oracle accepts its report
+([receipt](networking/hosted-ci.json)).
 
 The [WebSocket record](websocket/README.md) now describes the HTTPClient/StreamPeer adapter
 with pinned wslay; the prior `WebSocketPeer` report remains available as explicit history.
