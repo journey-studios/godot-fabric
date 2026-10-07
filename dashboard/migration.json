@@ -8,12 +8,12 @@
     "focusSequence": "5",
     "focusTitle": "Modal: nested/Pressability/cancelamento comprovados; ref0×0 e autoridade entre owners em correção. WebSocket #48 mergeado."
   },
-  "updatedAt": "2026-10-07T21:48:19.032982+00:00",
+  "updatedAt": "2026-10-07T21:53:11.031797+00:00",
   "source": {
-    "commit": "ebcb292969d7214bcd2651c22b44776859d83b2f",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/ebcb292969d7214bcd2651c22b44776859d83b2f",
-    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48",
-    "scope": "WebSocket #48 mergeado em ebcb292 após cinco jobs verdes no head final55980ac, aprovação CodeRabbit e cinco threads resolvidas. Artefatos verificados independentemente:95checks/60conexões/53traces WebSocket,100checks/137requests HTTP, carga/lifetime e56inputs por SHA-256. Capturas e prova local mantêm pin73a27b0; recibos históricos422c2ee/e8dd7b0 preservados. GF-22 parcial. Modal: investigação desktop escolheu Windows embedded irmãs com somente topo exclusivo; primeira montagem RN local validada e documentada; implementação do draft #51 em andamento, sem checkpoint novo.23/156 checkpoints e0/39 itens completos."
+    "commit": "dd66069eb7b5923c416fa11276b0224cf97e08fe",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/dd66069eb7b5923c416fa11276b0224cf97e08fe",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51",
+    "scope": "Modal desktop publicada em dd66069 após revisão thermo-nuclear e cinco achados corrigidos. Root verifica 33 produtores no commit, 68/68 headless, 73/73 gráficos, lifecycle/membership/reorder/owners e consumer externo via SDK. CI/CodeRabbit da implementação pendentes. Causa completa das falhas históricas de input indeterminada; input final usa device dedicado. GF-18 parcial; orientação/insets, mobile/export e paridade integral abertos. WebSocket #48 já mergeado em ebcb292. Preserva 23/156 checkpoints e 0/39 itens completos."
   },
   "phases": [
     {
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Revisão thermo-nuclear da Modal no draft #51: três P1 e dois P2 corrigidos, com simplificação de ownership e geometria. Root confirma 68/68 headless, 73/73 gráficos, 65/65 lifecycle, 31/31 membership e 9/9 reorder e owners; controle de device dedicado passa nos dois hosts. Consumer externo via SDK: 68/68 e tipos positivos/negativos. Causa completa das falhas anteriores de input permanece indeterminada. CI/CodeRabbit da implementação pendentes. Orientação/insets e mobile/export abertos; quatro checkpoints false, 23/156 e 0/39 preservados.",
+      "note": "Revisão thermo-nuclear da Modal na PR #51: três P1 e dois P2 corrigidos, com simplificação de ownership e geometria. Root confirma 68/68 headless, 73/73 gráficos, 65/65 lifecycle, 31/31 membership e 9/9 reorder e owners; controle de device dedicado passa nos dois hosts. Consumer externo via SDK: 68/68 e tipos positivos/negativos. Causa completa das falhas anteriores de input permanece indeterminada. Implementação publicada em dd66069; CI/CodeRabbit pendentes. Orientação/insets e mobile/export abertos; quatro checkpoints false, 23/156 e 0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3477,6 +3477,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-reviewed-source-published-dd66069",
+      "at": "2026-10-07T21:53:11.031797+00:00",
+      "taskIds": [
+        "GF-18"
+      ],
+      "message": "Implementação revisada publicada na PR #51 em dd66069; os 33 hashes executados conferem com os blobs do commit. Parecer e capturas atualizados. CI/CodeRabbit desse código permanecem pendentes; não conta os checks verdes da preparação. GF-18 segue parcial e sem novo checkpoint.",
+      "url": "https://github.com/journey-studios/godot-fabric/commit/dd66069eb7b5923c416fa11276b0224cf97e08fe"
+    },
     {
       "id": "modal-thermonuclear-local-review-closed-20261007",
       "at": "2026-10-07T21:48:19.032982+00:00",

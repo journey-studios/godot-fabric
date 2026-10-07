@@ -485,3 +485,9 @@ The published preparatory CI does not certify the new implementation: merge
 requires CI and CodeRabbit on the implementation commit. GF-18 stays in progress
 with all four checkpoints false. Orientation/insets, mobile/export and complete
 pinned RN parity remain outside this first-slice proof.
+
+
+The reviewed implementation is published as `dd66069` in PR #51. Root verifies
+all 33 executed producer pins against its Git blobs. The
+[source publication receipt](../evidence/modal/reviewed-source-publication.json)
+records local approval separately from pending implementation CI/CodeRabbit.
