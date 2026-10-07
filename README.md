@@ -377,19 +377,22 @@ global got its module in the next record, below). Hosted CI is pending.
 [Evidence](docs/evidence/networking/README.md).
 
 The same example's second card runs React Native's own `WebSocket` against an echo server the
-scene starts: the host registers a fourth C++ TurboModule, `WebSocketModule`, with the contract
-of RN's Android module (and the socket hooks of `BlobModule`), and runs each socket on Godot's
-`WebSocketPeer`, polled on the main thread together with the HTTP transport. It covers ws and
-wss, text and binary messages (`arraybuffer` and `blob`), subprotocols, the default Origin, close
-codes, errors, and the stop of the application with sockets open (closed with 1001, then
-silence). 93 headless checks in two roots of one application against a deterministic RFC 6455
-server written for the suite, whose own frame log an independent oracle compares with what JS
-observed on 52 of the 59 connections it recorded. The preceding host fails exactly its 81
-normative checks, and retained sabotages (no default Origin, the wrong close code at stop) fail
-4 and 2. The engine loses the messages a server writes in the same poll as its close frame
-([godot#115384](https://github.com/godotengine/godot/issues/115384)); `permessage-deflate`,
-cookies and a connect time-out are open; closing a socket that is still connecting fails it, as
-browsers do, where Android's module does nothing. Hosted CI is pending.
+scene starts. Its `WebSocketModule` uses Godot `HTTPClient` for asynchronous DNS/TCP/TLS setup,
+then public `StreamPeer` reads and writes with pinned wslay for RFC 6455 framing. The 95-check
+headless probe covers 60 server connections; an independent wire oracle compares 53 required
+JS/wire traces. It verifies data before coalesced close frames, interleaved ping, exact TLS close
+1000 and peer-selected 4002/reason, and an abnormal 1006 after a TLS drop. The preceding host
+passed 12 checks and failed 83; the Origin and stop-code sabotages fail four and two checks.
+Each WebSocket poll admits at most 1 MiB of inbound wire bytes across WebSocket sockets. Its
+256-event cap uses canonical pending networking-event capacity after the separate HTTP poll.
+Eight-socket load phases reached each limit, delivered 1,024 messages per phase and ended with
+zero pending events. Eight reentrant cancel/stop cases verify silent teardown; four drained echo
+cases observed wire close 1001, while four greeting cases with unread input ended in TCP drops,
+so cancellation's close delivery remains best effort. Connection plus upgrade has an explicit
+30-second host deadline and close has a separate 60-second deadline. Hosted CI passed all five
+jobs for pinned head `422c2ee` ([receipt](docs/evidence/websocket/hosted-ci.json)); later PR-head
+changes need their own green run. The parity job covers 13 core-ui-v2 cases on Android/iOS, not
+WebSocket differential or Godot mobile runtime behavior.
 [Evidence](docs/evidence/websocket/README.md).
 
 This does not promise compatibility with every React Native library.

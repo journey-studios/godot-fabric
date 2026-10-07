@@ -11,6 +11,13 @@ and its exact reason. A TLS drop after the client's close remains an abnormal
 failure. See the curated [execution receipt](execution.json). Raw per-run reports remain
 local and ignored.
 
+Hosted CI passed all five jobs for pinned implementation head `422c2ee` ([receipt](hosted-ci.json),
+[GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)). Independent
+inspection of the native artifact recomputed the product oracle and matched 46 repository inputs.
+Its parity job covers 13
+`core-ui-v2` cases on Android/iOS, not WebSocket differential or Godot mobile runtime behavior.
+Changes after that pinned head need their own green CI before merge.
+
 Negative controls are also retained in the execution receipt: the preceding main host
 (`afa5d875`) passed only 12 of 95 checks and made zero server connections; the Origin
 sabotage failed exactly four checks, and the stop-close-code sabotage failed exactly two.
@@ -70,12 +77,14 @@ frames. The per-image SHA-256 and sampled color are in the [execution receipt](e
 The verified macOS native SDK pack and provisioned addon include the pinned wslay library and
 license. The iOS simulator arm64 build passed and its combined archive link retains both Fabric
 and wslay symbols. That link proof did not execute on an iOS runtime or export a consumer app;
-ABI certification and hosted CI remain separate.
+ABI certification remains open. Hosted native execution is headless macOS for the pinned head;
+it is not mobile runtime evidence.
 
 ## Boundaries
 
-This is local headless evidence on macOS arm64. Android, iOS-device and Web runtime behavior
-remain separate. The fixtures do not certify `permessage-deflate`, other
+The product and graphical captures are local macOS arm64 evidence; hosted native execution is
+headless macOS for the pinned head. Android, iOS-device and Web runtime behavior remain separate.
+The fixtures do not certify `permessage-deflate`, other
 extensions, cookies, proxies, system trust integration, HTTP/2, long-duration or
 hardware load, offline reconnection, or the complete GF-22 acceptance. This PR
 adds evidence for one GF-22 slice; no roadmap checkpoint, weight, denominator or

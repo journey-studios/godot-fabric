@@ -4,10 +4,13 @@ Status: the HTTPClient/wslay adapter passed the 95-check product probe and indep
 oracle on macOS arm64 with pinned RN 0.87.1 and Godot 4.7.2. The server recorded 60 connections;
 the oracle requires all messages sent before a close frame and verifies the peer's actual close
 code and reason. Separate TLS cases cover immediate close 1000, peer-selected close 4002 with
-its exact reason, and a drop after the client's close as a failure. The sustained load probe
-reached the shared 1 MiB read budget and 256-event admission limit across eight sockets; the
-lifetime probe covered reentrant cancel/stop from open and message handlers. Hosted CI remains
-the separate confirmation. The prior WebSocketPeer path's data loss is the behavior in
+its exact reason, and a drop after the client's close as a failure. The bounded load probe
+reached the 1 MiB read budget across WebSocket sockets and the 256-event admission limit using
+capacity after the separate HTTP poll. The lifetime probe covered reentrant cancel/stop from
+open and message handlers. Hosted CI passed all five jobs for pinned head `422c2ee`
+([receipt](../evidence/websocket/hosted-ci.json)); later PR-head changes need separate green
+checks. The parity job's 13 `core-ui-v2` Android/iOS cases do not prove WebSocket differential or
+Godot mobile runtime behavior. The prior WebSocketPeer path's data loss is the behavior in
 [godotengine/godot#115384](https://github.com/godotengine/godot/issues/115384); it is not an
 observed limitation of this transport. A separate TLS read behavior was traced in pinned engine
 source: the public binding discards bytes on a non-OK status while its TLS peer can collect
@@ -75,7 +78,7 @@ could not be found`), and `BlobModule`'s `addWebSocketHandler`, `removeWebSocket
 `sendOverSocket` threw `E_UNSUPPORTED`. On the preceding host the same bundle runs the
 checks that need no native module and every other check fails at that lookup.
 
-## Godot WebSocketPeer constraints
+## Historical Godot WebSocketPeer constraints
 
 `WebSocketPeer` is the engine's WebSocket endpoint (`modules/websocket`, built on the wslay
 library). The client side is `connect_to_url(url, TLSOptions)`, then `poll()`, regularly: it is
@@ -97,12 +100,12 @@ engine observations explain the switch and remain relevant to the pinned 4.7.2 r
 
 | Finding | Source | Result for this adapter | Evidence |
 | --- | --- | --- | --- |
-| `WebSocketPeer` can lose frames read in the same poll that processes a close frame. This is the behavior described by [godot#115384](https://github.com/godotengine/godot/issues/115384). | [`get_packet`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L814-L831), [`poll`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L703-L785) | The current transport reads the exposed TCP/TLS stream directly and lets pinned wslay parse frames. The product probe and wire oracle verify data sent before a coalesced close, including close-coalesced and interleaved-control cases. | Upstream issue and pinned engine source |
+| The former `WebSocketPeer` adapter could lose frames read in the same poll that processes a close frame. This is the behavior described by [godot#115384](https://github.com/godotengine/godot/issues/115384). | [`get_packet`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L814-L831), [`poll`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L703-L785) | Historical behavior of the superseded adapter. The current StreamPeer/wslay product probe verifies data before a coalesced close and interleaved-control cases; the old limitation is not an observed limitation of this adapter. | Upstream issue and pinned engine source |
 | The pinned `StreamPeerMbedTLS::get_partial_data` can collect plaintext before returning EOF; the public `StreamPeer::_get_partial_data` binding clears its returned byte array on any non-OK status. The WebSocketPeer wslay callback treats the failed read as no data. | [`StreamPeerMbedTLS::get_partial_data`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/mbedtls/stream_peer_mbed_tls.cpp#L210-L253), [`StreamPeer::_get_partial_data`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/io/stream_peer.cpp#L86-L105), [`_wsl_recv_callback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L572-L598) | This source-backed TLS explanation is separate from #115384. The adapter reads at most Godot's queued plaintext, or one byte to load a TLS record when none is queued, so a close frame is parsed before a later EOF. The product smoke confirmed exact 1000 and 4002/reason delivery and rejected a post-close drop. | Pinned engine source; `tests/websocket-transport-smoke.test.mjs` |
 | Wslay disables reads after it queues a protocol close for invalid frames, invalid UTF-8 or a message over its configured maximum. | Pinned upstream [wslay event parser](https://github.com/tatsuhiro-t/wslay/blob/0e7d106ff89ad6638090fd811a9b2e4c5dda8d40/lib/wslay_event.c) | The adapter reports a terminal failure after flushing wslay's protocol close, without waiting for a peer close it can no longer read. Invalid-text and oversize product cases complete and release their sockets. | Source inspection; current product probe |
 
-Godot Android exports need the `INTERNET` permission and a Web export would use the browser's
-`WebSocket`, which cannot add headers or choose its handshake; neither is exercised here.
+Godot Android WebSocket runtime is not exercised. Web exports require a browser-specific
+WebSocket transport and are outside this proof.
 
 ## The implementation
 
@@ -130,10 +133,11 @@ StreamPeer reads and writes after that. Pinned wslay commit
 generated headers are private build inputs and are not exported by the native adapter SDK.
 `native/websocket_handshake.h` validates the bounded HTTP upgrade response before framing starts.
 
-The WebSocket poll shares a 1 MiB inbound wire-byte allowance across upgrade and frame reads,
-and admits at most 256 pending networking events. Capacity comes from canonical event counters
-(`queued - delivered - dropped`) after the HTTP poll, less slots reserved by incomplete WebSocket
-messages. A data message reserves one event slot at its first frame and releases it only when
+Each WebSocket poll shares a 1 MiB inbound wire-byte allowance across WebSocket connections,
+including upgrade and frame reads. It admits at most 256 pending networking events; capacity
+comes from canonical event counters (`queued - delivered - dropped`) after the separate HTTP poll,
+less slots reserved by incomplete WebSocket messages. A data message reserves one event slot at
+its first frame and releases it only when
 complete; fragments and control frames can continue under that reservation. Frame headers,
 control traffic and upgrade bytes debit the same wire budget. Connections rotate their first poll
 position, and another round runs only when bytes or event capacity made progress. Two eight-socket
@@ -156,9 +160,9 @@ with the value left out for the credential headers) and the close parameters.
   sees and iOS does as an event: it becomes a `websocketFailed` with OkHttp's message, so that
   every `connect` ends in a close or a failure; only an id that is not a non-negative integer,
   or one already in use, throws. The default Origin is added when the caller gave none. The
-  handshake's own headers (`Host`, `Upgrade`, `Connection`, `Sec-WebSocket-Key`,
-  `-Version`, `-Extensions` and `-Protocol`) are the engine's: a caller's value for one of them
-  is dropped and counted.
+  adapter constructs the handshake headers (`Host`, `Upgrade`, `Connection`,
+  `Sec-WebSocket-Key`, `Sec-WebSocket-Version`, and any offered protocol); caller values for
+  handshake-owned headers are dropped and counted. The adapter does not offer extensions.
 - **Messages.** Text goes out as a text message, base64 as a binary one, a blob's bytes as a
   binary one and `ping` as an empty binary one. Incoming text is a `text` event, binary is
   base64 or, for a socket in blob mode, a blob in the shared store that JS wraps and
@@ -176,8 +180,9 @@ with the value left out for the credential headers) and the close parameters.
   socket and no event reaches JS afterwards; retained methods
   that start something are refused with `E_MODULE_DISPOSED`, and late cleanup is harmless.
 - **Seams.** `validation_tls_trusted_authorities` and `validation_clock_offset_ms` are the two
-  validation seams the HTTP transport already has; the sockets use the same ones, the second
-  for the closing deadline. A product never sets either.
+  validation seams the HTTP transport already has; sockets use the same trust roots and injected
+  clock for their 30-second connection-plus-upgrade and 60-second closing deadlines. A product
+  never sets either.
 
 ## Why the probe is discriminating
 
@@ -198,28 +203,21 @@ second authority for the negative cases and a port that accepts and never answer
 The [fixture](../../tests/websocket-fixture.jsx) runs RN's public `WebSocket` in two roots of
 one application and records every event of every socket in order with the state it saw; the
 [probe](../../tests/websocket-probe.gd) waits on conditions, never on time, and also reads the
-application's networking snapshot. The [oracle](../../tests/websocket-oracle.mjs) trusts
-none of the probe's verdicts. It states, for each of the 60 connections the cases open, what the
-server must have received and sent (from the server's own constants and byte pattern), reads
-what the server recorded, and compares both with what JS observed: the handshake (one
-`Host`, `Upgrade`, `Connection`, version and Origin; a 16-byte key no other connection
-reused; no cookie), every frame a client sent masked, the data messages in each direction byte
-for byte, the close frames and codes, how each connection ended at the server, and, on 52
-sockets, that JS saw the same messages and ended the way the case documents. It ties the native
-counters to the server's record by arithmetic: the transport sent as many messages and bytes
-as the server received, read what the server sent but for the messages the engine dropped or
-refused, started every connection the server saw plus the six it could not (two refused ports,
-one that never answers and three untrusted certificates), and every connect ended as a
-refusal, a close, a failure or the stop that ended four.
+application's networking snapshot. The [oracle](../../tests/websocket-oracle.mjs) trusts none of
+the probe's verdicts: it compares the server's independent handshake/frame log with the probe's
+JS observations, including every required message, close code/reason and terminal outcome. The
+current product receipt records 60 server connections and 53 required wire/JS comparisons,
+including all expected data before close. It ties transport counters to server-observed traffic;
+the exact checks and case accounting are in the [execution receipt](../evidence/websocket/execution.json).
 
-On the preceding host the same bundle runs: the 12 checks that need no native module pass and
-the other 81 fail, with no connection reaching the server, and the oracle rejects the report.
+On the preceding host the same bundle runs: 12 of 95 checks pass and 83 fail, with no connection
+reaching the server, and the oracle rejects the report.
 Two retained sabotages break one line each, rebuild, run the probe and the oracle and restore
 the source byte for byte: a module that never adds the default Origin (the server then sees a
 handshake without one, and 4 checks fail) and a stop that closes with 1000 instead of 1001
 (the server sees the wrong close code on the sockets the stop ended, and 2 checks fail). The
 runner also fails on any engine, script or native error line it did not expect, and the suite
-passes with the control receipts absent, as in CI, and under heavy CPU load.
+passes with the control receipts absent, as in CI.
 
 ## Departures from RN
 
@@ -241,9 +239,9 @@ passes with the control receipts absent, as in CI, and under heavy CPU load.
   ([`RealWebSocket.connect`](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L157-L163))
   and fails a socket whose caller supplied `Sec-WebSocket-Extensions`
   ([lines 147-150](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L147-L150));
-  the engine negotiates none, and this host drops a caller's `Sec-WebSocket-Extensions` like
-  the other handshake headers, with no check of its own.
-- **Handshake-owned headers are the engine's.** OkHttp replaces `Upgrade`, `Connection`, the key
+  this adapter does not offer or negotiate extensions and drops a caller's
+  `Sec-WebSocket-Extensions` with other handshake-owned headers.
+- **The adapter owns handshake headers.** OkHttp replaces `Upgrade`, `Connection`, the key
   and the version, and keeps a caller's `Host`
   ([`BridgeInterceptor`](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/http/BridgeInterceptor.kt#L58-L60));
   this host drops all of them, and the suite asserts that a `Host`, an `Upgrade` and a
@@ -256,11 +254,11 @@ passes with the control receipts absent, as in CI, and under heavy CPU load.
   (line 89); this host applies a 30-second policy to connection plus upgrade and 60 seconds to
   the close response. The 30-second deadline is an explicit host policy verified with the
   injected clock, not a claim of inherited OkHttp behavior.
-- **Subprotocols are checked the engine's way:** a server that selects none, or one that was
-  not offered, fails the socket; OkHttp accepts both and reports `''` or the unoffered name.
-- **Failure messages are this host's and the engine's.** A failed handshake carries no HTTP
-  status, so "Expected HTTP 101 response but was '403 Forbidden'" cannot be produced; a lost
-  connection says that the connection to host:port was lost without a close frame.
+- **Subprotocol selection:** a server that selects no protocol is accepted and reports `''`;
+  an unoffered protocol is rejected. OkHttp accepts both cases.
+- **Failure text is host-specific.** Upgrade rejection errors retain the response status line;
+  other connection failures use adapter diagnostics. Exact OkHttp and SocketRocket failure-text
+  parity is not claimed.
 - **Invalid UTF-8 text fails the socket.** Wslay sends its protocol close (1007); the module
   reports a terminal failure to RN, which exposes error followed by close 1006.
 - **Cancellation close delivery is best effort with unread input.** Drained `/echo` scenarios
@@ -271,11 +269,11 @@ passes with the control receipts absent, as in CI, and under heavy CPU load.
 
 ## Exploratory observations outside the receipt
 
-The earlier WebSocketPeer transport used two 16 MiB rings per connection, which reserved about
-48 MiB of address space per socket. The current wslay adapter removes those rings and buffers
-messages up to 16 MiB per connection. The executed load probe covers wire-byte and pending-event
-caps, fairness and real RN handlers; it is bounded evidence for these fixtures rather than a
-general heap or long-duration soak certification.
+Historical scratch measurement (not a current backend measurement): the former WebSocketPeer
+transport used two 16 MiB rings per connection. The current wslay adapter has no such rings; its
+16 MiB message limit is a protocol admission limit, not a measured heap reservation. The executed
+load probe covers wire-byte and pending-event caps, fairness and real RN handlers; it is bounded
+evidence for these fixtures rather than a general heap or long-duration soak certification.
 
 ## Remaining scope
 

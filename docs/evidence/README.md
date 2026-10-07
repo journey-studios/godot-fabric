@@ -454,8 +454,10 @@ with a bounded pending-event peak and zero pending events at finish. The previou
 connections; both retained source sabotages were rejected by the oracle. Eight reentrant lifetime
 cases end with no active sockets; quiescent echo peers record 1001, while greeting with unread
 input records a TCP drop as best-effort cancellation. The curated load, lifetime and execution measurements are in the evidence record; raw per-run reports remain ignored. The native SDK pack/addon provision and iOS simulator arm64 build-link pass, with no runtime
-or consumer export claimed. Hosted CI and other export targets remain separate; this does not
-complete GF-22 or add a checkpoint. The networking example separately passes 29/29 headless
+or consumer export claimed. [Hosted CI](websocket/hosted-ci.json) passed all five jobs for pinned
+head `422c2ee`; later PR-head changes require their own green run. Its 13 `core-ui-v2` Android/iOS
+parity cases are not WebSocket differential or Godot mobile runtime proof. This does not complete
+GF-22 or add a checkpoint. The networking example separately passes 29/29 headless
 and 51/51 graphical checks, with all 11 current captures linked from the record.
 
 The source was compiled and executed independently on **macOS arm64** using

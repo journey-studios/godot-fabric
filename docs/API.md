@@ -58,7 +58,7 @@ from planned RN compatibility.
 | Touchables | [Original TouchableWithoutFeedback, TouchableHighlight](../examples/touchables/README.md) and TouchableOpacity: RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots; TouchableOpacity dims through RN's native animated driver (0 ms on the grant, 250 ms back) | No TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |
 | PanResponder | [RN's original PanResponder](evidence/pan-responder/README.md) over Godot mouse and touch input: `panHandlers`, the gesture state (`dx`, `dy`, `x0`, `y0`, `moveX`, `moveY`, velocity, active touches), a free pan view, parents that claim a gesture or capture every start, a child that refuses to yield and a view removed mid-gesture, in the four responder flag lanes | Pinch zoom through chart libraries, `InteractionManager` handles, velocity on real hardware, nested scroll views and negotiation with native Godot controls remain open |
 | Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by the ticks of the host's frame clock ([frame clock record](evidence/frame-clock/README.md)) | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; a uniform `transform: [{ scale }]`, animated or not, renders as a planar uniform scale ([uniform scale record](evidence/uniform-scale/README.md)); `scale: 0` and other singular transforms, animated or not, collapse their View as RN does ([singular transforms record](evidence/singular-transforms/README.md)) |
-| Networking | [RN's own `fetch` (with Headers, Request and Response), `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal`](../examples/networking/README.md) as lazy globals: the host's initialization imports RN's `setUpXHR` and three native modules (`Networking`, with the contract of RN's Android wrapper, `BlobModule` and `FileReaderModule`) give them HTTP/1.1 and HTTPS over Godot's `HTTPClient`; redirects (up to 20) and the total time-out are the host's; `text`, `base64` and `blob` responses; string, base64, multipart and blob bodies; abort, network errors and disposal at application stop ([record](evidence/networking/README.md)). RN's own `WebSocket` runs over a fourth native module, `WebSocketModule` (the contract of RN's Android module) with BlobModule's socket hooks, and Godot's `WebSocketPeer`: ws and wss, text and binary messages (`arraybuffer` and `blob`), subprotocols, handshake headers and the default Origin, close codes and reasons, errors and the stop of the application with sockets open ([record](evidence/websocket/README.md)) | WebSocket: no extensions such as `permessage-deflate`, no cookies, no connect time-out; the engine drops the messages a server writes in the same poll as its close frame (godot#115384) and merges a ping sent between fragments into the message; a server that selects no subprotocol, or one that was not offered, fails the socket where Android's OkHttp would open it; closing a socket that is still connecting fails it, as a browser does, where Android's module does nothing. HTTP: no cookies (`withCredentials` has no effect, `clearCookies` calls back `false`); compressed responses fail explicitly; no HTTP/2, pooling, proxy or system trust configuration, upload or download progress, incremental streaming, `uri` bodies or `FormData` file parts; `Networking` is not exported from `react-native`; only macOS arm64 was executed |
+| Networking | [RN's own `fetch` (with Headers, Request and Response), `XMLHttpRequest`, `FormData`, `Blob`, `File`, `FileReader`, `URL`, `URLSearchParams`, `AbortController` and `AbortSignal`](../examples/networking/README.md) as lazy globals: the host's initialization imports RN's `setUpXHR` and three native modules (`Networking`, with the contract of RN's Android wrapper, `BlobModule` and `FileReaderModule`) give them HTTP/1.1 and HTTPS over Godot's `HTTPClient`; redirects (up to 20) and the total time-out are the host's; `text`, `base64` and `blob` responses; string, base64, multipart and blob bodies; abort, network errors and disposal at application stop ([record](evidence/networking/README.md)). RN's own `WebSocket` runs through `WebSocketModule` (RN Android contract) and BlobModule's socket hooks. Godot `HTTPClient` owns asynchronous DNS/TCP/TLS setup; the adapter then uses its public `StreamPeer` connection with pinned wslay for RFC 6455 framing. ws/wss, text/binary (`arraybuffer`/`blob`), protocols, handshake headers, Origin, peer close codes/reasons and silent stop are covered ([record](evidence/websocket/README.md)) | WebSocket: no extensions such as `permessage-deflate`, cookies, proxy/system trust configuration or HTTP/2; connection plus upgrade has a 30-second host deadline and close has a separate 60-second deadline. The 95-check local product probe covers 60 connections and 53 required wire/JS comparisons; each WebSocket poll admits at most 1 MiB of inbound wire bytes across WebSocket sockets; its 256-event cap uses canonical pending networking-event capacity after the separate HTTP poll. TLS close code/reason are reported only when a peer close frame arrives; a drop after client close is abnormal. A server selecting no subprotocol is accepted; an unoffered protocol is rejected. Closing while connecting fails, unlike Android's no-op. HTTP: no cookies (`withCredentials` has no effect, `clearCookies` calls back `false`); compressed responses fail explicitly; no HTTP/2, pooling, proxy or system trust configuration, upload or download progress, incremental streaming, `uri` bodies or `FormData` file parts; `Networking` is not exported from `react-native`. Local runtime proof is macOS arm64; hosted CI passed five jobs for pinned head `422c2ee` ([receipt](evidence/websocket/hosted-ci.json)), while later PR-head changes require new green checks. The parity job’s 13 Android/iOS `core-ui-v2` cases do not establish WebSocket differential or Godot mobile runtime behavior |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated drag in the ScrollView's own coordinates | All children mount; no inertia/momentum, bounce, paging, zoom, sticky headers, refresh, indicators or complete nested/multitouch scrolling |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
 | AppState and Appearance | [RN's original AppState](evidence/app-state/README.md), fed by the Godot application lifecycle: focus loss is `inactive`, a pause is `background`, `change`, `focus`, `blur` and `memoryWarning` are sent, the roots of an application share one state and stop sends nothing. [RN's original Appearance and useColorScheme](evidence/appearance/README.md), fed by Godot's system theme: `getColorScheme`, `addChangeListener`, `setColorScheme` overrides that win over the system and `unspecified` following it again, a change event only when the effective scheme changes, one theme callback shared by every application | Minimizing or hiding a desktop window sends no Godot notification; real OS focus and theme changes on each system, resume with pending timers or network, accent colors, `PlatformColor`/`DynamicColorIOS`, per-window themes and Godot mobile exports remain open |
@@ -543,19 +543,20 @@ Android wrapper (RN ships it only as `.ios.js` and `.android.js`), and four C++
 TurboModules, `Networking` (RN's generated Android spec), `BlobModule`,
 `FileReaderModule` and `WebSocketModule`, share one application state (a blob store and one
 stoppable call invoker). The first three run their requests on Godot's `HTTPClient`
-(`native/http_transport.h` is the seam a platform transport can replace) and the fourth runs
-its sockets on Godot's `WebSocketPeer` (`native/websocket_transport.h` is the seam for
-that one). Everything runs on the main thread, which is the JS thread, and ends with the
-application: a stop cancels the requests in flight, closes the sockets that are open with
-1001 and refuses retained module methods with `E_MODULE_DISPOSED`, and no event reaches JS
+(`native/http_transport.h` is the seam a platform transport can replace). WebSocket connection
+setup uses `HTTPClient` for asynchronous DNS/TCP/TLS, then retains its public `StreamPeer`
+connection and pinned wslay for framing behind `native/websocket_transport.h`. Everything runs
+on the main thread, which is the JS thread, and ends with the
+application: a stop cancels the requests in flight, attempts a best-effort 1001 close on open
+sockets, refuses retained module methods with `E_MODULE_DISPOSED`, and sends no later event to JS
 afterwards. The `react-native` facade gains no export: `Networking` is
 still missing, and the globals are the supported surface. The
 [record](evidence/networking/README.md) has the 100 headless checks, the preceding-host
 control and two retained sabotages; [the research note](research/networking.md) explains
 the contract and where this host departs from RN. The
-[WebSocket record](evidence/websocket/README.md) has the 93 checks of the sockets and
-[its research note](research/websocket.md) the Android contract, the engine's behavior with
-sources and the departures.
+[WebSocket record](evidence/websocket/README.md) has 95 local product checks across 60
+connections and 53 required wire/JS comparisons. Its research note describes the current
+adapter and keeps the former WebSocketPeer findings in a separate historical section.
 
 What the checks cover, against a local Node server over HTTP and over HTTPS with a test CA
 (macOS arm64):
@@ -592,27 +593,32 @@ What the checks cover, against a local Node server over HTTP and over HTTPS with
   1000-4999, a reserved one or a reason over 123 bytes is refused with a warning and the
   socket stays open), a server's close frame without a status is `1005`, a refused handshake,
   a lost connection or a close the server never answers within 60 seconds is an `error` and a
-  `close` with `1006`, and `send` or `ping` while CONNECTING throw as in RN. The stop of the
-  application closes every open socket with 1001 and nothing reaches JS afterwards.
+  `close` with `1006`, and `send` or `ping` while CONNECTING throw as in RN. A peer close code
+  and reason are reported only when its close frame arrives; a drop after client close is an
+  abnormal failure. Application stop attempts a nonblocking 1001 close on open sockets and
+  emits no later JS event; delivery is best effort if unread input remains.
 
-Explicit limits: cookies are neither stored nor sent (`withCredentials` has no effect and
+Explicit limits: WebSocket connection plus upgrade has a 30-second host deadline, and the close
+handshake a separate 60-second deadline; the 30-second value is host policy, not inherited from
+OkHttp. Each WebSocket poll shares a 1 MiB wire-byte budget across WebSocket sockets; its 256
+event cap uses canonical pending networking-event capacity after the separate HTTP poll.
+Incomplete messages reserve a slot across polls. The eight-socket load proof reached
+each limit. Cookies are neither stored nor sent (`withCredentials` has no effect and
 `clearCookies` calls back `false`); a response with a `Content-Encoding` other than
 `identity` fails, and so does a string request body with `Content-Encoding: gzip` (that path
 has no check of its own; the header is dropped for other bodies, as on Android); the body is
 buffered and delivered once (no incremental updates, no upload or download progress events);
 `uri` bodies and `FormData` file parts fail explicitly; there is no pooling, keep-alive,
-HTTP/2, proxy or system trust configuration, offline or reconnect behavior. For
-`WebSocket`: no extensions (OkHttp offers `permessage-deflate`, the engine none), no cookies and
-no connect time-out; a caller's `Host`, `Upgrade`, `Connection`, key, version, extensions and
-protocol headers are dropped, because the handshake is the engine's; the engine drops the
-messages a server writes in the same poll as its close frame (godotengine/godot#115384) and
-merges a ping sent between the fragments of a message into the message; a server that selects
-no subprotocol, or one that was not offered, fails the socket where Android's OkHttp opens it;
-invalid UTF-8 text fails it with 1007 where OkHttp delivers replacement characters; a close
-over TLS that the client began is taken as complete with the code and reason it sent; closing
-a socket that is still connecting fails it, as a browser does, where Android's module does
-nothing; failure texts are the host's and the engine's, not OkHttp's. Godot Android exports
-need the `INTERNET` permission and a Web export is bound by CORS; neither is exercised.
+HTTP/2, proxy or system trust configuration, offline or reconnect behavior. For `WebSocket`:
+no extensions (OkHttp offers `permessage-deflate`), cookies, proxy, HTTP/2 or reconnect policy;
+the adapter constructs handshake-owned `Host`, `Upgrade`, `Connection`, key, version and
+protocol headers. A server selecting no subprotocol is accepted; an unoffered protocol is
+rejected. Invalid UTF-8 text sends protocol close 1007 on the wire, while RN observes terminal
+error and close 1006. A peer close code/reason is never inferred from the client's request.
+Closing while CONNECTING fails the attempt, unlike Android's module no-op; failure text differs
+from OkHttp. Cancellation sends 1001 best-effort, with an immediate TCP drop possible when
+input remains unread. Godot Android WebSocket runtime is untested. A Web export needs a
+browser-specific WebSocket transport; browser WebSocket behavior is outside this proof.
 
 Native runtime acceptance currently targets macOS arm64. The experimental
 [iOS build path](IOS_BUILD.md) has arm64 device/simulator build and link proof;

@@ -61,11 +61,17 @@ The [WebSocket record](evidence/websocket/README.md) registers a fourth, `WebSoc
 over the same application state (`native/networking_state.h`): it queues its events through
 the same stoppable invoker, keeps the phase of every socket that has not ended, and also
 implements the socket hooks of `BlobModule` (binary messages as blobs in the shared store, a
-blob sent as one binary message). Its sockets run on a transport over Godot's `WebSocketPeer`
-(`native/websocket_transport.h` is the seam) that the runtime polls on each frame in the same
-networking poll as the HTTP transport. Stopping the application closes the open sockets with
-1001, forgets all of them and makes retained methods fail with `E_MODULE_DISPOSED`; nothing
-reaches JS afterwards.
+blob sent as one binary message). Godot `HTTPClient` owns asynchronous DNS/TCP/TLS setup; the
+transport retains its public `StreamPeer` connection and uses pinned wslay for WebSocket
+framing. A WebSocket poll shares a 1 MiB inbound wire-byte budget across WebSocket connections;
+its 256-event admission cap uses canonical pending networking-event capacity after the HTTP poll,
+with slots reserved for incomplete messages across polls. Stopping the application attempts a
+nonblocking 1001 close, forgets the sockets and makes retained methods
+fail with `E_MODULE_DISPOSED`; nothing reaches JS afterwards. Close-frame delivery during
+cancellation is best effort when input remains unread. The hosted native suite passed for pinned
+head `422c2ee` ([receipt](evidence/websocket/hosted-ci.json)); later PR-head changes require a
+new green run. See the [WebSocket evidence](evidence/websocket/README.md) for local and hosted
+proof and target limits.
 
 ## Original logical tree and IDs
 

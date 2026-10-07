@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "WebSocket: transporte e limites verificados; CI pendente. Próximo: Modal."
+    "focusTitle": "WebSocket: CI verificada; revisão documental final. Próximo: Modal."
   },
-  "updatedAt": "2026-10-07T14:51:15Z",
+  "updatedAt": "2026-10-07T15:50:06Z",
   "source": {
     "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
     "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "O WebSocket original do RN usa o HTTPClient do Godot como connector assíncrono e seu StreamPeer público com wslay upstream pinado. A prova local passou 95 checks/60 conexões/53 comparações e carga com limites globais de 1 MiB e 256 eventos; GF-22 segue parcial e CI do novo head pendente.",
+    "scope": "Backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay: prova local 95/60/53; byte budget de 1 MiB compartilhado entre sockets WebSocket e admissão de 256 eventos canônicos após o poll HTTP. CI passou 5/5 no head fixado 422c2ee; o head com revisão documental final ainda requer sua CI. GF-22 segue parcial.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
   },
   "phases": [
@@ -2053,7 +2053,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "fetch (com Headers, Request e Response), XMLHttpRequest, FormData, Blob, File, FileReader, URL, URLSearchParams e AbortController originais do RN como globais, instalados pela inicialização do host (setUpXHR) sobre três TurboModules C++ (Networking no contrato do wrapper Android do RN, BlobModule e FileReaderModule) e um transporte sobre o HTTPClient do Godot: HTTP/1.1 e HTTPS, uma conexão por requisição, redirecionamentos (até 20) e tempo limite total do host, respostas text, base64 e blob, corpos string, base64, multipart e blob, aborto, erros de rede e liberação na parada da aplicação. 100 headless em duas roots contra um servidor Node determinístico, com um oráculo independente que confere as 137 requisições registradas; o host anterior falha exatamente 84; as sabotagens retidas (redirecionamentos não seguidos e cabeçalhos repetidos não unidos) falham 8 e 2, rejeitadas pelo oráculo. O WebSocket original do RN roda sobre um quarto TurboModule C++ (WebSocketModule, no contrato Android do RN, com as ligações do BlobModule), usando HTTPClient como connector DNS/TCP/TLS e o StreamPeer público com wslay upstream pinado para framing. 95 checks, 60 conexões e 53 comparações wire/JS; TLS preserva close 1000 e 4002/reason literal e trata drop como falha. Limites compartilhados por poll: 1 MiB de leitura e 256 eventos pendentes, exercitados em duas fases de carga com oito sockets e 1.024 mensagens cada; fairness, pico pendente e drenagem final verificados. Oito casos de cancel/stop reentrante cobrem on_open/on_message: quatro ecos drenados recebem 1001; quatro casos com greeting pendente terminam como TCP drop best-effort, sem alegar handshake completo. Exemplo: 29/29 headless, 51/51 gráfico e 11 capturas macOS. SDK macOS empacotado/verificado, addon provisionado e link iOS simulator arm64 com archive combinado e símbolos Fabric/wslay; sem runtime/export consumidor iOS. Host anterior: 12/95 e zero conexões; sabotagens Origin/stop rejeitadas pelo oráculo em 4/2 checks. Issue godot#115384 e perda do WebSocketPeer são históricos do backend substituído, não limitação observada do adapter atual. Abertos: respostas e corpos comprimidos, progresso de upload/download, streaming incremental, corpos uri e partes de arquivo, pooling, export Networking do react-native, extensões WebSocket (permessage-deflate), cookies, configuração de proxy/trust do sistema, HTTP/2, offline/reconexão, duração/hardware ampliados e runtime/export Android, iOS e Web. CI do novo head ainda pendente. O aceite total do GF-22 continua em andamento; esta fatia não altera checkpoints, peso nem denominador.",
+      "note": "fetch (com Headers, Request e Response), XMLHttpRequest, FormData, Blob, File, FileReader, URL, URLSearchParams e AbortController originais do RN como globais, instalados pela inicialização do host (setUpXHR) sobre três TurboModules C++ (Networking no contrato do wrapper Android do RN, BlobModule e FileReaderModule) e um transporte sobre o HTTPClient do Godot: HTTP/1.1 e HTTPS, uma conexão por requisição, redirecionamentos (até 20) e tempo limite total do host, respostas text, base64 e blob, corpos string, base64, multipart e blob, aborto, erros de rede e liberação na parada da aplicação. 100 headless em duas roots contra um servidor Node determinístico, com um oráculo independente que confere as 137 requisições registradas; o host anterior falha exatamente 84; as sabotagens retidas (redirecionamentos não seguidos e cabeçalhos repetidos não unidos) falham 8 e 2, rejeitadas pelo oráculo. O WebSocket original do RN roda sobre um quarto TurboModule C++ (WebSocketModule, no contrato Android do RN, com as ligações do BlobModule), usando HTTPClient como connector DNS/TCP/TLS e o StreamPeer público com wslay upstream pinado para framing. 95 checks, 60 conexões e 53 comparações wire/JS; TLS preserva close 1000 e 4002/reason literal e trata drop como falha. Admissão WebSocket: byte budget de 1 MiB por poll compartilhado entre sockets WebSocket; capacidade de 256 eventos canônicos calculada após o poll HTTP, exercitados em duas fases de carga com oito sockets e 1.024 mensagens cada; fairness, pico pendente e drenagem final verificados. Oito casos de cancel/stop reentrante cobrem on_open/on_message: quatro ecos drenados recebem 1001; quatro casos com greeting pendente terminam como TCP drop best-effort, sem alegar handshake completo. Exemplo: 29/29 headless, 51/51 gráfico e 11 capturas macOS. SDK macOS empacotado/verificado, addon provisionado e link iOS simulator arm64 com archive combinado e símbolos Fabric/wslay; sem runtime/export consumidor iOS. Host anterior: 12/95 e zero conexões; sabotagens Origin/stop rejeitadas pelo oráculo em 4/2 checks. Issue godot#115384 e perda do WebSocketPeer são históricos do backend substituído, não limitação observada do adapter atual. Abertos: respostas e corpos comprimidos, progresso de upload/download, streaming incremental, corpos uri e partes de arquivo, pooling, export Networking do react-native, extensões WebSocket (permessage-deflate), cookies, configuração de proxy/trust do sistema, HTTP/2, offline/reconexão, duração/hardware ampliados e runtime/export Android, iOS e Web. Hosted CI passou 5/5 jobs no head fixado 422c2ee (https://github.com/journey-studios/godot-fabric/actions/runs/37640391170); alterações posteriores do PR precisam de sua própria CI verde. O job de parity cobre 13 casos core-ui-v2 Android/iOS, não differential WebSocket nem runtime Godot móvel. Revisão documental final em curso; próxima fatia: Modal. O aceite total do GF-22 continua em andamento; esta fatia não altera checkpoints, peso nem denominador.",
       "blocker": "",
       "checkpoints": [
         {
@@ -2072,6 +2072,10 @@
             {
               "label": "WebSocket PR #48: recibo de execução, hashes e resultados",
               "url": "https://github.com/journey-studios/godot-fabric/blob/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78/docs/evidence/websocket/execution.json"
+            },
+            {
+              "label": "WebSocket PR #48: hosted CI 5/5 jobs para head fixado 422c2ee (execução em https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)",
+              "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37640391170"
             }
           ]
         },
@@ -3469,6 +3473,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "websocket-hosted-reviewed-20261007",
+      "at": "2026-10-07T15:50:06Z",
+      "taskIds": [
+        "GF-22"
+      ],
+      "message": "PR #48: CI hospedada 5/5 no head fixado 422c2ee. Inspeção independente do artifact: oracle95/60/53, 46 inputs por hash, carga de 1.024 mensagens por fase e oito casos lifetime. Paridade de 13 casos core-ui-v2 com referências Android/iOS; não comprova WebSocket diferencial nem runtime Godot móvel. Documentação pública alinhada ao backend HTTPClient/StreamPeer/wslay, orçamento de bytes compartilhado entre sockets WebSocket e capacidade canônica de eventos após HTTP. Head documental final ainda exige CI/revisão antes do merge. GF-22 permanece parcial; 23/156 checkpoints e 0/39 itens completos.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37640391170"
+    },
     {
       "id": "websocket-local-verified-20261007",
       "at": "2026-10-07T14:51:15Z",

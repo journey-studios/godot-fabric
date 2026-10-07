@@ -29,7 +29,10 @@ struct WebSocketMessage {
 // What a transport reports about one connection, always from poll() on the main thread and never from start(), send()
 // or close(). In order: on_open once, on_message for each message, and then exactly one of on_closed (the peer's close
 // frame arrived: `code` is the one it carried, 1005 when it carried none) and on_failure (a handshake that failed or a
-// connection that ended without a close frame). Nothing is reported after stop().
+// connection that ended without a close frame). A listener may call cancel() or stop() reentrantly from a callback;
+// cancellation suppresses further callbacks for that connection. The transport holds a strong connection reference
+// during its active poll, and releases the framing context only after any active framing callback has unwound. Nothing
+// is reported after stop() returns.
 struct WebSocketListener {
   std::function<void(std::string)> on_open;  // the subprotocol the server selected, "" when none
   std::function<void(WebSocketMessage)> on_message;
@@ -67,7 +70,7 @@ class WebSocketTransport {
   virtual void poll(std::size_t byte_budget, std::size_t event_budget) = 0;
   // Inbound messages already started but not yet delivered retain their event slots across polls.
   virtual std::size_t reserved_events() const = 0;
-  // Closes every connection with 1001 and forgets it. No listener runs after it returns.
+  // Attempts a best-effort 1001 close on open connections, then forgets every connection. No listener runs after it returns.
   virtual void stop() = 0;
   virtual folly::dynamic snapshot() const = 0;
 };

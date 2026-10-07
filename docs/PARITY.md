@@ -93,8 +93,13 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   initialization and backed by native networking: the original
   [fetch, XMLHttpRequest, FormData, Blob, FileReader and AbortController](evidence/networking/README.md)
   (100 checks against a local server over HTTP and HTTPS; its hosted CI run is pending), and
-  the original [WebSocket](evidence/websocket/README.md) over Godot's `WebSocketPeer` (93
-  checks against a local RFC 6455 server over ws and wss; its hosted CI run is pending).
+  the original [WebSocket](evidence/websocket/README.md) over Godot `HTTPClient`'s public
+  `StreamPeer` connection and pinned wslay (95 local product checks, 60 server connections,
+  53 required wire/JS comparisons; 1 MiB inbound bytes across WebSocket sockets and a 256-event
+  admission cap using canonical pending events after HTTP polling; all five hosted CI jobs passed
+  for pinned head `422c2ee` ([receipt](evidence/websocket/hosted-ci.json)). The hosted parity job's
+  13 `core-ui-v2` Android/iOS cases are not WebSocket differential or Godot mobile runtime proof;
+  later PR-head changes require new green CI).
   They are globals, not names of the `react-native` root: the facade's counts above do not
   change, and RN's `Networking` export stays among the missing 53.
 
