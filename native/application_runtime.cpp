@@ -23,6 +23,8 @@
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
 #include "native_animated.h"
+#include "networking_modules.h"
+#include "godot_http_transport.h"
 #include <react/runtime/TimerManager.h>
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
 #include <react/renderer/components/view/primitives.h>
@@ -197,6 +199,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::shared_ptr<rn::ContextContainer> context;
   std::shared_ptr<rn::RuntimeScheduler> runtime_scheduler;
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
+  // RN's networking stack over Godot's HTTP client, polled from pump() and ended by stop().
+  std::unique_ptr<fabric_godot::Networking> networking;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   std::shared_ptr<fabric_godot::AdapterRegistry> adapters;
   const std::thread::id host_thread{std::this_thread::get_id()};
@@ -287,7 +291,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   explicit Impl(FabricSurface &theme_source, std::function<fabric_godot::WindowMetrics()> metrics,
       const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
       const std::shared_ptr<fabric_godot::AppLifecycle> &lifecycle,
-      const std::shared_ptr<fabric_godot::SystemAppearance> &appearance, std::shared_ptr<fabric_godot::AdapterRegistry> selected)
+      const std::shared_ptr<fabric_godot::SystemAppearance> &appearance, std::function<std::string()> trusted_authorities,
+      std::function<double()> clock_offset_ms, std::shared_ptr<fabric_godot::AdapterRegistry> selected)
       : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)), adapters(std::move(selected)) {
     if (adapters && !adapters->sealed()) throw std::runtime_error("E_ADAPTER_UNSEALED: application requires a sealed selection");
     // One application owns Hermes, Fabric, scheduling and timers. All native
@@ -388,6 +393,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     });
     native_modules->add_app_state(lifecycle);
     native_modules->add_appearance(appearance);
+    // The deadlines of timed requests run on the monotonic clock plus the validation seam's offset, which is 0 outside validation.
+    networking = std::make_unique<fabric_godot::Networking>(fabric_godot::make_godot_http_transport(
+        std::move(trusted_authorities), [offset = std::move(clock_offset_ms)] { return now_ms() + (offset ? offset() : 0); }));
+    networking->install(*native_modules);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
           [this](rn::SurfaceId id, rn::dom::DOMRect rect, bool transforms) {
@@ -920,6 +929,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           dispatching_timer = id;
           timer_manager->callTimer(id);
         }
+      // Requests advance before the drain, so the events they produce are delivered
+      // in this pump; one pump reads at most a megabyte of response bodies.
+      if (!stopping && !stop_requested) networking->poll(1024 * 1024);
       for (int limit = 0; !stop_requested && !work.empty() && limit < 256; ++limit) {
         auto callback = std::move(work.front());
         work.pop_front();
@@ -1023,6 +1035,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     surface_phase_pending = false;
     game_services->stop();
     if (native_animated) native_animated->stop();
+    // In-flight requests end first: nothing may report to JS from here on.
+    networking->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
     std::vector<int> ids;
@@ -1914,6 +1928,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("active", active_pointers)("hoverPointers", hover_pointers)("nextId", next_pointer_id)
         ("stored", pointer_routes.size())("suppressed", suppressed_pointers);
     result["nativeModules"] = native_modules->snapshot();
+    result["networking"] = networking->snapshot();
     result["nativeAnimated"] = native_animated ? native_animated->snapshot() : folly::dynamic::object("enabled", false);
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
@@ -2022,9 +2037,10 @@ namespace fabric_godot {
 ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::function<WindowMetrics()> window_metrics,
     const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services,
     std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<SystemAppearance> appearance,
+    std::function<std::string()> trusted_authorities, std::function<double()> clock_offset_ms,
     std::shared_ptr<AdapterRegistry> adapters)
     : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services),
-          lifecycle, appearance, std::move(adapters))) {
+          lifecycle, appearance, std::move(trusted_authorities), std::move(clock_offset_ms), std::move(adapters))) {
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }

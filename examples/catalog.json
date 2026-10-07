@@ -203,6 +203,13 @@
     "scene": "examples/pan-responder/scene.tscn"
   },
   {
+    "id": "networking",
+    "title": "Original RN fetch, FormData and AbortController over Godot's HTTP client, against a local server",
+    "api": "public",
+    "source": "examples/networking/App.jsx",
+    "scene": "examples/networking/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",

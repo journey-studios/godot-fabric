@@ -63,6 +63,19 @@ test("project modules named like RN native seams retain their own implementation
   assert.equal(inputs.length, names.length + 1);
 });
 
+test("RN's RCTNetworking resolves to its Android wrapper and a project's own module of that name stays", async t => {
+  // RN ships the wrapper only as .ios.js and .android.js; RCTNetworking.js merely imports itself, and this host's
+  // extensions pick neither platform file. The Android wrapper is the one whose contract the Godot module implements.
+  const rn = fixture(t, {"App.js": 'import Networking from "react-native/Libraries/Network/RCTNetworking"; export default Networking;'});
+  const inputs = Object.keys((await compile(rn, "App.js")).metafile.inputs);
+  assert.ok(inputs.some(input => input.endsWith("node_modules/react-native/Libraries/Network/RCTNetworking.android.js")));
+  assert.ok(!inputs.some(input => input.endsWith("node_modules/react-native/Libraries/Network/RCTNetworking.js")));
+  const project = fixture(t, {"RCTNetworking.js": 'export default "owned";', "App.js": 'import value from "./RCTNetworking"; export default value;'});
+  const result = await compile(project, "App.js");
+  assert.equal(execute(result).default, "owned");
+  assert.equal(Object.keys(result.metafile.inputs).length, 2);
+});
+
 test("a project AppRegistryImpl and renderApplication do not become original RN hooks", async t => {
   const directory = fixture(t, {
     "ReactNative/AppRegistryImpl.js": 'import render from "./renderApplication"; export default render();',
