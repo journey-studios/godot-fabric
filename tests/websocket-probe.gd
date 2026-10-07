@@ -700,7 +700,7 @@ func tls_stage() -> void:
   stages.tlsInvalid = invalid
   socket_check(failed_with(result_of(invalid), "not valid PEM"), "tls/Trust that is not valid PEM refuses the socket instead of trusting everything")
   application.set_meta(TRUST_META, authority)
-  # Only the two TLS handshakes that reach the engine's TLS peer print a diagnostic; malformed trust is refused by the host.
+  # Only the three TLS handshakes that reach the engine's TLS peer print a diagnostic; malformed trust is refused by the host.
   stages.deliberateTlsFailures = 3
 
 func tls_close_stage() -> void:

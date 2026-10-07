@@ -384,7 +384,7 @@ export function verifyWebSocketReport(report, serverLog) {
   equal(transport.overflows, 1, "as the transport saw it");
   equal(final.droppedSends + transport.sendErrors, 0, "and no other send was lost");
 
-  // 4. The transport validates HTTP upgrades itself; only two TLS handshake failures reach the engine's TLS peer.
+  // 4. The transport validates HTTP upgrades itself; only three TLS handshake failures reach the engine's TLS peer.
   equal(stages.deliberateTlsFailures, 3, "all three untrusted TLS handshakes that reach the engine are refused");
 
   // 5. Nothing is left, here or there.
