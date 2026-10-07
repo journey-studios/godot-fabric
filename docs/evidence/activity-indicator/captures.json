@@ -1,0 +1,30 @@
+{
+  "example": "activity-indicator",
+  "command": "npm run example -- activity-indicator --capture",
+  "godot": "4.7.2-stable (official)",
+  "displayServer": "macOS",
+  "exampleChecks": {
+    "headless": 14,
+    "nativeRenderer": 19
+  },
+  "files": [
+    {
+      "stage": "running",
+      "path": "docs/evidence/activity-indicator/activity-indicator-running.png",
+      "sha256": "3ccfd5d44b0a88507de045dda75b0f1c4a9191f01ba8b401691ee1b56bb84f1b",
+      "bytes": 58622,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "stopped",
+      "path": "docs/evidence/activity-indicator/activity-indicator-stopped.png",
+      "sha256": "9409388a65986950d42da7f7b2efebf0eaa79ffb671b53bb8335fde8d83f8aa4",
+      "bytes": 57890,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    }
+  ]
+}

@@ -46,6 +46,12 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [nativewind](nativewind/README.md) | Utility classes, variables, breakpoints and manual theme | Public | [App](nativewind/App.jsx) · [scene](nativewind/scene.tscn) |
 | [typography](typography/README.md) | Nested text, fonts, wrapping and retained child state | Mixed | [App](typography/App.jsx) · [scene](typography/scene.tscn) |
 | [animated](animated/README.md) | Original Animated on RN's C++ NativeAnimated advanced by the host's frame clock, and TouchableOpacity | Public | [App](animated/App.jsx) · [scene](animated/scene.tscn) |
+| [switch](switch/README.md) | Original RN Switch: controlled values, colors, disabled input and real clicks | Public | [App](switch/App.jsx) · [scene](switch/scene.tscn) |
+| [activity-indicator](activity-indicator/README.md) | Original RN ActivityIndicator: sizes, colors, animating and hidesWhenStopped | Public | [App](activity-indicator/App.jsx) · [scene](activity-indicator/scene.tscn) |
+| [touchables](touchables/README.md) | Original RN touchables: the opacity, the underlay and the absence of feedback while pressed | Public | [App](touchables/App.jsx) · [scene](touchables/scene.tscn) |
+| [virtualized-list](virtualized-list/README.md) | Original RN FlatList and SectionList windowed by the mouse wheel | Public | [App](virtualized-list/App.jsx) · [scene](virtualized-list/scene.tscn) |
+| [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
+| [pan-responder](pan-responder/README.md) | Original RN PanResponder dragging a box with the mouse | Public | [App](pan-responder/App.jsx) · [scene](pan-responder/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -208,9 +214,10 @@ the preceding-host control and two retained negative controls.
 The [PanResponder matrix](pan-responder/README.md) drives RN's original
 `PanResponder` with touches and mouse drags over a free pan view, claiming and
 refusing parents, a capture parent and a view removed mid-gesture, in four flag
-lanes: `npm run test:responders:pan`, outside the launcher catalog. Its
+lanes: `npm run test:responders:pan`, next to the launcher entry
+(`npm run example -- pan-responder` drags a box with the mouse). Its
 [receipt](../docs/evidence/pan-responder/README.md) records 128 headless checks,
-the preceding-SDK control and a retained sabotage.
+the preceding-SDK control, a retained sabotage and three captures of the example.
 
 The [AppState probe](app-state/README.md) delivers Godot's focus, pause and
 memory-warning notifications to an application whose two roots subscribe to the
@@ -221,10 +228,11 @@ preceding-host control and a retained negative control.
 
 The [Switch probe](switch/README.md) mounts RN's original `Switch.js` in two roots
 and toggles it with actual mouse clicks and touch taps: `npm run test:switch`,
-outside the launcher catalog. A value prop that does not follow is restored by
-Switch.js's `setValue`, disabled input is ignored and colors reach the native
-switch. Its [receipt](../docs/evidence/switch/README.md) records 108/108
-headless checks, the preceding host's 2 mount failures and a retained sabotage.
+next to the launcher entry (`npm run example -- switch`). A value prop that does
+not follow is restored by Switch.js's `setValue`, disabled input is ignored and
+colors reach the native switch. Its [receipt](../docs/evidence/switch/README.md)
+records 108/108 headless checks, the preceding host's 2 mount failures, a retained
+sabotage and two captures of the example.
 
 The [shared touches matrix](shared-touches/README.md) presses the original
 `Pressable`s of two roots with overlapping touches and the mouse in four flag
@@ -235,22 +243,25 @@ and the preceding-host control.
 
 The [touchables probe](touchables/README.md) presses RN's original
 `TouchableWithoutFeedback` and `TouchableHighlight`, imported from `react-native`,
-with real mouse and touch on two roots: `npm run test:touchables`, outside the
-launcher catalog. It checks callback order and payloads, the native underlay and
-child opacity, `delayPressOut`, long press, hitSlop and retention, disabled,
-nesting, removal mid-press and the single-child rule. Its
+with real mouse and touch on two roots: `npm run test:touchables`, next to the
+launcher entry (`npm run example -- touchables` holds the mouse on all three
+touchables, `TouchableOpacity` included). It checks callback order and payloads,
+the native underlay and child opacity, `delayPressOut`, long press, hitSlop and
+retention, disabled, nesting, removal mid-press and the single-child rule. Its
 [receipt](../docs/evidence/touchables/README.md) records 93/93 headless checks,
-the preceding-SDK and sabotage controls and why `TouchableOpacity` was unavailable
-then; the [Animated example](animated/README.md) makes it public.
+the preceding-SDK and sabotage controls, five captures of the example and why
+`TouchableOpacity` was unavailable then; the [Animated example](animated/README.md)
+makes it public.
 
 The [ActivityIndicator probe](activity-indicator/README.md) mounts RN's original
 `ActivityIndicator.js` in two roots and measures each spinner across actual
-SceneTree frames: `npm run test:activity-indicator`, outside the launcher
-catalog. The phase advances once per frame while animating and freezes when
-stopped; `hidesWhenStopped`, color and the small/large/numeric frames reach the
-native spinner. Its [receipt](../docs/evidence/activity-indicator/README.md)
-records 33/33 headless checks, the preceding host's 2 mount failures and a
-retained sabotage.
+SceneTree frames: `npm run test:activity-indicator`, next to the launcher entry
+(`npm run example -- activity-indicator`). The phase advances once per frame
+while animating and freezes when stopped; `hidesWhenStopped`, color and the
+small/large/numeric frames reach the native spinner. Its
+[receipt](../docs/evidence/activity-indicator/README.md) records 33/33 headless
+checks, the preceding host's 2 mount failures, a retained sabotage and two
+captures of the example.
 
 The [capture notification matrix](pointer-capture-notifications/README.md)
 captures mouse and touch contacts over two roots and observes got/lost on JSX
@@ -262,18 +273,21 @@ headless checks and two retained sabotages.
 
 The [virtualized-list probe](virtualized-list/README.md) scrolls RN's original
 `FlatList`, `SectionList` and `VirtualizedList` with wheel steps and touch drags
-in two roots: `npm run test:lists`, outside the launcher catalog. Cells outside
-the window unmount and return, and an inverted list follows the finger. Its
-[receipt](../docs/evidence/virtualized-list/README.md) records 44 headless
-checks, the preceding-host and preceding-SDK controls and a retained negative
-control.
+in two roots: `npm run test:lists`, next to the launcher entry
+(`npm run example -- virtualized-list` turns the mouse wheel over a `FlatList` and
+a `SectionList`). Cells outside the window unmount and return, and an inverted
+list follows the finger. Its [receipt](../docs/evidence/virtualized-list/README.md)
+records 44 headless checks, the preceding-host and preceding-SDK controls, a
+retained negative control and two captures of the example.
 
 The [Appearance probe](appearance/README.md) changes the system theme through the
 one Callable registered with Godot's `DisplayServer` and overrides it with
 `setColorScheme`, while two roots render through `useColorScheme` and two
-applications observe at once: `npm run test:appearance`, outside the launcher
-catalog. Its [receipt](../docs/evidence/appearance/README.md) records 79 headless
-checks, the preceding-host and pre-fix controls and a retained negative control.
+applications observe at once: `npm run test:appearance`, next to the launcher
+entry (`npm run example -- appearance` switches a screen between light and dark).
+Its [receipt](../docs/evidence/appearance/README.md) records 79 headless checks,
+the preceding-host and pre-fix controls, a retained negative control and three
+captures of the example.
 
 The [Animated probe](animated/README.md) drives RN's original `Animated` with both
 drivers and `TouchableOpacity` with real mouse and touch in two roots of one

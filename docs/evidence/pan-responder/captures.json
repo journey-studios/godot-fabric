@@ -1,0 +1,39 @@
+{
+  "example": "pan-responder",
+  "command": "npm run example -- pan-responder --capture",
+  "godot": "4.7.2-stable (official)",
+  "displayServer": "macOS",
+  "exampleChecks": {
+    "headless": 11,
+    "nativeRenderer": 18
+  },
+  "files": [
+    {
+      "stage": "before",
+      "path": "docs/evidence/pan-responder/pan-responder-before.png",
+      "sha256": "23dc4893af6f63be8d9f74b5ff067cc8dd4e0862ea005399f4f30ab90a9f9332",
+      "bytes": 30747,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "dragging",
+      "path": "docs/evidence/pan-responder/pan-responder-dragging.png",
+      "sha256": "ee55df007b40ae88384c5907e03ee3c9381be327a34d72a1afdbdd17ed419a4f",
+      "bytes": 32636,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    },
+    {
+      "stage": "after",
+      "path": "docs/evidence/pan-responder/pan-responder-after.png",
+      "sha256": "b76263dbe2001d6f1598350a8845b294251749a0887d9d874b8c6b38698ee678",
+      "bytes": 32384,
+      "width": 900,
+      "height": 680,
+      "stableAcrossRuns": true
+    }
+  ]
+}

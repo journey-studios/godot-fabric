@@ -156,6 +156,41 @@ Uma sabotagem retida da execução original, em que o módulo envia
 e o oráculo rejeitou o relatório. O cabeçalho foi restaurado byte a byte e o host
 recompilado voltou ao hash executado.
 
+## Capturas
+
+O exemplo interativo [`appearance`](../../../examples/appearance/README.md) abre no launcher com
+`npm run example -- appearance`, e `npm run example -- appearance --capture` salva três quadros do
+renderizador nativo, de 900 × 680, enquanto a validação dele clica de verdade nos botões e muda o
+tema do sistema (14 checks headless, 20 com o renderizador). O
+[recibo de capturas](captures.json) registra o caminho, o SHA-256 e as dimensões de cada quadro,
+e os bytes se repetiram em duas execuções seguidas.
+
+![A tela no tema claro depois de um clique em Light, sem evento de mudança ouvido](appearance-light.png)
+
+**Light.** Clique em Light com o sistema em light: `setColorScheme("light")` é uma sobrescrita
+sem efeito, então o RN não envia evento (`none yet`) e a página segue clara.
+
+![A tela no tema escuro depois de um clique em Dark, com um evento de mudança ouvido](appearance-dark.png)
+
+**Dark.** Clique em Dark: o esquema efetivo vira `dark`, o RN envia um evento
+(`1 · last dark`) e a tela inteira é redesenhada no tema escuro, com `setColorScheme("dark")` como
+origem.
+
+![A tela no tema escuro escolhido pelo sistema depois de o tema do sistema virar escuro](appearance-system-dark.png)
+
+**System dark.** Depois de System devolver o controle ao sistema (claro, segundo evento) e de o
+sistema virar escuro pelo Callable único registrado no `DisplayServer`: o RN ouve o terceiro
+evento (`3 · last dark`) e a tela é escura, agora escolhida por `the system`.
+
+A validação amostra a cor da página no quadro do renderizador, dentro do retângulo da root, e
+confere que é a do tema (`#e2e8f0` no claro e `#0f172a` no escuro). O tema do sistema vem da meta
+de validação e do Callable registrado, não do tema real do macOS, e não há oráculo independente de
+pixels.
+
+Estas execuções são locais: o recibo de [CI hospedada](hosted-ci.json) desta fatia não cobre o
+exemplo, que o `npm run test:examples` do job `native-cold-start` passa a repetir (sem captura)
+quando ele entra na `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
+
 ## Regressões
 
 Na execução original, no mesmo host, passaram os três gates do job `contracts`

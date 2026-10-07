@@ -118,6 +118,37 @@ B, e a remontagem), e o oráculo independente rejeita o relatório no primeiro c
 de fase. A fonte foi restaurada byte a byte e o rebuild reproduziu o host
 `267763d9`.
 
+## Capturas
+
+O exemplo interativo [`activity-indicator`](../../../examples/activity-indicator/README.md) abre
+no launcher com `npm run example -- activity-indicator`, e
+`npm run example -- activity-indicator --capture` salva dois quadros do renderizador nativo, de
+900 × 680, enquanto a validação dele clica de verdade no botão e lê cada spinner ao longo de
+quadros reais do SceneTree (14 checks headless, 19 com o renderizador). O
+[recibo de capturas](captures.json) registra o caminho, o SHA-256 e as dimensões de cada quadro,
+e os bytes se repetiram em duas execuções seguidas.
+
+![Seis spinners girando e o status animating: true](activity-indicator-running.png)
+
+**Girando.** Seis spinners: o pequeno padrão no cinza do iOS, `size="large"` azul,
+`size={48}` laranja, `size={28}` violeta e os dois controlados por `animating`, um com
+`hidesWhenStopped` padrão e outro com `hidesWhenStopped={false}`; o status diz `animating: true`.
+
+![Os dois últimos spinners parados: um escondido e o outro no último quadro](activity-indicator-stopped.png)
+
+**Parados.** Depois de um clique real em `Stop the last two`: o spinner com
+`hidesWhenStopped` padrão deixou de ser desenhado (o quadro dele está vazio), o que tem
+`hidesWhenStopped={false}` fica no último quadro e os outros quatro seguem girando; o status diz
+`animating: false`.
+
+A validação compara o SHA-256 da região do spinner escondido entre os dois quadros: ele deixa de
+ter os pixels que tinha girando. Não há oráculo independente de pixels, e a geometria dos raios
+e a velocidade do UIKit seguem abertas em Limites.
+
+Estas execuções são locais: o recibo de [CI hospedada](hosted-ci.json) desta fatia não cobre o
+exemplo, que o `npm run test:examples` do job `native-cold-start` passa a repetir (sem captura)
+quando ele entra na `main`. Nenhum GF, checkpoint, peso ou denominador fecha.
+
 ## Regressões
 
 No host atual passaram os três gates do job `contracts` (262 testes Node, um deles
