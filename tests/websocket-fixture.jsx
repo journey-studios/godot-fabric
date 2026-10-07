@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AppRegistry, NativeEventEmitter, TurboModuleRegistry, View} from "react-native";
 import {disposeEnvironment, environmentStats} from "../src/platform-environment";
 
@@ -8,7 +8,7 @@ import {disposeEnvironment, environmentStats} from "../src/platform-environment"
 // compares the record with what the server saw. Nothing here knows the native module: on a host without it, the first
 // `new WebSocket` throws where RN looks the module up, which fails every case that needs the network, and the cases that
 // need none behave the same on both hosts.
-const state = {servers: null, cases: {}, sequence: 0, roots: {}, log: [], sockets: {}};
+const state = {servers: null, cases: {}, sequence: 0, roots: {}, log: [], sockets: {}, setters: {}, load: null};
 // The modules as the bundle first found them, retained to be called after the application stops.
 const retained = {};
 for (const name of ["WebSocketModule", "BlobModule"]) {
@@ -237,7 +237,7 @@ const cases = {
     unauthorized: await drive({url: url("/reject?status=401&case=reject-401")}),
     badAccept: await drive({url: url("/bad-accept?case=bad-accept")}),
     wrongProtocol: await drive({url: url("/wrong-protocol?case=wrong-protocol"), protocols: ["chat.v1"]}),
-    unmatchedProtocol: await drive({url: url("/echo?case=unmatched-protocol"), protocols: ["other"]}),
+    unmatchedProtocol: await drive({url: url("/echo?case=unmatched-protocol"), protocols: ["other"], onOpen: ws => ws.close()}),
     refused: await drive({url: base.refused + "/x?case=refused"}),
     badScheme: await drive({url: "ftp://127.0.0.1:1/x"}),
     noScheme: await drive({url: "not a url"}),
@@ -259,6 +259,35 @@ const cases = {
   },
   // A message that does not fit in what OkHttp queues (16 MiB) closes the socket with 1001 and sends nothing.
   overflow: ({url}) => drive({url: url("/echo?case=overflow"), onOpen: ws => ws.send(new Uint8Array(16 * 1048576 + 1))}),
+  // The separate load probe keeps real RN socket callbacks and React state/timer work active while the native queue is full.
+  load: ({url, root, args}) => {
+    const count = Number(args.count ?? 128);
+    const sockets = Number(args.sockets ?? 8);
+    const bytes = Number(args.bytes ?? 8192);
+    state.load = {running: true, count, sockets, received: Array(sockets).fill(0), setStateCalls: 0, timerTicks: 0, renders: 0};
+    const timer = setInterval(() => {
+      if (state.load?.running) {
+        state.load.timerTicks += 1;
+        state.setters[root]?.(revision => revision + 1);
+      }
+    }, 4);
+    const sessions = Array.from({length: sockets}, (_, index) => drive({url: url(`/flood?count=${count}&bytes=${bytes}&stream=${index}&case=load-${index}`),
+      name: `load-${index}`, onMessage: ws => {
+        state.load.received[index] += 1;
+        state.load.setStateCalls += 1;
+        state.setters[root]?.(revision => revision + 1);
+        if (state.load.received[index] === count) {
+          ws.close();
+        }
+      }}));
+    return Promise.all(sessions).then(results => {
+      clearInterval(timer);
+      state.load.running = false;
+      state.setters[root]?.(revision => revision + 1);
+      return {results: results.length, received: [...state.load.received], setStateCalls: state.load.setStateCalls,
+        timerTicks: state.load.timerTicks, renders: state.load.renders};
+    });
+  },
   // What the engine does with frames that are not plain messages: fragments are one message, pings are answered by the
   // engine, and the server's pong comes back, none of which JS sees.
   frames: async ({url}) => ({
@@ -269,21 +298,24 @@ const cases = {
     }}),
     serverPing: await drive({url: url("/ping?case=server-ping"), onOpen: ws => ws.send("after the ping"), onMessage: ws => ws.close()}),
     ping: await drive({url: url("/echo?case=client-ping"), onOpen: ws => ws.ping(), onMessage: ws => ws.close()}),
-    // RFC 6455 fails a connection whose text frame is not UTF-8, with 1007; the engine does, OkHttp does not.
+    // RFC 6455 fails a connection whose text frame is not UTF-8, with 1007; JS receives an abnormal close.
     invalidText: await drive({url: url("/invalid-text?case=invalid-text")}),
   }),
-  // The engine drops the messages that arrive in the same poll as the peer's close frame (godotengine/godot#115384). A
-  // server that writes three messages and a close in one go is the reproduction: the close always arrives, the messages
-  // may not. Observed, never required.
+  // The server writes three messages and a close in one go. Every complete message and the peer's close must be observed.
   dataThenClose: async ({url}) => ({
     coalesced: await drive({url: url("/data-then-close?count=3&coalesce=1&code=4003&reason=done&case=data-then-close")}),
   }),
-  // A ping between the fragments of one message: RFC 6455 allows it, the engine puts the ping's payload into the message.
-  // Observed, never required.
+  // A ping between the fragments of one message must not enter the reassembled data payload.
   interleavedPing: async ({url}) => ({
     fragmented: await drive({url: url("/fragmented-ping?case=fragmented-ping"), onMessage: ws => ws.close()}),
   }),
   tls: async ({url, args}) => drive({url: url("/echo?case=wss-" + args.label, args.origin), onOpen: ws => ws.send("secure"), onMessage: ws => ws.close()}),
+  tlsCloseContract: async ({url}) => ({
+    normal: await drive({url: url("/echo?case=tls-close-normal", "wss"), onOpen: ws => ws.close()}),
+    different: await drive({url: url("/different-close?case=tls-close-different", "wss"), onOpen: ws => ws.close(1000, "client selected")}),
+    dropped: await drive({url: url("/drop-after-close?case=tls-close-drop", "wss"), onOpen: ws => ws.close(1000, "client selected")}),
+  }),
+  handshakeTimeout: ({url, args}) => drive({url: url(`/hold?name=${args.name}&case=${args.name}`)}),
   // The native module's own contract, below WebSocket's tolerance: the four device events and their payloads, called
   // directly, together with the arguments RN's JS never sends.
   contract: async ({url, base}) => {
@@ -377,14 +409,20 @@ function start(name, root, args) {
 }
 
 function Root({name}) {
+  const [, setRevision] = useState(0);
   useEffect(() => {
     state.roots[name] = {mounted: true, cleanups: 0};
+    state.setters[name] = setRevision;
     return () => {
+      delete state.setters[name];
       state.roots[name].mounted = false;
       state.roots[name].cleanups += 1;
       state.log.push({event: "cleanup", name});
     };
   }, [name]);
+  if (state.load?.running) {
+    state.load.renders += 1;
+  }
   return <View testID={"websocket-" + name} style={{width: 120, height: 40, backgroundColor: "#7c3aed"}} />;
 }
 AppRegistry.registerComponent("WebSocketProbe", () => Root);
@@ -409,6 +447,9 @@ globalThis.WebSocketProbe = {
   },
   status(key) {
     return state.cases[key]?.status ?? "missing";
+  },
+  loadProgress() {
+    return state.load;
   },
   entry(key) {
     return state.cases[key] ?? null;

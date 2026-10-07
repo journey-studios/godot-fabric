@@ -24,6 +24,7 @@ var stages := {}
 var expected_original_failures: Array = []
 var allow_original_negative := false
 var sabotage := false
+var tls_close_smoke := false
 var ports := {}
 var authority := ""
 var other_authority := ""
@@ -303,6 +304,7 @@ func url_of(path: String, origin := "ws") -> String:
 func _initialize() -> void:
   allow_original_negative = OS.get_cmdline_user_args().has("--allow-original-negative")
   sabotage = OS.get_cmdline_user_args().has("--sabotage")
+  tls_close_smoke = OS.get_cmdline_user_args().has("--tls-close-smoke")
   for argument: String in OS.get_cmdline_user_args():
     if argument.begins_with("--ports="):
       ports = JSON.parse_string(argument.trim_prefix("--ports="))
@@ -338,6 +340,10 @@ func run_probe() -> void:
   check(int(app.rootCount) == 2 and app.errors.is_empty(), "mount/Two roots mount through the original AppRegistry in one application")
   application.call("evaluate", "WebSocketProbe.configure(%s)" % JSON.stringify(ports))
   await module_stage()
+  if tls_close_smoke:
+    await tls_close_stage()
+    await finish()
+    return
   await state_stage()
   await echo_stage()
   await protocol_stage()
@@ -372,9 +378,9 @@ func module_stage() -> void:
   check(constructs.get("created") == true or str(constructs.get("message")).contains("'WebSocketModule' could not be found"),
     "modules/Constructing a WebSocket either works or fails with RN's own module lookup error")
   socket_check(constructs.get("created") == true, "modules/RN's own WebSocket constructs over the native module")
-  socket_check(transport_of(initial).get("transport") == "godot-websocket-peer" and count_of(section(initial, "sockets"), "open") == 0
+  socket_check(transport_of(initial).get("transport") == "godot-httpclient-wslay" and count_of(section(initial, "sockets"), "open") == 0
     and count_of(transport_of(initial), "active") == 0 and count_of(initial, "connects") == 0,
-    "modules/The application's sockets run on the Godot WebSocketPeer transport with nothing open")
+    "modules/The application's sockets use the HTTPClient and wslay transport with nothing open")
   # The socket of the constructs probe ends by itself: its port refuses.
   if native_available:
     await wait_until(func() -> bool: return count_of(transport_of(websocket()), "active") == 0)
@@ -565,19 +571,22 @@ func failure_stage() -> void:
   var failures := await run_case("A", "failures")
   stages.failures = failures
   var result := result_of(failures)
-  socket_check(failed_with(section(result, "rejected"), "failed before it opened") and failed_with(section(result, "unauthorized"), "failed before it opened")
-    and failed_with(section(result, "badAccept"), "failed before it opened") and failed_with(section(result, "refused"), "failed before it opened"),
+  socket_check(failed_with(section(result, "rejected"), "HTTP/1.1 403 Forbidden") and failed_with(section(result, "unauthorized"), "HTTP/1.1 401 Forbidden")
+    and failed_with(section(result, "badAccept"), "invalid Sec-WebSocket-Accept") and failed_with(section(result, "refused"), "failed before the upgrade"),
     "failure/A handshake the server refuses (403, 401, a wrong accept key) or a port that refuses is an error and a close with code 1006")
-  socket_check(failed_with(section(result, "wrongProtocol"), "failed before it opened") and failed_with(section(result, "unmatchedProtocol"), "failed before it opened"),
-    "limits/The engine is as strict as a browser: a subprotocol the client never offered, or none where some were offered, fails the handshake (OkHttp accepts both)")
-  socket_check(failed_with(section(result, "badScheme"), "Expected URL scheme 'http' or 'https' but was 'ftp'") and failed_with(section(result, "noScheme"), "no scheme was found"),
-    "failure/A URL OkHttp cannot read fails with OkHttp's words instead of throwing")
+  socket_check(failed_with(section(result, "wrongProtocol"), "unoffered subprotocol")
+    and types_of(section(result, "unmatchedProtocol")) == ["open", "close"]
+    and section(result, "unmatchedProtocol").get("protocol") == "" and ended_with(section(result, "unmatchedProtocol"), 1000, ""),
+    "limits/An unoffered subprotocol is rejected, while the optional absence of a selected protocol opens with an empty protocol")
+  socket_check(failed_with(section(result, "badScheme"), "Expected URL scheme 'http' or 'https' but was 'ftp'")
+    and failed_with(section(result, "noScheme"), "Expected URL scheme 'http' or 'https' but no scheme was found"),
+    "failure/Unsupported and missing URL schemes fail with the host's endpoint diagnostic")
   socket_check(failed_with(section(result, "badHeader"), "Unexpected char 0x0a at 1 in X-Bad value: a\\u000ab")
     and failed_with(section(result, "nonAsciiHeader"), "Unexpected char 0xe7 at 1 in X-Unicode value: ação")
     and failed_with(section(result, "badProtocol"), "Unexpected char 0x01 at 3 in Sec-WebSocket-Protocol value: bad\\u0001"),
     "failure/A header or subprotocol OkHttp refuses fails the socket with its message")
-  socket_check(types_of(section(result, "dropped")) == ["open", "error", "close"] and failed_with(section(result, "dropped"), "was lost without a close frame")
-    and types_of(section(result, "reset")) == ["open", "error", "close"] and failed_with(section(result, "reset"), "was lost without a close frame"),
+  socket_check(types_of(section(result, "dropped")) == ["open", "error", "close"] and failed_with(section(result, "dropped"), "ended without exposing a close frame")
+    and types_of(section(result, "reset")) == ["open", "error", "close"] and failed_with(section(result, "reset"), "ended without exposing a close frame"),
     "failure/A connection cut after it opened, by a FIN or a reset, is an error and a close with code 1006 after open")
   var log := await server_log()
   socket_check(connection(log, "reject").get("state") == "refused" and handshake_status(connection(log, "reject")) == 403
@@ -588,8 +597,6 @@ func failure_stage() -> void:
   for label: String in ["refused", "bad-header", "non-ascii-header", "bad-protocol"]:
     untouched = untouched and connection(log, label).is_empty()
   check(untouched, "failure/A request the host refuses itself never reaches the server")
-  stages.deliberateEngineErrors = {"handshake": 5}
-
 func large_stage() -> void:
   var before := transport_of(websocket())
   var large := await run_case("A", "large")
@@ -643,26 +650,27 @@ func frame_stage() -> void:
   socket_check(pongs.size() == 1 and frame_text(pongs[0]) == "ping-payload" and types_of(section(result, "serverPing")) == ["open", "message", "close"],
     "frames/The engine answers the server's ping with a pong that carries its payload, and JS sees nothing of it")
   var invalid := section(result, "invalidText")
-  socket_check(types_of(invalid) == ["open", "close"] and ended_with(invalid, 1007, "Invalid frame payload data"),
-    "limits/A text frame that is not UTF-8 fails the socket with 1007, as RFC 6455 says (OkHttp reads it with replacement characters)")
+  socket_check(types_of(invalid) == ["open", "error", "close"] and failed_with(invalid, "close code 1007"),
+    "limits/Invalid UTF-8 sends close 1007 on the wire and terminates JS as an abnormal failure")
   var client_ping := connection(log, "client-ping")
   socket_check(data_summary(client_ping, "in") == ["binary:0"] and frames_of(client_ping, "out", ["binary"]).size() == 1
     and messages_of(section(result, "ping")).size() == 1 and int(messages_of(section(result, "ping"))[0].length) == 0,
     "frames/ping() sends an empty binary message, as Android's module does, and the echo of it is an empty ArrayBuffer")
-  # Reproduction, not a requirement: the engine drops what arrives in the poll of the peer's close frame.
+  # The stream adapter must deliver each complete data message before the peer's close event.
   var observed := await run_case("A", "dataThenClose")
   stages.dataThenClose = observed
   var coalesced := section(result_of(observed), "coalesced")
   var delivered := messages_of(coalesced).size()
-  stages.dataThenCloseObserved = {"sent": 3, "delivered": delivered, "note": "godotengine/godot#115384: data that arrives in the same poll as a close frame is not readable"}
-  socket_check(ended_with(coalesced, 4003, "done") and delivered <= 3 and types_of(coalesced).slice(-1) == ["close"],
-    "limits/Whether or not the engine delivered the messages written with a close frame, the close arrives with the server's code and reason")
+  stages.dataThenCloseObserved = {"sent": 3, "delivered": delivered}
+  socket_check(ended_with(coalesced, 4003, "done") and delivered == 3 and types_of(coalesced).slice(-1) == ["close"],
+    "limits/All messages coalesced with the peer's close arrive before its exact close code and reason")
   var interleaved := await run_case("A", "interleavedPing")
   stages.interleavedPing = interleaved
   var interleaved_messages := messages_of(section(result_of(interleaved), "fragmented"))
-  stages.interleavedPingObserved = {"messages": interleaved_messages.size(), "text": interleaved_messages[0].get("text") if not interleaved_messages.is_empty() else null,
-    "note": "RFC 6455 allows a ping between the fragments of a message; the engine puts the ping's payload into the message"}
-  socket_check(types_of(section(result_of(interleaved), "fragmented")).slice(-1) == ["close"], "limits/A ping between fragments does not stop the socket from closing")
+  stages.interleavedPingObserved = {"messages": interleaved_messages.size(), "text": interleaved_messages[0].get("text") if not interleaved_messages.is_empty() else null}
+  socket_check(interleaved_messages.size() == 1 and interleaved_messages[0].text == "fragmented"
+    and types_of(section(result_of(interleaved), "fragmented")).slice(-1) == ["close"],
+    "limits/A ping between fragments stays out of the reassembled message")
   var after := await server_log()
   var written := connection(after, "data-then-close")
   socket_check(data_summary(written, "out") == ["text:2", "text:2", "text:2"] and int(close_of(written, "out").get("closeCode", -1)) == 4003,
@@ -676,24 +684,46 @@ func tls_stage() -> void:
     "tls/A server certified by the authority the validation seam trusts answers over wss")
   var untrusted := await run_case("A", "tls", {"origin": "wssUntrusted", "label": "untrusted"})
   stages.tlsUntrusted = untrusted
-  socket_check(failed_with(result_of(untrusted), "failed before it opened"), "tls/A certificate from an authority that is not trusted is an error and a close with code 1006")
+  socket_check(failed_with(result_of(untrusted), "failed before the upgrade"), "tls/A certificate from an authority that is not trusted is an error and a close with code 1006")
   application.remove_meta(TRUST_META)
   var without := await run_case("A", "tls", {"origin": "wss", "label": "no-seam"})
   stages.tlsDefault = without
-  socket_check(failed_with(result_of(without), "failed before it opened"), "tls/Without the seam only Godot's default roots are trusted, and the test authority is not among them")
+  socket_check(failed_with(result_of(without), "failed before the upgrade"), "tls/Without the seam only Godot's default roots are trusted, and the test authority is not among them")
   application.set_meta(TRUST_META, other_authority)
   var wrong := await run_case("A", "tls", {"origin": "wss", "label": "wrong"})
   var right := await run_case("A", "tls", {"origin": "wssUntrusted", "label": "right"})
   stages.tlsOther = {"wrong": wrong, "right": right}
-  socket_check(failed_with(result_of(wrong), "failed before it opened") and types_of(result_of(right)) == ["open", "message", "close"],
+  socket_check(failed_with(result_of(wrong), "failed before the upgrade") and types_of(result_of(right)) == ["open", "message", "close"],
     "tls/Trust follows the configured authority: the other server's certificate verifies and the first one's does not")
   application.set_meta(TRUST_META, "not a certificate")
   var invalid := await run_case("A", "tls", {"origin": "wss", "label": "invalid"})
   stages.tlsInvalid = invalid
   socket_check(failed_with(result_of(invalid), "not valid PEM"), "tls/Trust that is not valid PEM refuses the socket instead of trusting everything")
   application.set_meta(TRUST_META, authority)
-  # The engine prints a handshake error for each certificate it refuses: the runner expects these three.
+  # Only the two TLS handshakes that reach the engine's TLS peer print a diagnostic; malformed trust is refused by the host.
   stages.deliberateTlsFailures = 3
+
+func tls_close_stage() -> void:
+  var entry := await run_case("A", "tlsCloseContract")
+  stages.tlsCloseContract = entry
+  var result := result_of(entry)
+  var normal := section(result, "normal")
+  var different := section(result, "different")
+  var dropped := section(result, "dropped")
+  socket_check(types_of(normal) == ["open", "close"] and ended_with(normal, 1000, ""),
+    "tls close/A clean TLS close frame is delivered with its wire code and reason")
+  socket_check(types_of(different) == ["open", "close"] and ended_with(different, 4002, "peer selected"),
+    "tls close/A peer-selected TLS close code and reason are delivered literally")
+  socket_check(types_of(dropped) == ["open", "error", "close"] and failed_with(dropped, "ended without exposing a close frame"),
+    "tls close/A TLS drop after client close remains an abnormal failure")
+  var log := await server_log()
+  var normal_wire := connection(log, "tls-close-normal")
+  var different_wire := connection(log, "tls-close-different")
+  var dropped_wire := connection(log, "tls-close-drop")
+  socket_check(int(close_of(normal_wire, "out").get("closeCode", -1)) == 1000 and close_of(normal_wire, "out").get("closeReason") == ""
+    and int(close_of(different_wire, "out").get("closeCode", -1)) == 4002 and close_of(different_wire, "out").get("closeReason") == "peer selected"
+    and close_of(dropped_wire, "out").is_empty() and int(close_of(dropped_wire, "in").get("closeCode", -1)) == 1000,
+    "tls close/The server wire log distinguishes both close frames from the post-close TLS drop")
 
 func contract_stage() -> void:
   var contract := await run_case("A", "contract")
@@ -751,8 +781,7 @@ func roots_stage() -> void:
   check(count_of(section(websocket(), "sockets"), "open") == 0, "roots/Nothing is left open")
 
 func timeout_stage() -> void:
-  # The server never answers the close frame. The engine would wait forever; the host gives up after OkHttp's minute, on the
-  # clock the validation moves, once the server has the close frame, so the outcome does not depend on how fast anything ran.
+  # The host's close deadline is explicit; advance the validation clock after the server records the close frame.
   var before := websocket()
   var key := begin("A", "silentClose", {"name": "close-timeout"})
   var saw_close := false
@@ -778,6 +807,20 @@ func timeout_stage() -> void:
   var silent := connection(log, "close-timeout")
   socket_check(int(close_of(silent, "in").get("closeCode", -1)) == 1000 and close_of(silent, "out").is_empty(),
     "timeout/The server had received the close frame and sent nothing back")
+  var before_handshake := websocket()
+  var handshake_key := begin("A", "handshakeTimeout", {"name": "handshake-timeout"})
+  var handshake_held := await wait_for_hold("handshake-timeout", "waiting")
+  application.set_meta(CLOCK_META, 31000.0)
+  var handshake_done := await finished(handshake_key)
+  application.set_meta(CLOCK_META, 0.0)
+  var handshake := result_of(entry_of(handshake_key))
+  stages.handshakeTimeout = entry_of(handshake_key)
+  var after_handshake := websocket()
+  socket_check(handshake_held and handshake_done and failed_with(handshake, "connection and upgrade timed out")
+    and count_of(transport_of(after_handshake), "closeTimeouts") == count_of(transport_of(before_handshake), "closeTimeouts"),
+    "timeout/A stalled connect or upgrade ends at the host's 30 second deadline without counting as a close timeout")
+  socket_check(await wait_for_hold("handshake-timeout", "closed-by-client"),
+    "timeout/Timing out an incomplete upgrade closes its held TCP connection")
 
 func accounting_stage() -> void:
   var state := websocket()
@@ -883,7 +926,7 @@ func finish() -> void:
     "sabotage": sabotage,
     "scope": {"publicReactNativeImport": true, "originalRNJavaScript": true, "twoRootsOneApplication": true,
       "serverIsLoopbackNode": true, "tlsAuthorityThroughValidationSeam": true, "blobMessagesCertified": true, "cookiesCertified": false,
-      "extensionsCertified": false, "handshakeStatusCertified": false, "dataWithCloseCertified": false, "interleavedControlFramesCertified": false}}
+      "extensionsCertified": false, "handshakeStatusCertified": false, "dataWithCloseCertified": true, "interleavedControlFramesCertified": true}}
   var output := FileAccess.open("res://build/websocket-report.json", FileAccess.WRITE)
   if not check(output != null, "report/The websocket report is saved with any normative failure visible"):
     quit(1)

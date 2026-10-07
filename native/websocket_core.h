@@ -21,6 +21,7 @@
 namespace fabric_godot::websocket {
 // RealWebSocket.MAX_QUEUE_SIZE: a message that does not fit in what is already queued closes the socket with 1001.
 constexpr std::size_t max_queued_bytes = 16u * 1024u * 1024u;
+constexpr double handshake_timeout_ms = 30000;
 // RealWebSocket.CANCEL_AFTER_CLOSE_MILLIS: how long a closing handshake waits for the peer's close frame.
 constexpr double close_timeout_ms = 60000;
 // WebSocketProtocol.CLOSE_MESSAGE_MAX: a close frame's payload is at most 125 bytes, two of them the code.

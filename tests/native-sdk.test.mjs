@@ -49,18 +49,27 @@ function fixture(t) {
     '.deps/build/rn-pointer-overlay',
   ];
   for (const tree of trees) write(root, tree + '/fixture.h', '#pragma once\n');
+  const wslay = '.deps/' + lock.wslay.directory + '/lib';
+  write(root, wslay + '/wslay_event.c', '/* fixture source */\n');
+  write(root, wslay + '/wslay_event.h', '#pragma once\n');
+  write(root, wslay + '/includes/wslay/wslay.h', '#pragma once\n');
+  write(root, '.deps/' + lock.wslay.directory + '/COPYING', 'fixture wslay license\n');
+  write(root, '.deps/build/wslay/config.h', '#define WSLAY_CONFIG_FIXTURE 1\n');
+  write(root, '.deps/build/wslay/includes/wslay/wslayver.h', '#define WSLAY_VERSION_FIXTURE 1\n');
   write(root, trees[1] + '/ignore.cpp', '// do not publish native source\n');
   write(root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h', '#pragma once\n// fixture overlay\n');
   write(root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp', '// fixture overlay source\n');
   write(root, '.deps/build/rn-pointer-overlay/overlay-manifest.json', '{"fixture":true}');
   const flagsFile = write(root, '.deps/build/CMakeFiles/fabric_godot.dir/flags.make', [
     'CXX_DEFINES = -DGDEXTENSION -DMACOS_ENABLED -DFOLLY_MOBILE=1 -Dfabric_godot_EXPORTS',
-    'CXX_INCLUDES = ' + [trees.at(-1), ...trees.slice(0, -1)].map(tree => '-I"' + path.join(root, tree) + '"').join(' ')
+    'CXX_INCLUDES = ' + [trees.at(-1), ...trees.slice(0, -1), wslay + '/includes', '.deps/build/wslay/includes', '.deps/build/wslay']
+      .map(tree => '-I"' + path.join(root, tree) + '"').join(' ')
       + ' -I"' + path.join(root, '.deps/' + lock['react-native'].directory + '/ReactCommon/unused') + '"',
     'CXX_FLAGS = -O3 -DNDEBUG -std=gnu++20 -arch arm64 -isysroot "' + sysroot + '" -mmacosx-version-min=13.0 -fPIC', '',
   ].join('\n'));
   write(root, '.deps/build/CMakeFiles/fabric_core.dir/flags.make', 'fixture-core-flags');
   write(root, '.deps/build/godot-cpp/CMakeFiles/godot-cpp.dir/flags.make', 'fixture-godot-flags');
+  write(root, '.deps/build/wslay/CMakeFiles/wslay.dir/flags.make', 'fixture-wslay-flags');
   write(root, trees[1] + '/original.cpp', '// fixture native upstream source');
   write(root, '.deps/' + lock['godot-cpp'].directory + '/src/godot.cpp', '// fixture native binding source');
   write(root, '.deps/build/godot-cpp/gen/src/classes/control.cpp', '// fixture generated binding source');
@@ -101,6 +110,8 @@ test('dry package has original combination shape, SPI headers and shared importe
   assert.equal(combination.nativeDependencies.length, 3);
   assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/adapter_registry.h')));
   assert.ok(fs.existsSync(path.join(value.out, 'include/sdk/turbo_module_registry.h')));
+  assert.ok(!manifest.files.some(entry => entry.path.includes('wslay')),
+    'private framing headers are hashed inputs, not part of the adapter SDK');
   assert.ok(fs.existsSync(path.join(value.out, 'include/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h')));
   assert.ok(fs.existsSync(path.join(value.out, 'lib/frameworks/hermesvm.framework/hermesvm')));
   assert.equal(fs.readlinkSync(path.join(value.out, 'lib/frameworks/hermesvm.framework/Versions/Current')), 'A');
@@ -140,7 +151,8 @@ test('changed native source during compilation refuses the completed host receip
 });
 
 test('changed consumed headers or build flags reject stale SDK publication', t => {
-  for (const input of ['header', 'flags', 'rn-source', 'godot-source', 'overlay-header', 'overlay-source', 'overlay-receipt', 'overlay-generator']) {
+  for (const input of ['header', 'flags', 'rn-source', 'godot-source', 'overlay-header', 'overlay-source', 'overlay-receipt',
+    'overlay-generator', 'wslay-internal-header', 'wslay-generated-config', 'wslay-flags']) {
     const value = fixture(t);
     record(value);
     if (input === 'header') write(value.root, value.trees[1] + '/fixture.h', '#pragma once\n// changed');
@@ -150,7 +162,10 @@ test('changed consumed headers or build flags reject stale SDK publication', t =
     else if (input === 'overlay-header') write(value.root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.h', '// changed overlay header');
     else if (input === 'overlay-source') write(value.root, '.deps/build/rn-pointer-overlay/react/renderer/uimanager/PointerEventsProcessor.cpp', '// changed overlay source');
     else if (input === 'overlay-receipt') write(value.root, '.deps/build/rn-pointer-overlay/overlay-manifest.json', '{"changed":true}');
-    else write(value.root, 'scripts/rn-pointer-overlay.mjs', '// changed overlay generator');
+    else if (input === 'overlay-generator') write(value.root, 'scripts/rn-pointer-overlay.mjs', '// changed overlay generator');
+    else if (input === 'wslay-internal-header') write(value.root, '.deps/' + value.lock.wslay.directory + '/lib/wslay_event.h', '// changed internal header');
+    else if (input === 'wslay-generated-config') write(value.root, '.deps/build/wslay/config.h', '// changed generated config');
+    else fs.appendFileSync(path.join(value.options.buildDir, 'wslay/CMakeFiles/wslay.dir/flags.make'), '\nchanged');
     rejects('SDK_STALE_BUILD', () => packageNativeSdk({...value.options, out: value.out}));
     assert.ok(!fs.existsSync(value.out));
   }

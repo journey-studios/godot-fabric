@@ -1,12 +1,16 @@
 import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 
-// Executed producers of the WebSocket slice: the pure WebSocket core and its unit test, the transport seam and the Godot
-// WebSocketPeer transport behind it, the TLS options both transports build, the modules that carry the sockets (the
+// Executed producers of the WebSocket slice: the pure WebSocket core and its unit test, the transport seam, the Godot
+// HTTPClient/wslay connection and its bounded upgrade parser, the TLS options both transports build, the modules that carry the sockets (the
 // WebSocketModule in its own translation unit and the BlobModule's hooks, over the state and blob store the networking
 // modules share), the runtime wiring that polls and stops them, the validation seam for the TLS authority and the clock,
-// and the Godot class profile and build that bring WebSocketPeer in.
+// and the Godot class profile and build that expose the stream classes.
 export const websocketNativeProducers = ["native/websocket_core.h", "native/websocket_core_test.cpp", "native/websocket_transport.h",
-  "native/godot_websocket_transport.h", "native/godot_websocket_transport.cpp", "native/godot_tls.h", "native/http_core.h",
+  "native/godot_websocket_transport.h", "native/godot_websocket_transport.cpp", "native/godot_websocket_connection.h",
+  "native/godot_websocket_connection.cpp", "native/websocket_handshake.h", "native/websocket_handshake_test.cpp",
+  "tests/websocket-transport-smoke.test.mjs",
+  "native/godot_tls.h", "native/http_core.h", "dependencies.json", "scripts/setup.py", "scripts/native-sdk.mjs",
+  "scripts/pack-addon.mjs", "scripts/ios-build.py", "THIRD_PARTY_NOTICES.md",
   "native/blob_store.h", "native/networking_modules.h", "native/networking_modules.cpp", "native/networking_state.h",
   "native/websocket_module.h", "native/websocket_module.cpp", "native/application_runtime.cpp", "native/application_runtime.h",
   "native/fabric_application.cpp", "native/godot-profile.json", "native/CMakeLists.txt"];

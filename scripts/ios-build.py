@@ -45,11 +45,13 @@ def inputs():
     files += sorted((PROJECT / "native").glob("*.cpp"))
     files += sorted((PROJECT / "native").glob("*.h"))
     files += [PROJECT / "native/godot-profile.json"]
+    files += sorted((DEPS / LOCK["wslay"]["directory"] / "lib").rglob("*"))
+    files = [file for file in files if file.is_file()]
     return {str(file.relative_to(PROJECT)): sha256(file) for file in files}
 
 
 def dependencies(target):
-    for name in ("react-native", "hermes", "rn-dependencies", "godot-cpp"):
+    for name in ("react-native", "hermes", "rn-dependencies", "godot-cpp", "wslay"):
         dependency = LOCK[name]
         archive = DEPS / dependency["archive"]
         if not archive.exists() or sha256(archive) != dependency["sha256"]:
@@ -106,7 +108,7 @@ def build(target, configuration, jobs, architecture="arm64"):
     # Merge our extension, upstream Fabric/Yoga and godot-cpp archives. Dynamic
     # framework dependencies are deliberately excluded from this static archive.
     run("xcrun", "libtool", "-static", "-o", archive, output / "libfabric_godot.a",
-        output / "libfabric_core.a", bindings)
+        output / "libfabric_core.a", output / "wslay/libwslay.a", bindings)
     witness = output / "fabric_ios_link_smoke"
     if run("xcrun", "lipo", "-archs", archive).split() != [architecture]:
         raise RuntimeError(f"Combined archive has the wrong architecture: {archive}")
@@ -123,10 +125,10 @@ def build(target, configuration, jobs, architecture="arm64"):
         "sourceCommit": run("git", "rev-parse", "HEAD"),
         "sourceDirty": bool(run("git", "status", "--porcelain")),
         "sourceSHA256": source_hashes, "dependencyLibrarySHA256": dependency_hashes,
-        "pinnedArchiveSHA256": {name: LOCK[name]["sha256"] for name in ("react-native", "hermes", "rn-dependencies", "godot-cpp")},
+        "pinnedArchiveSHA256": {name: LOCK[name]["sha256"] for name in ("react-native", "hermes", "rn-dependencies", "godot-cpp", "wslay")},
         "versions": {"reactNative": LOCK["react-native"]["version"], "react": LOCK["react"],
                      "hermes": LOCK["hermes"]["version"], "godot": LOCK["godot"]["version"],
-                     "godotCpp": LOCK["godot-cpp"]["commit"], "cmake": LOCK["cmake"]},
+                     "godotCpp": LOCK["godot-cpp"]["commit"], "wslay": LOCK["wslay"]["commit"], "cmake": LOCK["cmake"]},
         "toolchain": {"xcode": run("xcodebuild", "-version"), "sdk": sdk,
                       "sdkVersion": run("xcrun", "--sdk", sdk, "--show-sdk-version")},
         "archive": str(archive.relative_to(PROJECT)), "archiveSHA256": sha256(archive),

@@ -16,6 +16,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 // broken on purpose (scripts/websocket-sabotage.mjs builds those hosts and restores the source): the probe and the oracle
 // must both reject it.
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
+const tlsCloseSmoke = process.argv.includes("--tls-close-smoke");
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? "origin");
 assert.ok([null, "origin", "stop"].includes(sabotage), "Unknown sabotage: " + sabotage);
@@ -81,7 +82,8 @@ function runProbe(binary, server) {
   const {ports, files} = server.info;
   const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/websocket-probe.gd", "--",
     `--ports=${JSON.stringify(ports)}`, `--ca=${files.ca}`, `--other-ca=${files.untrustedCa}`,
-    ...(allowOriginalNegative ? ["--allow-original-negative"] : []), ...(sabotage === null ? [] : ["--sabotage"])],
+    ...(allowOriginalNegative ? ["--allow-original-negative"] : []), ...(sabotage === null ? [] : ["--sabotage"]),
+    ...(tlsCloseSmoke ? ["--tls-close-smoke"] : [])],
   {encoding: "utf8", timeout: 240000, maxBuffer: 64 * 1024 * 1024});
   return {result, log: (result.stdout ?? "") + (result.stderr ?? "")};
 }
@@ -110,10 +112,6 @@ function assertSameReproducer(control, report, bundle, name) {
 
 // What the engine prints, as errors, for the failures the probe causes on purpose: each handshake it refuses (the cause
 // and then its own summary) and each certificate it will not trust.
-const handshakeErrors = [/^Invalid status code\. Got: '403', expected '101'\.$/, /^Invalid status code\. Got: '401', expected '101'\.$/,
-  /^Missing or invalid header 'sec-websocket-accept'\. Expected value '[A-Za-z0-9+/=]{28}'\.$/, /^Received unrequested sub-protocol -> never-offered$/,
-  /^Requested sub-protocol\(s\) but received none\.$/];
-const handshakeSummary = "Invalid response headers.";
 const tlsError = "TLS handshake error: -9984";
 
 test("RN's own WebSocket runs over native sockets against a local server", async () => {
@@ -122,6 +120,12 @@ test("RN's own WebSocket runs over native sockets against a local server", async
     assert.equal(unit.error, undefined);
     assert.equal(unit.status, 0, unit.stdout + unit.stderr);
     assert.match(unit.stdout, /WEBSOCKET_CORE_PASSED/);
+  }
+  const handshake = spawnSync(path.join(root, ".deps/build/websocket_handshake_test"), [], {encoding: "utf8", timeout: 20000});
+  if (sabotage === null && !allowOriginalNegative) {
+    assert.equal(handshake.error, undefined);
+    assert.equal(handshake.status, 0, handshake.stdout + handshake.stderr);
+    assert.match(handshake.stdout, /10 assertions/);
   }
   const bundle = await bundleWebSocketProbe();
   const binary = await ensureGodotBinary();
@@ -153,21 +157,24 @@ test("RN's own WebSocket runs over native sockets against a local server", async
   assert.equal(report.reactNative, "0.87.1");
   assert.equal(report.displayServer, "headless");
   assert.equal(report.allowOriginalNegative, allowOriginalNegative);
+  if (tlsCloseSmoke) {
+    assert.equal(result.status, 0, log);
+    assert.deepEqual(report.checks.filter(row => !row.passed), []);
+    assert.ok(report.stages.tlsCloseContract);
+    assert.equal(serverLog.connections.length, 3, "The TLS smoke opens only its three close-contract connections");
+    return;
+  }
   assert.equal(new Set(report.checks.map(row => row.name)).size, report.checks.length);
   assert.equal(new Set(report.expectedOriginalFailures).size, report.expectedOriginalFailures.length);
   const failures = report.checks.filter(row => !row.passed).map(row => row.name);
   const checkErrors = [...log.matchAll(/^ERROR: FABRIC_CHECK_FAILED: (.+)$/gm)].map(match => match[1]);
   assert.deepEqual(sorted(checkErrors), sorted(failures));
-  // Every ERROR line is a failed check, or one the engine prints for a failure the probe causes on purpose: a handshake it
-  // refuses or a certificate it will not trust. No native, script or engine error hides.
+  // Every ERROR line is a failed check or one of the TLS failures the probe causes on purpose. Handshake validation belongs
+  // to the adapter now, so Godot does not print parser diagnostics for those expected rejections.
   const engineErrors = [...log.matchAll(/^ERROR: (?!FABRIC_CHECK_FAILED: )(.+)$/gm)].map(match => match[1]);
-  const expectedHandshakes = allowOriginalNegative ? 0 : report.stages.deliberateEngineErrors.handshake;
   const expectedTls = allowOriginalNegative ? 0 : report.stages.deliberateTlsFailures;
-  const causes = engineErrors.filter(text => handshakeErrors.some(pattern => pattern.test(text)));
-  assert.equal(causes.length, expectedHandshakes, "The engine refused exactly the handshakes the probe offered it to refuse");
-  assert.equal(engineErrors.filter(text => text === handshakeSummary).length, expectedHandshakes, "Each refused handshake is summarized once");
-  assert.equal(engineErrors.filter(text => text === tlsError).length, expectedTls, "The engine refused exactly the certificates the probe offered it to refuse");
-  assert.equal(engineErrors.length, expectedHandshakes * 2 + expectedTls, "No native diagnostic, script or engine error is hidden");
+  assert.equal(engineErrors.filter(text => text === tlsError).length, expectedTls, "The engine logged exactly the TLS handshakes it refused");
+  assert.equal(engineErrors.length, expectedTls, "No native diagnostic, script or engine error is hidden");
   for (const file of ["tests/websocket-fixture.jsx", "tests/websocket-probe.gd", "tests/websocket-native.test.mjs", "tests/websocket-oracle.mjs",
     "tests/websocket-server.mjs", "tests/networking-certificates.mjs", "scripts/websocket-bundle.mjs", "src/initialize.js", "src/platform-environment.js",
     "sdk/toolchain/platform-plugin.mjs", ...websocketNativeProducers]) {
@@ -205,6 +212,11 @@ test("RN's own WebSocket runs over native sockets against a local server", async
   assert.equal(report.allCurrentAssertionsPassed, true);
   assert.match(log, /WEBSOCKET_PASSED: \d+/);
   const verified = verifyWebSocketReport(report, serverLog);
+  for (const stage of ["echoText", "handshakeTimeout"]) {
+    const missing = structuredClone(report);
+    delete missing.stages[stage];
+    assert.ok(oracleRejection(missing, serverLog) !== null, `The independent oracle rejects a missing ${stage} JS session`);
+  }
   const original = await optionalJson("build/websocket-original-report.json");
   if (original != null) {
     assert.ok(original.originalNegativeObserved);

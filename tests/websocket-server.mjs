@@ -355,6 +355,17 @@ const routes = {
       peer.socket.end();
     }}),
   },
+  // Transport spike routes: echo a TLS close, return a different peer code, or drop after the client's close frame.
+  "different-close": {
+    handlers: () => ({...echoHandlers, close: peer => {
+      peer.entry.state = "closing";
+      peer.close(4002, "peer selected");
+      peer.socket.end();
+    }}),
+  },
+  "drop-after-close": {
+    handlers: () => ({...echoHandlers, close: peer => peer.drop()}),
+  },
   // Sends a ping and records the pong, then echoes.
   ping: {
     handlers: () => echoHandlers,
@@ -369,6 +380,22 @@ const routes = {
   large: {
     handlers: () => echoHandlers,
     onOpen: peer => peer.binary(bytePattern(1048576)),
+  },
+  // An aggregate load with several independent messages per socket. One poll's shared byte budget must rotate through
+  // these peers; the messages stay separate so the runtime's callback admission is exercised as well as byte reads.
+  flood: {
+    handlers: () => echoHandlers,
+    onOpen: (peer, _context, query) => {
+      const count = Number(query.get("count") ?? 128);
+      const bytes = Number(query.get("bytes") ?? 8192);
+      const stream = Number(query.get("stream") ?? 0);
+      const frames = Array.from({length: count}, (_, index) => {
+        const payload = Buffer.alloc(bytes, 0x78);
+        payload.write(`${stream}:${index}:`, 0, "utf8");
+        return {opcode: OPCODES.text, payload};
+      });
+      peer.burst(frames);
+    },
   },
   // Messages split into fragments: the client must reassemble them.
   fragmented: {
@@ -510,7 +537,7 @@ function closedPort() {
   });
 }
 
-async function startWebSocketServer(outDirectory) {
+export async function startWebSocketServer(outDirectory) {
   const identity = issueTestIdentity("Godot Fabric websocket test CA");
   const untrusted = issueTestIdentity("Godot Fabric untrusted websocket test CA");
   const ports = {

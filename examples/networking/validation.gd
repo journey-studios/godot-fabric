@@ -153,7 +153,7 @@ func run() -> void:
   verify(text("net-status") == "No request yet" and badge() == BADGE_IDLE and text("net-log") == "No requests yet" and server.requests.is_empty(),
     "Nothing has been requested: the badge is idle and the server has seen nothing")
   verify(not module().is_empty() and section(module(), "transport").get("transport") == "godot-http-client"
-    and section(section(module(), "webSocket"), "transport").get("transport") == "godot-websocket-peer",
+    and section(section(module(), "webSocket"), "transport").get("transport") == "godot-httpclient-wslay",
     "The application's networking module runs on the Godot transports, for HTTP and for sockets")
   await capture("idle", BADGE_IDLE)
 
@@ -272,12 +272,13 @@ func run_sockets() -> void:
   # Server close: the server ends the socket with 4001 and a reason, and the page shows that exact close.
   await click("ws-server-close")
   var server_closed := await wait_for(func() -> bool: return text("ws-status") == "WebSocket: closed 4001")
+  var server_close_finished := await wait_for(func() -> bool: return server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed").size() == 1 and section(web_socket(), "sockets").get("open") == 0)
   stages.socketServerClose = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
   verify(server_closed and text("ws-last") == "closed by the server" and badge("ws-badge") == BADGE_IDLE and socket_events().slice(-1) == ["close 4001 closed by the server"],
     "A close the server starts arrives with its code and reason, and the badge goes back to gray")
   var closed_events := server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed")
-  verify(closed_events.size() == 1 and closed_events[0].code == 4001 and section(web_socket(), "sockets").get("open") == 0,
-    "The server saw the close handshake finish and the module holds no socket")
+  verify(server_close_finished and closed_events.size() == 1 and closed_events[0].code == 4001 and closed_events[0].reason == "closed by the server",
+    "The server recorded the completed 4001 close handshake and exact reason")
   await capture("server-close", BADGE_IDLE, "ws-badge", "websocket")
 
   # Drop: the server cuts the connection with no close frame, which is an error and a close with code 1006.
@@ -288,7 +289,7 @@ func run_sockets() -> void:
   stages.socketDropped = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
   var dropped_log := socket_events().slice(-2)
   verify(dropped and badge("ws-badge") == BADGE_FAILED and dropped_log == ["error", "close 1006"]
-    and text("ws-last").contains("was lost without a close frame"), "A connection the server cuts ends with an error and a close with code 1006, and the badge turns red")
+    and text("ws-last").contains("ended without exposing a close frame"), "A connection the server cuts ends with an error and a close with code 1006, and the badge turns red")
   verify(int(section(web_socket(), "transport").get("failed", 0)) == 1 and int(web_socket().get("failed", 0)) == 1,
     "The module counted one failed socket")
   await capture("dropped", BADGE_FAILED, "ws-badge", "websocket")
@@ -301,8 +302,9 @@ func run_sockets() -> void:
   var server_ended := await wait_for(func() -> bool: return server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed").size() == 3)
   stages.socketClosed = {"example": example(), "serverEvents": server.socket_events.duplicate(true), "module": web_socket()}
   verify(closed and text("ws-last") == "done" and badge("ws-badge") == BADGE_IDLE, "Close ends the socket with 1000 and the reason the page gave")
-  var last_closed: Dictionary = server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed").back()
-  verify(server_ended and last_closed.code == 1000 and last_closed.reason == "done", "The server received that close frame")
+  closed_events = server.socket_events.filter(func(row: Dictionary) -> bool: return row.event == "closed")
+  verify(server_ended and not closed_events.is_empty() and closed_events.back().code == 1000 and closed_events.back().reason == "done",
+    "The server received that close frame")
   await capture("closed", BADGE_IDLE, "ws-badge", "websocket")
   var state := web_socket()
   verify(int(state.get("connects", 0)) == 3 and int(state.get("opened", 0)) == 3 and int(state.get("closed", 0)) == 2 and int(state.get("failed", 0)) == 1

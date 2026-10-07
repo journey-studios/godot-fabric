@@ -10,6 +10,7 @@
 #include "websocket_module.h"
 #include <ReactCommon/TurboModule.h>
 #include <jsi/jsi.h>
+#include <algorithm>
 #include <cstdint>
 #include <functional>
 #include <map>
@@ -67,7 +68,8 @@ struct NetworkingState {
   std::shared_ptr<CollectedBlobs> collected = std::make_shared<CollectedBlobs>();
   std::mt19937_64 random{std::random_device{}()};
   uint64_t sent{}, refused{}, aborted{}, responses{}, completions{}, failures{}, events_queued{}, events_delivered{},
-      events_dropped{}, blob_handlers{}, cookie_clears{}, file_reads{}, file_failures{}, blobs_closed{}, blobs_collected{};
+      events_dropped{}, events_peak_pending{}, blob_handlers{}, cookie_clears{}, file_reads{}, file_failures{}, blobs_closed{}, blobs_collected{};
+  uint64_t pending_events() const { return events_queued - events_delivered - events_dropped; }
   void release_collected() {
     for (const auto &id : collected->take()) {
       if (blobs.release(id)) ++blobs_collected;
@@ -112,6 +114,7 @@ using Payload = std::function<jsi::Value(jsi::Runtime &)>;
 inline void queue_event(const std::shared_ptr<NetworkingState> &state, const std::shared_ptr<RequestToken> &token, std::string name,
     Payload payload) {
   ++state->events_queued;
+  state->events_peak_pending = std::max(state->events_peak_pending, state->pending_events());
   state->invoker->invokeAsync([owner = std::weak_ptr<NetworkingState>(state), token, name = std::move(name),
       payload = std::move(payload)](jsi::Runtime &rt) {
     const auto state = owner.lock();

@@ -2,10 +2,9 @@ import React, { useRef, useState } from "react";
 import { AppRegistry, Pressable, StyleSheet, Text, View } from "react-native";
 
 // RN's own fetch, FormData, AbortController and WebSocket through the public
-// react-native import, over native modules backed by Godot's HTTP client and
-// WebSocketPeer. The scene starts a small HTTP server and a WebSocket echo server
-// on loopback and passes their addresses in as baseUrl and socketUrl; nothing else
-// reaches the network.
+// react-native import and the host's native networking modules. The scene starts
+// HTTP and WebSocket echo servers on loopback, passing their addresses as baseUrl
+// and socketUrl; nothing else reaches the network.
 const observations = { renders: 0, operations: [], view: null, pending: false };
 const socketObservations = { renders: 0, events: [], view: null, readyState: null };
 globalThis.NetworkingExample = {
@@ -99,7 +98,7 @@ function SocketCard({ socketUrl }) {
     <View testID="ws-card" style={styles.card}>
       <Text style={styles.eyebrow}>GODOT FABRIC / WEBSOCKET</Text>
       <Text style={styles.title}>WebSocket, straight from React Native.</Text>
-      <Text style={styles.description}>RN's own WebSocket over Godot's WebSocketPeer, echoed by a server on this machine.</Text>
+      <Text style={styles.description}>RN's own WebSocket, echoed by a server on this machine.</Text>
       <View style={styles.buttons}>
         <Action prefix="ws" id="connect" label="Connect" onPress={actions.connect} />
         <Action prefix="ws" id="send" label="Send" onPress={actions.send} />

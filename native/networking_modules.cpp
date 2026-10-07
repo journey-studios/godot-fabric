@@ -577,7 +577,10 @@ void Networking::poll(std::size_t byte_budget) {
   if (!state_->active) return;
   state_->release_collected();
   state_->transport->poll(byte_budget);
-  state_->sockets.transport->poll(byte_budget);
+  const auto pending = state_->pending_events();
+  const auto reserved = state_->sockets.transport->reserved_events();
+  const auto available = pending < max_network_events_per_poll ? max_network_events_per_poll - pending : 0;
+  state_->sockets.transport->poll(byte_budget, available > reserved ? available - reserved : 0);
 }
 
 void Networking::stop() { state_->stop(); }
@@ -588,7 +591,9 @@ folly::dynamic Networking::snapshot() const {
       ("requests", folly::dynamic::object("inFlight", s.requests.size())("sent", s.sent)("refused", s.refused)
           ("aborted", s.aborted)("responses", s.responses)("completions", s.completions)("failures", s.failures)
           ("clearedCookies", s.cookie_clears))
-      ("events", folly::dynamic::object("queued", s.events_queued)("delivered", s.events_delivered)("dropped", s.events_dropped))
+      // The stopped invoker suppresses queued closures; pending therefore describes only an active network queue.
+      ("events", folly::dynamic::object("queued", s.events_queued)("delivered", s.events_delivered)("dropped", s.events_dropped)
+          ("pending", s.active ? s.pending_events() : 0)("peakPending", s.events_peak_pending))
       ("blobs", folly::dynamic::object("count", s.blobs.count())("bytes", s.blobs.bytes())("stored", s.blobs.stored())
           ("released", s.blobs.released())("closed", s.blobs_closed)("collected", s.blobs_collected)
           ("networkingHandlers", s.blob_handlers))

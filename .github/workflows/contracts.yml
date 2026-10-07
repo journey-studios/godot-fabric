@@ -179,6 +179,10 @@ jobs:
             build/websocket-comparison.json
             build/websocket-current.log
             build/websocket-probe-bundle.json
+            build/websocket-load.json
+            build/websocket-load-*
+            build/websocket-transport-lifetime.json
+            build/websocket-transport-lifetime-*
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:focus:commands
       - run: npm run test:pointers:processor

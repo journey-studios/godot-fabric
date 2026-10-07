@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.31)
-project(godot_fabric LANGUAGES CXX)
+project(godot_fabric LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
@@ -10,6 +10,8 @@ set(DEPS "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/rndeps/packages/react-native/thir
 set(HERMES "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/hermes/destroot")
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/../dependencies.json" FABRIC_DEPENDENCIES_JSON)
 string(JSON FABRIC_NODE_VERSION GET "${FABRIC_DEPENDENCIES_JSON}" node version)
+string(JSON WSLAY_DIRECTORY GET "${FABRIC_DEPENDENCIES_JSON}" wslay directory)
+set(WSLAY "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/${WSLAY_DIRECTORY}")
 find_program(FABRIC_OVERLAY_NODE NAMES node
   HINTS "${CMAKE_CURRENT_SOURCE_DIR}/../.deps/node-v${FABRIC_NODE_VERSION}-darwin-arm64/bin"
   REQUIRED)
@@ -157,7 +159,15 @@ add_executable(affine_transform_test affine_transform_test.cpp)
 add_executable(http_core_test http_core_test.cpp)
 # The pure WebSocket core (the URL, origin, protocols, headers and close parameters OkHttp accepts) needs neither Godot nor RN.
 add_executable(websocket_core_test websocket_core_test.cpp)
+add_executable(websocket_handshake_test websocket_handshake_test.cpp)
 target_include_directories(timer_registry_test PRIVATE "${RN}")
+
+# Pin the same upstream wslay implementation used by Godot, without building or
+# patching the engine. Only its portable event/framing library enters the addon.
+set(WSLAY_STATIC ON CACHE BOOL "Build static wslay" FORCE)
+set(WSLAY_SHARED OFF CACHE BOOL "Build shared wslay" FORCE)
+set(WSLAY_CONFIGURE_INSTALL OFF CACHE BOOL "Do not install wslay" FORCE)
+add_subdirectory("${WSLAY}/lib" wslay)
 
 set(GODOTCPP_TARGET template_release CACHE STRING "Godot binding build configuration")
 set(GODOTCPP_BUILD_PROFILE "${CMAKE_CURRENT_SOURCE_DIR}/godot-profile.json" CACHE FILEPATH "" FORCE)
@@ -172,16 +182,29 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
 else()
   set(FABRIC_GODOT_LIBRARY_TYPE SHARED)
 endif()
-add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp godot_http_transport.cpp godot_websocket_transport.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
+add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp register.cpp)
+target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
+
+# Explicit test-only extension for synchronous listener reentrancy. Its class is
+# registered only in this library; the shipped Fabric extension has no probe API.
+option(FABRIC_BUILD_WEBSOCKET_TRANSPORT_TEST "Build the isolated WebSocket transport test extension" OFF)
+if(FABRIC_BUILD_WEBSOCKET_TRANSPORT_TEST AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
+  add_library(websocket_transport_test SHARED websocket_transport_test_fixture.cpp
+    godot_websocket_transport.cpp godot_websocket_connection.cpp)
+  target_include_directories(websocket_transport_test PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
+  target_link_libraries(websocket_transport_test PRIVATE fabric_core "$<LINK_ONLY:wslay>" godot-cpp)
+  set_target_properties(websocket_transport_test PROPERTIES PREFIX "" SUFFIX ".dylib"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/websocket-transport-test")
+endif()
 if(APPLE AND NOT CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # Retain the binding objects for the pinned Godot class profile as SDK exports,
   # including classes only an external adapter uses. This is one archive in one
   # shared host; adapters never link that archive themselves. Upstream RN sources
   # retain their existing link selection; strict adapter linking identifies any
   # additional RN export required by the supported SPI.
-  target_link_libraries(fabric_godot PRIVATE fabric_core "$<LINK_LIBRARY:WHOLE_ARCHIVE,godot-cpp>")
+target_link_libraries(fabric_godot PRIVATE fabric_core "$<LINK_ONLY:wslay>" "$<LINK_LIBRARY:WHOLE_ARCHIVE,godot-cpp>")
 else()
-  target_link_libraries(fabric_godot PRIVATE fabric_core godot-cpp)
+target_link_libraries(fabric_godot PRIVATE fabric_core "$<LINK_ONLY:wslay>" godot-cpp)
 endif()
 if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   # A static GDExtension links into the exported Xcode app. Its upstream Hermes
@@ -189,7 +212,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test affine_transform_test http_core_test websocket_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test affine_transform_test http_core_test websocket_core_test websocket_handshake_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES

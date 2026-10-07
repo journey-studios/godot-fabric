@@ -10,6 +10,8 @@
 #include <vector>
 
 namespace fabric_godot {
+inline constexpr std::size_t max_network_events_per_poll = 256;
+
 // One WebSocket connection as the WebSocketModule hands it to a transport. The module has already parsed and
 // canonicalized the URL (ws or wss, the port written out), validated the headers and chosen the subprotocols; the
 // transport adds only what the wire needs (Host, Upgrade, Connection, the key and the version).
@@ -41,9 +43,8 @@ enum class WebSocketSend {
   Overflow,  // the message does not fit in what is queued: nothing was queued, and the module closes with 1001 as OkHttp does
 };
 
-// The platform seam under RN's WebSocketModule. Godot's WebSocketPeer is the first transport; a platform one
-// (NSURLSessionWebSocketTask, WinHTTP) can replace it without the module noticing. Every method runs on the
-// application's main thread, which is also the JS thread.
+// The platform seam under RN's WebSocketModule. Every method runs on the application's main thread, which is also the JS
+// thread; a platform transport can replace Godot's without the module noticing.
 class WebSocketTransport {
  public:
   virtual ~WebSocketTransport() = default;
@@ -55,12 +56,17 @@ class WebSocketTransport {
   // connecting ends as a failure at the next poll(). A closing handshake the peer never answers ends as a failure too,
   // after RealWebSocket's own 60 seconds on the transport's clock.
   virtual void close(uint64_t id, int code, const std::string &reason) = 0;
-  // Ends a connection without a word to its listener: an open one is closed with 1001, and nothing it holds is reported. The
-  // module uses it for a connection whose failure it has already reported, because a failure is the last event of a socket.
+  // Ends a connection without a word to its listener: an open one sends a best-effort 1001 close before its stream is
+  // discarded. The module uses it after reporting failure too, so no event follows a socket's terminal event.
   virtual void cancel(uint64_t id) = 0;
-  // Advances every connection, reading at most `byte_budget` bytes of messages in all (always at least one message from
-  // a connection that has one, so that no message waits forever behind a larger one).
-  virtual void poll(std::size_t byte_budget) = 0;
+  // Advances every connection, sharing inbound wire-byte and event budgets across them. Wire bytes include upgrade
+  // headers and WebSocket frame headers, control payloads and data payloads. A data message reserves one event slot at
+  // its first frame and keeps it until complete, so fragmented messages make progress across polls without unbounded
+  // queued callbacks. The caller supplies available network-event capacity; zero admits no new event.
+  // Connections rotate their first poll position to share the budgets fairly.
+  virtual void poll(std::size_t byte_budget, std::size_t event_budget) = 0;
+  // Inbound messages already started but not yet delivered retain their event slots across polls.
+  virtual std::size_t reserved_events() const = 0;
   // Closes every connection with 1001 and forgets it. No listener runs after it returns.
   virtual void stop() = 0;
   virtual folly::dynamic snapshot() const = 0;

@@ -166,12 +166,18 @@ function snapshot(options) {
   const lock = readJson(path.join(root, 'dependencies.json'));
   const actual = settings(buildDir, root, options.fixture === true);
   const trees = headerTrees(root, buildDir, lock);
+  const privateIncludeTrees = [
+    {name: 'wslay-internal-headers', source: path.join(root, '.deps', lock.wslay.directory, 'lib')},
+    {name: 'wslay-generated-config', source: path.join(buildDir, 'wslay')},
+  ];
   for (const name of ['adapter_registry.h', 'adapter_loader.h', 'turbo_module_registry.h'])
     if (!exists(path.join(root, 'native', name))) fail('SDK_SPI_MISSING', name);
   const treeInputs = trees.map(tree => ({name: tree.name, destination: tree.destination,
     source: path.relative(root, tree.source).split(path.sep).join('/'),
     files: tree.publicFiles ? tree.publicFiles.map(name => ({path: name, sha256: fileHash(path.join(tree.source, name))}))
       : treeRecords(tree.source, true)}));
+  const privateTreeInputs = privateIncludeTrees.map(tree => ({name: tree.name,
+    source: path.relative(root, tree.source).split(path.sep).join('/'), files: treeRecords(tree.source, true)}));
   const sourceFiles = fs.readdirSync(path.join(root, 'native')).filter(name => /\.(?:cpp|h)$/.test(name)
     || ['CMakeLists.txt', 'godot-profile.json'].includes(name)).map(name => 'native/' + name);
   sourceFiles.push('dependencies.json', 'scripts/native-sdk.mjs', 'scripts/codegen-contract.mjs', 'scripts/rn-pointer-overlay.mjs');
@@ -180,13 +186,15 @@ function snapshot(options) {
   const sourceTrees = [['react-native', path.join(root, '.deps', lock['react-native'].directory, 'ReactCommon')],
     ['react-native-specs', path.join(root, '.deps', lock['react-native'].directory, 'React/FBReactNativeSpec')],
     ['godot-cpp', path.join(root, '.deps', lock['godot-cpp'].directory, 'src')],
+    ['wslay', path.join(root, '.deps', lock.wslay.directory, 'lib')],
     ['godot-cpp-generated', path.join(buildDir, 'godot-cpp/gen/src')],
     ['react-native-pointer-overlay', path.join(buildDir, 'rn-pointer-overlay')]]
     .map(([name, directory]) => ({name, files: treeRecords(directory, 'sources')}));
   sourceTrees.find(tree => tree.name === 'react-native-pointer-overlay').manifestSha256 =
     fileHash(path.join(buildDir, 'rn-pointer-overlay/overlay-manifest.json'));
   const targetFlagsSha256 = Object.fromEntries(['CMakeFiles/fabric_core.dir/flags.make',
-    'godot-cpp/CMakeFiles/godot-cpp.dir/flags.make'].map(name => [name, fileHash(path.join(buildDir, name))]));
+    'godot-cpp/CMakeFiles/godot-cpp.dir/flags.make', 'wslay/CMakeFiles/wslay.dir/flags.make']
+    .map(name => [name, fileHash(path.join(buildDir, name))]));
   const dependencies = sharedLibraries(root, lock).map(library => ({name: library.name,
     source: path.relative(root, library.source).split(path.sep).join('/'), binary: library.binary,
     sha256: fileHash(path.join(library.source, library.binary)), files: treeRecords(library.source)}));
@@ -198,6 +206,7 @@ function snapshot(options) {
     const absolute = path.resolve(flag.slice(2));
     if (!exists(absolute)) { omittedIncludes.push(path.relative(root, absolute)); continue; }
     const physical = fs.realpathSync(absolute);
+    if (privateIncludeTrees.some(tree => inside(fs.realpathSync(tree.source), physical))) continue;
     const tree = trees.find(candidate => inside(fs.realpathSync(candidate.source), physical));
     if (!tree) fail('SDK_INCLUDE', 'include is outside declared shared header trees: ' + flag);
     const relative = path.relative(fs.realpathSync(tree.source), physical).split(path.sep).join('/');
@@ -210,7 +219,7 @@ function snapshot(options) {
   buildSettings: {cacheSha256: actual.cacheSha256, flagsSha256: actual.flagsSha256,
     definitions: actual.groups.CXX_DEFINES, flags: actual.groups.CXX_FLAGS},
   includeDirectories: [...new Set(includeDirectories)], omittedIncludes, sourceSha256, sourceTrees,
-  targetFlagsSha256, trees: treeInputs, dependencies};
+  targetFlagsSha256, trees: treeInputs, privateTrees: privateTreeInputs, dependencies};
 }
 
 export function captureBuildInputs(options) {
@@ -330,7 +339,8 @@ export function packageNativeSdk(options) {
     fs.mkdirSync(path.join(out, 'licenses'));
     for (const [name, source] of [['SDK', 'LICENSE'], ['ReactNative', '.deps/' + lock['react-native'].directory + '/LICENSE'],
       ['Hermes', '.deps/' + lock.hermes.directory + '/LICENSE'],
-      ['GodotCpp', '.deps/' + lock['godot-cpp'].directory + '/LICENSE.md']])
+      ['GodotCpp', '.deps/' + lock['godot-cpp'].directory + '/LICENSE.md'],
+      ['Wslay', '.deps/' + lock.wslay.directory + '/COPYING']])
       fs.copyFileSync(path.join(root, source), path.join(out, 'licenses/' + name + '-LICENSE'));
     fs.copyFileSync(path.join(root, 'THIRD_PARTY_NOTICES.md'), path.join(out, 'licenses/THIRD_PARTY_NOTICES.md'));
     const allHeaders = current.trees.map(tree => ({destination: tree.destination, files: tree.files}));

@@ -12,8 +12,10 @@ React Native's original `fetch` (with `Headers`, `Request` and `Response`),
 `XMLHttpRequest`, `FormData`, `Blob`, `FileReader`, `AbortController` and `WebSocket` run in
 the application: RN's own JavaScript, installed from the host's initialization exactly as
 `InitializeCore` installs it, over four native modules the host implements with RN's Android
-contract (`Networking`, `BlobModule`, `FileReaderModule` and `WebSocketModule`), a transport on
-Godot's `HTTPClient` and another on Godot's `WebSocketPeer`. The launcher entry is the
+contract (`Networking`, `BlobModule`, `FileReaderModule` and `WebSocketModule`), an HTTP
+transport on Godot's `HTTPClient` and a WebSocket transport that keeps Godot's `HTTPClient`
+as its asynchronous DNS/TCP/TLS connector, then uses its public stream with pinned wslay for
+RFC 6455 framing. The launcher entry is the
 interactive demo, a screen with two cards. The left one has six buttons (GET JSON, GET text,
 POST form, Redirect, Slow and Abort) that call `fetch` against a small HTTP server the scene
 starts on loopback, with a status badge, the final URL, the content type, the body and a log
@@ -164,9 +166,12 @@ Cookies are neither stored nor sent, responses are not decompressed (a compresse
 answer fails explicitly), requests use HTTP/1.1 on one connection each, upload and
 download progress events are not sent, and `FormData` file parts and `uri` bodies
 fail explicitly. WebSocket negotiates no extensions (no `permessage-deflate`), sends no
-cookies and has no connect time-out of its own; the engine drops the messages a server
-writes in the same poll as its close frame, which the example's echo server never does.
-See the [networking research](../../docs/research/networking.md), the
+cookies and uses a 30-second host deadline for connect plus upgrade. Stopping the
+application attempts a nonblocking 1001 close; pending input can make the peer report a
+TCP drop instead of a completed close handshake. The byte and event budgets, data-before-close,
+fragmented ping, TLS close/drop cases and cancellation behavior are covered by the
+[WebSocket evidence](../../docs/evidence/websocket/README.md). See the
+[networking research](../../docs/research/networking.md), the
 [WebSocket research](../../docs/research/websocket.md) and the
 [networking](../../docs/evidence/networking/README.md) and
 [WebSocket](../../docs/evidence/websocket/README.md) evidence.

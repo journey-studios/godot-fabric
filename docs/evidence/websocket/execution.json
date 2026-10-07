@@ -1,0 +1,328 @@
+{
+  "format": "godot-fabric.websocket-execution/v1",
+  "executedAt": "2026-10-07",
+  "checkoutHead": "e62d7e9e0cff25f6c0992fcfbc79c968b164e8e8",
+  "sourceState": "dirty working tree on PR #48 head; source changes are not represented by checkoutHead",
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "node": "v22.23.3",
+    "mode": "headless"
+  },
+  "productProbe": {
+    "command": "npm run test:websocket",
+    "suite": "4/4 subtests passed",
+    "checks": 95,
+    "connections": 60,
+    "oracleComparisons": 53,
+    "allCurrentAssertionsPassed": true,
+    "hostSha256": "7994cc0fe7780d7759bc05d10152d8b37ea0c81a7615939f88284d94d499f352",
+    "bundleSha256": "5f51967a7ee343db09690ae58ae4c45bc19880bac3ad9545f8aa68546631845a",
+    "rawReportSha256": "95b7afb14841cdfa030053306c06722562f377801ccbacf08183c1ed88adf7e0",
+    "dataBeforeClose": true,
+    "interleavedControlFrames": true,
+    "tlsCloseCases": [
+      "peer close 1000 preserved",
+      "peer close 4002 and exact reason preserved",
+      "TCP/TLS drop after client close reported as abnormal failure"
+    ],
+    "elapsedMs": 63124.906584,
+    "subtests": 4
+  },
+  "loadProbe": {
+    "command": "node --test tests/websocket-load.test.mjs",
+    "phases": [
+      {
+        "bytesPerMessage": 8192,
+        "sockets": 8,
+        "messagesPerSocket": 128,
+        "delivered": 1024,
+        "firstProgressFrames": [
+          4,
+          4,
+          4,
+          4,
+          4,
+          5,
+          5,
+          5
+        ],
+        "fairnessSpan": 1,
+        "setStateCalls": 1024,
+        "timerTicks": 11,
+        "renders": 10,
+        "maxEventsAdmittedPerPoll": 132,
+        "canonicalPendingPeak": 131,
+        "maxBytesPerPoll": 1048576,
+        "maxMessagesPerPoll": 128,
+        "pendingAtEnd": 0
+      },
+      {
+        "bytesPerMessage": 512,
+        "sockets": 8,
+        "messagesPerSocket": 128,
+        "delivered": 1024,
+        "firstProgressFrames": [
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3
+        ],
+        "fairnessSpan": 0,
+        "setStateCalls": 1024,
+        "timerTicks": 6,
+        "renders": 5,
+        "maxEventsAdmittedPerPoll": 256,
+        "canonicalPendingPeak": 256,
+        "maxBytesPerPoll": 132098,
+        "maxMessagesPerPoll": 256,
+        "pendingAtEnd": 0
+      }
+    ],
+    "summary": "Eight real RN WebSocket handlers per phase; 128 messages per socket; pending event peak never exceeded 256; each phase delivered 1,024 messages and ended with zero pending events."
+  },
+  "lifetimeProbe": {
+    "command": "node --test tests/websocket-transport-lifetime.test.mjs",
+    "scenarios": 8,
+    "loadedTestLibrarySha256": "f7018c86d3221f6437e6754e18d03c9fcdf5bb87f4938daa40374a7c73d8d5d7",
+    "echoClose1001": 4,
+    "greetingDropWithoutCloseFrame": 4,
+    "allActiveZero": true,
+    "callbackCounts": {
+      "cancel-greeting-message": {
+        "opened": 1,
+        "messages": 1,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "cancel-greeting-open": {
+        "opened": 1,
+        "messages": 0,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "cancel-message": {
+        "opened": 1,
+        "messages": 1,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "cancel-open": {
+        "opened": 1,
+        "messages": 0,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "stop-greeting-message": {
+        "opened": 1,
+        "messages": 1,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "stop-greeting-open": {
+        "opened": 1,
+        "messages": 0,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "stop-message": {
+        "opened": 1,
+        "messages": 1,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      },
+      "stop-open": {
+        "opened": 1,
+        "messages": 0,
+        "closed": 0,
+        "failed": 0,
+        "actions": 1
+      }
+    }
+  },
+  "limitations": [
+    "Local macOS/headless evidence; hosted CI and other export targets are separate.",
+    "Immediate reentrant cancellation with unread /greeting data may end as TCP drop before a 1001 frame reaches the peer; it is not counted as a completed close handshake.",
+    "30-second connection-plus-upgrade deadline is a host policy, not inherited Android/OkHttp behavior.",
+    "Extensions, cookies, proxy/system trust, HTTP/2, and non-macOS exports remain outside this proof.",
+    "This PR is a slice of GF-22; it does not complete GF-22 or change roadmap checkpoints."
+  ],
+  "negativeControls": {
+    "previousHost": {
+      "sourceCommit": "afa5d87533f38c1cf86c0e0cffe6e2309d4d2eea",
+      "hostSha256": "e09690f527db883af1efdc641103ef7fdaab355974221876c90f1ed1154fd790",
+      "checks": 95,
+      "passed": 12,
+      "failed": 83,
+      "serverConnections": 0,
+      "exitCode": 0,
+      "expectedFailureObserved": true,
+      "rawReportSha256": "c43ab5940cf0ce8fd5ac0e4d067998d9e4d3f1819e8aac05dfedc2c4fe255ab0"
+    },
+    "sabotages": {
+      "origin": {
+        "checks": 95,
+        "failed": 4,
+        "expectedFailuresObserved": true,
+        "oracleRejected": true
+      },
+      "stopCloseCode": {
+        "checks": 95,
+        "failed": 2,
+        "expectedFailuresObserved": true,
+        "oracleRejected": true
+      },
+      "genuineSourcesRestored": true,
+      "genuineHostRestored": true,
+      "genuineHostSha256": "7994cc0fe7780d7759bc05d10152d8b37ea0c81a7615939f88284d94d499f352",
+      "sourceSha256": {
+        "native/websocket_module.cpp": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+        "native/godot_websocket_connection.cpp": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d"
+      },
+      "rawReceiptSha256": "a3b587eda2bde59f5e7833640f33486b5686f1b3fbeca2caa7b78e61fbd9a57a"
+    }
+  },
+  "nativePackaging": {
+    "commands": [
+      "npm run sdk:native:pack -- --build-dir .deps/build --out build/websocket-native-sdk-review",
+      "npm run sdk:pack -- build/websocket-addon-review --native-sdk build/websocket-native-sdk-review",
+      "npm run sdk:native:verify -- --sdk build/websocket-native-sdk-review"
+    ],
+    "nativeSdkReceiptSha256": "82626c52b00e5c38708b203bb9057806ccc2dcbe23a863988cc21a7e2aab62bf",
+    "nativeSdkBuildReceiptSha256": "1bb2cc7713269a2e2bde6865a0834648c93d729cebf77bbd530dc4c478fb8674",
+    "nativeSdkPackAndVerifyPassed": true,
+    "addonProvisioningPassed": true,
+    "hostSha256": "7994cc0fe7780d7759bc05d10152d8b37ea0c81a7615939f88284d94d499f352",
+    "wslayLicenseSha256": "0e602a00db6ce15c1311a180b13563aa638918a77f813b24cd78c9fe5cab63d0",
+    "wslayLicenseIncludedInSdkAndAddon": true,
+    "runtimeExecuted": false,
+    "abiCertified": false
+  },
+  "iosSimulatorLink": {
+    "target": "iOS simulator arm64",
+    "buildPassed": true,
+    "combinedArchiveSha256": "b9466e28748a2fe8071c6fd935dce9ec487ac8139eb0bbd21fa2a4926b834eb0",
+    "linkWitnessSha256": "0c16e5d4f1ac2c75bf1f59819fa0a0559a543a320ab42bacb915094e72e37883",
+    "combinedArchiveOnly": true,
+    "entryAndWslaySymbolsRetained": true,
+    "runtimeExecuted": false,
+    "consumerExported": false,
+    "receiptSha256": "11d7c2af5cdb280469aacd089374a186592b2ddd531e2f6b96a81de05cafae6e"
+  },
+  "gates": {
+    "contracts": "passed",
+    "static": "passed after adding test:websocket:streams",
+    "publication": "passed"
+  },
+  "exampleValidation": {
+    "headless": {
+      "command": "npm run example -- networking --headless",
+      "checks": 29,
+      "passed": 29,
+      "displayServer": "headless",
+      "reportSha256": "b129763ecca0de2634818ee5bc45fc926ce265a05d5dc4c26917474ed4e4f69e"
+    },
+    "graphical": {
+      "command": "npm run example -- networking --capture",
+      "checks": 51,
+      "passed": 51,
+      "displayServer": "macOS",
+      "godot": "4.7.2-stable (official)",
+      "reactNative": "0.87.1",
+      "renderer": "fabric",
+      "captureCount": 11,
+      "reportSha256": "2fba2b1904f8393571d615785e2fb37a70364238554487491a2270405c8abae7",
+      "captures": [
+        {
+          "file": "networking-idle.png",
+          "sha256": "9baada6ea629149156db8e43221e7fc6cebd02b684d07eacccaa4e5a05ca31d0",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "475569"
+        },
+        {
+          "file": "networking-json.png",
+          "sha256": "d55551d49bd1742d9fe43709419295b22a3d94d3feee7d73e8fbb4f7ee604b30",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "16a34a"
+        },
+        {
+          "file": "networking-form.png",
+          "sha256": "aad4fc0d2e36a105bffaac698808e0c3e21071b7736336b5f4b486655bb9db3d",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "16a34a"
+        },
+        {
+          "file": "networking-redirect.png",
+          "sha256": "6d8a92fdbefca22b15a7fa104d2294c934772cd765f0516bd50cf1a214f7e4d0",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "16a34a"
+        },
+        {
+          "file": "networking-pending.png",
+          "sha256": "6ba2d7f09a1b51fc242ae17330f9d36dd06fe653322d2631691315b74bb71356",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "d97706"
+        },
+        {
+          "file": "networking-aborted.png",
+          "sha256": "48ca20f11920a02534b2c468495e693210fd0cb9c79a9058b46fd7db7daac8fe",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "dc2626"
+        },
+        {
+          "file": "websocket-open.png",
+          "sha256": "fc920f819be2a30ea10adcc7adc3df94ef0a295f430ecb22031c9933ca5827f2",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "16a34a"
+        },
+        {
+          "file": "websocket-echo.png",
+          "sha256": "c3a0505c047a3a5726d89b3946401834922fdfaf373530a00a28eb2df1e07388",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "16a34a"
+        },
+        {
+          "file": "websocket-server-close.png",
+          "sha256": "b7a27a2f2c47aba3773c8c316e5a843511a68283e37ac158d6e3d675b2eaf53e",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "475569"
+        },
+        {
+          "file": "websocket-dropped.png",
+          "sha256": "4db120895b58035d6bb3f8408ad674028fecf72f8422e7ef8698bacf4be00da9",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "dc2626"
+        },
+        {
+          "file": "websocket-closed.png",
+          "sha256": "92167297097e4b03d5eaf93116a7bc12bf84c6dccbbd53f2a8816ecfb99c3caf",
+          "width": 900,
+          "height": 680,
+          "badgeColor": "475569"
+        }
+      ]
+    }
+  }
+}

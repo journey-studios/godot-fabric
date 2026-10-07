@@ -1,17 +1,20 @@
-# WebSocket over Godot's WebSocketPeer
+# WebSocket transport over Godot streams
 
-Status: executed isolated macOS validation against pinned RN 0.87.1 and official
-Godot 4.7.2. The [evidence](../evidence/websocket/README.md) owns the 93 headless
-checks against a deterministic local RFC 6455 server over ws and wss, the independent
-oracle that checks the 59 connections the server recorded against what each case must have
-caused, compares what JS observed on 52 of them and ties the native counters to the server's
-frame log, the preceding-host control (the same bundle fails exactly its 81 normative checks)
-and two retained sabotages (a module that never sends the default Origin fails 4 checks, a
-stop that closes with 1000 instead of 1001 fails 2). The engine loses the messages that
-arrive in the same poll as a close frame (godotengine/godot#115384): the host cannot
-recover them, and the suite reproduces the loss without requiring it. `permessage-deflate`
-and every other extension, cookies, a connect time-out, HTTP/2, proxies and every target
-but macOS are not certified. Hosted CI is pending.
+Status: the HTTPClient/wslay adapter passed the 95-check product probe and independent wire
+oracle on macOS arm64 with pinned RN 0.87.1 and Godot 4.7.2. The server recorded 60 connections;
+the oracle requires all messages sent before a close frame and verifies the peer's actual close
+code and reason. Separate TLS cases cover immediate close 1000, peer-selected close 4002 with
+its exact reason, and a drop after the client's close as a failure. The sustained load probe
+reached the shared 1 MiB read budget and 256-event admission limit across eight sockets; the
+lifetime probe covered reentrant cancel/stop from open and message handlers. Hosted CI remains
+the separate confirmation. The prior WebSocketPeer path's data loss is the behavior in
+[godotengine/godot#115384](https://github.com/godotengine/godot/issues/115384); it is not an
+observed limitation of this transport. A separate TLS read behavior was traced in pinned engine
+source: the public binding discards bytes on a non-OK status while its TLS peer can collect
+plaintext and return EOF in one call. The adapter limits reads to queued plaintext or one byte
+to expose a close frame before EOF, and reports a drop without inferring success.
+`permessage-deflate`, cookies, proxy configuration, HTTP/2 and targets other than macOS remain
+outside this proof.
 
 ## What RN does
 
@@ -72,7 +75,7 @@ could not be found`), and `BlobModule`'s `addWebSocketHandler`, `removeWebSocket
 `sendOverSocket` threw `E_UNSUPPORTED`. On the preceding host the same bundle runs the
 checks that need no native module and every other check fails at that lookup.
 
-## What Godot reports
+## Godot WebSocketPeer constraints
 
 `WebSocketPeer` is the engine's WebSocket endpoint (`modules/websocket`, built on the wslay
 library). The client side is `connect_to_url(url, TLSOptions)`, then `poll()`, regularly: it is
@@ -89,25 +92,14 @@ the `TLSOptions` given
 ([class reference](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/doc_classes/WebSocketPeer.xml);
 the sources cited below are the commit of the official 4.7.2-stable build).
 
-What the host depends on, works around or chose, with where it comes from. "Suite" is the
-check of the websocket suite that asserts it; "scratch" is an observation from throw-away
-scripts on the development machine, which are not in the repository.
+The prior adapter used Godot's `WebSocketPeer`; the current adapter no longer does. These
+engine observations explain the switch and remain relevant to the pinned 4.7.2 runtime.
 
-| Behavior | Source | What the host does | Asserted |
+| Finding | Source | Result for this adapter | Evidence |
 | --- | --- | --- | --- |
-| A message is readable only while the peer is OPEN: `get_packet` and `get_available_packet_count` give nothing otherwise. A close frame flips OPEN to CLOSING inside `poll()`, and a clean close reaches CLOSED and clears the input buffer in the same call, so what arrived in the poll of the close frame is gone when `poll()` returns. This is [godot#115384](https://github.com/godotengine/godot/issues/115384) (open on 2026-10-07). | [`get_packet`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L814-L831), [`get_available_packet_count`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L833-L839), [the close frame](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L647-L663), [`poll`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L703-L785) and [`close`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L849-L885) | Nothing can be done: reading after `poll()` cannot help, because the buffer is cleared inside it, and reading before it cannot see what has not arrived. The loss is documented, and the suite reproduces it with one route that writes three messages and the close frame in one write; the check asks only that the close arrives with the server's code and reason and that JS got at most three messages. Reproduced in 3 of 3 scratch runs; the suite's run delivered 0 of 3. Every other case keeps the data and the close frame apart by protocol order, never by a timer. | Reproduction only (`limits/`) |
-| Messages sent by the server after the client's own close frame cannot be read either (the peer is CLOSING). | `get_packet`, `close` (as above) | Nothing; the same limit. | Scratch |
-| `connect_to_url` accepts a handshake only if the status is 101, `Connection` and `Upgrade` match and the accept key is right; it checks the selected subprotocol both ways: one the client never offered fails, and so does none when some were offered. OkHttp 4.9.2 checks status, `Connection`, `Upgrade` and the accept key and never looks at `Sec-WebSocket-Protocol`; RFC 6455 section 4.1 makes the unrequested subprotocol a failure, and the [WHATWG WebSockets Standard](https://websockets.spec.whatwg.org/#concept-websocket-establish) also fails a connection that offered subprotocols and got none. | [`_verify_server_response`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L424-L481); OkHttp [`checkUpgradeSuccess`](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L222-L250) | The host offers the list RN's module builds. A server that selects nothing, or something else, fails the socket where Android would open it: an `error` and a `close` with code 1006. | Suite (`limits/`, `failure/`, and `protocol/` for the working paths) |
-| A failed handshake leaves the peer CLOSED with close code -1 and prints the cause as engine errors; there is no HTTP status to read, so a 403, a wrong accept key and a refused port look alike to the host. | `_verify_server_response` (lines 424-481) | The failure message says the connection failed before it opened and that the engine reports no status. The runner allows exactly the engine lines the probe provokes (5 causes, each followed by the engine's own "Invalid response headers.", and 3 certificates), and fails on any other. | Suite (`failure/`, the runner's allow-list) |
-| A close frame the engine receives in the same `poll()` that completes the handshake takes the peer from CONNECTING to CLOSED without the host ever seeing OPEN. | [`poll`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L703-L785) (the handshake and the frame loop run in one call) | The host reports `websocketOpen` and then `websocketClosed`, as RN's JS expects of a socket that opened. | Suite (`close/`) |
-| The engine never gives up on a closing handshake the server does not answer: nothing in `poll()` times it out. OkHttp cancels the call 60 seconds after it writes the close frame, and the socket fails. | `poll` (lines 703-785); OkHttp [`CANCEL_AFTER_CLOSE_MILLIS`](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L641) and [the cancel it schedules](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L511-L513) | The host starts a 60-second deadline when it asks the engine to close, on the same clock as the HTTP transport's deadlines (so the suite moves it with `validation_clock_offset_ms` and waits for nothing), then drops the connection and fails the socket: an `error` and a `close` with code 1006 and a message that names the timeout. | Suite (`timeout/`) |
-| A close reason the wslay library refuses (over 123 bytes) is not an error to the engine: `close()` ignores the result of queueing the frame, the peer goes to CLOSING and nothing is sent. The class reference says a reason must be smaller than 123 bytes; RFC 6455 section 5.5 caps a control frame's payload at 125 bytes, two of them the code. OkHttp refuses it with `reason.size() > 123`. | [`close`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L849-L885); OkHttp [`close`](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L430-L445) and [`validateCloseCode`](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/WebSocketProtocol.kt#L122-L135) | The module refuses a code outside 1000-4999, a reserved code (1004-1006, 1015-2999) and a reason over 123 UTF-8 bytes with OkHttp's own messages, as a warning in JS, and leaves the socket as it was, as Android does when OkHttp throws. The engine is never asked. The hang itself was seen in scratch runs. | Suite (`close/`), the hang in scratch |
-| Over TLS, a closing handshake the client began ends with the peer CLOSED and close code -1: the server's close frame and its `close_notify` arrive together and the engine's read fails, so the code and reason the server echoed are not reported. Over plain TCP the same end is a connection that was cut. | `poll` and [`_wsl_recv_callback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L572-L598) (a failed read makes `poll` close the peer, [lines 744-751](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L744-L751)); the cause was not traced further | The host takes a closing it started over TLS as complete and reports the code and reason it asked for, which a server echoes; the same end over TCP, or one the application did not start, is a failure. | Suite (the oracle counts 4 implied closes) |
-| A text frame that is not UTF-8 fails the peer with 1007 and the reason "Invalid frame payload data" (RFC 6455 section 8.1 requires failing the connection); no message reaches JS. OkHttp reads the same bytes with replacement characters. | `poll` ([lines 759-781](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L759-L781)) | Nothing: the socket ends with `close` 1007 and the engine's reason. | Suite (`limits/`) |
-| A ping that sits between the fragments of a message (RFC 6455 section 5.4 allows it) has its payload written into the message being assembled: the frame callback appends the chunk of every frame while a data message is pending. The engine answers pings itself (RFC 6455 section 5.5.2). | [`_wsl_frame_recv_chunk_callback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L610-L618) | Nothing: the message arrives with the ping's bytes inside. The suite records what JS got, checks that a pong with the payload went back and that the socket still closes, and the oracle accounts for the merged bytes. | Suite (`limits/`, `frames/`) |
-| The rings default to 65,535 bytes, and a message larger than the inbound size fails the peer with 1009: a 1 MiB message never fits. A message the outbound side cannot hold, or more than `max_queued_packets`, is refused with an engine error. The documented size is "roughly the maximum amount of memory that will be allocated". | [`websocket_peer.h`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/websocket_peer.h#L53) (the defaults), [`_do_client_handshake`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L414-L416) (the limit) and [`_send`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L787-L803) | The host sets both rings to 16 MiB, OkHttp's own queue limit (`MAX_QUEUE_SIZE`, [line 635](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L635)), and `max_queued_packets` to 16,384. It checks the outbound size before it sends, so the engine never refuses (and prints about) a message: one that does not fit makes the module close the socket with 1001 and send nothing, as OkHttp's `send` does ([lines 405-408](https://github.com/square/okhttp/blob/3edf17ca8a5048912d19e84d0fc2a7941a97c07d/okhttp/src/main/kotlin/okhttp3/internal/ws/RealWebSocket.kt#L405-L408)). The rings cost address space, not resident memory: 40 sockets with 16 MiB rings opened at once raised the engine's static allocation counter by about 1,925 MB (some 48 MiB per socket) and the process's resident set by 6 MB (scratch, 3 of 3 runs). | Suite (`large/`) |
-| `PacketPeer.put_packet` with an empty array sends nothing, while `WebSocketPeer.send` with an empty array sends an empty frame. | the class reference; scratch | `ping()` is an empty binary message through `send`, as Android's is; iOS sends a ping frame, which Godot's peer cannot be asked to send. | Suite (`frames/`) |
-| `heartbeat_interval` is 0 by default: the peer sends no pings of its own. | [`websocket_peer.h`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/websocket_peer.h#L73) | Nothing is set: RN's OkHttp client builder (`OkHttpClientProvider.kt`, lines 52-54) sets no ping interval either. | n/a |
+| `WebSocketPeer` can lose frames read in the same poll that processes a close frame. This is the behavior described by [godot#115384](https://github.com/godotengine/godot/issues/115384). | [`get_packet`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L814-L831), [`poll`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L703-L785) | The current transport reads the exposed TCP/TLS stream directly and lets pinned wslay parse frames. The product probe and wire oracle verify data sent before a coalesced close, including close-coalesced and interleaved-control cases. | Upstream issue and pinned engine source |
+| The pinned `StreamPeerMbedTLS::get_partial_data` can collect plaintext before returning EOF; the public `StreamPeer::_get_partial_data` binding clears its returned byte array on any non-OK status. The WebSocketPeer wslay callback treats the failed read as no data. | [`StreamPeerMbedTLS::get_partial_data`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/mbedtls/stream_peer_mbed_tls.cpp#L210-L253), [`StreamPeer::_get_partial_data`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/core/io/stream_peer.cpp#L86-L105), [`_wsl_recv_callback`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/websocket/wsl_peer.cpp#L572-L598) | This source-backed TLS explanation is separate from #115384. The adapter reads at most Godot's queued plaintext, or one byte to load a TLS record when none is queued, so a close frame is parsed before a later EOF. The product smoke confirmed exact 1000 and 4002/reason delivery and rejected a post-close drop. | Pinned engine source; `tests/websocket-transport-smoke.test.mjs` |
+| Wslay disables reads after it queues a protocol close for invalid frames, invalid UTF-8 or a message over its configured maximum. | Pinned upstream [wslay event parser](https://github.com/tatsuhiro-t/wslay/blob/0e7d106ff89ad6638090fd811a9b2e4c5dda8d40/lib/wslay_event.c) | The adapter reports a terminal failure after flushing wslay's protocol close, without waiting for a peer close it can no longer read. Invalid-text and oversize product cases complete and release their sockets. | Source inspection; current product probe |
 
 Godot Android exports need the `INTERNET` permission and a Web export would use the browser's
 `WebSocket`, which cannot add headers or choose its handshake; neither is exercised here.
@@ -128,15 +120,29 @@ device event leaves through RN's scheduler in the order it was queued and is dro
 application stops.
 
 The transport sits behind `native/websocket_transport.h`: `start`, `send`, `close`, `cancel`,
-`poll(byte_budget)`, `stop` and a listener with `on_open`, `on_message`, `on_closed` and
+`poll(byte_budget, event_budget)`, `stop` and a listener with `on_open`, `on_message`, `on_closed` and
 `on_failure`, called only from `poll()` on Godot's main thread, which is the JS thread.
-`native/godot_websocket_transport.cpp` is the first implementation: one `WebSocketPeer` per
-socket, advanced from `ApplicationRuntime::pump` in the same networking poll as the HTTP
-transport, with the same byte budget (a connection hands JS at most 256 messages per pump, and
-the first message of a pump is read whatever is left of the budget, so no socket waits behind
-another). Rings, queue and deadline are the host choices of the table above. The TLS options
-both transports build (the engine's roots, or the PEM the validation seam trusts) live in
-`native/godot_tls.h`. The pure parts live in `native/websocket_core.h` and have their own C++
+`native/godot_websocket_transport.cpp` advances one `GodotWebSocketConnection` per socket from
+`ApplicationRuntime::pump`. Godot's HTTPClient owns async DNS/TCP/TLS connection setup; the
+adapter stops polling it at `STATUS_CONNECTED`, retains it as stream owner, and uses public
+StreamPeer reads and writes after that. Pinned wslay commit
+`0e7d106ff89ad6638090fd811a9b2e4c5dda8d40` owns the RFC 6455 framing. Its MIT source and
+generated headers are private build inputs and are not exported by the native adapter SDK.
+`native/websocket_handshake.h` validates the bounded HTTP upgrade response before framing starts.
+
+The WebSocket poll shares a 1 MiB inbound wire-byte allowance across upgrade and frame reads,
+and admits at most 256 pending networking events. Capacity comes from canonical event counters
+(`queued - delivered - dropped`) after the HTTP poll, less slots reserved by incomplete WebSocket
+messages. A data message reserves one event slot at its first frame and releases it only when
+complete; fragments and control frames can continue under that reservation. Frame headers,
+control traffic and upgrade bytes debit the same wire budget. Connections rotate their first poll
+position, and another round runs only when bytes or event capacity made progress. Two eight-socket
+RN load phases reached the 1 MiB byte cap and 256-event cap respectively; both delivered all
+1,024 messages, kept canonical pending events at or below 256, and ended at zero pending events.
+Every socket made progress; the first-progress spread was one frame for 8 KiB messages and zero
+for 512-byte messages. The TLS options shared with HTTP live in `native/godot_tls.h`. The pure
+parts live in
+`native/websocket_core.h` and have their own C++
 test (47 assertions in 6 groups, `native/websocket_core_test.cpp`): URLs read the way OkHttp's
 `HttpUrl` reads them (through `native/http_core.h`, so `ws:` and `wss:` are `http:` and `https:`
 underneath, and an `http:` or `https:` URL connects too, as it does on Android), the default
@@ -165,9 +171,9 @@ with the value left out for the credential headers) and the close parameters.
   code or reason OkHttp refuses is a warning in JS and leaves the socket alone. A close frame
   without a status is reported as 1005. A socket the server closes arrives as `open`, any
   messages and `close` with the server's code and reason.
-- **Stop.** The application's stop ends the transport first: every open socket gets a close
-  frame with 1001, the engine is polled once so that the frame leaves before the connection
-  does, the module forgets every socket and no event reaches JS afterwards; retained methods
+- **Stop.** The application's stop ends the transport first: each open connection queues and
+  nonblockingly flushes a 1001 close before its stream is discarded, the module forgets every
+  socket and no event reaches JS afterwards; retained methods
   that start something are refused with `E_MODULE_DISPOSED`, and late cleanup is harmless.
 - **Seams.** `validation_tls_trusted_authorities` and `validation_clock_offset_ms` are the two
   validation seams the HTTP transport already has; the sockets use the same ones, the second
@@ -193,7 +199,7 @@ The [fixture](../../tests/websocket-fixture.jsx) runs RN's public `WebSocket` in
 one application and records every event of every socket in order with the state it saw; the
 [probe](../../tests/websocket-probe.gd) waits on conditions, never on time, and also reads the
 application's networking snapshot. The [oracle](../../tests/websocket-oracle.mjs) trusts
-none of the probe's verdicts. It states, for each of the 59 connections the cases open, what the
+none of the probe's verdicts. It states, for each of the 60 connections the cases open, what the
 server must have received and sent (from the server's own constants and byte pattern), reads
 what the server recorded, and compares both with what JS observed: the handshake (one
 `Host`, `Upgrade`, `Connection`, version and Origin; a 16-byte key no other connection
@@ -246,42 +252,36 @@ passes with the control receipts absent, as in CI, and under heavy CPU load.
 - **No cookies.** Nothing is stored or sent; Android adds the Cookie header of the app's
   cookie handler for the URL (`WebSocketModule.kt`, lines 99-102 and 347-361) and iOS the
   shared storage's. The suite asserts that no cookie is sent.
-- **No connect time-out.** Android gives OkHttp 10 seconds to connect (line 89); the engine has
-  none and the host adds none, so a server that accepts and never answers leaves the socket
-  CONNECTING until JS closes it (which fails it, as above).
+- **Connection timeout differs from Android.** Android gives OkHttp 10 seconds to connect
+  (line 89); this host applies a 30-second policy to connection plus upgrade and 60 seconds to
+  the close response. The 30-second deadline is an explicit host policy verified with the
+  injected clock, not a claim of inherited OkHttp behavior.
 - **Subprotocols are checked the engine's way:** a server that selects none, or one that was
   not offered, fails the socket; OkHttp accepts both and reports `''` or the unoffered name.
 - **Failure messages are this host's and the engine's.** A failed handshake carries no HTTP
   status, so "Expected HTTP 101 response but was '403 Forbidden'" cannot be produced; a lost
   connection says that the connection to host:port was lost without a close frame.
-- **Invalid UTF-8 text fails the socket with 1007** where OkHttp delivers it with replacement
-  characters.
-- **Data written with a close frame can be lost, and a ping between fragments is merged into
-  the message:** two engine limits, documented and not required (see above).
+- **Invalid UTF-8 text fails the socket.** Wslay sends its protocol close (1007); the module
+  reports a terminal failure to RN, which exposes error followed by close 1006.
+- **Cancellation close delivery is best effort with unread input.** Drained `/echo` scenarios
+  receive the exact 1001 close on the wire. Reentrant cancellation while `/greeting` has sent
+  unread data can terminate TCP before the close frame reaches the peer; that is recorded as a
+  drop, not a completed close handshake. No delayed teardown is claimed.
 - **`websocketClosed` carries no `clean` flag**, as on Android; RN's JS does not read it.
 
 ## Exploratory observations outside the receipt
 
-Run on the committed tree with scratch scripts and not asserted by the suite. Forty
-`WebSocketPeer`s opened at once against the local server, with the host's 16 MiB inbound and
-outbound rings and 16,384 queued packets, were all OPEN: the engine's static allocation counter
-went from 23.2 MB to 1,948.4 MB (about 48 MiB of address space per socket) and the process's
-resident set from 114.4, 114.6 and 114.7 MB to 120.2, 120.4 and 120.4 MB in three runs, so the
-pages are committed only as messages use them. An environment that limits address space or
-refuses to overcommit would feel the 48 MiB per socket, and a product that opens many sockets
-may want a smaller ring than the host's default. The reproduction of godot#115384 delivered none
-of the three messages written with the close frame in the suite's run and in 3 of 3 scratch runs,
-and no variation of polling around the close frame recovered them. A handshake the server
-answers with 403 or with a wrong accept key is indistinguishable from a refused port in the
-engine's own state.
+The earlier WebSocketPeer transport used two 16 MiB rings per connection, which reserved about
+48 MiB of address space per socket. The current wslay adapter removes those rings and buffers
+messages up to 16 MiB per connection. The executed load probe covers wire-byte and pending-event
+caps, fairness and real RN handlers; it is bounded evidence for these fixtures rather than a
+general heap or long-duration soak certification.
 
 ## Remaining scope
 
-`permessage-deflate` and the other extensions, cookies, a connect time-out, a ring size the
-application can choose (the host's 16 MiB reserves about 48 MiB of address space per open
-socket), HTTP/2 and WebSocket over HTTP/2, proxy and system trust configuration, the exact
-failure texts of OkHttp and SocketRocket, iOS's module contract, recovery of the messages the engine drops with a close
-frame (it needs the engine fixed), reconnect and offline behavior, hardware and Godot
-Android, iOS and Web exports, and the contract, parity and targets of GF-22. No checkpoint of
+`permessage-deflate` and the other extensions, cookies, HTTP/2 and WebSocket over HTTP/2, proxy
+and system trust configuration, the exact failure texts of OkHttp and SocketRocket, iOS's module
+contract, broader sustained-duration and hardware load, reconnect and offline behavior, hardware
+and Godot Android, iOS and Web exports, and the contract, parity and targets of GF-22. No checkpoint of
 GF-22 changes with this record: its first slice closed with the
 [networking record](../evidence/networking/README.md).

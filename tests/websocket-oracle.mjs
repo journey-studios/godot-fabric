@@ -38,8 +38,8 @@ const labelOf = url => new URL(url, "ws://placeholder").searchParams.get("case")
 // server. `js` is how the socket must end for JS when it is not the plain open, messages and close of a clean socket.
 const echoed = messages => ({in: messages, out: messages});
 const ends = (code, reason = "") => ({clientClose: {code, reason}, serverClose: {code, reason}, end: "closed"});
-const refusedHandshake = (status, route) => ({route, in: [], out: [], clientClose: null, serverClose: null, end: "refused", handshake: status,
-  js: ["error", "close"], jsFailure: "failed before it opened"});
+const refusedHandshake = (status, route, jsFailure) => ({route, in: [], out: [], clientClose: null, serverClose: null, end: "refused", handshake: status,
+  js: ["error", "close"], jsFailure});
 const held = {listener: "ws", route: "hold", in: [], out: [], clientClose: null, serverClose: null, end: "dropped-by-client-before-open", handshake: null};
 const rejectedClose = {route: "server-close", in: [textMessage("now")], out: [], clientClose: {code: 1000, reason: "bye"}, serverClose: {code: 1000, reason: "bye"}, end: "closed"};
 
@@ -47,7 +47,7 @@ function expectedConnections(ports) {
   const origin = `http://127.0.0.1:${ports.ws}`;
   const pattern = binaryMessage(bytePattern(MEGABYTE));
   const entries = {
-    "states": {route: "echo", ...echoed([]), ...ends(1000)},
+    "states": {route: "echo", ...echoed([]), ...ends(1000), wireOnly: "The state-property probe uses the native module directly and creates no JS socket session."},
     "echo-text": {route: "echo", ...echoed([textMessage(utf8Text)]), ...ends(4000, "bye"), origin},
     "echo-binary": {route: "echo", ...echoed([binaryMessage(allBytes), binaryMessage(allBytes), binaryMessage(allBytes.subarray(10, 20)),
       binaryMessage(Buffer.from([1, 0, 254, 255, 44, 1])), binaryMessage(allBytes.subarray(4, 12))]), ...ends(1000)},
@@ -74,38 +74,45 @@ function expectedConnections(ports) {
     "close-rejected-range": rejectedClose,
     "send-after-close": {route: "echo", ...echoed([]), ...ends(1000), js: ["open", "error", "close"], jsFailure: "client is null"},
     "close-connecting": {...held, js: ["error", "close"], jsFailure: "WebSocket is closed before the connection is established."},
-    "reject": refusedHandshake(403, "reject"),
-    "reject-401": refusedHandshake(401, "reject"),
-    "bad-accept": {...refusedHandshake(101, "bad-accept"), end: "bad-accept"},
-    "wrong-protocol": {...refusedHandshake(101, "wrong-protocol"), end: "dropped-by-client", protocols: "chat.v1"},
-    "unmatched-protocol": {...refusedHandshake(101, "echo"), end: "dropped-by-client", protocols: "other"},
-    "drop": {route: "drop", in: [textMessage("boom")], out: [], clientClose: null, serverClose: null, end: "dropped-by-server", js: ["open", "error", "close"], jsFailure: "was lost without a close frame"},
-    "reset": {route: "drop", in: [textMessage("boom")], out: [], clientClose: null, serverClose: null, end: "dropped-by-server", js: ["open", "error", "close"], jsFailure: "was lost without a close frame"},
+    "reject": refusedHandshake(403, "reject", "HTTP/1.1 403 Forbidden"),
+    "reject-401": refusedHandshake(401, "reject", "HTTP/1.1 401 Forbidden"),
+    "bad-accept": {...refusedHandshake(101, "bad-accept", "invalid Sec-WebSocket-Accept"), end: "bad-accept"},
+    "wrong-protocol": {...refusedHandshake(101, "wrong-protocol", "unoffered subprotocol"), end: "dropped-by-client", protocols: "chat.v1"},
+    "unmatched-protocol": {route: "echo", ...echoed([]), ...ends(1000), protocols: "other"},
+    "drop": {route: "drop", in: [textMessage("boom")], out: [], clientClose: null, serverClose: null, end: "dropped-by-server", js: ["open", "error", "close"], jsFailure: "ended without exposing a close frame"},
+    "reset": {route: "drop", in: [textMessage("boom")], out: [], clientClose: null, serverClose: null, end: "dropped-by-server", js: ["open", "error", "close"], jsFailure: "ended without exposing a close frame"},
     "large-binary": {route: "echo", ...echoed([pattern]), ...ends(1000)},
     "large-text": {route: "echo", ...echoed([describe("text", Buffer.alloc(MEGABYTE, "x"))]), ...ends(1000)},
     "large-server": {route: "large", in: [], out: [pattern], ...ends(1000)},
     "large-blob": {route: "large", in: [], out: [pattern], ...ends(1000)},
     "overflow": {route: "echo", ...echoed([]), ...ends(1001)},
-    // The engine fails the socket with 1007 for a text frame that is not UTF-8: JS gets no message.
-    "invalid-text": {route: "invalid-text", in: [], out: [describe("text", Buffer.from([0x61, 0xff, 0x62, 0xc3]))], ...ends(1007), jsReason: "Invalid frame payload data", mayLose: true},
+    // The transport sends the protocol's 1007 close, then reports that terminal failure to JS as code 1006.
+    "invalid-text": {route: "invalid-text", in: [], out: [describe("text", Buffer.from([0x61, 0xff, 0x62, 0xc3]))], jsOut: [],
+      ...ends(1007), js: ["open", "error", "close"], jsFailure: "close code 1007"},
     "fragmented": {route: "fragmented", in: [], out: [textMessage("fragmented"), binaryMessage([1, 2, 3, 4, 5, 6])], ...ends(1000),
       fragments: ["text:4:nf", "continuation:4:nf", "continuation:2", "binary:3:nf", "continuation:3"]},
-    // A ping between fragments is mishandled by the engine: what JS got is not asserted, that a pong went back is.
-    "fragmented-ping": {route: "fragmented-ping", in: [], out: "unchecked", ...ends(1000), pong: "between"},
+    // A ping between fragments does not enter the reassembled application message.
+    "fragmented-ping": {route: "fragmented-ping", in: [], out: [textMessage("fragmented")], ...ends(1000), pong: "between"},
     "server-ping": {route: "ping", in: [textMessage("after the ping")], out: [textMessage("after the ping")], ...ends(1000), pong: "ping-payload"},
     "client-ping": {route: "echo", ...echoed([binaryMessage([])]), ...ends(1000)},
-    // The engine drops what arrives with a close frame: JS may have fewer than the three messages, never more.
+    // All three messages are delivered before the server's close, even when written together.
     "data-then-close": {route: "data-then-close", in: [], out: [textMessage("m0"), textMessage("m1"), textMessage("m2")], clientClose: {code: 4003, reason: "done"},
-      serverClose: {code: 4003, reason: "done"}, end: "closed", mayLose: true},
+      serverClose: {code: 4003, reason: "done"}, end: "closed"},
     "wss-trusted": {listener: "wss", route: "echo", ...echoed([textMessage("secure")]), ...ends(1000)},
     "wss-right": {listener: "wss-untrusted", route: "echo", ...echoed([textMessage("secure")]), ...ends(1000)},
-    "contract": {route: "echo", ...echoed([textMessage("hello"), binaryMessage([1, 2, 3]), binaryMessage([])]), ...ends(1000, "done")},
-    "contract-bad-base64": {route: "echo", in: [], out: [], ...ends(1001)},
+    "contract": {route: "echo", ...echoed([textMessage("hello"), binaryMessage([1, 2, 3]), binaryMessage([])]), ...ends(1000, "done"),
+      wireOnly: "The module contract probe invokes the native module directly; its device events are asserted in the probe."},
+    "contract-bad-base64": {route: "echo", in: [], out: [], ...ends(1001),
+      wireOnly: "The malformed base64 contract probe invokes the native module directly; no JS WebSocket object owns this request."},
     "close-timeout": {route: "silent", in: [], out: [], clientClose: {code: 1000, reason: "slow"}, serverClose: null, end: "closed", js: ["open", "error", "close"], jsFailure: "close timed out"},
-    "stop-open": {route: "echo", ...echoed([textMessage("stop-open")]), ...ends(1001)},
-    "stop-blob": {route: "echo", ...echoed([binaryMessage([1, 2, 3])]), ...ends(1001)},
-    "stop-closing": {route: "silent", in: [], out: [], clientClose: {code: 1000, reason: "never answered"}, serverClose: null, end: "closed"},
-    "stop-connecting": held,
+    "handshake-timeout": {...held, js: ["error", "close"], jsFailure: "connection and upgrade timed out"},
+    "stop-open": {route: "echo", ...echoed([textMessage("stop-open")]), ...ends(1001),
+      wireOnly: "The application stop discards queued JS events before a terminal session can be recorded."},
+    "stop-blob": {route: "echo", ...echoed([binaryMessage([1, 2, 3])]), ...ends(1001),
+      wireOnly: "The application stop discards queued JS events before a terminal session can be recorded."},
+    "stop-closing": {route: "silent", in: [], out: [], clientClose: {code: 1000, reason: "never answered"}, serverClose: null, end: "closed",
+      wireOnly: "The application stop silently drops a close already waiting for the server."},
+    "stop-connecting": {...held, wireOnly: "The application stop silently drops the socket before its held upgrade completes."},
   };
   for (const root of ["A", "B"]) {
     for (let index = 0; index < 3; index += 1) {
@@ -189,7 +196,7 @@ function verifySession(label, session, connection, entry) {
   const types = session.events.map(event => event.type);
   const messages = session.events.filter(event => event.type === "message");
   const closes = session.events.filter(event => event.type === "close");
-  const sent = Array.isArray(entry.out) || entry.out === undefined ? dataMessages(connection, "out") : null;
+  const sent = Array.isArray(entry.jsOut) ? entry.jsOut : Array.isArray(entry.out) || entry.out === undefined ? dataMessages(connection, "out") : null;
   if (entry.js) {
     same(types, entry.js, `${label}: how the socket ended for JS`);
   } else {
@@ -212,11 +219,7 @@ function verifySession(label, session, connection, entry) {
   }
   // What JS received is what the server sent: the same messages in the same order, byte for byte.
   if (sent !== null) {
-    if (entry.mayLose) {
-      check(messages.length <= sent.length, `${label}: JS cannot have more than the server sent`);
-    } else {
-      equal(messages.length, sent.length, `${label}: JS received every message the server sent`);
-    }
+    equal(messages.length, sent.length, `${label}: JS received every message the server sent`);
     messages.forEach((message, index) => {
       const wanted = sent[index];
       if (message.kind === "text") {
@@ -324,33 +327,35 @@ export function verifyWebSocketReport(report, serverLog) {
       same(headerValues(connection, "upgrade"), ["websocket"], `${label}: Upgrade is the engine's`);
     }
     const session = sessions.get(label);
-    if (session !== undefined) {
+    if (entry.wireOnly !== undefined) {
+      check(session === undefined, `${label}: wire-only evidence is explicitly scoped: ${entry.wireOnly}`);
+    } else {
+      check(session !== undefined, `${label}: a JS session is required`);
       verifySession(label, session, connection, entry);
       compared += 1;
     }
   }
-  check(compared >= 40, `JS's side of the sockets was compared with the server's: ${compared}`);
+  equal(compared, Object.values(entries).filter(entry => entry.wireOnly === undefined).length,
+    "every ordinary connection has a JS session compared with the server");
 
-  // 3. The native counters, by arithmetic against the server's record. The messages the server sent that JS cannot have
-  // received are the ones the engine drops with a close frame, which the probe observed (each of them is two bytes, "m0".."m2").
+  // 3. The native counters, by arithmetic against the server's wire record.
   const final = stages.stopped.networking.webSocket;
   const transport = final.transport;
   const clientMessages = connections.flatMap(connection => dataMessages(connection, "in"));
   const serverMessages = connections.flatMap(connection => dataMessages(connection, "out"));
-  const lost = stages.dataThenCloseObserved.sent - stages.dataThenCloseObserved.delivered;
   equal(stages.dataThenCloseObserved.sent, 3, "the probe observed the three messages the server wrote with the close frame");
-  check(lost >= 0 && lost <= 3, "the messages lost with a close frame are at most those written");
+  equal(stages.dataThenCloseObserved.delivered, 3, "all messages written with the close frame reached JavaScript");
   equal(transport.messagesOut.text, clientMessages.filter(message => message.opcode === "text").length, "the transport sent as many text messages as the server received");
   equal(transport.messagesOut.binary, clientMessages.filter(message => message.opcode === "binary").length, "and as many binary ones");
   equal(transport.messagesOut.bytes, clientMessages.reduce((total, message) => total + message.length, 0), "and as many bytes");
-  // The one message that is no UTF-8 is refused by the engine too, and is four bytes.
-  equal(transport.messagesIn.text + transport.messagesIn.binary, serverMessages.length - lost - 1, "the transport read every message the server sent but the ones the engine dropped or refused");
-  // The engine puts the payload of a ping that sits between fragments into the message: the probe recorded what it delivered.
+  // The one message that is not UTF-8 is refused by the transport after it sends close 1007.
+  equal(transport.messagesIn.text + transport.messagesIn.binary, serverMessages.length - 1, "the transport delivered every valid message and refused only the invalid text frame");
+  // A ping between fragments remains a control frame and is not part of the reassembled message.
   const observed = stages.interleavedPingObserved;
   equal(observed.messages, 1, "the message with a ping between its fragments arrived as one message");
-  const merged = Buffer.byteLength(observed.text, "utf8") - "fragmented".length;
-  equal(transport.messagesIn.bytes, serverMessages.reduce((total, message) => total + message.length, 0) - lost * 2 - 4 + merged,
-    "and as many bytes, with what the engine merged into the message");
+  equal(observed.text, "fragmented", "the ping payload did not enter the reassembled data message");
+  equal(transport.messagesIn.bytes, serverMessages.reduce((total, message) => total + message.length, 0) - 4,
+    "the transport counted every delivered payload except the four invalid UTF-8 bytes");
   equal(final.sent, clientMessages.length, "the module counts the messages the server received");
   equal(final.sentBytes, transport.messagesOut.bytes, "and their bytes");
   equal(final.received, transport.messagesIn.text + transport.messagesIn.binary, "and the messages the transport read");
@@ -370,7 +375,7 @@ export function verifyWebSocketReport(report, serverLog) {
   equal(final.closeRejections, 3, "three closes were refused: a long reason, a reserved code, a code out of range");
   equal(final.connectingCloses, 2, "two sockets were closed while connecting");
   equal(transport.closeTimeouts, 1, "one close was never answered");
-  equal(transport.impliedCloses, 4, "four closings over TLS ended without the server's frame and were taken as complete");
+  equal(transport.impliedCloses, undefined, "the transport exposes no inferred-close success counter");
   equal(final.ignoredHeaders, 1, "one header that is no string was ignored");
   equal(final.droppedHeaders, 3, "three of the handshake's own headers were dropped");
   equal(final.blobMessages, 4, "four binary messages became blobs");
@@ -379,10 +384,8 @@ export function verifyWebSocketReport(report, serverLog) {
   equal(transport.overflows, 1, "as the transport saw it");
   equal(final.droppedSends + transport.sendErrors, 0, "and no other send was lost");
 
-  // 4. What the probe declared about the engine's own diagnostics, against what the server shows it must have refused.
-  const refused = ["reject", "reject-401", "bad-accept", "wrong-protocol", "unmatched-protocol"].filter(label => byLabel.has(label));
-  equal(stages.deliberateEngineErrors.handshake, refused.length, "the engine refused the handshakes the server shows it was offered to refuse");
-  equal(stages.deliberateTlsFailures, 3, "and the three certificates it must not trust");
+  // 4. The transport validates HTTP upgrades itself; only two TLS handshake failures reach the engine's TLS peer.
+  equal(stages.deliberateTlsFailures, 3, "all three untrusted TLS handshakes that reach the engine are refused");
 
   // 5. Nothing is left, here or there.
   equal(stages.stopped.networking.stopped, true, "the application stopped");
@@ -392,6 +395,6 @@ export function verifyWebSocketReport(report, serverLog) {
   for (const name of ["close-connecting", "stop-connecting"]) {
     equal(serverLog.holds[name], "closed-by-client", `${name}: the held handshake saw the client leave`);
   }
-  return {connections: connections.length, compared, serverMessages: serverMessages.length, clientMessages: clientMessages.length, lostWithClose: lost,
+  return {connections: connections.length, compared, serverMessages: serverMessages.length, clientMessages: clientMessages.length,
     started: transport.started, connects: final.connects};
 }

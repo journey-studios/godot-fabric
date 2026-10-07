@@ -36,7 +36,7 @@ def source(name):
             target = Path(staging)
             with tarfile.open(archive) as contents:
                 contents.extractall(target, filter="data")
-            extracted = target / dependency["directory"] if name in ("react-native", "godot-cpp") else target
+            extracted = target / dependency["directory"] if name in ("react-native", "godot-cpp", "wslay") else target
             extracted.rename(destination)
     return destination
 
@@ -51,7 +51,7 @@ def main(target="macos", configuration="Release"):
     (DEPS / ".gdignore").touch()
     (PROJECT / "build").mkdir(exist_ok=True)
     (PROJECT / "build/.gdignore").touch()
-    for name in ("react-native", "hermes", "rn-dependencies", "godot-cpp"):
+    for name in ("react-native", "hermes", "rn-dependencies", "godot-cpp", "wslay"):
         source(name)
     environment = DEPS / "python"
     cmake = environment / "bin/cmake"

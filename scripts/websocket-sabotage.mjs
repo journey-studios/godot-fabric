@@ -26,9 +26,9 @@ const variants = [
     find: '    if (!has_origin) request.headers.emplace_back("origin", websocket::default_origin(url));',
     replace: '    if (false) request.headers.emplace_back("origin", websocket::default_origin(url));'},
   {name: "stop", argument: "--sabotage=stop", hostDirectory: "build/websocket-sabotage-stop-host",
-    file: "native/godot_websocket_transport.cpp",
-    find: "    const bool open = peer->get_ready_state() == WebSocketPeer::STATE_OPEN;\n    peer->close(websocket::close_going_away, \"\");",
-    replace: "    const bool open = peer->get_ready_state() == WebSocketPeer::STATE_OPEN;\n    peer->close(1000, \"\");"},
+    file: "native/godot_websocket_connection.cpp",
+    find: "      wslay_event_queue_close(wslay_, 1001, nullptr, 0);",
+    replace: "      wslay_event_queue_close(wslay_, 1000, nullptr, 0);"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));
