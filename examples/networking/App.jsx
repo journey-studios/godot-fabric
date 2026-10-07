@@ -34,6 +34,9 @@ function NetworkingExample({ baseUrl }) {
   const [view, setView] = useState(idle);
   const [log, setLog] = useState([]);
   const controller = useRef(null);
+  // The newest request owns the screen: an answer or an error that comes back after a newer request started is
+  // logged but not shown, so a late response can never replace the view of the request the user is waiting for.
+  const newest = useRef(0);
   observations.renders += 1;
   observations.view = view;
   observations.pending = view.badge === "pending";
@@ -46,19 +49,24 @@ function NetworkingExample({ baseUrl }) {
   const start = (label, url) => {
     show("pending", `${label} …`, url, "—", "Waiting for the answer");
   };
-  const failure = (label, error) => {
+  const failure = (label, error, current) => {
     record(label, error.name === "AbortError" ? "aborted" : "failed");
-    show("failed", `${label}: ${error.name}`, "—", "—", String(error.message));
+    if (current) {
+      show("failed", `${label}: ${error.name}`, "—", "—", String(error.message));
+    }
   };
   const perform = async (label, path, init, summarize) => {
+    const token = ++newest.current;
     start(label, baseUrl + path);
     try {
       const response = await fetch(baseUrl + path, init);
       const body = await summarize(response);
       record(label, String(response.status));
-      show(response.ok ? "ok" : "failed", `${label}: ${response.status}`, response.url, response.headers.get("content-type") ?? "—", body);
+      if (token === newest.current) {
+        show(response.ok ? "ok" : "failed", `${label}: ${response.status}`, response.url, response.headers.get("content-type") ?? "—", body);
+      }
     } catch (error) {
-      failure(label, error);
+      failure(label, error, token === newest.current);
     }
   };
 
@@ -82,6 +90,8 @@ function NetworkingExample({ baseUrl }) {
       return `${data.message} · followed one redirect`;
     }),
     slow: () => {
+      // One slow request at a time: the previous one ends before the next starts, so Abort always targets the latest.
+      controller.current?.abort();
       controller.current = new AbortController();
       return perform("GET slow", "/api/slow", { signal: controller.current.signal }, (response) => response.text());
     },

@@ -170,8 +170,12 @@ func run() -> void:
   var seen := server.requests.size()
   await click("net-text")
   var text_done := await wait_for(func() -> bool: return text("net-status") == "GET text: 200")
+  var text_requests := requests_after(seen)
+  stages.text = {"example": example(), "requests": text_requests}
   verify(text_done and text("net-body") == "Zażółć gęślą jaźń — do servidor, com acentos" and text("net-type") == "text/plain; charset=utf-8",
     "GET text decodes the multi-byte UTF-8 body")
+  verify(text_requests.size() == 1 and text_requests[0].method == "GET" and text_requests[0].target == "/api/text",
+    "The server received exactly one GET for /api/text")
 
   # POST form: FormData travels as multipart with a boundary and its two parts.
   seen = server.requests.size()
