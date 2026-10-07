@@ -481,7 +481,18 @@ Rodadas uma vez com scripts de rascunho na árvore commitada, não afirmadas pel
   Android); esta fatia entrega os globais.
 - **Plataformas.** Só macOS arm64 foi executado; exports Android (permissão `INTERNET`),
   iOS e Web (CORS), hardware real, rede offline e reconexão não foram exercitados.
-- **CI.** A CI hospedada desta fatia está pendente.
+- **CI.** A CI hospedada do push da `main` em `afa5d87` (run 37571237096) passou nos
+  cinco jobs na primeira tentativa, sem reexecução. O job `native-cold-start` rodou
+  `npm run test:networking` (1 de 1 teste ok), e o artefato `native-networking`
+  repete os **100 checks headless** com os IDs do relatório commitado. O oráculo
+  independente aceita o relatório baixado, e os 84 checks que o host anterior falha,
+  os 8 da sabotagem de redirects e os 2 da sabotagem de cabeçalhos passam todos no
+  run. O arquivo `src/react-native-platform.jsx` não está nos pins commitados: tem o
+  mesmo SHA-256 (`7613a6a4…`) em `83a3557` e em `afa5d87`, e o SHA-256 do bundle do
+  run é o registrado (`84d5ee49…`), o que prova que o mesmo bundle rodou. O
+  [Pages](publication.json) (run 37571237256) implantou exatamente os dados
+  commitados de `afa5d87`; o site público já foi substituído por um redeploy manual
+  de `main` no mesmo commit (run 37640606620). [Recibo](hosted-ci.json).
 
 Nenhum GF inteiro, outro checkpoint, peso ou denominador fecha: só o checkpoint de fatia do
 GF-22.
