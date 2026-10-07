@@ -29,7 +29,8 @@ async function check({sdk, out, capture, cmake}) {
   fs.mkdirSync(out); fs.mkdirSync(path.join(out,'logs'));
   const inputs = ['scripts/adapter-runtime-check.mjs','scripts/pack-addon.mjs','sdk/toolchain/build.mjs',
     'sdk/toolchain/adapter-plugin.mjs','sdk/toolchain/project-resolution.mjs','sdk/toolchain/project-config.mjs',
-    'sdk/toolchain/project-typecheck.mjs','sdk/toolchain/platform-plugin.mjs',
+    'sdk/toolchain/project-typecheck.mjs','sdk/toolchain/native-typecheck.mjs',
+    'sdk/toolchain/native-compiler.mjs','sdk/toolchain/platform-plugin.mjs',
     'sdk/toolchain/platform-resolution.mjs','scripts/codegen.mjs','scripts/codegen-contract.mjs','scripts/adapter-manifest.mjs',
     ...fs.readdirSync(path.join(root,'tests/adapters/package')).map(name=>'tests/adapters/package/'+name),
     'tests/adapters/consumer/ui/index.tsx','tests/adapters/consumer/validation.gd','tests/adapters/consumer/main.tscn',

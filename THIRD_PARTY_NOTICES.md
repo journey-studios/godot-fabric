@@ -14,6 +14,9 @@ source/framework archives and verifies SHA-256 before extraction.
 | godot-cpp | da26c1732ee8656ef9ccad587cbdd55acf8637c8 | [MIT](https://github.com/godotengine/godot-cpp/blob/da26c1732ee8656ef9ccad587cbdd55acf8637c8/LICENSE.md) |
 | Godot | official 4.7.2, separately installed | [MIT and third-party notices](https://godotengine.org/license/) |
 | Private Node.js | 22.23.3, macOS arm64 provisioning | Complete LICENSE in the downloaded official Node archive, including third-party notices |
+| tsc-rs | 0.1.0 | MIT; npm package metadata is `MIT AND Apache-2.0`. Its installed NOTICE preserves upstream TypeScript Apache-2.0, Go BSD-3-Clause, Unicode and other attribution notices |
+| @tsc-rs/darwin-arm64 | 0.1.0 | `MIT AND Apache-2.0`; see the installed package LICENSE and NOTICE files |
+| @tsc-rs/linux-x64 | 0.1.0 | `MIT AND Apache-2.0`; see the installed package LICENSE and NOTICE files |
 | NativeWind | 4.2.7 | See the installed package LICENSE |
 | react-native-css-interop | 0.2.7 | See the installed package LICENSE |
 | Tailwind CSS | 3.4.17 | See the installed package LICENSE |
@@ -28,6 +31,7 @@ ReactNativeDependencies includes additional upstream libraries; its downloaded
 artifact and upstream React Native sources retain their associated notices.
 
 Provisioned addon directories include the Node distribution and its license,
-the installed JavaScript packages with their license files, native Hermes,
-React Native and godot-cpp licenses, font licenses and this notice. They are
-generated locally or by CI; no prebuilt public addon release is shipped yet.
+the installed JavaScript packages with their license and notice files, native
+Hermes, React Native and godot-cpp licenses, font licenses and this notice.
+They are generated locally or by CI; no prebuilt public addon release is
+shipped yet.
