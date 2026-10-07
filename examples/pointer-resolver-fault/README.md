@@ -83,6 +83,8 @@ reads, but only this one-shot `publicInstance` fault was executed. Separate
 stateNode/canonical faults, permanent or proxy accessors, broader root lookup
 and flag combinations, reentrant stop/retirement and other pointer categories
 remain open. Hardware, Godot mobile exports, full priority mapping, performance
-and ABI certification need independent acceptance. CI for this fixture is
-pending; the preceding Document/root CI does not cover it. See the
+and ABI certification need independent acceptance. Hosted run 37236875765 repeated
+the 65 checks with identical IDs and bundle
+([receipt](../../docs/evidence/pointer-resolver-faults/hosted-ci.json)); the 85
+viewport checks and the captures stay local. See the
 [analysis and remaining boundaries](../../docs/research/pointer-resolver-faults.md).

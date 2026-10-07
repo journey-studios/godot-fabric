@@ -76,7 +76,9 @@ commands and actual 680×160 native frames. Its updated A=2/B=0 image follows
 one healthy A gesture and the recovered fault batch, before any B input or
 Cancel. Graphical acceptance adds 16 pixel assertions, two counter assertions
 and two saves to the same 65 checks. The receipt owns hashes and execution
-identity; hosted CI for this correction remains pending.
+identity; hosted run 37236875765 repeated the 65 getter checks with identical IDs
+and bundle ([receipt](../evidence/pointer-resolver-faults/hosted-ci.json)), and the
+viewport checks and captures stay local.
 
 ## What this does not certify
 

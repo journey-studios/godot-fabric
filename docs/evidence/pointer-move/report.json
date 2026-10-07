@@ -2683,7 +2683,13 @@
     "tests/pointer-query-fault-fixture.jsx"
   ],
   "hostedCI": {
-    "status": "pending-view-pointermove-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-view-move-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "01c6118d671a0d600ce5f569fd2b441308d3e4d229c2b0b2f12fea08b95e6591",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37345287351",
+    "headSha": "4ca3f1fbb5c49981bb32ce682d523449092ceb97",
+    "jobs": 5,
+    "headlessChecks": 219
   },
   "limits": [
     "View pointermove listeners only (hit target and its parent), with both original EventTarget flags enabled, under touch drags and button-less mouse motion.",

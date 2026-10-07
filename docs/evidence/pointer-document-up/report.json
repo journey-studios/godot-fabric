@@ -2275,7 +2275,13 @@
     "currentHostAndNativeSourcesRestoredByteForByte": true
   },
   "hostedCI": {
-    "status": "pending-this-slice",
+    "status": "verified-completed-hosted-workflow-and-headless-docup-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "a2fac58a8414bc7f798e7010748b6c296a50786b225caf2a26ff249e89515cab",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37244296477",
+    "headSha": "84270fbeadd21df728592e3d4cea23b0be09eec9",
+    "jobs": 5,
+    "headlessChecks": 1371,
     "newEightLaneWorkflowGateAdded": true,
     "precedingViewUp": "../pointer-up/hosted-ci.json"
   },

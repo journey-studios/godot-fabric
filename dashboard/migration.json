@@ -8,7 +8,7 @@
     "focusSequence": "3",
     "focusTitle": "Relógio de quadros do host: requestAnimationFrame e o NativeAnimated C++ rodam no ritmo de uma tela (todo quadro numa janela com V-Sync que pode desenhar; onde nada pacia o loop, inclusive numa janela que não desenha, meio período de atualização desde o quadro anterior ou um período desde o último tick) e não a cada quadro do Godot; Transforms singulares do RN (scale: 0, scaleX: 0, matrizes sem inversa, entradas e saídas animadas pelo zero) colapsam a View como no RN em vez de lançar E_TRANSFORM_SINGULAR; escala uniforme de transform (scale) em Controls planares do Godot, estática, animada e sob clique real; Animated, Easing e TouchableOpacity sobre o NativeAnimated C++ do RN avançado pelo relógio de quadros do host; Appearance, Touchables, ActivityIndicator, notificações de captura e listas virtualizadas na main; próximos: Networking e Modal"
   },
-  "updatedAt": "2026-10-06T22:54:57.831566+00:00",
+  "updatedAt": "2026-10-06T21:05:45.062343-03:00",
   "source": {
     "commit": "e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
     "url": "https://github.com/journey-studios/godot-fabric/commit/e67f82ca54a83c8cfbc7db6e97ae11a70871ea2d",
@@ -2370,7 +2370,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "Addon/editor e consumer30/40/43 precedentes confirmados pela CI 80729da nos cinco jobs. Novo SDK compilado/pack verificado e original-Codegen consumer separado passou 17 Godot/318checks com remount/owner switch e captura/pixels. Esta nova fatia tem evidência local; CI própria ainda pendente. Instalação/update/dev tooling e exports Debug/Release por alvo abertos.",
+      "note": "Addon/editor e consumer30/40/43 precedentes confirmados pela CI 80729da nos cinco jobs. Novo SDK compilado/pack verificado e original-Codegen consumer separado passou 17 Godot/318checks com remount/owner switch e captura/pixels. Esta nova fatia tem evidência local; a CI no head b5dafc8 (run 37163024271) passou os cinco jobs e o job nativo roda as oito lanes headless de root, mas o recibo (docs/evidence/view/preceding-ci.json) registra só os jobs, sem auditar o artefato, e as lanes gráficas seguem locais. Instalação/update/dev tooling e exports Debug/Release por alvo abertos.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3456,6 +3456,15 @@
     }
   ],
   "activity": [
+    {
+      "id": "root-retirement-hosted-ci-receipt-20261006",
+      "at": "2026-10-06T21:05:45.062343-03:00",
+      "taskIds": [
+        "GF-28"
+      ],
+      "message": "CI da retirada independente de roots: a CI no head b5dafc8 (run 37163024271), a fonte da fatia mais o pin do dashboard, passou nos cinco jobs, e o job nativo roda as oito lanes headless de root do runtime de adapters (o workflow e o runner desse commit as incluem). O recibo docs/evidence/view/preceding-ci.json registra só os jobs e não audita o artefato; as lanes gráficas, com capturas e pixels, seguem locais. A nota do GF-28 deixa de dizer que a CI da fatia está pendente. Nenhum checkpoint, GF, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4420688eb008c7c634f091d468a10653aaa4dd6e/docs/evidence/view/preceding-ci.json"
+    },
     {
       "id": "frame-clock-hosted-ci-and-pages-20261006",
       "at": "2026-10-06T22:54:57.831566+00:00",

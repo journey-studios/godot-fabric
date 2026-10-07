@@ -56,6 +56,47 @@ Its native roots/props/state/lifecycle and captures are separately validated.
 This advances GF-28/GF-29 without closing their complete SDK/export/dev-tool or
 per-target acceptance; pending V2 decisions retain their status.
 
+## Subsequent checkpoint — 2026-10-06
+
+The public facade now exports **39 names awaiting differential certification and 5
+explicit placeholders** (Image, ImageBackground, KeyboardAvoidingView,
+RefreshControl and StatusBar) and omits 53 of the 97 root values, as
+`npm run parity:status` counts them. The [live status board](compatibility/BASELINE.md)
+keeps those counts and a per-area table of the evidence below. The tables further
+down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
+remain the 2026-10-01 snapshot (4 usable components, 9 environment names, 14
+unavailable names and 70 missing), and must not be read as current counts.
+
+Since the 2026-10-03 checkpoint these slices ran on macOS arm64 over original RN
+source, each with retained negative controls and a hosted CI run that repeated its
+headless checks (the [evidence index](evidence/README.md) lists every record and receipt):
+
+- **Environment:** the original [AppState](evidence/app-state/README.md) (75 checks),
+  fed by Godot's application lifecycle, and [Appearance and
+  useColorScheme](evidence/appearance/README.md) (79), fed by its system theme.
+- **Input:** the original [PanResponder](evidence/pan-responder/README.md) (128 checks
+  in four flag lanes), the [shared touches](evidence/shared-touches/README.md) (92)
+  that let the roots of one application share RN's single responder, and the
+  [capture notifications](evidence/pointer-capture-notifications/README.md) (672),
+  next to the View and Document pointer matrices (up, move, hover, click) whose
+  public flags stay off.
+- **Components:** the original [Switch](evidence/switch/README.md) (108),
+  [ActivityIndicator](evidence/activity-indicator/README.md) (33),
+  [touchables](evidence/touchables/README.md) (93) and [lists](evidence/virtualized-list/README.md)
+  (44: FlatList, SectionList, VirtualizedList and VirtualizedSectionList).
+- **Animation and transforms:** the original [Animated](evidence/native-animated/README.md)
+  over RN's C++ Native Animated (75), RN's uniform [scale](evidence/uniform-scale/README.md)
+  (29) and [singular transforms](evidence/singular-transforms/README.md) (49) on
+  planar Controls, and the [frame clock](evidence/frame-clock/README.md) (37) that
+  paces `requestAnimationFrame` and the native animation like a display link.
+
+None of these is an original-native differential: the 13-case core-ui-v2
+comparison with iOS and Android remains the only one. They complete no GF item
+and add no weight or denominator; the first-slice checkpoints they closed are in
+the [dashboard](../dashboard/README.md), and each record keeps its own open
+boundaries (hardware, mobile exports, complete contracts). The audit-date tables
+below preserve the findings of 2026-10-01.
+
 ## What 1.0 must mean
 
 A supported application should import the stable public `react-native` API,

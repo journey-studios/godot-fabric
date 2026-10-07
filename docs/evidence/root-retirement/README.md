@@ -126,6 +126,12 @@ That validates the preceding importer-scoped alias delivery and existing
 fixtures, before these new root cases. Current slice CI is reported separately
 when executed.
 
+> Later note (2026-10-06): the [hosted run at `b5dafc8`](../view/preceding-ci.json),
+> this slice's source plus its dashboard pin, passed all five jobs. Its native job
+> runs the eight headless root lanes (the workflow and the runner at that commit
+> include them), but the record lists the jobs only: it does not audit the artifact,
+> and the graphical lanes, with their captures and pixels, stay local.
+
 Complete bootstrap, activation/restart, scene pause/resume, overlays/portals,
 full touch/responder cancellation, original RN lifecycle differential cases,
 arbitrary native ownership violations, long-running async operations and other
