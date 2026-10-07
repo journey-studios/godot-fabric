@@ -11,22 +11,21 @@ and its exact reason. A TLS drop after the client's close remains an abnormal
 failure. See the curated [execution receipt](execution.json). Raw per-run reports remain
 local and ignored.
 
-Hosted CI passed all five jobs for pinned implementation head `422c2ee` ([receipt](hosted-ci.json),
+Hosted CI passed all five jobs for implementation commit `422c2ee` only ([receipt](hosted-ci.json),
 [GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37640391170)). Independent
 inspection of the native artifact recomputed the product oracle and matched 46 repository inputs.
 Its parity job covers 13
 `core-ui-v2` cases on Android/iOS, not WebSocket differential or Godot mobile runtime behavior.
-Changes after that pinned head need their own green CI before merge.
+Changes after commit `422c2ee` need their own green CI before merge.
 
-The HTTP diagnostic correction passed all five jobs at `e8dd7b0`
+The separate HTTP diagnostic correction receipt covers commit `e8dd7b0` and passed all five jobs
 ([receipt](hosted-ci-e8dd7b0.json),
 [GitHub run](https://github.com/journey-studios/godot-fabric/actions/runs/37651052057)).
 Independent inspection again recomputed 95/60/53, checked 46 WebSocket inputs,
 verified both load phases and all eight lifetime cases, and checked the 13-case
 parity subset. The HTTP artifact separately passed 100 checks; 51 distinct inputs
 across the HTTP and WebSocket bundles matched that hosted checkout. This run used
-base `afa5d875`; integration with the later `a608ccf` main tooling updates still
-requires fresh green CI before merge.
+base `afa5d875`; integration with main at `51ad758` still requires its own green CI before merge.
 
 The later `3b57e72` run failed in the HTTP regression suite before WebSocket ran.
 Its truncated-body XHR emitted the expected error sequence, but Godot reported
@@ -34,8 +33,8 @@ connection loss instead of EOF. The [diagnostic receipt](ci-http-diagnostic.json
 records both exact permitted reasons, the corrected 100-check local run and five
 rejected oracle mutations. The main baseline passed six times; that failure was
 not reproduced there. The failed hosted run remains failed, and the correction
-was verified by the pinned `e8dd7b0` run above. Later heads still require their own
-green hosted checks before merge.
+was verified by the `e8dd7b0` run above. The later integration commit `51ad758` still
+requires its own green hosted check before merge.
 
 Negative controls are also retained in the execution receipt: the preceding main host
 (`afa5d875`) passed only 12 of 95 checks and made zero server connections; the Origin
@@ -96,13 +95,13 @@ frames. The per-image SHA-256 and sampled color are in the [execution receipt](e
 The verified macOS native SDK pack and provisioned addon include the pinned wslay library and
 license. The iOS simulator arm64 build passed and its combined archive link retains both Fabric
 and wslay symbols. That link proof did not execute on an iOS runtime or export a consumer app;
-ABI certification remains open. Hosted native execution is headless macOS for the pinned head;
-it is not mobile runtime evidence.
+ABI certification remains open. Hosted native execution is headless macOS for receipt
+commits `422c2ee` and `e8dd7b0`; it is not mobile runtime evidence.
 
 ## Boundaries
 
-The product and graphical captures are local macOS arm64 evidence; hosted native execution is
-headless macOS for the pinned head. Android, iOS-device and Web runtime behavior remain separate.
+The product and graphical captures are local macOS arm64 evidence; hosted native execution
+covers receipt commits `422c2ee` and `e8dd7b0`. Android, iOS-device and Web runtime behavior remain separate.
 The fixtures do not certify `permessage-deflate`, other
 extensions, cookies, proxies, system trust integration, HTTP/2, long-duration or
 hardware load, offline reconnection, or the complete GF-22 acceptance. This PR

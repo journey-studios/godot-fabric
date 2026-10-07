@@ -12,7 +12,7 @@
   "source": {
     "commit": "73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
     "url": "https://github.com/journey-studios/godot-fabric/commit/73a27b0c467884a9bf51dc7b6cb70e4cb198ac78",
-    "scope": "Backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay: prova local 95/60/53; byte budget de 1 MiB compartilhado entre sockets WebSocket e admissão de 256 eventos canônicos após HTTP. CI passou 5/5 no head fixado e8dd7b0, incluindo a correção dos dois diagnósticos exatos de erro HTTP. Integração com main a608ccf e tsc-rs exige nova CI antes do merge. GF-22 segue parcial.",
+    "scope": "Implementação local fixada em 73a27b0c467884a9bf51dc7b6cb70e4cb198ac78: backend WebSocket RN sobre HTTPClient/StreamPeer público com wslay, prova local 95/60/53, limite global de 1 MiB wire por poll entre sockets WebSocket e capacidade canônica de 256 eventos após HTTP. Recibos CI históricos cobrem 422c2ee e a correção HTTP e8dd7b0; integração com main em 51ad758 aguarda CI própria. GF-22 segue parcial.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/48"
   },
   "phases": [
