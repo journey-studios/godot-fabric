@@ -303,11 +303,11 @@ func module_stage() -> void:
   native_available = modules.get("Networking") == true
   network_check(modules.get("Networking") == true and modules.get("BlobModule") == true and modules.get("FileReaderModule") == true,
     "modules/RN's Networking, BlobModule and FileReaderModule load from the native host")
-  check(modules.get("WebSocketModule") == false, "modules/WebSocketModule is not provided yet")
+  # WebSocket has a suite of its own; here it is only seen to be there, where this slice's first version saw it fail.
+  network_check(modules.get("WebSocketModule") == true, "modules/WebSocketModule is provided by the native host")
   var socket: Dictionary = js("NetworkingProbe.webSocket()")
   stages.webSocket = socket
-  check(socket.get("created") == false and str(socket.get("message")).contains("'WebSocketModule' could not be found"),
-    "modules/The first use of WebSocket fails with RN's own module lookup error")
+  network_check(socket.get("created") == true, "modules/RN's own WebSocket constructs over the native module")
   var globals := await run_case("A", "globals")
   stages.globals = globals
   network_check(result_of(globals).get("XMLHttpRequest") == "function" and result_of(globals).get("FileReader") == "function",

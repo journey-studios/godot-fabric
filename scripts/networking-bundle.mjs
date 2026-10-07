@@ -1,13 +1,15 @@
 import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 
 // Executed producers of the networking slice: the pure HTTP core and its unit test, the transport seam and
-// the Godot transport behind it, the blob store and the three modules over it, the runtime wiring that polls
-// and stops them, the validation seam for the TLS authority, and the Godot class profile and build that
-// bring HTTPClient in.
+// the Godot transport behind it (and the TLS options it shares with the WebSocket transport), the blob store
+// and the modules over it with the state they share (the WebSocketModule, in its own translation unit, is one
+// of them), the runtime wiring that polls and stops them, the validation seam for the TLS authority, and the
+// Godot class profile and build that bring HTTPClient in.
 export const networkingNativeProducers = ["native/http_core.h", "native/http_core_test.cpp", "native/http_transport.h",
-  "native/godot_http_transport.h", "native/godot_http_transport.cpp", "native/blob_store.h", "native/networking_modules.h",
-  "native/networking_modules.cpp", "native/application_runtime.cpp", "native/application_runtime.h", "native/fabric_application.cpp",
-  "native/godot-profile.json", "native/CMakeLists.txt"];
+  "native/godot_http_transport.h", "native/godot_http_transport.cpp", "native/godot_tls.h", "native/blob_store.h", "native/networking_modules.h",
+  "native/networking_modules.cpp", "native/networking_state.h", "native/websocket_module.h", "native/websocket_module.cpp",
+  "native/application_runtime.cpp", "native/application_runtime.h", "native/fabric_application.cpp", "native/godot-profile.json",
+  "native/CMakeLists.txt"];
 
 export function bundleNetworkingProbe() {
   return bundleNativeProbe({name: "networking", entryPoint: "tests/networking-fixture.jsx",

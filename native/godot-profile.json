@@ -36,6 +36,7 @@
     "ProjectSettings",
     "HTTPClient",
     "TLSOptions",
-    "X509Certificate"
+    "X509Certificate",
+    "WebSocketPeer"
   ]
 }

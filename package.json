@@ -76,7 +76,8 @@
     "test:appearance": "node --test tests/appearance-native.test.mjs",
     "test:animated": "node --test tests/native-animated-native.test.mjs",
     "test:frame-clock": "node --test tests/frame-clock-native.test.mjs",
-    "test:networking": "node --test tests/networking-native.test.mjs"
+    "test:networking": "node --test tests/networking-native.test.mjs",
+    "test:websocket": "node --test tests/websocket-native.test.mjs"
   },
   "dependencies": {
     "nativewind": "4.2.7",

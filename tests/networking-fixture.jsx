@@ -499,6 +499,17 @@ globalThis.NetworkingProbe = {
     };
     return {Networking: find("Networking"), BlobModule: find("BlobModule"), FileReaderModule: find("FileReaderModule"), WebSocketModule: find("WebSocketModule")};
   },
+  // A WebSocket constructs where the host has the module and throws RN's own lookup error where it has not. Nothing listens
+  // on the port: the socket fails at once, and closing it is all the cleanup it needs.
+  webSocket() {
+    try {
+      const socket = new WebSocket("ws://127.0.0.1:1/");
+      socket.close();
+      return {created: true};
+    } catch (error) {
+      return {created: false, message: String(error.message)};
+    }
+  },
   // The retained modules, called after the application stopped.
   afterStop() {
     const attempt = (module, call) => {
@@ -522,16 +533,6 @@ globalThis.NetworkingProbe = {
       read: attempt(retained.FileReaderModule, module => module.readAsText({blobId: "x", offset: 0, size: 0}, "utf-8")),
       lookup: attempt({}, () => TurboModuleRegistry.get("Networking")),
     };
-  },
-  // The first use of WebSocket fails, as RN's own module lookup does, until the host has the module.
-  webSocket() {
-    try {
-      const socket = new WebSocket("ws://127.0.0.1:1/");
-      socket.close();
-      return {created: true};
-    } catch (error) {
-      return {created: false, message: String(error.message)};
-    }
   },
   dispose() {
     disposeEnvironment();

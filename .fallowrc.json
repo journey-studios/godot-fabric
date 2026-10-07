@@ -54,7 +54,8 @@
     "tests/appearance-fixture.jsx",
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
-    "tests/networking-fixture.jsx"
+    "tests/networking-fixture.jsx",
+    "tests/websocket-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",

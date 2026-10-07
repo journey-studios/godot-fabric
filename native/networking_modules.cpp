@@ -1,4 +1,5 @@
 #include "networking_modules.h"
+#include "networking_state.h"
 #include "blob_store.h"
 #include "http_core.h"
 #include "turbo_module_registry.h"
@@ -8,9 +9,6 @@
 #include <react/bridging/Bridging.h>
 #include <react/bridging/Promise.h>
 #include <cmath>
-#include <functional>
-#include <map>
-#include <mutex>
 #include <optional>
 #include <random>
 #include <stdexcept>
@@ -21,68 +19,12 @@ namespace rn = facebook::react;
 namespace jsi = facebook::jsi;
 
 namespace fabric_godot {
-// Shared by a request's queued events: once JS aborts the request, none of them
-// may reach it, as RN's abortRequest sends nothing for a request it cancels.
-struct RequestToken {
-  bool cancelled{};
-};
-
-// Blobs whose JS objects were garbage collected, waiting for the main thread to release them. Hermes may finalize
-// a host object on any thread, so a collector only queues the id here, and the queue outlives the application's state.
-struct CollectedBlobs {
-  std::mutex mutex;
-  bool open{true};
-  std::vector<std::string> ids;
-  void push(std::string id) {
-    const std::lock_guard<std::mutex> lock(mutex);
-    if (open) ids.push_back(std::move(id));
-  }
-  std::vector<std::string> take() {
-    const std::lock_guard<std::mutex> lock(mutex);
-    return std::exchange(ids, {});
-  }
-  void close() {
-    const std::lock_guard<std::mutex> lock(mutex);
-    open = false;
-    ids.clear();
-  }
-};
-
-struct NetworkingState {
-  struct Request {
-    std::string response_type;
-    std::shared_ptr<RequestToken> token;
-    std::string content_type;
-    std::string body;
-  };
-  bool active{true};
-  std::unique_ptr<HttpTransport> transport;
-  BlobStore blobs;
-  // The invoker the events and promises of all three modules go through. It
-  // refuses everything once the application stops.
-  std::shared_ptr<rn::CallInvoker> invoker;
-  std::map<uint64_t, Request> requests;
-  std::shared_ptr<CollectedBlobs> collected = std::make_shared<CollectedBlobs>();
-  std::mt19937_64 random{std::random_device{}()};
-  uint64_t sent{}, refused{}, aborted{}, responses{}, completions{}, failures{}, events_queued{}, events_delivered{},
-      events_dropped{}, blob_handlers{}, cookie_clears{}, file_reads{}, file_failures{}, blobs_closed{}, blobs_collected{};
-  void release_collected() {
-    for (const auto &id : collected->take()) {
-      if (blobs.release(id)) ++blobs_collected;
-    }
-  }
-  void stop() {
-    if (!active) return;
-    active = false;
-    // The transport goes first: nothing it holds may report once the state is gone.
-    transport->stop();
-    requests.clear();
-    collected->close();
-    blobs.clear();
-  }
-};
-
 namespace {
+using networking::Payload;
+using networking::js_string;
+using networking::queue_event;
+using networking::string_value;
+
 std::string upper(std::string text) {
   for (auto &c : text) c = c >= 'a' && c <= 'z' ? static_cast<char>(c - 'a' + 'A') : c;
   return text;
@@ -114,15 +56,8 @@ class StoppableInvoker final : public rn::CallInvoker {
   }
 };
 
-std::optional<std::string> string_value(jsi::Runtime &rt, const jsi::Value &value) {
-  return value.isString() ? std::optional<std::string>(value.getString(rt).utf8(rt)) : std::nullopt;
-}
 std::optional<std::string> string_property(jsi::Runtime &rt, const jsi::Object &object, const char *name) {
   return string_value(rt, object.getProperty(rt, name));
-}
-jsi::String js_string(jsi::Runtime &rt, const std::string &utf8) {
-  // Wire bytes are not always valid UTF-8; JS strings must be.
-  return jsi::String::createFromUtf8(rt, http::sanitize_utf8(utf8));
 }
 
 // BlobManager's BlobData: {blobId, offset, size, type?, name?, ...}.
@@ -277,34 +212,6 @@ std::optional<std::string> build_body(jsi::Runtime &rt, NetworkingState &state, 
     return build_form_data(rt, form.getObject(rt).getArray(rt), content_type, state.random, headers, body);
   if (data.hasProperty(rt, "formData")) return "Received request but form data was empty";
   return std::nullopt;  // nothing in the payload that could be understood: an empty body
-}
-
-void deliver(jsi::Runtime &rt, const std::string &name, jsi::Value payload) {
-  // The device emitter is where RN's NativeEventEmitter listens; a runtime that
-  // has not created it yet has nobody to tell.
-  const auto emitter = rt.global().getProperty(rt, "__rctDeviceEventEmitter");
-  if (!emitter.isObject()) return;
-  const auto object = emitter.getObject(rt);
-  object.getPropertyAsFunction(rt, "emit").callWithThis(rt, object, jsi::String::createFromAscii(rt, name), std::move(payload));
-}
-
-using Payload = std::function<jsi::Value(jsi::Runtime &)>;
-// Queues one device event. Events leave through the invoker in the order they
-// were queued, and a stopped application or an aborted request drops them.
-void queue_event(const std::shared_ptr<NetworkingState> &state, const std::shared_ptr<RequestToken> &token, std::string name,
-    Payload payload) {
-  ++state->events_queued;
-  state->invoker->invokeAsync([owner = std::weak_ptr<NetworkingState>(state), token, name = std::move(name),
-      payload = std::move(payload)](jsi::Runtime &rt) {
-    const auto state = owner.lock();
-    if (!state) return;
-    if (token->cancelled) {
-      ++state->events_dropped;
-      return;
-    }
-    ++state->events_delivered;
-    deliver(rt, name, payload(rt));
-  });
 }
 
 // [requestId, error] with the time-out flag Android appends only for a time-out.
@@ -523,9 +430,24 @@ class NativeBlobModule final : public rn::NativeBlobModuleCxxSpec<NativeBlobModu
     live(rt);
     ++state_->blob_handlers;
   }
-  void addWebSocketHandler(jsi::Runtime &rt, double) { unsupported(rt); }
-  void removeWebSocketHandler(jsi::Runtime &rt, double) { unsupported(rt); }
-  void sendOverSocket(jsi::Runtime &rt, jsi::Object, double) { unsupported(rt); }
+  // BlobModule's content handler for a socket: its binary messages arrive as blobs in the shared store instead of base64.
+  void addWebSocketHandler(jsi::Runtime &rt, double socket) {
+    live(rt);
+    state_->sockets.set_blob_handler(socket, true);
+  }
+  // Late cleanup (WebSocket.close() calls it after the application stopped, too) stays harmless.
+  void removeWebSocketHandler(jsi::Runtime &, double socket) {
+    if (!state_->active) return;
+    state_->sockets.set_blob_handler(socket, false);
+  }
+  // The bytes of a blob, sent as one binary message. Android sends nothing for a blob it does not hold, and so does this.
+  void sendOverSocket(jsi::Runtime &rt, jsi::Object blob, double socket) {
+    live(rt);
+    const auto ref = blob_ref(rt, blob);
+    BlobStore::View view;
+    const bool held = ref && !resolve_blob(*state_, *ref, view);
+    send_blob_over_socket(state_, socket, held ? std::optional<std::string>(std::string(view.bytes())) : std::nullopt);
+  }
 
   void createFromParts(jsi::Runtime &rt, jsi::Array parts, jsi::String blob_id) {
     live(rt);
@@ -565,9 +487,6 @@ class NativeBlobModule final : public rn::NativeBlobModuleCxxSpec<NativeBlobModu
   std::shared_ptr<NetworkingState> state_;
   void live(jsi::Runtime &rt) const {
     if (!state_->active) throw jsi::JSError(rt, "E_MODULE_DISPOSED: BlobModule");
-  }
-  static void unsupported(jsi::Runtime &rt) {
-    throw jsi::JSError(rt, "E_UNSUPPORTED: Blobs over WebSocket are not implemented in this host yet");
   }
 };
 
@@ -615,15 +534,18 @@ class NativeFileReader final : public rn::NativeFileReaderModuleCxxSpec<NativeFi
 };
 }
 
-Networking::Networking(std::unique_ptr<HttpTransport> transport) : state_(std::make_shared<NetworkingState>()) {
-  if (!transport) throw std::invalid_argument("Networking requires an HTTP transport");
-  state_->transport = std::move(transport);
+Networking::Networking(std::unique_ptr<HttpTransport> http, std::unique_ptr<WebSocketTransport> sockets)
+    : state_(std::make_shared<NetworkingState>()) {
+  if (!http) throw std::invalid_argument("Networking requires an HTTP transport");
+  if (!sockets) throw std::invalid_argument("Networking requires a WebSocket transport");
+  state_->transport = std::move(http);
+  state_->sockets.transport = std::move(sockets);
 }
 Networking::~Networking() { state_->stop(); }
 
 void Networking::install(TurboModuleRegistry &registry) {
   const auto state = state_;
-  // Every module of the three binds the same invoker, created when the first is.
+  // Every module of the four binds the same invoker, created when the first is.
   const auto bind = [state](const std::shared_ptr<rn::CallInvoker> &invoker) {
     if (!state->invoker) state->invoker = std::make_shared<StoppableInvoker>(invoker, state);
   };
@@ -644,12 +566,18 @@ void Networking::install(TurboModuleRegistry &registry) {
         bind(invoker);
         return std::make_shared<NativeFileReader>(state);
       }, dispose);
+  registry.add(websocket_module_name(),
+      [state, bind](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
+        bind(invoker);
+        return make_websocket_module(state);
+      }, dispose);
 }
 
 void Networking::poll(std::size_t byte_budget) {
   if (!state_->active) return;
   state_->release_collected();
   state_->transport->poll(byte_budget);
+  state_->sockets.transport->poll(byte_budget);
 }
 
 void Networking::stop() { state_->stop(); }
@@ -664,6 +592,7 @@ folly::dynamic Networking::snapshot() const {
       ("blobs", folly::dynamic::object("count", s.blobs.count())("bytes", s.blobs.bytes())("stored", s.blobs.stored())
           ("released", s.blobs.released())("closed", s.blobs_closed)("collected", s.blobs_collected)
           ("networkingHandlers", s.blob_handlers))
-      ("fileReader", folly::dynamic::object("reads", s.file_reads)("failures", s.file_failures));
+      ("fileReader", folly::dynamic::object("reads", s.file_reads)("failures", s.file_failures))
+      ("webSocket", s.sockets.snapshot());
 }
 }
