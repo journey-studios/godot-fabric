@@ -102,9 +102,17 @@ export function guardSources(root, files) {
     });
     const entry = {child, closed};
     children.add(entry);
-    const timer = setTimeout(() => signalGroup(child, "SIGTERM"), timeout);
+    // Past its timeout the group gets SIGTERM and, as on a signal, SIGKILL after the grace period. One signal would
+    // leave `closed` pending for a child (or a grandchild holding the pipes) that ignores it, and the script would wait
+    // on it with the sabotaged source in the tree. Both timers go when the child closes.
+    let escalation;
+    const timer = setTimeout(() => {
+      signalGroup(child, "SIGTERM");
+      escalation = setTimeout(() => signalGroup(child, "SIGKILL"), GRACE_MS);
+    }, timeout);
     return closed.then(result => {
       clearTimeout(timer);
+      clearTimeout(escalation);
       children.delete(entry);
       if (interrupted) {
         return new Promise(() => {});
