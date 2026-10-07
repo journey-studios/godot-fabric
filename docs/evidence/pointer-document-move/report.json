@@ -434,7 +434,13 @@
     "tests/pointer-document-move-probe.gd"
   ],
   "hostedCI": {
-    "status": "pending-document-pointermove-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-document-move-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "72c014d3bf5cdae15f331a7065b0e2254285d9350f50183d48545205f0cb0a87",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37351245158",
+    "headSha": "46876eb5a156ee3c4a00476d84f7f58076a29e26",
+    "jobs": 5,
+    "headlessChecks": 1932
   },
   "limits": [
     "Document and documentElement pointermove listeners under touch drags and one button-less mouse hover, in eight original/current x flag lanes on the same host.",

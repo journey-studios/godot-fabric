@@ -34,12 +34,48 @@ not recursive. Private deep imports, undocumented globals, every possible
 value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
-`npm run parity:status` generates `build/parity-status.json`. The current facade
-has **17 exported names awaiting differential certification, 11 explicit
-placeholders, and 69 missing public names** after adding Button/public TextInput.
-This describes source presence. The [public form evidence](../evidence/public-controls/README.md)
-is a Godot acceptance fixture; it does not add mobile differential coverage. The board separately identifies native
-reports as `not_run`, `invalid_or_stale`, or `passed_subset`.
+`npm run parity:status` generates `build/parity-status.json`. On 2026-10-06 the
+current facade has **39 exported names awaiting differential certification, 5
+explicit placeholders and 53 missing public names** of the 97 root values, against
+17, 11 and 69 after adding Button/public TextInput (2026-10-02). The five
+placeholders are Image, ImageBackground, KeyboardAvoidingView, RefreshControl and
+StatusBar. This describes source presence: the board counts the export forms the
+facade uses (`export { x }`, `export { default as x }`, `export * as x` and exported
+functions, classes and constants). The
+[public form evidence](../evidence/public-controls/README.md) is a Godot acceptance
+fixture; it does not add mobile differential coverage, and neither do the slices
+listed below. The board separately identifies native reports as `not_run`,
+`invalid_or_stale`, or `passed_subset`.
+
+## Godot evidence since Button and TextInput
+
+Each row is a facade area that gained Godot acceptance on macOS arm64 after the
+public Button/TextInput checkpoint: the names it exercises, its retained record and
+the hosted CI run that repeated the slice's headless checks (the receipt linked in
+each record). Every slice has retained negative controls, most with an independent
+oracle. None is an original-native iOS/Android differential (the thirteen
+core-ui-v2 cases remain the only one), none changes the `exported_unverified` status
+above, and none completes a GF item: the [dashboard](../../dashboard/README.md) keeps
+the first-slice checkpoints they closed. The counts are the headless checks of each
+slice's own suite, not a coverage percentage.
+
+| Area | Facade names | Record | Headless checks and controls | Hosted CI |
+| --- | --- | --- | --- | --- |
+| Application state | `AppState` | [AppState](../evidence/app-state/README.md) | 75; the preceding host fails exactly 62, and a host whose focus outranks the pause fails 5 | run 37382633328 ([receipt](../evidence/app-state/hosted-ci.json)) |
+| System theme | `Appearance`, `useColorScheme` | [Appearance](../evidence/appearance/README.md) | 79; the preceding host fails exactly 56, the host from before the shared callback 9 | run 37408741652 ([receipt](../evidence/appearance/hosted-ci.json)) |
+| Gestures | `PanResponder` | [PanResponder](../evidence/pan-responder/README.md) | 128 in four flag lanes; a PanResponder without capture-phase handlers fails 6 | run 37385104730 ([receipt](../evidence/pan-responder/hosted-ci.json)) |
+| Responder transport | none new; every touch component | [Shared touches](../evidence/shared-touches/README.md) | 92 in four flag lanes; the preceding host fails exactly 9 | run 37392899167 ([receipt](../evidence/shared-touches/hosted-ci.json)) |
+| Pointer capture | View pointer props and ref methods; Document listeners | [Capture notifications](../evidence/pointer-capture-notifications/README.md) | 672 in eight lanes; two retained sabotages fail 12 or 13 and 33 | run 37396999119 ([receipt](../evidence/pointer-capture-notifications/hosted-ci.json)) |
+| Pointer events, View (public flags off) | View pointer props and ref listeners | [Up](../evidence/pointer-up/README.md), [move](../evidence/pointer-move/README.md), [hover](../evidence/pointer-hover/README.md), [root path](../evidence/pointer-root-path/README.md) and [click](../evidence/pointer-click/README.md), after the interest and fault records of the [evidence index](../evidence/README.md) | 62, 219, 158, 82 and 728; the preceding host fails exactly 8, 45, 32, 9 (and crashes on the Document case) and 31 | runs 37241023275 ([receipt](../evidence/pointer-up/hosted-ci.json)), 37345287351 ([receipt](../evidence/pointer-move/hosted-ci.json)), 37352693788 ([receipt](../evidence/pointer-hover/hosted-ci.json)), 37359026197 ([receipt](../evidence/pointer-root-path/hosted-ci.json)) and 37375758262 ([receipt](../evidence/pointer-click/hosted-ci.json)) |
+| Pointer events, Document (public flags off) | Document and documentElement listeners | [Up](../evidence/pointer-document-up/README.md), [move](../evidence/pointer-document-move/README.md) and [hover](../evidence/pointer-document-hover/README.md), and the Up follow-ups of the [evidence index](../evidence/README.md) | 1,371 (up to 6,451 in the Up follow-ups), 1,932 and 1,530 over eight original/current lanes | runs 37244296477 ([receipt](../evidence/pointer-document-up/hosted-ci.json)), 37351245158 ([receipt](../evidence/pointer-document-move/hosted-ci.json)) and 37364101069 ([receipt](../evidence/pointer-document-hover/hosted-ci.json)) |
+| Switch | `Switch` | [Switch](../evidence/switch/README.md) | 108; the preceding host fails exactly 2, a sabotaged `setValue` 13 | run 37390584578 ([receipt](../evidence/switch/hosted-ci.json)) |
+| Activity indicator | `ActivityIndicator` | [ActivityIndicator](../evidence/activity-indicator/README.md) | 33; the preceding host fails exactly 2, a sabotage of the per-frame work 9 | run 37395264445 ([receipt](../evidence/activity-indicator/hosted-ci.json)) |
+| Touchables | `TouchableWithoutFeedback`, `TouchableHighlight` (`TouchableOpacity` is in the next area) | [Touchables](../evidence/touchables/README.md) | 93 and an animated lane; the preceding SDK fails exactly 19, an imitation over Pressable 42 | run 37394073082 ([receipt](../evidence/touchables/hosted-ci.json)) |
+| Lists | `FlatList`, `SectionList`, `VirtualizedList`, `VirtualizedSectionList` | [Virtualized lists](../evidence/virtualized-list/README.md) | 44; the preceding host fails exactly 3, the preceding SDK 11, a ScrollView without `onLayout` 3 | run 37401008543 ([receipt](../evidence/virtualized-list/hosted-ci.json)) |
+| Animation | `Animated`, `Easing`, `useAnimatedValue`, `useAnimatedValueXY`, `TouchableOpacity` | [Animated](../evidence/native-animated/README.md) | 75, recomputed by an independent oracle; the preceding host fails exactly 59 | run 37439650201, second attempt ([receipt](../evidence/native-animated/hosted-ci.json)) |
+| Transforms | View `transform`: uniform `scale` | [Uniform scale](../evidence/uniform-scale/README.md) | 29, or 35 with the capture; the preceding host fails exactly 22 | run 37455258901 ([receipt](../evidence/uniform-scale/hosted-ci.json)) |
+| Transforms | View `transform`: singular matrices and `scale: 0` | [Singular transforms](../evidence/singular-transforms/README.md) | 49, or 58 with the capture; the preceding host fails exactly 37, a sabotage of the pointer projection 2 | run 37499277022 ([receipt](../evidence/singular-transforms/hosted-ci.json)) |
+| Frame pacing | `requestAnimationFrame` and RN's Native Animated frames | [Frame clock](../evidence/frame-clock/README.md) | 37 over eight loop paces; the preceding host fails exactly 29, three retained sabotages each fail at least one | run 37538167415 ([receipt](../evidence/frame-clock/hosted-ci.json)) |
 
 ## Original native oracle
 
@@ -125,7 +161,10 @@ This is the first GF-01/GF-02 delivery from the
 Next differential fixtures should cover public facade/types first, then runtime
 globals and metrics, followed by editing/selection, pointer/responder ordering,
 scroll commands and list virtualization. Existing Suspense/error-boundary and
-other Godot acceptance tests still need original-native comparisons. System
+other Godot acceptance tests still need original-native comparisons, and so do the
+slices in the table above: pointer and responder ordering, lists and animation have
+Godot acceptance now and no iOS/Android differential case yet. System
 IME, accessibility, dev StrictMode, native modules, portals, scheduler ordering,
-animations and platform-specific APIs also remain open. Add explicit cases and
-evidence for each contract instead of promoting source presence to full parity.
+platform-specific APIs and animation beyond that acceptance also remain open. Add
+explicit cases and evidence for each contract instead of promoting source presence
+to full parity.

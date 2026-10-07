@@ -11,7 +11,9 @@ headless** (including a Move-fault application), **243/243 actual Viewport check
 and the preceding host's **45 visible failures in 135 checks** with the same SDK
 bundle. The graphical lane
 adds 20 actual pixels, two React-counter checks and two saves/dimension checks.
-Hosted CI for this slice is pending.
+Hosted run 37345287351 repeated the 219 headless checks with identical IDs, bundle
+and fault stages ([receipt](../../docs/evidence/pointer-move/hosted-ci.json)); the
+viewport lane stays local.
 
 ## Run
 

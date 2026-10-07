@@ -1561,7 +1561,13 @@
     "tests/pointer-click-probe.gd"
   ],
   "hostedCI": {
-    "status": "pending-click-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-click-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "71d4e62c4a0fda03f6c43cb7049cf101446c7dd31be93f1a62c1d5bf09a8c633",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37375758262",
+    "headSha": "72155bc8ffc785006d70be6e3b74fe3c672f3588",
+    "jobs": 5,
+    "headlessChecks": 728
   },
   "limits": [
     "Mouse buttons, touches, a Pressable and a vertical ScrollView in two roots, eight original/current x flag lanes on the same host, headless.",

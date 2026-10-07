@@ -918,7 +918,13 @@
     ]
   },
   "hostedCI": {
-    "status": "pending-view-up-fault-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-view-up-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "cf3b5367e9806f3231615b1c38e89e8248e1665c1abae00dc34f344454b93b56",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37330669524",
+    "headSha": "01d3add98e593ea42a5273f1115190b84ae251d2",
+    "jobs": 5,
+    "headlessChecks": 240
   },
   "limits": [
     "One-shot throw and non-boolean faults on the actual View ref at Up offsets 36/37, in a second application after the healthy View Up probe stopped; the old-host control never runs that phase.",

@@ -497,7 +497,13 @@
     ]
   },
   "hostedCI": {
-    "status": "pending-view-up-resolver-fault-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-view-up-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "a16bd0a6d7b3670dbfda7ed37e663bbc8a905eff23a26cdad7da7508b192b1b8",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37332057453",
+    "headSha": "b02ab93ef8805e240ea9269b0b54a4a066419c02",
+    "jobs": 5,
+    "headlessChecks": 296
   },
   "limits": [
     "One-shot getter faults on the actual View canonical.publicInstance slot, armed after Down and read by the native component lookup before the SDK, in the second application; the old-host control never runs that phase.",

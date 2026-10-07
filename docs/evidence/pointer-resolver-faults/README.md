@@ -130,5 +130,6 @@ commits preserve the production sources; they are not additional native runs.
 its full public JSON equals the committed data after removing only generated
 `publication`, and the local live API equals that data commit. The source remains
 outside main. [Getter CI](https://github.com/journey-studios/godot-fabric/actions/runs/37236875765)
-is in progress at the same head: contracts passed; native/iOS/Android and the
-new artifact audit remain pending. Publication success is separate from CI.
+was in progress at the same head when this data was published (contracts had
+passed; the native, iOS and Android jobs and the artifact audit were pending); the
+hosted receipt above records its completion. Publication success is separate from CI.

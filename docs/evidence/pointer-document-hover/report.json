@@ -841,7 +841,13 @@
     "tests/pointer-document-hover-probe.gd"
   ],
   "hostedCI": {
-    "status": "pending-document-hover-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-document-hover-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "69401d0df200f9e081305fe3a7855d91d93a71707af0276da54d7d4a71542a1b",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37364101069",
+    "headSha": "15e1dda2b2daa31650cc0bd427651499a33410eb",
+    "jobs": 5,
+    "headlessChecks": 1530
   },
   "limits": [
     "Document and documentElement over/out/enter/leave listeners under a button-less mouse and a touch, in eight original/current x flag lanes on the same host, headless.",

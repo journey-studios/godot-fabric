@@ -1410,7 +1410,13 @@
     "tests/rn-pointer-overlay.test.mjs"
   ],
   "hostedCI": {
-    "status": "pending-root-path-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-root-path-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "2cecff0431586e391c4d733c04fb2860cd4626a2551b37939b43432b7d5a3599",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37359026197",
+    "headSha": "a478778dd53842c50ecbbce016aaba2241c9988e",
+    "jobs": 5,
+    "headlessChecks": 82
   },
   "limits": [
     "Mouse and touch with target bubble listeners and Document capture enter/leave listeners, both original flags enabled.",

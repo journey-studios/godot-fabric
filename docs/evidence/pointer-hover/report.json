@@ -1640,7 +1640,13 @@
     "tests/rn-pointer-overlay.test.mjs"
   ],
   "hostedCI": {
-    "status": "pending-view-hover-slice"
+    "status": "verified-completed-hosted-workflow-and-headless-view-hover-artifact",
+    "receipt": "hosted-ci.json",
+    "receiptSha256": "13a86081409aa9bddac1cfe6d2136902fdc76730746849062e4ea54819de6b4b",
+    "run": "https://github.com/journey-studios/godot-fabric/actions/runs/37352693788",
+    "headSha": "fcaae01dbbf8ebae159f3e89b86ab8c3fc317b10",
+    "jobs": 5,
+    "headlessChecks": 158
   },
   "limits": [
     "View hover listeners (target or parent, bubble or capture) under button-less mouse motion, and target bubble listeners under touch, with both original flags enabled.",

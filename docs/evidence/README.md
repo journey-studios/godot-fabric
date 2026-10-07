@@ -606,8 +606,10 @@ original/current SDK × four flag executions: 1,371 headless checks, a separate
 Original Document D-only and element I-and-D methods, nonempty own-root Map
 queries, exact Event identity, healthy legacy pooling, removal, negative A while
 B held, Cancel and stop are verified. Down regression passes 2,723 checks.
-Hosted Document Up is pending; native/SDK bytes reuse the separately proven
-View Up implementation and full event/RN/ABI acceptance remains open.
+Hosted run 37244296477 passed the same 1,371 checks in the eight lanes
+([receipt](pointer-document-up/hosted-ci.json)); native/SDK bytes reuse the
+separately proven View Up implementation and full event/RN/ABI acceptance remains
+open.
 
 - [Document Up bubble once/AbortSignal](pointer-document-up-lifecycle/README.md):2,143 headless checks,414 native viewport checks,62 pixels and five actual PNGs; original/current SDK controls are separate. Hosted run 37246479501 passed the same 2,143 checks with identical IDs, bundles and lifecycle stages ([receipt](pointer-document-up-lifecycle/hosted-ci.json)).
 - [Document Up rerender, retirement and remount](pointer-document-up-refs/README.md): 2,709 headless checks, 535 native viewport checks and 90 pixels; held-root retirement delivers one TouchCancel and no Up, retained Document listeners stay inert for the replacement root, and the cancelled contact's release is swallowed. Hosted run 37310815360 passed the same 2,709 checks with identical IDs, bundles and refs stages ([receipt](pointer-document-up-refs/hosted-ci.json)).

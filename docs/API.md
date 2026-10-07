@@ -22,17 +22,28 @@ The examples use React and JSX. `react-native` imports resolve to the Godot
 facade through the provided bundler; another bundler needs equivalent platform
 resolution and the original React Native syntax transforms.
 
-The facade exposes View, Text, Pressable, TouchableWithoutFeedback,
-TouchableHighlight, ScrollView, RN's original lists, Button, Switch,
-ActivityIndicator and single-line TextInput for public composition. The [typed form](../examples/form/README.md)
-exercises the new controls through ordinary RN imports. Internal probes remain
-separate; neither those probes nor the public form certify the complete mobile
-API. NativeWind TextInput interop still requires dedicated validation.
+The facade exposes View, Text, Pressable, ScrollView, Button and single-line
+TextInput; the touchables (TouchableWithoutFeedback, TouchableHighlight and
+TouchableOpacity); Switch and ActivityIndicator; RN's original lists (FlatList,
+SectionList, VirtualizedList and VirtualizedSectionList); Animated, Easing,
+useAnimatedValue and useAnimatedValueXY; PanResponder; the environment modules
+(AppState, Appearance, useColorScheme, Dimensions, PixelRatio, useWindowDimensions,
+Platform, StyleSheet, AccessibilityInfo and I18nManager); and the native-module
+entrypoints (AppRegistry, RootTagContext, NativeModules, NativeEventEmitter,
+TurboModuleRegistry, UIManager, findNodeHandle and the codegen helpers). Image,
+ImageBackground, KeyboardAvoidingView, RefreshControl and StatusBar are exported
+placeholders that throw when used; the other names of RN's root are not exported.
+The [typed form](../examples/form/README.md) exercises the controls through
+ordinary RN imports. Internal probes remain separate; neither those probes nor
+the public form certify the complete mobile API. NativeWind TextInput interop
+still requires dedicated validation.
 
-The [parity audit](PARITY.md) records current public exports and verified gaps;
-the [1.0 roadmap](../ROADMAP.md) assigns their priorities, dependencies and
-completion criteria. Current implementation evidence is distinct from planned
-RN compatibility.
+The [live status board](compatibility/BASELINE.md) counts the current public
+exports and lists the evidence behind each area; the [parity audit](PARITY.md)
+records the dated 2026-10-01 export inventory and verified gaps, followed by later
+checkpoints; the [1.0 roadmap](../ROADMAP.md) assigns their priorities,
+dependencies and completion criteria. Current implementation evidence is distinct
+from planned RN compatibility.
 
 | Area | Implemented subset | Important limits |
 | --- | --- | --- |
@@ -45,9 +56,11 @@ RN compatibility.
 | TextInput | Public controlled/uncontrolled single-line LineEdit, acknowledged edits, UTF-16 selection, initial autoFocus, original TextInput.State and native focus/blur coordination, editing events, native measurement and ref commands | Only layout/appearance/fontSize/static color styles; unsupported props fail; system IME, virtual keyboard, multiline, mobile policy and undo parity remain open |
 | Pressable | Original Pressability and responder negotiation, supported press callbacks, disabled behavior, move-out/return under Godot surface translation/scale, mouse/touch movement under RN affine parents | Hover, keyboard activation, accessibility integration and complete multitouch require more work |
 | Touchables | [Original TouchableWithoutFeedback, TouchableHighlight](../examples/touchables/README.md) and TouchableOpacity: RN's Pressability, callback order, underlay and child opacity, delayPressOut, long press, hitSlop/retention, nesting, disabled and removal mid-press, on two roots; TouchableOpacity dims through RN's native animated driver (0 ms on the grant, 250 ms back) | No TouchableNativeFeedback, focus/keyboard activation, accessibility or concurrent cross-root presses |
+| PanResponder | [RN's original PanResponder](evidence/pan-responder/README.md) over Godot mouse and touch input: `panHandlers`, the gesture state (`dx`, `dy`, `x0`, `y0`, `moveX`, `moveY`, velocity, active touches), a free pan view, parents that claim a gesture or capture every start, a child that refuses to yield and a view removed mid-gesture, in the four responder flag lanes | Pinch zoom through chart libraries, `InteractionManager` handles, velocity on real hardware, nested scroll views and negotiation with native Godot controls remain open |
 | Animated | [RN's original Animated, Easing, useAnimatedValue and useAnimatedValueXY](../examples/animated/README.md): values, timing, spring, decay, composition, interpolation, Animated.View and createAnimatedComponent over the public View; the JS driver on requestAnimationFrame, or with `useNativeDriver` RN's own C++ Native Animated and AnimationBackend advanced by the ticks of the host's frame clock ([frame clock record](evidence/frame-clock/README.md)) | Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render; LayoutAnimation, Animated.event with the native driver on the Godot ScrollView, reduced motion, PlatformColor interpolation, `unstable_disableBatchingForNativeCreate`, performance budgets and mobile exports remain open; Animated.View does not reject View styles Godot lacks; a uniform `transform: [{ scale }]`, animated or not, renders as a planar uniform scale ([uniform scale record](evidence/uniform-scale/README.md)); `scale: 0` and other singular transforms, animated or not, collapse their View as RN does ([singular transforms record](evidence/singular-transforms/README.md)) |
 | ScrollView | Original Fabric descriptor/state, vertical/horizontal scroll, contentOffset, scrollTo/scrollToEnd without animation, scroll events with Android's `scrollEventThrottle` rule, RN's ref methods and responder-mediated drag in the ScrollView's own coordinates | All children mount; no inertia/momentum, bounce, paging, zoom, sticky headers, refresh, indicators or complete nested/multitouch scrolling |
 | Lists | RN's original FlatList, SectionList, VirtualizedList and VirtualizedSectionList on that ScrollView: windowing, getItemLayout and measured cells, viewability, onEndReached, scroll commands and their failures, header/footer/empty, separators, horizontal and inverted lists | Animated scrolling, sticky section headers, RefreshControl, maintainVisibleContentPosition, initialScrollIndex, numColumns, nested lists and the 10,000-row performance acceptance remain open |
+| AppState and Appearance | [RN's original AppState](evidence/app-state/README.md), fed by the Godot application lifecycle: focus loss is `inactive`, a pause is `background`, `change`, `focus`, `blur` and `memoryWarning` are sent, the roots of an application share one state and stop sends nothing. [RN's original Appearance and useColorScheme](evidence/appearance/README.md), fed by Godot's system theme: `getColorScheme`, `addChangeListener`, `setColorScheme` overrides that win over the system and `unspecified` following it again, a change event only when the effective scheme changes, one theme callback shared by every application | Minimizing or hiding a desktop window sends no Godot notification; real OS focus and theme changes on each system, resume with pending timers or network, accent colors, `PlatformColor`/`DynamicColorIOS`, per-window themes and Godot mobile exports remain open |
 | NativeWind | Resolved utility styles, responsive logical viewport, supported pressed styles, CSS variables and manual theme | Unsupported style/native modules fail explicitly; no Reanimated or automatic system-theme contract |
 | SVG / charts | SVG/G/Defs/ClipPath/Path/Rect/Circle/Line/LinearGradient/Stop and simple SVG text, tested with unmodified Chart Kit | Budget 2048×2048, unscaled viewBox, no arbitrary transforms, nested SVG certification or full SVG typography |
 
@@ -55,13 +68,20 @@ RN compatibility.
 
 Run `npm run type-check` with [tsconfig.godot.json](../tsconfig.godot.json).
 The declarations in [types/react-native.ts](../types/react-native.ts) derive
-View, Text, Button, Switch, TextInput, styles/events and native refs from the
-pinned RN types, narrowing them to this implementation. They are checked as
+View, Text, Button, Switch, ActivityIndicator, TouchableOpacity, TextInput,
+styles/events and native refs from the pinned RN types, narrowing them to this
+implementation. They are checked as
 project source with strict TypeScript. Third-party declaration bodies use
 `skipLibCheck`; the upstream contract inventory still checks their source hashes
 and signatures. Positive consumer assignments and negative unsupported-prop
 fixtures run in CI. AppRegistry's registration subset and RootTagContext are
-also typed. Other facade exports do not yet have Godot declarations;
+also typed, and so are the exports declared from RN's own types: AppState,
+Appearance and useColorScheme, the four lists, Animated, Easing and the two
+animated-value hooks, NativeModules, NativeEventEmitter, TurboModuleRegistry, the
+codegen helpers, findNodeHandle and a UIManager measurement subset. Pressable,
+ScrollView, TouchableWithoutFeedback, TouchableHighlight, PanResponder, Platform,
+Dimensions, PixelRatio, useWindowDimensions, AccessibilityInfo and I18nManager do
+not yet have Godot declarations;
 this is not the complete typed SDK. The
 [independent consumer](../consumers/minimal/README.md) now packages this bounded
 type surface with a provisioned addon; full SDK types remain open.
@@ -181,9 +201,10 @@ differ under rotation/skew/other-root embeddings. See the
 [geometry receipt](evidence/pointer-geometry/README.md) and preceding
 [lifetime receipt](evidence/pointers/README.md).
 
-Actual queued coalescing, complete responder/PanResponder, hardware,
-scroll/windows, cross-application stacking and mobile differentials remain
-open. These executed subsets do not close GF-08/GF-13.
+Actual queued coalescing, the complete responder contract (RN's PanResponder runs
+on these samples, with the limits of the [PanResponder record](evidence/pan-responder/README.md)),
+hardware, scroll/windows, cross-application stacking and mobile differentials
+remain open. These executed subsets do not close GF-08/GF-13.
 
 ## Public View geometry
 
@@ -516,7 +537,8 @@ Godot on those systems does not by itself make this GDExtension available.
 Two named surfaces are exercised by the shared example. Portals, overlapping
 surface input, ecosystem TurboModules, JS worker-thread execution,
 10,000-row virtualized lists and Hermes RSS/heap profiling are not certified.
-The generic list demonstrates reconciliation and scrolling of mounted rows.
+The generic list demonstrates reconciliation and scrolling of mounted rows, while
+RN's original lists window their cells on the ScrollView (the Lists row above).
 
 Native GUI readback proves rendering at logical dimensions. Viewport-injected
 input does not prove physical mouse/touch hardware, system IME or DPI/Retina.

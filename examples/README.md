@@ -118,7 +118,8 @@ is held, Cancel and balanced stop. Its
 [receipt](../docs/evidence/pointer-up/README.md) records 62/62 headless, 90/90
 viewport checks and eight visible old-host failures with the same current SDK
 bundle. Document Up, other flags and full event/lifecycle acceptance remain
-open; regression, SDK and hosted CI acceptance for this slice are pending.
+open; the regression and SDK checks passed, and hosted run 37241023275 repeated
+the 62 headless checks ([receipt](../docs/evidence/pointer-up/hosted-ci.json)).
 
 | Before native Up input | After the first bubble case |
 | --- | --- |
@@ -424,7 +425,8 @@ checks with 20 pixels. Ordinary original Document/element listeners qualify Up
 without a leaf JSX pointer helper. Event identity, root ownership, capture-only,
 negative A while B held, final removal, Cancel and stop have executed checks.
 [The receipt](../docs/evidence/pointer-document-up/README.md) distinguishes the
-captured Document-only stage from later cases and pending hosted CI.
+captured Document-only stage from later cases and from the hosted run that repeated
+its 1,371 headless checks ([receipt](../docs/evidence/pointer-document-up/hosted-ci.json)).
 
 | Native initial frame | Document Up commits A2/B0 |
 | --- | --- |
