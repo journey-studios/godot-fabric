@@ -1,12 +1,20 @@
 # Image: RN's own pipeline over worker-thread decoding in Godot
 
 Status: executed local validation against pinned RN 0.87.1 and official Godot 4.7.2 on macOS
-arm64. The [evidence](../evidence/images/README.md) owns the 74 headless checks across actual
-SceneTree frames, the control on the preceding host (the 3 normative checks it can reach fail), two
-retained sabotages that the probe and the independent oracle both reject, 15 mutations of the
-genuine report that the oracle refuses, the 17 headless and 25 graphical checks of the example and
-its two captures. Hosted CI has not run this slice. GF-16 stays open; only its first-slice
-checkpoint is claimed.
+arm64. The [first slice's evidence](../evidence/images/README.md) owns the checks of the local
+pipeline across actual SceneTree frames (74 when it was recorded, 73 now that the second slice
+changed the contract), the control on the preceding host (the 3 normative checks it can reach
+fail), two retained sabotages that the probe and the independent oracle both reject and the oracle's
+mutations of the genuine report. The [network slice's evidence](../evidence/images-network/README.md)
+owns the 74 headless checks over a loopback Node server (HTTP and HTTPS), the control on the
+preceding host (37 checks run, the 30 that need the network fail), three retained sabotages that the
+probe and the oracle both reject, 33 mutations of the genuine report that the oracle refuses and the
+22 headless and 30 graphical checks of the example and its two captures. Hosted run 37724902858 (the
+push of main 6d02746, the squash of #56) passed all five jobs in its first attempt; its native job
+ran `npm run test:images` (1 of 1 TAP test passing) and its artifact repeated the first slice's 74
+checks, and the independent oracle accepts its report
+([receipt](../evidence/images/hosted-ci.json)); hosted CI has not run the network slice. GF-16 stays
+open; the network slice closes no checkpoint.
 
 All paths below are under `node_modules/react-native/` unless they start with `native/`, `src/`,
 `sdk/` or `tests/`.
@@ -95,6 +103,64 @@ fields `__packager_asset`, `httpServerLocation`, `width`, `height`, `scales`, `h
 `ImageLoader` TurboModule (`Libraries/Image/NativeImageLoaderIOS.js`;
 `RCTImageLoader.mm:1235-1300`: `getSize` rejects with `E_GET_SIZE_FAILURE`).
 
+## What RN does for a network image
+
+**The source becomes a request.** `ReactCommon/react/renderer/components/image/conversions.h:78-103`
+reads `headers`, `body`, `method` and `cache` (`reload`, `force-cache`, `only-if-cached`) from the JS
+source, and `Libraries/Image/ImageSourceUtils.js:39-47` turns `crossOrigin="use-credentials"` into an
+`Access-Control-Allow-Credentials: true` header and `referrerPolicy` into `Referrer-Policy`.
+`.../imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h:114-153`
+(`NSURLRequestFromImageSource`) builds the `NSURLRequest`: `GET`, or the method upper-cased (125-128),
+a body for any method (129-132), each header through `setValue:forHTTPHeaderField:` so that a later
+value of a name replaces the earlier one (140-146), and the cache policy (52-65): `reload` is
+`NSURLRequestReloadIgnoringLocalCacheData`, `force-cache` `ReturnCacheDataElseLoad`, `only-if-cached`
+`ReturnCacheDataDontLoad` and anything else the protocol's own policy. A plain `GET` returns before any
+of that (135-138).
+
+**The loader decides where the picture comes from.** `RCTImageManager.mm:83-113` asks
+`loadImageWithURLRequest` with the content frame, the scale, `clipped:NO` and stretch, and turns the
+progress block into `(progress / total, progress, total)` (89). In `Libraries/Image/RCTImageLoader.mm`,
+`_loadImageOrDataWithURLRequest` (492) makes a `NSURLRequestReloadIgnoringLocalCacheData` request
+uncacheable (540-542). A request that no URL loader claims, which is every http and https one, asks the
+decoded cache first, `RCTImageCache`, for its key (665-672) and, on a miss, goes to `_loadURLRequest`
+(705-820) and the `RCTNetworking` module; after the decode the picture is stored with the response
+(863-870). `RCTImageCache.mm` keys a picture by `url|width|height|scale|mode` written with `%g` (30-34),
+keeps at most 2 MiB a picture and 20 MiB in all (21-22, 75-78), empties itself on a memory warning and
+when the app resigns active (49-56), and drops an entry that went stale when it is asked for it (81-96).
+It decides whether a response may be kept and when it goes stale in `addImageToCache:...response:`
+(98-148): a `Cache-Control` component that contains `no-cache` or `no-store`, or ends in `max-age=0`,
+forbids keeping it; `max-age=N` makes it stale at `Date + N`; without one, `Expires` gives the time,
+and otherwise a tenth of the time between `Last-Modified` and `Date`; a response with no readable `Date`
+has no stale time. The date format is the one `dateWithHeaderString` reads (150-162).
+
+**Downloads.** `_loadURLRequest` queues an `RCTNetworkTask` (759-801). `dequeueTasks` (425-486) starts
+at most `maxConcurrentLoadingTasks` of them (4, `RCTImageLoader.mm:131`) in order, and removes the
+finished ones, decrementing `_activeTasks` for each (432-437), a cancelled one that never started
+included. `Libraries/Network/RCTNetworkTask.mm:170-217` accumulates the body and calls the progress block
+with `(received, expectedContentLength)` for every chunk. `processResponse` (728-756) judges the result:
+an error passes through; no data is `Unknown image download error` (736-738); a status other than 200 is
+an `NSError` whose code is the status and whose text is `Failed to load <response URL>` (744-750); both
+reach the completion with the response. `RCTHTTPRequestHandler.mm:147-160` replaces the headers of a
+redirected request with the cookies' (an app header does not survive a redirect), and the session
+accepts cookies (98-100).
+
+**The statics.** `getSize` (`RCTImageLoader.mm:1231-1245`) rejects `E_GET_SIZE_FAILURE` with
+`Failed to getSize of <uri>`; `getSizeWithHeaders` (1248-1265) rejects it with no message and resolves a
+`{width, height}` object. Both go through `getImageSizeForURLRequest` (1065-1116), which loads the bytes
+and reads their metadata without decoding (1072). `prefetchImage` and `prefetchImageWithMetadata`
+(1267-1297) are a `loadImageWithURLRequest` of size 0x0, scale 1 and prefetch priority that resolves
+`YES` or rejects `E_PREFETCH_FAILURE`, so a prefetched picture is stored in the decoded cache under the
+key of size 0x0. `queryCache` (1299-1303, `getImageCacheStatus` 1119-1140) asks the shared `NSURLCache`
+and answers `memory`, `disk` or `disk/memory` for each URL it holds.
+
+**The error payload.** `RCTImageComponentView.mm:183-210` reads `httpStatusCode` and
+`httpResponseHeaders` out of the error's `userInfo` and `ImageEventEmitter.cpp:45-63` sends
+`responseCode` and `httpResponseHeaders` only when they are present. `RCTImageLoader` puts the keys in the
+error: `addResponseHeadersToError` (`RCTImageLoader.mm:37-46`) copies `response.statusCode` and
+`response.allHeaderFields` into its `userInfo`, and the loader's completion applies it (576-579) to every
+error that arrives with an `NSHTTPURLResponse` unless the completion runs on the main queue with data
+(567-574), a path a download does not take, since its completion runs on the network handler's queue.
+
 ## What this host did
 
 `src/react-native-platform.jsx` exported `Image` and `ImageBackground` as `unavailable`
@@ -131,7 +197,7 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
   releases the gate and waits for every task. Each recorded job carries the identity of the thread
   that ran it, so the evidence can show that none ran on the main thread.
 - **What is decoded.** `native/image_core.h` classifies the URI (`res://` and bundled assets,
-  `user://` and `file://`, `data:` with base64 or percent encoding, http(s) refused by name),
+  `user://` and `file://`, `data:` with base64 or percent encoding, http(s) sent to the network sources below),
   sniffs the format from magic bytes, reads the dimensions from the header of PNG, JPEG, WebP,
   BMP, TGA and SVG and refuses absurd ones before any decoder runs (Godot's JPEG loader multiplies
   dimensions in `unsigned int` and its PNG loader allocates before checking `Image::MAX_PIXELS`),
@@ -146,30 +212,68 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
   content frame and the picture's point size, with the texture's filter set to linear; repeat tiles
   at the picture's size in points. The `ImageLoader` TurboModule (`native/image_loader_module.cpp`)
   answers `getSize` with `[width, height]` and `getSizeWithHeaders` with `{width, height}` from
-  the header alone, and rejects the rest as described below.
+  the header alone, and, since the network slice, `prefetch` and `queryCache` as described below.
 - **The asset pipeline.** `sdk/toolchain/asset-plugin.mjs` is one esbuild plugin for every build:
   `require()` of an image becomes Metro's module with Metro's descriptor (the unit tests compare it
   with `getAssetData` of Metro itself, hash included, and with `generateAssetCodeFileAst`'s shape),
   every `@Nx` variant is merged into one descriptor, and the files are copied beside the bundle
   under `assets/` with a `<bundle>.assets.json` manifest that holds each file's SHA-256 and the
   bundle's. The iOS export hook copies the manifest's files (`sdk/addon/ios_export.gd`).
+- **Network downloads (the second slice).** `native/image_network.cpp` is `ImageNetwork`, the loader's own
+  downloader over an `HttpTransport` that `application_runtime.cpp:599-607` makes from the same factory,
+  trust and clock as Networking's (a second instance: a shared one would collide on caller-chosen ids and
+  `Networking::stop` would end image loads). It builds the request like `NSURLRequestFromImageSource`
+  (`build_download_request`, 32-55), runs at most four downloads in first-in-first-out order
+  (`start_queued`, 129-185), judges each result like `processResponse` (`judge_download`, 57-73) and
+  enforces the size and idle limits and the progress in `settle_active` (187-241). Transport listeners only
+  record; cancelling, the limits, the progress and the outcome all happen after `transport->poll()` returns,
+  because cancelling inside a listener is a use-after-free in the transport, and `stop()` stops the transport
+  first so that no listener runs afterwards (252-259). Every image request sets
+  `HttpRequest::drop_headers_on_redirect` (`native/http_transport.h:21-26`, honored by `plan_redirect`,
+  `native/http_core.h:283-310`, and passed at `native/godot_http_transport.cpp:177`): the follow-up request
+  carries none of the request's headers, as `RCTHTTPRequestHandler` leaves only the cookies and the host has none;
+  Networking leaves it off and keeps OkHttp's rules. A request that carries `Authorization`,
+  `Proxy-Authorization` or `Cookie` and whose URL is http is refused in `build_download_request` before any
+  request, with a host message.
+- **The route and the two caches.** `native/image_cache.h` holds what needs no Godot: the HTTP date format
+  and `integerValue` of `RCTImageCache` (57-104), `response_freshness` (123-154), the decoded key (32-36),
+  `carries_credentials` (172-177), `route()` (204-221) and `ExpiringLru` (227-314). `native/image_sources.cpp`
+  (`ImageSources`) owns the network and both caches: `resolve` (74-158) builds the request, asks `route()` (a
+  decoded hit never touches the byte cache, because a lookup moves an entry to the front of its cache; a
+  request that carries credentials asks neither cache), and answers from the decoded cache, from the byte
+  cache (decoded again off the main thread) or from a download; `from_download` (162-199) keeps a 200 in the
+  byte cache whoever asked (a view, `getSize` or `prefetch`) unless the request carried credentials, and
+  `keep_picture` (215-220) keeps the decoded picture of a view's request unless it reloaded, the response
+  forbids it or the request carried credentials.
+  Time is the validation clock, moved by `validation_clock_offset_ms` (monotonic for the idle timeout, wall
+  for the stale times), so no check sleeps.
+- **The statics.** `native/image_loader_module.cpp` answers `getSize` and `getSizeWithHeaders` of a network
+  URL (45-75; a header value that is not a string is written as `image::number_text` or as `1` or `0`,
+  `native/image_core.h`), `prefetchImage` and `prefetchImageWithMetadata` (79-80 and 102-111, which download,
+  check off the main thread that the bytes are a picture, and keep only the response) and `queryCache`
+  (83-95, `memory` for a URL the byte cache holds).
+- **The view and the lifecycle.** `GodotImage` fills `responseCode` and `httpResponseHeaders` of a failure
+  (`native/image_view.cpp:152-162`) and tiles without resizing the shared texture (182-190);
+  `AppLifecycle::on_memory_warning` (`native/app_lifecycle.h:46-53`) runs the caches' clearing before JS is
+  told of a memory warning.
 
 ## Where the host departs from RN
 
 - **Error codes are message prefixes.** The `ImageLoader` module rejects with a message that starts
   `E_GET_SIZE_FAILURE: ...` or `E_PREFETCH_FAILURE: ...`; RN's `reject(code, message, error)` also
   sets `Error.code`, which the host's promise rejection does not carry.
-- **Repeat tiles at an integer size in points.** UIKit tiles a resizable image at its size in
-  points with float geometry; the host draws a texture whose size override is an integer number of
-  points.
+- **Repeat tiles at the picture's exact size in points.** UIKit tiles a resizable image at its size in
+  points with float geometry. The first slice drew a texture whose size override was an integer
+  number of points; the network slice tiles at the exact, possibly fractional, size with a draw
+  transform (`native/image_view.cpp:182-190`), because the decoded cache hands one texture to every
+  view of a picture and no view may resize it.
 - **SVG is rasterized at the request's scale**, which iOS's decoder does not do (RN has no SVG
   image on iOS); `getSize` of an SVG measures at scale 1.
 - **`res://` is the bundle.** A `res://` source is decoded whole at the scale of its file name
   like a bundled asset, because that is what the exported project's resources are.
 - **`getSize` believes the header** and decodes nothing, so a corrupt or oversized picture still
-  has its size; `getSizeWithHeaders` accepts and ignores its headers (only local sources load).
-- **No cache and no prefetch.** `prefetch` and `prefetchWithMetadata` reject
-  `E_PREFETCH_FAILURE: this host has no image cache yet`, and `queryCache` answers `{}`.
+  has its size; the headers of `getSizeWithHeaders` are sent for a network source and ignored for a
+  local one.
 - **GIF is refused** through `onError` (Godot has no GIF decoder), and animated formats are not
   played.
 - **ImageIO's thumbnail rounding is assumed round-to-nearest**; the host shrinks with
@@ -179,11 +283,60 @@ host fails where RN's `Image.ios.js` asks the host for the `ImageLoader` module:
   decode-error text.
 - **A wrapper refuses what the host does not implement.** RN's `Image` accepts `tintColor`,
   `blurRadius`, `capInsets`, `defaultSource`, `loadingIndicatorSource`, `fadeDuration`,
-  `progressiveRenderingEnabled`, `resizeMethod`, `resizeMultiplier` and `overlayColor`, a border
-  radius on the style, and `headers`, `method`, `body` and `cache` on a source. The wrapper makes
-  each fail where the Image renders, with a message that names the prop and why, and invalid
+  `progressiveRenderingEnabled`, `resizeMethod`, `resizeMultiplier` and `overlayColor`, and a border
+  radius on the style. The wrapper makes each fail where the Image renders, with a message that names the prop and why, and invalid
   values, unregistered asset ids and an Image inside `Text` fail with the host's messages, instead
   of dropping them silently.
+
+### Where the network slice departs from RN iOS
+
+Each of these was a decision of the slice, recorded in the [evidence](../evidence/images-network/README.md)
+and in its `report.json`. Those that rest on how `NSURLSession` and `NSURLCache` behave inside (progress
+of a cached response, what the cache keeps, revalidation, the `gzip` offer) come from Apple's
+documentation and RN's code and were not compared on an iOS device.
+
+- **Progress is coalesced** to at most one event per request per pump, cumulative; iOS reports one per
+  chunk (`RCTNetworkTask.mm:211-215`). A picture served from either cache reports none.
+- **The byte cache is the host's own** (`native/image_cache.h:24-28`, `native/image_sources.cpp:162-199`):
+  memory only, 20 MiB, no entry over 1 MiB, only a 200 for a `GET` without a body, under the URL that was
+  asked for (a redirect's own response is not kept), with `Date` taken as the arrival time when the response
+  has none. A stale entry is downloaded again, never revalidated (no `If-None-Match`, no 304), and `Vary`,
+  `Set-Cookie` and `Authorization` are ignored when a response is kept. `queryCache` answers `memory` or
+  nothing.
+- **`prefetch` keeps only the bytes**; `RCTImageLoader` also stores the decoded picture under the key of size
+  0x0 (1267-1297), which no view asks for. `getSize` does not consult the decoded cache. `prefetch` also
+  accepts local sources.
+- **Failure texts of the transport are the host's** (`Failed to connect to 127.0.0.1:N`, `unexpected end of
+  stream from H:N`, `The request timed out.`), and a header name or value the wire cannot carry, or a
+  method the transport cannot send, fails through `onError` before any request
+  (`native/image_network.cpp:32-55`).
+- **No departure in the error payload.** The status and the headers that come with a failure are the ones
+  `RCTImageLoader` hands the completion (`native/image_network.cpp:57-73`), and `GodotImage` sends them as
+  `responseCode` and `httpResponseHeaders` (`native/image_view.cpp:152-162`), as `RCTImageComponentView`
+  does from the `userInfo` that `addResponseHeadersToError` fills (see above).
+- **No cookies, no compression offered** (iOS offers `gzip` and decodes it), HTTP/1.1 only, and cleartext
+  http is allowed for a request without credentials (App Transport Security blocks it by default on iOS; a
+  request with credentials is refused, below).
+- **A request that carries credentials neither reads nor writes either cache**, which is stricter than iOS.
+  `RCTImageCache` and `NSURLCache` are keyed by URL (`RCTImageCache.mm:30-34`), so on iOS a response fetched
+  with one credential can answer a request that carries another or none; here a request whose headers
+  carry `Authorization`, `Proxy-Authorization` or `Cookie` (`native/image_cache.h:172-177`, `route()` at
+  204-221, `ImageSources::resolve` and `keep_picture`) always asks the server, `only-if-cached` finds nothing
+  for it, and `queryCache` still reports what the byte cache holds.
+- **A request that carries those headers over http is refused** (`native/image_network.cpp:32-55`): it fails
+  through `onError`, or rejects a size, with a host message before any request. iOS reaches the same end
+  through App Transport Security, which blocks cleartext http by default; the host blocks only the http
+  that carries credentials.
+- **Host policy.** A response over 128 MiB is refused, by `Content-Length` or as it arrives, and a download
+  that receives no bytes for 60 s fails with `The request timed out.` (`native/image_network.cpp:187-241`);
+  RN bounds concurrency, not the size of a response, and 60 s is `NSURLSession`'s default request timeout
+  read as idleness. The limit of four downloads is exact, where `dequeueTasks` can let a fifth run after a
+  cancellation (432-437).
+- **The OS memory warning empties both caches** (`native/app_lifecycle.h:46-53`,
+  `native/application_runtime.cpp:608-610`); `RCTImageCache` also empties when the app resigns active, and
+  this host does not.
+- **`crossOrigin` and `referrerPolicy`** become request headers as `ImageSourceUtils.js` makes them, and
+  the source's own headers are used as given.
 
 ## Why the probe is discriminating
 
@@ -207,11 +360,28 @@ in-flight stage: the swapped-away request's events arrive at once because nothin
 pool. A view that does not leave the request it swapped away from fails 2 checks, and the oracle
 rejects the late second `progress`, `load` and `loadEnd`.
 
+The network suite ([driver](../../tests/images-network-probe.gd), [oracle](../../tests/images-network-oracle.mjs))
+runs a Node server in a child process that records every request as it arrived on the wire and holds
+responses until a control request releases them, so the stages wait on state: four downloads at the server
+and two queued, a partial body, a download cancelled before and after its head, a swap, the size limit
+(announced and found out), the idle timeout moved by the clock offset, and a stop with a decode and five
+downloads in flight. The oracle reads the server's log and the served files, recomputes what
+`RCTImageLoader`, `RCTImageCache` and `NSURLCache` do with them, and replays the 115 cache and credential operations over a
+model of the two caches with the clock each ran at. No check counts progress events or relies on how the
+transport segmented the bytes, and each stale time sits more than 20 s from the clock of its stage. The
+control on the preceding host runs 37 checks and fails exactly the 30 normative ones among them. Three
+retained sabotages break one behavior each: a reload that consults the decoded cache fails 1 check (the oracle
+rejects where `c1-reload` came from), a download whose transport request is never closed fails 34 (the oracle
+rejects the first Image that does not end in `loadEnd`) and a repeating Image that resizes the shared texture
+fails 2 (the oracle rejects the shared texture's pixels).
+
 ## What stays open for GF-16
 
-- **Network images** (http and https, headers, method, body, cache) need GF-22's transport and a
-  request layer for images, with the request's cancellation and progress.
-- **The decoded-image cache, `prefetch` and a real `queryCache`.**
+- **A disk cache, revalidation, `Vary`, cookies, compression and HTTP/2** for network images, and a pass
+  against a remote server, a proxy and real network conditions; the network slice ran against a loopback
+  server.
+- **Hosted CI** for the network slice, and a differential comparison of the caches and the failure texts with
+  iOS.
 - **`tintColor`** (a shader on the Image's own canvas item), **`blurRadius`**, **`capInsets`**,
   **`defaultSource`**, **`loadingIndicatorSource`**, **`fadeDuration`**,
   **`progressiveRenderingEnabled`**, **`resizeMethod`**, **`resizeMultiplier`** and

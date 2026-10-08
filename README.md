@@ -459,12 +459,24 @@ read, bounded and decoded on Godot's `WorkerThreadPool`, never on the main threa
 Metro's modules with Metro's descriptor, every `@Nx` variant, chosen by RN's `pickScale`, and
 `res://`, `user://`, `file://` and `data:` sources decode PNG, JPEG, WebP, BMP, TGA and SVG. A
 request swapped away or unmounted while its decode is in flight reports nothing and creates no
-texture. 74 headless checks in two roots of one application with an independent oracle; the
-preceding host fails the 3 normative checks it can reach, and retained sabotages (decoding on the
-main thread, a view that keeps listening to a swapped-away request) fail 12 and 2. Network
-images, the decoded-image cache, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping and
-animated formats are open; each unsupported prop fails where the Image renders. Hosted CI is
-pending. [Evidence](docs/evidence/images/README.md).
+texture. `http(s)` sources, with `headers`, `method`, `body` and `cache`, download over the loader's
+own HTTP transport (at most four at once) with RN iOS's request, failure and progress semantics,
+through an `RCTImageCache`-like decoded cache and an `NSURLCache`-like memory byte cache that the OS
+memory warning empties; `Image.prefetch`, `queryCache` and `getSize` work for them, and a
+cancelled download closes its transport request, a request that carries `Authorization`,
+`Proxy-Authorization` or `Cookie` neither reads nor writes either cache (stricter than iOS) and is refused
+over http, and a redirect drops the source's headers as on iOS. 73 headless checks of the local pipeline in
+two roots of one application and 74 of the network slice over a loopback server, each with an
+independent oracle; the preceding host fails the 3 and 30 normative checks it can reach, and
+retained sabotages (decoding on the main thread, a view that keeps listening to a swapped-away
+request, a reload that consults the decoded cache, a download whose transport request stays open, a
+repeating Image that resizes the shared texture) fail 12, 2, 1, 34 and 2. A disk cache,
+revalidation, cookies, compression, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping
+and animated formats are open; each unsupported prop fails where the Image renders. Hosted CI passed
+the first slice's 74 checks on main (run 37724902858,
+[receipt](docs/evidence/images/hosted-ci.json)) and is pending for the network slice.
+[Evidence](docs/evidence/images/README.md);
+[network evidence](docs/evidence/images-network/README.md).
 
 React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
 `Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
@@ -632,11 +644,11 @@ public `react-native` import, each driven by real mouse input in its validation.
 Every example README shows all the states it captures, and each evidence record
 keeps the SHA-256 of its frames in a `captures.json`.
 
-| Image: modes and sources | Image: after the clicks |
+| Image: modes, sources and network pictures | Image: after the clicks and a remount |
 | --- | --- |
-| [![The six resize modes, an @2x asset, data URIs, an ImageBackground and a failed picture](docs/evidence/images/images-all-modes.png)](examples/images/README.md) | [![The preview in center mode showing the logo after a swap](docs/evidence/images/images-interaction.png)](examples/images/README.md) |
+| [![The six resize modes, an @2x asset, data URIs, an ImageBackground, a failed picture and a row of a network PNG, a remount tile and an HTTP 404](docs/evidence/images-network/images-network-all-modes.png)](examples/images/README.md) | [![The remounted network PNG answered by the decoded cache and the preview in center mode showing the logo after a swap](docs/evidence/images-network/images-network-remount.png)](examples/images/README.md) |
 
-The Image example's frames are taken at content scale 2; its evidence keeps their SHA-256 in
+The Image example's frames are taken at content scale 2; the network evidence keeps their SHA-256 in
 `report.json`.
 
 | Pointerdown interest: initial | Pointerdown interest: after React updates |

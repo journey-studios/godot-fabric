@@ -3099,9 +3099,52 @@ networking, WebSocket and transform guard suites, which only live in `build/`, w
 their preserved preceding hosts; hosted CI has no controls and is not affected. The Animated check
 that listed `Image` among the components that fail where they render no longer does, since
 `Animated.Image` renders now. All 159 executed code and configuration inputs match implementation
-`552fb56` via git show/SHA-256 (executed from the committed tree, execution base `ebcb292`). After the review of #56, `GodotImage` tells JS `onLoadStart` before it swaps observers (`addObserver` answers inside the call when a request holds a response), the oracle judges the order of every event list (18 mutations of the genuine report, and no lane drives the synchronous path), the asset pipeline starts each build empty and the builder places the asset files before the bundle and finishes the manifest and the retirement after it ([`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)); the lanes ran again with the same counts (74, 3, 12 and 2) and the `postReview` section of `report.json` pins the six changed files. Hosted
-CI for this slice is pending. Only GF-16's first-slice checkpoint closes; no whole GF, other
+`552fb56` via git show/SHA-256 (executed from the committed tree, execution base `ebcb292`). After the review of #56, `GodotImage` tells JS `onLoadStart` before it swaps observers (`addObserver` answers inside the call when a request holds a response), the oracle judges the order of every event list (18 mutations of the genuine report, and no lane drives the synchronous path), the asset pipeline starts each build empty and the builder places the asset files before the bundle and finishes the manifest and the retirement after it ([`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)); the lanes ran again with the same counts (74, 3, 12 and 2) and the `postReview` section of `report.json` pins the six changed files. Hosted Contracts run 37724902858 (the push of main
+[`6d02746`](https://github.com/journey-studios/godot-fabric/commit/6d02746bfe95ba48041ba1accbb6096ae4e8bb82),
+the squash of #56) passed all five jobs in its first attempt; its [audited
+artifact](docs/evidence/images/hosted-ci.json) repeats the 74 headless checks with identical IDs, the
+independent oracle accepts the downloaded report, and the 6 files of the review commit
+[`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)
+have the SHA-256 that `postReview` pins; the other 28 tracked paths that differ from the `552fb56` pins came
+with commits main gained, and the bundle SHA-256 differs from the recorded ones for that reason. [Pages
+37724902853](docs/evidence/images/publication.json) deployed this record from main `6d02746`. Only GF-16's first-slice checkpoint closes; no whole GF, other
 checkpoint, weight or denominator closes.
+
+**Network images and the image caches (2026-10-08).** The second slice of GF-16 replaces what the paragraphs above
+leave open or refused: `http(s)` sources with `headers`, `method`, `body` and `cache`, the decoded-image cache,
+`prefetch`, `queryCache` and `getSize` of a network URL, and `repeat` at an exact fractional size. The
+[network evidence](docs/evidence/images-network/README.md) records **74 headless checks** (66 normative) over a
+loopback Node server in HTTP and HTTPS, which the independent oracle rechecks against the server's own log and a
+model of both caches. The `ImageLoader` owns a second `HttpTransport` (Networking's factory, trust and clock), runs
+at most four downloads at once as `RCTImageLoader` does, builds the request as `NSURLRequestFromImageSource`, judges
+the result as it does (`Failed to load <URL>`, `Unknown image download error`, the decode error alone, the transport's
+text, each with the response that came), keeps a 128 MiB response limit and a 60 s idle timeout of its own and
+sends the bytes through the first slice's worker-pool decode, so no read, sniff, measure or decode of network
+bytes ran on the main thread. An `RCTImageCache`-like decoded cache (2 MiB a picture, 20 MiB, LRU, stale times from
+`Cache-Control`, `Expires` and `Last-Modified`) and an `NSURLCache`-like memory byte cache (20 MiB, 1 MiB an entry)
+decide, by `native/image_cache.h`'s `route()`, whether a picture comes from memory, from cached bytes or from the
+server, under the cache policies `reload`, `force-cache` and `only-if-cached`; the OS memory warning empties both,
+cancelling an Image mid-download closes the transport request, and a view never resizes the texture the cache
+shares among Images. Time moves through the validation clock, so no check sleeps. The same bundle on the preceding
+host (main `6d02746`) runs 37 checks and fails exactly the 30 normative ones among them; three retained sabotages
+(a reload that consults the decoded cache, a download whose transport request is never closed, a repeating Image
+that resizes the shared texture) fail 1, 34 and 2 checks and the oracle rejects each, and 33 mutations of the
+genuine report are refused. The example now shows a network PNG, a remount answered by the decoded cache without a
+second request and a 404 (22 headless and 30 graphical checks; two new captures). Departures from RN iOS are
+listed in the evidence and the [research note](docs/research/images.md): coalesced progress with none for a cache
+hit, only the final 200 kept in the byte cache, no revalidation or `Vary`, a `prefetch` that keeps bytes only, host
+failure texts, no cookies, compression or HTTP/2, and cleartext allowed for a request without credentials; a
+failure's `responseCode` and response headers reach `onError`, and an image redirect drops the source's headers, as
+they do on iOS. The first slice's suite changed with the contract (73 checks, 62 normative). Open: a disk cache, revalidation, remote servers and
+real network conditions, hosted CI for this slice, and everything the first slice left open apart from network
+images, the decoded cache, `prefetch` and `queryCache`. This slice closes no checkpoint: GF-16 stays in progress.
+After the review of #64 ([`910cffb`](https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10)),
+a request that carries `Authorization`, `Proxy-Authorization` or `Cookie` neither reads nor writes either cache (stricter
+than iOS, whose caches are keyed by URL) and is refused over http (what App Transport Security does on iOS), image
+redirects drop the source's headers as `RCTHTTPRequestHandler` does (the old deviation is gone), header numbers keep
+every digit and the example's server answers 400 and 431 instead of reading a bad request line; the lanes ran again
+with 74 checks (66 normative), the control failing the same 30 of 37, sabotages failing 1, 34 and 2, 33 oracle
+mutations, and the first record's 72, 64, 1, 32, 2 and 27 are kept in the `postReview` of its `report.json`.
 
 ### iOS- and Android-specific APIs: the upstream unavailability, reproduced (2026-10-08)
 

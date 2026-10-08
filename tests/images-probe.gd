@@ -258,7 +258,7 @@ func sources_stage() -> void:
 
 func failures_stage() -> void:
   var logs: Dictionary = stages.mount.react.logs
-  var failing := ["missing", "corrupt", "truncated", "gif", "notimage", "empty", "oversize-png", "oversize-jpg", "http", "scheme", "data", "data-garbage", "file", "file-corrupt"]
+  var failing := ["missing", "corrupt", "truncated", "gif", "notimage", "empty", "oversize-png", "oversize-jpg", "scheme", "data", "data-garbage", "file", "file-corrupt"]
   var sequences := true
   var textureless := true
   var uninvolved := true
@@ -284,8 +284,8 @@ func failures_stage() -> void:
   check(oversize_png.size() == 1 and oversize_jpg.size() == 1 and int(oversize_png[0].sourceWidth) == 65535 and int(oversize_jpg[0].sourceHeight) == 65535
     and int(oversize_png[0].width) == 0 and int(oversize_jpg[0].width) == 0 and String(oversize_png[0].error).contains("over the host limit"),
     "failures/A header that claims 65535x65535 pixels is read and refused before any decoder runs", true)
-  check(String(event_of("neg-http", logs, "error").get("error", "")).contains("later slice") and String(event_of("neg-scheme", logs, "error").get("error", "")).contains("Unsupported image URI"),
-    "failures/http(s) fails through onError naming the later slice, and an unknown scheme is refused", true)
+  check(String(event_of("neg-scheme", logs, "error").get("error", "")).contains("Unsupported image URI") and String(event_of("neg-scheme", logs, "error").get("error", "")).contains("http:// and https://"),
+    "failures/An unknown scheme is refused through onError, naming the schemes the host loads", true)
   check(String(event_of("neg-data", logs, "error").get("error", "")).contains("valid base64"), "failures/Invalid base64 in a data URI fails through onError", true)
   stages.failures = {"failing": failing}
 
@@ -455,7 +455,7 @@ func api_stage() -> void:
   run_js("api()")
   run_js("resolve()")
   var keys := ["getSize", "getSize-callback", "getSize-svg", "getSize-data", "getSize-jpeg", "getSize-webp", "getSize-missing", "getSize-corrupt", "getSize-oversize",
-    "getSize-http", "getSizeWithHeaders", "getSizeWithHeaders-http", "prefetch", "prefetchWithMetadata", "queryCache", "getSize-failure-callback", "resolve"]
+    "getSizeWithHeaders", "prefetch", "prefetchWithMetadata", "prefetch-missing", "queryCache", "getSize-failure-callback", "resolve"]
   var ready: bool = await wait_until(func() -> bool:
     var results: Dictionary = react().results
     return keys.all(func(key: String) -> bool: return results.has(key)))
@@ -471,12 +471,10 @@ func api_stage() -> void:
   var missing: Dictionary = results["getSize-missing"]
   check(not missing.ok and String(missing.message).begins_with("E_GET_SIZE_FAILURE: Failed to getSize of ") and String(results["getSize-failure-callback"].value).begins_with("E_GET_SIZE_FAILURE"),
     "api/A size that cannot be read rejects with E_GET_SIZE_FAILURE, to the promise and to the failure callback", true)
-  check(not results["getSize-http"].ok and String(results["getSize-http"].message).contains("E_GET_SIZE_FAILURE") and String(results["getSize-http"].message).contains("later slice")
-    and not results["getSizeWithHeaders-http"].ok, "api/An http(s) size rejects with E_GET_SIZE_FAILURE naming the later slice", true)
-  check(not results.prefetch.ok and String(results.prefetch.message).contains("E_PREFETCH_FAILURE") and String(results.prefetch.message).contains("no image cache yet")
-    and not results.prefetchWithMetadata.ok and String(results.prefetchWithMetadata.message).contains("E_PREFETCH_FAILURE"),
-    "api/prefetch and prefetchWithMetadata reject with E_PREFETCH_FAILURE saying the host has no image cache yet", true)
-  check(results.queryCache.ok and results.queryCache.value == {}, "api/queryCache finds nothing cached", true)
+  check(results.prefetch.ok and results.prefetch.value == true and results.prefetchWithMetadata.ok and results.prefetchWithMetadata.value == true
+    and not results["prefetch-missing"].ok and String(results["prefetch-missing"].message).begins_with("E_PREFETCH_FAILURE: Could not find image "),
+    "api/prefetch and prefetchWithMetadata resolve true for a picture that loads and reject with E_PREFETCH_FAILURE and the failure text for one that does not", true)
+  check(results.queryCache.ok and results.queryCache.value == {}, "api/queryCache finds nothing cached, for a file and for an address no download ever asked for", true)
   var resolved: Dictionary = results.resolve.value
   check(int(resolved.pickScale) == 2 and String(resolved.source.uri).ends_with("badge@2x.png") and resolved.nullish == null and resolved.missing == null
     and float(resolved.source.scale) == 2.0 and resolved.object.uri == "res://x.png", "api/resolveAssetSource picks the scale from PixelRatio and passes objects through")
@@ -489,8 +487,7 @@ func contract_stage() -> void:
   var missing: Array = ids.filter(func(id: String) -> bool: return not messages.has("A-refusal-" + id))
   check(missing.is_empty(), "contract/Every unsupported Image prop fails where the Image renders")
   var later := ["tintColor", "style.tintColor", "blurRadius", "capInsets", "defaultSource", "loadingIndicatorSource", "fadeDuration", "progressiveRenderingEnabled",
-    "resizeMethod", "resizeMultiplier", "overlayColor", "style.borderRadius", "style.borderTopLeftRadius", "source.headers", "source.method", "source.body", "source.cache",
-    "crossOrigin", "referrerPolicy"]
+    "resizeMethod", "resizeMultiplier", "overlayColor", "style.borderRadius", "style.borderTopLeftRadius"]
   var named := true
   for id: String in later:
     named = named and String(messages.get("A-refusal-" + id, "")).begins_with("Godot Image does not implement ") and String(messages.get("A-refusal-" + id, "")).contains(" yet: ")

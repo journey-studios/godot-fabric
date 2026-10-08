@@ -67,10 +67,11 @@ function header(width, height) {
   return chunk("IHDR", ihdr);
 }
 
-export function encodePng(picture) {
+// `level` is zlib's: the fixtures use the smallest file, and a test that needs a file as large as its pixels asks for 0 (stored).
+export function encodePng(picture, level = 9) {
   const stride = picture.width * 4, pixels = rgba(picture), rows = Buffer.alloc((stride + 1) * picture.height);
   for (let y = 0; y < picture.height; y++) pixels.copy(rows, y * (stride + 1) + 1, y * stride, (y + 1) * stride);
-  return Buffer.concat([signature, header(picture.width, picture.height), chunk("IDAT", deflateSync(rows, {level: 9})), chunk("IEND", Buffer.alloc(0))]);
+  return Buffer.concat([signature, header(picture.width, picture.height), chunk("IDAT", deflateSync(rows, {level})), chunk("IEND", Buffer.alloc(0))]);
 }
 
 // 24-bit, bottom-up, rows padded to four bytes: the BMP every decoder reads.

@@ -90,6 +90,26 @@ void redirects_follow_okhttp_rules() {
   require(https && https->url.tls() && !find_header(https->headers, "authorization"), "Changing the scheme changes the origin");
 }
 
+void redirects_can_drop_every_header_as_the_ios_image_loader_does() {
+  const auto from = url("http://a.test/start");
+  const auto request = headers({{"content-type", "text/plain"}, {"content-length", "3"}, {"authorization", "Bearer x"}, {"host", "a.test"}, {"x-keep", "1"}});
+  const auto moved = [&](const std::string &method, int status, const char *location, bool drop) {
+    return plan_redirect(method, status, from, request, headers({{"Location", location}}), drop);
+  };
+  for (const char *location : {"/next", "http://b.test/x", "https://a.test/secure"}) {
+    const auto next = moved("GET", 302, location, true);
+    require(next && next->headers.empty(), "A redirect that drops headers carries none, on the same origin or across");
+    const auto kept = moved("GET", 302, location, false);
+    require(kept && find_header(kept->headers, "x-keep") && !find_header(kept->headers, "host"), "Off by default: the OkHttp rules apply");
+  }
+  const auto post = moved("POST", 307, "/next", true);
+  require(post && post->method == "POST" && post->keep_body && post->headers.empty(), "The method and the body follow their own rules");
+  const auto get = moved("POST", 302, "/next", true);
+  require(get && get->method == "GET" && !get->keep_body && get->headers.empty(), "A POST that becomes a GET carries none either");
+  require(plan_redirect("GET", 302, from, request, headers({{"Location", "/next"}})) && plan_redirect("GET", 302, from, request, headers({{"Location", "/next"}}))->headers.size() == 2,
+      "The argument is optional: the call every other caller makes is unchanged (the body headers and host go, authorization and x-keep stay)");
+}
+
 void headers_follow_android() {
   const auto joined = join_duplicate_headers(headers({{"Set-Cookie", "a=1"}, {"X-Multi", "one"}, {"set-cookie", "b=2"}, {"Set-Cookie", "c=3"}, {"X-Multi", "two"}}));
   require(joined.size() == 3 && joined[0] == std::make_pair(std::string("Set-Cookie"), std::string("a=1, c=3")) &&
@@ -192,6 +212,7 @@ int main() {
   urls_are_canonicalized_like_okhttp();
   references_resolve_against_the_current_url();
   redirects_follow_okhttp_rules();
+  redirects_can_drop_every_header_as_the_ios_image_loader_does();
   headers_follow_android();
   header_validation_rejects_splitting();
   media_types();
