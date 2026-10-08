@@ -197,12 +197,20 @@ export const coreEventConfigs = {
   },
 };
 
+// The text styles beyond the Controls' own: RN's Text builds its view config over this base, and a style the
+// config does not declare never reaches the paragraph. The Controls' style map above stays as it is.
+const textStyle = Object.fromEntries(["fontFamily", "fontWeight", "lineHeight", "letterSpacing", "textAlign"]
+  .map(name => [name, true]));
+
 // Generated components extend ViewProps, not the GodotControl-specific props.
 export default {
-  validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
-    /^(onTouch|onPointer|onGotPointer|onLostPointer|onClick|onResponder|onStartShould|onMoveShould)/.test(name) ||
-    ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren",
-      ...Object.keys(accessibilityAttributes)].includes(name))),
+  validAttributes: {
+    ...Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
+      /^(onTouch|onPointer|onGotPointer|onLostPointer|onClick|onResponder|onStartShould|onMoveShould)/.test(name) ||
+      ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren",
+        ...Object.keys(accessibilityAttributes)].includes(name))),
+    style: {...controlViewConfig.validAttributes.style, ...textStyle},
+  },
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
     .filter(([name]) => /^(topTouch|topPointer|topGotPointer|topLostPointer|topClick)/.test(name))),
   directEventTypes: { topLayout: { registrationName: "onLayout" }, ...accessibilityEventTypes },

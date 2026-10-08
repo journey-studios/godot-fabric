@@ -582,11 +582,13 @@
         "native/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.cpp",
         "native/paragraph_layout.cpp",
         "tests/text-layout-native.test.mjs",
+        "tests/text-original-native.test.mjs",
         "docs/research/text-layout.md",
+        "docs/research/text-original.md",
         "docs/evidence/text-layout/README.md",
         "examples/text-layout/App.jsx"
       ],
-      "note": "onTextLayout (outer paragraph only) and the Yoga baseline come from the host's measureLines; span press/selection, font scaling, decoration, inline views and the original Text.js remain open."
+      "note": "Runs RN's original Text.js. onTextLayout (outer paragraph only) and the Yoga baseline come from the host's measureLines; the outer paragraph presses through RN's Pressability. Span press, selection, adjustsFontSizeToFit, font scaling, decoration, head/middle ellipsis, inline views and Text accessibility remain open; the default size stays 18, not RN's 14."
     },
     {
       "name": "TextInput",

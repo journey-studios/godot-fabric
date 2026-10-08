@@ -12,7 +12,6 @@ const INLINE_ERROR := "Inline Controls are not implemented in Godot Text"
 const REJECTIONS := [
   ["string", "onTextLayout must be a function"],
   ["object", "onTextLayout must be a function"],
-  ["press", "does not implement onPress"],
   ["selectable", "does not implement selectable"],
   ["fit", "does not implement adjustsFontSizeToFit"],
 ]
@@ -285,11 +284,21 @@ func negative_stage() -> Dictionary:
     failures.append(message)
     run_js("attempt(null)")
     await settle(6)
+  # RN's original Text presses on its outer paragraph: onPress is accepted there (a nested one is rejected, which
+  # tests/text-original-probe.gd judges), and it leaves the paragraph and the layout alone.
+  run_js("attempt('outer-press')")
+  await settle(10)
+  var accepted := state()
+  var outer_press := {"rejections": accepted.rejections.size(), "mounted": node_exists("A", "guarded"), "fallback": node_exists("A", "guard-fallback")}
+  check(outer_press.rejections == REJECTIONS.size() and outer_press.mounted and not outer_press.fallback,
+    "negative/An outer Text with onPress is accepted and mounts as a paragraph")
+  run_js("attempt(null)")
+  await settle(6)
   check(errors().is_empty(), "negative/Rejected props reach no native layout and report no host error")
   var value := state()
   check(value.rejections.size() == REJECTIONS.size() and not node_exists("A", "guard-fallback"),
     "negative/The boundary recovers once the rejected prop is removed")
-  return {"messages": failures, "react": value}
+  return {"messages": failures, "react": value, "outerPress": outer_press}
 
 func failure_variant(name: String, listen: bool, position: Vector2) -> Dictionary:
   var before_errors := errors().size()

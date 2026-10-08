@@ -243,6 +243,22 @@ func run() -> void:
     "The summary shows the new lines")
   verify(native_state().get("errors", []).is_empty(), "The run raised no host error")
   await capture("narrow")
+
+  # A real click on the pressable paragraph: RN's original Text reports press in, press and, once the minimum
+  # press duration has passed, press out. The last one is waited for by its event, not by a number of frames.
+  verify(node_of("press-line").get("kind") == "paragraph" and node_of("press-line").get("nativeText", "").contains("pressed 0 times"),
+    "The pressable line is a native paragraph that has not been pressed")
+  await click("press-line")
+  var pressed := await wait_for(func() -> bool: return example().get("pressLog", []).size() == 3)
+  await frames(4)
+  var after_press := example()
+  stages.press = {"example": after_press, "nodes": surface_state().get("nodes", [])}
+  verify(pressed and after_press.pressLog.count("in") == 1 and after_press.pressLog.count("press") == 1 and after_press.pressLog.count("out") == 1
+    and after_press.pressLog[0] == "in" and int(after_press.presses) == 1,
+    "A click on the paragraph reports press in first and then the press, once, and a press out")
+  verify(node_of("press-line").get("nativeText", "").contains("pressed 1 times"),
+    "React rendered the pressed paragraph again with the new count")
+  verify(native_state().get("errors", []).is_empty(), "Pressing the paragraph raised no host error")
   await finish()
 
 func finish() -> void:

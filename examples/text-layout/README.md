@@ -5,6 +5,7 @@ npm run example -- text-layout
 npm run example -- text-layout --headless
 npm run example -- text-layout --capture
 npm run test:text-layout
+npm run test:text-original
 ```
 
 The public `Text` reports its lines through RN's own `onTextLayout`: after each
@@ -29,11 +30,15 @@ and `height`, and an orange rule at its baseline, `y + ascender`.
   letters, and a button that narrows the column: the paragraphs wrap again, RN
   delivers new lines and the boxes follow. The summary line reads the first
   line's `ascender`, `capHeight` and `xHeight` from the event.
+- The last line of the right column is a paragraph with `onPressIn`, `onPress` and
+  `onPressOut`: `Text` renders RN's original `Text.js`, so a click on it reports
+  press in, the press, and press out once Pressability's 130 ms minimum press duration
+  has passed, and the count in the paragraph goes up.
 
 ## What the validation establishes
 
 [validation.gd](validation.gd) sends an actual Godot mouse click and reads the
-native Controls the host drew. The headless run passes 18 checks:
+native Controls the host drew. The headless run passes 22 checks:
 
 - Each `Text` is a native paragraph and received exactly one event for its first
   layout; the wrapped paragraph reports three lines, the limited one two and
@@ -50,8 +55,11 @@ native Controls the host drew. The headless run passes 18 checks:
   lines and receives a new event, `HEH`, whose lines did not change, receives
   none, the boxes follow and the heights still add up. The run raises no host
   error.
+- A click on the pressable paragraph reports press in first and then the press
+  once, and a press out (waited for by its event, not by a number of frames); React
+  renders the paragraph again with the new count, and the run raises no host error.
 
-With `--capture` the renderer's frame is read too and the run passes 32 checks:
+With `--capture` the renderer's frame is read too and the run passes 36 checks:
 every reported line has painted ink; the box drawn at each line's event frame
 contains that line's ink, in both states; the ink of `HEH` ends on the baseline
 `y + ascender` (±1 pixel) and is as tall as the reported `capHeight`, and the ink
@@ -72,6 +80,9 @@ with the rule inside them. The row of three texts shares one baseline rule, and 
 lines: the wrapped paragraph has four, the summary says `wrap: 4 lines`, and the boxes and rules
 follow. `HEH`, whose lines did not change, received no new event.
 
+Both frames are the first slice's: they predate the pressable line at the end of the right
+column, whose captures come with the evidence record of the second slice.
+
 ## Evidence suite
 
 ```sh
@@ -91,6 +102,29 @@ and three sabotages of `native/paragraph_layout.cpp` (every line reported
 whatever `numberOfLines` says, an ascender without the centred `lineHeight`
 offset, the host's sentinel left in a line's text) fail the probe and are
 rejected by the oracle. See the [research](../../docs/research/text-layout.md).
+
+```sh
+npm run test:text-original
+```
+
+[tests/text-original-native.test.mjs](../../tests/text-original-native.test.mjs)
+runs 113 headless checks in one Hermes application over RN's original `Text.js`: the
+registry (`RCTText` and `RCTVirtualText` registered once, by RN's own
+`TextNativeComponent`), every press gesture with a real mouse and a real touch (tap, a
+press held past 130 ms, a long press, leaving and re-entering the region with the default
+offsets and with `pressRetentionOffset`, outside, `disabled`, a span's text, inert props),
+the style of 19 paragraphs run by run, the default size and the spans that inherit it,
+27 rejected props word for word and three `NativeText`s that skip the facade and are
+refused by the host. An independent
+[oracle](../../tests/text-original-oracle.mjs) replays each gesture against
+Pressability's rules. [scripts/text-original-sabotage.mjs](../../scripts/text-original-sabotage.mjs)
+retains the controls: the SDK and host of main before the slice fail exactly 62
+normative checks (`node tests/text-original-native.test.mjs --previous`), the same bundle
+on that host alone fails the 3 bypass checks (`--previous-host`), and six sabotages
+(the wrapper registering `RCTText` again, no text styles in the base config, a private
+ancestor context, a nested press allowed, no native guard, RN's default size of 14) fail
+the probe and are rejected by the oracle. See the
+[research](../../docs/research/text-original.md).
 
 ## Original syntax
 
@@ -114,10 +148,12 @@ export function Measured() {
 ## Limits
 
 `onTextLayout` is emitted by the outer paragraph only; a nested `Text` ignores it,
-as RN's virtual text does, and a value that is not a function throws. Span press,
-selection (`onPress`, `selectable`), `adjustsFontSizeToFit`, font scaling,
-decoration and italics, head/middle ellipsis, inline views, bidi/emoji and font
-fallback are not implemented. The text of a truncated last line, empty text, a
+as RN's virtual text does, and a value that is not a function throws. The outer
+paragraph presses through RN's original `Text.js`; a nested `Text` that sets any press
+or responder prop fails (press on a span needs hit testing by fragment). Selection
+(`selectable`), `adjustsFontSizeToFit`, font scaling (accepted and inert), Text
+accessibility, decoration and italics, head/middle ellipsis, inline views, bidi/emoji
+and font fallback are not implemented; the default size is 18, not RN's 14. The text of a truncated last line, empty text, a
 `lineHeight` smaller than the font and lines beyond a fixed height are not part of
 the contract because RN's platforms differ on them. The numbers agree with the
 bundled fonts' tables to one pixel; no iOS or Android reference was measured.

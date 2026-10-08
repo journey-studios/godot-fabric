@@ -57,6 +57,7 @@
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
     "tests/text-layout-fixture.jsx",
+    "tests/text-original-fixture.jsx",
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/websocket-fixture.jsx",

@@ -361,6 +361,14 @@ const measuredText = <Text numberOfLines={2} onTextLayout={layoutHandler} ref={i
 const originalTextProps: import("../../node_modules/react-native/types_generated/index").TextProps = { onTextLayout: layoutHandler };
 // @ts-expect-error the handler receives the layout event, not a press
 const wrongTextLayout = <Text onTextLayout={(event: PointerEvent) => { void event; }}>Lines</Text>;
-// @ts-expect-error span presses are not implemented
-const spanPress = <Text onPress={() => {}}>Lines</Text>;
-void measuredText; void originalTextProps; void wrongTextLayout; void spanPress;
+// The outer paragraph presses through RN's original Text: the press events, the retention region and disabled.
+const pressableText = <Text onPress={() => {}} onPressIn={() => {}} onPressOut={() => {}} onLongPress={() => {}} disabled
+  pressRetentionOffset={{ top: 10, left: 10, bottom: 10, right: 10 }} allowFontScaling={false} maxFontSizeMultiplier={1.2}
+  dynamicTypeRamp="body" suppressHighlighting>Press</Text>;
+// @ts-expect-error selection and font fitting are not implemented
+const selectableText = <Text selectable adjustsFontSizeToFit>Lines</Text>;
+// @ts-expect-error head and middle ellipsizing are not implemented
+const middleEllipsis = <Text numberOfLines={1} ellipsizeMode="middle">Lines</Text>;
+// @ts-expect-error fontSize is a style, not a prop of RN's Text
+const fontSizeProp = <Text fontSize={20}>Lines</Text>;
+void measuredText; void originalTextProps; void wrongTextLayout; void pressableText; void selectableText; void middleEllipsis; void fontSizeProp;
