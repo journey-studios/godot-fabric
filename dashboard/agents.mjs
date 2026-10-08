@@ -4,8 +4,18 @@ export const AGENT_STATES = { planning: "Planejando", implementing: "Implementan
 // Wired by every delivery and merged sequentially by the orchestrator: never exclusive. They are cut out of every
 // area (reserving one is accepted, ignored and warned about) and only warn when 2+ agents change them.
 export const SHARED_PATHS = [
-  "ROADMAP.md", "dashboard/migration.json", "package.json", "package-lock.json", ".github/workflows/contracts.yml", ".fallowrc.json", "examples/catalog.json", "docs/evidence/README.md",
-  "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", "tests/types/consumer.tsx", "tests/platform-seams.test.mjs",
+  // Plan, manifests and CI wiring.
+  "ROADMAP.md", "README.md", "dashboard/migration.json", "package.json", "package-lock.json", ".github/workflows/contracts.yml", ".fallowrc.json",
+  // Docs and evidence.
+  "docs/API.md", "docs/NATIVE_MODULES.md", "docs/PARITY.md", "docs/compatibility/BASELINE.md", "docs/compatibility/react-native-0.87.1.json", "docs/evidence/README.md",
+  // Examples.
+  "examples/README.md", "examples/entry.jsx", "examples/catalog.json",
+  // Native hubs.
+  "native/application_runtime.cpp", "native/application_runtime.h", "native/fabric_application.cpp", "native/fabric_application.h", "native/turbo_module_registry.cpp", "native/turbo_module_registry.h", "native/CMakeLists.txt", "native/register.cpp",
+  // JS and public types.
+  "src/react-native-platform.jsx", "src/platform-environment.js", "types/react-native.ts",
+  // Scripts and tests every slice extends.
+  "scripts/sabotage-sources.mjs", "tests/types/consumer.tsx", "tests/platform-seams.test.mjs",
 ];
 export const STALE_MINUTES = 30;
 export const MAX_MESSAGES = 20;

@@ -51,12 +51,13 @@ test("the same file outside any area is a file conflict", () => {
 });
 
 test("shared files only warn when 2+ agents change them", () => {
-  // Test files every slice with public API appends cases to.
-  const appended = ["tests/types/consumer.tsx", "tests/platform-seams.test.mjs"];
+  // Hubs every slice appends to, one per group of SHARED_PATHS.
+  const appended = ["tests/types/consumer.tsx", "tests/platform-seams.test.mjs", "native/fabric_application.cpp", "examples/entry.jsx", "docs/API.md", "scripts/sabotage-sources.mjs"];
   for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", ...appended]) {
     assert.ok(SHARED_PATHS.includes(shared), shared);
   }
-  assert.equal(SHARED_PATHS.length, 15);
+  assert.equal(SHARED_PATHS.length, 30);
+  assert.equal(new Set(SHARED_PATHS).size, SHARED_PATHS.length, "no duplicates");
   // Outside any area, changing them from two agents is only a shared warning.
   for (const file of appended) {
     const both = coordinate([live(record(1), [file]), live(record(2), [file])], start);
