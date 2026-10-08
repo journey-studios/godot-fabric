@@ -167,8 +167,12 @@ test("native macOS arm64 export and copied-app rejection controls", {
   let signatureReason;
   await assert.rejects(() => verifySignatures(signatureHarness, plistApp),
     error => { signatureReason = error.message; return true; });
+  assert.match(signatureReason, /invalid Info\.plist \(plist or signature have been modified\)/,
+    "signature control must reject the modified plist through codesign");
   const signatureLogNames = await readdir(signatureHarness.directory);
-  for (let index = 0; index <= 8; index++)
+  // The executable's signature binds its enclosing Info.plist and rejects it
+  // before the enclosing app verification, so commands 0..7 must have run.
+  for (let index = 0; index <= 7; index++)
     assert.ok(signatureLogNames.includes(`verify-signature-${index}.log`),
       `signature control did not reach production verification command ${index}`);
   controls.push({name: "xml-whitespace-invalidates-signed-info-plist", app: plistApp,
