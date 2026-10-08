@@ -18,7 +18,12 @@ const digest = content => createHash("sha256").update(content).digest("hex");
 // build/<name>-probe.js with its receipt; build/app.js is never written here.
 // seams are the public SDK files and bundled the original RN modules the
 // bundle must contain; references are RN platform sources pinned for citation.
-export async function bundleNativeProbe({name, entryPoint, sources, seams, bundled, references}) {
+// A control can bundle another SDK: platformRoot is the directory of the facade
+// and its siblings (default src/), and plugins are esbuild plugins that go
+// before the platform plugin, such as an in-memory override of one SDK file. A
+// control names its bundle and receipt through name, and its seams and sources
+// are the paths of the SDK it bundles.
+export async function bundleNativeProbe({name, entryPoint, sources, seams, bundled, references, platformRoot = path.join(root, "src"), plugins = []}) {
   const output = path.join(root, "build");
   await mkdir(output, {recursive: true});
   const bundlePath = path.join(output, name + "-probe.js");
@@ -27,7 +32,7 @@ export async function bundleNativeProbe({name, entryPoint, sources, seams, bundl
     outfile: bundlePath, bundle: true, platform: "neutral", format: "iife", metafile: true,
     define: {"process.env.NODE_ENV": '"production"', __DEV__: "false"},
     mainFields: ["main"], resolveExtensions: godotExtensions,
-    plugins: [assets.plugin, platformPlugin(path.join(root, "src"), id => requireSdk.resolve(id))]});
+    plugins: [assets.plugin, ...plugins, platformPlugin(platformRoot, id => requireSdk.resolve(id))]});
   const inputs = Object.keys(result.metafile.inputs);
   for (const file of bundled) {
     assert.ok(inputs.includes("node_modules/react-native/" + file), "Probe must bundle the original RN module: " + file);

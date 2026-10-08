@@ -83,6 +83,7 @@
     "test:text-layout": "node --test tests/text-layout-native.test.mjs",
     "test:networking": "node --test tests/networking-native.test.mjs",
     "test:device-services": "node --test tests/device-services-native.test.mjs",
+    "test:os-contracts": "node --test tests/os-contracts-native.test.mjs",
     "test:websocket": "node --test --test-concurrency=1 tests/websocket-native.test.mjs tests/websocket-transport-smoke.test.mjs tests/websocket-transport-lifetime.test.mjs tests/websocket-load.test.mjs",
     "test:images": "node --test tests/images-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
