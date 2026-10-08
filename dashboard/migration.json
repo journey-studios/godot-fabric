@@ -8,7 +8,7 @@
     "focusSequence": "6",
     "focusTitle": "Bibliotecas: NativeWind e Chart Kit num consumer independente."
   },
-  "updatedAt": "2026-10-08T14:00:05.627Z",
+  "updatedAt": "2026-10-08T16:10:38.000Z",
   "source": {
     "commit": "fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
     "url": "https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e",
@@ -3442,20 +3442,39 @@
             {
               "id": "vermelho",
               "label": "Cena de prova e oráculo escritos antes da política: com a Surface no padrão o teste de clique no vazio FALHA, e o vermelho é registrado em commit",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Commit do vermelho: a cena de prova, o fixture, o probe e o oráculo foram escritos antes da política e o clique no vazio chega 0 de 100 ao mundo",
+                  "url": "https://github.com/journey-studios/godot-fabric/commit/2fef3548518e9529b7738ed22500372f737dbd79"
+                },
+                {
+                  "label": "Evidência executada: o host anterior falha exatamente os 31 checks normativos (clique, clique direito e toque no vazio, hover, câmera e controles positivos dos overlays) e os outros 35 valem nos dois hosts",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+                }
+              ]
             },
             {
               "id": "politica",
               "label": "Política aplicada e documentada em docs/ (mouse_filter da Surface, ordem _input, GUI e _unhandled_input; topologia de uma Surface em tela cheia contra uma por painel, time-box de 3 fatias): 100/100, 0/100 e overlay 0/100 no macOS gráfico, com capturas",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência executada: 100/100 no vazio, 0/100 no Pressable e 0/100 com overlay na árvore ou Modal aberto na faixa gráfica do macOS (N=100, gl_compatibility, 18 checks, 4 capturas), mais 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20); CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+                }
+              ]
             },
             {
               "id": "sabotagem",
               "label": "Sabotagem (Surface em STOP) rejeitada pelo oráculo; roda da tela e clique direito no mundo funcionam; toque no HUD gera 0 eventos de mouse emulado no mundo (variante ScreenTouch com emulate_mouse_from_touch ligado)",
-              "done": false,
-              "evidence": []
+              "done": true,
+              "evidence": [
+                {
+                  "label": "Evidência executada: a sabotagem surface-stop (Surface em STOP) é rejeitada pelo oráculo (31 falhas) e a views-ignore também (21); a roda e o clique direito no vazio chegam ao mundo 100/100; um toque no HUD dá 0 eventos de mouse emulado (e 0 ScreenTouch) ao mundo, com emulate_mouse_from_touch ligado; CI hospedada pendente",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+                }
+              ]
             },
             {
               "id": "iphone",
@@ -4177,6 +4196,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "milestone-0-5-v05-02-pointer-03f039a",
+      "at": "2026-10-08T16:10:38.000Z",
+      "taskIds": [],
+      "message": "Primeira fatia do spike de ponteiro (V05-02, go/no-go nº 1 do marco 0.5) com evidência local: um HUD React Native sobre um mapa Godot (Node2D de 24x16 tiles sob uma Camera2D com zoom 2). A política mínima é a FabricSurface com MOUSE_FILTER_IGNORE por padrão, definido no construtor, e só os Controls das Views do RN barram o ponteiro. Na área vazia do HUD, 100/100 cliques esquerdos, 100/100 direitos, 100/100 rodas e 100/100 toques chegam ao mundo e 0 aos handlers, e o tile selecionado é o que a câmera dá; no Pressable, 100 onPress e 0 no mundo (um toque no HUD dá 0 ScreenTouch e 0 mouse emulado ao mundo); com overlay na árvore ou Modal aberto, 0/100, e 100/100 com ele fechado antes e depois. 66 checks headless em duas topologias (uma Surface em tela cheia com N=100 e uma por painel com N=20), em rajadas entregues por um único flush, sem depender do ritmo dos quadros, com um oráculo independente que refaz cada contagem pela geometria do HUD e pela conta da câmera. O host anterior falha exatamente os 31 checks normativos (a roda no vazio já passa na main, porque o GUI a deixa atravessar um Control STOP, e por isso não é normativa) e as sabotagens surface-stop e views-ignore falham 31 e 21 checks e são rejeitadas pelo oráculo. Faixa gráfica local no macOS (janela real, gl_compatibility, N=100): 18 checks e 4 capturas. É a fatia 1 de 3 do spike: GO para a política mínima; a decisão go/no-go é da fatia 3. Lacunas para a fatia 2 (variante a2, depois do #58): o hitSlop, o Text com onPress, os vãos de ScrollView e a roda sobre o HUD ou sobre um overlay na árvore ainda chegam ao mundo além do RN. O critério iphone segue aberto (P7): os eventos são sintéticos, sem ponteiro de hardware, tela de toque real nem export móvel. CI hospedada e Pages pendentes. A 1.0 não muda: nenhum checkpoint, nota, peso nem denominador de GF-xx se move.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md"
+    },
     {
       "id": "library-consumer-first-slice-fc0f428",
       "at": "2026-10-08T14:00:05.627Z",

@@ -541,6 +541,25 @@ gain, neutral, cost, or inconclusive when the interval is too wide to decide, pl
 decision on keeping the RN HUD for games. If arm B is not ready in its time-box, the
 report is a partial A against C comparison and claims no gain.
 
+**Progress.** V05-02 has its first slice, the first of the three the spike is
+time-boxed to. With `FabricSurface` taking `MOUSE_FILTER_IGNORE` by default, a click
+on the empty area of the HUD's `pointerEvents="box-none"` root reached the Godot map
+100 times out of 100 and no HUD handler, a click or a tap on a `Pressable` pressed it
+100 times and never reached the map, and with a tree overlay or a `Modal` open nothing
+did, in one full-screen Surface and in one Surface per panel, headless and on a real
+macOS window with captures. The red test came first (the preceding host fails exactly
+the 31 checks that need the policy) and two retained sabotages are rejected by an
+independent oracle; the
+[evidence record](https://github.com/journey-studios/godot-fabric/blob/03f039ade0bed6b7dcdd7991d504d057c16006c6/docs/evidence/world-input/README.md)
+has the numbers. In `milestones` the criteria `vermelho`, `politica` and `sabotagem`
+are done and `iphone` is not: the events are synthetic, with no hardware pointer or
+touch screen and no iPhone run, which waits for the device package. What remains of
+V05-02 is slice 2, variant (a2), for what the minimal policy leaves open (a hit slop, a
+`Text` with `onPress`, the gaps of a ScrollView and the wheel over the HUD or a tree
+overlay, which still reach the map as well as React Native), after PR #58 merges, and
+the go/no-go decision of slice 3. Hosted CI for the slice is pending. No 1.0 number
+moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
