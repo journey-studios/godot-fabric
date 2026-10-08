@@ -2,6 +2,7 @@ import { execFile, execFileSync } from "node:child_process";
 import { mkdir, readFile, readdir, realpath, rename, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { parseArgs, promisify } from "node:util";
 import { AGENT_SLOTS, AGENT_STATES, MAX_MESSAGES, coordinate, messageTimeline, validateAgent } from "../dashboard/agents.mjs";
@@ -26,21 +27,27 @@ export function resolveAgentsDirectory(cwd) {
   }
 }
 
-// With -z a rename is "XY new\0old\0": keep the new path and skip the old one.
+// One item per status entry, listing every path it touches. With -z a rename or copy is "XY new\0old\0": a rename
+// also empties the old path (which may sit in another agent's area), a copy leaves it untouched.
 function parseStatus(output) {
   const tokens = output.split("\0");
-  const paths = [];
+  const entries = [];
   for (let index = 0; index < tokens.length; index++) {
     const entry = tokens[index];
     if (entry.length < 4) {
       continue;
     }
-    paths.push(entry.slice(3));
-    if (/[RC]/.test(entry.slice(0, 2))) {
+    const code = entry.slice(0, 2);
+    const paths = [entry.slice(3)];
+    if (/[RC]/.test(code)) {
       index++;
+      if (code.includes("R")) {
+        paths.push(tokens[index]);
+      }
     }
+    entries.push(paths);
   }
-  return paths;
+  return entries;
 }
 
 const failureOf = error => (error.stderr?.trim() || error.message).split("\n")[0];
@@ -57,12 +64,13 @@ async function inspectWorktree(worktree) {
       git(worktree, "rev-parse", "HEAD"),
       git(worktree, "rev-list", "--left-right", "--count", `${base}...HEAD`),
       // Plumbing on purpose: porcelain `git diff` refreshes (rewrites) the index even with --no-optional-locks.
-      git(worktree, "merge-base", base, "HEAD").then(mergeBase => git(worktree, "diff-tree", "-r", "-M", "--name-only", "-z", mergeBase.trim(), "HEAD")),
+      // No rename detection: a committed rename lists both the old and the new path.
+      git(worktree, "merge-base", base, "HEAD").then(mergeBase => git(worktree, "diff-tree", "-r", "--no-renames", "--name-only", "-z", mergeBase.trim(), "HEAD")),
       git(worktree, "status", "--porcelain=v1", "-z", "--untracked-files=all"),
     ]);
     const [behind, ahead] = counts.trim().split(/\s+/).map(value => parseInt(value, 10));
     const entries = parseStatus(status);
-    const changed = [...new Set([...committed.split("\0").filter(Boolean), ...entries])].sort();
+    const changed = [...new Set([...committed.split("\0").filter(Boolean), ...entries.flat()])].sort();
     return { exists: true, branch: branch.trim(), head: head.trim(), base, ahead, behind, dirty: entries.length, changed };
   } catch (error) {
     return { exists: true, error: failureOf(error) };
@@ -108,8 +116,45 @@ export async function readBoard(directory) {
   };
 }
 
-async function writeRecord(directory, file, record) {
+const LOCK_WAIT_MS = 10_000;
+const LOCK_STALE_MS = 60_000;
+const LOCK_RETRY_MS = 50;
+
+// Every command that writes runs alone: the slot choice, the coordination check and the write all see one snapshot.
+// mkdir is atomic, so the lock is a directory; readBoard only reads slot-N.json and never sees it.
+async function withRegistryLock(directory, task) {
   await mkdir(directory, { recursive: true });
+  const lock = path.join(directory, ".lock");
+  const deadline = Date.now() + LOCK_WAIT_MS;
+  for (;;) {
+    try {
+      await mkdir(lock);
+      break;
+    } catch (error) {
+      if (error.code !== "EEXIST") {
+        throw error;
+      }
+    }
+    const held = await stat(lock).catch(() => null);
+    if (held && Date.now() - held.mtimeMs > LOCK_STALE_MS) {
+      // Left behind by a dead process: move it aside (only one waiter wins the rename) and retry.
+      const aside = `${lock}.${process.pid}.stale`;
+      await rename(lock, aside).then(() => rm(aside, { recursive: true, force: true }), () => {});
+      continue;
+    }
+    if (Date.now() >= deadline) {
+      throw new Error(`O registro de agentes está em uso por outro comando há mais de ${LOCK_WAIT_MS / 1000} s; tente de novo. Se nenhum comando estiver rodando, remova ${lock}.`);
+    }
+    await sleep(LOCK_RETRY_MS);
+  }
+  try {
+    return await task();
+  } finally {
+    await rm(lock, { recursive: true, force: true });
+  }
+}
+
+async function writeRecord(directory, file, record) {
   const target = path.join(directory, file);
   const temporary = `${target}.${process.pid}.tmp`;
   await writeFile(temporary, `${JSON.stringify(record, null, 2)}\n`);
@@ -310,6 +355,8 @@ async function list({ context }) {
 }
 
 const commands = { list, claim, update, say, check, release };
+// Only these write to the registry, so only these take the lock (reads rely on atomic renames).
+const writers = new Set(["claim", "update", "say", "release"]);
 const optionSpec = {
   agents: { type: "string" }, agent: { type: "string" }, title: { type: "string" }, state: { type: "string" },
   now: { type: "string" }, next: { type: "string" }, blocker: { type: "string" }, pr: { type: "string" },
@@ -340,9 +387,12 @@ async function main() {
   const cwd = process.cwd();
   const directory = parsed.values.agents ? path.resolve(parsed.values.agents) : resolveAgentsDirectory(cwd);
   const worktree = await currentWorktree(cwd);
-  const board = await readBoard(directory);
-  const context = { directory, worktree, board, mine: board.agents.find(agent => agent.worktree === worktree) };
-  await commands[command]({ options: parsed.values, positionals: parsed.positionals, context });
+  const execute = async () => {
+    const board = await readBoard(directory);
+    const context = { directory, worktree, board, mine: board.agents.find(agent => agent.worktree === worktree) };
+    await commands[command]({ options: parsed.values, positionals: parsed.positionals, context });
+  };
+  await (writers.has(command) ? withRegistryLock(directory, execute) : execute());
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

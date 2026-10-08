@@ -5,7 +5,7 @@ export const AGENT_STATES = { planning: "Planejando", implementing: "Implementan
 // area (reserving one is accepted, ignored and warned about) and only warn when 2+ agents change them.
 export const SHARED_PATHS = [
   "ROADMAP.md", "dashboard/migration.json", "package.json", "package-lock.json", ".github/workflows/contracts.yml", ".fallowrc.json", "examples/catalog.json", "docs/evidence/README.md",
-  "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts",
+  "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", "tests/types/consumer.tsx",
 ];
 export const STALE_MINUTES = 30;
 export const MAX_MESSAGES = 20;

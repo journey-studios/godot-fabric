@@ -165,7 +165,7 @@ Regras:
   `.github/workflows/contracts.yml`, `.fallowrc.json`, `examples/catalog.json`,
   `docs/evidence/README.md`, `native/application_runtime.cpp`,
   `native/CMakeLists.txt`, `native/register.cpp`, `src/react-native-platform.jsx`,
-  `types/react-native.ts`), nunca são exclusivos: ficam fora de toda área. Reservá-los
+  `types/react-native.ts`, `tests/types/consumer.tsx`), nunca são exclusivos: ficam fora de toda área. Reservá-los
   é aceito, mas ignorado, com o aviso `shared-area` (tire-os das áreas no próximo
   `update`); diretórios que os contêm (`native/`, `dashboard/`) são áreas normais,
   e alterar um compartilhado dentro da área de outro agente não é conflito.

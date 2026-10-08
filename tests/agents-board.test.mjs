@@ -5,6 +5,7 @@ import { mkdir, mkdtemp, readFile, readdir, realpath, rm, stat, utimes, writeFil
 import { devNull, tmpdir } from "node:os";
 import path from "node:path";
 import { once } from "node:events";
+import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { AGENT_SLOTS, MAX_MESSAGES, SHARED_PATHS, STALE_MINUTES, coordinate, messageTimeline, validateAgent } from "../dashboard/agents.mjs";
@@ -50,9 +51,13 @@ test("the same file outside any area is a file conflict", () => {
 });
 
 test("shared files only warn when 2+ agents change them", () => {
-  for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts"]) {
+  for (const shared of ["ROADMAP.md", "native/application_runtime.cpp", "native/CMakeLists.txt", "native/register.cpp", "src/react-native-platform.jsx", "types/react-native.ts", "tests/types/consumer.tsx"]) {
     assert.ok(SHARED_PATHS.includes(shared), shared);
   }
+  assert.equal(SHARED_PATHS.length, 14);
+  // The consumer type test is appended to by every slice: outside any area it is only a shared warning.
+  const consumer = coordinate([live(record(1), ["tests/types/consumer.tsx"]), live(record(2), ["tests/types/consumer.tsx"])], start);
+  assert.deepEqual(consumer.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["shared", "warning", "tests/types/consumer.tsx"]]);
   const result = coordinate([live(record(1), ["ROADMAP.md", "package.json"]), live(record(2), ["ROADMAP.md"])], start);
   assert.deepEqual(result.issues.map(issue => [issue.kind, issue.severity, issue.subject]), [["shared", "warning", "ROADMAP.md"]]);
   assert.match(result.issues[0].message, /merge sequencial pelo orquestrador/);
@@ -232,7 +237,7 @@ test("the board view escapes registry text, shortens home, shows five lanes and 
 });
 
 // A throwaway clone with an origin and two agent worktrees, mirroring how real agents work.
-async function createRepository(t) {
+async function createRepository(t, extra = 0) {
   const base = await realpath(await mkdtemp(path.join(tmpdir(), "fabric-agents-")));
   t.after(() => rm(base, { recursive: true, force: true }));
   const git = (cwd, ...args) => exec("git", args, { cwd });
@@ -244,6 +249,8 @@ async function createRepository(t) {
   }
   await writeFile(path.join(main, "README.md"), "base\n");
   await writeFile(path.join(main, "docs.md"), "docs\n");
+  await mkdir(path.join(main, "lib"));
+  await writeFile(path.join(main, "lib/util.js"), "export {}\n");
   await git(main, "add", ".");
   await git(main, "commit", "-q", "-m", "initial");
   await git(base, "clone", "-q", "--bare", main, "origin.git");
@@ -253,7 +260,14 @@ async function createRepository(t) {
   const b = path.join(base, "b");
   await git(main, "worktree", "add", "-q", "-b", "feat/a", a);
   await git(main, "worktree", "add", "-q", "-b", "feat/b", b);
-  return { base, main, a, b, git, directory: path.join(base, "registry") };
+  // `all` is every agent worktree: a, b and `extra` more.
+  const all = [a, b];
+  for (let index = 0; index < extra; index++) {
+    const more = path.join(base, `w${index + 3}`);
+    await git(main, "worktree", "add", "-q", "-b", `feat/w${index + 3}`, more);
+    all.push(more);
+  }
+  return { base, main, a, b, all, git, directory: path.join(base, "registry") };
 }
 
 async function cli(cwd, directory, ...args) {
@@ -291,7 +305,8 @@ test("readBoard reads live git state and reports invalid files without throwing"
   assert.deepEqual(board.agents.map(agent => agent.slot), [1, 2]);
   assert.deepEqual(board.agents[0].git, {
     exists: true, branch: "feat/a", head: board.agents[0].git.head, base: "origin/main", ahead: 1, behind: 1, dirty: 3,
-    changed: ["README.md", "committed.txt", "deep/nested/new.txt", "guide.md"],
+    // The staged rename docs.md -> guide.md touches both paths but is a single status entry.
+    changed: ["README.md", "committed.txt", "deep/nested/new.txt", "docs.md", "guide.md"],
   });
   assert.match(board.agents[0].git.head, /^[0-9a-f]{40}$/);
   assert.deepEqual(board.agents[1].git, { exists: false });
@@ -450,6 +465,69 @@ test("claim honors --slot, keeps the slot on re-claim and refuses a sixth agent"
   assert.match(sixth.stderr, /5 slots estão ocupados/);
   assert.match(sixth.stderr, /Agente 1/);
   assert.equal((await readdir(full)).length, AGENT_SLOTS);
+});
+
+test("concurrent claims are serialized: one winner for a contested area, no lost record otherwise", async t => {
+  const contested = await createRepository(t, 1);
+  const claim = (directory, cwd, ...extra) => cli(cwd, directory, "claim", "--task", "GF-30", "--title", "Concorrente", ...extra);
+  const results = await Promise.all(contested.all.map(cwd => claim(contested.directory, cwd, "--area", "src/shared/")));
+  assert.deepEqual(results.map(result => result.code).sort(), [0, 1, 1]);
+  for (const loser of results.filter(result => result.code === 1)) {
+    assert.match(loser.stderr, /Agente 1/);
+  }
+  assert.deepEqual(await readdir(contested.directory), ["slot-1.json"]);
+
+  // Without --slot every agent asks for "the first free slot": they must still land in distinct slots.
+  const open = await createRepository(t, 3);
+  const all = await Promise.all(open.all.map((cwd, index) => claim(open.directory, cwd, "--area", `src/area-${index}/`)));
+  assert.deepEqual(all.map(result => result.code), [0, 0, 0, 0, 0], all.map(result => result.stderr).join("\n"));
+  assert.deepEqual((await readdir(open.directory)).sort(), [1, 2, 3, 4, 5].map(slot => `slot-${slot}.json`));
+  const board = await readBoard(open.directory);
+  assert.deepEqual([board.agents.length, board.invalid.length, new Set(board.agents.map(agent => agent.worktree)).size], [5, 0, 5]);
+});
+
+test("a stale registry lock is recovered, a live one is waited for, and reads never wait", async t => {
+  const { a, b, directory } = await createRepository(t);
+  const lock = path.join(directory, ".lock");
+  const claim = cwd => cli(cwd, directory, "claim", "--task", "GF-30", "--title", "Lock");
+  await mkdir(lock, { recursive: true });
+  const old = new Date(Date.now() - 5 * 60000);
+  await utimes(lock, old, old);
+  const recovered = await claim(a);
+  assert.equal(recovered.code, 0, recovered.stderr);
+  assert.deepEqual(await readdir(directory), ["slot-1.json"], "the stale lock is removed and released");
+
+  await mkdir(lock);
+  const waiting = claim(b);
+  assert.equal((await cli(a, directory, "list")).code, 0, "listing is read-only and does not take the lock");
+  assert.equal((await cli(a, directory, "check")).code, 0);
+  await sleep(1200);
+  assert.deepEqual((await readdir(directory)).sort(), [".lock", "slot-1.json"], "the claim keeps waiting while the lock is held");
+  await rm(lock, { recursive: true });
+  const done = await waiting;
+  assert.equal(done.code, 0, done.stderr);
+  assert.deepEqual((await readdir(directory)).sort(), ["slot-1.json", "slot-2.json"]);
+});
+
+test("renaming a file out of another agent's area is trespass, staged and committed", async t => {
+  const { a, b, git, directory } = await createRepository(t);
+  assert.equal((await cli(a, directory, "claim", "--task", "GF-22", "--title", "A", "--area", "lib/")).code, 0);
+  assert.equal((await cli(b, directory, "claim", "--task", "GF-23", "--title", "B", "--area", "src/b/")).code, 0);
+  await mkdir(path.join(b, "src/b"), { recursive: true });
+  await git(b, "mv", "lib/util.js", "src/b/util.js");
+  const staged = (await readBoard(directory)).agents[1].git;
+  assert.deepEqual([staged.changed, staged.dirty], [["lib/util.js", "src/b/util.js"], 1]);
+  const checkStaged = await cli(b, directory, "check");
+  assert.equal(checkStaged.code, 1);
+  assert.match(checkStaged.stderr, /\[trespass\] Agente 2 alterou lib\/util\.js na área reservada pelo Agente 1/);
+  assert.equal((await cli(a, directory, "check")).code, 1);
+
+  await git(b, "commit", "-q", "-m", "move out of lib");
+  const committed = (await readBoard(directory)).agents[1].git;
+  assert.deepEqual([committed.changed, committed.dirty], [["lib/util.js", "src/b/util.js"], 0]);
+  const checkCommitted = await cli(b, directory, "check");
+  assert.equal(checkCommitted.code, 1);
+  assert.match(checkCommitted.stderr, /\[trespass\] Agente 2 alterou lib\/util\.js/);
 });
 
 test("server publishes the live agent board and tolerates a missing registry", async t => {
