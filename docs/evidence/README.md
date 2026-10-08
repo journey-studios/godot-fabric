@@ -561,7 +561,9 @@ the example, three C++ tests (cache 76, network 64 and core 77 assertions), and 
 from RN iOS, among them a rule stricter than iOS's URL-keyed caches (a request that carries `Authorization`,
 `Proxy-Authorization` or `Cookie` neither reads nor writes either cache, and is refused over http, which is what
 App Transport Security does there); image redirects drop the source's headers as iOS does. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
-target but macOS are open. Hosted CI pending; this slice closes no checkpoint.
+target but macOS are open. Hosted run 37750455295 (the push of main fb50a32) repeated the 74 checks with identical IDs
+and the recorded bundle, and the oracle accepts its report ([receipt](images-network/hosted-ci.json)). This slice
+closes no checkpoint.
 
 The [visual images record](images-visual/README.md) makes the same `Image` draw `tintColor`, `blurRadius`,
 `capInsets` and the clip of the style's `borderRadius`, and take the seven props that RN iOS ignores without

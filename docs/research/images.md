@@ -13,12 +13,17 @@ probe and the oracle both reject, 33 mutations of the genuine report that the or
 push of main 6d02746, the squash of #56) passed all five jobs in its first attempt; its native job
 ran `npm run test:images` (1 of 1 TAP test passing) and its artifact repeated the first slice's 74
 checks, and the independent oracle accepts its report
-([receipt](../evidence/images/hosted-ci.json)); hosted CI has not run the network slice. The
+([receipt](../evidence/images/hosted-ci.json)). Hosted run 37750455295 (the push of main fb50a32, the
+squash of #64) passed all five jobs in its first attempt; its native job ran `npm run
+test:images-network` (1 of 1 TAP test passing) and its artifact repeated the network slice's 74 checks
+with identical IDs and the bundle SHA-256 the report records (no pinned producer changed since
+`910cffb`: 194 of 194 tracked paths have its bytes), and the independent oracle accepts its report
+([receipt](../evidence/images-network/hosted-ci.json)). The
 [visual slice's evidence](../evidence/images-visual/README.md) owns the 53 headless checks of what is done to a
 picture (tint, blur, cap insets and the rounded clip, and the props iOS ignores), the control on the preceding
 host (all 53 run, the 40 normative fail), four retained sabotages that the probe and the oracle both reject, 48
 mutations of the genuine report that the oracle refuses, the exact pixels of 14 blurred bitmaps and the 26
-headless and 39 graphical checks of the example with its two captures; hosted CI has not run it either. GF-16
+headless and 39 graphical checks of the example with its two captures; hosted CI has not run it. GF-16
 stays open; neither the network slice nor the visual slice closes a checkpoint.
 
 All paths below are under `node_modules/react-native/` unless they start with `native/`, `src/`,
@@ -505,8 +510,7 @@ corners and borders.
 - **A disk cache, revalidation, `Vary`, cookies, compression and HTTP/2** for network images, and a pass
   against a remote server, a proxy and real network conditions; the network slice ran against a loopback
   server.
-- **Hosted CI** for the network slice, and a differential comparison of the caches and the failure texts with
-  iOS.
+- **A differential comparison of the caches and the failure texts** with iOS.
 - **A differential comparison of the visual effects with iOS**: the blur's box and rounding, the template
   rendering, the nine-patch's tiling and its behavior under the other content modes, and a view smaller than its
   caps.

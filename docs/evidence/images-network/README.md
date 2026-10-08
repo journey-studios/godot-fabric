@@ -430,7 +430,7 @@ imagem que falhou não deixa pixels de imagem. Não há oráculo independente de
 comparação com o UIKit segue aberta em Limites. Os dois quadros da primeira fatia continuam em
 [`docs/evidence/images`](../images/README.md), mostrando o exemplo antes da linha de rede.
 
-Estas execuções são locais: a CI hospedada ainda não rodou esta fatia.
+A lane com o renderizador roda só localmente; a CI hospedada rodou a lane headless da suíte (veja Limites).
 
 ## Regressões
 
@@ -485,9 +485,22 @@ gates que os leem rodaram de novo na árvore final.
   sob um aviso de memória real não foram comparados com o iOS.
 - **Plataformas.** Só macOS arm64 foi executado; Windows, Linux, Android, iOS e Web não foram exercitados,
   nem hardware real.
-- **CI.** A CI hospedada desta fatia está pendente: o oráculo e a sonda afirmam valores que o host entregou
-  ou limites (quatro downloads ao mesmo tempo, margem de 20 s em torno de cada tempo de validade), nunca o
-  ritmo de quadros nem a segmentação dos bytes.
+- **CI.** A CI hospedada do push da `main` em `fb50a32` (o squash do #64, run 37750455295) passou nos
+  cinco jobs na primeira tentativa, sem reexecução. O job `native-cold-start` rodou `npm run
+  test:images-network` (1 de 1 teste ok), e o artefato `native-images-network` repete os **74 checks
+  headless** com os IDs do relatório commitado (o mesmo digest, `d01c6a74…`); o mesmo job rodou o exemplo
+  `images` no `test:examples` (22 checks headless). O oráculo independente aceita o relatório baixado (24
+  Images declaradas, 146 jobs, 115 operações), e os 30, 1, 34 e 2 checks que o controle e as sabotagens
+  locais falham existem e passam todos no run. Os 194 pins de código e configuração têm em `fb50a32` os
+  bytes de `910cffb` (a árvore do head do PR é a da `main`): nenhum produtor do bundle mudou desde
+  `910cffb`, e o SHA-256 do bundle do run (`38e6eceb…`) é o que o relatório registra. O hash do host
+  nativo (`52683f95…`) é declarado pelo runner, que usou o Node v22.23.2 onde o estado commitado rodou o
+  v22.23.3. O [Pages](publication.json) (run 37750455287) implantou exatamente os dados commitados de
+  `fb50a32`; o site público já foi substituído por um deploy posterior do mesmo commit (run 37756845373,
+  `workflow_dispatch`). O oráculo e a sonda afirmam valores que o host entregou ou limites (quatro
+  downloads ao mesmo tempo, margem de 20 s em torno de cada tempo de validade), nunca o ritmo de quadros
+  nem a segmentação dos bytes. A CI hospedada não roda o controle no host anterior, as sabotagens nem a
+  captura com o renderizador. [Recibo](hosted-ci.json).
 
 Nenhum GF inteiro, contrato, paridade, alvo, outro checkpoint, peso ou denominador fecha: o GF-16
 continua aberto, e esta segunda fatia não fecha nenhum checkpoint.

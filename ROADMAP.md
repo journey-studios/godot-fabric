@@ -3133,7 +3133,7 @@ hit, only the final 200 kept in the byte cache, no revalidation or `Vary`, a `pr
 failure texts, no cookies, compression or HTTP/2, and cleartext allowed for a request without credentials; a
 failure's `responseCode` and response headers reach `onError`, and an image redirect drops the source's headers, as
 they do on iOS. The first slice's suite changed with the contract (73 checks, 62 normative). Open: a disk cache, revalidation, remote servers and
-real network conditions, hosted CI for this slice, and everything the first slice left open apart from network
+real network conditions, and everything the first slice left open apart from network
 images, the decoded cache, `prefetch` and `queryCache`. This slice closes no checkpoint: GF-16 stays in progress.
 After the review of #64 ([`910cffb`](https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10)),
 a request that carries `Authorization`, `Proxy-Authorization` or `Cookie` neither reads nor writes either cache (stricter
@@ -3141,7 +3141,16 @@ than iOS, whose caches are keyed by URL) and is refused over http (what App Tran
 redirects drop the source's headers as `RCTHTTPRequestHandler` does (the old deviation is gone), header numbers keep
 every digit and the example's server answers 400 and 431 instead of reading a bad request line; the lanes ran again
 with 74 checks (66 normative), the control failing the same 30 of 37, sabotages failing 1, 34 and 2, 33 oracle
-mutations, and the first record's 72, 64, 1, 32, 2 and 27 are kept in the `postReview` of its `report.json`.
+mutations, and the first record's 72, 64, 1, 32, 2 and 27 are kept in the `postReview` of its `report.json`. Hosted
+Contracts run 37750455295 (the push of main
+[`fb50a32`](https://github.com/journey-studios/godot-fabric/commit/fb50a325fe0e4961f434b21382d2c4a5885ee14e), the
+squash of #64) passed all five jobs in its first attempt; its audited artifact
+([receipt](docs/evidence/images-network/hosted-ci.json)) repeats the 74 headless checks with identical IDs and the
+bundle SHA-256 the report records (all 194 tracked pins have the bytes of
+[`910cffb`](https://github.com/journey-studios/godot-fabric/commit/910cffb1c35009438e06f14775aac80211664a10), so no
+producer changed), the independent oracle accepts the downloaded report, and the 30, 1, 34 and 2 checks that the local
+control and sabotages fail exist and pass. [Pages 37750455287](docs/evidence/images-network/publication.json) deployed
+this record from main `fb50a32`.
 
 **Tint, blur, cap insets and rounded clipping (2026-10-08).** The third slice of GF-16 makes the public `Image`
 draw what the first two slices refused: `tintColor`, `blurRadius`, `capInsets` and the radii of the Image's own

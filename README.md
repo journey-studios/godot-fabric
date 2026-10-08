@@ -481,7 +481,8 @@ fails the 40 normative checks, four retained sabotages (a clip that ignores the 
 blurred request that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 2, and the
 example's capture sampled the shader's pixels. A disk cache, revalidation, cookies, compression, animated formats
 and a comparison of the effects with iOS are open. Hosted CI passed the first slice's 74 checks on main (run
-37724902858, [receipt](docs/evidence/images/hosted-ci.json)) and is pending for the network and visual slices.
+37724902858, [receipt](docs/evidence/images/hosted-ci.json)) and the network slice's 74 checks (run 37750455295,
+[receipt](docs/evidence/images-network/hosted-ci.json)), and is pending for the visual slice.
 [Evidence](docs/evidence/images/README.md);
 [network evidence](docs/evidence/images-network/README.md);
 [visual evidence](docs/evidence/images-visual/README.md).
