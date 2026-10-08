@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "Modal PR #51: revisão thermo-nuclear corrigida e validada localmente; CI e CodeRabbit do novo head pendentes."
+    "focusTitle": "Modal PR #51: CodeRabbit aprovado; provas nativas hospedadas passam, CI excedeu 45 min. Novo head com budget global de 60 min aguarda CI completa."
   },
-  "updatedAt": "2026-10-07T23:21:19.665442+00:00",
+  "updatedAt": "2026-10-08T00:17:03.208711+00:00",
   "source": {
-    "commit": "3b8ddbcc251a2a136c0708b484d68dad2a0ce60c",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/3b8ddbcc251a2a136c0708b484d68dad2a0ce60c",
-    "scope": "Modal desktop revisada em 3b8ddbc: falha CI a978 reproduzida e corrigida na ordem do filtro existente. Root confirma 164 transform checks, 7 testes Modal sem skips, owners 11/11, oito lanes de capture (672 checks), consumer SDK 68/68, 283 Node + 13 Python. Pins 35/95/153 conferem com a fonte. CI e CodeRabbit do head corrigido pendentes; GF-18 parcial, orientação/insets, hardware, mobile/export e paridade integral abertos. Mantém 23/156 checkpoints e 0/39 itens completos.",
+    "commit": "bee7b40061319e25d002fc86808dc9c1140c5424",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/bee7b40061319e25d002fc86808dc9c1140c5424",
+    "scope": "Modal desktop: correção 3b8ddbc validada em bee7b40 na CI com 193 assertivas Modal (11 macOS display), 164 transforms e 672 capture. Root audita pins 35/95 e 10 RN; CodeRabbit aprova, seis threads resolvidas. Workflow 37701896839 cancelado pelo limite global45min, cold-start reporta passed e paridade skipped. Ajuste apenas do budget total para60min; novo head precisa cinco jobs verdes antes do merge. GF-18 parcial; mantém23/156 checkpoints e0/39 itens completos.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51"
   },
   "phases": [
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #51: revisão thermo-nuclear e CodeRabbit corrigiu geometria, captura cross-root, stack ownership, lifetime, teardown e indexação lógica. A CI a978 revelou inversão singular: o filtro privado de device vinha após rejeitar a chave do pointer. Controle pareado da raiz reproduz o erro no host 45ba095b e passa no host 0dd35f6c, com as mesmas 25 assertivas e witness device -1. Gates finais: 164 transform, 7 testes Modal (owners 11/11), 672 capture, consumer SDK 68/68, 283 Node + 13 Python; pins 35/95/153 conferidos no commit 3b8ddbc. Provas gráficas 73/73 anteriores permanecem atribuídas ao seu host. CI/CodeRabbit do novo head pendentes. Orientação/insets, hardware/mobile/export e paridade integral abertos; quatro checkpoints false, 23/156 e 0/39 preservados.",
+      "note": "PR #51: revisão thermo-nuclear corrigiu geometria, captura cross-root, stack ownership, lifetime, teardown e indexação lógica. Regressão singular a978 reproduzida e corrigida em 3b8ddbc, sem afrouxar oracle. CI bee7b40: Modal193 (owners11/macOS), transforms164 e capture672 passam;35 Modal/95 SDK/10 RN pins auditados. CodeRabbit aprovado e seis threads resolvidas. Workflow37701896839 cancelado pelo limite total45min após COLD_START_PASSED; paridade skipped. Budget global60min, novo head CI pendente. Consumer SDK local68/68 e gates283Node13Python anteriores preservados. Orientação/insets,hardware/mobile/export e paridade integral abertos; quatro checkpoints false,23/156 e0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3493,6 +3493,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "modal-hosted-bee7b40-global-timeout",
+      "at": "2026-10-08T00:17:03.208711+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-13"
+      ],
+      "message": "Root audita193 Modal (11 com display macOS),164 transforms,672 capture,35/95 producer pins e10 RN pins no bee7b40. CodeRabbit aprova e resolve seis threads. CI cancelada pelo limite global45min confirmado por annotation; cold-start passed no artefato, paridade skipped. Novo budget total60min conserva probes/oráculos; merge e aceite dependem de novo head completamente verde. Nenhum checkpoint ou denominador alterado.",
+      "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37701896839"
+    },
     {
       "id": "modal-ci-input-filter-corrected-3b8ddbc",
       "at": "2026-10-07T23:21:19.665442+00:00",

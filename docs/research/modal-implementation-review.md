@@ -1,8 +1,11 @@
 # Modal implementation quality review
 
 The desktop slice is locally approved on code commit `3b8ddbcc251a2a136c0708b484d68dad2a0ce60c`
-after the thermo-nuclear review and corrections. The final-head hosted CI and
-CodeRabbit remain required before merge; this is not full GF-18 acceptance.
+after the thermo-nuclear review and corrections. CodeRabbit approved `bee7b40`
+and all six review threads are resolved. Its hosted Modal, transform and capture
+stages passed, but the native job exhausted its global 45-minute budget before
+parity. A fresh complete CI run with a 60-minute global budget remains required
+before merge; this is not full GF-18 acceptance.
 
 The previous a97876b integration failed hosted `test:transforms:guards` with
 `det == 0`; its Modal step was skipped. Root reproduced the failure and confirmed
@@ -185,7 +188,8 @@ preparation corrections. Earlier 45ba095b and 37053a39 proofs remain historical.
 ## Acceptance boundary
 
 Local structural and behavioral review of this desktop slice is approved.
-The final implementation head still needs hosted CI and CodeRabbit approval
+CodeRabbit approved `bee7b40`, including the independently inspected hosted
+headed witness. The final implementation head still needs complete hosted CI
 before merge. GF-18 remains in progress with all four checkpoints false here.
 Orientation/insets, mobile/export, complete pinned RN parity and hardware input
 remain explicit acceptance work. Local approval does not increase the dashboard
@@ -198,3 +202,28 @@ confirms the required macos-15 owner-window probe passes 9/9 with display server
 macOS. Core Modal passes 68/68, lifecycle 65/65, reorder 9/9 and membership 31/31.
 No display skip was introduced. This establishes runner support; it does not
 certify the later CodeRabbit corrections. A subsequent live check confirms all five required workflow jobs passed on a32235d.
+
+## Corrected hosted head and global CI budget
+
+Root independently inspected the downloaded artifacts of [run 37701896839](https://github.com/journey-studios/godot-fabric/actions/runs/37701896839)
+at `bee7b40061319e25d002fc86808dc9c1140c5424`. The
+[curated receipt](../evidence/modal/hosted-bee7b40-timeout.json) records:
+
+- 193 positive Modal assertions, including the required 11-check macOS display
+  witness. Its missing-target negative fails exactly the intended assertion and
+  cleans both applications to zero roots, memberships and listeners.
+- 164 transform and 672 capture assertions, with no unexpected engine errors.
+  The 35 Modal producer pins, 95 compiled SDK pins and 10 original RN source pins
+  match the reviewed inputs. SDK manifest binding is verified; its payload files
+  are absent from this hosted artifact and are not independently rehashed here.
+- CodeRabbit's [independent artifact verification and approval](https://github.com/journey-studios/godot-fabric/pull/51#discussion_r4213152528).
+
+The workflow is **cancelled**, not green. GitHub's native check annotation says
+`The job has exceeded the maximum execution time of 45m0s`. Cold-start prints
+`COLD_START_PASSED` at cancellation, but its step is cancelled and parity is
+skipped. Passing earlier artifacts does not override that incomplete pipeline.
+The sole workflow correction raises the total native job budget to 60 minutes;
+individual probe deadlines, assertions, strict error checks and required headed
+execution remain unchanged. The new head must pass all five jobs before merge.
+The [dashboard capture](../evidence/modal/dashboard-hosted-timeout.jpg) preserves
+the partial hosted result and unchanged 23/156 checkpoints.

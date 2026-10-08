@@ -2750,6 +2750,26 @@ is headless macOS for pinned `422c2ee`, with later PR-head gates separate.
 Other open scope includes extensions, cookies, proxy/system trust configuration, HTTP/2,
 reconnect/offline behavior, hardware load and Android/iOS/Web runtime acceptance. GF-22’s
 contract, parity and targets remain open.
+
+### Modal desktop review (2026-10-07)
+
+GF-18 remains **In progress** with all four checkpoints open. The
+[thermo-nuclear review](docs/research/modal-implementation-review.md) requires
+typed Window stack ownership, one immutable physical embedding for geometry and
+input, canonical endpoint retirement and last-Surface membership cleanup.
+Independent paired controls reproduce and correct the geometry, capture and
+validation-device regressions. No full roadmap item or denominator changes.
+
+On corrected head `bee7b40`, the [hosted receipt](docs/evidence/modal/hosted-bee7b40-timeout.json)
+verifies 193 Modal assertions (11 on the macOS display), the fail-fast negative
+with both applications cleaned up, 164 transform and 672 capture assertions,
+35 Modal/95 SDK producer pins and 10 original RN pins. CodeRabbit approved that
+head and all six threads are resolved. The workflow nevertheless exhausted its
+45-minute global budget at cold-start completion; parity was skipped. The total
+budget is raised to 60 minutes without changing probes or their failure criteria,
+and a fresh complete CI run remains required before merge. Orientation/insets,
+hardware, mobile/export and complete pinned RN parity remain acceptance work.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and

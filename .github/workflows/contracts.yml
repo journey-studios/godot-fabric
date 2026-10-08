@@ -25,8 +25,9 @@ jobs:
       # GDExtension, graphical rendering or other platform support.
   native-cold-start:
     runs-on: macos-15
-    # The headless suites take ~21-24 minutes; macOS capacity delays can add more.
-    timeout-minutes: 45
+    # Cold dependency builds and native/headed suites took about 46 minutes.
+    # Keep a bounded global budget without changing individual probe deadlines.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
