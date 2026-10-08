@@ -295,3 +295,8 @@ node tests/performance-native.test.mjs --allow-original-negative   # with the pr
 node scripts/performance-sabotage.mjs    # the three retained sabotages, source restored byte for byte
 node tests/performance-native.test.mjs --replay=build/performance-current-report.json
 ```
+
+A replay judges the readings a report recorded, and a report that lacks a section or the shape a check indexes (the windows, the stopped
+application, the surface rows of a cycle, which later versions of the probe added) is incomplete: the probe's replay says
+`PERFORMANCE_REPLAY_INCOMPLETE` and exits with status 2, where it would otherwise abort on the index it does not have. The suite
+replays five damaged copies of its own report to show it.

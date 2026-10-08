@@ -241,6 +241,24 @@ test("The host counts its views, phases and Hermes heap exactly, and a soak of m
   const allowed = replayChecks(binary, atLimit.file);
   assert.equal(allowed.status, 0, allowed.log);
   assert.equal(oracleRejection(atLimit.copy), null, "The oracle accepts a rise of exactly the limit");
+  // A recorded report with a section emptied or malformed is incomplete: the replay says so with status 2 and does not abort on what it
+  // lacks. The sections the later versions of the probe added are the ones that older or damaged reports lack.
+  const damaged = {
+    "stopped-empty": stages => { stages.stopped = {}; },
+    "stopped-short": stages => { stages.stopped.plain = [stages.stopped.plain[0]]; },
+    "windows-hollow": stages => { stages.windows.withMeta = {}; },
+    "surface-row-old": stages => { delete stages.workloads.forms.cycles[2].retiredSurface.liveRoots; },
+    "workloads-null": stages => { stages.workloads = null; },
+  };
+  for (const [name, change] of Object.entries(damaged)) {
+    const broken = await mutated(report, `incomplete-${name}`, change);
+    const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/performance-probe.gd", "--",
+      `--replay=${path.resolve(broken.file)}`], {encoding: "utf8", timeout: 120000, maxBuffer: 64 * 1024 * 1024});
+    const output = (result.stdout ?? "") + (result.stderr ?? "");
+    assert.equal(result.status, 2, `${name}: ${output}`);
+    assert.match(output, /PERFORMANCE_REPLAY_INCOMPLETE/, name);
+    assert.doesNotMatch(output, /SCRIPT ERROR|Invalid access|Program crashed/, name);
+  }
   const original = await optionalJson("build/performance-original-report.json");
   if (original != null) {
     assert.ok(original.originalNegativeObserved);

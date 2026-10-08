@@ -595,6 +595,45 @@ func _initialize() -> void:
       return
   call_deferred("run_probe")
 
+func has_keys(value: Variant, keys: Array) -> bool:
+  if not value is Dictionary:
+    return false
+  for key: String in keys:
+    if not value.has(key):
+      return false
+  return true
+
+func is_pair(value: Variant) -> bool:
+  return value is Array and value.size() == 2
+
+# Whether a recorded report holds the sections the checks index, and the shapes they index in the later ones: the windows, the
+# stopped application and the surface rows of each cycle. A report of another version of the probe, or a damaged one, is
+# incomplete, and replay says so and stops, where indexing what it lacks would abort the script.
+func replay_is_complete(recorded: Variant) -> bool:
+  if not has_keys(recorded, ["provenance", "baseline", "heapSource", "burn", "workloads", "windows", "stopped"]):
+    return false
+  var side_keys := ["aggregates", "samples", "performanceBytes", "snapshotBytes"]
+  var windows: Dictionary = recorded["windows"] if recorded["windows"] is Dictionary else {}
+  if not has_keys(windows.get("withoutMeta"), side_keys) or not has_keys(windows.get("withMeta"), side_keys):
+    return false
+  if not has_keys(recorded["stopped"], ["stopped", "rootCount", "plain", "withMetas"]):
+    return false
+  if not is_pair(recorded["stopped"]["plain"]) or not is_pair(recorded["stopped"]["withMetas"]):
+    return false
+  var workloads: Variant = recorded["workloads"]
+  if not has_keys(workloads, WORKLOADS):
+    return false
+  var row_keys := ["rootCount", "liveRoots", "retiredRoots"]
+  for workload: String in WORKLOADS:
+    var cycles: Variant = workloads[workload].get("cycles") if workloads[workload] is Dictionary else null
+    if not cycles is Array:
+      return false
+    for cycle: Variant in cycles:
+      if not has_keys(cycle, ["mountedSurface", "retiredSurface"]) or not has_keys(cycle["mountedSurface"], row_keys) \
+          or not has_keys(cycle["retiredSurface"], row_keys):
+        return false
+  return true
+
 # Judges a report recorded before, without the application: the readings it holds are all the checks read.
 func replay_probe(path: String) -> void:
   var file := FileAccess.open(path, FileAccess.READ)
@@ -609,12 +648,11 @@ func replay_probe(path: String) -> void:
     quit(2)
     return
   var report: Dictionary = parsed
-  var recorded: Dictionary = report.get("stages", {})
-  for key: String in ["provenance", "baseline", "heapSource", "burn", "workloads", "windows", "stopped"]:
-    if not recorded.has(key):
-      push_error("PERFORMANCE_REPLAY_INCOMPLETE: " + path)
-      quit(2)
-      return
+  var recorded: Variant = report.get("stages", {})
+  if not replay_is_complete(recorded):
+    push_error("PERFORMANCE_REPLAY_INCOMPLETE: " + path)
+    quit(2)
+    return
   stages = recorded
   evaluate()
   var failures: Array = checks.filter(func(row: Dictionary) -> bool: return not row.passed).map(func(row: Dictionary) -> String: return row.name)
