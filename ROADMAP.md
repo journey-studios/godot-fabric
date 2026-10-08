@@ -581,9 +581,12 @@ props RN 0.87.1 declares for its seven components: 433 supported, 325 ignored wi
 case in the real host beside a baseline, an independent oracle recomputes the expectations, the SDK before the change
 fails exactly 22 of its 177 checks, and six retained sabotages are rejected. The
 [record](docs/evidence/frontier-scope/README.md) is local macOS arm64 evidence with no screenshot (the slice has no
-visual output); the hosted CI run and the Pages publication are pending. It lists two open items: the 26 ScrollView props
-that refuse even RN's default (a GF-14 decision) and the host crash that removing the check from the ScrollView exposes.
-No 1.0 checkpoint, weight or denominator moves.
+visual output). The hosted CI run of main `b0e40aa` (the squash of #74, run 37842839329) passed its five jobs on the
+first attempt, with the 181 native checks carrying the committed ids and accepted by the repository's oracle
+([receipt](docs/evidence/frontier-scope/hosted-ci.json)), and the Pages run 37842839320 deployed that commit's dashboard
+data with V05-04 closed ([receipt](docs/evidence/frontier-scope/publication.json)); the causal control and the retained
+sabotages stay local. It lists two open items: the 26 ScrollView props that refuse even RN's default (a GF-14 decision)
+and the host crash that removing the check from the ScrollView exposes. No 1.0 checkpoint, weight or denominator moves.
 
 ## Next implementation order
 

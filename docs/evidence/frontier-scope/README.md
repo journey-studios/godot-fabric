@@ -23,7 +23,9 @@ o ScrollView original do PR #58 e as regras do jogo do PR #70, a main `e1c7a39`)
 commit quando cada comando rodou; os arquivos deste registro, o `docs/API.md`, o `docs/PARITY.md`, o `ROADMAP.md` e o
 script `scripts/scope-scroll-crash.mjs` foram escritos depois e **não são entrada de nenhuma lane**. Ambiente: macOS
 arm64 (26.6.2), Godot oficial **4.7.2** (`ed1daf0bf`), React Native **0.87.1**, Node **v22.23.3**, modo headless. O recibo
-[`report.json`](report.json) fixa os SHA-256 das fontes, dos relatórios e do host, e as contagens abaixo.
+[`report.json`](report.json) fixa os SHA-256 das fontes, dos relatórios e do host, e as contagens abaixo. A CI hospedada
+e o Pages da `main` em `b0e40aa` (o squash do PR #74) têm recibos próprios, [`hosted-ci.json`](hosted-ci.json) e
+[`publication.json`](publication.json), descritos em "CI hospedada e publicação".
 
 ## O que o manifesto decide
 
@@ -201,6 +203,46 @@ Todos passaram, a partir do commit `e33817e`:
 
 O que a execução da fatia consertou no caminho está no `report.json` (`firstPassFailures`).
 
+## CI hospedada e publicação
+
+O push da `main` em `b0e40aa` (o squash do #74, run
+[37842839329](https://github.com/journey-studios/godot-fabric/actions/runs/37842839329) do workflow Contracts) passou nos
+cinco jobs na primeira tentativa, sem reexecução: `contracts` (3 min), `reference-android` (6 min), `reference-ios`
+(7 min), `native-cold-start` (56 min) e `parity-comparison` (21 s). O [recibo](hosted-ci.json) confere tudo contra a API
+do GitHub e o git local:
+
+- **O checkout.** Todos os jobs usaram `b0e40aa`, e a árvore que o GitHub guarda para ele (1.913 entradas) é a árvore
+  local; o head do PR (`ed2c69c`, 10 commits) tem essa mesma árvore.
+- **A lane de JS.** O job `contracts` roda `npm run test:contracts`, e dele os **13 testes** de `tests/scope-0.5.test.mjs`
+  (com os nomes que o arquivo tem no run) passam, no total de 7, 43 e 334 testes de Node e 13 de Python. Os outros 3
+  dos 16 da lane, os de `tests/scroll-view-contract.test.mjs`, rodam no passo `npm run test:scroll-view` do job nativo e
+  passam.
+- **A lane nativa.** `npm run test:scope-0.5` (passo 118 do job nativo, 30 s) passa o seu teste, e o relatório do
+  artefato tem os **181 checks**, todos passando, com os IDs do relatório commitado (o mesmo digest, `f6151b13…`) e as
+  mesmas contagens de casos (248 recusados, 650 ignorados, 4 permitidos, 150 de default, 124 não declarados). O oráculo
+  do repositório em `b0e40aa`, rodado pelo recibo sobre esse relatório, o aceita.
+- **O bundle.** O bundle da sonda que o run produziu (`eaa0c47a…`) é o que `bundleScopeProbe` produz em `b0e40aa`, e o
+  que produz em `e33817e` reproduz o `9d2e4587…` deste registro: o bundle embute o `src/`, e os merges da `main` mudaram
+  fontes que ele embute (a facade `src/react-native-platform.jsx`, entre elas) entre os dois. Os 19 pins do bundle
+  hospedado são os blobs de `b0e40aa`.
+- **O artefato.** `native-scope-0.5` (id 11581397662, 600.687 bytes, SHA-256 `1b259af8…`, igual ao digest da API e ao do
+  log de upload) tem 4 arquivos que casam com os caminhos do workflow; o recibo fixa o SHA-256 de cada um e do zip.
+
+O host nativo do runner (`207e9528…`) não é o binário deste registro (`81dd6811…`), e o Node é o v22.23.2 (aqui, o
+v22.23.3). Das 23 fontes que o `report.json` fixa em `e33817e`, 17 têm em `b0e40aa` os mesmos bytes e 6 diferem por causa
+dos merges da `main` (#65, a LayoutAnimation, e #73, os serviços do jogo); dos 9 pins de verificação, 1 difere (a
+auditoria de 2026-10-01, que o #65 editou). Depois de `e33817e` os commits do próprio PR só mexeram em documentos, na
+evidência, no dado do dashboard e no `scripts/scope-scroll-crash.mjs`, que nenhuma lane da CI roda. O run **não**
+executa o controle causal (`--previous`, 22 de 177), as seis sabotagens nem a reprodução da queda do ScrollView: o
+arquivo de comparação do passo diz `originalControlPresent: false`, e tudo isso continua local.
+
+O [Pages](publication.json) rodou uma vez sobre `b0e40aa` (run 37842839320, push, 20:53:45 a 20:54:36Z, `build` e
+`deploy` na primeira tentativa) e implantou exatamente os dados commitados de `b0e40aa` (SHA-256 `677123bb…`), com o
+renderizador e as fontes do commit. O JSON publicado tem o V05-04 com os três critérios (`manifesto`, `tipos` e `props`)
+fechados, as duas evidências dos recibos do #69 no checkpoint da fatia do GF-27 e as duas entradas de atividade, e os 27
+links pinados que o recibo confere são servidos pelo GitHub com o blob igual ao local. Esse deploy foi substituído 88
+minutos depois pelo push de `7ef63ed` (o #71).
+
 ## Divergências registradas
 
 **Props que o próprio RN injeta numa View pública.** `TouchableWithoutFeedback` e `TouchableNativeFeedback` passam
@@ -300,5 +342,7 @@ terminou em `SIGBUS` sem a linha do manipulador: o sinal varia, a prop e a monta
   exige o mesmo SHA-256 e falha sem ele).
 - O manifesto não edita a auditoria de 2026-10-01 (`docs/compatibility/react-native-0.87.1.json`): onde ela está
   atrasada, o manifesto diz `auditStale`, e o PARITY.md ganhou só uma linha de ponteiro, sem mexer em contagens.
-- **Não há CI hospedado nem publicação no Pages** para este registro: ele é local, macOS arm64, headless. Nenhum
+- **A execução do registro é local** (macOS arm64, headless). A CI hospedada e o Pages da `main` em `b0e40aa` têm
+  recibos ([`hosted-ci.json`](hosted-ci.json), [`publication.json`](publication.json)), mas a CI roda só as lanes de JS e
+  a nativa corrente: o controle `--previous`, as sabotagens e a reprodução da queda do ScrollView seguem locais. Nenhum
   hardware, nenhum iOS e nenhuma exportação foram exercitados. Nenhum checkpoint, peso ou denominador do 1.0 se move.
