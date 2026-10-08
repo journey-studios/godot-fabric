@@ -2211,8 +2211,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           } else adapter.update_pan(live_route.id, point, now);
         } else if (release) {
           cancel_scroll_route(live_route);
-        } else if (!invalid && adapter.pan_ready(live_route.id, point, blocked,
-            captured_in_surface(live_route.id, input_source))) {
+        } else if (!invalid && adapter.pan_ready(live_route.id, point, blocked) &&
+            !captured_in_surface(live_route.id, input_source)) {
           const int scroll_tag = live_route.scroll_tag;
           const int route_id = live_route.id;
           target->second->pointer->takeover(scroll_tag, route_id);

@@ -610,52 +610,52 @@ and [committed producer inventory](../evidence/scroll-view/committed-source-2a01
 
 ## Modal wheel dispatch and original Text integration
 
-CodeRabbit's Window wheel finding on8dd6129 is real. The existing Modal callback
+CodeRabbit's Window wheel finding on `8dd6129` is real. The existing Modal callback
 enters routed_input, whose pointer-key classifier cannot represent wheel
 buttons. The separate wheel call at the Surface root never executes there.
 The principal required an actual current Window.window_input witness with
 independent root, click/pan/reset and teardown controls before accepting RED.
-The final historical v6 report passes9of13 and fails exactly four Modal wheel
+The final historical v6 report passes 9 of 13 and fails exactly four Modal wheel
 checks: each real signal arrives, but logical/Fabric/paint offsets remain zero.
 Instrumentation attempts with a wrong/retired Window or failing owner setup
 remain rejected. The RED header's after-teardown ID zero is explicitly bounded
 by verified live snapshots; the permanent regression saves IDs before teardown.
 
-The final correction412eba2 deletes the duplicate physical Control-parent walk
+The final correction `412eba2` deletes the duplicate physical Control-parent walk
 and root-only dispatch. Wheel handling becomes one branch of the existing
 routed input entry point, after its input-device filter and before its pointer
 classifier. It reuses physical_hit_test, scroll_ancestor and the live mounted
 ScrollAdapter, including source-surface identity. No second wheel state,
 Modal-specific callback branch, wrapper or public API is needed. The principal
 removed a redundant physical-input-host lookup. ApplicationRuntime was already
-above1,000lines; this correction adds only one net line. Its321-line permanent
-probe,170-line measured oracle and92-line runner each remain bounded. The
+above 1,000 lines; this correction adds only one net line. Its 321-line permanent
+probe, 170-line measured oracle and 92-line runner each remain bounded. The
 principal rejected a giant cleanup condition chain and a one-use fixture wrapper;
 small canonical counters and one direct component replace them.
 
-Main's original Text #62 is integrated in0203145. Incoming exclusive Text files
+Main's original Text #62 is integrated in `0203145`. Incoming exclusive Text files
 match main; the dashboard preserves the GF-11 record, all other agents' tasks,
-GF-18 acceptance and milestone objects. The rebuilt7fc host passes ScrollView33,
-Modal wheel13, full Modal7tests/193mounted checks, click eight91-check lanes,
-list44 and OS37. Fresh same-host previous-SDK and sabotage controls are rejected.
+GF-18 acceptance and milestone objects. The rebuilt `7fc` host passes ScrollView 33,
+Modal wheel 13, full Modal 7 tests / 193 mounted checks, click eight 91-check lanes,
+list 44 and OS 37. Fresh same-host previous-SDK and sabotage controls are rejected.
 The principal independently replays the measured scroll/route/Modal/list/OS
-oracles and all26click cases in every lane, checks stopped-root cleanup and
-rejects14damaged Modal reports plus missing-click and rootB-leak copies.
-All134native inputs match the SDK receipt, working files and committed Git020;
-all2,713SDK file bytes/symlinks match its unique manifest and loaded-host link.
+oracles and all 26 click cases in every lane, checks stopped-root cleanup and
+rejects 14 damaged Modal reports plus missing-click and root-B-leak copies.
+All 134 native inputs match the SDK receipt, working files and committed Git `020`;
+all 2,713 SDK file bytes / symlinks match its unique manifest and loaded-host link.
 
 Root's contracts invocation initially overlapped the click suite and changed
 app.js; the integrity guard aborted correctly. The full suite was rerun serially,
 with no accepted result from the stopped attempt. A list run similarly rejected
-787-host sidecars; preserved historical controls were replaced by fresh7fc
-executions before the current list/OS runs. Evidence curation distinguishes
+`787`-host sidecars; preserved historical controls were replaced by fresh `7fc`
+executions before the current list / OS runs. Evidence curation distinguishes
 these rejected orchestration attempts from product failures. Raw build/pack/
 verify terminal logs were not retained; receipts and the root's independent
 package-byte verification are the preserved SDK evidence.
 
 Two headed Modal viewport captures were viewed by root. The actual instrumented
 copy, its diff and unchanged host/receipt/bundle identities are recorded; the
-canonical probe/report were preserved. Local gates pass352Node and13Python,
+canonical probe/report were preserved. Local gates pass 352 Node and 13 Python,
 static and publication checks. Historical Images/Animated/examples/four earlier
 ScrollView captures are retained as historical. This correction satisfies local
 thermo-nuclear quality review; final published-head CI, CodeRabbit and GF-14

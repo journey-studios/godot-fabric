@@ -25,7 +25,7 @@ class ScrollAdapter {
   bool command(const std::string &name, const folly::dynamic &args);
   void wheel(int direction, double factor);
   void pointer_down(int pointer_id, ScrollPoint local, double now);
-  bool pan_ready(int pointer_id, ScrollPoint local, bool blocked, bool captured) const;
+  bool pan_ready(int pointer_id, ScrollPoint local, bool blocked) const;
   void begin_pan(int pointer_id, ScrollPoint local, double now);
   void update_pan(int pointer_id, ScrollPoint local, double now);
   void finish_pan(int pointer_id, ScrollPoint local, double now, bool canceled = false);

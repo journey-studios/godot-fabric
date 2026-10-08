@@ -213,8 +213,8 @@ void ScrollAdapter::pointer_down(int pointer_id, ScrollPoint local, double now) 
   interrupt_motion();
   candidate_ = Candidate{pointer_id, local, now, false};
 }
-bool ScrollAdapter::pan_ready(int pointer_id, ScrollPoint local, bool blocked, bool captured) const {
-  if (!candidate_ || candidate_->pointer_id != pointer_id || candidate_->claimed || blocked || captured || !props_ || !props_->scrollEnabled) return false;
+bool ScrollAdapter::pan_ready(int pointer_id, ScrollPoint local, bool blocked) const {
+  if (!candidate_ || candidate_->pointer_id != pointer_id || candidate_->claimed || blocked || !props_ || !props_->scrollEnabled) return false;
   const double primary = props_->horizontal ? std::abs(local.x - candidate_->origin.x) : std::abs(local.y - candidate_->origin.y);
   const double cross = props_->horizontal ? std::abs(local.y - candidate_->origin.y) : std::abs(local.x - candidate_->origin.x);
   return primary > ScrollMotion::kDragThreshold && primary > cross;

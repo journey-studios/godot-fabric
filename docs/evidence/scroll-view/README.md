@@ -199,7 +199,7 @@ optional sidecars must be archived first, rather than relabeled.
 These are actual Modal Window viewport images from a copy that adds a capture
 helper, two frame-post-draw capture calls and capture metadata, and isolates
 the report path/output marker. The [exact diff](modal-wheel-0203145-capture.diff)
-is preserved. The canonical13-check report is unchanged. No mobile hardware,
+is preserved. The canonical 13-check report is unchanged. No mobile hardware,
 refresh-rate, full parity or complete GF-14 acceptance is claimed.
 
 ![Registered Agent1 task and current testing scope](agents-0203145-testing.jpg)

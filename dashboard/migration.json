@@ -4167,7 +4167,7 @@
         "GF-16"
       ],
       "message": "Local ScrollView/Modal validation used producer source commit 3bf129c. The evidence receipt is being published in a separate documentation batch from branch codex/scroll-original; hosted CI/review remain pending and GF-14 checkpoints remain open.",
-      "url": "https://github.com/journey-studios/godot-fabric/blob/codex/scroll-original/docs/evidence/scroll-view/integration-3bf129c.json"
+      "url": "https://github.com/journey-studios/godot-fabric/blob/d35808a5560bcbc0504f02cc5ddaadfb2ffae4f7/docs/evidence/scroll-view/integration-3bf129c.json"
     },
     {
       "id": "text-style-third-slice-1b9a64b",
