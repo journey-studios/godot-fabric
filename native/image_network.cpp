@@ -1,4 +1,5 @@
 #include "image_network.h"
+#include "image_cache.h"
 #include <algorithm>
 #include <vector>
 
@@ -30,16 +31,23 @@ int64_t announced_length(const http::Headers &headers) {
 
 std::optional<std::string> build_download_request(const RequestSpec &spec, HttpRequest &out) {
   std::string error;
-  if (!http::parse_url(spec.uri, &error)) return error;
+  const auto url = http::parse_url(spec.uri, &error);
+  if (!url) return error;
   HttpRequest request;
   request.method = spec.method.empty() ? "GET" : upper(spec.method);
   request.url = spec.uri;
+  // RCTHTTPRequestHandler replaces the headers of a redirected request with the cookies', of which the host keeps none.
+  request.drop_headers_on_redirect = true;
   for (const auto &[name, value] : spec.headers) {
     if (!http::valid_header_name(name)) return "The image source has an invalid header name: \"" + name + "\"";
     if (!http::valid_header_value(value)) return "The image source has an invalid value for the header \"" + name + "\"";
     const auto existing = std::find_if(request.headers.begin(), request.headers.end(), [&](const auto &entry) { return http::iequals(entry.first, name); });
     if (existing == request.headers.end()) request.headers.emplace_back(name, value);
     else *existing = {name, value};
+  }
+  // iOS reaches the same end through App Transport Security, which blocks cleartext by default: a credential is not written to a cleartext wire.
+  if (!url->tls() && image::carries_credentials(request.headers)) {
+    return "The image source carries credentials (an Authorization, Proxy-Authorization or Cookie header) and its URL is http: such a request is only sent over https";
   }
   request.body = spec.body;
   out = std::move(request);

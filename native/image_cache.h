@@ -166,6 +166,16 @@ inline const char *policy_name(CachePolicy policy) {
   return "default";
 }
 
+// A request whose headers carry a credential. Both caches are keyed by the URL (and the picture's size and scale), so a response fetched
+// with a credential could answer a request that carries none, or another's. RN iOS keys RCTImageCache and NSURLCache by URL too; this host
+// takes the safer rule instead: such a request neither reads nor writes either cache.
+inline bool carries_credentials(const http::Headers &headers) {
+  for (const auto &[name, value] : headers) {
+    if (http::iequals(name, "authorization") || http::iequals(name, "proxy-authorization") || http::iequals(name, "cookie")) return true;
+  }
+  return false;
+}
+
 // What a cache holds for a request: an entry, and whether it has gone stale.
 struct Lookup {
   bool present{};
@@ -188,9 +198,13 @@ enum class Route {
 // (cacheResult is NO for NSURLRequestReloadIgnoringLocalCacheData); a GET without a body is then looked for in the byte cache,
 // where the default policy takes a fresh entry only and force-cache and only-if-cached take any; what neither has is downloaded,
 // unless the policy asks for the caches alone. The lookups are made as they are needed and no sooner (a decoded hit never touches
-// the byte cache), because a lookup moves an entry to the front of its cache.
+// the byte cache), because a lookup moves an entry to the front of its cache. A request that carries credentials asks neither cache (and
+// the caller stores nothing of it), so only-if-cached finds nothing for it.
 template <typename Decoded, typename Bytes>
-Route route(CachePolicy policy, bool view, bool byte_cacheable, Decoded &&decoded, Bytes &&bytes) {
+Route route(CachePolicy policy, bool view, bool byte_cacheable, bool credentialed, Decoded &&decoded, Bytes &&bytes) {
+  if (credentialed) {
+    return policy == CachePolicy::OnlyIfCached ? Route::RefuseOnlyIfCached : Route::Download;
+  }
   if (view && policy != CachePolicy::Reload) {
     const Lookup found = decoded();
     if (found.present && !found.stale) {

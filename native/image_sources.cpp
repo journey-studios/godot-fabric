@@ -89,11 +89,13 @@ void ImageSources::resolve(const SourceRequest &request, SourceHooks hooks) {
   const std::string cache_url = url->to_string();
   // The path decides whether a .tga file is the TGA it must be declared to be.
   const std::string path = url->target.substr(0, url->target.find('?'));
-  const bool cacheable = wire.method == "GET" && wire.body.empty();
+  // A request that carries a credential neither reads nor writes either cache.
+  const bool credentialed = image::carries_credentials(request.headers);
+  const bool cacheable = wire.method == "GET" && wire.body.empty() && !credentialed;
   const std::string key = image::decoded_key(request.uri, request.width, request.height, request.scale);
   const double now = wall_ms_ ? wall_ms_() : 0;
   // A stale picture is dropped, as RCTImageCache drops it, whatever the policy then does.
-  const auto route = image::route(request.policy, request.view, cacheable,
+  const auto route = image::route(request.policy, request.view, cacheable, credentialed,
       [&] {
         auto *entry = decoded_.get(key);
         if (!entry) {
@@ -137,7 +139,8 @@ void ImageSources::resolve(const SourceRequest &request, SourceHooks hooks) {
       return;
     }
     case image::Route::RefuseOnlyIfCached:
-      hooks.done(failure("The image is not in the cache, and its source asks for the cache alone (cache: \"only-if-cached\")"));
+      hooks.done(failure(credentialed ? "The image is not in the cache, and its source asks for the cache alone (cache: \"only-if-cached\"); a request that carries credentials never reads the caches"
+                                      : "The image is not in the cache, and its source asks for the cache alone (cache: \"only-if-cached\")"));
       return;
     case image::Route::Download:
       break;
@@ -210,7 +213,7 @@ void ImageSources::stop() {
 
 // RCTImageCache keeps what a network response decoded to, unless the request reloaded or the response forbids it.
 void ImageSources::keep_picture(const SourceRequest &request, const image::Freshness &freshness, std::shared_ptr<LoadedImage> picture, std::size_t cost) {
-  if (!request.view || request.policy == image::CachePolicy::Reload || !freshness.storable) {
+  if (!request.view || request.policy == image::CachePolicy::Reload || !freshness.storable || image::carries_credentials(request.headers)) {
     return;
   }
   decoded_.put(image::decoded_key(request.uri, request.width, request.height, request.scale), std::move(picture), cost, freshness.stale_at);

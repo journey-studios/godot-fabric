@@ -20,6 +20,10 @@ struct HttpRequest {
   // The whole exchange, redirects included, must end within this many
   // milliseconds; 0 means no deadline (the call timeout of RN's Android client).
   double timeout_ms{};
+  // RCTHTTPRequestHandler's redirect delegate replaces the next request's headers with the cookies' (the host keeps none), so a redirected
+  // request carries none of the headers the caller set. Off by default: a request keeps OkHttp's rules, which keep them and drop only an
+  // Authorization that crosses to another origin (Networking). Image downloads turn it on.
+  bool drop_headers_on_redirect{};
 };
 
 struct HttpResponseHead {

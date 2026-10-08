@@ -1,4 +1,5 @@
 #include "image_loader_module.h"
+#include "image_core.h"
 #include "image_loader.h"
 #include "turbo_module_registry.h"
 #include "FBReactNativeSpecJSI.h"
@@ -6,7 +7,6 @@
 #include <react/bridging/Bridging.h>
 #include <react/bridging/Promise.h>
 #include <cmath>
-#include <cstdio>
 #include <map>
 #include <optional>
 #include <string>
@@ -26,12 +26,7 @@ struct State {
 // RCTConvert NSString of one value of getSizeWithHeaders' dictionary: a string as it is, a number or a boolean as its text.
 std::optional<std::string> header_text(jsi::Runtime &rt, const jsi::Value &value) {
   if (value.isString()) return value.getString(rt).utf8(rt);
-  if (value.isNumber()) {
-    const double number = value.getNumber();
-    char text[64];
-    std::snprintf(text, sizeof text, number == std::floor(number) && std::fabs(number) < 1e15 ? "%.0f" : "%g", number);
-    return std::string(text);
-  }
+  if (value.isNumber()) return image::number_text(value.getNumber());
   if (value.isBool()) return std::string(value.getBool() ? "1" : "0");
   return std::nullopt;
 }

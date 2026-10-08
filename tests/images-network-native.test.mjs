@@ -115,6 +115,12 @@ function assertOracleMutations(report) {
   mutate(candidate => { candidate.server.records = candidate.server.records.filter(row => row.url !== "/hang-body/h3"); }, /h3/, "the server holds every download that started");
   mutate(candidate => { op(candidate, "c1-same").served = "network"; }, /where the picture came from/, "a second Image of one picture is answered by the decoded cache");
   mutate(candidate => { op(candidate, "c1-reload").served = "decoded"; }, /where the picture came from/, "reload asks the server again");
+  mutate(candidate => { op(candidate, "c11-auth").served = "decoded"; }, /where the picture came from/, "a request that carries credentials is not answered by the decoded cache");
+  mutate(candidate => { op(candidate, "c11-plain-3").served = "bytes"; }, /where the picture came from/, "a request that carries credentials does not leave its response in the byte cache");
+  mutate(candidate => { op(candidate, "c11-gs-plain").served = "bytes"; }, /where the response came from/, "a size measured with credentials does not leave its response in the byte cache");
+  mutate(candidate => { op(candidate, "c11-http-auth").served = "network"; }, /where the picture came from/, "a request that carries credentials is not sent over http");
+  mutate(candidate => { op(candidate, "c11-gs-http").served = "network"; }, /where the response came from/, "a size measured with credentials is not asked over http");
+  mutate(candidate => { candidate.server.records.find(row => row.listener === "other" && row.url === "/pic/plain/quad24.png").rawHeaders.push("X-Keep", "kept"); }, /other origin gets neither/, "a redirect drops the source's headers");
   mutate(candidate => { op(candidate, "max-age-3").served = "decoded"; }, /where the picture came from/, "a stale picture is loaded again");
   mutate(candidate => { op(candidate, "heuristic-3").served = "network"; }, /where the picture came from/, "a heuristic stale time is a tenth of the age");
   mutate(candidate => { op(candidate, "lru-1-again").served = "decoded"; }, /where the picture came from/, "the decoded cache gives up the least recently used");

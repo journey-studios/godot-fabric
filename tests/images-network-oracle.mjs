@@ -32,7 +32,18 @@ export const networkJsOnlyChecks = [
   "cleanup/No host or runtime diagnostic was reported",
   "report/The network images report is saved",
 ];
-export const networkCheckCount = 72;
+export const networkCheckCount = 74;
+
+// A request that carries one of these headers neither reads nor writes either cache: this host's rule, stricter than iOS, whose RCTImageCache and
+// NSURLCache are keyed by URL alone, so that a response fetched with a credential cannot answer a request that carries none, or another's.
+const credentialHeaders = ["authorization", "proxy-authorization", "cookie"];
+const carriesCredentials = op => Object.keys(op.headers ?? {}).some(name => credentialHeaders.includes(name.toLowerCase()));
+// ... and is only sent over https: iOS blocks cleartext through App Transport Security, and this host does not write a credential to a cleartext wire.
+const refusedInTheClear = op => carriesCredentials(op) && new URL(op.uri).protocol === "http:";
+const clearTextCredentials = /carries credentials.*only sent over https/;
+// What the host writes for a header value that is not a string, as RCTConvert NSString does: 0.123456789 as its shortest text that reads back, an
+// integer as its digits and a boolean as 1.
+const headerTexts = {"gs-headers": {"x-ratio": "0.123456789", "x-count": "7", "x-flag": "1"}};
 
 // ---- what the server answers, from its routes ----
 
@@ -361,13 +372,19 @@ function verifyRequests(report) {
   for (const [url, count] of expectedHits) {
     assert.equal(recordsFor(report, url).length, count, `the server saw ${url} ${count} times`);
   }
-  // Redirects keep the source's headers, except that Authorization does not cross to another origin.
+  // A redirect drops the source's headers, as RCTHTTPRequestHandler's redirect delegate does (it leaves the cookies, and the host keeps none): the
+  // first hop carries them and the request it leads to carries none, on the same origin or on another.
+  const sameOrigin = declared.find(spec => spec.id === "ok-redirect");
+  same(valuesOf(recordsFor(report, fill(sameOrigin.source.uri, report.inputs))[0], "x-keep"), ["kept"], "the first hop of a same-origin redirect carries the header");
+  for (const record of recordsFor(report, fill("$http/pic/plain/quad24.png", report.inputs))) {
+    same(valuesOf(record, "x-keep"), [], "no request for the picture a same-origin redirect leads to carries the header");
+  }
   const cross = declared.find(spec => spec.id === "ok-redirect-cross");
   const hop = recordsFor(report, fill(cross.source.uri, report.inputs))[0];
   const landed = recordsFor(report, fill("$other/pic/plain/quad24.png", report.inputs));
   assert.equal(landed.length, 1);
   same([valuesOf(hop, "authorization"), valuesOf(hop, "x-keep")], [["secret"], ["kept"]], "the first hop carries both headers");
-  same([valuesOf(landed[0], "authorization"), valuesOf(landed[0], "x-keep")], [[], ["kept"]], "the other origin gets X-Keep and not Authorization");
+  same([valuesOf(landed[0], "authorization"), valuesOf(landed[0], "x-keep")], [[], []], "the other origin gets neither header");
 }
 
 // ---- the caches: a model of the two, replayed over the probe's operations ----
@@ -467,8 +484,8 @@ function simulate(report) {
   const decoded = new Lru(20 * MiB, 2 * MiB), bytes = new Lru(20 * MiB, 20 * MiB / 20);
   const cursors = new Map();
   const answers = url => {
-    const target = targetOf(url);
-    return report.server.records.filter(row => row.kind === "request" && row.url === target && row.listener === "http");
+    const target = targetOf(url), listener = listenerOf(url, report.ports);
+    return report.server.records.filter(row => row.kind === "request" && row.url === target && row.listener === listener);
   };
   const take = url => {
     const list = answers(url), at = cursors.get(url) ?? 0;
@@ -481,16 +498,33 @@ function simulate(report) {
     const outcome = decodeOutcome(bodies[name], {size: [op.width, op.height], scale: op.scale});
     return outcome;
   };
-  // Fetches a response the model does not hold and keeps it where RN iOS keeps it.
-  const fetch = (op, now) => {
+  // The request as it arrived on the wire carries the headers the operation declared, under whatever case they were written.
+  const sentWithTheDeclaredHeaders = (record, op) => {
+    const sent = new Map();
+    for (let index = 0; index + 1 < record.rawHeaders.length; index += 2) {
+      sent.set(record.rawHeaders[index].toLowerCase(), record.rawHeaders[index + 1]);
+    }
+    const declared = {...Object.fromEntries(Object.entries(op.headers ?? {}).map(([name, value]) => [name.toLowerCase(), value])), ...(headerTexts[op.label] ?? {})};
+    for (const [name, value] of Object.entries(declared)) {
+      assert.equal(sent.get(name), value, `${op.label}: the server received ${name}: ${value}`);
+    }
+    if (!carriesCredentials(op)) {
+      for (const name of credentialHeaders) {
+        assert.ok(!sent.has(name), `${op.label}: no ${name} was sent`);
+      }
+    }
+  };
+  // Fetches a response the model does not hold and keeps it where RN iOS keeps it (a request with credentials keeps it nowhere).
+  const fetch = (op, now, store = true) => {
     const record = take(op.uri);
+    sentWithTheDeclaredHeaders(record, op);
     const headers = record.responseHeaders;
     const length = Number(headers["content-length"] ?? 0);
     if (record.status !== 200 || length === 0) {
       return {record, ok: false};
     }
     const kept = freshness(headers, now);
-    if (kept.storable) {
+    if (kept.storable && store) {
       bytes.put(op.uri, length, kept.stale);
     }
     return {record, ok: true, headers, length};
@@ -530,8 +564,14 @@ function simulate(report) {
     if (op.kind === "view") {
       const policy = op.policy;
       const key = `${op.uri}|${op.width}|${op.height}|${op.scale}|0`;
+      const credentialed = carriesCredentials(op);
       let served = null, fresh = null, ok = true, text = null;
-      if (policy !== "reload") {
+      if (refusedInTheClear(op)) {
+        served = "";
+        ok = false;
+        text = clearTextCredentials;
+      }
+      if (served == null && policy !== "reload" && !credentialed) {
         const entry = decoded.get(key);
         if (entry) {
           if (staleAt(entry, now, op.label)) {
@@ -541,7 +581,7 @@ function simulate(report) {
           }
         }
       }
-      if (served == null && policy !== "reload") {
+      if (served == null && policy !== "reload" && !credentialed) {
         const found = hit(op, now);
         if (found) {
           served = "bytes";
@@ -551,10 +591,14 @@ function simulate(report) {
           ok = false;
           text = /only-if-cached/;
         }
+      } else if (served == null && credentialed && policy === "only-if-cached") {
+        served = "";
+        ok = false;
+        text = /only-if-cached.*credentials/;
       }
       if (served == null) {
         served = "network";
-        const got = fetch(op, now);
+        const got = fetch(op, now, !credentialed);
         if (!got.ok) {
           ok = false;
           const answer = answerFor(targetOf(op.uri));
@@ -566,7 +610,7 @@ function simulate(report) {
         if (outcome.error) {
           ok = false;
           text = outcome.error;
-        } else if (policy !== "reload" && fresh.storable) {
+        } else if (policy !== "reload" && fresh.storable && !credentialed) {
           decoded.put(key, outcome.width * outcome.height * 4, fresh.stale);
         }
       }
@@ -584,11 +628,16 @@ function simulate(report) {
       continue;
     }
     // prefetch, getSize and getSizeWithHeaders: the byte cache, and the picture only checked or measured.
-    const found = hit({...op, policy: "default"}, now);
+    const credentialed = carriesCredentials(op);
+    const found = credentialed ? null : hit({...op, policy: "default"}, now);
     let served = "bytes", ok = true, text = null, length;
-    if (!found) {
+    if (refusedInTheClear(op)) {
+      served = "";
+      ok = false;
+      text = clearTextCredentials;
+    } else if (!found) {
       served = "network";
-      const got = fetch(op, now);
+      const got = fetch(op, now, !credentialed);
       if (!got.ok) {
         ok = false;
         const answer = answerFor(targetOf(op.uri));
@@ -614,6 +663,9 @@ function simulate(report) {
       const prefix = op.kind.startsWith("prefetch") ? "E_PREFETCH_FAILURE: " : op.kind === "getSize" ? `E_GET_SIZE_FAILURE: Failed to getSize of ${op.uri}: ` : "E_GET_SIZE_FAILURE: ";
       if (text instanceof RegExp) {
         assert.match(op.result.message, new RegExp(`^${escape(prefix)}`));
+        if (text === clearTextCredentials) {
+          assert.match(op.result.message, text, op.label);
+        }
       } else {
         assert.equal(op.result.message, prefix + text, op.label);
       }

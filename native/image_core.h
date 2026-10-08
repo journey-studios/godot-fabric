@@ -10,10 +10,14 @@
 #include "http_core.h"
 #include <algorithm>
 #include <cctype>
+#include <charconv>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <iomanip>
+#include <locale>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -435,5 +439,33 @@ inline PixelSize decode_target(uint64_t source_width, uint64_t source_height, do
   const double factor = std::max(pixel_w, pixel_h) / std::max(sw, sh);
   return {static_cast<uint64_t>(std::max(1.0, std::round(sw * factor))), static_cast<uint64_t>(std::max(1.0, std::round(sh * factor)))};
 }
+
+// The text of a number as NSNumber's description reads it: an integral value as its digits and any other as the shortest decimal that reads
+// back as the same double (a fixed precision would round 0.123456789 to 0.123457). std::to_chars has an overload for doubles, but libc++ marks it
+// unavailable below macOS 13.3 and the host builds for 13.0, so the shortest of 1 to 17 significant digits that parses back is found with streams.
+inline std::string number_text(double number) {
+  if (std::isnan(number)) return "nan";
+  if (std::isinf(number)) return number < 0 ? "-inf" : "inf";
+  if (number == std::floor(number) && std::fabs(number) < 1e15) {
+    if (number == 0) return std::signbit(number) ? "-0" : "0";
+    char digits[32];
+    const auto result = std::to_chars(digits, digits + sizeof digits, static_cast<long long>(number));
+    return std::string(digits, result.ptr);
+  }
+  std::string text;
+  for (int precision = 1; precision <= 17; ++precision) {
+    std::ostringstream out;
+    out.imbue(std::locale::classic());
+    out << std::setprecision(precision) << number;
+    text = out.str();
+    std::istringstream in(text);
+    in.imbue(std::locale::classic());
+    double back = 0;
+    in >> back;
+    if (back == number) break;
+  }
+  return text;
+}
+
 
 }  // namespace fabric_godot::image

@@ -122,9 +122,10 @@ func loads_stage() -> void:
   check(hops.size() == 1 and landed.size() >= 1, "redirects/The server saw the redirect and the picture it led to", true)
   var cross: Array = (await server_log()).get("records", []).filter(func(row: Dictionary) -> bool: return String(row.listener) == "other" and String(row.url) == "/pic/plain/quad24.png")
   var first_hop: Array = await requests_for("/redirect/307?to=" + inputs.other + "/pic/plain/quad24.png")
-  check(cross.size() == 1 and raw_header(cross[0], "x-keep") == "kept" and raw_header(cross[0], "authorization") == ABSENT
-    and first_hop.size() == 1 and raw_header(first_hop[0], "authorization") == "secret",
-    "redirects/A redirect to another origin keeps the source's headers and drops Authorization", true)
+  check(cross.size() == 1 and raw_header(cross[0], "x-keep") == ABSENT and raw_header(cross[0], "authorization") == ABSENT
+    and first_hop.size() == 1 and raw_header(first_hop[0], "authorization") == "secret" and raw_header(first_hop[0], "x-keep") == "kept"
+    and raw_header(hops[0], "x-keep") == "kept" and landed.all(func(row: Dictionary) -> bool: return raw_header(row, "x-keep") == ABSENT),
+    "redirects/A redirect drops the source's headers, as RCTHTTPRequestHandler's redirect delegate does: the request it leads to reaches the server without them, to another origin or not", true)
   stages.loads = {"exact": exact}
 
 func requests_stage() -> void:
@@ -345,20 +346,22 @@ func job_since(before: int, uri: String, kinds: Array) -> Dictionary:
 func now_ms() -> float:
   return Time.get_unix_time_from_system() * 1000.0
 
-func view_op(label: String, target: String, size: int = 24, policy: String = "default", extra: Dictionary = {}) -> Dictionary:
+func view_op(label: String, target: String, size: int = 24, policy: String = "default", extra: Dictionary = {}, headers: Dictionary = {}) -> Dictionary:
   collect_jobs()
   var before := last_job
   var filled := fill(target)
   var spec := square(target, size)
   if policy != "default":
     spec.source["cache"] = policy
+  if not headers.is_empty():
+    spec.source["headers"] = headers
   spec.merge(extra, true)
   var unix := now_ms()
   mount_image(label, spec)
   await wait_until(func() -> bool: return ended(label))
   var job := job_since(before, filled, ["network"])
   var made := picture(label)
-  var op := {"label": label, "kind": "view", "uri": filled, "width": size, "height": size, "scale": SCALE, "policy": policy, "offset": offset_ms, "unix": unix,
+  var op := {"label": label, "kind": "view", "uri": filled, "width": size, "height": size, "scale": SCALE, "policy": policy, "headers": headers, "offset": offset_ms, "unix": unix,
     "served": job.get("served", ""), "outcome": job.get("outcome", ""), "error": job.get("error", ""), "jobId": job.get("id", -1), "events": types_of(label),
     "format": made.get("format", ""), "pictureWidth": made.get("width", 0), "pictureHeight": made.get("height", 0), "fingerprint": made.get("fingerprint", "")}
   ops.append(op)
@@ -375,14 +378,16 @@ func answer_of(label: String) -> Dictionary:
 func equal(a: Variant, b: Variant) -> bool:
   return typeof(a) == typeof(b) and a == b
 
-func static_op(label: String, kind: String, target: String, headers: Dictionary = {}) -> Dictionary:
+# `headers_js` is the JavaScript text of the headers object when its values are not all strings (a number or a boolean): GDScript's JSON would
+# decide how a float is written, and the point of such a call is what the host writes for the value.
+func static_op(label: String, kind: String, target: String, headers: Dictionary = {}, headers_js: String = "") -> Dictionary:
   collect_jobs()
   var before := last_job
   var filled := fill(target)
   var unix := now_ms()
   match kind:
     "getSize": run_js("getSize(" + quote(label) + ", " + quote(target) + ")")
-    "getSizeWithHeaders": run_js("getSizeWithHeaders(" + quote(label) + ", " + quote(target) + ", " + JSON.stringify(headers) + ")")
+    "getSizeWithHeaders": run_js("getSizeWithHeaders(" + quote(label) + ", " + quote(target) + ", " + (JSON.stringify(headers) if headers_js.is_empty() else headers_js) + ")")
     "prefetch": run_js("prefetch(" + quote(label) + ", " + quote(target) + ")")
     "prefetchWithMetadata": run_js("prefetchWithMetadata(" + quote(label) + ", " + quote(target) + ")")
   await wait_until(func() -> bool: return react().get("results", {}).has(label))
@@ -519,13 +524,17 @@ func api_stage() -> void:
     "api/prefetchWithMetadata resolves true; a prefetch that fails rejects with E_PREFETCH_FAILURE and the failure text (a status, a body that does not decode); a local source resolves", true)
   var sized := await static_op("gs-1", "getSize", "$http/pic/max-age/format.jpg?c10")
   var again := await static_op("gs-2", "getSize", "$http/pic/max-age/format.jpg?c10")
-  var with_headers := await static_op("gs-headers", "getSizeWithHeaders", "$http/pic/plain/wide.png?c10h", {"X-Size": "yes"})
+  # A number is written as its shortest text that reads back (RCTConvert NSString of 0.123456789 is "0.123456789"), an integer as its digits and a
+  # boolean as 1 or 0.
+  var with_headers := await static_op("gs-headers", "getSizeWithHeaders", "$http/pic/plain/wide.png?c10h", {"X-Size": "yes"},
+    '{"X-Size": "yes", "X-Ratio": 0.123456789, "X-Count": 7, "X-Flag": true}')
   var header_rows: Array = await requests_for(target_of(fill("$http/pic/plain/wide.png?c10h")))
   var huge := await static_op("gs-oversize", "getSize", "$http/pic/plain/oversize.png?c10")
   var gone := await static_op("gs-404", "getSize", "$http/status/404?c10")
   var gone_headers := await static_op("gs-404-headers", "getSizeWithHeaders", "$http/status/404?c10h", {})
   check(sized.result.ok and equal(sized.result.value, {"width": 24.0, "height": 24.0}) and again.result.ok and again.served == "bytes" and await requests_count("$http/pic/max-age/format.jpg?c10") == 1
     and with_headers.result.ok and equal(with_headers.result.value, {"width": 40.0, "height": 20.0}) and header_rows.size() == 1 and raw_header(header_rows[0], "x-size") == "yes"
+    and raw_header(header_rows[0], "x-ratio") == "0.123456789" and raw_header(header_rows[0], "x-count") == "7" and raw_header(header_rows[0], "x-flag") == "1"
     and huge.result.ok and equal(huge.result.value, {"width": 65535.0, "height": 65535.0}),
     "api/Image.getSize and getSizeWithHeaders download (or reuse the byte cache), read the header size off the main thread, send their headers, and decode nothing", true)
   check(not gone.result.ok and String(gone.result.message) == "E_GET_SIZE_FAILURE: Failed to getSize of " + fill("$http/status/404?c10") + ": Failed to load " + fill("$http/status/404?c10")
@@ -546,6 +555,54 @@ func uncacheable_stage() -> void:
     kept = kept and not cache_keys("bytes").has(target_of(fill(target)))
   check(kept, "cache/A response that forbids caching, with no-store, no-cache or max-age=0, is kept by neither cache: the second Image asks the server again", true)
   stages.uncacheable = {"decoded": cache_keys("decoded").size(), "bytes": cache_keys("bytes").size()}
+
+func credentials_stage() -> void:
+  # Both caches are keyed by URL, so a response fetched with a credential must not answer a request that carries none, nor the other way round:
+  # a request with Authorization, Proxy-Authorization or Cookie neither reads nor writes either cache (stricter than iOS, which keys by URL alone).
+  # Such a request is only sent over https (iOS blocks cleartext through ATS), so the cases that reach the server use the https listener.
+  var shared := "$https/pic/max-age/quad24.png?c11a"
+  var plain_first := await view_op("c11-plain-1", shared)
+  var with_auth := await view_op("c11-auth", shared, 24, "default", {}, {"Authorization": "Bearer probe"})
+  var plain_again := await view_op("c11-plain-2", shared)
+  var shared_rows: Array = await requests_for(target_of(fill(shared)))
+  var reads: bool = plain_first.served == "network" and with_auth.served == "network" and plain_again.served == "decoded" and shared_rows.size() == 2
+  reads = reads and raw_header(shared_rows[1], "authorization") == "Bearer probe" and raw_header(shared_rows[0], "authorization") == ABSENT
+  var kept := "$https/pic/max-age/quad24.png?c11b"
+  var with_cookie := await view_op("c11-cookie", kept, 24, "default", {}, {"Cookie": "session=probe"})
+  var plain_after := await view_op("c11-plain-3", kept)
+  var forced := await view_op("c11-proxy", kept, 24, "force-cache", {}, {"Proxy-Authorization": "Basic probe"})
+  var only := await view_op("c11-only-if-cached", kept, 24, "only-if-cached", {}, {"Authorization": "Bearer probe"})
+  var kept_rows: Array = await requests_for(target_of(fill(kept)))
+  var writes: bool = with_cookie.served == "network" and plain_after.served == "network" and forced.served == "network" and kept_rows.size() == 3
+  writes = writes and raw_header(kept_rows[0], "cookie") == "session=probe" and raw_header(kept_rows[1], "cookie") == ABSENT
+  writes = writes and raw_header(kept_rows[2], "proxy-authorization") == "Basic probe"
+  writes = writes and String(only.outcome) == "failed" and String(only.error).contains("only-if-cached") and String(only.error).contains("credentials")
+  var sized := "$https/pic/max-age/wide.png?c11w"
+  var size_auth := await static_op("c11-gs-auth", "getSizeWithHeaders", sized, {"Authorization": "Bearer probe"})
+  var held_after_auth := await query_op("q-c11-1", [sized])
+  var size_plain := await static_op("c11-gs-plain", "getSize", sized)
+  var held_after_plain := await query_op("q-c11-2", [sized])
+  var size_auth_again := await static_op("c11-gs-auth-2", "getSizeWithHeaders", sized, {"authorization": "Bearer probe"})
+  var sized_rows: Array = await requests_for(target_of(fill(sized)))
+  var measures: bool = size_auth.served == "network" and equal(held_after_auth.result.value, {}) and size_plain.served == "network"
+  measures = measures and equal(held_after_plain.result.value, {fill(sized): "memory"}) and size_auth_again.served == "network" and sized_rows.size() == 3
+  measures = measures and equal(size_auth_again.result.value, {"width": 40.0, "height": 20.0}) and raw_header(sized_rows[2], "authorization") == "Bearer probe"
+  check(reads and writes and measures,
+    "cache/A request that carries Authorization, Proxy-Authorization or Cookie neither reads nor writes either cache: it asks the server wherever a response is cached, and what it fetched answers no later request", true)
+  # Over http the same requests are not sent at all.
+  var cleartext := "$http/pic/max-age/quad24.png?c11h"
+  var http_auth := await view_op("c11-http-auth", cleartext, 24, "default", {}, {"Authorization": "Bearer probe"})
+  var http_cookie := await view_op("c11-http-cookie", cleartext, 24, "default", {}, {"Cookie": "session=probe"})
+  var http_size := await static_op("c11-gs-http", "getSizeWithHeaders", "$http/pic/max-age/wide.png?c11h", {"Proxy-Authorization": "Basic probe"})
+  var refused: bool = true
+  for op: Dictionary in [http_auth, http_cookie]:
+    refused = refused and String(op.outcome) == "failed" and served(op) == "" and String(op.error).contains("carries credentials") and String(op.error).contains("only sent over https")
+  refused = refused and not http_size.result.ok and String(http_size.result.message).begins_with("E_GET_SIZE_FAILURE: ") and String(http_size.result.message).contains("carries credentials")
+  refused = refused and await requests_count(cleartext) == 0 and await requests_count("$http/pic/max-age/wide.png?c11h") == 0
+  check(refused, "failures/A request that carries Authorization, Proxy-Authorization or Cookie over http fails through onError, or rejects a size, with the host's message, and nothing reaches the server", true)
+  for label in ["c11-plain-1", "c11-auth", "c11-plain-2", "c11-cookie", "c11-plain-3", "c11-proxy", "c11-only-if-cached", "c11-http-auth", "c11-http-cookie"]:
+    unmount_image(label)
+  stages.credentials = {"decoded": cache_keys("decoded").size(), "bytes": cache_keys("bytes").size()}
 
 func expiry_stage() -> void:
   var policies := ["max-age", "expires", "heuristic", "plain"]
@@ -741,6 +798,7 @@ func run_probe() -> void:
   await shared_stage()
   await api_stage()
   await uncacheable_stage()
+  await credentials_stage()
   await expiry_stage()
   await limits_of_the_caches_stage()
   await byte_cache_stage()

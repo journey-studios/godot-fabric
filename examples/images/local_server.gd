@@ -8,6 +8,9 @@ extends RefCounted
 const SUNRISE := "/pictures/sunrise.png"
 const MISSING := "/pictures/missing.png"
 const WIDTH := 192
+# The most bytes a request head may take before its blank line: the example's own client sends a few hundred. A peer that goes past it, or
+# that never finishes its head, is answered and closed, so one bad connection never grows its buffer without bound or keeps poll() from the others.
+const MAX_HEAD_BYTES := 16 * 1024
 const HEIGHT := 128
 var server := TCPServer.new()
 var connections: Array = []
@@ -67,16 +70,26 @@ func poll() -> void:
       continue
     var available := peer.get_available_bytes()
     if available > 0:
-      connection.buffer.append_array(peer.get_data(available)[1])
+      var received := peer.get_data(available)
+      if received[0] == OK:
+        connection.buffer.append_array(received[1])
     try_answer(connection)
 
 func try_answer(connection: Dictionary) -> void:
-  var text := (connection.buffer as PackedByteArray).get_string_from_ascii()
+  var buffer: PackedByteArray = connection.buffer
+  var text := buffer.get_string_from_ascii()
   var end := text.find("\r\n\r\n")
+  if (end < 0 and buffer.size() > MAX_HEAD_BYTES) or end > MAX_HEAD_BYTES:
+    respond(connection, "431 Request Header Fields Too Large", "text/plain", "head too large".to_utf8_buffer(), "")
+    return
   if end < 0:
     return
   var lines := text.substr(0, end).split("\r\n")
+  # METHOD TARGET HTTP/x.y: anything else is answered 400 and closed before its tokens are indexed.
   var request_line := lines[0].split(" ")
+  if request_line.size() != 3 or request_line[0].is_empty() or request_line[1].is_empty() or not request_line[2].begins_with("HTTP/"):
+    respond(connection, "400 Bad Request", "text/plain", "bad request".to_utf8_buffer(), "")
+    return
   var target: String = request_line[1].get_slice("?", 0)
   requests.append({"method": request_line[0], "target": target})
   if target == SUNRISE:

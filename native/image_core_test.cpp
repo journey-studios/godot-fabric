@@ -1,5 +1,6 @@
 #include "image_core.h"
 #include "image_geometry.h"
+#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -151,6 +152,18 @@ void resize_modes_draw_like_uiimageview() {
 }
 }  // namespace
 
+void numbers_are_written_as_the_shortest_text_that_reads_back() {
+  require(number_text(7) == "7" && number_text(-3) == "-3" && number_text(0) == "0" && number_text(-0.0) == "-0", "Integral values are their digits");
+  require(number_text(0.5) == "0.5" && number_text(0.1) == "0.1" && number_text(-2.25) == "-2.25", "Short fractions are not padded");
+  require(number_text(0.123456789) == "0.123456789", "A fixed precision of six digits would have written 0.123457");
+  require(number_text(1.0 / 3.0) == "0.3333333333333333" && number_text(0.1 + 0.2) == "0.30000000000000004", "As many digits as the value needs, up to seventeen");
+  require(number_text(123456789.123) == "123456789.123" && number_text(1e20) == "1e+20", "A large magnitude is written as %g would write it");
+  for (const double value : {0.123456789, 1e-7, 2.5e-7, 3.141592653589793, 1e15, 123456789012345.67, -1.7976931348623157e308, 5e-324, 0.1 + 0.2}) {
+    require(std::strtod(number_text(value).c_str(), nullptr) == value, "Every finite number reads back as itself: " + number_text(value));
+  }
+  require(number_text(std::nan("")) == "nan" && number_text(INFINITY) == "inf" && number_text(-INFINITY) == "-inf", "The values with no digits");
+}
+
 int main() {
   sources_are_classified_by_scheme();
   bundled_files_carry_their_scale_in_the_name();
@@ -159,5 +172,6 @@ int main() {
   absurd_headers_are_refused_before_decoding();
   decoding_shrinks_to_cover_the_request_and_never_upscales();
   resize_modes_draw_like_uiimageview();
+  numbers_are_written_as_the_shortest_text_that_reads_back();
   std::cout << "IMAGE_CORE_PASSED\n";
 }

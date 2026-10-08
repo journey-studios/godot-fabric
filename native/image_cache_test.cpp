@@ -103,9 +103,9 @@ void the_cache_gives_up_the_least_recently_used_first() {
 void a_request_is_routed_by_its_policy_and_what_the_caches_hold() {
   const Lookup none{}, fresh{true, false}, stale{true, true};
   int decoded_asked = 0, bytes_asked = 0;
-  const auto routed = [&](CachePolicy policy, bool view, bool cacheable, Lookup in_decoded, Lookup in_bytes) {
+  const auto routed = [&](CachePolicy policy, bool view, bool cacheable, Lookup in_decoded, Lookup in_bytes, bool credentialed = false) {
     decoded_asked = bytes_asked = 0;
-    return route(policy, view, cacheable, [&] { ++decoded_asked; return in_decoded; }, [&] { ++bytes_asked; return in_bytes; });
+    return route(policy, view, cacheable, credentialed, [&] { ++decoded_asked; return in_decoded; }, [&] { ++bytes_asked; return in_bytes; });
   };
   using enum CachePolicy;
   require(routed(Default, true, true, fresh, fresh) == Route::DecodedPicture && decoded_asked == 1 && bytes_asked == 0,
@@ -122,6 +122,21 @@ void a_request_is_routed_by_its_policy_and_what_the_caches_hold() {
       "A size or a prefetch (not a view) leaves the decoded cache alone and uses the byte cache");
   require(routed(Default, false, true, none, fresh) == Route::CachedBytes, "and is answered by it");
   require(routed(Default, true, false, none, fresh) == Route::Download && bytes_asked == 0, "A GET with a body, or any other method, is downloaded");
+  require(routed(Default, true, true, fresh, fresh, true) == Route::Download && decoded_asked == 0 && bytes_asked == 0,
+      "A request that carries credentials asks neither cache, whatever they hold: its response never comes from a request that had none");
+  require(routed(ForceCache, true, true, fresh, fresh, true) == Route::Download && decoded_asked == 0 && bytes_asked == 0, "not even under force-cache");
+  require(routed(Default, false, true, none, fresh, true) == Route::Download && bytes_asked == 0, "and a size or a prefetch with credentials leaves the byte cache alone too");
+  require(routed(OnlyIfCached, true, true, fresh, fresh, true) == Route::RefuseOnlyIfCached && decoded_asked == 0 && bytes_asked == 0,
+      "only-if-cached with credentials finds nothing to serve, and the server is not asked");
+}
+
+void credentials_are_named_by_their_headers() {
+  require(carries_credentials(response({{"Authorization", "Bearer x"}})), "Authorization");
+  require(carries_credentials(response({{"X-Keep", "1"}, {"authorization", ""}})), "The name is compared without case, and the value does not matter");
+  require(carries_credentials(response({{"PROXY-AUTHORIZATION", "Basic x"}})), "Proxy-Authorization");
+  require(carries_credentials(response({{"Cookie", "a=1"}})), "Cookie");
+  require(!carries_credentials(response({{"X-Authorization", "x"}, {"Authorization-Info", "x"}, {"Set-Cookie", "a=1"}, {"Cookies", "x"}})), "Only those three names, whole");
+  require(!carries_credentials(http::Headers{}), "No headers carry none");
 }
 
 void staleness_is_for_the_caller_to_judge() {
@@ -140,6 +155,7 @@ int main() {
   integer_values_read_as_nsstring_does();
   a_response_decides_whether_and_how_long_a_picture_is_kept();
   a_request_is_routed_by_its_policy_and_what_the_caches_hold();
+  credentials_are_named_by_their_headers();
   decoded_keys_follow_rctimagecache();
   the_cache_gives_up_the_least_recently_used_first();
   staleness_is_for_the_caller_to_judge();

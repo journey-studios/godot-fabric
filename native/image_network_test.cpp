@@ -114,6 +114,17 @@ void requests_are_built_as_the_ios_loader_builds_them() {
   require(!build_download_request({"BREW", "http://h/a.png", {}, ""}, request) && request.method == "BREW", "The transport decides which methods it can send");
   require(build_download_request({"", "http://h/a.png", {{"Bad Name", "v"}}, ""}, request).value_or("").find("invalid header name") != std::string::npos, "A header name with a space");
   require(build_download_request({"", "http://h/a.png", {{"", "v"}}, ""}, request).has_value(), "An empty header name");
+  require(!build_download_request({"", "http://h/a.png", {{"X-A", "1"}}, ""}, request) && request.drop_headers_on_redirect,
+      "An image request drops its headers on a redirect, as RCTHTTPRequestHandler's redirect delegate does");
+  for (const char *name : {"Authorization", "proxy-authorization", "COOKIE"}) {
+    HttpRequest unsent;
+    const auto refused = build_download_request({"", "http://h/a.png", {{"X-A", "1"}, {name, "secret"}}, ""}, unsent);
+    require(refused.value_or("").find("carries credentials") != std::string::npos && refused.value_or("").find("only sent over https") != std::string::npos,
+        std::string("A credential over http is refused before any request: ") + name);
+    require(!build_download_request({"", "https://h/a.png", {{"X-A", "1"}, {name, "secret"}}, ""}, request) && request.url == "https://h/a.png",
+        std::string("and sent over https: ") + name);
+  }
+  require(!build_download_request({"", "http://h/a.png", {{"X-Authorization", "x"}, {"Set-Cookie", "x"}}, ""}, request), "Other names are no credentials");
   require(build_download_request({"", "http://h/a.png", {{"X-A", "line\r\nInjected: 1"}}, ""}, request).value_or("").find("invalid value") != std::string::npos,
       "A value with a line break would split the request");
   require(build_download_request({"", "http://:80/a.png", {}, ""}, request).has_value(), "An URL without a host");
