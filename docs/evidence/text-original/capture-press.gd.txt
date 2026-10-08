@@ -1,0 +1,135 @@
+extends SceneTree
+
+# Captures the pressable paragraph of the text-layout example before, during and after a real click.
+# The example's own validation (examples/text-layout/validation.gd) captures its two layout states, both
+# before any press; this driver instantiates the same scene, clicks the paragraph with actual Godot mouse
+# input and saves the renderer's frame at three states, judging each by what the host mounted and painted:
+#   before  the paragraph says "pressed 0 times" and is painted in its resting blue (#1d4ed8)
+#   held    the mouse is down: onPressIn has run and the paragraph is painted in its held blue (#1e3a8a)
+#   after   the release has run onPress and onPressOut: "pressed 1 times", back in the resting blue
+# Every wait is on a condition the example reports; the frame count never decides a state.
+# Run (the native renderer is required, the driver is not part of the project):
+#   cp docs/evidence/text-original/capture-press.gd.txt build/capture-press.gd
+#   godot --path . --script res://build/capture-press.gd
+const DEVICE := 1001
+const RESTING := Color("1d4ed8")
+const HELD := Color("1e3a8a")
+var application: Node
+var surface: Control
+var checks: Array = []
+var frames_saved: Dictionary = {}
+
+func verify(condition: bool, name: String) -> bool:
+  checks.append({"name": name, "passed": condition})
+  if not condition:
+    push_error("FABRIC_CHECK_FAILED: " + name)
+  return condition
+
+func frames(count: int = 1) -> void:
+  for index in range(count):
+    await process_frame
+
+func wait_for(condition: Callable, limit_ms: int = 8000) -> bool:
+  var started := Time.get_ticks_msec()
+  while Time.get_ticks_msec() - started < limit_ms and not condition.call():
+    await process_frame
+  return condition.call()
+
+func example() -> Dictionary:
+  var value: Variant = JSON.parse_string(application.call("evaluate", "JSON.stringify(globalThis.TextLayoutExample.state())"))
+  return value if value is Dictionary else {}
+
+func node_of(id: String) -> Dictionary:
+  var snapshot: Variant = JSON.parse_string(surface.call("snapshot"))
+  if snapshot is Dictionary:
+    for entry: Dictionary in snapshot.get("nodes", []):
+      if entry.get("testID") == id:
+        return entry
+  return {}
+
+func background() -> String:
+  var appearance: Variant = node_of("press-line").get("appearance")
+  return str(appearance.background) if appearance is Dictionary else ""
+
+func text() -> String:
+  return str(node_of("press-line").get("nativeText", ""))
+
+func mouse(phase: String, point: Vector2) -> void:
+  if phase == "down":
+    var motion := InputEventMouseMotion.new()
+    motion.device = DEVICE
+    motion.position = point
+    Input.parse_input_event(motion)
+  var button := InputEventMouseButton.new()
+  button.device = DEVICE
+  button.position = point
+  button.button_index = MOUSE_BUTTON_LEFT
+  button.pressed = phase == "down"
+  button.button_mask = MOUSE_BUTTON_MASK_LEFT if phase == "down" else 0
+  Input.parse_input_event(button)
+  await frames(2)
+
+# The physical-pixel rectangle of a Control in the saved frame.
+func region(node: Control) -> Rect2i:
+  var physical := root.get_final_transform() * node.get_global_rect()
+  return Rect2i(Vector2i(physical.position.round()), Vector2i(physical.size.round()))
+
+func capture(stage: String, expected: Color) -> void:
+  await RenderingServer.frame_post_draw
+  var image := root.get_viewport().get_texture().get_image()
+  var path := "res://build/text-original-press-%s.png" % stage
+  verify(image.save_png(path) == OK, "The frame is saved: " + stage)
+  var box := region(surface.find_child("press-line", true, false) as Control)
+  var inside := Rect2i(Vector2i.ZERO, image.get_size()).encloses(box)
+  # A pixel of the paragraph's padding, away from its glyphs, is its painted background.
+  var sample := image.get_pixelv(box.position + Vector2i(3, 3)) if inside else Color.BLACK
+  var ink := 0
+  for y in range(box.position.y, box.end.y):
+    for x in range(box.position.x, box.end.x):
+      var color := image.get_pixel(x, y)
+      ink += int(color.r > 0.8 and color.g > 0.8 and color.b > 0.8)
+  verify(inside and absf(sample.r - expected.r) < 0.02 and absf(sample.g - expected.g) < 0.02 and absf(sample.b - expected.b) < 0.02,
+    "The paragraph is painted in %s in the %s frame" % [expected.to_html(false), stage])
+  verify(ink > 100, "The paragraph's text has painted ink in the %s frame" % stage)
+  frames_saved[stage] = {"path": path, "width": image.get_width(), "height": image.get_height(),
+    "paragraph": [box.position.x, box.position.y, box.size.x, box.size.y], "backgroundSample": sample.to_html(false), "ink": ink,
+    "text": text(), "background": background()}
+
+func _initialize() -> void:
+  call_deferred("run")
+
+func run() -> void:
+  var scene: Node = load("res://examples/text-layout/scene.tscn").instantiate()
+  root.add_child(scene)
+  application = scene.get_node("Application")
+  surface = scene.get_node("Surface")
+  surface.set_meta("validation_input_device", DEVICE)
+  var mounted := await wait_for(func() -> bool:
+    return text().contains("pressed 0 times") and str(node_of("summary").get("nativeText", "")).begins_with("wrap: 3 lines"))
+  verify(mounted, "The example mounted its pressable paragraph and its first layout")
+  await wait_for(func() -> bool: return background() == RESTING.to_html(false) + "ff")
+  await capture("before", RESTING)
+  var point := (surface.find_child("press-line", true, false) as Control).get_global_rect().get_center()
+  await mouse("down", point)
+  var held := await wait_for(func() -> bool: return example().get("pressLog", []) == ["in"] and background() == HELD.to_html(false) + "ff")
+  verify(held, "While the mouse is down onPressIn has run and the paragraph is painted in its held blue")
+  await capture("held", HELD)
+  await mouse("up", point)
+  var done := await wait_for(func() -> bool:
+    return example().get("pressLog", []).size() == 3 and text().contains("pressed 1 times") and background() == RESTING.to_html(false) + "ff")
+  verify(done, "After the release onPress and onPressOut have run and the paragraph says pressed 1 times in its resting blue")
+  await capture("after", RESTING)
+  var log: Array = example().get("pressLog", [])
+  verify(log.count("in") == 1 and log.count("press") == 1 and log.count("out") == 1 and log[0] == "in" and int(example().get("presses", 0)) == 1,
+    "One press in, one press and one press out reached React, press in first")
+  application.call("stop")
+  await frames(8)
+  var stopped: Variant = JSON.parse_string(application.call("snapshot"))
+  verify(stopped is Dictionary and stopped.get("stopped", false) and stopped.get("errors", []).is_empty(), "The run raised no host error")
+  var report := {"scenario": "text-original-press-captures", "godot": Engine.get_version_info().string, "displayServer": DisplayServer.get_name(),
+    "pressLog": log, "checks": checks, "frames": frames_saved}
+  var output := FileAccess.open("res://build/text-original-captures-report.json", FileAccess.WRITE)
+  output.store_string(JSON.stringify(report, "  ") + "\n")
+  var failed := checks.any(func(entry: Dictionary) -> bool: return not entry.passed)
+  print("TEXT_ORIGINAL_CAPTURES_FAILED" if failed else "TEXT_ORIGINAL_CAPTURES_PASSED: " + str(checks.size()))
+  quit(1 if failed else 0)

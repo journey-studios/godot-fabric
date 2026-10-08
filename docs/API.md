@@ -53,7 +53,7 @@ from planned RN compatibility.
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
 | View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and planar 2D affine styles, a singular one collapsing its View as RN does; the accessibility props of the Accessibility row below | RTL, 3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
-| Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip, `onTextLayout` on the outer paragraph (one entry per visible line) and the Yoga baseline for `alignItems`/`alignSelf: 'baseline'`, both from the lines the host measures and paints ([record](evidence/text-layout/README.md), [research](research/text-layout.md)) | Two bundled families plus initial Theme default; no selection, span press, inline Controls, italic/decoration/shadow, head/middle ellipsis, font scaling; `onTextLayout` is not emitted on a nested span, as in RN |
+| Text | [RN's original `Text.js`](../examples/text-layout/README.md) over the host paragraph: nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip, `onTextLayout` on the outer paragraph (one entry per visible line) and the Yoga baseline for `alignItems`/`alignSelf: 'baseline'`, both from the lines the host measures and paints ([record](evidence/text-layout/README.md), [research](research/text-layout.md)); and press on the outer paragraph: `onPress`, `onPressIn`, `onPressOut`, `onLongPress`, `pressRetentionOffset` and `disabled` through RN's own Pressability, with a real mouse and a real touch ([evidence](evidence/text-original/README.md), [research](research/text-original.md)); `allowFontScaling`, `maxFontSizeMultiplier`, `dynamicTypeRamp` and `suppressHighlighting` are accepted and change nothing (the host's font scale is 1 and nothing highlights outside iOS) | Two bundled families plus initial Theme default; the default size is 18, not RN's 14. Fail where the Text renders: any press or responder prop declared on a nested Text (a touch over a span's text is the outer paragraph's press, and works), `selectable`, `adjustsFontSizeToFit`, `ellipsizeMode` head, middle or invalid (`tail or clip`), `selectionColor`, `dataDetectorType`, `textBreakStrategy`, `lineBreakStrategyIOS`, `android_hyphenationFrequency`, the wrapper-only `text=` and `fontSize=`, and the styles `fontStyle` and `textDecoration*`; the host refuses head, middle and `adjustsFontSizeToFit` too, for a `NativeText` that skips the facade. No inline Controls, italic/decoration/shadow, font scaling or Text accessibility (a pressable paragraph gets RN's `link` role, which the host does not apply yet); `onTextLayout` is not emitted on a nested span, as in RN |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | Switch | RN's original Switch.js over RN's shared iOS/macOS Switch descriptor: value, onValueChange/onChange, disabled, trackColor/thumbColor/ios_backgroundColor, setValue restore of an unchanged value, testID/ref; mouse click and touch tap | 63×28 default frame (RN's iOS 26 size); custom-drawn, without animation, thumb dragging, keyboard activation or accessibility; Android-only props are unused |
 | ActivityIndicator | RN's original ActivityIndicator.js over the generated ActivityIndicatorView descriptor: animating, hidesWhenStopped, color, small/large/numeric size, testID/ref; the spinner advances with real frame time only while animating | Custom-drawn eight-spoke spinner filling the frame (UIKit keeps its own size); RN's iOS gray without a color; no accessibility or reduced-motion handling |
@@ -475,9 +475,46 @@ tooling and exports remain pending.
   ([tolerance](research/text-layout.md#tolerance-measured)).
 - `onTextLayout` must be a function (or `undefined`/`null`): any other value
   throws `Godot Text onTextLayout must be a function`. A nested `Text` ignores it, as RN's
-  virtual text does. `onPress`, `onPressIn`, `onPressOut`, `onLongPress`,
-  `selectable` and `adjustsFontSizeToFit` still throw
-  `Godot Text does not implement <name>`.
+  virtual text does.
+- `Text` renders RN's original `Libraries/Text/Text.js`
+  ([research](research/text-original.md), [evidence](evidence/text-original/README.md)); the platform's wrapper only validates
+  and adds the default size. The paragraph presses through `Pressability`:
+  `onPress`, `onPressIn`, `onPressOut`, `onLongPress`, `pressRetentionOffset`
+  and `disabled` behave as upstream, so a tap reports press in, press and, 130 ms
+  after the press in, press out (`Pressability`'s minimum press duration); a
+  press held longer reports press in, out and press; a long press reports
+  `onLongPress` after 500 ms and no press. The paragraph is the target of a
+  press over any of its text, a nested span's included. `onStartShouldSetResponder`
+  and the `onResponder*` handlers work on the outer paragraph.
+- Fail where the Text renders, with these errors:
+  - on a nested `Text`, any of the four press props (`onPress`, `onPressIn`,
+    `onPressOut` and `onLongPress`) and every prop that starts with `onResponder`, `onStartShouldSetResponder` or `onMoveShouldSetResponder` (the `Capture`, `Reject`, `Start`, `End` and `Termination` variants included):
+    `Godot Text does not implement <name> on a nested Text: only the outer paragraph is pressable`;
+  - `selectable` or `adjustsFontSizeToFit` when on: `Godot Text does not implement <name>`;
+  - `ellipsizeMode` head, middle or any other value:
+    `Godot Text supports tail or clip ellipsizeMode`;
+  - `selectionColor`, `dataDetectorType`, `textBreakStrategy`, `lineBreakStrategyIOS` or
+    `android_hyphenationFrequency` set: `Godot Text does not implement <name>`;
+  - the wrapper-only `text=` and `fontSize=` that RN's Text does not have:
+    `Godot Text does not implement <name>: it is not a prop of RN's Text` (pass the text
+    as children and the size in `style`);
+  - the styles `fontStyle` and `textDecoration*`: `Godot Text does not implement style <name>`;
+  - `numberOfLines` that is not a non-negative integer
+    (`Text numberOfLines must be a nonnegative integer`) or that is set on a nested
+    `Text` (`Godot Text numberOfLines applies to the outer paragraph only`).
+  The host repeats the refusal of head, middle and `adjustsFontSizeToFit` for a
+  `NativeText` that skips the facade: its `measure`, `measureLines` and paint report
+  `Godot Text supports tail or clip ellipsizeMode` or
+  `Godot Text does not implement adjustsFontSizeToFit` instead of drawing a substitute.
+- `allowFontScaling`, `maxFontSizeMultiplier`, `dynamicTypeRamp` and
+  `suppressHighlighting` are accepted and change nothing: the host's font scale
+  is fixed at 1 and there is no press highlight outside iOS.
+- The default size of an outer paragraph without a `fontSize` is 18 (spans
+  inherit it), not RN's 14: a divergence kept on purpose (the host already
+  falls back to 18), open.
+- `Text.js` gives a pressable paragraph `accessibilityRole: 'link'`; the host
+  applies no accessibility props to a paragraph yet (open, with the
+  accessibility slice).
 - The text of a truncated last line, empty text, a `lineHeight` smaller than the
   font and lines beyond a fixed node height differ between RN's platforms and
   are not part of the contract ([divergences](research/text-layout.md#documented-divergences-not-normative)).

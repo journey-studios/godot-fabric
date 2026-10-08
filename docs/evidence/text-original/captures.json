@@ -1,0 +1,101 @@
+{
+  "format": "godot-fabric.text-original-captures/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "ba5ff00fe1b22c6d5ba30925e57e8df6687a8261",
+  "platform": "macOS arm64",
+  "displayServer": "native renderer (OpenGL 4.1 Metal, Apple M3 Pro, Compatibility renderer)",
+  "godot": "4.7.2-stable (official, ed1daf0bf)",
+  "exampleValidation": {
+    "command": "node scripts/check.mjs --text-layout --capture",
+    "checks": 36,
+    "allPassed": true,
+    "note": "the example's own validation saves the 'initial' and 'narrow' frames; both precede any press, and each judges the painted ink against the reported lines"
+  },
+  "pressDriver": {
+    "command": "godot --path . --script res://build/capture-press.gd",
+    "source": "capture-press.gd.txt",
+    "sourceSha256": "476b389279d4eba766cf2941be4b25e5722bfeac8a7c08771b9dbaa578ab6cab",
+    "checks": 14,
+    "allPassed": true,
+    "pressLog": [
+      "in",
+      "press",
+      "out"
+    ],
+    "note": "the driver is not project code: it instantiates the example's scene, clicks the paragraph with actual Godot mouse input and waits on the conditions the example reports",
+    "checkNames": [
+      "The example mounted its pressable paragraph and its first layout",
+      "The frame is saved: before",
+      "The paragraph is painted in 1d4ed8 in the before frame",
+      "The paragraph's text has painted ink in the before frame",
+      "While the mouse is down onPressIn has run and the paragraph is painted in its held blue",
+      "The frame is saved: held",
+      "The paragraph is painted in 1e3a8a in the held frame",
+      "The paragraph's text has painted ink in the held frame",
+      "After the release onPress and onPressOut have run and the paragraph says pressed 1 times in its resting blue",
+      "The frame is saved: after",
+      "The paragraph is painted in 1d4ed8 in the after frame",
+      "The paragraph's text has painted ink in the after frame",
+      "One press in, one press and one press out reached React, press in first",
+      "The run raised no host error"
+    ]
+  },
+  "determinism": "each command ran twice in a row on the pinned commit and saved the very same bytes for every frame; the driver's before frame is byte-identical to the example's initial frame",
+  "frames": {
+    "initial": {
+      "path": "text-original-initial.png",
+      "sha256": "0592b9f1dcec84a5974adc71717e69ae31db5b357c1a592d685c8342960a66c9",
+      "bytes": 68184,
+      "source": "node scripts/check.mjs --text-layout --capture (frame 'initial' of the example's own validation)",
+      "description": "the example at rest: the pressable paragraph says pressed 0 times in its resting blue",
+      "width": 900,
+      "height": 680,
+      "identicalToDriverBeforeFrame": true
+    },
+    "narrow": {
+      "path": "text-original-narrow.png",
+      "sha256": "85e75d14f67d3095d7b41a63fe9a8a0431c66738980e11546d4a3423b7d87875",
+      "bytes": 67275,
+      "source": "node scripts/check.mjs --text-layout --capture (frame 'narrow' of the example's own validation)",
+      "description": "after the click that narrows the column: the paragraphs wrap again and the pressable paragraph still says pressed 0 times",
+      "width": 900,
+      "height": 680
+    },
+    "held": {
+      "path": "text-original-press-held.png",
+      "sha256": "39715f5cae0321e882f108bab633b8bc526f6499beb8ad716036ff745290d403",
+      "bytes": 68256,
+      "source": "capture-press.gd.txt (the driver, real mouse down held)",
+      "description": "the mouse is down on the pressable paragraph: onPressIn has run and it is painted in its held blue",
+      "width": 900,
+      "height": 680,
+      "paragraph": [
+        360,
+        392,
+        271,
+        36
+      ],
+      "backgroundSample": "1e3a8a",
+      "ink": 403,
+      "text": "Press this paragraph: pressed 0 times"
+    },
+    "after": {
+      "path": "text-original-press-after.png",
+      "sha256": "aebfbef1e0d3ae70e1593889e5f79915ea526eb9b7b35658edd2f4c915292141",
+      "bytes": 68067,
+      "source": "capture-press.gd.txt (the driver, after the real release)",
+      "description": "after the release: onPress and onPressOut have run, the paragraph says pressed 1 times and is back in its resting blue",
+      "width": 900,
+      "height": 680,
+      "paragraph": [
+        360,
+        392,
+        271,
+        36
+      ],
+      "backgroundSample": "1d4ed8",
+      "ink": 394,
+      "text": "Press this paragraph: pressed 1 times"
+    }
+  }
+}
