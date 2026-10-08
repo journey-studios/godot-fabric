@@ -575,6 +575,19 @@ snapshot the HUD will project is written down field by field but is not yet a se
 the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
 checkpoint, weight or denominator moves.
 
+**Progress.** V05-03, criterion `servicos`: the persistent `GameServices` node
+(`consumers/civ-lite/services/`) registers the Frontier snapshot as a state, `turn_ended` as
+a signal and eleven methods before any bundle or mount, from one GDScript schema source, with
+an epoch that starts at 1, rises on every `new_game` and stays out of the state and the hash.
+Hand-written TypeScript types are compared with the schemas Godot registered in both
+directions, and a bundle standing in for the HUD plays the whole 12-turn replay through the
+services to the same golden hash, with every snapshot it holds equal to the node's. The
+snapshot's `Action.args` became the intent's positional arguments, so an action is a call.
+Seven retained sabotages are rejected. The [record](https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md)
+is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and the Pages
+publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
+no 1.0 checkpoint, weight or denominator moves.
+
 **For agents.** Prefer what unblocks the game: V05-02, then V05-06 and V05-07, plus
 the minimum of GF-14 and GF-16 the HUD needs. This reorders the work queue; it does
 not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05

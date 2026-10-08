@@ -574,9 +574,11 @@ Civilization 2 whose map, rules, scripted faction and turns live in plain GDScri
 the rules and the state and snapshot the HUD will project, with no React and no native code: a 12-turn replay reaches one
 golden hash in three processes (integers only, its own PCG32, canonical serialization, SHA-256), covers the game's seven
 contexts and refuses invalid intents with a reason, judged by an independent oracle, with seven retained sabotages
-(`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The services that publish the snapshot, the HUD, the
-export and the devices are open, and so is hosted CI. [Evidence](docs/evidence/frontier-game/README.md);
-[research](docs/research/frontier-game.md).
+(`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The second package, the persistent `GameServices`
+node, publishes the snapshot and takes the intents as typed services with an epoch, with hand-written TypeScript types
+checked against the schemas Godot registered in both directions (`npm run test:frontier-services`; [evidence](docs/evidence/frontier-services/README.md), [research](docs/research/frontier-services.md)).
+The consumer project, the authority under bursts, the HUD, the export and the devices are open, and so is hosted CI.
+[Evidence](docs/evidence/frontier-game/README.md); [research](docs/research/frontier-game.md).
 
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
@@ -880,6 +882,7 @@ npm run test:text-layout                 # onTextLayout and the Yoga baseline fr
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs
 npm run test:civ-lite-game               # Frontier's rules in GDScript: a 12-turn replay to one golden hash in three processes, an independent oracle; sabotages: node scripts/civ-lite-game-sabotage.mjs
+npm run test:frontier-services           # Frontier's GameServices node: the 12-turn roteiro played through typed services to the golden hash, an epoch, TS/Godot schema parity; sabotages: node scripts/frontier-services-sabotage.mjs
 npm run check:static
 npm run check:publication
 npm run test:cold                        # two disposable projects, no resource cache

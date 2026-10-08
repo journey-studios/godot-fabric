@@ -41,8 +41,9 @@ const lane = sabotage === null ? "run" : `sabotage-${sabotage}-run`;
 const digest = value => createHash("sha256").update(value).digest("hex");
 
 // The shape of the snapshot, field by field: what the services slice mirrors in TypeScript. "int" and "string" are the
-// only leaf types; `[shape]` is an array of that shape; "args" is a record of ints and strings.
-const ACTION = {id: "string", label: "string", args: "args", enabled: "int", reason: "string", reason_text: "string"};
+// only leaf types; `[shape]` is an array of that shape. An action's args are the intent's positional arguments, an array
+// of ints, so the services slice can give them an exact schema and a caller needs no knowledge of the intents.
+const ACTION = {id: "string", label: "string", args: ["int"], enabled: "int", reason: "string", reason_text: "string"};
 const UNIT_CARD = {id: "int", owner: "int", kind: "string", name: "string", moves: "int", max_moves: "int", fortified: "int"};
 const CHECKED = {enabled: "int", reason: "string", reason_text: "string"};
 const SNAPSHOT_SHAPE = {
@@ -67,9 +68,6 @@ function conforms(value, shape, where) {
     assert.ok(Number.isInteger(value), `${where} must be an integer`);
   } else if (shape === "string") {
     assert.equal(typeof value, "string", `${where} must be a string`);
-  } else if (shape === "args") {
-    assert.ok(value !== null && typeof value === "object" && !Array.isArray(value), `${where} must be a record`);
-    assert.ok(Object.values(value).every(entry => Number.isInteger(entry) || typeof entry === "string"), `${where} holds integers and strings only`);
   } else if (Array.isArray(shape)) {
     assert.ok(Array.isArray(value), `${where} must be an array`);
     value.forEach((item, position) => conforms(item, shape[0], `${where}[${position}]`));
@@ -249,6 +247,21 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
   assert.deepEqual(actions("stack"), [["select_unit", 1, ""], ["select_unit", 1, ""], ["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("city"), [["clear_selection", 1, ""], ["end_turn", 1, ""]]);
   assert.deepEqual(actions("dialog"), [["end_turn", 0, "event_pending"]]);
+  // The args are the intent's positional arguments: [unit_id] for select_unit, found_city and fortify, and [] for the
+  // others. For found_city and fortify the unit is the selected one; for select_unit it is one of the tile's own units.
+  for (const [name, snapshot] of Object.entries(report.snapshots)) {
+    for (const action of snapshot.actions) {
+      if (["found_city", "fortify"].includes(action.id)) {
+        assert.deepEqual(action.args, [snapshot.selection.unit], `${name} ${action.id}: args are [the selected unit's id]`);
+        assert.ok(snapshot.selection.unit > 0, `${name} ${action.id}: a unit is selected`);
+      } else if (action.id === "select_unit") {
+        assert.equal(action.args.length, 1, `${name} ${action.id}: args are [a unit's id]`);
+        assert.ok(snapshot.tile.units.some(unit => unit.id === action.args[0] && unit.owner === 1), `${name} ${action.id}: the id is one of the player's units on the tile`);
+      } else {
+        assert.deepEqual(action.args, [], `${name} ${action.id}: an intent that takes no argument has none`);
+      }
+    }
+  }
   assert.equal(report.snapshots["cover-dialog"].dialog.open, 1);
   assert.deepEqual(report.snapshots["cover-dialog"].dialog.choices.map(choice => choice.id), ["welcome", "turn_away"]);
   assert.equal(report.snapshots["cover-dialog"].city.items.every(item => item.enabled === 0 && item.reason === "event_pending"), true, "A pending event disables the city screen too");

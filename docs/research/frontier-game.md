@@ -255,10 +255,13 @@ lists, so the TypeScript mirror needs no optional fields. Types below are `int`,
 
 **Resources**: `food`, `production`, `science`, each `{stock: int, rate: int}`. The rate is 0 until the city exists.
 
-**Action**: `id` (string, the intent's name), `label` (string), `args` (object of ints and strings, the intent's arguments
-that the HUD must send back), `enabled` (0 or 1), `reason` (string, the refusal code, `""` when enabled) and `reason_text`
-(string, what the HUD shows next to a disabled action). `enabled` is exactly "the intent would be accepted now": it comes
-from the same check the intent runs. Actions by context:
+**Action**: `id` (string, the intent's name), `label` (string), `args` (`int[]`, the intent's positional arguments in the
+order it takes them: `[unit_id]` for `select_unit`, `found_city` and `fortify`, `[]` for `clear_selection` and `end_turn`; a
+caller turns an action into a call as it is, the intent named `id` with `args`, and needs no knowledge of which intent takes
+what), `enabled` (0 or 1), `reason` (string, the refusal code, `""` when enabled) and `reason_text` (string, what the HUD
+shows next to a disabled action). `enabled` is exactly "the intent would be accepted now": it comes from the same check the
+intent runs, and the probe sends every enabled action back to a copy of the game with its own `args` to prove it. Actions by
+context:
 
 | Context | Actions |
 | --- | --- |
@@ -418,11 +421,12 @@ capture. Hosted CI for `npm run test:civ-lite-game` is pending.
 
 ## Limits and open questions
 
-- **The snapshot is not yet a service.** There is no `GameServices` node, no signal and no TypeScript mirror. The tables
-  above are the contract the services slice mirrors; any change here is a change of contract.
+- **The snapshot is a service since the services slice.** `consumers/civ-lite/services/` holds the `GameServices` node, its
+  schemas and, in `ui/frontier-types.ts`, the TypeScript mirror ([research](frontier-services.md)). The tables above are the
+  contract they mirror; any change here is a change of contract, and the parity test fails on a field that differs.
 - **Intent arguments are typed, and a wrong type is the caller's error.** The methods declare `int` and `String` parameters,
-  so GDScript raises its own error for another type instead of a refusal. The services slice must convert and check what React
-  sends before it calls the game.
+  so GDScript raises its own error for another type instead of a refusal. Through the services, the schema of each method
+  refuses a wrong type, a wrong count or an extra field with `E_SERVICE_SCHEMA` before any GDScript runs.
 - **A `project.godot` in `consumers/civ-lite/` would hide the game from the root project.** Godot treats a folder with its
   own `project.godot` as a separate project, as `consumers/minimal` is. The test loads `res://consumers/civ-lite/game/`
   from the root project; the scripts use relative `preload` paths, so they also work as `res://game/` in a consumer

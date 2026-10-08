@@ -66,7 +66,10 @@ static func is_frozen(value: Variant) -> bool:
 
 
 # An action is an intent the HUD can offer. `enabled` and `reason` come from the intent's own check, so the two agree.
-static func action(id: String, label: String, args: Dictionary, reason: String) -> Dictionary:
+# `args` are the intent's positional arguments, an array of integers in the order the intent takes them: [unit_id] for
+# select_unit, found_city and fortify, [] for clear_selection and end_turn. A caller sends them back as they are, under the
+# action's id as the intent's name, and needs no knowledge of which intent takes what.
+static func action(id: String, label: String, args: Array, reason: String) -> Dictionary:
   return {"id": id, "label": label, "args": args, "enabled": 1 if reason == "" else 0, "reason": reason, "reason_text": Rules.reason_text(reason)}
 
 
@@ -74,18 +77,18 @@ static func _actions(state: Dictionary, context: String) -> Array:
   var actions := []
   var unit_id := int(state.sel.unit)
   if context == "settler":
-    actions.append(action("found_city", "Found city", {"unit_id": unit_id}, Intents.check_found_city(state, unit_id)))
-    actions.append(action("fortify", "Fortify", {"unit_id": unit_id}, Intents.check_fortify(state, unit_id)))
+    actions.append(action("found_city", "Found city", [unit_id], Intents.check_found_city(state, unit_id)))
+    actions.append(action("fortify", "Fortify", [unit_id], Intents.check_fortify(state, unit_id)))
   elif context == "warrior":
-    actions.append(action("fortify", "Fortify", {"unit_id": unit_id}, Intents.check_fortify(state, unit_id)))
+    actions.append(action("fortify", "Fortify", [unit_id], Intents.check_fortify(state, unit_id)))
   elif context == "stack":
     for unit: Dictionary in World.units_at(state, int(state.sel.x), int(state.sel.y), Rules.OWNER_PLAYER):
       var name: String = Rules.UNITS[unit.kind].name
-      actions.append(action("select_unit", "Select " + name, {"unit_id": unit.id}, Intents.check_select_unit(state, int(unit.id))))
+      actions.append(action("select_unit", "Select " + name, [unit.id], Intents.check_select_unit(state, int(unit.id))))
   # Every context with something selected can close it. `none` has nothing to close, and `dialog` blocks the rest.
   if context != "none" and context != "dialog":
-    actions.append(action("clear_selection", "Clear selection", {}, Intents.check_clear_selection(state)))
-  actions.append(action("end_turn", "End turn", {}, Intents.check_end_turn(state)))
+    actions.append(action("clear_selection", "Clear selection", [], Intents.check_clear_selection(state)))
+  actions.append(action("end_turn", "End turn", [], Intents.check_end_turn(state)))
   return actions
 
 

@@ -99,6 +99,7 @@
     "test:images-visual": "node --test tests/images-visual-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
     "test:civ-lite-game": "node --test tests/civ-lite-game-native.test.mjs",
+    "test:frontier-services": "node --test --test-concurrency=1 tests/frontier-services-native.test.mjs tests/frontier-services-parity.test.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
   },
   "dependencies": {
