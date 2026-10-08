@@ -2770,6 +2770,53 @@ budget is raised to 60 minutes without changing probes or their failure criteria
 and a fresh complete CI run remains required before merge. Orientation/insets,
 hardware, mobile/export and complete pinned RN parity remain acceptance work.
 
+### Linking, Clipboard and Vibration over Godot's device services (2026-10-07)
+
+GF-23 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
+contract, parity and targets remain open. The [device services evidence](docs/evidence/device-services/README.md)
+runs React Native's original `Linking`, `Clipboard` (the legacy module) and `Vibration` from the public
+`react-native` import over three C++ TurboModules, `LinkingManager` (the iOS contract, which `Linking.js`
+takes when `Platform.OS` is `"godot"`), `Clipboard` and `Vibration`: **65 headless checks** in two
+applications of one bundle plus 2 in a second process without `--uri=`. No checkpoint of any other item changes.
+
+One `DeviceServices` per `FabricApplication` (`native/device_services.{h,cpp}`) registers the modules in the
+application's registry, creates each on the first read of its public API and ends all of them at stop:
+retained methods then throw `E_MODULE_DISPOSED` synchronously, `FabricApplication.deliver_url` returns
+`false` and nothing queued reaches JS (the shared `StoppableInvoker` of `native/stoppable_invoker.h`, which the
+networking modules use too). The platform calls (`OS.shell_open`, the `DisplayServer` clipboard,
+`Input.vibrate_handheld`) sit behind a backend struct that the application's `validation_device_services` meta
+replaces function by function; a pure core (`native/device_services_core.h`: the RFC 3986 scheme rule, the
+`--uri=` arguments, the counters) has its own C++ test. `canOpenURL` answers by scheme, because Godot cannot ask
+which handlers are installed; `openURL` rejects `Unable to open URL: <url>` without calling the backend for a
+string without a scheme, and the same message when the backend refuses; `openSettings` always rejects;
+`getInitialURL` reads the process's `--uri=`; `deliver_url(url)` is how a platform hands a deep link to the
+running application, once to every listener of every root, in order. Where the display server has no clipboard
+(the headless engine) `getString` rejects and `setString` throws `E_CLIPBOARD_UNAVAILABLE`. `vibrate` takes a
+finite, non-negative duration, `cancel()` reaches the backend (Godot has nothing to cancel) and
+`vibrateByPattern`, which RN's JavaScript never calls with this platform, throws `E_UNSUPPORTED`; RN's own
+repeating pattern is not stopped by `cancel()`, and the host leaves that as RN has it.
+
+Two applications run the same bundle: one with the validation backend (every function replaced by a Callable that
+records the call, two roots) and one with Godot's real backend (only `open_url` replaced by a failing stand-in, so
+nothing opens a URL). An independent oracle replays every step against RN's rules and compares calls, backend log,
+events and the host's counters. The preceding host (built from `e88b5bb`) fails exactly the 52 normative checks
+of 65 and 1 of 2, and two retained sabotages (a host that emits `url` twice and a `getString` with a stale cache)
+fail 5 and 9 checks; the oracle rejects each. An interactive example (`examples/device-services`) clicks its
+buttons with real mouse events, delivers deep links through a native Godot button and passes 16 headless checks,
+16 with the native renderer and 23 with seven captures, with every backend replaced.
+
+Open: Alert, Share, Settings and BackHandler (they depend on the pending V2-D30 decision and on GF-18's Modal),
+mobile deep-link plugins (GF-34 and GF-35), Windows and Linux (GF-32 and GF-33), a cancellable `openURL`,
+a capability-aware `canOpenURL`, vibration patterns and cancellation through a platform plugin, and real-device
+behavior (a real browser, the real pasteboard and real vibration are never exercised). Hosted CI for the new step
+is pending.
+
+On the implementation tree (`71d708c`) the contracts gate (281 Node/13 Python, static analysis, publication scan)
+and the networking (100) and WebSocket (95) suites pass; after merging main (`7e2df46`, the Modal slice) the
+contracts gate (283 Node/13 Python), `test:modal`, the device services suite with the controls rebuilt on the
+preserved preceding host, static analysis and the publication scan pass again. Only GF-23's first-slice
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
+
 ### Images and the asset pipeline (2026-10-07)
 
 GF-16 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
@@ -2879,7 +2926,7 @@ observe the real system and retain the original event/callback contracts.
 | GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | In progress | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
-| GF-23 · P1 · Shared device services | Planned | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
+| GF-23 · P1 · Shared device services | In progress | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
 | GF-24 · P1 · OS-specific public contracts | Planned | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |
 
 ## M3 — Make the platform extensible and usable outside the demos

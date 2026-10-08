@@ -30,6 +30,7 @@
 #include "turbo_module_registry.h"
 #include "godot_dom.h"
 #include "native_animated.h"
+#include "device_services.h"
 #include "networking_modules.h"
 #include "godot_http_transport.h"
 #include "godot_websocket_transport.h"
@@ -217,6 +218,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::unique_ptr<fabric_godot::Networking> networking;
   // The reads and decodes of RN's Image requests, on the worker pool; finished from pump() and ended by stop().
   std::shared_ptr<fabric_godot::ImageLoader> images;
+  // Linking, Clipboard and Vibration over the application's platform backend, ended by stop().
+  std::shared_ptr<fabric_godot::DeviceServices> device_services;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   std::shared_ptr<fabric_godot::AdapterRegistry> adapters;
   const std::thread::id host_thread{std::this_thread::get_id()};
@@ -475,8 +478,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       const std::string &scenario, uint64_t id, std::shared_ptr<fabric_godot::GameServiceRegistry> services,
       const std::shared_ptr<fabric_godot::AppLifecycle> &lifecycle,
       const std::shared_ptr<fabric_godot::SystemAppearance> &appearance, std::function<std::string()> trusted_authorities,
-      std::function<double()> clock_offset_ms, std::shared_ptr<fabric_godot::AdapterRegistry> selected)
-      : read_window(std::move(metrics)), runtime_id(id), game_services(std::move(services)), adapters(std::move(selected)) {
+      std::function<double()> clock_offset_ms, std::shared_ptr<fabric_godot::AdapterRegistry> selected,
+      std::shared_ptr<fabric_godot::DeviceServices> device)
+      : read_window(std::move(metrics)), runtime_id(id), device_services(std::move(device)), game_services(std::move(services)),
+        adapters(std::move(selected)) {
     if (adapters && !adapters->sealed()) throw std::runtime_error("E_ADAPTER_UNSEALED: application requires a sealed selection");
     // One application owns Hermes, Fabric, scheduling and timers. All native
     // mounting and JS work still execute on Godot's main thread.
@@ -592,6 +597,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     networking->install(*native_modules);
     fabric_godot::install_image_loader_module(*native_modules, images);
     if (scenario == "images-fixture") fabric_godot::install_image_loader_fixture(*native_modules, images);
+    if (device_services) device_services->install(*native_modules);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
           [this](const fabric_godot::PhysicalEmbedding &embedding, rn::dom::DOMRect rect, bool transforms) {
@@ -1286,6 +1292,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // In-flight requests end first: nothing may report to JS from here on.
     networking->stop();
     images->stop();
+    if (device_services) device_services->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
     std::vector<int> ids;
@@ -2395,6 +2402,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     result["nativeModules"] = native_modules->snapshot();
     result["networking"] = networking->snapshot();
     result["images"] = images->snapshot();
+    result["deviceServices"] = device_services ? device_services->snapshot() : folly::dynamic::object("installed", false);
     result["nativeAnimated"] = native_animated ? native_animated->snapshot() : folly::dynamic::object("enabled", false);
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
@@ -2514,9 +2522,10 @@ ApplicationRuntime::ApplicationRuntime(FabricSurface &theme_source, std::functio
     const std::string &scenario, uint64_t runtime_id, std::shared_ptr<GameServiceRegistry> services,
     std::shared_ptr<AppLifecycle> lifecycle, std::shared_ptr<SystemAppearance> appearance,
     std::function<std::string()> trusted_authorities, std::function<double()> clock_offset_ms,
-    std::shared_ptr<AdapterRegistry> adapters)
+    std::shared_ptr<AdapterRegistry> adapters, std::shared_ptr<DeviceServices> device_services)
     : impl(std::make_shared<Impl>(theme_source, std::move(window_metrics), scenario, runtime_id, std::move(services),
-          lifecycle, appearance, std::move(trusted_authorities), std::move(clock_offset_ms), std::move(adapters))) {
+          lifecycle, appearance, std::move(trusted_authorities), std::move(clock_offset_ms), std::move(adapters),
+          std::move(device_services))) {
   impl->initialize_host_phase();
 }
 ApplicationRuntime::~ApplicationRuntime() { impl->stop(); }

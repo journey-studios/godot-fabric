@@ -217,6 +217,13 @@
     "scene": "examples/images/scene.tscn"
   },
   {
+    "id": "device-services",
+    "title": "Original RN Clipboard, Linking and Vibration over the host's device services, with stand-in backends",
+    "api": "public",
+    "source": "examples/device-services/App.jsx",
+    "scene": "examples/device-services/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",
