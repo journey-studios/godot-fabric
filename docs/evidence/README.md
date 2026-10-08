@@ -582,6 +582,31 @@ stays `undefined` until `platform-plugin` has an alias, `StatusBar` stays a plac
 implementations, OS-specific props and OS-version comparison are open. Hosted CI is pending; this does not
 complete GF-24: only its first-slice checkpoint closes, and no whole GF, other checkpoint, weight or denominator does.
 
+The [AccessibilityInfo record](accessibility-info/README.md) runs React Native's original
+`AccessibilityInfo` from the public import over a C++ TurboModule, `AccessibilityManager`, with iOS's
+contract (the one `AccessibilityInfo.js` takes when `Platform.OS` is `"godot"`), and Godot's
+`DisplayServer`: GF-20's second slice, part a. The screen reader, reduce motion, reduce transparency and
+increase contrast (RN's "darker system colors") resolve from the last reading, which the host takes when the
+module is created and then once per frame, because Godot has no change signal, and each change of a known value
+is one event heard once by every listener of every root, with `change` as the alias of `screenReaderChanged`.
+A setting the platform does not report (`-1`) rejects `E_ACCESSIBILITY_UNKNOWN` and is never off; a method the
+`DisplayServer` lacks, or an answer that is not an integer, is `-1` too. Bold text, grayscale, inverted colors and
+the cross-fade preference have no backing and reject `E_ACCESSIBILITY_UNAVAILABLE`, and their events and
+`announcementFinished` never fire; announcements and programmatic focus throw `E_UNSUPPORTED` until the slice's part b.
+Two applications of one bundle run 54 headless checks (a validation meta that stands in for the system with two
+roots, and Godot's real backend, which reads `-1` for all four in headless and so rejects and never emits), with an
+independent oracle that replays every step against RN's and iOS's rules and holds the four `DisplayServer` method
+names to its own list of the engine's. The preceding host fails exactly the 40 normative checks (hosts `43a59607`
+and `29678056`); four retained host sabotages (`-1` read as off, a poll that reports every time, two settings'
+keys swapped, a method name the engine does not have) fail 12, 17, 8 and 2 checks and the oracle rejects each,
+and the missing resolver alias breaks the bundle in the platform-seams test. The example passes 10 headless
+checks, 10 with the native renderer and 12 with two captures, linked from the record, and every platform value
+comes from a stand-in the example's native buttons change. In headless no real value is read: a real VoiceOver,
+Reduce Motion, Reduce Transparency or Increase Contrast change, the mobile servers (which report `-1`), a
+graphical CI run, announcements, programmatic focus and text scale are open. Hosted CI and Pages are pending; this
+does not complete GF-20, and it closes no checkpoint, whole GF, weight or denominator (the first slice already
+closed GF-20's `slice` checkpoint).
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

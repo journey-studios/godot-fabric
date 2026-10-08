@@ -289,10 +289,22 @@ the host cannot honor fail explicitly instead of becoming a generic element.
 two roots; the preceding host fails exactly 10, and four retained sabotages are
 rejected). `npm run test:accessibility:bridge` reads the real NSAccessibility tree of
 the graphical Godot and presses elements with `AXPress` (22 checks, local macOS
-only; the preceding host fails exactly 5). `AccessibilityInfo`, focus, text scale,
-announcements and mobile (Godot 4.7.2 has no bridge on iOS or Android) are open.
+only; the preceding host fails exactly 5). Focus, text scale, announcements and mobile (Godot 4.7.2 has no bridge
+on iOS or Android) are open; `AccessibilityInfo`'s settings and events are the next example.
 Hosted CI has not run the headless step yet.
 [Evidence](docs/evidence/accessibility/README.md).
+
+The [AccessibilityInfo example](examples/accessibility-info/README.md) runs React Native's original
+`AccessibilityInfo` from the public import over a native `AccessibilityManager` module and Godot's
+`DisplayServer`: the screen reader, reduce motion, reduce transparency and increase contrast resolve from the
+last reading, which the host takes once per frame, and each change is one event heard by every listener of every
+root, with `change` as the alias of `screenReaderChanged`. A setting the platform does not report rejects as unknown,
+and bold text, grayscale, inverted colors and cross-fade reject as unavailable, never off; announcements and
+programmatic focus throw until the next slice. The headless probe runs two applications, one with a validation meta
+that stands in for the system and one with Godot's real backend, which reports nothing there: 54 checks replayed by an
+independent oracle. The preceding host fails exactly its 40 normative checks, and four host sabotages are rejected.
+Real operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
+[Evidence](docs/evidence/accessibility-info/README.md) and [research](docs/research/accessibility-info.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original

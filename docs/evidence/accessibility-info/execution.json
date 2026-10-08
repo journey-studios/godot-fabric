@@ -1,0 +1,509 @@
+{
+ "format": "godot-fabric.accessibility-info-execution/v1",
+ "executedAt": "2026-10-08",
+ "implementationCommit": "d54e8cdaea64663ed6f9d0f8f93303dec463a162",
+ "executedTreeSha": "cb3c08d1d8e86829ba90eaf5500a99c1843b1f3b",
+ "sourceState": "working tree clean and equal to the implementation commit's tree when every command below ran: every source in sourcePins was hashed by the bundle receipt of the run and equals the blob of the implementation commit (checked file by file); the evidence files, which are added afterwards, are not inputs of any command",
+ "baseCommit": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+ "environment": {
+  "platform": "macOS arm64 (26.6.2), Apple M3 Pro, 11 cores",
+  "godot": "4.7.2-stable (official, ed1daf0bf)",
+  "reactNative": "0.87.1",
+  "react": "19.2.3",
+  "hermes": "250829098.0.17",
+  "node": "v22.23.3",
+  "displayServer": "headless (suite); macOS native renderer (example captures)"
+ },
+ "hostedCi": {
+  "status": "pending",
+  "pages": "pending",
+  "note": "The accessibility-info step and the native-accessibility-info artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing is published to Pages yet; both are recorded after the merge. Everything below is local macOS arm64 evidence."
+ },
+ "sourceReceipt": {
+  "doesNotCertifyNativeBuild": true,
+  "note": "The bundle receipt (build/accessibility-info-probe-bundle.json, sha256 of the bundle ee95940ac9db3482b8a925a09adb4215804c14bd656db93d72fd013756a0ad47) pins the sources of the run; it does not certify the native build that a hosted runner makes from them. The hosts below are the local ones.",
+  "bundleSha256": "ee95940ac9db3482b8a925a09adb4215804c14bd656db93d72fd013756a0ad47"
+ },
+ "hosts": {
+  "previousSha256": "43a596072c69ba527f12ab35789461ba2d48b35b0e2a16c5422f580c28385a66",
+  "previousSourceCommit": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+  "currentSha256": "29678056b798f8f7f98b755a173d63f591c2bceb6533762f19e7f06320ada168",
+  "restoredSha256": "29678056b798f8f7f98b755a173d63f591c2bceb6533762f19e7f06320ada168",
+  "restoredEqualsCurrent": true,
+  "sabotagedSha256": {
+   "unknown-as-false": "c8d8e847c41066b04e386757ee3f7aeca3ccaf0eaf2cf8b3368fdda9b027f3ff",
+   "emit-every-poll": "d1f2f2230be15060074ad4bfa7bdffaea72f912d9de4a37b46d777f7114ea333",
+   "swapped-settings": "70b1da49ee03019eec1fa7cace0b98978547245f4569ad868cf5f102df5e3ac5",
+   "display-name": "28bf281f1d1110e31fa25dbf54657b16aafdadd39efc0034aec15eaa74b33cc1"
+  }
+ },
+ "nativeCore": {
+  "command": ".deps/build/accessibility_info_core_test",
+  "source": "native/accessibility_info_core_test.cpp",
+  "binarySha256": "c5f5791ccbcd8c3ecc6849613e7e558342e0161497f56032efc401edf4669aec",
+  "result": "ACCESSIBILITY_INFO_CORE_PASSED",
+  "logSha256": "57d091753b665e90bd3a950736639d172178cf4515e68f669384ed63bb3f6f89",
+  "alsoRunBy": "npm run test:accessibility-info (not in the sabotage and previous-host lanes)",
+  "tests": [
+   "readings_are_three_valued",
+   "the_table_names_each_setting_once",
+   "the_unbacked_table_names_each_setting_once",
+   "start_reads_the_baseline_without_reporting",
+   "a_change_is_reported_once",
+   "each_setting_reports_itself",
+   "unknown_is_never_reported",
+   "the_first_known_value_is_a_change",
+   "a_missing_backend_reads_unknown",
+   "a_stopped_settings_reads_nothing",
+   "ui_events_are_ignored_except_focus",
+   "multipliers_are_finite_and_positive",
+   "refusals_are_counted"
+  ],
+  "note": "The three-valued reading, the descriptor tables, the change rule (including unknown to known and back), stop, the UIManager event counts and the multiplier rule, with a recording fake platform and no engine."
+ },
+ "productProbe": {
+  "command": "npm run test:accessibility-info",
+  "suite": "1/1 subtests passed",
+  "applications": {
+   "A": "validation meta (validation_accessibility_settings) replaces the DisplayServer readings of the keys it names: two roots, 26 steps",
+   "R": "Godot's real backend (headless: every setting reads -1): one root, 5 steps, created first and running while A changes and stops"
+  },
+  "checks": 54,
+  "normativeChecks": 40,
+  "allCurrentAssertionsPassed": true,
+  "oracle": {
+   "stepsReplayed": {
+    "A": 26,
+    "R": 5
+   },
+   "settingChangeFrames": 9,
+   "eventsByName": {
+    "screenReaderChanged": 3,
+    "reduceMotionChanged": 4,
+    "reduceTransparencyChanged": 2,
+    "darkerSystemColorsChanged": 3,
+    "boldTextChanged": 0,
+    "grayscaleChanged": 0,
+    "invertColorsChanged": 0,
+    "announcementFinished": 0
+   },
+   "checkedWithEveryProbeCheckMarkedPassed": true,
+   "holdsTheFourDisplayServerMethodNamesToItsOwnList": true
+  },
+  "declaredDiagnostics": {
+   "current": {
+    "FABRIC_ERROR: focus is not implemented yet (GF-20 slice 2b)": 1
+   },
+   "original": {
+    "FABRIC_ERROR: Accessibility adapter is not implemented": 5
+   }
+  },
+  "hostSha256": "29678056b798f8f7f98b755a173d63f591c2bceb6533762f19e7f06320ada168",
+  "bundleSha256": "ee95940ac9db3482b8a925a09adb4215804c14bd656db93d72fd013756a0ad47",
+  "rawReportSha256": "94b72f7328693d6d240fecf500af21d9e6827ad550bb6842d94f4df0e816b41a",
+  "logSha256": "7d7741fb88aaf8eef4dc3a2a35430360d34da9b2fc3c104979682ed67c4d1d8c",
+  "comparisonSha256": "b12093a23a31a0402d73206f68b915d5325770f4efbe8e59d3ff15296138706b",
+  "displayMethods": {
+   "increaseContrast": {
+    "exists": true,
+    "last": -1,
+    "method": "accessibility_should_increase_contrast",
+    "reading": -1
+   },
+   "reduceMotion": {
+    "exists": true,
+    "last": -1,
+    "method": "accessibility_should_reduce_animation",
+    "reading": -1
+   },
+   "reduceTransparency": {
+    "exists": true,
+    "last": -1,
+    "method": "accessibility_should_reduce_transparency",
+    "reading": -1
+   },
+   "screenReader": {
+    "exists": true,
+    "last": -1,
+    "method": "accessibility_screen_reader_active",
+    "reading": -1
+   }
+  },
+  "scope": {
+   "actualGodotBackendInHeadless": true,
+   "mobileExportsCertified": false,
+   "publicReactNativeImport": true,
+   "realContrastCertified": false,
+   "realReduceMotionCertified": false,
+   "realScreenReaderCertified": false,
+   "realTransparencyCertified": false,
+   "twoRootsOneApplication": true,
+   "validationMetaReplacesReadings": true
+  }
+ },
+ "negativeControls": {
+  "previousHost": {
+   "command": "node tests/accessibility-info-native.test.mjs --allow-original-negative (the host preserved from main installed in addons/)",
+   "sourceCommit": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+   "hostSha256": "43a596072c69ba527f12ab35789461ba2d48b35b0e2a16c5422f580c28385a66",
+   "checks": 54,
+   "passed": 14,
+   "failed": 40,
+   "failedEqualsNormative": true,
+   "exitCode": 0,
+   "expectedFailureObserved": true,
+   "getterRejection": "NativeAccessibilityManagerIOS is not available (RN's own text, for the four backed and the four unbacked getters)",
+   "eventsDelivered": 0,
+   "declaredDiagnostics": {
+    "FABRIC_ERROR: Accessibility adapter is not implemented": 5
+   },
+   "oracleRejected": true,
+   "rawReportSha256": "9e6961ac4e8088e33944da1b731f479b07a7a10b0f421cebda51c22d3d6a2893",
+   "logSha256": "04056a02a61c040b5fdc9cb20c499c05fa9971647844e41f71c7d90149bf9628"
+  },
+  "sabotages": {
+   "unknown-as-false": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=unknown-as-false",
+    "what": "reads a setting the platform does not report (-1) as off: a getter resolves false where RN must be told it is unknown, and a setting that becomes unknown emits an event for false",
+    "file": "native/accessibility_info_core.h",
+    "find": "  if (raw == 0) {\n    return Reading::Off;\n  }\n  return Reading::Unknown;\n",
+    "replace": "  return Reading::Off;\n",
+    "checks": 54,
+    "failed": 12,
+    "failedChecks": [
+     "real/With the real backend the headless DisplayServer reports -1, so all four getters reject E_ACCESSIBILITY_UNKNOWN",
+     "real/What the DisplayServer answers to each of those methods is what the host last read for that setting",
+     "lazy/The first read creates the module, which takes the baseline from the platform and reports nothing for it",
+     "getters/An unknown setting (-1) rejects E_ACCESSIBILITY_UNKNOWN and never resolves false",
+     "events/A setting that was unknown and is now known is a change",
+     "unknown/A setting that becomes unknown (-1) emits nothing and its getter rejects, frame after frame (-1 to -1 emits nothing)",
+     "unknown/Coming back to the last known value is not a change, and the getter resolves again",
+     "seam/A key the meta leaves out is the DisplayServer's reading, which is -1 here",
+     "seam/A value that is not -1, 0 or 1 is unknown",
+     "callbacks/A getter hands its setting to the success callback, and a refusal to the error callback as an Error",
+     "stop/The never-removed library listener heard exactly the screen reader events of the run and none after stop",
+     "independence/R keeps its own state and hears nothing while A changes four settings and then stops"
+    ],
+    "oracleRejection": "A/lazy-read: increaseContrast",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "c8d8e847c41066b04e386757ee3f7aeca3ccaf0eaf2cf8b3368fdda9b027f3ff",
+    "sabotagedSourceSha256": "7859aa9d35a3b714c1a2f677e6d1d10cc081b97668c9489ca15f259db874fe98",
+    "runStatus": 0,
+    "rawReportSha256": "9d3eccbdb0c555384f40ef62ee25b618c9a45cf4f9ba321020386dddb97a1ee4",
+    "logSha256": "a6644b4ed3788cf4ee94ec30f1c756c22eae76cb253033825abf18879d971d76"
+   },
+   "emit-every-poll": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=emit-every-poll",
+    "what": "reports the known value of every setting on every poll, whether or not it changed: each listener hears the same value over and over",
+    "file": "native/accessibility_info_core.h",
+    "find": "      if (state.known && *state.known == *value) {\n",
+    "replace": "      if (false && state.known && *state.known == *value) {\n",
+    "checks": 54,
+    "failed": 17,
+    "failedChecks": [
+     "lazy/The first read creates the module, which takes the baseline from the platform and reports nothing for it",
+     "events/An unchanged platform emits nothing, frame after frame",
+     "events/Reduce motion turning on is one reduceMotionChanged(true) to the listeners of both roots, once each, and nothing else",
+     "events/'change' and 'screenReaderChanged' hear the same one event, in subscription order",
+     "events/Reduce transparency turning on is one reduceTransparencyChanged(true)",
+     "events/A setting that was unknown and is now known is a change",
+     "events/Increase contrast turning on is one darkerSystemColorsChanged(true)",
+     "events/Four settings that change in one frame are four events, once each, in the order of the settings",
+     "unknown/A setting that becomes unknown (-1) emits nothing and its getter rejects, frame after frame (-1 to -1 emits nothing)",
+     "unknown/Coming back to the last known value is not a change, and the getter resolves again",
+     "unknown/A known value that differs from the last known one is a change after an unknown reading",
+     "seam/A key the meta leaves out is the DisplayServer's reading, which is -1 here",
+     "seam/A value that is not -1, 0 or 1 is unknown",
+     "seam/Settings that come back from unknown to the value they last had report nothing, and every getter resolves again",
+     "lifetime/A removed subscription hears nothing, even removed twice, and the other root still does",
+     "lifetime/An unmounted root's subscriptions go with it: the event still happens in the host and no one hears it",
+     "stop/The never-removed library listener heard exactly the screen reader events of the run and none after stop"
+    ],
+    "oracleRejection": "A/lazy-read: screenReader",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "d1f2f2230be15060074ad4bfa7bdffaea72f912d9de4a37b46d777f7114ea333",
+    "sabotagedSourceSha256": "1ea98368410f432edfdd6e46b4e00f7a6296890cea9a9c2c620cf4ac1c106044",
+    "runStatus": 0,
+    "rawReportSha256": "16f0a8f2490a9eb3ce0276af5113e489729b414f1c081be492fe104ef36bb12b",
+    "logSha256": "365d21ffec76ef52e2e6af6b9dcf27ba314c36ccadc3453413658801933d1d08"
+   },
+   "swapped-settings": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=swapped-settings",
+    "what": "swaps the validation-meta keys of reduce motion and reduce transparency in the descriptor table: a change of one is reported as the other",
+    "file": "native/accessibility_info_core.h",
+    "find": "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n    {\"getCurrentReduceTransparencyState\", \"reduceTransparencyChanged\", \"reduceTransparency\", \"reduce transparency\",\n        \"reduce_transparency\", \"accessibility_should_reduce_transparency\"},\n",
+    "replace": "        \"reduce_transparency\", \"accessibility_should_reduce_animation\"},\n    {\"getCurrentReduceTransparencyState\", \"reduceTransparencyChanged\", \"reduceTransparency\", \"reduce transparency\",\n        \"reduce_animation\", \"accessibility_should_reduce_transparency\"},\n",
+    "checks": 54,
+    "failed": 8,
+    "failedChecks": [
+     "events/Reduce motion turning on is one reduceMotionChanged(true) to the listeners of both roots, once each, and nothing else",
+     "events/The getter answers the new value",
+     "events/Reduce transparency turning on is one reduceTransparencyChanged(true)",
+     "seam/A key the meta leaves out is the DisplayServer's reading, which is -1 here",
+     "seam/A value that is not -1, 0 or 1 is unknown",
+     "callbacks/A getter hands its setting to the success callback, and a refusal to the error callback as an Error",
+     "lifetime/A removed subscription hears nothing, even removed twice, and the other root still does",
+     "lifetime/An unmounted root's subscriptions go with it: the event still happens in the host and no one hears it"
+    ],
+    "oracleRejection": "A/motion-on/motion/get",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "70b1da49ee03019eec1fa7cace0b98978547245f4569ad868cf5f102df5e3ac5",
+    "sabotagedSourceSha256": "2d6b06c4a915d28bf46685a82e50cae419239566cd833dbcf89a69e46ba73cdf",
+    "runStatus": 0,
+    "rawReportSha256": "5160a308f49ac60326bbc6e81703235ed3193c849d6cc14deaf58a990f25645d",
+    "logSha256": "c472644dd53afd92cc2c12ba0379ebf42269959208478cc6755221a733499175"
+   },
+   "display-name": {
+    "command": "node tests/accessibility-info-native.test.mjs --sabotage=display-name",
+    "what": "names a DisplayServer method that does not exist for reduce motion: the host reads -1 (never off) and the getter still rejects, but the name is not the engine's",
+    "file": "native/accessibility_info_core.h",
+    "find": "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n",
+    "replace": "        \"reduce_animation\", \"accessibility_should_reduce_animations\"},\n",
+    "checks": 54,
+    "failed": 2,
+    "failedChecks": [
+     "real/The method the host reads for each of the four settings exists in the DisplayServer of this engine",
+     "real/What the DisplayServer answers to each of those methods is what the host last read for that setting"
+    ],
+    "oracleRejection": "A/early: reduceMotion",
+    "expectedFailuresObserved": true,
+    "oracleRejected": true,
+    "hostSha256": "28bf281f1d1110e31fa25dbf54657b16aafdadd39efc0034aec15eaa74b33cc1",
+    "sabotagedSourceSha256": "e8a438946c77dccbbc1ddb795afcdc3d808d17510d755056f8ab662c6ba3df3c",
+    "runStatus": 0,
+    "rawReportSha256": "1ff794f3e9030bf75ea9512eacf9cf68d223e54daaa086a2f49d321c82e8827b",
+    "logSha256": "05272900437903b8221575553b5fe907556c60f8a811b3c976081e128f836dae"
+   }
+  },
+  "sabotageRun": {
+   "command": "node scripts/accessibility-info-sabotage.mjs",
+   "exitCode": 0,
+   "sourcesRestoredByteForByte": true,
+   "receiptSha256": "35d97ae5b6d0f5f56ceed328c7f66e6ef57a1dfb4eab993ec9a57b3ff79a04d0"
+  },
+  "missingAlias": {
+   "command": "node --test tests/platform-seams.test.mjs",
+   "what": "bundles RN's legacySendAccessibilityEvent without the platform-plugin alias: the bundle has the self-importing .js and no .ios.js, and its default is not a function",
+   "result": "17/17 subtests"
+  }
+ },
+ "exampleValidation": {
+  "headless": {
+   "command": "node scripts/check.mjs --accessibility-info --headless",
+   "checks": 10,
+   "passed": 10,
+   "displayServer": "headless",
+   "reportSha256": "6456dd5409dc86a5a38c95f62db42a46949b6a9bf10e41a5411825d5f8bd65ef"
+  },
+  "native": {
+   "command": "node scripts/check.mjs --accessibility-info",
+   "checks": 10,
+   "passed": 10,
+   "displayServer": "macOS",
+   "reportSha256": "ff01be113f1efd981d748457a51419deb3a7cbf4a459185d76dd9abc14a12448"
+  },
+  "graphical": {
+   "command": "node scripts/check.mjs --accessibility-info --capture",
+   "checks": 12,
+   "passed": 12,
+   "displayServer": "macOS",
+   "reportSha256": "c7c7ec59069c2308b692ea9d2717d11be5ee5b26a22796d731ce975f5cea0b2d",
+   "captureCount": 2,
+   "captures": [
+    {
+     "file": "accessibility-info-initial.png",
+     "stage": "initial",
+     "shows": "Antes de qualquer mudança: três settings desligados, \"Increase contrast\" desconhecido, os quatro sem backing indisponíveis e \"Events heard\" em \"none yet\"; o rótulo nativo à direita lista o que o stand-in da plataforma reporta.",
+     "sha256": "7710c9716f0a41c75aa6cb6587818cc48f05323a59c49267656396cacb6cd4b0",
+     "bytes": 82551,
+     "width": 900,
+     "height": 680,
+     "stableAcrossRuns": true
+    },
+    {
+     "file": "accessibility-info-changed.png",
+     "stage": "changed",
+     "shows": "Depois de pressionar os botões nativos Screen reader, Reduce motion e Increase contrast: leitor de tela e movimento reduzido ligados, contraste aumentado desligado (era desconhecido) e \"Events heard\" em \"3 · darkerSystemColorsChanged=false\"; o stand-in reporta os mesmos valores.",
+     "sha256": "03779430867e00e9de7977ded6884a95332fe5f20de5482856d119345f9df40c",
+     "bytes": 84104,
+     "width": 900,
+     "height": 680,
+     "stableAcrossRuns": true
+    }
+   ],
+   "capturesIdenticalInTwoRuns": true
+  },
+  "pins": {
+   "examples/accessibility-info/App.jsx": "ab0b355ec18eeda2dd0fd10691c91c525e62f2552edb2aeff50f4a9e1c6de52f",
+   "examples/accessibility-info/scene.tscn": "4da19daa82650247b18cf7ecfaeda4594d3ee3c6d63b2fa736f95d0fc5e5d0df",
+   "examples/accessibility-info/validation.gd": "dfdf1bff117bfc77f14c287ac84e9e3e4e21793941eaac5d70ea43a565501f2e",
+   "examples/entry.jsx": "198a8422847e896390193b70fe89360d6ce97404292b8047c272ecaf3620a9e9",
+   "examples/catalog.json": "146e93cc0f274fe80389207aa812a18cae2a6475a3b6010ba41742c7521d16fc"
+  }
+ },
+ "regressions": {
+  "accessibility": {
+   "command": "npm run test:accessibility",
+   "result": "1/1 subtests passed"
+  },
+  "appearance": {
+   "command": "npm run test:appearance",
+   "result": "1/1 subtests passed"
+  },
+  "deviceServices": {
+   "command": "npm run test:device-services",
+   "result": "1/1 subtests passed"
+  },
+  "platformSeams": {
+   "command": "node --test tests/platform-seams.test.mjs",
+   "result": "17/17 subtests passed"
+  },
+  "typography": {
+   "command": "npm run test:typography",
+   "result": "4/4 subtests passed (the exit-time reduceMotion count is 0)"
+  },
+  "nativewind": {
+   "command": "npm run test:nativewind",
+   "result": "4/4 subtests passed (the exit-time reduceMotion count is 0)"
+  },
+  "contracts": {
+   "command": "npm run test:contracts",
+   "result": "exit 0: 302 Node tests, 13 Python tests, with test:parity (7) and test:dashboard (43) inside"
+  },
+  "typeCheck": {
+   "command": "npm run type-check",
+   "result": "exit 0"
+  },
+  "static": {
+   "command": "npm run check:static",
+   "result": "No issues found"
+  },
+  "publication": {
+   "command": "npm run check:publication",
+   "result": "passed (1384 files, no failure), before the evidence files were added"
+  },
+  "note": "run on the tree of the implementation commit before the evidence files were added"
+ },
+ "sourcePins": {
+  "tests/accessibility-info-fixture.jsx": "282d544c81fae1f87c226e95ac02aa7b322fabe131cfaaa9f7750fc35330391a",
+  "tests/accessibility-info-probe.gd": "e8a5be0e300ee10994af04e69c9a6c95e2f1ccb0267292f2beb0a6b36c9a9a88",
+  "tests/accessibility-info-native.test.mjs": "c9607c957bec0aa90c4f4a9ab1613eced34226bff8405cdc121e76c491b291cf",
+  "tests/accessibility-info-oracle.mjs": "492ef81ae5cfc3cbaf33daba0c03ab47c77dba6968973adfab49c1dc23212f76",
+  "scripts/accessibility-info-bundle.mjs": "c7f104466e77baaa4f405d9b5592d92f90756d1bd387a1e4d2e8a35a959e8273",
+  "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+  "src/accessibility-info.js": "8fab7a7c3804e1535c203dd1c2119ed70636bc804d97ba988c25191ce9d121d3",
+  "src/platform-environment.js": "29b494105084bdf2996893f85a0513cacbccf144d0f1a3550e32450ecac78f18",
+  "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+  "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+  "native/accessibility_info.h": "ba48f4e86f35a4519eca3904d1240a3bfd40ae63f85ce62c16e64ac435aff85e",
+  "native/accessibility_info.cpp": "f394ce90d226aba9965c14042d50fb9aed10926f7afd894f729ec2596b90b07d",
+  "native/accessibility_info_core.h": "914afbdc01ecc8697bbdca03945b10e2590d711b0f2a3cd07c38fc44ae009057",
+  "native/accessibility_info_core_test.cpp": "adef9c4718314712e2bb550d5fe2cd8881d4e152ff78e22c6773a55a8a241b67",
+  "native/stoppable_invoker.h": "380fa85b91fbb806eb3480dfd5b03027bdd84d2c26b7793c9ca7708f526e7931",
+  "native/fabric_application.cpp": "9294813e8ff0fec1798031fe929483df3ba5fb518b43aff5723240d40f21e9da",
+  "native/fabric_application.h": "6caa9f01a3221e62fd74e32158055e3ca6c85787436bf5a23a4f2b85f356100d",
+  "native/application_runtime.cpp": "b7eefff9befdd86df74d3d0a29f2f698dd070576f857f39c6db3054737c81199",
+  "native/application_runtime.h": "f57714d514fdfbf7b62b033ebde9e0c5493b8261102e1f13ffde600dda531e46",
+  "native/CMakeLists.txt": "df548da0d68bd88162b442523d56367a26686f0f23a585d51fff09b88ed015f7"
+ },
+ "observedBehavior": [
+  {
+   "api": "isScreenReaderEnabled (platform reports 1)",
+   "observed": "resolved true"
+  },
+  {
+   "api": "isReduceMotionEnabled (platform reports 0)",
+   "observed": "resolved false"
+  },
+  {
+   "api": "isDarkerSystemColorsEnabled (platform reports -1)",
+   "observed": "rejected: E_ACCESSIBILITY_UNKNOWN: the platform does not report increase contrast"
+  },
+  {
+   "api": "isBoldTextEnabled",
+   "observed": "rejected: E_ACCESSIBILITY_UNAVAILABLE: Godot has no way to read bold text"
+  },
+  {
+   "api": "prefersCrossFadeTransitions",
+   "observed": "rejected: E_ACCESSIBILITY_UNAVAILABLE: Godot has no way to read the preference for cross-fade transitions"
+  },
+  {
+   "api": "isHighTextContrastEnabled",
+   "observed": "resolved false"
+  },
+  {
+   "api": "isAccessibilityServiceEnabled",
+   "observed": "rejected: isAccessibilityServiceEnabled is only available on Android"
+  },
+  {
+   "api": "getRecommendedTimeoutMillis(3000)",
+   "observed": "resolved 3000"
+  },
+  {
+   "api": "AccessibilityManager.getCurrentBoldTextState (module call)",
+   "observed": "error callback: E_ACCESSIBILITY_UNAVAILABLE: Godot has no way to read bold text"
+  },
+  {
+   "api": "AccessibilityManager.getCurrentReduceTransparencyState (platform reports -1)",
+   "observed": "error callback: E_ACCESSIBILITY_UNKNOWN: the platform does not report reduce transparency"
+  },
+  {
+   "api": "setAccessibilityContentSizeMultipliers({extraLarge: 1.5, small: null})",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: setAccessibilityContentSizeMultipliers needs a content size category, which Godot does not have"
+  },
+  {
+   "api": "setAccessibilityContentSizeMultipliers({large: -1})",
+   "observed": "threw: Exception in HostFunction: E_ARGUMENT: setAccessibilityContentSizeMultipliers requires a finite number above zero for large"
+  },
+  {
+   "api": "announceForAccessibility",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: announceForAccessibility is not implemented yet (GF-20 slice 2b)"
+  },
+  {
+   "api": "announceForAccessibilityWithOptions",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: announceForAccessibilityWithOptions is not implemented yet (GF-20 slice 2b)"
+  },
+  {
+   "api": "setAccessibilityFocus",
+   "observed": "threw: Exception in HostFunction: E_UNSUPPORTED: setAccessibilityFocus is not implemented yet (GF-20 slice 2b)"
+  },
+  {
+   "api": "sendAccessibilityEvent(click, viewHoverEnter, windowStateChange, click)",
+   "observed": "returned; ignored and counted by type {\"click\": 2, \"viewHoverEnter\": 1, \"windowStateChange\": 1}; no error"
+  },
+  {
+   "api": "sendAccessibilityEvent(focus), application R",
+   "observed": "returned; application errors = [\"focus is not implemented yet (GF-20 slice 2b)\"]"
+  },
+  {
+   "api": "any of the twelve module methods after stop",
+   "observed": "threw: Exception in HostFunction: E_MODULE_DISPOSED: AccessibilityManager"
+  }
+ ],
+ "decisions": [
+  "AccessibilityManager follows iOS's RCTAccessibilityManager, the contract AccessibilityInfo.js takes when Platform.OS is godot; the Android AccessibilityInfo module is not installed and its lookup returns null.",
+  "The module takes the first reading when it is created (as RCTAccessibilityManager does in init), and a getter answers the last reading; the host reads the four settings once per frame, before it drains the queued work, because Godot has no change signal.",
+  "A reading is an integer or it is unknown: a missing DisplayServer method or a non-integer answer is -1, never off; a getter rejects E_ACCESSIBILITY_UNKNOWN for -1 and E_ACCESSIBILITY_UNAVAILABLE for the four settings Godot cannot read.",
+  "A change is a known value that differs from the last known one: unknown emits nothing, -1 after -1 emits nothing, a return to the last known value emits nothing, and the first known value after only unknown ones is a change.",
+  "Everything that names a setting (getter, event, snapshot key, error description, meta key, DisplayServer method) is one row of one table in native/accessibility_info_core.h.",
+  "The probe holds the names to the engine's: in headless all four real readings are -1, so it checks that each setting's displayMethod exists in the DisplayServer and that the engine's answer is what the host last read; the oracle holds the four names to its own list.",
+  "The probe waits for the poll counter the host reports (frames delivered), never for time, and the oracle checks the host polled at least the frames it waited for and no more after stop.",
+  "A focus accessibility event fails out loud and is declared in the report as an engine error the run provokes on purpose; every other type is ignored and counted by type, as iOS does.",
+  "Public getters (promises) after stop are not observed: a stopped runtime drains no microtasks. The twelve methods of the retained module and the public announcement carry the E_MODULE_DISPOSED check.",
+  "setAccessibilityContentSizeMultipliers validates (E_ARGUMENT for a value that is not null, undefined or a number above zero) and throws E_UNSUPPORTED for a valid argument; iOS stores any number and repairs it to 1.0 on use."
+ ],
+ "limitations": [
+  "Local macOS arm64 evidence; hosted CI and Pages are pending and recorded after the merge; other export targets are separate.",
+  "The headless engine reports -1 for all four settings, so no real value is read by the suite: values come from the validation meta. A real VoiceOver, Reduce Motion, Reduce Transparency or Increase Contrast change is not exercised.",
+  "In headless a swap of two DisplayServer methods that both exist would read the same -1 and pass: the suite proves each method exists and is answered as the host read it, and that the names are the oracle's list of Godot 4.7.2's, not that the method is the right one for a machine that reports a value.",
+  "Announcements (announceForAccessibility, announceForAccessibilityWithOptions), programmatic focus (setAccessibilityFocus, and sendAccessibilityEvent focus) and announcementFinished wait for GF-20 slice 2b.",
+  "Godot's mobile servers report -1 today, so every getter rejects E_ACCESSIBILITY_UNKNOWN there; the iOS and Android bridges are GF-34 and GF-35.",
+  "Bold text, grayscale, inverted colors, cross-fade transitions and the content size category have no backing in Godot: they reject, and their events never fire.",
+  "A change is seen at the next frame: there is no change callback to wait for.",
+  "The screen reader is VoiceOver alone on macOS; Windows and Linux values are unverified.",
+  "Text scale (setAccessibilityContentSizeMultipliers, fontScale) and a graphical CI run are out of this slice."
+ ]
+}
