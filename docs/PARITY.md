@@ -58,19 +58,19 @@ per-target acceptance; pending V2 decisions retain their status.
 
 ## Subsequent checkpoint — 2026-10-06
 
-The public facade now exports **56 names awaiting differential certification and 3
-explicit placeholders** (KeyboardAvoidingView, RefreshControl and StatusBar) and omits 38
+The public facade now exports **57 names awaiting differential certification and 3
+explicit placeholders** (KeyboardAvoidingView, RefreshControl and StatusBar) and omits 37
 of the 97 root values, as `npm run parity:status` counts them; Linking, Clipboard and Vibration
 (the first slice of GF-23), Modal and SafeAreaView (the Modal slice), AssetRegistry with Image and
 ImageBackground (the Image slice, which also took those two out of the placeholders), and
 ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid,
 DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback (the first
-slice of GF-24) are the seventeen names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
+slice of GF-24), and LayoutAnimation (the second slice of GF-19) are the eighteen names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
 keeps those counts and a per-area table of the evidence below. The tables further
 down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
-remain the 2026-10-01 snapshot, except the three GF-23 entries and the nine GF-24 entries
-now updated (5 usable components, 20 environment names, 14 unavailable names and 58
-missing), and must not be read as current counts.
+remain the 2026-10-01 snapshot, except the three GF-23 entries, the nine GF-24 entries and the
+GF-19 `LayoutAnimation` entry now updated (5 usable components, 21 environment names, 14 unavailable
+names and 57 missing), and must not be read as current counts.
 
 Since the 2026-10-03 checkpoint these slices ran on macOS arm64 over original RN
 source, each with retained negative controls and a hosted CI run that repeated its

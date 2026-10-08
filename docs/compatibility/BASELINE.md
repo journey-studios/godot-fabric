@@ -35,12 +35,13 @@ value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
 `npm run parity:status` generates `build/parity-status.json`. On 2026-10-08 the
-current facade has **56 exported names awaiting differential certification, 3
-explicit placeholders and 38 missing public names** of the 97 root values, against
+current facade has **57 exported names awaiting differential certification, 3
+explicit placeholders and 37 missing public names** of the 97 root values, against
 44, 5 and 48 on 2026-10-07 (the Image slice exported AssetRegistry and took Image and
-ImageBackground out of the placeholders, and nine OS-specific names were added: ToastAndroid,
+ImageBackground out of the placeholders, nine OS-specific names were added: ToastAndroid,
 PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid,
-InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback), 39, 5 and 53 on 2026-10-06
+InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback, and the LayoutAnimation
+slice exported LayoutAnimation), 39, 5 and 53 on 2026-10-06
 (Linking, Clipboard and Vibration were added, and so were Modal and SafeAreaView) and 17, 11 and 69
 after adding Button/public TextInput (2026-10-02). The three
 placeholders are KeyboardAvoidingView, RefreshControl and
@@ -95,7 +96,8 @@ they do not move the counts above, and the root's `Networking` export is still m
 Device services row is: it exported `Linking`, `Clipboard` and `Vibration`, which moved the
 counts from 39 and 53 to 42 and 50 before the Modal slice added `Modal` and `SafeAreaView`
 (44 and 48), the Image slice moved them to 47 and 47, and the OS-specific contracts row exported
-nine names, which moved them to 56 and 38. That row reproduces RN's own unavailability on a platform that is neither iOS nor Android:
+nine names, which moved them to 56 and 38, and the Layout animation row exported `LayoutAnimation`,
+which moved them to 57 and 37. The OS-specific contracts row reproduces RN's own unavailability on a platform that is neither iOS nor Android:
 `'denied'` and `false` from `PermissionsAndroid` mean unavailable on Godot, and no
 Android or iOS behavior is certified. Their hosted CI runs are pending.
 
