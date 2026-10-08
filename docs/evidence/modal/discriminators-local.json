@@ -1,0 +1,635 @@
+{
+  "format": "godot-fabric.modal-review-discriminators/v1",
+  "reviewer": "root",
+  "producerInputsVerified": 29,
+  "host": {
+    "path": "build/modal-review-native-sdk/lib/fabric_godot.dylib",
+    "sha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a"
+  },
+  "bundleSha256": "f4f937ef767ce5ccd062c2690263b1b4531b443852ebec4af88c9312ea45f4c0",
+  "producerReceiptSha256": "bca2ef84d88948d629f2c82b68144309dba3a5f27792c1cf9875233de2775564",
+  "sourceHashes": {
+    "native/application_runtime.cpp": "25d3084854225d9ece8b8fa8af8f675e8d871d27c031688984e2bee3ed22e91f",
+    "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+    "native/godot_dom.cpp": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+    "native/godot_dom.h": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+    "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+    "native/modal_window_stack.cpp": "ed3de5d1e5f8ac8e26cde9951c3e7eaf9badbde4097f77ae806e3f3f7b5b9ca8",
+    "native/modal_window_stack.h": "529c3481d5252d6e52f150ad332ca00b48d1f582634033d73f319a5eec9088ef",
+    "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+    "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+    "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+    "native/physical_embedding.cpp": "46311c4a590bd88859452c8d6ccb191d8d321b808017b1465dbc54170e317fb3",
+    "native/physical_embedding.h": "5c795ce53f3228059d2dbf281dbc72347b5ecda660a0b7517da9ad6b42688b27",
+    "native/pointer_adapter.cpp": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+    "native/pointer_adapter.h": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+    "native/pointer_event.h": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+    "native/pointer_geometry.cpp": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+    "native/pointer_geometry.h": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+    "native/adapter_registry.cpp": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+    "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+    "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535",
+    "tests/modal-host-fixture.jsx": "8a1f62803d764c9816b005692763c726937063903f953409dfedcf00afddbf8a",
+    "tests/modal-capture-lifetime-probe.gd": "719ea4152c8325f629e0c60b754579c28df18a8a3f0480581667ea3a29c34b26",
+    "tests/modal-sibling-order-probe.gd": "8c931cab14762c84909c86f53556b54f1134a7f0731eca37b042d435dfe482e4",
+    "tests/modal-owner-windows-probe.gd": "7ea24688e67120edc61fe5c406c681a9f0a46681c1aa79a5a037b04b7ba72e30",
+    "tests/modal-discriminators-native.test.mjs": "f38115a41c5587640dd564f356022b394b1c7314969c400733af63d803f27bb1",
+    "scripts/modal-host-bundle.mjs": "2684a1a591271728f80b8e4354f038f8ea4bc774524ced0f136de60017491ea1",
+    "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+    "package.json": "d505649718845b33518d1a0e3f0d7471b02766b7c00f4a07e9a47a0a5fd4f369",
+    ".github/workflows/contracts.yml": "531cfae5eacd3619d6b8e6c5bfdf7ad58780c1c03b9a4f1fde05aec9052e6098"
+  },
+  "cases": {
+    "modal-capture-lifetime": {
+      "checks": 65,
+      "passed": 65,
+      "failures": [],
+      "cycles": [
+        {
+          "cycle": 0,
+          "windowId": 27061650914,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 2.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 1,
+          "windowId": 28454159849,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 3.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 2,
+          "windowId": 29813114353,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 4.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 3,
+          "windowId": 31155291611,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 5.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 4,
+          "windowId": 32514246123,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 6.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 5,
+          "windowId": 33873200615,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 7.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 6,
+          "windowId": 35232155119,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 8.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 7,
+          "windowId": 36607886826,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 9.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 8,
+          "windowId": 37983618536,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 10.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        },
+        {
+          "cycle": 9,
+          "windowId": 39342573040,
+          "windowDestroyed": true,
+          "targetDisconnected": true,
+          "pointerRouting": {
+            "active": 0.0,
+            "contacts": 0.0,
+            "hoverPointers": 0.0,
+            "nextId": 11.0,
+            "stored": 0.0,
+            "suppressed": 0.0
+          },
+          "pointerProcessor": {
+            "active": 0.0,
+            "activeCapture": 0.0,
+            "hover": 0.0,
+            "pendingCapture": 0.0
+          }
+        }
+      ],
+      "reentrant": {
+        "triggered": true,
+        "rootCount": 0.0,
+        "errors": [],
+        "pointerRouting": {
+          "active": 0.0,
+          "contacts": 0.0,
+          "hoverPointers": 0.0,
+          "nextId": 12.0,
+          "stored": 0.0,
+          "suppressed": 0.0
+        },
+        "react": {
+          "cancels": 0.0,
+          "capturePresentOnGot": true,
+          "downs": 11.0,
+          "gots": 11.0,
+          "losts": 0.0,
+          "mounted": false,
+          "moves": 11.0,
+          "presses": 0.0,
+          "shows": 11.0,
+          "ups": 0.0
+        }
+      }
+    },
+    "modal-sibling-order": {
+      "checks": 9,
+      "passed": 9,
+      "failures": [],
+      "observed": [
+        {
+          "focused": true,
+          "logicalOrder": [
+            "a",
+            "portal",
+            "b",
+            "c"
+          ],
+          "parentId": 27011319263,
+          "physicalOrder": [
+            "ordinary-a",
+            "ordinary-b",
+            "ordinary-c"
+          ],
+          "react": {
+            "changes": [
+              "seedz"
+            ],
+            "order": [
+              "a",
+              "portal",
+              "b",
+              "c"
+            ],
+            "shows": 1.0,
+            "value": "seedz"
+          },
+          "retained": true,
+          "text": "seedz"
+        },
+        {
+          "focused": true,
+          "logicalOrder": [
+            "c",
+            "portal",
+            "a",
+            "b"
+          ],
+          "parentId": 27011319263,
+          "physicalOrder": [
+            "ordinary-c",
+            "ordinary-a",
+            "ordinary-b"
+          ],
+          "react": {
+            "changes": [
+              "seedz"
+            ],
+            "order": [
+              "c",
+              "portal",
+              "a",
+              "b"
+            ],
+            "shows": 1.0,
+            "value": "seedz"
+          },
+          "retained": true,
+          "text": "seedz"
+        },
+        {
+          "focused": true,
+          "logicalOrder": [
+            "a",
+            "b",
+            "portal",
+            "c"
+          ],
+          "parentId": 27011319263,
+          "physicalOrder": [
+            "ordinary-a",
+            "ordinary-b",
+            "ordinary-c"
+          ],
+          "react": {
+            "changes": [
+              "seedz"
+            ],
+            "order": [
+              "a",
+              "b",
+              "portal",
+              "c"
+            ],
+            "shows": 1.0,
+            "value": "seedz"
+          },
+          "retained": true,
+          "text": "seedz"
+        }
+      ],
+      "controlIds": {
+        "a": 27061650914,
+        "b": 27229423084,
+        "c": 27279754735,
+        "content": 27380418037,
+        "input": 27430749688
+      }
+    },
+    "modal-owner-windows": {
+      "checks": 9,
+      "passed": 9,
+      "failures": [],
+      "displayServer": "macOS",
+      "windowStateBeforeClicks": [
+        {
+          "embedded": true,
+          "exclusive": true,
+          "parent": 26994542026,
+          "targetViewport": 27481081316,
+          "targetWindow": 27481081316,
+          "visible": true
+        },
+        {
+          "embedded": true,
+          "exclusive": true,
+          "parent": 27313309146,
+          "targetViewport": 28135392768,
+          "targetWindow": 28135392768,
+          "visible": true
+        }
+      ],
+      "owners": {
+        "A": {
+          "windowId": 26994542026,
+          "state": {
+            "cancels": 0.0,
+            "capturePresentOnGot": true,
+            "downs": 1.0,
+            "gots": 1.0,
+            "losts": 1.0,
+            "mounted": true,
+            "moves": 0.0,
+            "presses": 1.0,
+            "shows": 1.0,
+            "ups": 1.0
+          },
+          "rootCount": 0.0,
+          "nativeTags": 0.0
+        },
+        "B": {
+          "windowId": 27313309146,
+          "state": {
+            "cancels": 0.0,
+            "capturePresentOnGot": true,
+            "downs": 2.0,
+            "gots": 2.0,
+            "losts": 2.0,
+            "mounted": true,
+            "moves": 0.0,
+            "presses": 2.0,
+            "shows": 1.0,
+            "ups": 2.0
+          },
+          "rootCount": 0.0,
+          "nativeTags": 0.0
+        }
+      }
+    }
+  },
+  "independentObservations": [
+    {
+      "id": "modal-capture-lifetime/required-probe-checks",
+      "passed": true
+    },
+    {
+      "id": "modal-capture-lifetime/clean-engine-diagnostics",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/ten-distinct-destroyed-windows",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-0/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-0/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-0/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-1/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-1/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-1/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-2/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-2/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-2/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-3/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-3/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-3/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-4/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-4/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-4/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-5/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-5/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-5/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-6/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-6/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-6/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-7/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-7/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-7/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-8/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-8/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-8/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-9/destroyed-and-disconnected",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-9/no-endpoint-or-processor-retention",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/cycle-9/no-fabricated-terminal-callback",
+      "passed": true
+    },
+    {
+      "id": "lifecycle/reentrant-stop-cleans-runtime",
+      "passed": true
+    },
+    {
+      "id": "modal-sibling-order/required-probe-checks",
+      "passed": true
+    },
+    {
+      "id": "modal-sibling-order/clean-engine-diagnostics",
+      "passed": true
+    },
+    {
+      "id": "order/physical-projection",
+      "passed": true
+    },
+    {
+      "id": "order/control-focus-text-show-retained",
+      "passed": true
+    },
+    {
+      "id": "order/runtime-errors",
+      "passed": true
+    },
+    {
+      "id": "modal-owner-windows/required-probe-checks",
+      "passed": true
+    },
+    {
+      "id": "modal-owner-windows/clean-engine-diagnostics",
+      "passed": true
+    },
+    {
+      "id": "owners/native-display-and-distinct-owners",
+      "passed": true
+    },
+    {
+      "id": "owners/two-independent-exclusive-embedded-modals",
+      "passed": true
+    },
+    {
+      "id": "owners/isolated-input-and-clean-stop",
+      "passed": true
+    }
+  ],
+  "executionHashes": {
+    "build/modal-final-discriminators-root/build/modal-capture-lifetime-report.json": "a4fa9bb2ce4d2d5e66e8301703c2a466e64fb4b826ce38434f4867c4081d26b9",
+    "build/modal-final-discriminators-root/capture-lifetime.log": "bf4fa5a7960b6a75aef9e21f5ba251b9636310706e3580d5f8f0c498769fa4e2",
+    "build/modal-final-discriminators-root/build/modal-sibling-order-report.json": "4b9b90e042c9d6593d83cd4c50723450d7c90c7c7b46c593cc6d020c487b923b",
+    "build/modal-final-discriminators-root/sibling-order.log": "6ae95f289e324b716b568c82e592dceda4319b67c9c42e0b44865d3b090199ad",
+    "build/modal-final-discriminators-root/build/modal-owner-windows-report.json": "6decb5be82ac06e2f6c1e3abe1f68db060938c3633a1a3dd26afe9f09b1c92d0",
+    "build/modal-final-discriminators-root/owner-windows.log": "7651a99e38cda79fc4d3cd9bcda9fd33caac2dc6cbeaf92c2e49dd285a55ea77"
+  },
+  "historicalNegative": "retired-window-routes-negative.json",
+  "limits": {
+    "sameLiveWindowSuppressionCertifiedByThisFixture": false,
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "hostedCI": false,
+    "fullGF18Acceptance": false
+  }
+}

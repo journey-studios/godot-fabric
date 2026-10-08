@@ -1,0 +1,69 @@
+{
+  "format": "godot-fabric.modal-pointer-negative/v1",
+  "checkedAt": "2026-10-07T19:39:37.890710+00:00",
+  "severity": "P1",
+  "finding": "The original RN Pressability-backed public Pressable receives input in the Surface but not in the Modal Window",
+  "implementationPublished": false,
+  "expected": {
+    "afterModalClick": {
+      "background": 1,
+      "modal": 1,
+      "visible": true
+    }
+  },
+  "observed": {
+    "afterModalClick": {
+      "background": 1.0,
+      "modal": 0.0,
+      "visible": true
+    },
+    "baseline": {
+      "background": 1.0,
+      "modal": 0.0,
+      "visible": false
+    },
+    "before": {
+      "background": 0.0,
+      "modal": 0.0,
+      "visible": false
+    },
+    "errors": [],
+    "modalControl": {
+      "present": true,
+      "size": {
+        "height": 44.0,
+        "width": 180.0
+      },
+      "viewport": 27766293981,
+      "visible": true,
+      "window": 27766293981
+    },
+    "surfaceViewport": 26575111624
+  },
+  "featureAssertionPassed": false,
+  "reproductionPassed": true,
+  "provenance": {
+    "nativeHostSha256": "ce3079a1d68f62095c8327ac4517b5f1248e3bde1b0b37671491ae8f8b72e07c",
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "bundleSha256": "36ccfd49179a81a89dd8a4ecee5b61d40dd339e63a7f4215ad025f47bdd1dfbd",
+    "fixtureSha256": "afa7494a915ab657fc016846560378182897aa7edcd5380fe28e3ee9101363b4",
+    "probeSha256": "8f759b755180dbcb3531924e0ec50227b33f9dbfb4bb3f0c4bfd7680df85dcdf",
+    "reportSha256": "d904d5dc453b321b7e4c4affcd7f1e5f06d3c9063805dda26cc70460a248aa69",
+    "logSha256": "7072271c1a09afdd91ce62c22cfd455c9eb197853140af636cd1bb8ba489345f",
+    "godot": "4.7.2-stable (official)",
+    "originalReactNativeSources": {
+      "Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+      "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1"
+    }
+  },
+  "scope": {
+    "engineInjectedInput": true,
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "publicGodotPressable": true,
+    "originalRNPressability": true,
+    "stockRNPressableJS": false
+  },
+  "requiredFix": "Route Modal Window input through canonical RN pointer dispatch with the actual physical Window/Viewport and one target-family embedding resolver shared with DOM/geometry/focus."
+}

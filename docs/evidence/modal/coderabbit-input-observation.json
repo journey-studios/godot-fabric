@@ -1,0 +1,59 @@
+{
+  "at": "2026-10-07T22:35:56.421505+00:00",
+  "hostSha256": "bd11fbba18fc6969da60c3c92038e8b02336584dab30f2166bd636da5d332bbe",
+  "checks": 10,
+  "failed": [
+    "owners/input-in-owner-B-is-confined-to-runtime-B",
+    "owners/B-remains-interactive-after-A-presentation-is-destroyed"
+  ],
+  "states": {
+    "A": {
+      "react": {
+        "cancels": 0,
+        "capturePresentOnGot": true,
+        "downs": 1,
+        "gots": 1,
+        "losts": 1,
+        "mounted": true,
+        "moves": 0,
+        "presses": 1,
+        "shows": 1,
+        "ups": 1
+      },
+      "nativePointer": {
+        "pointerMoves": 1,
+        "moves": 0,
+        "pointerDowns": 1,
+        "pointerUps": 1,
+        "pointerClicks": 1
+      }
+    },
+    "B": {
+      "react": {
+        "cancels": 0,
+        "capturePresentOnGot": true,
+        "downs": 2,
+        "gots": 2,
+        "losts": 2,
+        "mounted": true,
+        "moves": 0,
+        "presses": 1,
+        "shows": 1,
+        "ups": 2
+      },
+      "nativePointer": {
+        "pointerMoves": 27,
+        "moves": 2,
+        "pointerDowns": 2,
+        "pointerUps": 2,
+        "pointerClicks": 2
+      }
+    }
+  },
+  "completeCauseProven": false,
+  "logs": {
+    "modal-owner-windows-report.json": "870c04a63b207669786e44992cd368836add2539015ea77cf91077131240707d",
+    "modal-owner-windows.log": "17df5d0e70a22f01b5219622e8fff47677afeb5b052c289a945b83a9ed7008b7"
+  },
+  "scope": "Earlier dedicated-device-only witness still admitted native movement; complete cause of the Pressability failure remains indeterminate. The final same-input interloper witness is separately certified."
+}

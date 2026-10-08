@@ -1,0 +1,92 @@
+{
+  "format": "godot-fabric.modal-hosted-runner-control/v1",
+  "checkedAt": "2026-10-07T22:11:20.811025+00:00",
+  "workflowRun": 37692513071,
+  "head": "a32235dc9b5ed932bb7942e50fc33e7abe04f1e3",
+  "artifact": {
+    "id": 11513874948,
+    "name": "native-modal"
+  },
+  "command": "npm run test:modal",
+  "requiredHeadedOwnerProbeSkipped": false,
+  "executions": {
+    "modal-host-report.json": {
+      "checks": 68,
+      "passed": 68,
+      "displayServer": "headless",
+      "sha256": "13b224c24e5395d74be3496ad7db42b0e56477e0359b7acfe65311fd8facbb0c"
+    },
+    "modal-capture-lifetime-report.json": {
+      "checks": 65,
+      "passed": 65,
+      "displayServer": null,
+      "sha256": "cbb88fda3e86ce3d6a17909fac70699fddc8fcb05940105f58e2b77b3303f258"
+    },
+    "modal-sibling-order-report.json": {
+      "checks": 9,
+      "passed": 9,
+      "displayServer": null,
+      "sha256": "087deed047a637554a38c478177aebe8701f52219b54764181c02162a64c7d74"
+    },
+    "modal-stack-membership-report.json": {
+      "checks": 31,
+      "passed": 31,
+      "displayServer": null,
+      "sha256": "56bbc40114038cce5126721780a067ba4eb1399b8dbcae7e558400edd9f67c8f"
+    },
+    "modal-owner-windows-report.json": {
+      "checks": 9,
+      "passed": 9,
+      "displayServer": "macOS",
+      "sha256": "402761828c0c17312e3e0e76ac06f6316c2dac6d8bf498cc03b397c03ea6fad8"
+    },
+    "modal-host-current-report.json": {
+      "checks": 68,
+      "passed": 68,
+      "displayServer": "headless",
+      "sha256": "51a1dfc32c99886bbe88ec071cacf0f281d43686225b94e3a70be613a75a7f5f"
+    }
+  },
+  "bundleReceipts": {
+    "modal-host-probe-bundle.json": "d962facf1037037975603f745efe5a8729b1cb4636458adb7a6eb4243ca73193",
+    "modal-discriminators-probe-bundle.json": "fa088c205595a8f47bdc732639cfcd3a524b20136e73ed78780edf0e2f6c3df9",
+    "modal-stack-membership-probe-bundle.json": "78f6126ecdeec08ce0ecf1cad9fc63f6d13696abf4a95731ac34cd9ff4cf5a6d"
+  },
+  "logs": {
+    "modal-stack-membership.log": "326d32b40f4a1d8c2d3edf16eed3761a872b6d3939311993a00659116e38084a",
+    "modal-sibling-order.log": "1532a9f3fd4dc5fcec03ae2724dab40813825d9a61d8dfa800dd9791538d2fd9",
+    "modal-host-current.log": "5eb7e143a523041f816d31a80f5a04629ef94a46de7af8d7e7824e9893e4b877",
+    "modal-owner-windows.log": "c812fde362a060cfa123dacdc1dd30dd514e75da2f7bc23355b525264a1731d1",
+    "modal-capture-lifetime.log": "39d5a7b07f6113174e5fc4a66f77d47786d3f4984852a4d09d65a5d516720405"
+  },
+  "reviewThread": "PRRT_kwDOU35wrs6qHV-e",
+  "scope": "Confirms this macos-15 hosted workflow can run the required actual macOS two-owner probe. No display skip or weaker oracle was added.",
+  "limits": {
+    "workflowCompleteAtObservation": false,
+    "postCodeRabbitCorrectionsCertified": false,
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false
+  },
+  "bundleProducerPinsVerifiedAgainstGitBlobs": {
+    "modal-host-probe-bundle.json": 33,
+    "modal-discriminators-probe-bundle.json": 33,
+    "modal-stack-membership-probe-bundle.json": 33
+  },
+  "producerPinsReceipt": "thermonuclear-final-local.json",
+  "workflowCompletion": {
+    "checkedAt": "2026-10-07T22:36:49.122788+00:00",
+    "status": "completed",
+    "conclusion": "success",
+    "requiredJobs": [
+      "contracts",
+      "native-cold-start",
+      "reference-android",
+      "reference-ios",
+      "parity-comparison"
+    ],
+    "allRequiredJobsPassed": true,
+    "pendingNativeCorrectionsCertified": false
+  }
+}

@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
@@ -10,6 +10,17 @@ const originalInput: UpstreamInput = inputProps;
 const buttonProps: ButtonProps = { title: "Save", disabled: false, onPress: () => {} };
 const originalButton: UpstreamButton = buttonProps;
 void originalInput; void originalButton;
+const modalProps: ModalProps = {visible: true, transparent: true, animationType: "none",
+  presentationStyle: "overFullScreen", backdropColor: "#101820", testID: "modal", onShow: () => {},
+  onRequestClose: () => {}, children: <SafeAreaView testID="modal-content" />};
+void modalProps;
+// @ts-expect-error Godot currently presents modals without animation
+const animatedModal = <Modal animationType="fade" />;
+// @ts-expect-error sheet presentation styles are outside the Godot host contract
+const sheetModal = <Modal presentationStyle="pageSheet" />;
+// @ts-expect-error Android system-window flags are outside this desktop host
+const hardwareModal = <Modal hardwareAccelerated />;
+void animatedModal; void sheetModal; void hardwareModal;
 const transformStyle: ViewStyle = {
   transform: [{translateX: "25%"}, {scaleX: 2}, {rotate: "45deg"}, {skewY: "10deg"}],
   transformOrigin: [20, "75%", 0],
@@ -40,7 +51,8 @@ function Consumer() {
   const focused: ViewInstance | null = TextInput.State.currentlyFocusedInput();
   const focusedTag: number | null = TextInput.State.currentlyFocusedField();
   void focused; void focusedTag;
-  return <View ref={view}><TextInput {...inputProps} ref={input} /><Button {...buttonProps} /></View>;
+  return <View ref={view}><TextInput {...inputProps} ref={input} /><Button {...buttonProps} />
+    <Modal {...modalProps}><SafeAreaView ref={view} testID="safe-area" /></Modal></View>;
 }
 // Unsupported contracts must fail type checking; these directives fail if that changes.
 // @ts-expect-error multiline is not implemented

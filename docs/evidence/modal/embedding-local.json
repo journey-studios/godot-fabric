@@ -1,0 +1,269 @@
+{
+  "format": "godot-fabric.modal-embedding-local/v1",
+  "checkedAt": "2026-10-07T20:02:00.318329+00:00",
+  "publishedHead": "74fdb6d8af36fca6c497f7a8d410347833218d77",
+  "implementationPublished": false,
+  "scope": {
+    "headlessChecks": 37,
+    "graphicalChecks": 41,
+    "independentStageObservations": 22,
+    "measureInWindowOrigin": true,
+    "modalRNPointerDown": true,
+    "independentPublicPressabilityPress": true,
+    "nestedBoundaryProjection": false,
+    "screenOriginScaling": false,
+    "foreignOwnerFocusLifetime": false,
+    "captureAuthorityChanges": false,
+    "mobile": false,
+    "export": false,
+    "fullGF18Acceptance": false
+  },
+  "execution": {
+    "nativeHostSha256": "730fcbe9226057d9a70eda329a0e596a33c4af36d83f7a6aa8bd07b90c2e03df",
+    "headlessReportSha256": "8576bb729b522c72e34f7980fd2ed3a3a6973ba6e288bced744cd1dd0f47d202",
+    "headlessLogSha256": "cec8c092cf4c028f1a27a29227ffff0084f3fda4c4236616a61668414f71c724",
+    "graphicalProbeSha256": "01cf9de49931ad47138f837e251ca66ecbbe59f3891cc09d2b7aa002c03b0af0",
+    "graphicalReportSha256": "c68d91d76822146c2f371ee04b7f1a6be93aaf1cf81e5f4f4593f1cfc8804d10",
+    "graphicalLogSha256": "8125c971c1aa878d4a984df579d243c94d579f625a92d0f13708dda88648207b",
+    "captures": {
+      "embedding-initial.png": "9e5eb96d1332b2d098f5312e736bd9ffa4dcac7811358347d6e4fe3f067aa85a",
+      "embedding-resized.png": "9d1a2a04e9ee70faa8778b794330132776ecaf1636bf58ae95367a1bf8ab811b"
+    }
+  },
+  "independentObservations": [
+    {
+      "execution": "headless",
+      "name": "expected producer checks pass",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "DOM measurement starts at Modal origin",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "Modal RN Down received",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "same Window on resize",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "DOM measurement stays at Modal origin after resize",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "asynchronous second presentation changes exclusive top",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "observed asynchronous order preserved",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "callback stop and cleanup",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "small Root remains constrained",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "small Root remains constrained",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "name": "small Root remains constrained",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "expected producer checks pass",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "DOM measurement starts at Modal origin",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "Modal RN Down received",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "same Window on resize",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "DOM measurement stays at Modal origin after resize",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "asynchronous second presentation changes exclusive top",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "observed asynchronous order preserved",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "callback stop and cleanup",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "small Root remains constrained",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "small Root remains constrained",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "name": "small Root remains constrained",
+      "passed": true
+    }
+  ],
+  "pressabilityBeforeAfter": {
+    "beforeHostSha256": "ce3079a1d68f62095c8327ac4517b5f1248e3bde1b0b37671491ae8f8b72e07c",
+    "afterHostSha256": "730fcbe9226057d9a70eda329a0e596a33c4af36d83f7a6aa8bd07b90c2e03df",
+    "sameFixture": true,
+    "sameProbe": true,
+    "sameBundle": true,
+    "bundleSha256": "36ccfd49179a81a89dd8a4ecee5b61d40dd339e63a7f4215ad025f47bdd1dfbd",
+    "fixtureSha256": "afa7494a915ab657fc016846560378182897aa7edcd5380fe28e3ee9101363b4",
+    "probeSha256": "8f759b755180dbcb3531924e0ec50227b33f9dbfb4bb3f0c4bfd7680df85dcdf",
+    "before": {
+      "afterModalClick": {
+        "background": 1.0,
+        "modal": 0.0,
+        "visible": true
+      },
+      "baseline": {
+        "background": 1.0,
+        "modal": 0.0,
+        "visible": false
+      },
+      "before": {
+        "background": 0.0,
+        "modal": 0.0,
+        "visible": false
+      },
+      "errors": [],
+      "modalControl": {
+        "present": true,
+        "size": {
+          "height": 44.0,
+          "width": 180.0
+        },
+        "viewport": 27766293981,
+        "visible": true,
+        "window": 27766293981
+      },
+      "surfaceViewport": 26575111624
+    },
+    "after": {
+      "afterModalClick": {
+        "background": 1.0,
+        "modal": 1.0,
+        "visible": true
+      },
+      "baseline": {
+        "background": 1.0,
+        "modal": 0.0,
+        "visible": false
+      },
+      "before": {
+        "background": 0.0,
+        "modal": 0.0,
+        "visible": false
+      },
+      "errors": [],
+      "modalControl": {
+        "present": true,
+        "size": {
+          "height": 44.0,
+          "width": 180.0
+        },
+        "viewport": 27766293981,
+        "visible": true,
+        "window": 27766293981
+      },
+      "surfaceViewport": 26575111624
+    },
+    "afterReportSha256": "fc2adf2940e172a8b9f9f8c693da56b80a5e4300369f136eb37135d400274cd5",
+    "afterLogSha256": "8db3bb6c7110aed2ea3c2c30a79e0f686895daae94d4deb1d4f989704dd35ae8"
+  },
+  "provenance": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "bundleSha256": "4559553dadc5db731c08aa2eb2d785b79d5175796a0e0767520f9645933557e3",
+    "probeSha256": "154dd298aee22d42ee3314b0d2a17c865043747dce6ceac75578f4bddc2ff326",
+    "recordedProducerSources": {
+      "tests/modal-host-fixture.jsx": "1377579580bdb461b2d73a640e2b47eaf22d21f4bb45a86c6af2a4d7b42d01d5",
+      "tests/modal-host-probe.gd": "154dd298aee22d42ee3314b0d2a17c865043747dce6ceac75578f4bddc2ff326",
+      "tests/modal-host-native.test.mjs": "5bac2d8b090aff8166fed2b13c29d6a6e1ee7cbaf62dc9887090ec1705cbae19",
+      "scripts/modal-host-bundle.mjs": "673c3d4b9dd77a391aa765b4798c4314b91b9e4f7aba08bc1afddb3f3667e38a",
+      "scripts/native-probe-bundle.mjs": "851a4bec8d2266ee36de5b74c17ebc9023618a43b0daba477d40b51899a1dc7b",
+      "src/react-native-platform.jsx": "428623cdbff123f44b6f770f21c8d0cd78d04dda915a18e33dd86ad40c472f8c",
+      "sdk/toolchain/platform-plugin.mjs": "e0a028c542426692f16f8e13e3f8a8b139a33e5a0b140b9866c4e17c1f1dddd7",
+      "native/application_runtime.cpp": "0bce5c7e822ede93f9829487c53ebaf60c1f4dbdac7fbc67cfa4213ebe6ded82",
+      "native/application_runtime.h": "13bae247884fb4249d68972732116af14e791435d7c4177dd6b554ee2a523fc2",
+      "native/modal_host_view_component_descriptor.h": "72b273642b7034a90fabd7271ffe4928d745ab12cf02417769356f10b49d9aa3",
+      "native/modal_window_stack.cpp": "03df4d1e2c9b83211c2316a426af06cf272d5ed2a24d463da7428978d1d25627",
+      "native/modal_window_stack.h": "2bb4413ecabb866b51117cb2af95f3393dcdaa2b44d4e1d0e044c382b6d4d5d6",
+      "native/modal_presentation.cpp": "212a80cde81de0f82082291c0fb9406027419dc512856968eb974ee702008eee",
+      "native/modal_presentation.h": "35061253f753a46b6e43cf6f1e85cc665128d97f0d7693bcc362c185f2ea9b1e",
+      "native/window_metrics.h": "bbec1cd679e027add112537f0c9acfcf2883f366df3751669164f4070849b46a",
+      "native/CMakeLists.txt": "135286b82f1f9ea9b4000b95be76f763d1c1bec46fde0773daea7090433980a1",
+      "native/register.cpp": "ae88738fecffc0930c8d60c6a9a9dbcc498eeb6d285f885e2ab6fa7c600c3535"
+    },
+    "nativeProducerPinsComplete": false,
+    "missingChangedNativeProducerPins": [
+      "native/physical_embedding.cpp",
+      "native/physical_embedding.h",
+      "native/godot_dom.cpp",
+      "native/godot_dom.h",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "native/pointer_geometry.cpp",
+      "native/pointer_geometry.h"
+    ],
+    "originalReactNativeSources": {
+      "Libraries/Modal/Modal.js": "3d35351a0b1975f2e18fd976cafc2b7e302c7592521ce5a686013bff4d303c25",
+      "Libraries/Modal/RCTModalHostViewNativeComponent.js": "737ad639e5c189d0e01bbe31b30cf0f9691a901928529fbcbccfc6f190be4bdd",
+      "src/private/components/modal/specs/RCTModalHostViewNativeComponent.js": "d8458e8b7a9036589f4633f8289d58bdcb6bfdba9716b7fcb8b03101e1b064cd",
+      "Libraries/Components/SafeAreaView/SafeAreaView.js": "4e673548079b02e4806c3e8ee8ea153da5abda17850b0dd498d25d925c7174dd",
+      "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+      "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.h": "0855c0f8ae339ac0d61f2601698ef65e3da37845ff83b7a4f1dec95aa646f65d",
+      "React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm": "9b84a7d80d9b7afd58cec6827a4c5afbf4feb8dc29df0e19a7138eb5bf3bd96d",
+      "ReactAndroid/src/main/java/com/facebook/react/views/modal/ReactModalHostView.kt": "8c767b176b070a4034570fc94cda5e8898a87270b472fa56e0869ede241902e8",
+      "ReactCommon/react/renderer/components/modal/ModalHostViewShadowNode.cpp": "8be230fc06bfd55e95352a0bc03c347a7aa60bcbfc886830499b25c710981610",
+      "ReactCommon/react/renderer/components/modal/ModalHostViewComponentDescriptor.h": "257eb658668d0c4f6d4036df47cb22de18392183c315c5aa39a823fac4bd26be"
+    }
+  },
+  "limitations": [
+    "Execution identifies a frozen local native host, not a certified SDK producer/build.",
+    "The old runner omitted changed native geometry/pointer producer source pins. Historical hashes are not reconstructed using subsequently edited files.",
+    "The later nesting, contact ownership, authority and scaling changes require fresh execution.",
+    "No Modal checkpoint is closed by this milestone."
+  ]
+}
