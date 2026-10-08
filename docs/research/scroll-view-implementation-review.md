@@ -406,3 +406,46 @@ changing native/shared sources. Both modified files remain below 1,000 lines.
 Local thermo-nuclear review is satisfied for this correction. The prior CI
 failure, new hosted validation and acceptance remain separate evidence.
 See [the reproduction and independent correction receipt](../evidence/scroll-view/legacy-example-regression.json).
+
+
+## Pointer regression review and AccessibilityInfo integration
+
+The pointer suite was byte-identical to main's successful baseline. CI on
+`d785d1c` exposed stale assumptions at the ScrollView migration boundary: an
+anonymous host-row sentinel selected the content View instead of the shared
+AppRegistry parent; native ownership now cancels both child streams; measured
+momentum advances the offset after release. RN Android's native ScrollView source
+cancels the JS gesture before its BeginDrag event as well. This is source
+analysis, not mobile differential parity.
+
+The first proposed identity fix incorrectly used the surface documentElement.
+The principal rejected it before acceptance. Correction `b097fb3` uses the
+original RN sibling-parent relationship and requires a distinct mounted parent.
+It deletes anonymous-row lookup helpers and silent null-to-zero tag coercion.
+GDScript normalizes numeric tags only at the event-row comparison boundary.
+A stationary hold separates exact drag displacement from fling behavior; the
+probe retains the exact 55-to-0 offsets rather than accepting a broad range.
+The oracle requires the same pointer, both typed/star pointer and touch cancel
+pairs before BeginDrag, no later child move/end/click, no momentum and clean
+routes. The principal replays all 26 cases and rejects 16 damaged reports.
+
+Only three test files change for this correction; no native implementation or
+shared bundler branch is added. All stay below 1,000 lines. No compatibility
+mode, wrapper identity magic or second offset authority is introduced. The
+final correction satisfies local thermo-nuclear review.
+
+Integration `cae0d2e` preserves main's AccessibilityInfo feature, ScrollView
+contracts, both type imports and dashboard history/milestones. New host
+`b4dfdbda` passes all eight pointer lanes, ScrollView 28, lists 44, OS 37,
+AccessibilityInfo 54 and legacy example 73; the independent measured scroll and
+cleanup verifier passes. Old host-bound controls are archived and current list
+and OS SDK controls are rerun. Four graphical checks pass with unchanged PNG
+bytes, all visually checked. Contract checks pass 352 Node and 13 Python tests.
+127 build inputs and 181 distinct repository producers match the committed
+tree; group counts overlap. SDK packing/verification is experimental and does
+not certify an adapter ABI. The failed hosted run and historical successes
+remain separate from these local results. Hosted CI, new-head CodeRabbit
+review and GF-14 acceptance are still pending.
+
+See [the current integration receipt](../evidence/scroll-view/click-regression-and-accessibility-integration.json)
+and [producer map](../evidence/scroll-view/committed-source-cae0d2e.json).

@@ -207,3 +207,45 @@ The following final macOS captures show the original RN example with a
 These local results do not accept hosted CI or any GF-14 checkpoint. The
 previous 29/156 publication above is a historical dataset once newer review
 progress is deployed; every GF-14 checkpoint remains open.
+
+
+## Click regression and AccessibilityInfo integration
+
+The later CI run on `d785d1c` passed ScrollView, lists and OS, then failed
+`test:pointers:click`; the final parity job was skipped. All eight raw pointer
+reports were inspected. The anonymous content View made the old empty-testID
+root lookup ambiguous, and the old test still required a JS touch stream after
+native takeover. Its release-time displacement also included momentum. These
+are migrated expectations, not accepted hosted results.
+
+Correction `b097fb3` obtains the shared AppRegistry parent from original RN
+public instances, verifies both pointer/touch cancellation pairs before native
+scrolling and holds the contact stationary before release. The oracle retains
+exact offsets, identity, callback order, cleanup and 91 checks per lane. The
+principal rejected an initial proposal that confused the surface
+`documentElement` with the mounted AppRegistry View, reviewed the final design,
+and rejected 16 damaged copies using the exact Node case verifier.
+
+Main's AccessibilityInfo implementation is integrated in `cae0d2e`; the rebuilt
+host `b4dfdbda` passes eight pointer lanes (91 each), ScrollView 28, lists 44,
+OS 37, AccessibilityInfo 54 and the legacy ScrollView example 73. List and OS
+negative controls are regenerated on that host. Four fresh graphical checks
+pass; the principal views each capture, whose bytes match the prior images
+above. Contract checks pass 352 Node and 13 Python tests.
+
+The [current producer map](committed-source-cae0d2e.json) binds 127 recorded
+native inputs and the current bundle groups to committed sources: 181 distinct
+repository paths, with overlap between groups. The old 43d/123-pin proof remains
+historical. SDK packing/verification passes; its adapter and ABI certification
+claims remain false. The [correction and integration receipt](click-regression-and-accessibility-integration.json)
+records actual report/log identities, independent measured scroll checks, the
+failed hosted run and limitations. A new hosted run and CodeRabbit review of
+the published head remain required. GF-14's slice and full acceptance remain
+open; dashboard progress stays 29/156.
+
+The local shared board records this task and its reserved files. Its historical
+`private-interface.js` alert was coordinated after inspecting independent
+ScrollView and LayoutAnimation hunks; neither side should discard the other's
+methods. The live registry remains local.
+
+![Agent1 review state and reserved scope](agents-cae0d2e-review.jpg)

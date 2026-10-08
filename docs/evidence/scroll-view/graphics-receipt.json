@@ -18,27 +18,27 @@
   "command": "Godot --path <checkout> --windowed --script res://tests/scroll-view-graphics-probe.gd",
   "host": {
     "path": "addons/fabric_godot.dylib",
-    "expectedSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
-    "beforeSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
-    "afterSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+    "expectedSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
+    "beforeSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
+    "afterSha256": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
     "unchanged": true
   },
   "buildReceipt": {
     "path": ".deps/build/native-sdk-build.json",
-    "sha256": "10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45",
+    "sha256": "4f3cd1173d8afff4f275e4dca8c2355fe52460b9abb257e8f7b0b631643e856d",
     "unchanged": true,
     "recordedHostMatches": true
   },
   "bundle": {
     "path": "build/scroll-view-gf14-probe.js",
-    "expectedSha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910",
-    "beforeSha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910",
-    "afterSha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910",
+    "expectedSha256": "9ae998fa98666d90504e9c1791c312fb202800b6ab4c1ae3587172cdb94cc694",
+    "beforeSha256": "9ae998fa98666d90504e9c1791c312fb202800b6ab4c1ae3587172cdb94cc694",
+    "afterSha256": "9ae998fa98666d90504e9c1791c312fb202800b6ab4c1ae3587172cdb94cc694",
     "unchanged": true
   },
   "bundleReceipt": {
     "path": "build/scroll-view-gf14-probe-bundle.json",
-    "sha256": "f3a9e58ec1e232d40aae27a5427a440deee7ff5bcd0839ce884a6e615f197624",
+    "sha256": "069d02eaf8da75e42500f334662f7ea7865ab5bdcc008a001764d76a12f1830b",
     "unchanged": true
   },
   "probe": {
@@ -51,7 +51,7 @@
   },
   "report": {
     "path": "build/scroll-view-graphics-report.json",
-    "sha256": "879234b15bb8d56508d1c2e6325c4961b48d9f475c84efee0b21b01fa2379a04"
+    "sha256": "0f7b7599e4c4835dc1995fe4f6d93da69b480bddbcd27d73ea1bf8d079dbb02c"
   },
   "checks": [
     {
@@ -141,7 +141,7 @@
   ],
   "log": {
     "path": "build/scroll-view-graphics.log",
-    "sha256": "1f513b60f0574f3046671ddf5572e04ed37c6cdc08e1f7433542436f1609503b"
+    "sha256": "ecf6137e477bfd54eb4eb0d965849d27dc50d0a5e40582711844e5d2b6eef205"
   },
   "limitations": [
     "Godot macOS windowed run only; no physical hardware touch or mobile-export claim."

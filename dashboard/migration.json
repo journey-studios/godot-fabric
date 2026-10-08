@@ -6,13 +6,13 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14 PR #58: integração OS validada localmente; CI/review pendentes"
+    "focusTitle": "GF-14 PR #58: clique corrigido e AccessibilityInfo integrada; provas locais passam, nova CI pendente"
   },
-  "updatedAt": "2026-10-08T06:28:00.672145+00:00",
+  "updatedAt": "2026-10-08T07:49:09.628742+00:00",
   "source": {
-    "commit": "a0f1fc772c88396393ee5ee25bd0d6c27a893554",
-    "url": "https://github.com/journey-studios/godot-fabric/commit/a0f1fc772c88396393ee5ee25bd0d6c27a893554",
-    "scope": "PR #58: falha do exemplo legado corrigida e revisada localmente; nova CI e CodeRabbit pendentes. Dashboard preserva 29/156, 0/39 e milestones, sem aceite GF-14.",
+    "commit": "cae0d2e41b7d80e2f70afbbcd9a4634be42ceecc",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/cae0d2e41b7d80e2f70afbbcd9a4634be42ceecc",
+    "scope": "Correção b097fb3 do teste de clique após a migração do ScrollView original e main c858263 (AccessibilityInfo) integrada em cae0d2e. Novo host b4dfdbda: oito combinações de clique com 91 checks cada, ScrollView 28, listas 44, OS 37, AccessibilityInfo 54, exemplo 73 e quatro capturas gráficas; 352 Node / 13 Python. O principal rejeita 16 relatórios adulterados e confere 127 inputs nativos / 181 produtores distintos. CI d785 falhou em pointer-click após passes parciais; nova CI/review pendentes. GF-14 mantém quatro checkpoints abertos, 29/156 e 0/39; milestones e dados de outros agentes preservados.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
@@ -1633,7 +1633,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "CI nativa do head 4a6dd92 falhou no exemplo legado de ScrollView. Correção a0f1fc7 validada: 73 checks headless, 79 com captura e repetição independente de 73 pelo principal. Estrutura RN original, bloqueio nativo explícito, animação e interrupção pela roda preservados; faixa de categorias corrigida. Suíte completa anterior ao último ajuste visual: 34 cenários/2457 checks; cenário afetado repetido no estado final. CI e CodeRabbit do novo head pendentes; GF-14 sem aceite.",
+      "note": "CI nativa do head 4a6dd92 falhou no exemplo legado de ScrollView. Correção a0f1fc7 validada: 73 checks headless, 79 com captura e repetição independente de 73 pelo principal. Estrutura RN original, bloqueio nativo explícito, animação e interrupção pela roda preservados; faixa de categorias corrigida. Suíte completa anterior ao último ajuste visual: 34 cenários/2457 checks; cenário afetado repetido no estado final. CI e CodeRabbit do novo head pendentes; GF-14 sem aceite. Correção b097fb3 e integração AccessibilityInfo em cae0d2e: oito lanes de clique 91 e 16 controles offline do oráculo; novo host b4dfdbda passa ScrollView 28/listas 44/OS 37/AccessibilityInfo 54/exemplo 73, quatro capturas conferidas. CI anterior d785 falhou em clique; nova CI pendente, sem aceite antecipado.",
       "blocker": "",
       "checkpoints": [
         {
@@ -4089,6 +4089,16 @@
     }
   ],
   "activity": [
+    {
+      "id": "scroll-click-regression-accessibility-cae0d2e",
+      "at": "2026-10-08T07:49:09.628742+00:00",
+      "taskIds": [
+        "GF-14",
+        "GF-15"
+      ],
+      "message": "#58: CI d785 falhou no clique; corrigidas expectativas antigas por identidade RN e cancelamento nativo, com RED preservado e 16 cópias danificadas rejeitadas. Main AccessibilityInfo integrada em cae0d2e e novo host validado; oito lanes 91, ScrollView 28/listas 44/OS 37/AccessibilityInfo 54/exemplo 73 e quatro capturas. CI/review do próximo head pendentes. 29/156 e milestone 0.5 preservados; nenhum checkpoint GF-14 fechado.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/58"
+    },
     {
       "id": "gf14-legacy-example-corrected-20261008",
       "at": "2026-10-08T06:28:00.672145+00:00",
