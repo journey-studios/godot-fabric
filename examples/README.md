@@ -48,6 +48,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [animated](animated/README.md) | Original Animated on RN's C++ NativeAnimated advanced by the host's frame clock, and TouchableOpacity | Public | [App](animated/App.jsx) · [scene](animated/scene.tscn) |
 | [switch](switch/README.md) | Original RN Switch: controlled values, colors, disabled input and real clicks | Public | [App](switch/App.jsx) · [scene](switch/scene.tscn) |
 | [activity-indicator](activity-indicator/README.md) | Original RN ActivityIndicator: sizes, colors, animating and hidesWhenStopped | Public | [App](activity-indicator/App.jsx) · [scene](activity-indicator/scene.tscn) |
+| [accessibility](accessibility/README.md) | Original RN accessibility props: labels, roles, states, live region and the OS's press | Public | [App](accessibility/App.jsx) · [scene](accessibility/scene.tscn) |
 | [touchables](touchables/README.md) | Original RN touchables: the opacity, the underlay and the absence of feedback while pressed | Public | [App](touchables/App.jsx) · [scene](touchables/scene.tscn) |
 | [virtualized-list](virtualized-list/README.md) | Original RN FlatList and SectionList windowed by the mouse wheel | Public | [App](virtualized-list/App.jsx) · [scene](virtualized-list/scene.tscn) |
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
@@ -55,6 +56,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [networking](networking/README.md) | Original RN fetch, FormData and AbortController over Godot's HTTP client, and WebSocket over Godot's WebSocketPeer, against servers the scene starts | Public | [App](networking/App.jsx) · [scene](networking/scene.tscn) |
 | [text-layout](text-layout/README.md) | Text `onTextLayout` lines and the Yoga baseline, drawn over the paragraphs they came from | Public | [App](text-layout/App.jsx) · [scene](text-layout/scene.tscn) |
 | [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
+| [images](images/README.md) | Original RN Image, ImageBackground and asset registry over worker-thread decoding: the six resize modes, `@Nx` assets, `data:` sources, a failure and a preview that two buttons change | Public | [App](images/App.jsx) · [scene](images/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -275,6 +277,20 @@ small/large/numeric frames reach the native spinner. Its
 checks, the preceding host's 2 mount failures, a retained sabotage and two
 captures of the example.
 
+The [accessibility probe](accessibility/README.md) mounts RN's original `View`,
+`Pressable` and `TouchableOpacity` with accessibility props in two roots of one
+Hermes application: `npm run test:accessibility` (headless), next to the launcher
+entry (`npm run example -- accessibility`, headless or in a window). The headless
+suite proves the metadata only: the descriptor the host resolved for each element
+(name, hint, role, states, live region, hidden), the Controls' properties and the
+host path of the OS's press. `npm run test:accessibility:bridge` is the proof of
+the OS tree: it needs a graphical macOS session, reads the NSAccessibility tree of
+the running Godot and presses elements with `AXPress`, and it is not part of hosted
+CI. The preceding host fails exactly the descriptor checks in both, and retained
+sabotages are rejected by the probe and the independent oracle. Its
+[receipt](../docs/evidence/accessibility/README.md) records 80 headless checks
+(metadata only), 22 on the OS tree, the controls and two captures of the example.
+
 The [capture notification matrix](pointer-capture-notifications/README.md)
 captures mouse and touch contacts over two roots and observes got/lost on JSX
 props and on original View, documentElement and Document listeners, with hover
@@ -345,6 +361,17 @@ networking` clicks Connect, Send, Binary, Server close, Drop and Close against a
 scene starts). Its receipt records 93 headless checks, the preceding-host control, which fails
 exactly 81, and two retained sabotages, which fail 4 and 2. The example now has two cards, so
 its captures, 11 in all, were taken again and live with that record.
+
+The [images probe](images/README.md) runs RN's original `Image`, `ImageBackground`, `AssetRegistry` and
+`Animated.Image` over RN's own C++ image pipeline in two roots of one application: the declared
+sources (bundled `@Nx` assets, `res://`, `user://`, `file://` and `data:` URIs in every format), the six
+resize modes, the events and their order, failures, and decodes held in flight while their request is
+swapped away or unmounted, with an independent oracle that recomputes the sources, pixel sizes, events
+and rectangles from RN's formulas and the fixture's own pixels: `npm run test:images`, next to the
+launcher entry (`npm run example -- images` clicks `Next mode` and `Swap the picture`). Its
+[receipt](../docs/evidence/images/README.md) records 74 headless checks, two captures, the
+preceding-host control, which fails the 3 normative checks it can reach, and two retained sabotages,
+which fail 12 and 2.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

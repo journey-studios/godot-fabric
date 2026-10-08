@@ -2,6 +2,8 @@
 // native features fail where invoked, instead of becoming inert no-op shims.
 import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
+import GodotImage from "./image";
+import OriginalImageBackground from "react-native/Libraries/Image/ImageBackground";
 import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
 import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
@@ -23,6 +25,7 @@ import {
 import { PublicInput } from "./public-input";
 import TextInputState from "./text-input-state";
 import { validateButton, validateInput } from "./control-contracts.mjs";
+import { pressableAccessibilityProps, withExplicitRoles } from "./accessibility-view-config.js";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
 import OriginalStyleSheet from "react-native/Libraries/StyleSheet/StyleSheet";
 export { default as NativeModules } from "./native-modules";
@@ -126,19 +129,17 @@ function nativeStyle(style, kind) {
 }
 export function View({
   style,
-  accessible,
-  accessibilityRole,
-  accessibilityLabel,
   collapsable,
   ...props
 }) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");
   const flat = StyleSheet.flatten(style);
-  // Browser text selection is irrelevant to native Controls. Accessibility
-  // metadata remains explicitly unsupported, documented in the laboratory.
+  // Browser text selection is irrelevant to native Controls. The accessibility
+  // props reach RN's View, whose view config (src/accessibility-view-config.js)
+  // lets through the ones the host maps and rejects the values it cannot honor.
   const { userSelect, ...layout } = flat;
-  return <OriginalView {...props} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
+  return <OriginalView {...withExplicitRoles(props)} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
 }
 export function Text({ style, ...props }) {
   const flat = nativeStyle(style, "Text");
@@ -154,7 +155,7 @@ export function Pressable({ style, ...props }) {
     throw new Error("Inline Controls are not implemented in Godot Text");
   return (
     <GodotPressable
-      {...props}
+      {...pressableAccessibilityProps(props)}
       style={
         typeof style === "function"
           ? (state) => nativeStyle(style(state), "Pressable")
@@ -169,7 +170,10 @@ function unavailable(name, reason) {
     throw new Error(`Godot platform does not implement ${name}${reason ? `: ${reason}` : ""}`);
   };
 }
-export const Image = unavailable("Image");
+// RN's original Image.ios.js behind a validating wrapper (image.jsx), and its original ImageBackground and asset registry.
+export const Image = GodotImage;
+export const ImageBackground = OriginalImageBackground;
+export { default as AssetRegistry } from "react-native/asset-registry";
 // RN's original Switch.js takes its non-Android path: the generated
 // SwitchNativeComponent ViewConfig, its onChange event and setValue command.
 export function Switch({ style, ...props }) {
@@ -210,7 +214,6 @@ export function ActivityIndicator({ style, ...props }) {
   return <OriginalActivityIndicator {...props} style={nativeStyle(style, "ActivityIndicator")} />;
 }
 export const StatusBar = unavailable("StatusBar");
-export const ImageBackground = unavailable("ImageBackground");
 export const KeyboardAvoidingView = unavailable("KeyboardAvoidingView");
 export const RefreshControl = unavailable("RefreshControl");
 export function Button(props) {

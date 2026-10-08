@@ -37,8 +37,9 @@ export type SectionListData<ItemT> = RN.SectionListData<ItemT>;
 /** RN's original Animated: values, timing, spring, decay, composition and
  * interpolation, with the JS driver or, with useNativeDriver, RN's C++ native
  * animations run on the Godot frame tick; Animated.View and
- * createAnimatedComponent over the public View. Animated.Text, Image,
- * ScrollView, FlatList and SectionList fail where they render. */
+ * createAnimatedComponent over the public View, and Animated.Image over the
+ * Godot Image. Animated.Text, ScrollView, FlatList and SectionList fail where
+ * they render. */
 export declare const Animated: typeof RN.Animated;
 export declare namespace Animated {
   type Value = RN.Animated.Value;
@@ -97,12 +98,51 @@ export declare const UIManager: Pick<typeof RN.UIManager, "measure" | "measureIn
 export interface TextInputInstance extends NativeInstance, Pick<RN.TextInputInstance, "clear" | "setSelection"> {
   getNativeRef(): TextInputInstance | null;
 }
+/** The values of RN's accessibilityRole that the host maps to a Godot accessibility role (native/accessibility_core.h).
+ * The others, such as "webview" or "adjustable", fail at the host with the reason. */
+export type AccessibilityRole = "none" | "button" | "togglebutton" | "imagebutton" | "keyboardkey" | "link" | "checkbox" |
+  "radio" | "switch" | "menuitem" | "tab" | "text" | "header" | "image" | "progressbar" | "alert" | "timer" | "list" | "menu" |
+  "menubar" | "tablist" | "tabbar" | "radiogroup" | "toolbar" | "viewgroup" | "search";
+/** The values of RN's role that the host maps to a Godot accessibility role. */
+export type AccessibilityAriaRole = "presentation" | "none" | "button" | "link" | "checkbox" | "radio" | "switch" |
+  "menuitem" | "option" | "tab" | "heading" | "img" | "progressbar" | "alert" | "status" | "timer" | "tooltip" | "list" |
+  "listitem" | "menu" | "menubar" | "tablist" | "tabpanel" | "dialog" | "alertdialog" | "radiogroup" | "toolbar" | "group" |
+  "region" | "banner" | "complementary" | "contentinfo" | "form" | "main" | "navigation";
+/** accessibilityState as the host maps it: checked has no "mixed", and a state fails on a role that cannot show it
+ * (checked needs checkbox, radio, switch or togglebutton; selected tab, listitem or option; expanded button or menuitem). */
+export interface AccessibilityState {
+  busy?: boolean; checked?: boolean; disabled?: boolean; expanded?: boolean; selected?: boolean;
+}
+/** The accessibility props the Godot host maps to the OS's assistive technology: the name, the description, the role,
+ * the states, the live region, hidden, and the press of the OS (onAccessibilityTap). The rest of RN's accessibility
+ * props, accessibilityActions among them, are not supported: accessibilityActions fails where it renders. */
+export interface AccessibilityProps {
+  accessible?: boolean;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+  accessibilityRole?: AccessibilityRole;
+  role?: AccessibilityAriaRole;
+  accessibilityState?: AccessibilityState;
+  accessibilityLiveRegion?: "none" | "polite" | "assertive";
+  accessibilityElementsHidden?: boolean;
+  importantForAccessibility?: "auto" | "yes" | "no-hide-descendants";
+  onAccessibilityTap?: () => void;
+  "aria-label"?: string;
+  "aria-live"?: "off" | "polite" | "assertive";
+  "aria-hidden"?: boolean;
+  "aria-busy"?: boolean;
+  "aria-checked"?: boolean;
+  "aria-disabled"?: boolean;
+  "aria-expanded"?: boolean;
+  "aria-selected"?: boolean;
+}
 export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID" |
   "onPointerDown" | "onPointerDownCapture" | "onPointerMove" | "onPointerMoveCapture" |
   "onPointerUp" | "onPointerUpCapture" | "onPointerCancel" | "onPointerCancelCapture" |
   "onPointerOver" | "onPointerOverCapture" | "onPointerOut" | "onPointerOutCapture" |
   "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
-  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> & { style?: StyleProp<ViewStyle> };
+  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> &
+  AccessibilityProps & { style?: StyleProp<ViewStyle> };
 /** Text: onTextLayout is RN's original event, one entry per visible line (see docs/research/text-layout.md).
  * Only the outer Text emits it; a nested Text ignores it, as in RN. */
 export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout"> & {
@@ -127,6 +167,37 @@ export type SwitchChangeEvent = RN.SwitchChangeEvent;
  * ActivityIndicatorView component; a numeric size sizes the Godot spinner. */
 export type ActivityIndicatorProps = Pick<RN.ActivityIndicatorProps, "animating" | "color" | "hidesWhenStopped" | "size" |
   "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
+/** RN's original Image.ios.js behind a validating wrapper, with RN's own native image pipeline (ImageShadowNode, its
+ * ImageRequest and the observers) over a host ImageManager that reads and decodes on worker threads. Sources are
+ * require()d assets, res://, user://, file:// and data: URIs. tintColor, blurRadius, capInsets, defaultSource,
+ * loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier, overlayColor,
+ * source headers, method, body and cache, and a border radius on the style fail where the Image renders. */
+export type ImageResizeMode = RN.ImageResizeMode;
+export type ImageSourcePropType = RN.ImageSourcePropType;
+export type ImageLoadEvent = RN.ImageLoadEvent;
+export type ImageErrorEvent = RN.ImageErrorEvent;
+export type ImageProgressEventIOS = RN.ImageProgressEventIOS;
+export type ImageStyle = Omit<ViewStyle, "borderRadius" | "borderTopLeftRadius" | "borderTopRightRadius" | "borderBottomLeftRadius" | "borderBottomRightRadius" | "overflow"> &
+  Pick<RN.ImageStyle, "resizeMode" | "objectFit" | "overflow">;
+export type ImageProps = Pick<RN.ImageProps, "source" | "src" | "srcSet" | "alt" | "width" | "height" | "resizeMode" | "testID" | "nativeID" |
+  "onLayout" | "onLoadStart" | "onLoad" | "onLoadEnd" | "onError" | "onProgress" | "onPartialLoad"> & { style?: StyleProp<ImageStyle> };
+export type ImageBackgroundProps = ImageProps & { children?: React.ReactNode; style?: StyleProp<ViewStyle>;
+  imageStyle?: StyleProp<ImageStyle>; imageRef?: React.Ref<NativeInstance> };
+export interface ImageStatics {
+  getSize(uri: string): Promise<{ width: number; height: number }>;
+  getSize(uri: string, success: (width: number, height: number) => void, failure?: (error: unknown) => void): void;
+  getSizeWithHeaders(uri: string, headers: { [key: string]: string }): Promise<{ width: number; height: number }>;
+  getSizeWithHeaders(uri: string, headers: { [key: string]: string }, success: (width: number, height: number) => void,
+    failure?: (error: unknown) => void): void;
+  prefetch: typeof RN.Image.prefetch;
+  prefetchWithMetadata: typeof RN.Image.prefetchWithMetadata;
+  queryCache: typeof RN.Image.queryCache;
+  resolveAssetSource: typeof RN.Image.resolveAssetSource;
+}
+export declare const Image: React.ComponentType<ImageProps & React.RefAttributes<NativeInstance>> & ImageStatics;
+export declare const ImageBackground: React.ComponentType<ImageBackgroundProps & React.RefAttributes<NativeInstance>>;
+/** RN's AssetRegistry, which the bundled asset modules register their descriptors in. */
+export declare const AssetRegistry: typeof RN.AssetRegistry;
 /** RN's original Modal with the Godot presentation and lifecycle props. */
 export type ModalProps = Pick<RN.ModalProps, "visible" | "transparent" | "onShow" | "onRequestClose" |
   "testID" | "children" | "backdropColor"> & {
@@ -156,7 +227,7 @@ export declare const ActivityIndicator: React.ComponentType<ActivityIndicatorPro
  * the Godot View subset; props this platform has not verified are omitted. */
 export type TouchableOpacityProps = Pick<RN.TouchableOpacityProps, "activeOpacity" | "onPress" | "onPressIn" | "onPressOut" |
   "onLongPress" | "delayLongPress" | "delayPressIn" | "delayPressOut" | "disabled" | "hitSlop" | "pressRetentionOffset" |
-  "testID" | "nativeID" | "onLayout" | "children"> & { style?: StyleProp<ViewStyle> };
+  "testID" | "nativeID" | "onLayout" | "children"> & Omit<AccessibilityProps, "role" | "onAccessibilityTap"> & { style?: StyleProp<ViewStyle> };
 export declare const TouchableOpacity: React.ComponentType<TouchableOpacityProps & React.RefAttributes<NativeInstance>>;
 export declare const StyleSheet: {
   hairlineWidth: number;

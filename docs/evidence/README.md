@@ -462,6 +462,22 @@ parity cases are not WebSocket differential or Godot mobile runtime proof. This 
 GF-22 or add a checkpoint. The networking example separately passes 29/29 headless
 and 51/51 graphical checks, with all 11 current captures linked from the record.
 
+The [Accessibility record](accessibility/README.md) maps RN's accessibility props on `View`,
+`Pressable` and `TouchableOpacity` to Godot's AccessKit tree, with two kinds of proof that it keeps
+apart. **Metadata:** 80 headless checks over two roots of one Hermes application prove the descriptor
+the host resolved for each element, the properties set on each Control and the host path of the OS's
+press (an independent oracle re-derives every stage; the whole of both RN role vocabularies, 105
+spellings, is swept, each mapped to a Godot role or rejected with the reason). **The real OS tree:**
+22 checks on a graphical macOS run read the NSAccessibility tree of the running Godot from an inspector
+injected into the process and press elements with `AXPress`; this test is local and not part of
+hosted CI. A 594-assertion C++ test covers the pure role table. The preceding host fails exactly 10
+headless checks and 5 bridge checks, and four retained sabotages fail 6, 17, 3 and 5 checks that the
+oracle rejects. Two captures of the example. No screen reader's speech, no other platform, and no
+mobile (Godot 4.7.2 has no accessibility bridge on iOS or Android, which blocks GF-34 and GF-35);
+`expanded` and `busy` are not covered by the bridge and `AccessibilityInfo` is the next slice. Hosted
+CI has not run the headless step yet, and the bridge is local only. Only the `slice` checkpoint of GF-20's first
+slice closes; no whole GF, other checkpoint, weight or denominator closes.
+
 The [text layout record](text-layout/README.md) gives the public `Text` the geometry of its lines:
 RN's `onTextLayout` and the Yoga baseline of a Text in an `alignItems: 'baseline'` row. A Godot
 platform `TextLayoutManager` adds the virtual `measureLines` that RN's `ParagraphShadowNode`
@@ -504,6 +520,23 @@ replaced so that nothing opens a real URL or touches the real pasteboard. `canOp
 handlers are installed, a vibration cannot be cancelled in Godot, a deep link reaches a running application
 only through `FabricApplication.deliver_url`, and Alert, Share, Settings, BackHandler, mobile deep-link plugins
 and real-device behavior are open. Hosted CI is pending; this does not complete GF-23: only its first-slice checkpoint closes, and no whole GF, other checkpoint, weight or denominator does.
+
+The [images record](images/README.md) runs React Native's own `Image.ios.js`, `ImageBackground`,
+`AssetRegistry` and `Animated.Image` over RN's own C++ image pipeline (`ImageShadowNode`,
+`ImageRequest` and its observer coordinator) with a host `ImageManager`: every picture is read,
+bounded and decoded on Godot's `WorkerThreadPool` and never on the main thread, a native
+`GodotImage` draws the six resize modes UIKit maps, and `require()`d assets are Metro's modules
+with Metro's descriptor and every `@Nx` variant. Two roots of one application run 74 headless
+checks over bundled assets at three scales, every format, `user://`, `file://` and `data:` sources,
+failures, `getSize` and the upload budget, and over decodes held in flight while their request is
+swapped away or unmounted; an independent oracle recomputes sources, pixel sizes, events and
+rectangles from RN's formulas and the fixture's own pixels. The preceding host reaches 11 checks and
+fails the 3 normative ones among them; decoding on the main thread fails 12 checks and a view that
+keeps listening to a request it swapped away from fails 2, and the oracle rejects each, as it does
+15 mutations of the genuine report. Two captures of the example, a C++ test of the pure parts
+(68 assertions) and the research note with RN's file and line references. Network images, the
+decoded-image cache, tint, blur, capInsets, rounded image clipping, animated formats and every
+target but macOS are open. Hosted CI pending.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

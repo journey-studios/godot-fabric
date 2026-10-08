@@ -2875,6 +2875,56 @@ budget is raised to 60 minutes without changing probes or their failure criteria
 and a fresh complete CI run remains required before merge. Orientation/insets,
 hardware, mobile/export and complete pinned RN parity remain acceptance work.
 
+### Accessibility tree and OS bridge on macOS (2026-10-07)
+
+GF-20 becomes **In progress**; only its first-slice checkpoint becomes done, and the
+full item, contract, parity and targets remain open. The
+[accessibility evidence](docs/evidence/accessibility/README.md) maps RN's accessibility props on
+`View`, `Pressable` and `TouchableOpacity` to the accessibility element that Godot builds for each
+Control with AccessKit: the label and hint as the element's name and description, the role (every
+spelling of RN 0.87.1's `accessibilityRole` and `role`: 61 spellings map and name 44 distinct roles,
+42 of them a Godot role plus `none` and `presentation`; 44 spellings, naming 39 distinct roles, are
+rejected with the reason), the disabled, busy, checked,
+selected and expanded states, live regions, `aria-hidden` and `importantForAccessibility`
+hidden, and the OS's press. A role Godot has no word for gets the nearest role plus a role
+description (`header` is static text described as a heading) and is never replaced by a generic
+one; a value the host cannot honor (a role without an equivalent, `checked: "mixed"`, a state on a
+role that cannot show it, `accessibilityActions`) fails explicitly and leaves the View without
+semantics. The pure, Godot-free core (`native/accessibility_core.h`) holds the table and the
+resolution so that the mobile bridges of GF-34 and GF-35 can consume the same decisions.
+
+The proof has two kinds, kept apart. **Metadata:** 80 headless checks over two roots of one Hermes
+application prove the semantic descriptor the host resolved, the properties set on each Control and the
+host path of the OS's press; an independent oracle re-derives every stage, and both RN role
+vocabularies (105 spellings, 61 mapped and 44 rejected) are swept. A headless Godot has no OS accessibility driver, so this is
+metadata only and the report says so. **The real OS tree:** 22 checks on a graphical macOS run read the
+NSAccessibility tree that the running Godot's window serves to the system, from an inspector injected
+into the process, and press elements with `AXPress`: `onAccessibilityTap` answers alone, a View
+without a handler is clicked at its center and runs `onPress`, a disabled one refuses, and updates,
+removals, `aria-hidden` and remounts move the tree. This test is **local only**: it needs a window
+session and is not part of hosted CI. A 594-assertion C++ test covers the core. The preceding host
+fails exactly 10 headless checks and 5 bridge checks, and four retained sabotages (name, press, role
+table, hidden) fail 6, 17, 3 and 5 checks that the oracle rejects. The example is checked headless
+and in a window (18 checks) with two captures. A removal of `role` or `accessibilityRole` needed a
+workaround: RN's own `AccessibilityProps.cpp` keeps the previous role when the prop arrives as null.
+Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
+[`42615f4`](https://github.com/journey-studios/godot-fabric/commit/42615f4513cda44671ebc63a7f695ae1d9d7286e),
+recorded at [`ad7c53c`](https://github.com/journey-studios/godot-fabric/commit/ad7c53c396af2431e15b83d0acde8bd321fba9e8)
+and worded at [`ac5f913`](https://github.com/journey-studios/godot-fabric/commit/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9).
+After main's Modal slice was merged, the same suites passed on the merged tree (80 and 22 checks,
+594 assertions, the 7 Modal tests, 298 Node and 13 Python contract tests, with both controls and
+the four sabotages rebuilt for the new bundle); the receipt remains that of `42615f4`.
+
+Open: `AccessibilityInfo` (settings and events, the iOS `AccessibilityManager` contract) is the
+second slice; focus and keyboard navigation, announcements, grouping under `accessible`, custom
+`accessibilityActions`, `accessibilityValue`, text scale, `Text`, the host's Button and TextInput,
+and the Switch are not mapped yet. `expanded` and `busy` are published to Godot but AccessKit's macOS
+adapter does not serve them, so the bridge cannot cover them. **Mobile has no bridge:** Godot 4.7.2
+has no accessibility driver on iOS or Android, which blocks GF-34 and GF-35 until one exists, to be
+resolved early. No screen reader's speech was heard, and Windows and Linux trees are unread. The
+bridge in hosted CI and the hosted run of the headless step are pending. No whole GF, other checkpoint,
+weight or denominator closes.
+
 ### Text line geometry: onTextLayout and the Yoga baseline (2026-10-07)
 
 GF-11 moves to **In progress** with only its first-slice checkpoint done. The
@@ -2973,6 +3023,85 @@ contracts gate (283 Node/13 Python), `test:modal`, the device services suite wit
 preserved preceding host, static analysis and the publication scan pass again. Only GF-23's first-slice
 checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 
+### Images and the asset pipeline (2026-10-07)
+
+GF-16 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
+contract, parity and targets remain open. The [images evidence](docs/evidence/images/README.md)
+makes the public `Image`, `ImageBackground`, `AssetRegistry` and `Animated.Image` React Native's
+own modules and runs RN's own C++ image pipeline under them: **74 headless checks** in two roots of
+one Hermes application, in which no read or decode ran on the main thread. No other GF's checkpoint
+changes: network images need GF-22's transport and stay open.
+
+RN's `Image.ios.js` renders behind a validating wrapper (`src/image.jsx`,
+`src/image-contract.mjs`) that makes each prop the host cannot show yet fail where the Image
+renders, naming the prop and why; the SDK's platform plugin points every importer of RN's `Image`,
+`ImageBackground` and `AnimatedImage` at it, and the module loads on first use so a bundle without
+images, or on a host without the module, still evaluates. The host registers RN's generated
+`ImageComponentDescriptor` and an `ImageManager` under `ImageManagerKey`, so `ImageShadowNode`
+requests the picture from inside layout, picks the source and the content frame and scale, and
+`ImageRequest` and its observer coordinator keep the protocol (cancel when the last observer
+leaves, resume when one returns); `GodotImageManager` only builds the request and
+`ImageLoader` serves it. `ImageLoader` (`native/image_loader.{h,cpp}`) reads, sniffs, bounds,
+decodes and shrinks on Godot's `WorkerThreadPool` (up to four jobs in the pool, every task awaited,
+a cancelled job finishes and is dropped without a texture) and the main thread only creates the
+texture, within an upload budget per pump, and tells the observers. Headers are read and bounded
+before any decoder runs (Godot's JPEG loader multiplies dimensions in `unsigned int`, its PNG loader
+allocates before checking `Image::MAX_PIXELS`), non-bundled pictures shrink to cover the request in
+pixels and are never upscaled as `RCTTargetSize` does, a bundled asset is decoded whole at the scale
+of its file name, and an SVG is rasterized at the request's scale. `GodotImage` observes its
+state's request as `RCTImageComponentView` does (observer swap, `onLoadStart` only when the source
+changes, `onLoad` then `onLoadEnd` with the size in pixels, `onError` then `onLoadEnd`) and draws the
+six resize modes with the rectangles `UIViewContentMode` gives, `repeat` tiling at the picture's size
+in points. The `ImageLoader` TurboModule answers `getSize` and `getSizeWithHeaders` from the header
+and rejects `prefetch`, saying the host has no cache. Sources are `require()`d assets, `res://`,
+`user://`, `file://` and `data:` URIs; PNG, JPEG, WebP, BMP, TGA and SVG decode, and GIF fails
+through `onError`.
+
+`sdk/toolchain/asset-plugin.mjs` is the one esbuild plugin for every build: `require()` of an image
+is Metro's module with Metro's descriptor (the unit tests compare it, hash included, with Metro's
+own `getAssetData`), every `@Nx` variant joins one descriptor, and the files land beside the bundle
+with a `<bundle>.assets.json` manifest of each file's SHA-256 and the bundle's, which the iOS export
+hook copies. RN's `pickScale` then chooses by the window's content scale.
+
+An independent oracle recomputes the sources, the pixel sizes, the event sequences, the chosen
+scales and the six rectangles from RN's formulas and the fixture files' own pixels; stages that
+hold a decode in flight at a gate, limit the pool to one job and cap the upload budget at one byte
+make every assertion a state or a bound, never a count of frames. A request swapped away while its
+decode is in flight reports nothing and creates no texture; unmounting an Image or a root drops what
+is in flight and cancels what waited; stopping awaits every task and leaves no texture. The same
+bundle on the preceding host (built from `ebcb292`) reaches 11 checks, holds the 8 that need no
+pipeline and fails the 3 normative ones it can reach (`'ImageLoader' could not be found`); two
+retained sabotages (decoding on the main thread, a view that keeps listening to the request it
+swapped away from) fail 12 and 2 checks and the oracle rejects each, and 15 mutations of the genuine
+report are refused. A C++ test covers the pure parts (URI classes, formats, headers, decode targets
+and the six rectangles; 7 groups, 68 assertions). An interactive example (`examples/images`) shows
+the six modes, a bundled `@2x` asset, `data:` PNG and SVG, an `ImageBackground`, a failure and a
+preview that two buttons change (17 headless and 25 graphical checks), and its two captures are in
+the evidence.
+
+Open: network images (`http(s)`, headers, method, body and cache), the decoded-image cache,
+`prefetch` and `queryCache`, `tintColor`, `blurRadius`, `capInsets`, `defaultSource`,
+`loadingIndicatorSource`, `fadeDuration`, `progressiveRenderingEnabled`, `resizeMethod`,
+`resizeMultiplier` and `overlayColor` (each fails where the Image renders), rounded image clipping
+(a border radius on the Image's own style fails; the host clips rectangles only), animated GIF and
+WebP, `nativeImageSource`, assets in desktop and Android exports (the iOS hook copies the manifest's
+files, but no exported app ran), an independent pixel oracle, a comparison of ImageIO's thumbnail
+rounding and UIKit's tiling with iOS, and every target but macOS. The host departs from RN in the
+research note: the `ImageLoader` module's error codes are message prefixes, `repeat` tiles at an
+integer size in points, `res://` is decoded whole, and `getSize` believes the header.
+
+On the committed tree the contracts gates (7, 8 and 291 Node tests, 13 Python tests, static analysis,
+publication scan), the type check, the images, Animated, Switch, Touchables, focus commands, shared
+touches, click and module suites and the 31 examples pass. The facade, the Animated exports and the
+SDK platform plugin changed, so the local controls and sabotages of the Animated, frame clock,
+networking, WebSocket and transform guard suites, which only live in `build/`, were rebuilt on
+their preserved preceding hosts; hosted CI has no controls and is not affected. The Animated check
+that listed `Image` among the components that fail where they render no longer does, since
+`Animated.Image` renders now. All 159 executed code and configuration inputs match implementation
+`552fb56` via git show/SHA-256 (executed from the committed tree, execution base `ebcb292`). After the review of #56, `GodotImage` tells JS `onLoadStart` before it swaps observers (`addObserver` answers inside the call when a request holds a response), the oracle judges the order of every event list (18 mutations of the genuine report, and no lane drives the synchronous path), the asset pipeline starts each build empty and the builder places the asset files before the bundle and finishes the manifest and the retirement after it ([`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)); the lanes ran again with the same counts (74, 3, 12 and 2) and the `postReview` section of `report.json` pins the six changed files. Hosted
+CI for this slice is pending. Only GF-16's first-slice checkpoint closes; no whole GF, other
+checkpoint, weight or denominator closes.
+
 ## M1 — Complete the native UI tree
 
 Owners: component descriptors/adapters, Yoga/style schema, paragraph/input and
@@ -2987,7 +3116,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
 | GF-14 · P1 · Scroll and refresh | Planned | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
 | GF-15 · P1 · Virtualized lists | In progress | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
-| GF-16 · P1 · Images and asset pipeline | Planned | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
+| GF-16 · P1 · Images and asset pipeline | In progress | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
 | GF-17 · P1 · Shared widgets | In progress | Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases | GF-03, GF-10, GF-13, GF-20 |
 | GF-18 · P1 · Modals and safe areas | In progress | Deliver Modal presentation/dismiss/requestClose, overlay stacking/focus/back handling and the pinned SafeAreaView behavior. Handle orientation/insets and root ownership across windows/surfaces. Verify nested dialogs, background focus, keyboard, abrupt unmount and exported mobile presentation | GF-07, GF-09, GF-13, GF-20, GF-23 |
 
@@ -3000,7 +3129,7 @@ observe the real system and retain the original event/callback contracts.
 | ID / priority / work | Status | Required result and acceptance | Completion dependencies |
 | --- | --- | --- | --- |
 | GF-19 · P1 · Animated and layout animation | In progress | Deliver upstream Animated/Easing/hooks and LayoutAnimation with an actual native animation backend and driver semantics. Cover timing/spring/decay, composition/interpolation, event binding, cancellation and layout transitions; synchronize native values and JS callbacks. Measure under JS load, background/resume and reduced motion; complete core animation without requiring Reanimated | GF-05, GF-08, GF-09, GF-10, GF-25 |
-| GF-20 · P1 · Accessibility | Planned | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
+| GF-20 · P1 · Accessibility | In progress | Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early | GF-04, GF-07, GF-09, GF-13, GF-25 |
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | In progress | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
 | GF-23 · P1 · Shared device services | In progress | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |

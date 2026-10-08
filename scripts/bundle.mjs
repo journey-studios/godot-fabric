@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { createRequire } from "node:module";
 import { platformPlugin } from "../sdk/toolchain/platform-plugin.mjs";
+import { createAssetPipeline, publishAssets } from "../sdk/toolchain/asset-plugin.mjs";
 import { godotExtensions } from "./platform-resolution.mjs";
 import {
   compileNativeWind,
@@ -15,6 +16,7 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const requireSdk = createRequire(import.meta.url);
 await mkdir(path.join(root, "build"), { recursive: true });
 await compileNativeWind();
+const assets = createAssetPipeline({ root });
 const result = await build({
   absWorkingDir: root,
   entryPoints: ["examples/entry.jsx"],
@@ -27,6 +29,7 @@ const result = await build({
   resolveExtensions: godotExtensions,
   metafile: true,
   plugins: [
+    assets.plugin,
     {
       name: "laboratory-nativewind",
       setup(builder) {
@@ -58,6 +61,7 @@ const hermesBundle = await transformAsync(await readFile(bundlePath, "utf8"), {
   ],
 });
 await writeFile(bundlePath, hermesBundle.code + "\n");
+await publishAssets(assets, bundlePath, hermesBundle.code + "\n");
 await writeFile(
   path.join(root, "build/bundle-inputs.json"),
   JSON.stringify(Object.keys(result.metafile.inputs), null, 2) + "\n",

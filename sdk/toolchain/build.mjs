@@ -11,6 +11,7 @@ import { platformPlugin } from "./platform-plugin.mjs";
 import { prepareProjectResolution } from "./project-resolution.mjs";
 import { selectedAdapterInputs, prepareAdapterBuild } from "./adapter-plugin.mjs";
 import { resolveNativeCompiler } from "./native-compiler.mjs";
+import { createAssetPipeline } from "./asset-plugin.mjs";
 
 const toolchain = path.dirname(fileURLToPath(import.meta.url));
 const sdk = path.dirname(toolchain);
@@ -80,6 +81,7 @@ async function main() {
   });
   if (typecheck.error || typecheck.status !== 0)
     throw new Error("TypeScript failed\n" + (typecheck.stdout ?? "") + (typecheck.stderr ?? "") + (typecheck.error?.message ?? ""));
+  const assets = createAssetPipeline({root: project});
   const result = await build({
     absWorkingDir: project, entryPoints: [entry], outfile, write: false,
     tsconfigRaw: resolution.tsconfigRaw, conditions: resolution.conditions,
@@ -87,6 +89,7 @@ async function main() {
     define: { "process.env.NODE_ENV": '"production"', __DEV__: "false" },
     mainFields: ["main"], resolveExtensions: resolution.resolveExtensions,
     plugins: [
+      assets.plugin,
       resolution.plugin,
       adapterBuild.plugin,
       platformPlugin(path.join(sdk, "src"), (id) => requireSdk.resolve(id)),
@@ -100,6 +103,8 @@ async function main() {
   const code = transformed.code + "\n";
   const bundleSha256 = createHash("sha256").update(code).digest("hex");
   const packet = adapterBuild.selectionPacket(path.relative(project, outfile), bundleSha256);
+  // Image assets go beside the bundle, with a manifest that carries its hash.
+  const stagedAssets = await assets.stage(outfile, bundleSha256);
   const packetPath = outfile + ".adapters.json";
   const packetText = packet ? JSON.stringify(packet, null, 2) + "\n" : null;
   await mkdir(path.dirname(outfile), { recursive: true });
@@ -110,12 +115,16 @@ async function main() {
     if (packetText) await writeFile(packetStaging, packetText);
     resolution.assertUnchanged();
     adapterBuild.assertUnchanged();
+    // The new asset files only add to the directory, so they go first and the bundle still in place keeps every file it names.
+    await stagedAssets.place();
     // Publish selection first; the loader rejects a mixed generation by bundle
     // hash. The editor starts the runtime only after this builder succeeds.
     if (packetText) await rename(packetStaging, packetPath);
     await rename(staging, outfile);
     if (!packetText) await rm(packetPath, {force: true});
-  } finally { await rm(staging, {force: true}); await rm(packetStaging, {force: true}); }
+    // The manifest names the bundle just published, and the files only the previous manifest named can go now.
+    await stagedAssets.finish();
+  } finally { await rm(staging, {force: true}); await rm(packetStaging, {force: true}); await stagedAssets.discard(); }
   const inputs = Object.keys(result.metafile.inputs).map((file) => {
     const absolute = path.resolve(project, file);
     return absolute.startsWith(sdk + path.sep) ? "sdk/" + path.relative(sdk, absolute) : "project/" + path.relative(project, absolute);
@@ -128,6 +137,8 @@ async function main() {
     adapterSelection: packetText ? {path: path.relative(project, packetPath).split(path.sep).join("/"),
       sha256: createHash("sha256").update(packetText).digest("hex"), adapters: records.length,
       specs: adapterBuild.specCount} : null,
+    assets: stagedAssets.manifest ? {path: path.relative(project, outfile + ".assets.json").split(path.sep).join("/"),
+      files: stagedAssets.manifest.files.length} : null,
   }, null, 2) + "\n");
   console.log("GODOT_FABRIC_BUILT: " + entryArg);
 }

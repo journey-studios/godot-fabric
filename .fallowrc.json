@@ -47,6 +47,7 @@
     "tests/app-state-fixture.jsx",
     "tests/virtualized-list-fixture.jsx",
     "tests/switch-fixture.jsx",
+    "tests/accessibility-fixture.jsx",
     "tests/shared-touches-fixture.jsx",
     "tests/touchables-fixture.jsx",
     "tests/touchables-animated-fixture.jsx",
@@ -59,6 +60,7 @@
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/websocket-fixture.jsx",
+    "tests/images-fixture.jsx",
     "tests/modal-host-fixture.jsx"
   ],
   "ignorePatterns": [
@@ -183,6 +185,7 @@
         "VirtualizedSectionList",
         "RefreshControl",
         "ImageBackground",
+        "AssetRegistry",
         "KeyboardAvoidingView",
         "VirtualizedList",
         "TextInput",
@@ -296,7 +299,19 @@
             "useAnimatedValue",
             "useAnimatedValueXY",
             "TouchableOpacity",
-            "TouchableOpacityProps"
+            "TouchableOpacityProps",
+            "Image",
+            "ImageBackground",
+            "AssetRegistry",
+            "ImageProps",
+            "ImageBackgroundProps",
+            "ImageStyle",
+            "ImageStatics",
+            "ImageResizeMode",
+            "ImageSourcePropType",
+            "ImageLoadEvent",
+            "ImageErrorEvent",
+            "ImageProgressEventIOS"
           ]
         },
         {

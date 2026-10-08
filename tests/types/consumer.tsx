@@ -2,8 +2,9 @@ import React, { useRef } from "react";
 import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
+import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -266,9 +267,87 @@ const originalTouchableProps: import("../../node_modules/react-native/types_gene
 const publicTouchable = <TouchableOpacity {...touchableProps} ref={instance => { if (instance) instance.measure(() => {}); }}><View /></TouchableOpacity>;
 // @ts-expect-error the style is the Godot View subset
 const touchableShadow = <TouchableOpacity style={{shadowColor: "#000000"}} />;
-// @ts-expect-error accessibility props are not verified on this platform
-const touchableAccessibility = <TouchableOpacity accessibilityLabel="Save" />;
-void originalTouchableProps; void publicTouchable; void touchableShadow; void touchableAccessibility;
+void originalTouchableProps; void publicTouchable; void touchableShadow;
+
+// Accessibility: the props the host maps to the OS's assistive technology, on View and TouchableOpacity.
+const accessibleProps: AccessibilityProps = {accessible: true, accessibilityLabel: "Save", accessibilityHint: "Saves the draft",
+  accessibilityRole: "button", accessibilityState: {disabled: false, busy: false, checked: undefined, expanded: true},
+  accessibilityLiveRegion: "polite", accessibilityElementsHidden: false, importantForAccessibility: "no-hide-descendants",
+  onAccessibilityTap: () => {}, "aria-label": "Save", "aria-live": "off", "aria-hidden": false, "aria-disabled": true};
+const accessibleView = <View {...accessibleProps} role="tab" testID="accessible" />;
+const touchableAccessibilityProps: Omit<AccessibilityProps, "role" | "onAccessibilityTap"> = {...accessibleProps};
+const accessibleTouchable = <TouchableOpacity {...touchableAccessibilityProps} onPress={() => {}} disabled accessibilityRole="switch"
+  accessibilityState={{checked: true}} />;
+// @ts-expect-error RN's TouchableOpacity forwards accessibilityRole but not role or onAccessibilityTap to its View
+const touchableRole = <TouchableOpacity role="button" onAccessibilityTap={() => {}} />;
+const ariaSwitch = <View role="switch" aria-checked aria-label="Dark mode" />;
+// The platform's props are RN's own types, so a screen-reader label from RN code type-checks unchanged.
+const upstreamAccessibility: Pick<import("../../node_modules/react-native/types_generated/index").ViewProps,
+  "accessible" | "accessibilityLabel" | "accessibilityHint" | "accessibilityLiveRegion" | "accessibilityElementsHidden"> = accessibleProps;
+// @ts-expect-error an unknown role is rejected before it reaches the host
+const unknownRole = <View accessibilityRole="banana" />;
+// @ts-expect-error webview has no Godot accessibility role, so only the host's explicit error could say so
+const rejectedRole = <View accessibilityRole="webview" />;
+// @ts-expect-error a table role needs row and column counts, which are not supported
+const rejectedAriaRole = <View role="table" />;
+// @ts-expect-error heading is a role spelling, not an accessibilityRole
+const wrongVocabulary = <View accessibilityRole="heading" />;
+// @ts-expect-error Godot's accessibility has no mixed state
+const mixedState = <View accessibilityRole="checkbox" accessibilityState={{checked: "mixed"}} />;
+// @ts-expect-error custom accessibility actions are not supported yet
+const customActions = <View accessibilityActions={[{name: "activate"}]} />;
+// @ts-expect-error Godot hides an element only together with its descendants
+const hideOnly = <View importantForAccessibility="no" />;
+// @ts-expect-error a label is text
+const numericLabel = <TouchableOpacity accessibilityLabel={5} />;
+// @ts-expect-error the value of the accessibility state is a boolean
+const stateNotBoolean = <View accessibilityState={{disabled: "yes"}} />;
+// @ts-expect-error a live region is none, polite or assertive
+const assertiveOff = <View accessibilityLiveRegion="off" />;
+// @ts-expect-error accessibilityValue is not supported yet
+const valueProp = <View accessibilityValue={{now: 5}} />;
+void accessibleView; void accessibleTouchable; void touchableRole; void ariaSwitch; void upstreamAccessibility; void unknownRole; void rejectedRole;
+void rejectedAriaRole; void wrongVocabulary; void mixedState; void customActions; void hideOnly; void numericLabel;
+void stateNotBoolean; void assertiveOff; void valueProp;
+
+// Public Image: RN's original Image.ios.js over the Godot pipeline. Sources are assets, res://, user://, file:// and data: URIs.
+const mode: ImageResizeMode = "repeat";
+const asset: ImageSourcePropType = { uri: "res://pictures/logo.png", width: 40, height: 20 };
+const imageStyle: ImageStyle = { width: 60, height: 60, resizeMode: "cover", opacity: 0.9, borderWidth: 2 };
+const imageProps: ImageProps = {
+  source: asset, resizeMode: mode, style: imageStyle, testID: "logo",
+  onLoadStart: () => {},
+  onProgress: (event: ImageProgressEventIOS) => { const loaded: number = event.nativeEvent.loaded; const total: number = event.nativeEvent.total; void loaded; void total; },
+  onLoad: (event: ImageLoadEvent) => { const uri: string = event.nativeEvent.source.uri; const width: number = event.nativeEvent.source.width; void uri; void width; },
+  onError: (event: ImageErrorEvent) => { const message: string = event.nativeEvent.error; void message; },
+  onLoadEnd: () => {},
+};
+const originalImageStyle: import("../../node_modules/react-native/types_generated/index").ImageStyle = imageStyle;
+const publicImage = <Image {...imageProps} ref={instance => { if (instance) instance.measure(() => {}); }} />;
+const background = <ImageBackground source={asset} imageStyle={{ opacity: 0.5 }} style={{ borderRadius: 8, width: 80, height: 40 }}><View /></ImageBackground>;
+const backgroundProps: ImageBackgroundProps = { source: asset, resizeMode: "contain" };
+async function imageApis() {
+  const size: { width: number; height: number } = await Image.getSize("res://pictures/logo.png");
+  Image.getSize("res://pictures/logo.png", (width, height) => { void width; void height; });
+  const sized = await Image.getSizeWithHeaders("res://pictures/logo.png", { Accept: "image/png" });
+  const resolved = Image.resolveAssetSource(asset);
+  const registered: unknown = AssetRegistry.getAssetByID(1);
+  void Image.prefetch("res://pictures/logo.png"); void Image.queryCache(["res://pictures/logo.png"]);
+  return { size, sized, resolved, registered };
+}
+const animatedImage = <Animated.Image source={asset} style={{ opacity: 0.5 }} />;
+// Props the host has no native implementation for fail at type-check time as they do at render time.
+// @ts-expect-error tinting needs a shader on the image's own canvas item (a later slice)
+const tinted = <Image source={asset} tintColor="#ff0000" />;
+// @ts-expect-error blurring is a later image effect
+const blurred = <Image source={asset} blurRadius={4} />;
+// @ts-expect-error placeholders are a later image state
+const placeholder = <Image source={asset} defaultSource={asset} />;
+// @ts-expect-error the host clips rectangles only; rounded image clipping is a later slice
+const rounded = <Image source={asset} style={{ borderRadius: 8 }} />;
+// @ts-expect-error resize modes are cover, contain, stretch, center, repeat and none
+const invalidMode = <Image source={asset} resizeMode="fill" />;
+void originalImageStyle; void publicImage; void background; void backgroundProps; void imageApis; void animatedImage; void tinted; void blurred; void placeholder; void rounded; void invalidMode;
 
 // Text: onTextLayout is RN's original event, with one entry per visible line.
 const layoutHandler = (event: TextLayoutEvent) => {

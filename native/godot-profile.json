@@ -19,6 +19,7 @@
     "TextServerManager",
     "Image",
     "ImageTexture",
+    "WorkerThreadPool",
     "OS",
     "Engine",
     "ClassDB",

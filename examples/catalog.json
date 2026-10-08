@@ -175,6 +175,13 @@
     "scene": "examples/activity-indicator/scene.tscn"
   },
   {
+    "id": "accessibility",
+    "title": "Original RN accessibility props: labels, roles, states, live region and the OS's press",
+    "api": "public",
+    "source": "examples/accessibility/App.jsx",
+    "scene": "examples/accessibility/scene.tscn"
+  },
+  {
     "id": "touchables",
     "title": "Original RN touchables: the opacity, the underlay and the absence of feedback while pressed",
     "api": "public",
@@ -208,6 +215,13 @@
     "api": "public",
     "source": "examples/networking/App.jsx",
     "scene": "examples/networking/scene.tscn"
+  },
+  {
+    "id": "images",
+    "title": "Original RN Image over worker-thread decoding: resize modes, bundled @2x assets, data URIs and failures",
+    "api": "public",
+    "source": "examples/images/App.jsx",
+    "scene": "examples/images/scene.tscn"
   },
   {
     "id": "text-layout",

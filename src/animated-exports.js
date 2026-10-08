@@ -1,12 +1,13 @@
 // Godot's variant of RN's AnimatedExports, which RN's own Animated.js requires.
 // The implementation (values, animations, composition, events, nodes and the
-// native helper) and Animated.View are RN's original modules. RN's wrappers
+// native helper), Animated.View and Animated.Image (over the Godot Image) are RN's original modules. RN's wrappers
 // over components this platform renders differently, or does not render yet,
 // fail where they render instead of animating the wrong component.
 import Platform from "./platform";
 import AnimatedImplementation from "react-native/Libraries/Animated/AnimatedImplementation";
 import AnimatedMock from "react-native/Libraries/Animated/AnimatedMock";
 import AnimatedView from "react-native/Libraries/Animated/components/AnimatedView";
+import AnimatedImage from "react-native/Libraries/Animated/components/AnimatedImage";
 
 function uncertified(name, reason) {
   return function UncertifiedGodotAnimatedComponent() {
@@ -20,7 +21,6 @@ const ScrollView = uncertified("ScrollView",
   "it wraps RN's own ScrollView, not the Godot ScrollView, and Animated.event on that one is not verified");
 const FlatList = uncertified("FlatList", "its animated wrapper over the Godot ScrollView is not verified");
 const SectionList = uncertified("SectionList", "its animated wrapper over the Godot ScrollView is not verified");
-const Image = uncertified("Image", "Image is not implemented");
 
 const Animated = Platform.isDisableAnimations ? AnimatedMock : AnimatedImplementation;
 
@@ -29,7 +29,7 @@ export default {
     return FlatList;
   },
   get Image() {
-    return Image;
+    return AnimatedImage;
   },
   get ScrollView() {
     return ScrollView;

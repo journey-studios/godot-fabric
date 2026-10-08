@@ -18,7 +18,6 @@ const LIMIT_MS := 3000
 # RN's reasons, as src/animated-exports.js words them.
 const UNCERTIFIED := {
   "Text": "Godot platform has not certified Animated.Text: it wraps RN's own Text, not the Godot Text",
-  "Image": "Godot platform has not certified Animated.Image: Image is not implemented",
   "ScrollView": "Godot platform has not certified Animated.ScrollView: it wraps RN's own ScrollView, not the Godot ScrollView, and Animated.event on that one is not verified",
   "FlatList": "Godot platform has not certified Animated.FlatList: its animated wrapper over the Godot ScrollView is not verified",
   "SectionList": "Godot platform has not certified Animated.SectionList: its animated wrapper over the Godot ScrollView is not verified",
@@ -373,7 +372,7 @@ func mount_case() -> void:
     for kind: String in UNCERTIFIED:
       expected[root_name + ":" + kind] = UNCERTIFIED[kind]
   check(messages == expected,
-    "mount/Animated.Text, Image, ScrollView, FlatList and SectionList fail where they render, each with its reason")
+    "mount/Animated.Text, ScrollView, FlatList and SectionList fail where they render, each with its reason")
   module_check((state.get("enabled") == true and int(number(state.get("frames"))) == 0 and state.get("active") == false
     and int(number(state.get("resumes"))) == 0 and int(number(state.get("directUpdates"))) == 0),
     "module/RN's backend is attached to the application before any animation and idles with no frame delivered")
