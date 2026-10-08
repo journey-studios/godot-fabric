@@ -255,3 +255,17 @@ failed and timed-out runs above remain part of the regression record.
 The [dashboard capture](../evidence/modal/dashboard-109e6fd-final.jpg) records
 24/156 checkpoints in the local branch data. Public Pages publication is verified
 separately; a local capture alone does not prove cloud publication.
+
+
+Public Pages publication is now verified independently in the
+[publication receipt](../evidence/modal/publication-e5e3858.json). Run
+[37713213836](https://github.com/journey-studios/godot-fabric/actions/runs/37713213836)
+built with the main renderer and the exact published data commit `e5e3858`.
+Both the uploaded Pages artifact and the public JSON match the committed data
+when only generated `publication` metadata is removed. The
+[public dashboard capture](../evidence/modal/dashboard-public-e5e3858.jpg)
+shows the branch publication identity, 24/156 checkpoints and 0/39 whole items.
+The initial public read still served the preceding 23/156 data; the later
+matching read confirms propagation. An earlier dispatch with an incorrect
+reference failed before deploy and remains recorded. This publication accepts
+no additional checkpoint or full item.
