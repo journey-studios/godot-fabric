@@ -111,6 +111,7 @@ async function machOLoadCommands(harness, filename, name) {
 
 export function assertLocalLoadPaths(values, binary, app, label = "binary") {
   for (const value of values) {
+    if (value === "@loader_path" || value === "@executable_path") continue;
     assert.ok(value.startsWith("@rpath/") || value.startsWith("@loader_path/") || value.startsWith("@executable_path/")
       || value.startsWith("/System/Library/") || value.startsWith("/usr/lib/"), `${label} has an unexpected absolute path: ${value}`);
     if (!value.startsWith("@rpath/") && !value.startsWith("@loader_path/") && !value.startsWith("@executable_path/")) continue;

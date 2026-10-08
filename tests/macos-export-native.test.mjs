@@ -66,6 +66,7 @@ test("load-path validation permits contained loader paths and rejects traversal"
   const host = path.join(app, "Contents/Frameworks/fabric_godot.dylib");
   assert.doesNotThrow(() => assertLocalLoadPaths([
     "@rpath/hermesvm.framework/Versions/1/hermesvm", "@loader_path/frameworks",
+    "@loader_path", "@executable_path",
     "/System/Library/Frameworks/AppKit.framework/AppKit", "/usr/lib/libSystem.B.dylib",
   ], host, app));
   assert.throws(() => assertLocalLoadPaths(["@rpath/../outside.dylib"], host, app), /unsafe @rpath traversal suffix/);
