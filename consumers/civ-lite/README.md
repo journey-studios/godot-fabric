@@ -60,7 +60,8 @@ godot --path . --headless -- --validate                               # the ten 
 ```
 
 In the repository, `npm run test:consumer:civ-lite` provisions this template into a fresh directory and runs both, with no global
-Node and no network, and `node scripts/consumer-civ-lite-sabotage.mjs` runs the retained sabotages. The game and the services
+Node and no network, and `node scripts/consumer-civ-lite-sabotage.mjs` runs the retained sabotages. The runs, the receipt and two
+captures are in [docs/evidence/frontier-consumer/](../../docs/evidence/frontier-consumer/README.md); hosted CI is pending. The game and the services
 also run in the laboratory's root project:
 
 ```sh

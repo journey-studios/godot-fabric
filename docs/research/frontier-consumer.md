@@ -7,7 +7,8 @@ its HUD, reloading the scenery and the menu, measured for what a leak would grow
 
 The criterion this closes is V05-03 `consumidor`: "Consumidor civ-lite provisionado pelo addon (TSX público, sem Node global)
 abrindo no editor; 10 ciclos novo jogo, recarregar cenário e menu sem vazar listeners ou nós, com epoch monotônico". It does not
-close `autoridade`, and it does not depend on D22 or D23 (below).
+close `autoridade`, and it does not depend on D22 or D23 (below). The record of the runs, with the receipt and the two
+captures, is [docs/evidence/frontier-consumer/](../evidence/frontier-consumer/README.md); hosted CI for this lane is pending.
 
 ```sh
 npm run test:consumer:civ-lite            # provisions, builds in the editor, runs the ten cycles, builds offline
@@ -211,13 +212,13 @@ trust:
 | the dropped Worlds | `instance_from_id` of the two that the cycle dropped | freed |
 | errors | `snapshot().errors`, the HUD's problems, and the log | none; no `FABRIC_ERROR`, no `SCRIPT ERROR` |
 
-`OBJECT_COUNT` is recorded in the report and not asserted: it is 1616 in every cycle of the headless run, and 1615, 1618 and
-then 1620 from the third cycle on in the headed one (a renderer warming up), so it does not say "back to the first cycle" the
-way the asserted measures do. The count of checks is exact and fixed in the script: **145 native checks**, 6 before the cycles,
+`OBJECT_COUNT` is recorded in the report and not asserted: it is the same in every cycle of the headless run (1614 in the
+record) and moves over the first cycles of the headed one (1613 to 1618, a renderer warming up), so it does not say "back to the
+first cycle" the way the asserted measures do. The count of checks is exact and fixed in the script: **145 native checks**, 6 before the cycles,
 10 in the first, 14 in each of the other nine, 3 after them; the headed run adds the three of the captures (148).
 
-The run on the machine of this slice (the series is `build/consumer-civ-lite/series.json`; the headed run gave the same values
-for every measure in the table):
+The run on the machine of this slice, headless (the [record](../evidence/frontier-consumer/README.md) has it with the receipt; the
+headed run gave the same values for every measure in the table):
 
 | Cycle | nodes | orphans | bindings | subscriptions | `snapshot_changed` connections | HUD connections | epoch (Godot, HUD) |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
