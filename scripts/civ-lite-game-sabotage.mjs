@@ -27,6 +27,9 @@ import {guardSources} from "./sabotage-sources.mjs";
 //         player's tile.
 //  ai-city  the defect the review of PR #70 found: only a unit of the player blocks the faction, not the city. The
 //         faction walks into the city and the Warrior the city finishes that turn is born on top of it.
+//  ai-wrong-event  the faction waits as it should but says it moved: ai_moved in place of ai_blocked. The state is the
+//         genuine one, so the state alone cannot tell; the probe's check of the wait's event fails, and the oracle,
+//         which judges the log entries a turn appended against the events the rules give the faction's phases, rejects it.
 //
 // There is no host here and nothing to rebuild: the game is plain GDScript. Run with:
 //   node scripts/civ-lite-game-sabotage.mjs
@@ -45,6 +48,8 @@ const variants = [
   {name: "ai-city", file: `${game}/turn.gd`,
     find: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty() or not World.city_at(state, x, y).is_empty()\n",
     replace: "  return not World.units_at(state, x, y, Rules.OWNER_PLAYER).is_empty()\n"},
+  {name: "ai-wrong-event", file: `${game}/turn.gd`, find: "    World.emit(state, \"ai_blocked\", ai.tx, ai.ty)\n",
+    replace: "    World.emit(state, \"ai_moved\", ai.tx, ai.ty)\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const files = [...new Set(variants.map(variant => variant.file))];

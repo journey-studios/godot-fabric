@@ -373,7 +373,13 @@ raised once and resolved once; the context derived again from the serialization.
 `BigInt`: PCG's reference outputs, the generator's state after the number of draws the game says it made, and the map the
 generator must have drawn from the seed. Every refusal is justified by the state before it, and every accepted intent must
 leave exactly the state the oracle computes. In every state, the roteiro's and the three built turns', it also requires that
-no tile holds units of two sides and that no unit of the faction stands on the player's city.
+no tile holds units of two sides and that no unit of the faction stands on the player's city. It judges the log too: the entries
+a turn appended are the last `log_seq` difference entries of the log, each carries the turn its phase ran in (the turn the
+`end_turn` began on, except the `refresh` phase, which emits after the turn advances), their number is the number of events the
+phases reported, and the first two are the events the rules give the faction's phases (`ai_planned`, then `ai_moved` when it
+walks or `ai_blocked` when it waits, each with the target tile), compared apart from the phases the probe reports. In the three
+built turns it also requires exactly one `ai_blocked`, at the tile the faction could not enter, and no `ai_moved`, so a wait that
+is reported as a move, or not reported, cannot pass: the state alone does not show it.
 
 ### Retained sabotages
 
@@ -395,6 +401,9 @@ no tile holds units of two sides and that no unit of the faction stands on the p
 - **ai-city**: only a unit of the player blocks the faction, not the city: the defect found in the review of PR #70, where the
   faction walked into the city and the Warrior the city finished that turn was born on top of it. Four probe checks fail and the
   oracle rejects `city-on-route`.
+- **ai-wrong-event**: the faction waits as it should but emits `ai_moved` in place of `ai_blocked`. The state, the hashes and the
+  golden hash are the genuine ones, so the state cannot tell; one probe check fails (the wait is an `ai_blocked` event) and the
+  oracle rejects `city-on-route` through its judgment of the log entries the turn appended.
 
 The control with a previous host **does not apply**: this slice has no native code and no host to compare with. The restored
 sources are proven by hash and must pass the plain test.

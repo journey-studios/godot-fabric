@@ -753,11 +753,12 @@ the `prng` one also gives three different hashes in three processes. The previou
 native code. `type-check`, `check:static`, `check:publication`, `test:contracts` and all 35 examples pass on the same commit
 (`4b86a7b`). The snapshot is a written and checked contract, not yet a service: the services, the HUD, the export and the
 devices are open, and the **hosted CI run (`native-civ-lite-game`) and the Pages publication are pending**. The record is
-pinned at `4b86a7b`: the current suite has 634 checks (629 there) and six retained sabotages (the four above and two more,
-failing 5 and 4 probe checks) because the review of PR #70 made the scripted faction wait for the player's city as well as for
+pinned at `4b86a7b`: the current suite has 634 checks (629 there) and seven retained sabotages (the four above and three more,
+failing 5, 4 and 1 probe checks) because the review of PR #70 made the scripted faction wait for the player's city as well as for
 the player's units (before, a Warrior finished in a city on its route was born on top of the faction's), added three turns built
-for that wait, which the roteiro never reaches, and made the oracle require that no tile holds units of two sides; the golden
-hash, the trace hash and the roteiro are unchanged.
+for that wait, which the roteiro never reaches, and made the oracle require that no tile holds units of two sides and judge the
+log entries each turn appended, the faction's events included (the third new sabotage reports a wait as a move and is rejected by
+the oracle and one probe check); the golden hash, the trace hash and the roteiro are unchanged.
 
 The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
 lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and

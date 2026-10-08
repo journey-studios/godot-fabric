@@ -1,14 +1,17 @@
 # Frontier: as regras e o cenário do jogo do 0.5, em GDScript
 
 > **Registro fixado.** As contagens abaixo são as da execução sobre `4b86a7b`: 629 checks por execução e quatro sabotagens, com
-> 6, 1, 13 e 3 falhas. A suíte atual tem **634 checks** e **seis sabotagens** (as quatro, com as mesmas falhas, mais `ai-ignores-block`
-> e `ai-city`, com 5 e 4 falhas) porque a revisão do PR #70 corrigiu a facção depois de o registro ser fixado: o Warrior da IA
+> 6, 1, 13 e 3 falhas. A suíte atual tem **634 checks** e **sete sabotagens** (as quatro, com as mesmas falhas, mais `ai-ignores-block`,
+> `ai-city` e `ai-wrong-event`, com 5, 4 e 1 falhas) porque a revisão do PR #70 corrigiu a facção depois de o registro ser fixado: o Warrior da IA
 > agora espera no lugar quando há uma unidade do jogador **ou a cidade do jogador** no próximo tile da rota (antes só a unidade
 > bloqueava, e o Warrior que a cidade concluía no mesmo turno nascia em cima da IA). O probe ganhou três turnos montados para esse
 > caso (`city-on-route`, `city-on-route-next-turn` e `unit-on-route`), que o roteiro não alcança, e o oráculo os julga e passou a
-> exigir que nenhum tile tenha unidades dos dois lados nem a facção na cidade. Os hashes dourado e de trilha e o roteiro (73
-> passos) não mudaram, e por isso as duas sabotagens novas não perdem o hash dourado: só os turnos montados as rejeitam. O recibo e
-> os links continuam descrevendo `4b86a7b`.
+> exigir que nenhum tile tenha unidades dos dois lados nem a facção na cidade. Uma segunda rodada de revisão fez o oráculo julgar também
+> o log: as entradas que cada turno acrescentou, com o turno de cada fase, e os eventos da facção (`ai_planned`, depois `ai_moved`
+> ao andar ou `ai_blocked` ao esperar), de modo que uma espera relatada como movimento, ou não relatada, não passa; a sabotagem
+> `ai-wrong-event` (a IA espera, mas emite `ai_moved`) só o oráculo e um check do probe rejeitam, porque o estado é o genuíno. Os hashes
+> dourado e de trilha e o roteiro (73 passos) não mudaram, e por isso as três sabotagens novas não perdem o hash dourado: só os turnos
+> montados as rejeitam. O recibo e os links continuam descrevendo `4b86a7b`.
 
 Esta fatia é o pacote P3 do marco 0.5 (V05-03, critério `replay`), ligada ao GF-28. O jogo de referência **Frontier**,
 um jogo de estratégia por turnos no estilo de interação do Civilization 2, tem agora as suas regras e o seu cenário

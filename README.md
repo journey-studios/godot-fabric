@@ -546,7 +546,7 @@ Civilization 2 whose map, rules, scripted faction and turns live in plain GDScri
 ([`consumers/civ-lite/game/`](consumers/civ-lite/game/)), with the HUD to be React Native over Godot. This first package has
 the rules and the state and snapshot the HUD will project, with no React and no native code: a 12-turn replay reaches one
 golden hash in three processes (integers only, its own PCG32, canonical serialization, SHA-256), covers the game's seven
-contexts and refuses invalid intents with a reason, judged by an independent oracle, with six retained sabotages
+contexts and refuses invalid intents with a reason, judged by an independent oracle, with seven retained sabotages
 (`npm run test:civ-lite-game`; `node scripts/civ-lite-game-sabotage.mjs`). The services that publish the snapshot, the HUD, the
 export and the devices are open, and so is hosted CI. [Evidence](docs/evidence/frontier-game/README.md);
 [research](docs/research/frontier-game.md).

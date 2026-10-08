@@ -166,6 +166,11 @@ test("Frontier's rules replay 12 turns to the same golden hash in three processe
       assert.ok(!rejections.goldenHashDiffers && !rejections.executionsDiffer, "The roteiro does not reach the faction's wait");
       assert.ok(failed.some(name => /^ai wait: /.test(name)), failed.join("\n"));
       assert.ok(oracle.every(message => /^case (city-on-route|unit-on-route)/.test(message)), oracle.join("\n"));
+      if (sabotage === "ai-wrong-event") {
+        // The faction waits as it should, so the state is the genuine one: only the events it emits tell, and only the
+        // oracle's judgment of the log entries a turn appended sees them.
+        assert.ok(oracle.every(message => /the faction's phases emit the events the rules give them/.test(message)), oracle.join("\n"));
+      }
       if (sabotage === "ai-city") {
         // The defect the review of PR #70 found: the city is not a block, so the faction walks into it.
         assert.ok(oracle.every(message => /^case city-on-route/.test(message)), oracle.join("\n"));

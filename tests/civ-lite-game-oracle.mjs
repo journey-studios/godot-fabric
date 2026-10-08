@@ -311,10 +311,12 @@ function refusal(state, intent, args) {
   }
 }
 
-// The state an accepted intent must leave (the log aside), and for an end_turn what each phase must report.
+// The state an accepted intent must leave (the log aside), and for an end_turn what each phase must report and the events
+// the faction's two phases must emit, `{code, a, b}` each, apart from the phases the probe reports.
 function accept(state, intent, args) {
   const next = structuredClone(state);
   const phases = [];
+  const aiEvents = [];
   switch (intent) {
     case "select_tile": {
       const [x, y] = args;
@@ -382,16 +384,16 @@ function accept(state, intent, args) {
       break;
     }
     case "end_turn":
-      endTurn(next, phases);
+      endTurn(next, phases, aiEvents);
       break;
     default:
       assert.fail(`unknown intent ${intent}`);
   }
-  return {next, phases};
+  return {next, phases, aiEvents};
 }
 
 // The six phases of a turn, on a copy of the state, with the tasks and events each must report.
-function endTurn(state, phases) {
+function endTurn(state, phases, aiEvents) {
   const ai = state.ai;
   const faction = unitById(state, ai.unit);
   const phase = (name, tasks, events) => phases.push({name, tasks, events});
@@ -401,11 +403,15 @@ function endTurn(state, phases) {
   } else {
     [ai.tx, ai.ty] = ROUTE[(ai.step + 1) % ROUTE.length];
     phase("ai_plan", 1, 1);
+    aiEvents.push({code: "ai_planned", a: ai.tx, b: ai.ty});
     // The faction waits on a tile with a unit of the player or the player's city: it never captures and never overlaps.
     if (unitAt(state, ai.tx, ai.ty, PLAYER).length === 0 && cityAt(state, ai.tx, ai.ty) === undefined) {
       faction.x = ai.tx;
       faction.y = ai.ty;
       ai.step = (ai.step + 1) % ROUTE.length;
+      aiEvents.push({code: "ai_moved", a: ai.tx, b: ai.ty});
+    } else {
+      aiEvents.push({code: "ai_blocked", a: ai.tx, b: ai.ty});
     }
     phase("ai_move", 1, 1);
   }
@@ -580,6 +586,24 @@ function checkInvariants(state, where) {
 // Keeps the log aside, which is judged by its sequence numbers and the phases' event counts.
 const withoutLog = state => ({...state, log: undefined, log_seq: undefined});
 
+// The log entries a transition appended: the last `log_seq` difference entries of the log after it. Every entry carries
+// the turn its phase ran in: the turn the transition began on, except the refresh phase of an end_turn, whose entries are
+// emitted after the turn advances. The faction's two phases come first in an end_turn and emit what the rules give them,
+// so a wait that is reported as a move, or not reported, shows here and not in the state.
+function appendedEntries(before, after, phases, aiEvents, where) {
+  const count = after.log_seq - before.log_seq;
+  assert.ok(count >= 0 && count <= after.log.length, `${where}: the log keeps every entry the transition appended`);
+  const entries = count === 0 ? [] : after.log.slice(-count);
+  const refreshed = phases.length === 0 ? 0 : phases.at(-1).events;
+  entries.forEach((entry, position) => {
+    const turn = position >= entries.length - refreshed ? after.turn : before.turn;
+    assert.equal(entry.turn, turn, `${where}: log entry ${entry.seq} carries the turn its phase ran in`);
+  });
+  assert.deepEqual(entries.slice(0, aiEvents.length).map(({code, a, b}) => ({code, a, b})), aiEvents,
+    `${where}: the faction's phases emit the events the rules give them`);
+  return entries;
+}
+
 export function verifyFrontierReport(report) {
   assert.equal(report.scenario, "civ-lite-game");
   assert.equal(report.displayServer, "headless");
@@ -632,8 +656,9 @@ export function verifyFrontierReport(report) {
       assert.equal(step.serialization, previousText, `${where} was refused and must change nothing`);
       refusals[reason] = (refusals[reason] ?? 0) + 1;
     } else {
-      const {next, phases} = accept(previous, step.intent, step.args);
+      const {next, phases, aiEvents} = accept(previous, step.intent, step.args);
       assert.deepEqual(withoutLog(state), withoutLog(next), `${where} must leave the state the rules compute from the state before it`);
+      appendedEntries(previous, state, phases, aiEvents, where);
       const emitted = state.log_seq - previousSeq;
       if (step.intent === "end_turn") {
         turns += 1;
@@ -677,7 +702,15 @@ export function verifyFrontierReport(report) {
     checkInvariants(before, `${where} before`);
     checkInvariants(after, `${where} after`);
     assert.equal(refusal(before, "end_turn", []), "", `${where} must be an accepted end_turn`);
-    assert.deepEqual(withoutLog(after), withoutLog(accept(before, "end_turn", []).next), `${where}: end_turn must leave the state the rules compute from the state before it`);
+    const {next, phases, aiEvents} = accept(before, "end_turn", []);
+    assert.deepEqual(withoutLog(after), withoutLog(next), `${where}: end_turn must leave the state the rules compute from the state before it`);
+    const entries = appendedEntries(before, after, phases, aiEvents, where);
+    assert.equal(entries.length, phases.reduce((sum, phase) => sum + phase.events, 0), `${where}: the log grows by the events the phases emit`);
+    // The faction waits and says so: one ai_blocked at the tile it could not enter, and no ai_moved.
+    const target = ROUTE[(before.ai.step + 1) % ROUTE.length];
+    assert.deepEqual(entries.filter(entry => entry.code === "ai_blocked").map(entry => [entry.a, entry.b]), [target],
+      `${where}: exactly one ai_blocked, at the tile the faction could not enter`);
+    assert.equal(entries.filter(entry => entry.code === "ai_moved").length, 0, `${where}: the faction that waits does not report a move`);
   }
   return {steps: report.steps.length, turns, finalHash: report.finalHash, contexts: [...seen].sort(), refusals, draws: previous.rng.draws,
     waitCases: report.waitCases.map(entry => entry.name)};
