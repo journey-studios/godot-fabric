@@ -124,6 +124,13 @@ Ref<Font> ParagraphLayout::font(const rn::TextAttributes &a) const {
 }
 PreparedParagraph ParagraphLayout::prepare(const rn::AttributedString &text,
     const rn::ParagraphAttributes &props, float width) const {
+  // The facade rejects these before they reach the host. A paragraph built without it (RN's NativeText imported
+  // directly) must not get a silent substitute either: head and middle would be drawn as a plain character trim,
+  // and a fit to the box would be ignored. The callers (measure, measureLines, apply) report the failure.
+  if (props.ellipsizeMode == rn::EllipsizeMode::Head || props.ellipsizeMode == rn::EllipsizeMode::Middle)
+    throw std::runtime_error("Godot Text supports tail or clip ellipsizeMode");
+  if (props.adjustsFontSizeToFit)
+    throw std::runtime_error("Godot Text does not implement adjustsFontSizeToFit");
   PreparedParagraph out;
   out.paragraph.instantiate();
   out.paragraph->set_width(std::isfinite(width) ? std::max(1.0f, std::floor(width)) : -1);

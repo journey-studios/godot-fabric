@@ -8,7 +8,7 @@ import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {build} from "esbuild";
 import {parseSync, transformFromAstSync} from "@babel/core";
-import {controlViewConfig} from "../src/base-view-config.js";
+import platformBaseViewConfig, {controlViewConfig, textStyleAttributes} from "../src/base-view-config.js";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -33,6 +33,17 @@ function execute(result, globals = {}) {
   const module = {exports: {}};
   vm.runInNewContext(result.outputFiles[0].text, {module, exports: module.exports, ...globals});
   return module.exports;
+}
+// A generated component's ViewConfig is built over the platform's base config, so its style map is that config's.
+// The base config also declares the text styles RN's Text needs; the Controls' own style map does not.
+function assertGeneratedStyle(config) {
+  assert.deepEqual(Object.keys(config.validAttributes.style).sort(), Object.keys(platformBaseViewConfig.validAttributes.style).sort());
+  // The names of the platform's text styles that the Controls' map lacks: color and fontSize are in both.
+  const textOnly = textStyleAttributes.filter(name => !(name in controlViewConfig.validAttributes.style));
+  assert.ok(textOnly.length > 0 && textOnly.every(name => name in platformBaseViewConfig.validAttributes.style),
+    "the text styles are in the base config");
+  assert.deepEqual(Object.keys(platformBaseViewConfig.validAttributes.style).filter(name => !textOnly.includes(name)).sort(),
+    Object.keys(controlViewConfig.validAttributes.style).sort());
 }
 
 test("only RN's original lists resolve RN's unexported feature flags", async t => {
@@ -411,7 +422,7 @@ test("public Switch is RN's original Switch.js over the generated RCTSwitch View
   }
   // Only the iOS ViewConfig lists onChange as an attribute; it is still an event.
   assert.equal(config.validAttributes.onChange, undefined);
-  assert.deepEqual(Object.keys(config.validAttributes.style).sort(), Object.keys(controlViewConfig.validAttributes.style).sort());
+  assertGeneratedStyle(config);
   assert.deepEqual({...config.bubblingEventTypes.topChange.phasedRegistrationNames}, {captured: "onChangeCapture", bubbled: "onChange"});
   assert.ok(config.bubblingEventTypes.topTouchStart && config.directEventTypes.topLayout);
   assert.equal(customBubblingEventTypes.topChange, config.bubblingEventTypes.topChange);
@@ -453,7 +464,7 @@ test("public ActivityIndicator is RN's original module over the generated RCTAct
     assert.equal(config.validAttributes[name], true, name);
   }
   assert.equal(typeof config.validAttributes.color.process("#999999"), "number");
-  assert.deepEqual(Object.keys(config.validAttributes.style).sort(), Object.keys(controlViewConfig.validAttributes.style).sort());
+  assertGeneratedStyle(config);
   assert.ok(config.bubblingEventTypes.topTouchStart && config.directEventTypes.topLayout);
   const publicEntry = fixture(t, {"Public.js": 'export {ActivityIndicator} from "react-native";'});
   const inputs = Object.keys((await compile(publicEntry, "Public.js")).metafile.inputs);

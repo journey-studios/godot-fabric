@@ -112,7 +112,10 @@ native code.
   the prop and `topTextLayout` on the `RCTText` ViewConfig only. A non-function
   value throws `Godot Text onTextLayout must be a function`. On a nested span the
   handler is dropped, as RN does. `onPress`, `onPressIn`, `onPressOut`,
-  `onLongPress`, `selectable` and `adjustsFontSizeToFit` are still rejected.
+  `onLongPress`, `selectable` and `adjustsFontSizeToFit` were still rejected in
+  this slice; the next one runs RN's original `Text.js`, accepts the press props on
+  the outer paragraph and keeps the rest rejected
+  ([text-original](text-original.md)).
   `types/react-native.ts` gains `onTextLayout` and `TextLayoutEvent`.
 - **SDK.** The platform header is published at
   `include/sdk/text_platform/react/renderer/textlayoutmanager/TextLayoutManager.h`
