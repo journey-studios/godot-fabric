@@ -261,6 +261,18 @@ jobs:
             build/device-services-launch-current.log
             build/device-services-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      - run: npm run test:world-input
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-world-input
+          path: |
+            build/world-input-report.json
+            build/world-input-current-report.json
+            build/world-input-comparison.json
+            build/world-input-current.log
+            build/world-input-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:os-contracts
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()

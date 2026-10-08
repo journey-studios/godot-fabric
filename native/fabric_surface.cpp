@@ -13,7 +13,13 @@ using namespace godot;
 static std::string utf8(const String &value) { return value.utf8().get_data(); }
 static String gd(const std::string &value) { return String::utf8(value.c_str()); }
 
-FabricSurface::FabricSurface() = default;
+FabricSurface::FabricSurface() {
+  // The Surface takes no pointer from the GUI. React Native sees the pointer through _input, which mouse_filter does not
+  // gate, and the Views it mounts are the Controls that stop it (STOP, or IGNORE for scroll, text and pointerEvents none or
+  // box-none). A STOP Surface would swallow every click on the HUD's empty area before the world's _unhandled_input hears it.
+  // A scene may still set the filter on a Surface that should take the pointer.
+  set_mouse_filter(MOUSE_FILTER_IGNORE);
+}
 FabricSurface::~FabricSurface() { unmount(); }
 FabricApplication *FabricSurface::application() const {
   return Object::cast_to<FabricApplication>(ObjectDB::get_instance(application_id));
