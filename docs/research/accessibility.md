@@ -17,8 +17,8 @@ certifies a screen reader's speech, other platforms or mobile. The
 controls and captures.
 
 Not in this slice: `AccessibilityInfo` (settings and events, the fatter half of
-the roadmap item; they are the [next note](accessibility-info.md)), text scale, focus and keyboard navigation, announcements
-(`announceForAccessibility`), custom actions (`accessibilityActions`), group
+the roadmap item; they are the [next note](accessibility-info.md), and the announcements `announceForAccessibility` speaks are the
+[one after](accessibility-announcements.md)), text scale, focus and keyboard navigation, the announcement of a View's live region, custom actions (`accessibilityActions`), group
 semantics that suppress children (`accessible` on a container), Text (GF-11),
 Button and TextInput of the host (GF-17), and the mobile bridges (see Open).
 
@@ -197,9 +197,15 @@ Rejected, each with its reason in the error:
   `columnheader`, `cell`, `grid` (table semantics); `tree`, `treeitem` (levels);
   `combobox`, `summary`; `searchbox` (a View is not editable).
 
-`alert`, `status` and `timer` are static text with a word: Godot announces by
-live region only, so none of them announces by itself. Combine them with
-`accessibilityLiveRegion`.
+`alert`, `status` and `timer` are static text with a word, and the word does not make
+them speak. Godot has no announce method for an extension, and AccessKit's macOS
+adapter speaks a live node only when it has a **value** (`event.rs` `node_added` and
+`node_updated`): `accessibilityLiveRegion` sets `accessibility_live` on a node that has
+a name (`native/accessible_view.cpp:134-136`), so it is probably silent on macOS too. This
+sentence used to say to combine the roles with `accessibilityLiveRegion` and was probably
+wrong; the behavior of the live region is not measured on VoiceOver and is open
+([accessibility-announcements.md](accessibility-announcements.md); use
+`AccessibilityInfo.announceForAccessibility` to speak).
 
 ### Errors
 
@@ -326,7 +332,8 @@ waits met their state in one to four polls).
 
 - **AccessibilityInfo** (settings and events, the `AccessibilityManager`
   contract) is the second slice, part a, now in the [AccessibilityInfo note](accessibility-info.md): the alias in the SDK's platform
-  plugin and the polling of the OS settings are in place; announcements and focus are part b.
+  plugin and the polling of the OS settings are in place; the announcements (`announceForAccessibility`) and the refused
+  focus are part b, the [announcements note](accessibility-announcements.md).
 - **Mobile.** Godot 4.7.2 has no accessibility bridge on iOS or Android. This is a
   real blocker for GF-34 and GF-35, to be resolved early: the core is ready to
   feed a bridge, but the bridge is not.
@@ -334,7 +341,8 @@ waits met their state in one to four polls).
 - **Not mapped yet**: `accessibilityValue` and `aria-value*`,
   `accessibilityLabelledBy`/`aria-labelledby`, `accessibilityViewIsModal`,
   `accessibilityLanguage`, `accessibilityActions` (fails) and the handlers that
-  need them, `focusable`/`tabIndex`, group semantics, announcements, text scale.
+  need them, `focusable`/`tabIndex`, group semantics, the announcement of a View's live region (probably silent on
+  macOS; see Errors above and [accessibility-announcements.md](accessibility-announcements.md)), text scale.
   The first ones are dropped by the ViewConfig like any unregistered prop and have
   no type.
 - **Selection, expansion and busy on macOS.** Measured on macOS 26.6.2:

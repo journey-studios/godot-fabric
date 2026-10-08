@@ -306,12 +306,19 @@ The [AccessibilityInfo example](examples/accessibility-info/README.md) runs Reac
 `DisplayServer`: the screen reader, reduce motion, reduce transparency and increase contrast resolve from the
 last reading, which the host takes once per frame, and each change is one event heard by every listener of every
 root, with `change` as the alias of `screenReaderChanged`. A setting the platform does not report rejects as unknown,
-and bold text, grayscale, inverted colors and cross-fade reject as unavailable, never off; announcements and
-programmatic focus throw until the next slice. The headless probe runs two applications, one with a validation meta
-that stands in for the system and one with Godot's real backend, which reports nothing there: 54 checks replayed by an
-independent oracle. The preceding host fails exactly its 40 normative checks, and four host sabotages are rejected.
-Real operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
-[Evidence](docs/evidence/accessibility-info/README.md) and [research](docs/research/accessibility-info.md).
+and bold text, grayscale, inverted colors and cross-fade reject as unavailable, never off. `announceForAccessibility` and
+`announceForAccessibilityWithOptions` are spoken through AccessKit: each is a new live element with the text as its value
+(assertive for `priority: 'high'`, polite otherwise), dropped and counted when no screen reader is there; `queue: true`,
+`priority: 'low'` and the screen reader's programmatic focus throw `E_UNSUPPORTED` with their reasons (the macOS API has no
+queue, AccessKit has two live modes, Godot has one focus). The headless probe runs two applications, one with validation
+metas that stand in for the system and for the `AccessibilityServer` (a recorder) and one with Godot's real backend, which
+reports nothing there: 69 checks replayed by an independent oracle. The preceding host fails exactly its 15 normative checks,
+and eight host sabotages are rejected. `npm run test:accessibility-info:bridge` (local, graphical macOS, no permission)
+interposes the call AccessKit makes to AppKit and proves it posts each announcement with its text and priority level (12 checks;
+that VoiceOver spoke is not proven, and AccessKit posts the announcements of one frame in an order of its own). Real
+operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
+[Evidence](docs/evidence/accessibility-info/README.md) (settings), [research](docs/research/accessibility-info.md) and
+[announcements](docs/research/accessibility-announcements.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original

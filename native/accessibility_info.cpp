@@ -1,4 +1,5 @@
 #include "accessibility_info.h"
+#include "accessibility_announcer.h"
 #include "fabric_application.h"
 #include "stoppable_invoker.h"
 #include "turbo_module_registry.h"
@@ -22,15 +23,21 @@ namespace fabric_godot {
 // The owner and what the module shares with it. The module holds it through a shared_ptr, so a module RN keeps
 // alive past the application's stop (a method JS retained) still finds a stopped state and not a dangling one.
 struct AccessibilityInfoState {
+  // The announcer comes first: it takes its port from the backend, which the settings then take whole. The port's update runs
+  // the announcer's publish, so the announcer is what the port is given.
+  accessibility::Announcer announcer;
   accessibility::Settings core;
   // Set by the AccessibilityManager module while it exists: the settings' device events are emitted through that
   // module's own emitDeviceEvent.
   std::function<void(accessibility::Setting, bool)> emit;
   std::size_t manager_created{}, events_unobserved{}, settled_dropped{};
 
-  explicit AccessibilityInfoState(accessibility::Backend backend) : core(std::move(backend)) {}
+  explicit AccessibilityInfoState(accessibility::Backend backend)
+      : announcer(backend.announce ? backend.announce([this] { announcer.publish(); }) : accessibility::AnnouncePort{}),
+        core(std::move(backend)) {}
   void stop() {
     core.stop();
+    announcer.stop();
     emit = {};
   }
   // What StoppableInvoker asks of its state: nothing queued runs after a stop, and the drops are counted.
@@ -51,8 +58,8 @@ std::shared_ptr<rn::CallInvoker> guarded(const std::shared_ptr<rn::CallInvoker> 
 // AccessibilityManager is the module AccessibilityInfo.js uses when Platform.OS is not "android" (Godot's is
 // "godot"), with the contract of iOS's RCTAccessibilityManager: the getters hand the setting to a success callback
 // and an error to the other, and the changes are device events whose body is the new boolean. The settings come from
-// the application's Godot backend; the ones Godot cannot read reject, and the announcement and the focus, which are
-// the next slice's, throw.
+// the application's Godot backend; the ones Godot cannot read reject. The announcements are spoken through AccessKit
+// (queue and low priority, which it cannot honor, throw) and the screen reader's focus throws.
 class NativeAccessibilityManager final : public rn::NativeAccessibilityManagerCxxSpec<NativeAccessibilityManager> {
  public:
   NativeAccessibilityManager(const std::shared_ptr<rn::CallInvoker> &invoker, std::shared_ptr<AccessibilityInfoState> state)
@@ -107,25 +114,61 @@ class NativeAccessibilityManager final : public rn::NativeAccessibilityManagerCx
     throw jsi::JSError(runtime, std::string(accessibility::code_unsupported) + ": setAccessibilityContentSizeMultipliers needs a "
         "content size category, which Godot does not have");
   }
+  // The screen reader's focus is Godot's keyboard focus (see accessibility::focus_refusal): moving one moves the other, which
+  // iOS does not do, so the call is refused with that reason.
   void setAccessibilityFocus(jsi::Runtime &runtime, double) {
     live(runtime);
     state_->core.note_focus_refused();
-    throw jsi::JSError(runtime, std::string(accessibility::code_unsupported) + ": setAccessibilityFocus is not implemented yet (GF-20 slice 2b)");
+    throw jsi::JSError(runtime, accessibility::focus_refusal);
   }
-  void announceForAccessibility(jsi::Runtime &runtime, jsi::String) {
+  // RCTAccessibilityManager posts UIAccessibilityAnnouncementNotification. Here the announcer puts the text in a live element for
+  // AccessKit to speak; with no screen reader the call returns, counted, as it does on iOS and Android.
+  void announceForAccessibility(jsi::Runtime &runtime, jsi::String announcement) {
     live(runtime);
-    state_->core.note_announce_refused();
-    throw jsi::JSError(runtime, std::string(accessibility::code_unsupported) + ": announceForAccessibility is not implemented yet (GF-20 slice 2b)");
+    announce(runtime, announcement.utf8(runtime), {});
   }
-  void announceForAccessibilityWithOptions(jsi::Runtime &runtime, jsi::String, jsi::Object) {
+  void announceForAccessibilityWithOptions(jsi::Runtime &runtime, jsi::String announcement, jsi::Object options) {
     live(runtime);
-    state_->core.note_announce_options_refused();
-    throw jsi::JSError(runtime, std::string(accessibility::code_unsupported) +
-        ": announceForAccessibilityWithOptions is not implemented yet (GF-20 slice 2b)");
+    announce(runtime, announcement.utf8(runtime), announce_options(runtime, options));
   }
 
  private:
   std::shared_ptr<AccessibilityInfoState> state_;
+  // {queue?: boolean, priority?: string} (NativeAccessibilityManager.js): an option that is undefined or null is left out, and
+  // one of another type is an argument error, as the typed bridge of iOS would not take it.
+  accessibility::AnnounceOptions announce_options(jsi::Runtime &runtime, const jsi::Object &options) {
+    accessibility::AnnounceOptions result;
+    const auto queue = options.getProperty(runtime, "queue");
+    if (queue.isBool()) {
+      result.queue = queue.getBool();
+    } else if (!queue.isUndefined() && !queue.isNull()) {
+      invalid_announcement(runtime, "queue to be a boolean");
+    }
+    const auto priority = options.getProperty(runtime, "priority");
+    if (priority.isString()) {
+      result.priority = priority.getString(runtime).utf8(runtime);
+    } else if (!priority.isUndefined() && !priority.isNull()) {
+      invalid_announcement(runtime, "priority to be a string");
+    }
+    return result;
+  }
+  [[noreturn]] void invalid_announcement(jsi::Runtime &runtime, const char *requirement) {
+    state_->core.note_announce_invalid();
+    throw jsi::JSError(runtime, std::string(accessibility::code_argument) + ": announceForAccessibilityWithOptions requires " + requirement);
+  }
+  void announce(jsi::Runtime &runtime, const std::string &text, const accessibility::AnnounceOptions &options) {
+    switch (state_->announcer.announce(text, options)) {
+      case accessibility::AnnounceOutcome::RefusedQueue:
+        throw jsi::JSError(runtime, accessibility::queue_refusal);
+      case accessibility::AnnounceOutcome::RefusedPriority:
+        throw jsi::JSError(runtime, accessibility::priority_refusal);
+      case accessibility::AnnounceOutcome::Pending:
+      case accessibility::AnnounceOutcome::DroppedNoScreenReader:
+      case accessibility::AnnounceOutcome::DroppedEmpty:
+      case accessibility::AnnounceOutcome::Stopped:
+        break;
+    }
+  }
   void live(jsi::Runtime &runtime) const {
     if (!state_->core.active()) {
       throw jsi::JSError(runtime, std::string(accessibility::code_disposed) + ": AccessibilityManager");
@@ -163,6 +206,28 @@ class NativeAccessibilityManager final : public rn::NativeAccessibilityManagerCx
     });
   }
 };
+
+// What the host says of the announcements, for the snapshot: the counters (requested = published + pending + the dropped), the last
+// one taken, whether an OS accessibility tree stands behind the application, the engine API they use and, for a validation run,
+// the calls the announcer made to the platform.
+folly::dynamic announcements_snapshot(const accessibility::Announcer &announcer) {
+  const auto &c = announcer.counters();
+  folly::dynamic recorded = folly::dynamic::array();
+  for (const auto &operation : announcer.recorded()) {
+    recorded.push_back(folly::dynamic::object("op", operation.op)("handle", operation.handle)("text", operation.text));
+  }
+  const auto &last_text = announcer.last_text();
+  const auto &last_live = announcer.last_live();
+  return folly::dynamic::object("stopped", announcer.stopped())("osTree", announcer.available())
+      ("requested", c.requested)("published", c.published)("released", c.released)
+      ("updatesRequested", c.updates_requested)("updates", c.updates)("pending", announcer.pending())("held", announcer.held())
+      ("dropped", folly::dynamic::object("noScreenReader", c.dropped_no_screen_reader)("empty", c.dropped_empty)
+          ("expired", c.dropped_expired)("stopped", c.dropped_stopped))
+      ("refused", folly::dynamic::object("queue", c.refused_queue)("priority", c.refused_priority))
+      ("lastText", last_text ? folly::dynamic(*last_text) : folly::dynamic(nullptr))
+      ("lastPriority", last_live ? folly::dynamic(accessibility::live_name(*last_live)) : folly::dynamic(nullptr))
+      ("maxPendingPumps", accessibility::Announcer::max_pending_pumps)("api", announce_api_report())("recorded", recorded);
+}
 
 // Godot's backend. The meta is read on every reading, so a validation run changes a setting by setting it again. The key
 // of each setting in the meta and the DisplayServer method that is its reading are in the core's table.
@@ -210,6 +275,7 @@ void AccessibilityInfo::install(TurboModuleRegistry &registry) {
 }
 
 void AccessibilityInfo::poll() {
+  state_->announcer.pump();
   for (const auto &change : state_->core.poll()) {
     if (state_->emit) {
       state_->emit(change.setting, change.value);
@@ -218,6 +284,8 @@ void AccessibilityInfo::poll() {
     }
   }
 }
+
+void AccessibilityInfo::publish_announcements() { state_->announcer.publish(); }
 
 accessibility::UiEvent AccessibilityInfo::ui_event(const std::string &type) { return state_->core.note_ui_event(type); }
 
@@ -254,7 +322,8 @@ folly::dynamic AccessibilityInfo::snapshot() const {
       ("modules", folly::dynamic::object("AccessibilityManager", s.manager_created))("polls", c.polls)("settings", settings)
       ("events", events)("eventsUnobserved", s.events_unobserved)("unbacked", unbacked)
       ("refused", folly::dynamic::object("contentSize", c.content_size_refused)("contentSizeInvalid", c.content_size_invalid)
-          ("announce", c.announce_refused)("announceWithOptions", c.announce_options_refused)("focus", c.focus_refused))
+          ("announceInvalid", c.announce_invalid)("focus", c.focus_refused))
+      ("announcements", announcements_snapshot(s.announcer))
       ("uiEvents", folly::dynamic::object("ignored", c.ui_events_ignored)("ignoredOther", c.ui_events_ignored_other)
           ("unsupported", c.ui_events_unsupported)("byType", by_type))
       ("settlementsDropped", s.settled_dropped);
@@ -263,6 +332,9 @@ folly::dynamic AccessibilityInfo::snapshot() const {
 accessibility::Backend make_godot_accessibility_backend(uint64_t application_id) {
   accessibility::Backend backend;
   backend.read = [application_id](Setting setting) { return read_setting(application_id, setting); };
+  backend.announce = [application_id](std::function<void()> publish) {
+    return make_godot_announce_port(application_id, std::move(publish));
+  };
   return backend;
 }
 }

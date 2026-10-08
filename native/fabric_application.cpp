@@ -269,6 +269,8 @@ void FabricApplication::_notification(int what) {
     case NOTIFICATION_APPLICATION_PAUSED: app_state->pause(true); break;
     case NOTIFICATION_APPLICATION_RESUMED: app_state->pause(false); break;
     case NOTIFICATION_OS_MEMORY_WARNING: app_state->memory_warning(); break;
+    // The accessibility update AccessKit asked for: the announcements waiting for it are published into it.
+    case fabric_godot::notification_accessibility_update: accessibility_info->publish_announcements(); break;
     default: break;
   }
 }

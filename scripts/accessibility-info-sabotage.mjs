@@ -20,7 +20,19 @@ import {guardSources} from "./sabotage-sources.mjs";
 //                    probe's existence check nor the oracle's list of the engine's four names accepts it. In headless all
 //                    four real readings are -1, so only that check can tell a wrong name from a right one.
 //
-// A fifth sabotage, the missing legacySendAccessibilityEvent alias, breaks the JavaScript bundle and not the host:
+// The four of the announcements (slice 2b) break the announcer's core, which decides what is put in the element, with which live
+// mode, whether there is a screen reader to put it for, and whether it is a new element:
+//
+//  announce-name       puts the text in the element's name and not its value. AccessKit's macOS adapter speaks the value of a
+//                      live node (event.rs node_added / node_updated); a name alone is silent, which is what Godot's own
+//                      Window::accessibility_announcement does there. The recorded calls say name where they must say value.
+//  swapped-priorities  makes "high" polite and every other priority assertive: the recorded live modes are the wrong way round.
+//  ungated-announce    answers that a screen reader is always there: the announcement is kept (or published) with none, and the
+//                      headless real server, which has none, no longer drops it and counts it.
+//  reused-element      makes the first element and puts every later announcement in it: the same text said twice does not speak
+//                      again (a value equal to the one before is not an update), and the recorded calls show one element.
+//
+// A fifth sabotage of the settings, the missing legacySendAccessibilityEvent alias, breaks the JavaScript bundle and not the host:
 // tests/platform-seams.test.mjs bundles without that rule and shows AccessibilityInfo's focus call break.
 //
 // Both the probe's checks and the oracle (which replays the commands against RN's rules) must reject each host. The
@@ -46,6 +58,19 @@ const variants = [
   {name: "display-name", argument: "--sabotage=display-name", hostDirectory: "build/accessibility-info-sabotage-display-name-host",
     file: table, find: "        \"reduce_animation\", \"accessibility_should_reduce_animation\"},\n",
     replace: "        \"reduce_animation\", \"accessibility_should_reduce_animations\"},\n"},
+  {name: "announce-name", argument: "--sabotage=announce-name", hostDirectory: "build/accessibility-info-sabotage-announce-name-host",
+    file: table, find: "inline constexpr TextProperty announcement_text = TextProperty::Value;\n",
+    replace: "inline constexpr TextProperty announcement_text = TextProperty::Name;\n"},
+  {name: "swapped-priorities", argument: "--sabotage=swapped-priorities", hostDirectory: "build/accessibility-info-sabotage-swapped-priorities-host",
+    file: table,
+    find: "  if (priority == \"high\") {\n    return Live::Assertive;\n  }\n  if (priority == \"low\") {\n    return std::nullopt;\n  }\n  return Live::Polite;\n",
+    replace: "  if (priority == \"high\") {\n    return Live::Polite;\n  }\n  if (priority == \"low\") {\n    return std::nullopt;\n  }\n  return Live::Assertive;\n"},
+  {name: "ungated-announce", argument: "--sabotage=ungated-announce", hostDirectory: "build/accessibility-info-sabotage-ungated-announce-host",
+    file: table, find: "  bool available() const { return port_.available && port_.available(); }\n",
+    replace: "  bool available() const { return true; }\n"},
+  {name: "reused-element", argument: "--sabotage=reused-element", hostDirectory: "build/accessibility-info-sabotage-reused-element-host",
+    file: table, find: "      const uint64_t handle = port_.create ? port_.create() : 0;\n      if (handle == 0) {\n",
+    replace: "      static uint64_t reused = 0;\n      if (reused == 0) {\n        reused = port_.create ? port_.create() : 0;\n      }\n      const uint64_t handle = reused;\n      if (handle == 0) {\n"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));

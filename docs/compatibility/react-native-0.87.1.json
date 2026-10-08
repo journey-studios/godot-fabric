@@ -37,11 +37,14 @@
         "src/platform-environment.js",
         "src/accessibility-info.js",
         "native/accessibility_info.cpp",
+        "native/accessibility_announcer.cpp",
         "tests/accessibility-info-native.test.mjs",
+        "tests/accessibility-announcements-bridge.test.mjs",
         "docs/evidence/accessibility-info/README.md",
-        "docs/research/accessibility-info.md"
+        "docs/research/accessibility-info.md",
+        "docs/research/accessibility-announcements.md"
       ],
-      "note": "RN's original AccessibilityInfo over the iOS AccessibilityManager contract: the screen reader, reduce motion, reduce transparency and increase contrast read from Godot's DisplayServer once per frame, with their events and the alias change; an unreported setting rejects E_ACCESSIBILITY_UNKNOWN, bold text, grayscale, inverted colors and cross-fade reject E_ACCESSIBILITY_UNAVAILABLE. Announcements and programmatic focus (GF-20 slice 2b) throw E_UNSUPPORTED; no mobile bridge; real operating-system settings are not certified."
+      "note": "RN's original AccessibilityInfo over the iOS AccessibilityManager contract: the screen reader, reduce motion, reduce transparency and increase contrast read from Godot's DisplayServer once per frame, with their events and the alias change; an unreported setting rejects E_ACCESSIBILITY_UNKNOWN, bold text, grayscale, inverted colors and cross-fade reject E_ACCESSIBILITY_UNAVAILABLE. announceForAccessibility and announceForAccessibilityWithOptions are spoken through AccessKit (a live element with the text as its value, assertive for priority high), dropped and counted with no screen reader; queue true and priority low throw E_UNSUPPORTED, and the screen reader's programmatic focus is refused (Godot has one focus); announcementFinished never fires. That VoiceOver spoke is not proven (a local macOS lane proves what AccessKit posts); no mobile bridge; real operating-system settings are not certified."
     },
     {
       "name": "ActionSheetIOS",

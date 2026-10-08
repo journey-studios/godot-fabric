@@ -216,8 +216,9 @@ else()
 endif()
 add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp accessible_view.cpp image_view.cpp image_loader.cpp image_network.cpp image_sources.cpp godot_image_manager.cpp image_loader_module.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp device_services.cpp godot_device_backend.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
 target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
-# AccessibilityInfo: the AccessibilityManager module over the DisplayServer's accessibility settings.
-target_sources(fabric_godot PRIVATE accessibility_info.cpp)
+# AccessibilityInfo: the AccessibilityManager module over the DisplayServer's accessibility settings, and the announcer's port
+# into Godot's AccessibilityServer.
+target_sources(fabric_godot PRIVATE accessibility_info.cpp accessibility_announcer.cpp)
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
 # registered only in this library; the shipped Fabric extension has no probe API.

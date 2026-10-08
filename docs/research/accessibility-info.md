@@ -10,8 +10,9 @@ fifth, the missing resolver alias, is rejected by the platform-seams test). The
 [evidence record](../evidence/accessibility-info/README.md) pins the executions to the
 implementation commit. Real operating-system settings (a user turning VoiceOver, Reduce
 Motion, Reduce Transparency or Increase Contrast on), the mobile servers and a graphical CI
-run are not certified; see "Remaining scope". Announcements and programmatic focus are part
-b of the slice and are not implemented.
+run are not certified; see "Remaining scope". Announcements and the refusal of programmatic focus are
+part b of the slice, [accessibility-announcements.md](accessibility-announcements.md); this note records
+part a, and where a row below says "none yet" or names slice 2b, that note has replaced it.
 
 ## What RN does
 
@@ -100,8 +101,9 @@ bundled (the resolver picked the self-importing file).
   signal, and `set_system_theme_change_callback` is the only change hook of the display
   server. A change can only be seen by asking again.
 - **No backing at all** for bold text, grayscale, inverted colors, cross-fade transitions and
-  the content size category; Godot has no method that announces text (only the live region of
-  a node) and no end-of-speech callback.
+  the content size category; Godot has no method that announces text to an extension (only the live region of
+  a node, which AccessKit's macOS adapter speaks when the node has a value: slice 2b builds an element for each
+  announcement) and no end-of-speech callback.
 - `DisplayServer` is not in the class profile (`native/godot-profile.json`), so the host calls
   it through `Engine::get_singleton()->get_singleton("DisplayServer")->call(...)`, as
   `native/fabric_application.cpp` already does for the theme. The profile is unchanged.
@@ -128,11 +130,11 @@ networking and device modules, so nothing queued runs after a stop.
 | `isInvertColorsEnabled` | `getCurrentInvertColorsState` | none | the same |
 | `prefersCrossFadeTransitions` | `getCurrentPrefersCrossFadeTransitionsState` | none | the same |
 | none (module call) | `setAccessibilityContentSizeMultipliers` | none (no content size category) | an argument with a value that is not null, undefined or a number above zero for one of the twelve categories throws `E_ARGUMENT`; a valid one throws `E_UNSUPPORTED` |
-| `setAccessibilityFocus` | `setAccessibilityFocus` | none yet | throws `E_UNSUPPORTED` naming GF-20 slice 2b |
-| `announceForAccessibility` | `announceForAccessibility` | none | throws `E_UNSUPPORTED` naming slice 2b |
-| `announceForAccessibilityWithOptions` | `announceForAccessibilityWithOptions` | none | throws `E_UNSUPPORTED` naming slice 2b |
+| `setAccessibilityFocus` | `setAccessibilityFocus` | none: Godot has one focus | slice 2a threw `E_UNSUPPORTED` naming GF-20 slice 2b; slice 2b throws it with the reason (Godot has a single focus; moving the screen reader's would blur the focused control) |
+| `announceForAccessibility` | `announceForAccessibility` | none | slice 2a threw `E_UNSUPPORTED` naming slice 2b; slice 2b speaks it through AccessKit |
+| `announceForAccessibilityWithOptions` | `announceForAccessibilityWithOptions` | none | slice 2a threw `E_UNSUPPORTED` naming slice 2b; slice 2b speaks it (`priority: 'high'` is assertive) and refuses `queue: true` and `priority: 'low'` with their reasons |
 | `isHighTextContrastEnabled`, `isAccessibilityServiceEnabled`, `getRecommendedTimeoutMillis` | none | none | RN's own JavaScript answers (`false`, a rejection, the timeout given) |
-| `sendAccessibilityEvent(handle, type)` | UIManager delegate | none | a type other than `focus` is ignored and counted by type, as iOS does; `focus` fails out loud with `focus is not implemented yet (GF-20 slice 2b)` |
+| `sendAccessibilityEvent(handle, type)` | UIManager delegate | none | a type other than `focus` is ignored and counted by type, as iOS does; `focus` fails out loud (slice 2a: `focus is not implemented yet (GF-20 slice 2b)`; slice 2b: the focus reason above) |
 
 Events, by device event name (`change` is `screenReaderChanged`'s alias, and it is the same
 single emission):
@@ -144,7 +146,7 @@ single emission):
 | `reduceTransparencyChanged` | `reduceTransparencyChanged` | reduce transparency reading | once per change |
 | `darkerSystemColorsChanged` | `darkerSystemColorsChanged` | increase contrast reading | once per change |
 | `boldTextChanged`, `grayscaleChanged`, `invertColorsChanged` | the same | none | never fires |
-| `announcementFinished` | the same | none (no announcement, no end-of-speech callback) | never fires |
+| `announcementFinished` | the same | none (macOS, AccessKit and Godot have no end-of-speech signal; Godot's text to speech is not the screen reader) | never fires |
 | `highTextContrastChanged`, `accessibilityServiceChanged`, any other name | none | RN's map has no entry | `{remove() {}}`, as RN |
 
 Decisions:
@@ -187,8 +189,8 @@ Decisions:
    and waits for the host's own poll counter (frames the host delivered), never for time.
 8. **Module calls after stop throw `E_MODULE_DISPOSED`** synchronously, for all twelve
    methods; queued callbacks and events are dropped and counted.
-9. **`uiManagerDidSendAccessibilityEvent`**: `focus` still fails (the message above) and is
-   counted; every other type is counted by type (at most sixteen distinct types, then one
+9. **`uiManagerDidSendAccessibilityEvent`**: `focus` fails out loud (the message above; slice 2b
+   replaced "not implemented yet" by the reason) and is counted; every other type is counted by type (at most sixteen distinct types, then one
    overflow count).
 
 `RN's index.js` exposes `AccessibilityInfo` through a lazy getter, so
@@ -218,7 +220,7 @@ RN's rules and not from the host:
   unsubscribing, unmounting a root, and stop.
 - **R** (the real backend): in headless every setting is `-1`, so every getter rejects and no
   event ever arrives, while A changes four settings and stops; a `focus` event still fails
-  with the slice-2b message.
+  (with the slice-2a message here, the reason since slice 2b).
 - Order and counts, never time: the probe waits for the host's poll counter, and the oracle
   checks the host polled at least the frames it waited for and that a stopped application
   polls no more.
@@ -252,11 +254,11 @@ RN's rules and not from the host:
   `E_ACCESSIBILITY_UNKNOWN` there. A bridge to UIKit and Android's accessibility manager is
   the work of the mobile slices (GF-34 and GF-35).
 - **No graphical CI.** The hosted run is headless.
-- **Slice 2b.** Announcements need a spike on whether AccessKit on macOS announces live
-  regions; programmatic focus needs the node-to-element lookup. Until then
-  `announceForAccessibility`, `announceForAccessibilityWithOptions` and `setAccessibilityFocus`
-  throw `E_UNSUPPORTED`, `sendAccessibilityEvent(..., 'focus')` fails out loud, and
-  `announcementFinished` never fires.
+- **Slice 2b** ([accessibility-announcements.md](accessibility-announcements.md)). The spike
+  found that AccessKit's macOS adapter speaks a live node's value (measured), so announcements are
+  elements made for each call; programmatic focus has no way to move the screen reader's focus
+  without moving the keyboard focus, and stays refused with that reason; `announcementFinished`
+  never fires.
 - **Text scale.** `setAccessibilityContentSizeMultipliers` and `fontScale` wait for a content
   size category that Godot does not have. iOS stores whatever number it is given and falls back
   to `1.0` with an `RCTLogError` when it uses a multiplier of zero or less

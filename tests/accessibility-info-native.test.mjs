@@ -10,14 +10,16 @@ import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 import {verifyAccessibilityInfoReport} from "./accessibility-info-oracle.mjs";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
-// --allow-original-negative runs the same bundle on the preceding host, which has no AccessibilityManager module: every
-// check that needs it must fail there while the JavaScript ones hold. The host in addons/ has to be the preserved one
-// (build/accessibility-info-previous-host). --sabotage=<name> runs it on a host whose source was broken on purpose
+// --allow-original-negative runs the same bundle on the preceding host (GF-20 slice 2a: the settings and events, with the
+// announcements and the focus refused as "not implemented yet"): every check of what slice 2b added must fail there while the
+// others, the settings and events, hold. The host in addons/ has to be the preserved one
+// (build/accessibility-announcements-previous-host). --sabotage=<name> runs it on a host whose source was broken on purpose
 // (scripts/accessibility-info-sabotage.mjs builds those hosts and restores the source): the probe and the independent
 // oracle must both reject it.
 const allowOriginalNegative = process.argv.includes("--allow-original-negative");
 const sabotageArgument = process.argv.find(argument => argument === "--sabotage" || argument.startsWith("--sabotage="));
-const sabotageNames = ["unknown-as-false", "emit-every-poll", "swapped-settings", "display-name"];
+const sabotageNames = ["unknown-as-false", "emit-every-poll", "swapped-settings", "display-name", "announce-name", "swapped-priorities",
+  "ungated-announce", "reused-element"];
 const sabotage = sabotageArgument === undefined ? null : (sabotageArgument.split("=")[1] ?? sabotageNames[0]);
 assert.ok(sabotage === null || sabotageNames.includes(sabotage), "Unknown sabotage: " + sabotage);
 assert.ok(!(allowOriginalNegative && sabotage !== null), "A run is the current host, the previous one, or one sabotage");
@@ -88,7 +90,7 @@ test("RN's own AccessibilityInfo runs over the host's accessibility settings and
   const hostSha256 = digest(await readFile(host));
   if (allowOriginalNegative) {
     // The control is only a control on the host that predates this slice.
-    const preserved = digest(await readFile(path.join(root, "build/accessibility-info-previous-host/fabric_godot.dylib")));
+    const preserved = digest(await readFile(path.join(root, "build/accessibility-announcements-previous-host/fabric_godot.dylib")));
     assert.equal(hostSha256, preserved, "addons/fabric_godot.dylib must be the preserved previous host");
   }
   const bundle = await bundleAccessibilityInfoProbe();
@@ -138,22 +140,22 @@ test("RN's own AccessibilityInfo runs over the host's accessibility settings and
     assert.ok(report.originalNegativeObserved);
     assert.deepEqual(sorted(failures), sorted(report.expectedOriginalFailures), "Only the AccessibilityManager checks qualify as the old-host control");
     assert.match(log, new RegExp(`ACCESSIBILITY_INFO_ORIGINAL_NEGATIVE: ${failures.length}`));
-    // Without the module the original getters reject where RN looks it up, with RN's own text, and nothing is ever emitted.
-    const unavailable = /NativeAccessibilityManagerIOS.*is not available/;
-    for (const label of ["get/screen", "get/motion", "get/transparency", "get/contrast"]) {
-      const entry = stateOf(report, "A", "getters", label);
-      assert.equal(entry.state, "rejected", label);
-      assert.match(entry.error, unavailable, label);
-    }
-    for (const label of ["bold", "gray", "invert", "crossfade"]) {
-      assert.match(stateOf(report, "A", "unbacked", label).error, unavailable, label);
+    // The preceding host has the module: the settings and the events hold, and what is missing is refused as "not implemented yet".
+    assert.equal(stateOf(report, "A", "getters", "get/screen").state, "resolved");
+    assert.equal(stateOf(report, "A", "getters", "get/screen").value, true);
+    assert.equal(report.stages.A["lazy-read"].info.modules.AccessibilityManager, 1, "the preceding host has the AccessibilityManager module");
+    assert.ok(eventRows(report, "A", "motion-on").length > 0, "the preceding host delivers the settings' events");
+    for (const [step, label] of [["announce-basic", "announce/say"], ["announce-priorities", "priority/high"], ["announce-batch", "batch/three"],
+      ["announce-empty", "odd/unicode"], ["focus-refused", "focus/public"], ["focus-refused", "focus/direct"], ["announce-no-reader", "silent/plain"]]) {
+      const entry = stateOf(report, "A", step, label);
+      assert.equal(entry.state, "threw", `${step}/${label}: the preceding host refuses`);
+      assert.match(entry.error, /E_UNSUPPORTED.*GF-20 slice 2b/, `${step}/${label}: and says the slice that was to do it`);
     }
     for (const app of ["A", "R"]) {
       for (const step of Object.keys(report.stages[app])) {
-        assert.deepEqual(eventRows(report, app, step), [], `The preceding host delivers no event: ${app}/${step}`);
+        assert.equal(report.stages[app][step].info.announcements, undefined, `The preceding host has no announcements: ${app}/${step}`);
       }
     }
-    assert.equal(report.stages.A["lazy-read"].info.modules, undefined, "The preceding host has no AccessibilityInfo counters");
     assert.ok(oracleRejection(report) != null, "The oracle rejects the preceding host");
     return;
   }

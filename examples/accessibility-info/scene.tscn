@@ -45,9 +45,23 @@ offset_right = 876.0
 offset_bottom = 252.0
 text = "Increase contrast"
 
+[node name="AnnouncerButton" type="Button" parent="."]
+offset_left = 644.0
+offset_top = 264.0
+offset_right = 876.0
+offset_bottom = 312.0
+text = "Announcement reader"
+
 [node name="StandIn" type="Label" parent="."]
 offset_left = 644.0
-offset_top = 268.0
+offset_top = 328.0
 offset_right = 876.0
-offset_bottom = 420.0
+offset_bottom = 500.0
+autowrap_mode = 3
+
+[node name="AnnounceCounters" type="Label" parent="."]
+offset_left = 644.0
+offset_top = 520.0
+offset_right = 876.0
+offset_bottom = 640.0
 autowrap_mode = 3

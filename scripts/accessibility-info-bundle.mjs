@@ -1,10 +1,11 @@
 import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 
-// Executed producers of the AccessibilityInfo slice: the owner of the settings, the core and the AccessibilityManager
-// module, the invoker that ends queued events with the application, and the files that wire them into the application
-// and its registry.
+// Executed producers of the AccessibilityInfo slice: the owner of the settings, the core (with the announcer) and the
+// AccessibilityManager module, the announcer's port into Godot's AccessibilityServer and its validation recorder, the invoker
+// that ends queued events with the application, and the files that wire them into the application and its registry.
 export const accessibilityInfoNativeProducers = ["native/accessibility_info.h", "native/accessibility_info.cpp",
-  "native/accessibility_info_core.h", "native/accessibility_info_core_test.cpp", "native/stoppable_invoker.h",
+  "native/accessibility_info_core.h", "native/accessibility_info_core_test.cpp", "native/accessibility_announcer.h",
+  "native/accessibility_announcer.cpp", "native/stoppable_invoker.h",
   "native/fabric_application.cpp", "native/fabric_application.h", "native/application_runtime.cpp",
   "native/application_runtime.h", "native/CMakeLists.txt"];
 
