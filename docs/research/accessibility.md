@@ -17,7 +17,7 @@ certifies a screen reader's speech, other platforms or mobile. The
 controls and captures.
 
 Not in this slice: `AccessibilityInfo` (settings and events, the fatter half of
-the roadmap item), text scale, focus and keyboard navigation, announcements
+the roadmap item; they are the [next note](accessibility-info.md)), text scale, focus and keyboard navigation, announcements
 (`announceForAccessibility`), custom actions (`accessibilityActions`), group
 semantics that suppress children (`accessible` on a container), Text (GF-11),
 Button and TextInput of the host (GF-17), and the mobile bridges (see Open).
@@ -325,8 +325,8 @@ waits met their state in one to four polls).
 ## Open
 
 - **AccessibilityInfo** (settings and events, the `AccessibilityManager`
-  contract) is the second slice. It needs an alias in the SDK's platform plugin
-  and polling of the OS settings.
+  contract) is the second slice, part a, now in the [AccessibilityInfo note](accessibility-info.md): the alias in the SDK's platform
+  plugin and the polling of the OS settings are in place; announcements and focus are part b.
 - **Mobile.** Godot 4.7.2 has no accessibility bridge on iOS or Android. This is a
   real blocker for GF-34 and GF-35, to be resolved early: the core is ready to
   feed a bridge, but the bridge is not.

@@ -76,6 +76,18 @@ export function platformPlugin(platformRoot, resolveSdk, {eventTargetParentMode 
           return { path: path.join(rnRoot, "Libraries/Network/RCTNetworking.android.js") };
         }
       });
+      builder.onResolve({ filter: /(?:^|\/)legacySendAccessibilityEvent$/ }, args => {
+        // RN ships this function only as .ios.js and .android.js (legacySendAccessibilityEvent.js merely imports
+        // itself, for deep imports), and this host resolves neither extension: AccessibilityInfo.js would import a
+        // module that imports itself and its setAccessibilityFocus would call undefined. The iOS one is the function
+        // whose contract the Godot AccessibilityManager module implements (setAccessibilityFocus for a focus event);
+        // the Android one reaches NativeAccessibilityInfo, which the host does not install.
+        const target = path.join(rnRoot, "Libraries/Components/AccessibilityInfo/legacySendAccessibilityEvent");
+        if (args.path === "react-native/Libraries/Components/AccessibilityInfo/legacySendAccessibilityEvent" ||
+            (args.path.startsWith(".") && args.importer.startsWith(rnRoot + path.sep) &&
+              path.resolve(path.dirname(args.importer), args.path) === target))
+          return { path: target + ".ios.js" };
+      });
       builder.onResolve({ filter: /(?:^|\/)Image$/ }, args => {
         // RN ships Image only as .ios.js and .android.js (Image.js merely imports itself for deep imports), and
         // this host resolves neither extension. The public export, ImageBackground and AnimatedImage all import the

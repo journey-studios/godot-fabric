@@ -89,6 +89,25 @@ clipboard. `Vibration`: `vibrate(ms)` for a finite, non-negative duration (`E_AR
 `cancel()` to the backend and `vibrateByPattern` refused with `E_UNSUPPORTED`. See the [research
 note](research/device-services.md).
 
+AccessibilityInfo registers one more C++ TurboModule, `AccessibilityManager` (RN's generated
+`NativeAccessibilityManagerCxxSpec`, the iOS contract `AccessibilityInfo.js` takes when `Platform.OS` is `"godot"`),
+created when JS first imports `AccessibilityInfo.js` (RN's Android `AccessibilityInfo` module is not installed and its
+lookup returns `null`), from one `AccessibilityInfo` owned by each `FabricApplication`
+(`native/accessibility_info.{h,cpp}`) and shared by its roots. Its constructor takes the baseline reading of the four settings
+Godot's `DisplayServer` can report (the screen reader, reduce motion, reduce transparency and increase contrast), and
+`ApplicationRuntime`'s pump reads them again once per frame, before it drains the queued work, because Godot has no change
+signal. A getter calls its success callback with the last reading, or its error callback with an `Error` whose message starts
+`E_ACCESSIBILITY_UNKNOWN` when the platform reports `-1`; the four settings Godot cannot read (bold text, grayscale, inverted
+colors, cross-fade) call it with `E_ACCESSIBILITY_UNAVAILABLE`. A change is a known value that differs from the last known one
+and leaves as a device event (`screenReaderChanged`, `reduceMotionChanged`, `reduceTransparencyChanged`,
+`darkerSystemColorsChanged`) through RN's scheduler on the same stoppable call invoker as the device services, so a stop drops
+what was queued; retained methods then throw `E_MODULE_DISPOSED` synchronously, for all twelve. The readings are a backend
+struct that the validation meta `validation_accessibility_settings` can replace per setting.
+`setAccessibilityContentSizeMultipliers` validates its argument (`E_ARGUMENT`) and throws `E_UNSUPPORTED`; `setAccessibilityFocus`,
+`announceForAccessibility` and `announceForAccessibilityWithOptions` throw `E_UNSUPPORTED` naming GF-20 slice 2b; the
+`UIManager`'s accessibility events other than `focus` are ignored and counted by type. See the [research
+note](research/accessibility-info.md).
+
 The OS-specific APIs (`ToastAndroid`, `PermissionsAndroid`, `ActionSheetIOS`, `PushNotificationIOS`,
 `StatusBar` and the rest of the [OS-specific contracts](research/os-contracts.md)) add **no native
 module**, and their absence is the contract. RN looks the modules up by name (`ToastAndroid` with
@@ -142,10 +161,10 @@ is the host component that every `View` mounts as (`GodotAccessibleView`, a `Pan
 that fills Godot's accessibility element from RN's props and answers the OS's
 press), with the pure, Godot-free semantic core in
 `native/accessibility_core.h` that a mobile bridge can consume. Its contract is
-in the [research note](research/accessibility.md). `AccessibilityInfo` stays the
-environment subset above (fixed policy values, no OS settings and no events); its
-module contract, the settings and events of iOS's `AccessibilityManager`, is the
-second slice. Godot's `AccessibilityServer` is reached by name through the engine's
+in the [research note](research/accessibility.md). `AccessibilityInfo`, the settings and
+events of iOS's `AccessibilityManager`, is the first half of the second slice and is a
+TurboModule (`AccessibilityManager`, above); announcements and programmatic focus are
+its second half. Godot's `AccessibilityServer` is reached by name through the engine's
 singleton registry, since the binding profile does not include it.
 
 ## Validation and remaining work
