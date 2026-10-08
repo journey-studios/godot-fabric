@@ -26,7 +26,7 @@ const lineKeys = ["ascender", "capHeight", "descender", "height", "text", "width
 const sentinel = "​";
 const inlineError = "Inline Controls are not implemented in Godot Text";
 const rejectionMessages = ["onTextLayout must be a function", "onTextLayout must be a function",
-  "does not implement onPress", "does not implement selectable", "does not implement adjustsFontSizeToFit"];
+  "does not implement selectable", "does not implement adjustsFontSizeToFit"];
 // The probe's checks that depend on the platform manager's measureLines, which the preceding host lacks:
 // RN never delivers onTextLayout and the Yoga baseline callback answers zero.
 export const normativeOriginalFailures = [
@@ -267,6 +267,9 @@ export function verifyTextLayoutReport(report, {original = false} = {}) {
   assert.ok(log.every((row, index) => index === 0 || log[index - 1].sequence < row.sequence), "events are in dispatch order");
   assert.deepEqual(report.stages.negative.messages.map((message, index) => message.includes(rejectionMessages[index])),
     rejectionMessages.map(() => true), "the wrapper's rejections");
+  // An outer Text presses through RN's original Text: onPress is no longer one of the rejections, and it adds none.
+  assert.equal(report.stages.negative.messages.length, rejectionMessages.length);
+  assert.deepEqual(report.stages.negative.outerPress, {rejections: rejectionMessages.length, mounted: true, fallback: false}, "an outer onPress is accepted");
   verifyFailure(report.stages.failure, {original});
   const offsets = verifyBaseline(report.stages.baseline, {original}, maxima);
   if (original) {

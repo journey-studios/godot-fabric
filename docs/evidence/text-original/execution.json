@@ -1,0 +1,506 @@
+{
+  "format": "godot-fabric.text-original-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "ba5ff00fe1b22c6d5ba30925e57e8df6687a8261",
+  "executedTreeSha": "79a6288785c91a4c12dd7e726c6d1026635e6fa3",
+  "sourceState": "working tree clean and equal to the implementation commit's tree, with no untracked file outside the ignored build/, addons/, .deps/ and node_modules/, when every command below ran; the evidence files were added afterwards and are not inputs",
+  "mergedMainCommit": "dd057602800ff674e17a2e0121b74f2f1b95cc48",
+  "previousSdkCommit": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "modes": [
+      "headless",
+      "native renderer (examples and captures only)"
+    ]
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The text-original step and the native-text-original artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing has been published to Pages. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "note": "The SHA-256 of the sources below are the pins of the probe bundle's receipt and equal the blobs of the implementation commit. They certify what was bundled and read, not the native binary another machine compiles: the host hashes are those of the binaries built on this machine."
+  },
+  "nativeCode": {
+    "changed": true,
+    "file": "native/paragraph_layout.cpp",
+    "change": "ParagraphLayout::prepare throws for ellipsizeMode head and middle and for adjustsFontSizeToFit; measure, measureLines and GodotParagraph::apply already report a throw",
+    "hostSha256": "a8b7b887e367e3e5a68be0cfac938ea16a151f9c33e7d5f1aa5a6dcb4a093d86",
+    "previousHostSha256": "2cf11ea16151a4c00eaf1fb734ba72fa56d5783ac13642ba591c223233db6e5d",
+    "previousHost": "the fabric_godot.dylib that main's build (6d02746 sources) produced before the slice, kept in build/text-original-previous-host/ and installed in addons/ by scripts/text-original-sabotage.mjs only for the two controls on it"
+  },
+  "productProbe": {
+    "command": "npm run test:text-original",
+    "suite": "1/1 subtests passed",
+    "elapsedMs": 13254,
+    "application": "one Hermes application with three roots (press, static paragraphs, rejected props) and one root per bypass case",
+    "checks": 114,
+    "checksByGroup": {
+      "mount": 2,
+      "registry": 3,
+      "tap": 8,
+      "held": 2,
+      "outside": 2,
+      "region": 12,
+      "long": 4,
+      "long-tap": 10,
+      "disabled": 2,
+      "plain": 2,
+      "span": 4,
+      "inert": 8,
+      "responder": 2,
+      "sentinel": 2,
+      "static": 10,
+      "negative": 30,
+      "bypass": 3,
+      "stop": 7,
+      "report": 1
+    },
+    "normativeChecks": 60,
+    "hostChecks": 3,
+    "checksThatHoldOnAnySdk": 51,
+    "allCurrentAssertionsPassed": true,
+    "marker": [
+      "TEXT_ORIGINAL_PASSED: 114"
+    ],
+    "inputDevices": [
+      "mouse",
+      "touch"
+    ],
+    "pressGestures": 36,
+    "oracle": {
+      "sections": [
+        "mount",
+        "registry",
+        "press",
+        "static",
+        "negative",
+        "bypass",
+        "stop"
+      ],
+      "readsSdkSource": false,
+      "replaysPressabilityFromRawSamples": true,
+      "rejectedPropMessagesWordForWord": 28,
+      "staticParagraphsChecked": 19,
+      "checkedWithEveryProbeCheckMarkedPassed": true
+    },
+    "hostSha256": "a8b7b887e367e3e5a68be0cfac938ea16a151f9c33e7d5f1aa5a6dcb4a093d86",
+    "bundleSha256": "7edabedb9bd0c80133055f9ce52ad4e3de59dec65e2fd5cf3c8c7d809f1abdc3",
+    "bundleInputs": 389,
+    "originalModules": {
+      "Libraries/Text/Text.js": true,
+      "Libraries/Text/TextNativeComponent.js": true,
+      "Libraries/Text/TextAncestorContext.js": true,
+      "Libraries/Pressability/Pressability.js": true,
+      "Libraries/Pressability/usePressability.js": true,
+      "Libraries/Components/View/View.js": true,
+      "Libraries/Renderer/implementations/ReactFabric-prod.js": true,
+      "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js": true
+    },
+    "rawReportSha256": "e32cd6c94466a12b0bdbfc5bbf91b8db5902f4cffa8864a91ac886aa8059b66f",
+    "comparisonSha256": "3f86cc167ac112b7b15ef640e3a627dfb9a75dbf653488b709256e855429ab00"
+  },
+  "controls": {
+    "previous": {
+      "command": "node tests/text-original-native.test.mjs --previous (host installed by scripts/text-original-sabotage.mjs)",
+      "sdk": "src/ of main 6d02746 (the Image and Accessibility slices), extracted from git into build/text-original-previous-sdk/ and bundled by bundleNativeProbe with platformRoot",
+      "facadeSha256": "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218",
+      "sdkSourceSha256": {
+        "src/react-native-platform.jsx": "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218",
+        "src/text.jsx": "2edcafb828946a908abef4afffd9adccdf03a6d874da62e33afb54a6b2168f3a",
+        "src/base-view-config.js": "8ca29c87bf2ccccbccf961e279d45ce9f3c963fbfc33e95018637beb4f7664d7"
+      },
+      "checks": 114,
+      "passed": 51,
+      "failed": 63,
+      "failedByGroup": {
+        "mount": 1,
+        "registry": 3,
+        "tap": 6,
+        "held": 2,
+        "outside": 2,
+        "region": 12,
+        "long": 4,
+        "long-tap": 8,
+        "disabled": 2,
+        "span": 4,
+        "inert": 6,
+        "negative": 10,
+        "bypass": 3
+      },
+      "failedEqualsNormative": true,
+      "marker": [
+        "TEXT_ORIGINAL_PREVIOUS_NEGATIVE: 63"
+      ],
+      "bundleSha256": "a7be1d75dec623f680b5737954f5d24618376fce05eb8939101aee78d42f9564",
+      "bundleInputs": 368,
+      "textJsInBundle": false,
+      "hostSha256": "2cf11ea16151a4c00eaf1fb734ba72fa56d5783ac13642ba591c223233db6e5d",
+      "oracleRejectedSections": [
+        "mount",
+        "registry",
+        "press",
+        "negative",
+        "bypass"
+      ],
+      "oracleRejection": {
+        "mount": "Expected values to be strictly deep-equal: + actual - expected + [ + { + case: 'tap', + message: 'Godot Text does not implement onPress' + }, + { + case: 'long', + message: 'Godot Text does not implem",
+        "registry": "Expected values to be strictly equal: + actual - expected + 'Tried to register two views with the same name RCTText' - null ",
+        "press": "mouse: a press held past the minimum presses out before it presses + actual - expected + [] - [ - 'in', - 'out', - 'press' - ] ",
+        "negative": "span-press fails with Godot Text does not implement onPress on a nested Text, not Godot Text does not implement onPress",
+        "bypass": "fit: the import itself works + actual - expected + [ + { + case: 'bypass-fit', + message: 'Element type is invalid: expected a string (for built-in components) or a class/function (for composite compo"
+      },
+      "rawReportSha256": "9a2372641ae9337aa8e24b4b85e5b5b864e5cff7510ae15e51b49e83d46e6760"
+    },
+    "previousHost": {
+      "command": "node tests/text-original-native.test.mjs --previous-host (host installed by scripts/text-original-sabotage.mjs)",
+      "sdk": "this slice's SDK, the very bundle of the product probe",
+      "checks": 114,
+      "passed": 111,
+      "failed": 3,
+      "failedChecks": [
+        "bypass/fit/A NativeText that skips the wrapper is refused by the host with: Godot Text does not implement adjustsFontSizeToFit",
+        "bypass/head/A NativeText that skips the wrapper is refused by the host with: Godot Text supports tail or clip ellipsizeMode",
+        "bypass/middle/A NativeText that skips the wrapper is refused by the host with: Godot Text supports tail or clip ellipsizeMode"
+      ],
+      "failedEqualsHostChecks": true,
+      "marker": [
+        "TEXT_ORIGINAL_PREVIOUS_HOST_NEGATIVE: 3"
+      ],
+      "bundleSha256": "7edabedb9bd0c80133055f9ce52ad4e3de59dec65e2fd5cf3c8c7d809f1abdc3",
+      "sameBundleAsProductProbe": true,
+      "hostSha256": "2cf11ea16151a4c00eaf1fb734ba72fa56d5783ac13642ba591c223233db6e5d",
+      "silentOnAllThree": true,
+      "oracleRejectedSections": [
+        "bypass"
+      ],
+      "rawReportSha256": "ff01a14c8ffcde1e6efe3150acd8155e41eb1047c96e79e0426aa8817df97d1c"
+    },
+    "sabotages": [
+      {
+        "name": "register",
+        "command": "node tests/text-original-native.test.mjs --sabotage=register",
+        "what": "the wrapper registers RCTText and RCTVirtualText itself again, as before the slice: RN's own NativeText then collides with it at start-up",
+        "file": "src/text.jsx",
+        "find": "import OriginalText from \"react-native/Libraries/Text/Text\";",
+        "replace": "import { register } from \"react-native/Libraries/Renderer/shims/ReactNativeViewConfigRegistry\";\nimport { controlViewConfig } from \"./components\";\nimport OriginalText from \"react-native/Libraries/Text/Text\";\nconst own = (name, extra) => register(name, () => ({ ...controlViewConfig, uiViewClassName: name, ...extra }));\nown(\"RCTText\", {});\nown(\"RCTVirtualText\", {});",
+        "sabotagedSourceSha256": "2d52d7e65f5dc9516c5da982fab1fa8301763eec20521c5ac3d8da7a94dbedb1",
+        "checks": 105,
+        "failed": 102,
+        "failedByGroup": {
+          "mount": 2,
+          "registry": 3,
+          "tap": 8,
+          "held": 2,
+          "outside": 2,
+          "region": 12,
+          "long": 4,
+          "long-tap": 10,
+          "disabled": 2,
+          "plain": 2,
+          "span": 4,
+          "inert": 8,
+          "responder": 2,
+          "sentinel": 2,
+          "static": 1,
+          "negative": 29,
+          "bypass": 3,
+          "stop": 6
+        },
+        "marker": "TEXT_ORIGINAL_SABOTAGE_REJECTED: 102",
+        "runStatus": 0,
+        "oracleRejectedSections": [
+          "mount",
+          "registry",
+          "press",
+          "static",
+          "negative",
+          "bypass",
+          "stop"
+        ],
+        "oracleRejection": {
+          "mount": "tap is mounted as a paragraph",
+          "registry": "Cannot read properties of undefined (reading 'error')",
+          "press": "tap/mouse: released at the end",
+          "static": "Expected values to be strictly deep-equal: + actual - expected + [] - [ - 's-14', - 's-18', - 's-600', - 's-accepted', - 's-bold', - 's-center', - 's-clip', - 's-color', - 's-default', - 's-inherit', ",
+          "negative": "span-press fails with Godot Text does not implement onPress on a nested Text, not ",
+          "bypass": "fit: the paragraph is mounted false !== true ",
+          "stop": "no host error besides the refusals of the bypass cases"
+        },
+        "rawReportSha256": "59e565e99353cfeb898fcf66dc00c4a08403142447554f8662e7708377b3b4b9",
+        "bundleSha256": "a0887eaf358ffa9f2235f22789401268221ec5634fa144a38d011db100caad9f"
+      },
+      {
+        "name": "style",
+        "command": "node tests/text-original-native.test.mjs --sabotage=style",
+        "what": "the base view config declares no text style, so fontFamily, fontWeight, lineHeight, letterSpacing and textAlign never reach the paragraph",
+        "file": "src/base-view-config.js",
+        "find": "    style: platformStyle,\n",
+        "replace": "",
+        "sabotagedSourceSha256": "92a1f7ba2b903807a2c2b9d6122ad469306edcd26b21545d5dcdc5eb063241a4",
+        "checks": 114,
+        "failed": 5,
+        "failedByGroup": {
+          "registry": 1,
+          "static": 4
+        },
+        "marker": "TEXT_ORIGINAL_SABOTAGE_REJECTED: 5",
+        "runStatus": 0,
+        "oracleRejectedSections": [
+          "registry",
+          "static"
+        ],
+        "oracleRejection": {
+          "registry": "RCTText declares the style fontFamily",
+          "static": "s-default: run 0 style + actual - expected [ 18, 400, + '', - 'NotoSans', 'f8fafcff', 0 ] "
+        },
+        "rawReportSha256": "ca8cb32646ca2314a3b259100659adebd6808c3c713918a12accf5810750bad7",
+        "bundleSha256": "00610073e0a5500281df72a19da179ca8e180f38e8e10be3a53c2b45f823baf4"
+      },
+      {
+        "name": "ancestor",
+        "command": "node tests/text-original-native.test.mjs --sabotage=ancestor",
+        "what": "the facade reads a private text ancestor context instead of the one RN's Text and View share",
+        "file": "src/text.jsx",
+        "find": "import TextAncestorContext from \"react-native/Libraries/Text/TextAncestorContext\";",
+        "replace": "const TextAncestorContext = React.createContext(false);",
+        "sabotagedSourceSha256": "0b52e126bcf415f6bcb3f09fc343dc1758e5271e0bcf162b3a7ca9e7b3799718",
+        "checks": 114,
+        "failed": 13,
+        "failedByGroup": {
+          "static": 1,
+          "negative": 12
+        },
+        "marker": "TEXT_ORIGINAL_SABOTAGE_REJECTED: 13",
+        "runStatus": 0,
+        "oracleRejectedSections": [
+          "static",
+          "negative",
+          "stop"
+        ],
+        "oracleRejection": {
+          "static": "s-spans: run 1 style + actual - expected [ + 18, - 20, 700, 'NotoSans', 'f8fafcff', 0 ] ",
+          "negative": "span-press fails with Godot Text does not implement onPress on a nested Text, not ",
+          "stop": "no host error besides the refusals of the bypass cases"
+        },
+        "rawReportSha256": "c35b1af2b1e1c3f77143769ca931f2207e7dc9579becacb0f9213b8e7fa2268f",
+        "bundleSha256": "023453db6f5aa29deb720c4498cc26fc82a9ada8034b7b34a5396ea02b970df4"
+      },
+      {
+        "name": "span-press",
+        "command": "node tests/text-original-native.test.mjs --sabotage=span-press",
+        "what": "a nested Text may carry press and responder props (the rejection loop is removed)",
+        "file": "src/text.jsx",
+        "find": "    for (const name of spanPressProps) {\n      if (props[name] != null) {\n        throw new Error(`Godot Text does not implement ${name} on a nested Text: only the outer paragraph is pressable`);\n      }\n    }\n",
+        "replace": "",
+        "sabotagedSourceSha256": "015410e46b2adf90f06e3d540f6274c97f916a800a94075faa56f388b227f336",
+        "checks": 114,
+        "failed": 7,
+        "failedByGroup": {
+          "negative": 7
+        },
+        "marker": "TEXT_ORIGINAL_SABOTAGE_REJECTED: 7",
+        "runStatus": 0,
+        "oracleRejectedSections": [
+          "negative"
+        ],
+        "oracleRejection": {
+          "negative": "span-press fails with Godot Text does not implement onPress on a nested Text, not "
+        },
+        "rawReportSha256": "fe047038c589efc195e53bda5b3eea34ac4ccba8c047b81aaa9495fa5925591e",
+        "bundleSha256": "991f58f52a49d50ea4623ac680cc4731330affdd8efb2f29156fd9f22f717202"
+      },
+      {
+        "name": "default",
+        "command": "node tests/text-original-native.test.mjs --sabotage=default",
+        "what": "the paragraph's default size is RN's 14 instead of this platform's 18",
+        "file": "src/text.jsx",
+        "find": "const DEFAULT_FONT_SIZE = 18;",
+        "replace": "const DEFAULT_FONT_SIZE = 14;",
+        "sabotagedSourceSha256": "7bf1a82e3d083457f60edace366a786918c66a6d9cacb0d1fc1d1e17b1eac96d",
+        "checks": 114,
+        "failed": 2,
+        "failedByGroup": {
+          "static": 2
+        },
+        "marker": "TEXT_ORIGINAL_SABOTAGE_REJECTED: 2",
+        "runStatus": 0,
+        "oracleRejectedSections": [
+          "static"
+        ],
+        "oracleRejection": {
+          "static": "s-default: run 0 style + actual - expected [ + 14, - 18, 400, 'NotoSans', 'f8fafcff', 0 ] "
+        },
+        "rawReportSha256": "7a4ccb9599d6425ed5feb1fb94910f7a084690c5e5fac354289ad3506c396eb8",
+        "bundleSha256": "fd7f945a0f5afe10ab87c8720d4d2028be134c2f7e75a51c3352589b9c9ebfb2"
+      },
+      {
+        "name": "guard",
+        "command": "node tests/text-original-native.test.mjs --sabotage=guard",
+        "what": "ParagraphLayout::prepare does not refuse head, middle and adjustsFontSizeToFit (the host is rebuilt)",
+        "file": "native/paragraph_layout.cpp",
+        "find": "  if (props.ellipsizeMode == rn::EllipsizeMode::Head || props.ellipsizeMode == rn::EllipsizeMode::Middle)\n    throw std::runtime_error(\"Godot Text supports tail or clip ellipsizeMode\");\n  if (props.adjustsFontSizeToFit)\n    throw std::runtime_error(\"Godot Text does not implement adjustsFontSizeToFit\");\n",
+        "replace": "",
+        "sabotagedSourceSha256": "b4c19ac192234f66f40aa70574afdd40635e0fe227602901c5ad02c7f6dfe8b6",
+        "hostSha256": "2cf11ea16151a4c00eaf1fb734ba72fa56d5783ac13642ba591c223233db6e5d",
+        "checks": 114,
+        "failed": 3,
+        "failedByGroup": {
+          "bypass": 3
+        },
+        "marker": "TEXT_ORIGINAL_SABOTAGE_REJECTED: 3",
+        "runStatus": 0,
+        "oracleRejectedSections": [
+          "bypass"
+        ],
+        "oracleRejection": {
+          "bypass": "fit: the host refuses it"
+        },
+        "rawReportSha256": "ce9862624b093945a8816c1ac8f2a0eda928e5758ca6546d5c9146a493921a54",
+        "bundleSha256": "7edabedb9bd0c80133055f9ce52ad4e3de59dec65e2fd5cf3c8c7d809f1abdc3"
+      }
+    ],
+    "script": "node scripts/text-original-sabotage.mjs",
+    "scriptElapsed": "about 3 min 46 s (05:27:56Z to 05:31:42Z)",
+    "sourceHashesUnchanged": true,
+    "sourceSha256": {
+      "src/text.jsx": "29b63dfaa12f5e8f6594a2fc243aa0820e5ee98ac2e5686bc464c7499c919525",
+      "src/base-view-config.js": "df216df6b5d2705ffe9077715a0ce71823224f8a559b7ad9d18f43a3b7606350",
+      "native/paragraph_layout.cpp": "f8dd2eb1ab2769dd18213976a005f87b462e9cb0411649a8d5de6a9b6d7db984"
+    },
+    "hostSha256": {
+      "genuine": "a8b7b887e367e3e5a68be0cfac938ea16a151f9c33e7d5f1aa5a6dcb4a093d86",
+      "restored": "a8b7b887e367e3e5a68be0cfac938ea16a151f9c33e7d5f1aa5a6dcb4a093d86"
+    },
+    "guardSabotageHostEqualsPreviousHost": true,
+    "runStatuses": {
+      "previous": 0,
+      "previousHost": 0,
+      "genuineRunAfterwards": 0
+    }
+  },
+  "executedSourceSha256": {
+    "tests/text-original-fixture.jsx": "f9f4f3bb06aa0bf26473da14eda066e90b5282ae88c242e164d0a26b2d4bda1e",
+    "tests/text-original-probe.gd": "0b1cb993c2190e1e58760327e17dde4c9c61bd8ea5b72d9de5b164a09051fa37",
+    "tests/text-original-native.test.mjs": "a2527fd6d9218147200acb99076fa5775f4830e9046cd9314178bad1d17c2d25",
+    "tests/text-original-oracle.mjs": "e495d50c9f3a21c091f9dc49b144bce519639940ce7a8fd22bdcde06f1a49a99",
+    "scripts/text-original-bundle.mjs": "8efa8d7adecdb29e2eefc58433485a47447da7ecf2617e11b6d429d35f41cb98",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "sdk/toolchain/platform-plugin.mjs": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+    "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade",
+    "src/text.jsx": "29b63dfaa12f5e8f6594a2fc243aa0820e5ee98ac2e5686bc464c7499c919525",
+    "src/base-view-config.js": "df216df6b5d2705ffe9077715a0ce71823224f8a559b7ad9d18f43a3b7606350",
+    "native/paragraph_layout.h": "2560d18658f9919d7ebd6a44d9b6f80d8658fa923de89a5467937954fbbb4a36",
+    "native/paragraph_layout.cpp": "f8dd2eb1ab2769dd18213976a005f87b462e9cb0411649a8d5de6a9b6d7db984",
+    "native/paragraph_view.cpp": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+    "native/application_runtime.cpp": "e7e5f8db23a8af053d12ee59da742b1210354b88eb4d272da3051733c4281a42",
+    "native/CMakeLists.txt": "e4f68a5289fd6f9f7e63c9a03cfee681d62b37cb08a01f113c3e35ef23495974",
+    "scripts/text-original-sabotage.mjs": "9ddd2718cf22512ff96c89aefcc1c64a2d1ab16e97f650617a3d2fca12c607e7",
+    "tests/platform-seams.test.mjs": "324b291532c10aafd228386eedcaa62ba253f996484fdadfcdfcb9771b19129c",
+    "examples/text-layout/App.jsx": "0bfdebdaf14dd4c5a20d7ebe22a69b4b7a75772c1879e5886dae1510bb8b32e0",
+    "examples/text-layout/validation.gd": "bfc39679a98cc242af03d7253a7d14c2064ce24ffd19ac9197aa655d03a9cc07"
+  },
+  "originalReactNativeSources": {
+    "Libraries/Text/Text.js": "953284065228869852d6c16cebc5cd69fa810f81ed1ce57e4b7d9c746eda154a",
+    "Libraries/Text/TextNativeComponent.js": "3e783f0b9fcf2e2905d4be23449c77970d29de39755b966cdd259b2f671d5740",
+    "Libraries/Text/TextAncestorContext.js": "bf1a2a6b0f76d505b0c447d6f3be8fa827dc07adb22a9f291c142550c442832c",
+    "Libraries/Pressability/Pressability.js": "e69bf22b5de59c9b5fe61cf97deab986e53f2ec3efd8c855829ff35cbd6a38c1",
+    "Libraries/Pressability/usePressability.js": "6ea47170258ee32adc3b66216c4ed31c09ebf42c07b4b403a3f9d02d82091a2a",
+    "Libraries/Components/View/View.js": "bd8bd1250762fde59a24e08680071952d938c06ba72e461b9f763a765ab3c61b",
+    "Libraries/Renderer/implementations/ReactFabric-prod.js": "6f53e433d921c0090d0610c5a0091d0b3acb53d13f5d48c32d1e40bfac4bdfda",
+    "Libraries/Renderer/shims/ReactNativeViewConfigRegistry.js": "816494cf365fbb7318c274e5406856df41e96426efaad5a74141fc863372331b",
+    "Libraries/Text/TextProps.js": "c44f742ca010685634a2696d94b89e0690b0e88a56729029488b166ecab3c017",
+    "Libraries/Pressability/PressabilityTypes.js": "3f0dfb31796e99edc05edbed625e51b5b7d5ef77fe50a906580f1e124b69e809",
+    "ReactCommon/react/renderer/components/text/BaseParagraphProps.cpp": "27b2560f914004142746d2a394b8b703243779bac0fd85d6555f186c00f18b9d",
+    "ReactCommon/react/renderer/components/text/BaseTextProps.cpp": "397f5444ac85de9f0edd13ebf97b832527486d3e8a3e426e57d140de8a48bd9e",
+    "ReactCommon/react/renderer/components/text/ParagraphEventEmitter.cpp": "2accdc80e1bef3e68a5355ffbc2713a0546b779cbb1b939fb98a9e415c0f607f",
+    "ReactCommon/react/renderer/attributedstring/ParagraphAttributes.h": "b0b21b53abbc2fa48e91ee51cbd2a0a644e71e1fa8360c2ea14d91a0b7e30fcc",
+    "ReactCommon/react/renderer/attributedstring/primitives.h": "6a430aec7b07c862e442fd91d93472754323d4a7df402f14b2aff290d3a9fe63"
+  },
+  "regressions": {
+    "note": "run on the implementation commit, on the host above, one native run at a time; every command exited 0",
+    "npm run test:text-layout": {
+      "subtests": "1/1",
+      "marker": [
+        "TEXT_LAYOUT_PASSED: 76"
+      ]
+    },
+    "npm run test:touchables": {
+      "subtests": "1/1",
+      "markers": [
+        "TOUCHABLES_PASSED: 93",
+        "TOUCHABLES_ANIMATED_PASSED: 7"
+      ]
+    },
+    "npm run test:typography": {
+      "tests": "4/4"
+    },
+    "node scripts/check.mjs --typography": {
+      "headless": 50,
+      "nativeRenderer": 63
+    },
+    "npm run test:examples": {
+      "examples": 34,
+      "allHeadless": true,
+      "textLayout": 22,
+      "typography": 50,
+      "touchables": 13,
+      "pressable": 47
+    },
+    "node scripts/check.mjs --text-layout --capture": {
+      "nativeRenderer": 36
+    },
+    "node --test tests/platform-seams.test.mjs": {
+      "tests": "16/16"
+    },
+    "npm run test:contracts": {
+      "nodeTests": 301,
+      "dashboardTests": 43,
+      "parityTests": 7,
+      "pythonTests": 13
+    },
+    "npm run test:parity": {
+      "inventory": "8113 contracts, 97 public values",
+      "tests": "7/7"
+    },
+    "npm run type-check": "passed",
+    "npm run check:static": "no issues found",
+    "npm run check:publication": "passed"
+  },
+  "captures": {
+    "file": "captures.json",
+    "driver": "capture-press.gd.txt",
+    "frames": {
+      "initial": {
+        "path": "text-original-initial.png",
+        "sha256": "0592b9f1dcec84a5974adc71717e69ae31db5b357c1a592d685c8342960a66c9"
+      },
+      "narrow": {
+        "path": "text-original-narrow.png",
+        "sha256": "85e75d14f67d3095d7b41a63fe9a8a0431c66738980e11546d4a3423b7d87875"
+      },
+      "held": {
+        "path": "text-original-press-held.png",
+        "sha256": "39715f5cae0321e882f108bab633b8bc526f6499beb8ad716036ff745290d403"
+      },
+      "after": {
+        "path": "text-original-press-after.png",
+        "sha256": "aebfbef1e0d3ae70e1593889e5f79915ea526eb9b7b35658edd2f4c915292141"
+      }
+    }
+  },
+  "limitations": [
+    "Press on a nested Text (a span) needs hit testing by text fragment and its own dispatch in the pointer adapter: a nested Text that sets a press or responder prop fails with an error.",
+    "The accessibilityRole 'link' that Text.js gives a pressable paragraph reaches its props; the host applies no accessibility props to a paragraph yet.",
+    "The default size of a paragraph is 18, not RN's 14: a documented divergence that keeps the examples and captures.",
+    "allowFontScaling, maxFontSizeMultiplier, dynamicTypeRamp and suppressHighlighting are accepted and inert: the host's font scale is 1 and nothing highlights outside iOS.",
+    "selectable, adjustsFontSizeToFit, selectionColor, dataDetectorType, textBreakStrategy, lineBreakStrategyIOS, android_hyphenationFrequency, ellipsizeMode head and middle, fontStyle and textDecoration are rejected, not implemented.",
+    "The suite runs headless on macOS arm64 with the host's own hit test; it is not a differential against RN on iOS or Android.",
+    "Hosted CI and the Pages publication are pending."
+  ]
+}
