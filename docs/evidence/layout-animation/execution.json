@@ -1,0 +1,1125 @@
+{
+  "format": "godot-fabric.layout-animation-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "ee8f5bd55e60556bd3fb4408eed11734399ae378",
+  "executedTreeSha": "daa2ec272894e6f455acf2464656a425ece85a31",
+  "featureCommit": "2648ab0b06f2c433431ea20616d3ca6a388749ac",
+  "sourceState": "working tree clean and equal to the implementation commit's tree when every command below ran: every source in sourcePins was hashed by the bundle receipt of the run and equals the blob of the implementation commit (checked file by file); the evidence files, which are added afterwards, are not inputs of any command",
+  "baseCommit": "c8582636ed2f26a1a02004a6bae60f5e220cee70",
+  "environment": {
+    "platform": "macOS arm64 (26.6.2), Apple M3 Pro, 11 cores",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "displayServer": "headless (suite); macOS native renderer (example captures)"
+  },
+  "hostedCi": {
+    "status": "pending",
+    "pages": "pending",
+    "note": "The layout-animation step and the native-layout-animation artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing is published to Pages yet; both are recorded after the merge. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "doesNotCertifyNativeBuild": true,
+    "note": "The bundle receipt (build/layout-animation-probe-bundle.json, sha256 of the bundle 2b86de17b73b5f58c2456be059fdd68cb0c86bcf84684824fd7fdcf790c0224e) pins the sources of the run; it does not certify the native build that a hosted runner makes from them. The hosts below are the local ones.",
+    "bundleSha256": "2b86de17b73b5f58c2456be059fdd68cb0c86bcf84684824fd7fdcf790c0224e"
+  },
+  "hosts": {
+    "previousSha256": "7efa0b0605c5467a5f94ee3a29f06f700ed77b08f9da7a7ee2a1205d55c813cc",
+    "previousSourceCommit": "c8582636ed2f26a1a02004a6bae60f5e220cee70",
+    "currentSha256": "8db8bf3de1dc5e9f5c59817635bf4b0159adb0e517855b348e4db1840031275c",
+    "restoredSha256": "8db8bf3de1dc5e9f5c59817635bf4b0159adb0e517855b348e4db1840031275c",
+    "restoredEqualsCurrent": true,
+    "sabotagedSha256": {
+      "seconds-clock": "3a728d5e7ca3169ecfa8504c527090c43b6c5fc89ee15fe60464b7d464f76dc4",
+      "no-register-surface": "a006279a98c9f3743946a5eff69302c50a0b34ddc16306dee22412666365a61a",
+      "no-consumer": "f50b11ce1428e14eca29acedb808abfa1c159e52c59ff8e52590372e26c25f3f",
+      "drop-callback": "fc9e7aaf5924925db7d055eaed9ec6b06fe9abf420fb68efbba706cf4ff4d4e4"
+    }
+  },
+  "productProbe": {
+    "command": "npm run test:layout-animation",
+    "suite": "1/1 subtests passed",
+    "runs": [
+      {
+        "lane": "current, run 1",
+        "exitCode": 0,
+        "suiteDurationMs": 11898.28
+      },
+      {
+        "lane": "current, run 2",
+        "exitCode": 0,
+        "suiteDurationMs": 11506.1
+      },
+      {
+        "lane": "current, run 3",
+        "exitCode": 0,
+        "suiteDurationMs": 11958
+      },
+      {
+        "lane": "current, under CPU load: 8 `yes` processes",
+        "exitCode": 0,
+        "suiteDurationMs": 16630.46,
+        "loadAverageBefore": "7.16 6.44 7.25",
+        "loadAverageAfter": "12.25 7.65 7.66"
+      }
+    ],
+    "application": "one FabricApplication, one root, 18 stages: mount, api, idle-start, native-end, update-linear, update-ease, update-spring, create-opacity, create-scale, delete-opacity, delete-scale, mixed, fail, interrupt, legacy, flag, idle-end, stop",
+    "checks": 121,
+    "normativeChecks": 83,
+    "allCurrentAssertionsPassed": true,
+    "oracle": {
+      "transactions": 359,
+      "maximumErrorsAgainstTheOracle": {
+        "position": 0.00001825821263423677,
+        "opacity": 4.196167002756823e-8,
+        "scale": 4.450480162176973e-8
+      },
+      "tolerances": {
+        "position": 0.0005,
+        "opacity": 0.00001,
+        "scale": 0.00001
+      },
+      "checkedWithEveryProbeCheckMarkedPassed": true
+    },
+    "declaredDiagnostics": {
+      "current": {
+        "Error parsing animation type: bogus": 1,
+        "Error parsing animation config: could not parse field `type`": 1,
+        "Parsing LayoutAnimationConfig failed: {\"duration\":400,\"update\":{\"type\":\"bogus\"}}": 1
+      },
+      "original": {}
+    },
+    "hostSha256": "8db8bf3de1dc5e9f5c59817635bf4b0159adb0e517855b348e4db1840031275c",
+    "bundleSha256": "2b86de17b73b5f58c2456be059fdd68cb0c86bcf84684824fd7fdcf790c0224e",
+    "rawReportSha256": "7f6e27dd09f19d13c441706d932f648b8dbfd091c8867012afe04a00881e1b2c",
+    "logSha256": "60d0e3457f2cfd9a60d878a1bfb1a12147e997be5dbd90a6f9f05506c9a63801",
+    "comparisonSha256": "f47e3c016031dca3300b6950d0b747ed136e237d8e81764fe74a0419b9745f98",
+    "scope": {
+      "costPerTickCertified": false,
+      "frameClockIsGodotsTick": true,
+      "hitTestingOfDelayedDeletesCertified": false,
+      "invalidConfigFailureCallback": true,
+      "keyboardEaseInEaseOutCertified": false,
+      "legacyUIManagerMethods": true,
+      "mobileExportsCertified": false,
+      "multipleRootsCertified": false,
+      "oneRootAtATime": true,
+      "originalLayoutAnimationModule": true,
+      "presetsAndTypesLinearEaseInEaseOutSpring": true,
+      "publicReactNativeImport": true,
+      "reducedMotionCertified": false,
+      "rnCxxLayoutAnimationDriver": true,
+      "textAndImageStateInterpolationCertified": false,
+      "updateCreateDelete": true
+    }
+  },
+  "negativeControls": {
+    "previousHost": {
+      "command": "node tests/layout-animation-native.test.mjs --previous-host (the host preserved from main installed in addons/)",
+      "sourceCommit": "c8582636ed2f26a1a02004a6bae60f5e220cee70",
+      "hostSha256": "7efa0b0605c5467a5f94ee3a29f06f700ed77b08f9da7a7ee2a1205d55c813cc",
+      "checks": 121,
+      "passed": 38,
+      "failed": 83,
+      "failedEqualsNormative": true,
+      "exitCode": 0,
+      "expectedFailureObserved": true,
+      "timerEndedEveryConfigureNext": "update-linear, update-ease, update-spring, create-opacity, delete-opacity, native-end and mixed each end by RN's JS timer once (race: fired)",
+      "pullsTotal": -1,
+      "declaredDiagnostics": {},
+      "oracleRejected": true,
+      "oracleRejection": "The driver is installed",
+      "rawReportSha256": "6824aac4022a95aa564b79680c251efa5a4fc88627c180e43775f211d9123533",
+      "logSha256": "89e8c5c3045976c012ffde0425f2ee7ddc902754b138378d2fdc18b17d7a60e2"
+    },
+    "sabotages": {
+      "seconds-clock": {
+        "command": "node tests/layout-animation-native.test.mjs --sabotage=seconds-clock",
+        "what": "the driver reads the host's frame time in seconds, not milliseconds: its progress never moves",
+        "file": "native/layout_animation.cpp",
+        "find": "    owner->last_read_ms = static_cast<uint64_t>(owner->frame_ms);",
+        "replace": "    owner->last_read_ms = static_cast<uint64_t>(owner->frame_ms / 1000.0);",
+        "checks": 121,
+        "failed": 75,
+        "failedChecks": [
+          "native-end/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "native-end/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "native-end/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "native-end/The driver completes the animation and queues RN's success callback once",
+          "native-end/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "native-end/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "native-end/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-linear/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-linear/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "update-linear/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-linear/The driver completes the animation and queues RN's success callback once",
+          "update-linear/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "update-linear/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-ease/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-ease/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "update-ease/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-ease/The driver completes the animation and queues RN's success callback once",
+          "update-ease/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "update-ease/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-spring/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-spring/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "update-spring/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-spring/The driver completes the animation and queues RN's success callback once",
+          "update-spring/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "update-spring/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-spring/The spring overshoots the final layout before it settles on it",
+          "create-opacity/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "create-opacity/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "create-opacity/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "create-opacity/The driver completes the animation and queues RN's success callback once",
+          "create-opacity/The new view is created at opacity 0 and fades in to 1 without a scale",
+          "create-scale/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "create-scale/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "create-scale/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "create-scale/The driver completes the animation and queues RN's success callback once",
+          "create-scale/The new view is created collapsed (scale 0, hidden), grows to scale 1 on both axes and stays at full opacity",
+          "delete-opacity/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "delete-opacity/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "delete-opacity/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "delete-opacity/The driver completes the animation and queues RN's success callback once",
+          "delete-opacity/The deleted view stays mounted through the animation and is removed by its last transaction",
+          "rest/Before delete-scale, the stage is back at its base layout with no animation armed",
+          "delete-scale/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "delete-scale/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "delete-scale/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "delete-scale/The driver completes the animation and queues RN's success callback once",
+          "delete-scale/The deleted view stays mounted through the animation and is removed by its last transaction",
+          "delete-scale/The deleted view shrinks toward scale 0 at full opacity",
+          "rest/Before mixed, the stage is back at its base layout with no animation armed",
+          "mixed/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "mixed/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "mixed/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "mixed/The driver completes the animation and queues RN's success callback once",
+          "mixed/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "mixed/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "mixed/The commit's creates and inserts reach the Controls at once and its removes and deletes wait for the animation's end",
+          "rest/Before fail, the stage is back at its base layout with no animation armed",
+          "fail/An invalid config calls onAnimationDidFail once, starts no animation, and the driver serves no transaction",
+          "fail/The Controls take the committed layout in one step with no intermediate frame",
+          "rest/Before interrupt, the stage is back at its base layout with no animation armed",
+          "interrupt/A second animation armed mid-animation joins the one in flight: the driver starts once, completes once, queues both callbacks and idles",
+          "interrupt/The box, moving under the first animation, ends exactly at the layout of the second",
+          "interrupt/Each configureNext gets its onAnimationDidEnd exactly once",
+          "interrupt/The driver ends both: the first animation's callback arrives no later than the second's, and RN's timers never fire",
+          "rest/Before legacy, the stage is back at its base layout with no animation armed",
+          "legacy/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "legacy/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "legacy/RN calls the legacy callback exactly once, when the driver ends the animation",
+          "legacy/The driver completes the animation and queues RN's success callback once",
+          "legacy/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "legacy/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "rest/Before flag, the stage is back at its base layout with no animation armed",
+          "flag/The legacy flag changes nothing in the driver: no animation, callback, transaction or tick",
+          "idle-end/Idle, neither the driver nor the frame clock ticks, no transaction is pulled and the driver's clock only moves forward",
+          "rest/Before stop, the stage is back at its base layout with no animation armed"
+        ],
+        "oracleRejection": "Transaction 1: RN reads the frame time in whole milliseconds",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "3a728d5e7ca3169ecfa8504c527090c43b6c5fc89ee15fe60464b7d464f76dc4",
+        "sabotagedSourceSha256": "28fe479ddf630851b7d22bdf3d1e75d5ffa1756618d911dbd4350d8ccc43ce23",
+        "runStatus": 0,
+        "rawReportSha256": "308bb250104e378a157ed98c61625236e222e665325c42d0bd75af1a6f2e6038",
+        "logSha256": "c0b9c1bb1a49dd7d9c3299a905e70df023a8f9fc914d3094460e1a93dcaa278f"
+      },
+      "no-register-surface": {
+        "command": "node tests/layout-animation-native.test.mjs --sabotage=no-register-surface",
+        "what": "no surface hands its mounting coordinator to the driver, so it never overrides a transaction: the Controls get the committed layout in one step",
+        "file": "native/layout_animation.cpp",
+        "find": "  tree.getMountingCoordinator()->setMountingOverrideDelegate(state_->recorder);\n",
+        "replace": "",
+        "checks": 121,
+        "failed": 87,
+        "failedChecks": [
+          "native-end/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "native-end/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "native-end/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "native-end/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "native-end/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "native-end/The driver completes the animation and queues RN's success callback once",
+          "native-end/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "native-end/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "native-end/linear moves the box one way and never past the final layout",
+          "update-linear/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-linear/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "update-linear/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "update-linear/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "update-linear/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-linear/The driver completes the animation and queues RN's success callback once",
+          "update-linear/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-linear/linear moves the box one way and never past the final layout",
+          "update-ease/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-ease/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "update-ease/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "update-ease/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "update-ease/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-ease/The driver completes the animation and queues RN's success callback once",
+          "update-ease/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-ease/easeInEaseOut moves the box one way and never past the final layout",
+          "update-spring/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-spring/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "update-spring/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "update-spring/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "update-spring/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-spring/The driver completes the animation and queues RN's success callback once",
+          "update-spring/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-spring/The spring overshoots the final layout before it settles on it",
+          "create-opacity/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "create-opacity/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "create-opacity/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "create-opacity/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "create-opacity/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "create-opacity/The driver completes the animation and queues RN's success callback once",
+          "create-opacity/The new view is created at opacity 0 and fades in to 1 without a scale",
+          "create-opacity/The opacity takes more than one value on its way",
+          "create-scale/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "create-scale/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "create-scale/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "create-scale/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "create-scale/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "create-scale/The driver completes the animation and queues RN's success callback once",
+          "create-scale/The new view is created collapsed (scale 0, hidden), grows to scale 1 on both axes and stays at full opacity",
+          "create-scale/The scale takes more than one value on its way",
+          "delete-opacity/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "delete-opacity/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "delete-opacity/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "delete-opacity/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "delete-opacity/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "delete-opacity/The driver completes the animation and queues RN's success callback once",
+          "delete-opacity/The deleted view stays mounted through the animation and is removed by its last transaction",
+          "delete-opacity/The deleted view fades out with its opacity decreasing and no scale",
+          "delete-scale/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "delete-scale/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "delete-scale/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "delete-scale/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "delete-scale/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "delete-scale/The driver completes the animation and queues RN's success callback once",
+          "delete-scale/The deleted view stays mounted through the animation and is removed by its last transaction",
+          "delete-scale/The deleted view shrinks toward scale 0 at full opacity",
+          "mixed/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "mixed/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "mixed/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "mixed/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "mixed/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "mixed/The driver completes the animation and queues RN's success callback once",
+          "mixed/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "mixed/The commit's creates and inserts reach the Controls at once and its removes and deletes wait for the animation's end",
+          "interrupt/A second animation armed mid-animation joins the one in flight: the driver starts once, completes once, queues both callbacks and idles",
+          "interrupt/The box, moving under the first animation, ends exactly at the layout of the second",
+          "interrupt/Each configureNext gets its onAnimationDidEnd exactly once",
+          "interrupt/The driver ends both: the first animation's callback arrives no later than the second's, and RN's timers never fire",
+          "interrupt/The box continues from where the first animation had put it, with no jump to either end",
+          "legacy/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "legacy/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "legacy/The clock RN reads for a transaction is the host's frame time in whole milliseconds, and never goes back",
+          "legacy/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "legacy/RN calls the legacy callback exactly once, when the driver ends the animation",
+          "legacy/The driver completes the animation and queues RN's success callback once",
+          "legacy/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "legacy/linear moves the box one way and never past the final layout",
+          "stop/Stopping the application mid-animation ends the driver: no further tick or transaction, and no error"
+        ],
+        "oracleRejection": "native-end: the driver served the start, at least one frame between, and the end",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "a006279a98c9f3743946a5eff69302c50a0b34ddc16306dee22412666365a61a",
+        "sabotagedSourceSha256": "f447e9bb00e97c76f90821e3f6ae5d3963d3afd6274671767c3a26f11bea262a",
+        "runStatus": 0,
+        "rawReportSha256": "b891404f39910fd85bc1638bd9f44f2fb506737e8a60d356ba2982052abf668e",
+        "logSha256": "6da55f1f9ee657e380de5d1fb50c7b935119db84b66f339dad2bcc47834b7bc5"
+      },
+      "no-consumer": {
+        "command": "node tests/layout-animation-native.test.mjs --sabotage=no-consumer",
+        "what": "the driver's animation is not a consumer of the frame clock: it never ticks and the animation stalls at its first frame",
+        "file": "native/application_runtime.cpp",
+        "find": " || (layout_animation && layout_animation->active());",
+        "replace": ";",
+        "checks": 121,
+        "failed": 86,
+        "failedChecks": [
+          "native-end/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "native-end/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "native-end/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "native-end/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "native-end/The driver completes the animation and queues RN's success callback once",
+          "native-end/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "native-end/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "native-end/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-linear/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-linear/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "update-linear/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "update-linear/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-linear/The driver completes the animation and queues RN's success callback once",
+          "update-linear/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "update-linear/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-ease/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-ease/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "update-ease/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "update-ease/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-ease/The driver completes the animation and queues RN's success callback once",
+          "update-ease/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "update-ease/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-spring/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "update-spring/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "update-spring/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "update-spring/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "update-spring/The driver completes the animation and queues RN's success callback once",
+          "update-spring/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "update-spring/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "update-spring/The spring overshoots the final layout before it settles on it",
+          "create-opacity/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "create-opacity/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "create-opacity/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "create-opacity/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "create-opacity/The driver completes the animation and queues RN's success callback once",
+          "create-opacity/The new view is created at opacity 0 and fades in to 1 without a scale",
+          "create-opacity/The opacity takes more than one value on its way",
+          "create-scale/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "create-scale/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "create-scale/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "create-scale/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "create-scale/The driver completes the animation and queues RN's success callback once",
+          "create-scale/The new view is created collapsed (scale 0, hidden), grows to scale 1 on both axes and stays at full opacity",
+          "create-scale/The scale takes more than one value on its way",
+          "create-scale/The new view rests where the style puts it",
+          "delete-opacity/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "delete-opacity/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "delete-opacity/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "delete-opacity/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "delete-opacity/The driver completes the animation and queues RN's success callback once",
+          "delete-opacity/The deleted view stays mounted through the animation and is removed by its last transaction",
+          "delete-opacity/The deleted view fades out with its opacity decreasing and no scale",
+          "rest/Before delete-scale, the stage is back at its base layout with no animation armed",
+          "delete-scale/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "delete-scale/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "delete-scale/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "delete-scale/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "delete-scale/The driver completes the animation and queues RN's success callback once",
+          "delete-scale/The deleted view stays mounted through the animation and is removed by its last transaction",
+          "delete-scale/The deleted view shrinks toward scale 0 at full opacity",
+          "rest/Before mixed, the stage is back at its base layout with no animation armed",
+          "mixed/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "mixed/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "mixed/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "mixed/RN calls onAnimationDidEnd exactly once, whichever side ends the animation",
+          "mixed/The driver completes the animation and queues RN's success callback once",
+          "mixed/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "mixed/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "mixed/The commit's creates and inserts reach the Controls at once and its removes and deletes wait for the animation's end",
+          "rest/Before fail, the stage is back at its base layout with no animation armed",
+          "rest/Before interrupt, the stage is back at its base layout with no animation armed",
+          "interrupt/A second animation armed mid-animation joins the one in flight: the driver starts once, completes once, queues both callbacks and idles",
+          "interrupt/The box, moving under the first animation, ends exactly at the layout of the second",
+          "interrupt/Each configureNext gets its onAnimationDidEnd exactly once",
+          "interrupt/The driver ends both: the first animation's callback arrives no later than the second's, and RN's timers never fire",
+          "rest/Before legacy, the stage is back at its base layout with no animation armed",
+          "legacy/The commit starts RN's driver once: one animation starts and completes, its success callback is queued, none is lost, and it idles after",
+          "legacy/The driver serves several transactions and the Controls change only in the frames that applied one",
+          "legacy/The driver ticks only on a tick of the frame clock that began with an animation in flight, at that tick's timestamp",
+          "legacy/RN calls the legacy callback exactly once, when the driver ends the animation",
+          "legacy/The driver completes the animation and queues RN's success callback once",
+          "legacy/The animation ends at the layout RN committed: the Control, fabric*, onLayout, measure and getBoundingClientRect agree",
+          "legacy/The first transaction shows the start layout, the last the final layout, and the Control takes more than one value between them",
+          "rest/Before flag, the stage is back at its base layout with no animation armed",
+          "rest/Before stop, the stage is back at its base layout with no animation armed",
+          "stop/Stopping the application mid-animation ends the driver: no further tick or transaction, and no error"
+        ],
+        "oracleRejection": "native-end: the driver served the start, at least one frame between, and the end",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "f50b11ce1428e14eca29acedb808abfa1c159e52c59ff8e52590372e26c25f3f",
+        "sabotagedSourceSha256": "306bc66b62f955c0d7b11c32cac036067d06ef9e7106399300f05158942d715a",
+        "runStatus": 0,
+        "rawReportSha256": "e144c5e4f0f8672a8badc7e1476541504def1571c9b1e5dafbde5af8d9b61228",
+        "logSha256": "f75c3b248716cdaba5081c6b41b15f270d72748a535b61cb7a6e49fad32f0273"
+      },
+      "drop-callback": {
+        "command": "node tests/layout-animation-native.test.mjs --sabotage=drop-callback",
+        "what": "the success callback the driver queues is counted and dropped: only RN's JS timer ends the call",
+        "file": "native/layout_animation.cpp",
+        "find": "    executor(std::move(callback));\n",
+        "replace": "    static_cast<void>(callback);\n",
+        "checks": 121,
+        "failed": 6,
+        "failedChecks": [
+          "native-end/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "mixed/The driver ends the call before RN's timer could: the callback follows the native completion, once, with the final layout mounted, and the timer is cleared",
+          "fail/RN's JS timer still calls onAnimationDidEnd once for a config the driver rejects, and the box takes the committed layout",
+          "fail/An invalid config calls onAnimationDidFail once, starts no animation, and the driver serves no transaction",
+          "interrupt/The driver ends both: the first animation's callback arrives no later than the second's, and RN's timers never fire",
+          "legacy/RN calls the legacy callback exactly once, when the driver ends the animation"
+        ],
+        "oracleRejection": "native-end: only the driver can have ended the call, and it cleared RN's timer",
+        "expectedFailuresObserved": true,
+        "oracleRejected": true,
+        "hostSha256": "fc9e7aaf5924925db7d055eaed9ec6b06fe9abf420fb68efbba706cf4ff4d4e4",
+        "sabotagedSourceSha256": "eb29cc4708f86fd5d3298b92986c557cdd130c806001915ae78448391fc4deed",
+        "runStatus": 0,
+        "rawReportSha256": "48d90f293ee140073925cb7a0d8f9824e0d3c06ff9c469d77beb8c85b30535df",
+        "logSha256": "2375e14348d03b047109385bdc5c19c5bdd3242f35cc7852c649733ded444ba2"
+      }
+    },
+    "sabotageRun": {
+      "command": "node scripts/layout-animation-sabotage.mjs",
+      "exitCode": 0,
+      "sourcesRestoredByteForByte": true,
+      "receiptSha256": "94a281a2831da62e371ee5ed13a53e83b8b59dfaf0e146eabf3274f3d794f608"
+    }
+  },
+  "observedPulls": [
+    {
+      "case": "update-linear",
+      "node": "box",
+      "property": "x",
+      "startReadMs": 413502024,
+      "rows": [
+        {
+          "sequence": 19,
+          "godotFrame": 102,
+          "readMsMinusStart": 0,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 20
+        },
+        {
+          "sequence": 20,
+          "godotFrame": 103,
+          "readMsMinusStart": 2,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 20.6666660308838
+        },
+        {
+          "sequence": 21,
+          "godotFrame": 104,
+          "readMsMinusStart": 12,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 24
+        },
+        {
+          "sequence": 37,
+          "godotFrame": 148,
+          "readMsMinusStart": 314,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 124.666664123535
+        },
+        {
+          "sequence": 53,
+          "godotFrame": 188,
+          "readMsMinusStart": 591,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 217
+        },
+        {
+          "sequence": 54,
+          "godotFrame": 190,
+          "readMsMinusStart": 605,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 2,
+          "removes": 0,
+          "deletes": 0,
+          "after": 220
+        }
+      ]
+    },
+    {
+      "case": "create-opacity",
+      "node": "child",
+      "property": "opacity",
+      "startReadMs": 413504239,
+      "rows": [
+        {
+          "sequence": 131,
+          "godotFrame": 421,
+          "readMsMinusStart": 0,
+          "creates": 1,
+          "inserts": 1,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0
+        },
+        {
+          "sequence": 132,
+          "godotFrame": 422,
+          "readMsMinusStart": 3,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.000246719806455076
+        },
+        {
+          "sequence": 133,
+          "godotFrame": 423,
+          "readMsMinusStart": 12,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.00394264934584498
+        },
+        {
+          "sequence": 140,
+          "godotFrame": 444,
+          "readMsMinusStart": 156,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.531395256519318
+        },
+        {
+          "sequence": 148,
+          "godotFrame": 463,
+          "readMsMinusStart": 287,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.995373904705048
+        },
+        {
+          "sequence": 149,
+          "godotFrame": 466,
+          "readMsMinusStart": 306,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 2,
+          "removes": 0,
+          "deletes": 0,
+          "after": 1
+        }
+      ]
+    },
+    {
+      "case": "delete-opacity",
+      "node": "doomed",
+      "property": "opacity",
+      "startReadMs": 413505365,
+      "rows": [
+        {
+          "sequence": 187,
+          "godotFrame": 583,
+          "readMsMinusStart": 0,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 1
+        },
+        {
+          "sequence": 188,
+          "godotFrame": 584,
+          "readMsMinusStart": 4,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.991999983787537
+        },
+        {
+          "sequence": 189,
+          "godotFrame": 585,
+          "readMsMinusStart": 12,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.976000010967255
+        },
+        {
+          "sequence": 202,
+          "godotFrame": 619,
+          "readMsMinusStart": 247,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.50600004196167
+        },
+        {
+          "sequence": 216,
+          "godotFrame": 653,
+          "readMsMinusStart": 481,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 0,
+          "deletes": 0,
+          "after": 0.0379999876022339
+        },
+        {
+          "sequence": 217,
+          "godotFrame": 656,
+          "readMsMinusStart": 500,
+          "creates": 0,
+          "inserts": 0,
+          "updates": 1,
+          "removes": 1,
+          "deletes": 1,
+          "after": "removed"
+        }
+      ]
+    }
+  ],
+  "costPerTick": {
+    "note": "Measured once with a temporary instrumented host (a stopwatch around UIManager::animationTick(), applied and reverted by a local script, never part of the tree) over N absolutely positioned 6-point views that all move for 1 s under one LayoutAnimation. It is not a gate and not a budget (GF-30 owns budgets; its counters are not in this base). The machine carried other heavy processes (load average about 8).",
+    "commit": "ee8f5bd55e60556bd3fb4408eed11734399ae378",
+    "machine": "Apple M3 Pro, headless, release host",
+    "runsPerCount": 3,
+    "byViews": {
+      "1": {
+        "runs": 3,
+        "ticksPerRun": [
+          53,
+          56
+        ],
+        "medianUs": [
+          121.209,
+          135.042
+        ],
+        "p95Us": [
+          202.75,
+          389.167
+        ],
+        "maxUs": [
+          318.459,
+          478.083
+        ]
+      },
+      "10": {
+        "runs": 3,
+        "ticksPerRun": [
+          53,
+          59
+        ],
+        "medianUs": [
+          287.916,
+          312.542
+        ],
+        "p95Us": [
+          502.083,
+          775.709
+        ],
+        "maxUs": [
+          647.333,
+          1003.459
+        ]
+      },
+      "100": {
+        "runs": 3,
+        "ticksPerRun": [
+          59,
+          63
+        ],
+        "medianUs": [
+          1368.417,
+          1969.75
+        ],
+        "p95Us": [
+          2481.333,
+          3030
+        ],
+        "maxUs": [
+          3088.542,
+          3500.625
+        ]
+      },
+      "400": {
+        "runs": 3,
+        "ticksPerRun": [
+          60,
+          68
+        ],
+        "medianUs": [
+          3709.792,
+          3802.375
+        ],
+        "p95Us": [
+          4277.167,
+          5404.125
+        ],
+        "maxUs": [
+          6246.708,
+          6747.958
+        ]
+      }
+    },
+    "runs": [
+      {
+        "count": 1,
+        "repeat": 0,
+        "ticks": 56,
+        "meanUs": 115.79385714285714,
+        "medianUs": 121.209,
+        "p95Us": 202.75,
+        "maxUs": 318.459
+      },
+      {
+        "count": 1,
+        "repeat": 1,
+        "ticks": 56,
+        "meanUs": 161.52307142857143,
+        "medianUs": 135.042,
+        "p95Us": 333.625,
+        "maxUs": 399.417
+      },
+      {
+        "count": 1,
+        "repeat": 2,
+        "ticks": 53,
+        "meanUs": 141.2759245283019,
+        "medianUs": 125.541,
+        "p95Us": 389.167,
+        "maxUs": 478.083
+      },
+      {
+        "count": 10,
+        "repeat": 0,
+        "ticks": 59,
+        "meanUs": 341.1900508474576,
+        "medianUs": 303.417,
+        "p95Us": 775.709,
+        "maxUs": 901.25
+      },
+      {
+        "count": 10,
+        "repeat": 1,
+        "ticks": 53,
+        "meanUs": 282.888283018868,
+        "medianUs": 287.916,
+        "p95Us": 502.083,
+        "maxUs": 647.333
+      },
+      {
+        "count": 10,
+        "repeat": 2,
+        "ticks": 55,
+        "meanUs": 331.6159090909091,
+        "medianUs": 312.542,
+        "p95Us": 625.375,
+        "maxUs": 1003.459
+      },
+      {
+        "count": 100,
+        "repeat": 0,
+        "ticks": 63,
+        "meanUs": 1532.9199841269842,
+        "medianUs": 1563.958,
+        "p95Us": 2690.333,
+        "maxUs": 3500.625
+      },
+      {
+        "count": 100,
+        "repeat": 1,
+        "ticks": 59,
+        "meanUs": 1837.91806779661,
+        "medianUs": 1969.75,
+        "p95Us": 3030,
+        "maxUs": 3088.542
+      },
+      {
+        "count": 100,
+        "repeat": 2,
+        "ticks": 60,
+        "meanUs": 1391.9402666666667,
+        "medianUs": 1368.417,
+        "p95Us": 2481.333,
+        "maxUs": 3245.709
+      },
+      {
+        "count": 400,
+        "repeat": 0,
+        "ticks": 68,
+        "meanUs": 3741.64830882353,
+        "medianUs": 3710.625,
+        "p95Us": 4408.083,
+        "maxUs": 6246.708
+      },
+      {
+        "count": 400,
+        "repeat": 1,
+        "ticks": 66,
+        "meanUs": 3867.664742424243,
+        "medianUs": 3802.375,
+        "p95Us": 4277.167,
+        "maxUs": 6747.958
+      },
+      {
+        "count": 400,
+        "repeat": 2,
+        "ticks": 60,
+        "meanUs": 3830.3423499999994,
+        "medianUs": 3709.792,
+        "p95Us": 5404.125,
+        "maxUs": 6291.875
+      }
+    ]
+  },
+  "exampleValidation": {
+    "headless": {
+      "command": "npm run example -- layout-animation --headless",
+      "checks": 12,
+      "passed": 12,
+      "displayServer": "headless",
+      "reportSha256": "73e86b3b93f833f17eae8115f6c54b6189d9b881fef38925647169763477e33c"
+    },
+    "native": {
+      "command": "npm run example -- layout-animation --check",
+      "checks": 12,
+      "passed": 12,
+      "displayServer": "macOS",
+      "reportSha256": "c0b4419f7dcaa7548f256b1029f10f3462a4194e77d9992463f6e3ee9aa6c1b6"
+    },
+    "graphical": {
+      "command": "npm run example -- layout-animation --capture",
+      "checks": 23,
+      "passed": 23,
+      "displayServer": "macOS",
+      "reportSha256": "9f730645fb1bcabe414328e1da4c1eb5eac081489e426cf37f39a0fc5fce565c",
+      "captureCount": 5,
+      "captures": [
+        {
+          "file": "layout-animation-before.png",
+          "stage": "before",
+          "shows": "Antes de qualquer animação: três tiles em linha, o status \"idle\" e os dois botões em opacidade plena; o driver está instalado e ocioso e o React renderizou uma vez.",
+          "sha256": "9f0b2326487e1b126adc2576a2b0956499830c1550617cb982251aad2035c56c",
+          "bytes": 25798,
+          "width": 900,
+          "height": 680,
+          "stableAcrossRuns": true
+        },
+        {
+          "file": "layout-animation-spring-mid.png",
+          "stage": "spring-mid",
+          "shows": "Durante o spring: o tile laranja parado e os outros dois saindo da linha para a coluna (cerca de 10 e 20 pontos do lugar de origem), status \"spring: running\", cedo na animação.",
+          "sha256": "aa6d8dad402f530edb358e649d141ae3f4057b34890b963a6e8cd0dacdfdea68",
+          "bytes": 27396,
+          "width": 900,
+          "height": 680,
+          "stableAcrossRuns": false
+        },
+        {
+          "file": "layout-animation-spring-end.png",
+          "stage": "spring-end",
+          "shows": "Depois do spring: os três tiles em coluna, exatamente onde o Yoga os colocou, status \"spring: finished\", três renderizações do React.",
+          "sha256": "c817442bf9e139d086193c37e45359713248a25e97fbace5f008799493c3336e",
+          "bytes": 27184,
+          "width": 900,
+          "height": 680,
+          "stableAcrossRuns": true
+        },
+        {
+          "file": "layout-animation-ease-mid.png",
+          "stage": "ease-mid",
+          "shows": "Durante o ease in / out: o tile laranja que sai, ainda montado, a cerca de 95% de opacidade, os do meio já subindo e o amarelo que entra a cerca de 5%; status \"easeInEaseOut: running\", cedo na animação.",
+          "sha256": "74a8a32c9265d33a26b5053369650d8d7a7125e90ebd7681b823a3744ed1b2df",
+          "bytes": 28920,
+          "width": 900,
+          "height": 680,
+          "stableAcrossRuns": false
+        },
+        {
+          "file": "layout-animation-ease-end.png",
+          "stage": "ease-end",
+          "shows": "Depois do ease in / out: o tile laranja removido só no fim, os tiles ciano, roxo e amarelo em coluna, o amarelo opaco, status \"easeInEaseOut: finished\".",
+          "sha256": "298dbec3fabdc0e9000f2950760c00c369c13e27709d3c692f3eeee890b6187e",
+          "bytes": 28090,
+          "width": 900,
+          "height": 680,
+          "stableAcrossRuns": true
+        }
+      ],
+      "runsCompared": 8,
+      "note": "Over eight capture runs the before, spring-end and ease-end frames were byte-identical; the two mid-animation frames differ between runs (three variants of spring-mid, two of ease-mid), because the renderer draws the frame after the one the validation reads. The frames published here are those of run 2."
+    },
+    "pins": {
+      "examples/layout-animation/App.jsx": "638af6e7df4b55436435dae9af743de4f2e7fd7007dc80472970f1f31c0472a1",
+      "examples/layout-animation/scene.tscn": "e3c8046e6001e933c31a1aa1eca8c996bd1604e8b8ee09bc8018d67b69a8dc2d",
+      "examples/layout-animation/validation.gd": "17ad413db2bd85b8464f923c3affc7f09dc97db6456585b1061a706d7930e6d8",
+      "examples/entry.jsx": "ab011e830280289b4b3109ee2dd6f42d87e5fa5e2f12d85dd8b4cf927b833b30",
+      "examples/catalog.json": "65c715c793d0599a106544728c3fc177dfd06d749694807bab99d214ffeb01e8"
+    }
+  },
+  "regressions": {
+    "animated": {
+      "command": "npm run test:animated",
+      "result": "1/1 subtests passed"
+    },
+    "frameClock": {
+      "command": "npm run test:frame-clock",
+      "result": "1/1 subtests passed"
+    },
+    "touchables": {
+      "command": "npm run test:touchables",
+      "result": "1/1 subtests passed"
+    },
+    "examples": {
+      "command": "npm run test:examples",
+      "result": "exit 0: 36 examples, 36 acceptance lines passed (layout-animation: 12 checks)"
+    },
+    "contracts": {
+      "command": "npm run test:contracts",
+      "result": "exit 0: 302 Node tests, 13 Python tests, with test:parity (7) and test:dashboard (43) inside"
+    },
+    "platformSeams": {
+      "command": "node --test tests/platform-seams.test.mjs",
+      "result": "17/17 subtests passed"
+    },
+    "typeCheck": {
+      "command": "npm run type-check",
+      "result": "exit 0"
+    },
+    "static": {
+      "command": "npm run check:static",
+      "result": "No issues found"
+    },
+    "publication": {
+      "command": "npm run check:publication",
+      "result": "passed (1402 files, no failure), before the evidence files were added"
+    },
+    "performance": "test:performance (GF-30) is not in this base",
+    "note": "run on the tree of the implementation commit before the evidence files were added"
+  },
+  "sourcePins": {
+    "tests/layout-animation-fixture.jsx": "2a4501d002c642e36daa8e4096509778ca80df9791446744163375a22f12c532",
+    "tests/layout-animation-cases.mjs": "7f5c837f30bcf9f12bcdd0f42c6ef81051bd67ff3b2d5843de3fa2aab2101833",
+    "tests/layout-animation-probe.gd": "c6a825a8eaa3443be407f3d40d5c2e83383a3459e02bb38ee4a90a64cecfa86e",
+    "tests/layout-animation-native.test.mjs": "050b21435544d45847ded9dd85270d1dfeceeccb377d94d3c12449b17df3cd1e",
+    "tests/layout-animation-oracle.mjs": "c081f5681bc8624f5cb20d4f086f90fa3674d27d3515d8ac753aff93c7f0841f",
+    "scripts/layout-animation-bundle.mjs": "fcc573f29f793da96ba08cf0539e5e8ae46fa57f87e9d6648d60ed870fe0965f",
+    "scripts/layout-animation-sabotage.mjs": "13e00ba48e22fad70af8ce0a8e1fcd44c0ce13b885d7d41f75f0c0203f052694",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "src/react-native-platform.jsx": "6fef4b859bf30495cfa36db2dd4ad3b3ae424580c2a912a45c102507ca0e0467",
+    "src/private-interface.js": "5a007baa5a4b7f4756c3a315696c4e769e40959338966ac86e0f1606d682281c",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "native/layout_animation.h": "a660c2b2d83b111c6af87eff25f3a9d3914e8e8e934928985b5266e2266fed27",
+    "native/layout_animation.cpp": "a16d2a5717eb49882045e6b9294f603a5dc8a3263c8efa5ca85088d81404985e",
+    "native/application_runtime.cpp": "51e9c421b1337155451d27ccf5e3752d9f606e59a3f91105fb31b0d36aecc5f9",
+    "native/CMakeLists.txt": "2f53b9210047d2029c84388946a877583bf7b6f892c7be4c7db43b06cc8fa51c"
+  },
+  "originalReactNativeSources": {
+    "Libraries/LayoutAnimation/LayoutAnimation.js": "136414d9949441c0500cae905d4e93db2cadc5faa0a2c6e30eb491bfad1c4f1b",
+    "src/private/featureflags/ReactNativeFeatureFlags.js": "e89221ac3efc588560bd5ce7b52301a02c9d34cedd457840bf94822669977cac",
+    "Libraries/ReactNative/FabricUIManager.js": "e76f1b42b55796d4abf27e63e3c897470ea664eb2eca44029abdeb36a8a2257c",
+    "index.js": "5e03e5233650531810ef3129db116e1e534bbf30d85fccf6a10248ef9a088538",
+    "ReactCommon/react/renderer/animations/LayoutAnimationDriver.cpp": "0c5f45dcfe9248b320572a8a2faa30030129363ab00ee8832694011af10520a8",
+    "ReactCommon/react/renderer/animations/LayoutAnimationKeyFrameManager.cpp": "1cee7ffbd07728fd9d87ba19fe6c4f6ec91cab71297997232f361367d3e0e413",
+    "ReactCommon/react/renderer/animations/utils.cpp": "77fdb68718c19b1bee04dc0dee222533ffde5d45b6828f055483e8b87cbb9aaf",
+    "ReactCommon/react/renderer/animations/conversions.h": "f73750fe67951769f69c575caca05e7791f3a992d272581de9e586f6236cf435",
+    "ReactCommon/react/renderer/animations/primitives.h": "29296f9c21cfdfc4268333c37f63d0745ec6d9c71e248eab9ef0f5190dcd0a6c",
+    "ReactCommon/react/renderer/components/view/ViewPropsInterpolation.h": "e095cb4652551f90a860ba8ea7ec8887aab2992c0156d406a18d5a45eb7059c3",
+    "ReactCommon/react/renderer/uimanager/UIManager.cpp": "1a2fc7e3e3a7ef9162388cb023664e73f0cc96bde99899140fb2e5f7644e1fcc",
+    "ReactCommon/react/renderer/uimanager/UIManagerBinding.cpp": "c9b31e0dacfce08c985dd4ecefa0bde29ec8b1acc6041e1e28b4aebe79687e4b",
+    "ReactCommon/react/renderer/mounting/MountingCoordinator.cpp": "650b1f53b85676244bf26c4611447fc1e0fa69d9bbef9de1924f9dddde477e0a",
+    "ReactCommon/react/renderer/scheduler/Scheduler.cpp": "eb809ca378728a558a63431bf9e886a3006ef0af5deabe5d12a6fa7d5db906e3",
+    "React/Fabric/RCTScheduler.mm": "0d1ede5f7e414798c83eef3b0a0f235a26eb60c023787e68397e067d9795814f",
+    "ReactAndroid/src/main/jni/react/fabric/FabricUIManagerBinding.cpp": "e53126373be416e8d228df4aaac1c3455cf834a1e6187d2b95fdfbae7a60b9e8",
+    "Libraries/ReactNative/BridgelessUIManager.js": "9f7643ed5d4eeab62a3f8217d000bbf513d256d131234baa606835722c22ed55"
+  },
+  "observedBehavior": [
+    {
+      "api": "LayoutAnimation.create(600, 'linear', 'opacity'), Presets.easeInEaseOut, Presets.linear, Presets.spring",
+      "observed": "the configs RN builds, equal to the oracle's literals (duration 300, 500 and 700; springDamping 0.4 for the spring)"
+    },
+    {
+      "api": "configureNext(config, onEnd, onFail) and one commit that updates the box",
+      "observed": "the driver serves the commit's transaction (progress 0) and one per tick; one success callback is queued; onEnd is called once, after the last transaction, with the timer cleared when the driver is first"
+    },
+    {
+      "api": "configureNext with duration 5000 and update.duration 300",
+      "observed": "onEnd when the 300 ms animation completes, with RN's JS timer cleared; the timer would have fired at 5017 ms"
+    },
+    {
+      "api": "create with property opacity / scaleXY",
+      "observed": "the view is created at opacity 0 / collapsed (the Control hidden), follows the curve and ends at 1"
+    },
+    {
+      "api": "delete with property opacity / scaleXY",
+      "observed": "the view stays mounted with decreasing opacity / scale; the last transaction removes and deletes it"
+    },
+    {
+      "api": "Presets.spring on an update",
+      "observed": "the box passes its final layout by up to a quarter of the distance between 10% and 30% of the duration and ends exactly on it"
+    },
+    {
+      "api": "configureNext with update: {type: 'bogus'}",
+      "observed": "one onAnimationDidFail, no animation started, three glog error lines, the Controls take the committed layout in one step; RN's JS timer ends the call once"
+    },
+    {
+      "api": "a second configureNext and commit mid-animation",
+      "observed": "the first animation's callback is queued by the second commit's transaction, the box continues from the view on screen and ends exactly at the second layout; started 1, completed 1, callbacksQueued 2"
+    },
+    {
+      "api": "UIManager.setLayoutAnimationEnabledExperimental(true)",
+      "observed": "does not throw, returns undefined, and nothing moves in the driver"
+    },
+    {
+      "api": "UIManager.configureNextLayoutAnimation(config, onEnd, onFail)",
+      "observed": "animates like LayoutAnimation, with no JS timer: only the driver calls onEnd"
+    },
+    {
+      "api": "UIManager.createView() and other legacy methods",
+      "observed": "still throw 'Legacy UIManager.createView is not supported'"
+    },
+    {
+      "api": "stopping the application mid-animation",
+      "observed": "stopped true, active false, no tick or transaction after the stop, no error"
+    }
+  ],
+  "decisions": [
+    "The driver is RN's own LayoutAnimationDriver, compiled from react/renderer/animations with no subclass and no copy; no animation logic lives in the host.",
+    "The clock RN reads is the pump's frame time in whole milliseconds, handed over at every pump (not only on ticks) because a commit that animates or interrupts pulls between ticks; it never goes back and there is no offset seam.",
+    "The in-flight flag is the LayoutAnimationStatusDelegate's, as iOS switches its run loop observer, not the driver's shouldAnimateFrame(), which is also true between configureNext and the commit.",
+    "Surfaces get a forwarding MountingOverrideDelegate (RecordingDriver) that records what the driver returns, so a transaction is attributed to the driver exactly, without inferring it from how often the clock is read and without a hook in the runtime.",
+    "The oracle recomputes every frame from the clock RN read for each served transaction, with RN's formulas (conversions.h, utils.cpp, LayoutAnimationKeyFrameManager.cpp, ViewPropsInterpolation.h), and never reads a probe verdict; the test feeds it a report whose checks are all marked passed.",
+    "Cases whose top-level duration is far longer than their animations (separated) prove the driver, not RN's JS timer, ended the call; the others may be ended by either, and RN calls onAnimationDidEnd once.",
+    "Cost per tick was measured with temporary instrumentation and is not a gate."
+  ],
+  "limitations": [
+    "Local macOS arm64 evidence; hosted CI and Pages are pending and recorded after the merge; other export targets are separate.",
+    "Reduced motion: Platform.isDisableAnimations is undefined under Godot's platform, so configureNext never skips; it is not wired to the AccessibilityInfo setting.",
+    "One root at a time: the armed animation is global and the next commit of any surface consumes it. Stopping a root with an animation in flight is covered through its empty commit and the application stop.",
+    "Text and Image animate layout only (RN's own limit); type keyboard falls back to linear; easeIn and easeOut run RN's curves without a certificate; delay and initialVelocity are parsed and not exercised.",
+    "A deleted view stays mounted, and so reachable by input, for the whole animation, as on RN's platforms; its pointer behavior in Godot is not certified.",
+    "Background and resume, behavior under JS load, the mobile exports and hosted macOS and iOS runs are not covered.",
+    "The mid-animation captures are the first frame the example's validation accepts, early in the animation, and differ between runs.",
+    "The cost per tick has no budget and was measured once on a loaded machine.",
+    "No graphical CI: the hosted run is headless."
+  ]
+}
