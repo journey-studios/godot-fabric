@@ -268,6 +268,20 @@ headless checks in two roots; the preceding host fails the 2 mount checks.
 Hosted CI repeated the 33 checks ([receipt](docs/evidence/activity-indicator/hosted-ci.json)).
 [Evidence](docs/evidence/activity-indicator/README.md).
 
+The [accessibility example](examples/accessibility/README.md) maps RN's accessibility
+props on `View`, `Pressable` and `TouchableOpacity` to Godot's AccessKit tree: the
+label and hint as the element's name and description, the role (44 accepted
+spellings, a table in the [research note](docs/research/accessibility.md)), the
+disabled, busy, checked, selected and expanded states, live regions, `aria-hidden`
+and the OS's press (`onAccessibilityTap`, or a click at the View's center). Values
+the host cannot honor fail explicitly instead of becoming a generic element.
+`npm run test:accessibility` is headless, so it proves metadata only (80 checks in
+two roots; the preceding host fails exactly 10, and four retained sabotages are
+rejected). `npm run test:accessibility:bridge` reads the real NSAccessibility tree of
+the graphical Godot and presses elements with `AXPress` (22 checks, local macOS
+only; the preceding host fails exactly 5). `AccessibilityInfo`, focus, text scale,
+announcements and mobile (Godot 4.7.2 has no bridge on iOS or Android) are open.
+
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original
 View, documentElement and Document listeners, and hover and click while a pointer

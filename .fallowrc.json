@@ -46,6 +46,7 @@
     "tests/app-state-fixture.jsx",
     "tests/virtualized-list-fixture.jsx",
     "tests/switch-fixture.jsx",
+    "tests/accessibility-fixture.jsx",
     "tests/shared-touches-fixture.jsx",
     "tests/touchables-fixture.jsx",
     "tests/touchables-animated-fixture.jsx",

@@ -48,6 +48,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [animated](animated/README.md) | Original Animated on RN's C++ NativeAnimated advanced by the host's frame clock, and TouchableOpacity | Public | [App](animated/App.jsx) · [scene](animated/scene.tscn) |
 | [switch](switch/README.md) | Original RN Switch: controlled values, colors, disabled input and real clicks | Public | [App](switch/App.jsx) · [scene](switch/scene.tscn) |
 | [activity-indicator](activity-indicator/README.md) | Original RN ActivityIndicator: sizes, colors, animating and hidesWhenStopped | Public | [App](activity-indicator/App.jsx) · [scene](activity-indicator/scene.tscn) |
+| [accessibility](accessibility/README.md) | Original RN accessibility props: labels, roles, states, live region and the OS's press | Public | [App](accessibility/App.jsx) · [scene](accessibility/scene.tscn) |
 | [touchables](touchables/README.md) | Original RN touchables: the opacity, the underlay and the absence of feedback while pressed | Public | [App](touchables/App.jsx) · [scene](touchables/scene.tscn) |
 | [virtualized-list](virtualized-list/README.md) | Original RN FlatList and SectionList windowed by the mouse wheel | Public | [App](virtualized-list/App.jsx) · [scene](virtualized-list/scene.tscn) |
 | [appearance](appearance/README.md) | Original RN Appearance and useColorScheme: setColorScheme and the system theme | Public | [App](appearance/App.jsx) · [scene](appearance/scene.tscn) |
@@ -263,6 +264,18 @@ small/large/numeric frames reach the native spinner. Its
 [receipt](../docs/evidence/activity-indicator/README.md) records 33/33 headless
 checks, the preceding host's 2 mount failures, a retained sabotage and two
 captures of the example.
+
+The [accessibility probe](accessibility/README.md) mounts RN's original `View`,
+`Pressable` and `TouchableOpacity` with accessibility props in two roots of one
+Hermes application: `npm run test:accessibility` (headless), next to the launcher
+entry (`npm run example -- accessibility`, headless or in a window). The headless
+suite proves the metadata only: the descriptor the host resolved for each element
+(name, hint, role, states, live region, hidden), the Controls' properties and the
+host path of the OS's press. `npm run test:accessibility:bridge` is the proof of
+the OS tree: it needs a graphical macOS session, reads the NSAccessibility tree of
+the running Godot and presses elements with `AXPress`, and it is not part of hosted
+CI. The preceding host fails exactly the descriptor checks in both, and retained
+sabotages are rejected by the probe and the independent oracle.
 
 The [capture notification matrix](pointer-capture-notifications/README.md)
 captures mouse and touch contacts over two roots and observes got/lost on JSX

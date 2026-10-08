@@ -36,7 +36,7 @@
         "src/react-native-platform.jsx",
         "src/platform-environment.js"
       ],
-      "note": "Surface policy or fixed values; complete system behavior is not implemented."
+      "note": "Surface policy or fixed values; complete system behavior is not implemented. The View accessibility tree is a separate, first GF-20 slice; the settings and events here are its second."
     },
     {
       "name": "ActionSheetIOS",
@@ -427,8 +427,10 @@
       "roadmap": "GF-13",
       "evidence": [
         "src/react-native-platform.jsx",
-        "src/components.jsx"
-      ]
+        "src/components.jsx",
+        "src/accessibility-view-config.js"
+      ],
+      "note": "Carries the mapped accessibility props (aria-* converted as RN's Pressable does, accessible by default, disabled as the disabled state); focus, keyboard and custom actions are open."
     },
     {
       "name": "ProgressBarAndroid",
@@ -671,8 +673,11 @@
       "roadmap": "GF-10",
       "evidence": [
         "src/react-native-platform.jsx",
-        "src/components.jsx"
-      ]
+        "src/components.jsx",
+        "src/accessibility-view-config.js",
+        "docs/research/accessibility.md"
+      ],
+      "note": "The accessibility props the host maps (label, hint, role, state, live region, hidden, onAccessibilityTap) reach Godot's AccessKit tree (GF-20, first slice); the rest of RN's accessibility props and the OS settings are open."
     },
     {
       "name": "VirtualViewMode",
