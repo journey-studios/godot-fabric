@@ -23,7 +23,13 @@ with identical IDs and the bundle SHA-256 the report records (no pinned producer
 picture (tint, blur, cap insets and the rounded clip, and the props iOS ignores), the control on the preceding
 host (all 53 run, the 40 normative fail), four retained sabotages that the probe and the oracle both reject, 48
 mutations of the genuine report that the oracle refuses, the exact pixels of 14 blurred bitmaps and the 26
-headless and 39 graphical checks of the example with its two captures; hosted CI has not run it. GF-16
+headless and 39 graphical checks of the example with its two captures. Hosted run 37773373567 (the push
+of main 9c5d0eb, the squash of #66) passed all five jobs in its first attempt; its native job ran `npm
+run test:images-visual` (1 of 1 TAP test passing) and its artifact repeated the 53 checks with identical
+IDs and the bundle SHA-256 that the `postReview` of the report records (`9e2b7e03…`), the independent
+oracle accepts its report (52 declared Images, 13 live changes, 62 jobs), and the 40, 2, 3, 8 and 2
+checks that the local control and sabotages fail exist and pass
+([receipt](../evidence/images-visual/hosted-ci.json)). GF-16
 stays open; neither the network slice nor the visual slice closes a checkpoint.
 
 All paths below are under `node_modules/react-native/` unless they start with `native/`, `src/`,
@@ -517,7 +523,6 @@ corners and borders.
 - **A placeholder for `defaultSource` and `loadingIndicatorSource`**, which iOS does not draw either; and
   **`fadeDuration`**, **`progressiveRenderingEnabled`**, **`resizeMethod`**, **`resizeMultiplier`** and
   **`overlayColor`**, which are Android's and are accepted without effect.
-- **Hosted CI** for the visual slice.
 - **Animated GIF and WebP**, **`nativeImageSource`**, and Image inside Text.
 - **Export of assets** for desktop and Android (the iOS hook exists but no exported app ran),
   and a hardware pass of decode memory and the upload budget.

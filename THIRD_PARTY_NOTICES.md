@@ -22,6 +22,7 @@ source/framework archives and verifies SHA-256 before extraction.
 | react-native-css-interop | 0.2.7 | See the installed package LICENSE |
 | Tailwind CSS | 3.4.17 | See the installed package LICENSE |
 | React Native Chart Kit | 7.0.4 | See the installed package LICENSE |
+| react-native-svg | 15.15.5 | [MIT](https://github.com/software-mansion/react-native-svg/blob/v15.15.5/LICENSE); its public API shapes the SDK's SVG facade, and the libraries consumer installs it as Chart Kit asks, but no react-native-svg file is bundled |
 | Zustand | 5.0.15 | MIT; see the installed package LICENSE |
 | Noto Sans / JetBrains Mono | pinned original assets | [SIL OFL 1.1 and asset provenance](assets/fonts/README.md) |
 

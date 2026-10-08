@@ -3188,14 +3188,22 @@ after the blur, `capInsets` apply to `stretch` and `repeat` only with UIKit's be
 unverified, a list of `capInsets` is refused (RN's parser reads it as a map and keeps nothing), a fully transparent
 black tint is not a tint (RN's C++ color has no value for it), and the border is painted below the picture where iOS
 paints it above (nothing differs in what is seen). The first slice's suite changed with the contract (72 checks, 13
-refusals fewer). Open: a comparison of the effects with iOS, hosted CI for this slice, and everything the earlier
+refusals fewer). Open: a comparison of the effects with iOS and everything the earlier
 slices left open. This slice closes no checkpoint: GF-16 stays in progress. After the review of #66
 ([`b5471d9`](https://github.com/journey-studios/godot-fabric/commit/b5471d9a36a36e5aabd9469652b9b9b9e6113248)),
 `box_blur_rgba8` returns without touching the buffer when `width x height` or the byte count would overflow `size_t`
 (the C++ test has 11 groups and 49 assertions), the example's `logoAt` shares the supersampling loop of every other
 drawn asset (the 12 PNGs are byte-identical), and the lanes ran again with the same counts (53, 40, and 2, 3, 8 and
 2); the `postReview` section of the [visual `report.json`](docs/evidence/images-visual/report.json) pins the three
-changed files.
+changed files. Hosted Contracts run 37773373567 (the push of main
+[`9c5d0eb`](https://github.com/journey-studios/godot-fabric/commit/9c5d0eba274df1ad47376946270b044209a9243d), the
+squash of #66) passed all five jobs in its first attempt; its audited artifact
+([receipt](docs/evidence/images-visual/hosted-ci.json)) repeats the 53 headless checks with identical IDs and the
+bundle SHA-256 that `postReview` records, the independent oracle accepts the downloaded report, and the 40, 2, 3, 8
+and 2 checks that the local control and sabotages fail exist and pass; of the 181 tracked pins, 168 have the bytes of
+`6c221e8`, 3 are the review commit's files with the SHA-256 that `postReview` pins and 10 came with the merges of main
+(#59 and #62), and none of them differs between the review commit `b5471d9` and the run head. [Pages
+37773373621](docs/evidence/images-visual/publication.json) deployed this record from main `9c5d0eb`.
 
 ### Node, heap and pump-phase baselines in a soak (2026-10-08)
 
@@ -3553,6 +3561,64 @@ main (`b82fbdd`, #67) the host was reconfigured and rebuilt, the controls were r
 the preceding host, the eight sabotages rejected, 12 on the local lane) and the performance, text style, the 35 examples and the
 contracts gate (303 Node/13 Python) passed again. No checkpoint, whole GF, weight or denominator closes.
 
+### NativeWind and Chart Kit in an independent consumer (2026-10-08)
+
+GF-27 leaves **Planned** with this slice, its first verified one: it certifies NativeWind (`className` on View, Text,
+Image and Pressable, manual dark mode, retained state) and Chart Kit v2's `LineChart` in a project that owns its
+lockfile and is built by the public SDK alone. Only the first-slice checkpoint closes; the table row and the dashboard
+record move to In progress together, in the dashboard record that follows the
+[evidence](docs/evidence/library-consumer/README.md). The libraries used to run only through the laboratory's own
+bundler; a consumer that imported NativeWind failed at four points of the builder
+([research](docs/research/library-consumer.md)): an optional peer that css-interop names only in
+`peerDependenciesMeta`, the `import "./global.css"` (no Tailwind step), the JSX in css-interop's `doctor.native.js`, and
+`className` against type aliases that cannot merge (with no Pressable or `useWindowDimensions` declaration). The JSX
+import source already worked.
+
+`consumers/libraries/` is an independent project (its own `package.json` and committed `package-lock.json`, TSX that
+imports only packages) with the exact releases NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17,
+react-native-chart-kit 7.0.4 and react-native-svg 15.15.5, installed by `npm ci --ignore-scripts` with the SDK's private
+Node. The builder now counts an optional peer in `peerDependenciesMeta` as declared (the SDK's facades answer it),
+compiles a project's Tailwind CSS entry with the SDK's own Tailwind, NativeWind preset and css-interop compiler into a
+module that registers the styles with the one interop runtime of the bundle, takes the Tailwind configuration from
+`godotFabric.tailwind` in `package.json` and never runs a `tailwind.config.*` (it fails with the field named), loads
+`doctor.native.js` through one narrow JSX rule, and offers `className` types only to a project that lists
+`types/nativewind.ts`. The installed nativewind and css-interop must be the SDK's releases. The laboratory and the SDK share
+one compile implementation: the laboratory's `build/app.js` and compiled styles keep their SHA-256.
+
+The JS lane (`tests/library-consumer.test.mjs`, in `test:contracts`) runs 13 tests: the lock against the installed
+versions, the bundle's inputs (no `examples/`, no project `src/`, no web interop runtime, no upstream react-native-svg
+file), the compiled classes, a repeatable bundle, and the refusals (a `tailwind.config.js`, other CSS, a bad declaration,
+css-interop 0.2.6, `className` without the opt-in and on TextInput, Switch, ActivityIndicator and Button) with a retained
+sabotage that removes the optional-peer rule. The native lane (`npm run test:consumer:libraries`, in the
+`native-cold-start` job) provisions the template, installs it, builds it through the editor plugin and runs it: **46
+headless checks**, 58 with the renderer, over real pointer events and waits for states. The minimal consumer still passes
+its 30 build and 40 native checks, and `test:charts` (4 tests, about 2 s) joins `native-cold-start`. The same consumer
+fails on main's SDK (`9c5d0eb`): the reduced one, which only imports NativeWind, at `react-native-safe-area-context`, and
+the full one at `E_ADAPTER_SELECTION`, since main does not know the `tailwind` key.
+
+Four captures show the light theme, a `className` swap to the project's own `brand` colour, the dark theme (`dark:`
+variants through `Appearance.setColorScheme`) and a remounted subtree with an updated chart. The SDK compiles the native
+pipeline of NativeWind (`NATIVEWIND_OS=godot`) while the laboratory keeps the web preset it always ran: open item, since
+unifying them would change the laboratory's evidence.
+
+Open: `className` on TextInput (GF-12), Switch and the lists, following the system theme (the host feeds `Appearance`
+with it; only the manual override is certified), `fontScale`, `rem` and `PixelRatio` scaling, `darkMode: "class"`, the
+SVG adapter's transform, group opacity, font weights 700 and 800, Polygon, Polyline and the v1 root API (and any
+`native/svg_node.*` change), the other Chart Kit charts and the written chart contract, the Reanimated, Gesture Handler,
+safe-area and screens ports (P2), other platforms, the laboratory's web preset against the SDK's native one, and the
+duplicated version strings. The hosted CI run of the new steps and the Pages publication are **pending**.
+
+Executed on macOS arm64 with official Godot 4.7.2 at implementation
+[`fc0f428`](https://github.com/journey-studios/godot-fabric/commit/fc0f4280c43e01d26d6fc9374e922fa449b88c5e): the JS lane
+(13), the native lane (19 build and install checks, 46 and 58 native), the minimal consumer (30 and 40), the 35 examples (chart 34, nativewind 49 and typography 50 headless checks),
+the type check, the contracts gate, static analysis and the publication scan pass on that tree. Only the first-slice
+checkpoint closes; no whole GF, other checkpoint, weight or denominator closes. After the review of PR #69,
+[`91c545d`](https://github.com/journey-studios/godot-fabric/commit/91c545d765e570809c7fbf3211ce9988574ff9d4) has the SDK
+expand and scan the `godotFabric.tailwind.content` globs itself, so a brace branch cannot leave the project, a symbolic
+link that leaves it fails the build naming the link, and Tailwind receives the files' text instead of the globs; the JS
+lane is at 15 tests and the bundle and compiled styles are unchanged by the fix, as the
+[evidence](docs/evidence/library-consumer/README.md) records in a later note.
+
 ### LayoutAnimation on RN's own LayoutAnimationDriver (2026-10-08)
 
 GF-19 stays **In progress**; this is its second slice and it closes no checkpoint: the first slice already closed
@@ -3666,7 +3732,7 @@ consumer project can write TSX, add native functionality, debug and export.
 | --- | --- | --- | --- |
 | GF-25 · P0 · TurboModule and event infrastructure | In progress | Provide typed JSI TurboModule registration/lazy lookup, get/getEnforcing semantics, NativeModules compatibility, callable modules and native event-emitter contracts. Build a custom C++ example with constants, sync calls, async promises/events and disposal. Test missing modules, exceptions, listener lifetime and per-runtime ownership; support platform bridges without pretending mobile binaries are portable | GF-03, GF-05, GF-07 |
 | GF-26 · P1 · Codegen and custom Fabric components | In progress | Integrate upstream specs/schema/codegen with public codegenNativeComponent/Commands, registry/requireNativeComponent and versioned generated artifacts. A consumer builds a new descriptor/view with typed props, events and ref commands without editing the renderer core. Verify schema mismatch failures, mount/update/delete and ABI/export packaging | GF-08, GF-10, GF-25, GF-31 |
-| GF-27 · P1 · Selected library certification | Planned | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
+| GF-27 · P1 · Selected library certification | In progress | Certify original NativeWind/compiler/css-interop and Chart Kit against the public SDK, including TextInput, theme/scaling and retained state. Expand the local SVG adapter to the declared chart contract and document remaining SVG limits. Tests use package imports in an independent app; publish exact versions and supported features. Reanimated/Gesture Handler/safe-area/screens ports remain explicit P2 unless added to release scope | GF-11, GF-12, GF-15, GF-16, GF-19, GF-21, GF-26 |
 | GF-28 · P1 · SDK, addon and consumer exports | In progress | Separate platform SDK/native addon from generic examples. Publish typed JS entrypoints, locked build/codegen tools, supported package resolution, prebuilt native artifacts or reproducible builds, licenses and an export plugin/dependency manifest. Support application entry/root props in existing Godot projects without editing demo source. Verify a clean external consumer and exported debug/release app on every target | GF-03, GF-07, GF-25, GF-26, GF-31 |
 | GF-29 · P1 · Development experience | In progress | Supply original dev renderer, mapped JS/native errors, source maps, LogBox/dev settings, Hermes inspection and React Native DevTools integration. Add reliable reload/Fast Refresh with documented state rules and no stale native nodes. Verify syntax/runtime/native exceptions, reconnect, profiler visibility and production removal of dev-only paths | GF-05, GF-06, GF-07, GF-28 |
 | GF-30 · P1 · Frame, heap and threading budgets | In progress | Profile mount/layout/shaping/JS and retain reproducible frame-time, Hermes heap/RSS and native-node measurements for idle/forms/charts/10,000 rows. Define target-device budgets before accepting optimization. Implement caching or JS/worker/Rust paths only for measured bottlenecks, preserving JSI ownership, Godot main-thread calls and event/commit ordering. Soak and unmount cycles show bounded steady-state memory. The 48/480-row ScrollView benchmark from the pre-publication prototype was not ported; this item starts without a scroll benchmark | GF-11, GF-15, GF-19, GF-28 |

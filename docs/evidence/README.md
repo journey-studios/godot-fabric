@@ -584,7 +584,9 @@ that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 
 Two captures of the example, whose pixel checks saw the shader draw, a C++ test of the pure parts (46 assertions) and
 every departure from RN iOS (the blur's rounding, effects on the next draw, `onLoad` after the blur, `capInsets` in
 `stretch` and `repeat` only, a refused list of insets, a transparent black tint). A comparison of the effects with
-iOS, every target but macOS and hosted CI are open; this slice closes no checkpoint.
+iOS and every target but macOS are open. Hosted run 37773373567 (the push of main 9c5d0eb) repeated the 53 checks with
+identical IDs and the bundle the `postReview` records, and the oracle accepts its report
+([receipt](images-visual/hosted-ci.json)). This slice closes no checkpoint.
 
 The [performance record](performance/README.md) is GF-30's first slice. The application snapshot gains a `performance`
 section (exact counters of the native views, Hermes' live heap after a forced collection, and the pump split into
@@ -731,6 +733,22 @@ headless and 72 renderer checks, four of them reading pixels, with three capture
 four times, and with the window narrowed). Real italic faces, the double, dotted, dashed and wavy lines, `overline`,
 bidirectional text and line geometry that matches either platform are open. The hosted CI run and the Pages publication
 are **pending**.
+
+The [libraries consumer record](library-consumer/README.md) is GF-27's first slice: an independent project with its own
+lockfile (NativeWind 4.2.7, react-native-css-interop 0.2.7, Tailwind 3.4.17, react-native-chart-kit 7.0.4 and
+react-native-svg 15.15.5, installed with the SDK's private Node) that uses `className` on View, Text, Image and Pressable,
+`active:`, manual dark mode through `Appearance.setColorScheme`, retained state and Chart Kit v2's `LineChart`, built only
+by the public SDK. The builder counts an optional peer named in `peerDependenciesMeta` as declared, compiles a project's
+Tailwind CSS entry with the SDK's own Tailwind and css-interop compiler from a declarative `godotFabric.tailwind` (a
+`tailwind.config.*` is refused, since the SDK never runs project JavaScript), loads css-interop's `doctor.native.js` through
+one narrow JSX rule, and offers `className` types only to a project that opts in. A JS lane (13 tests, in `test:contracts`)
+and a native lane (19 build and install checks and 46 native, 58 with the renderer, in `native-cold-start`) pass, the
+minimal consumer still passes its 30 and 40, and four renderer captures show the light, class-swapped and dark themes
+and a remounted subtree with a repainted chart. The same consumer fails on main's SDK (`9c5d0eb`) at
+`react-native-safe-area-context` and at `E_ADAPTER_SELECTION`, and a retained sabotage of the optional-peer rule fails
+there too. `className` on TextInput, following the system theme, font scaling, the rest of the SVG contract, the other
+charts, the P2 ports, other platforms, and the laboratory's web preset against the SDK's native one are open. The hosted
+CI run and the Pages publication are **pending**.
 
 The [LayoutAnimation record](layout-animation/README.md) runs React Native's original `LayoutAnimation` (and the
 legacy `UIManager.configureNextLayoutAnimation`) from the public import on RN's own C++ `LayoutAnimationDriver`,

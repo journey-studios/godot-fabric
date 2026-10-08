@@ -12,6 +12,7 @@ import { prepareProjectResolution } from "./project-resolution.mjs";
 import { selectedAdapterInputs, prepareAdapterBuild } from "./adapter-plugin.mjs";
 import { resolveNativeCompiler } from "./native-compiler.mjs";
 import { createAssetPipeline } from "./asset-plugin.mjs";
+import { assertNoTailwindConfigFile, createTailwindStep } from "./tailwind-plugin.mjs";
 
 const toolchain = path.dirname(fileURLToPath(import.meta.url));
 const sdk = path.dirname(toolchain);
@@ -58,6 +59,7 @@ async function main() {
   if (dependencies.babel) throw new Error("Project Babel configuration is not supported by this prototype: package.json");
   for (const name of ["babel.config.js", "babel.config.cjs", "babel.config.mjs", "babel.config.json", "babel.config.cts", ".babelrc", ".babelrc.json", ".babelrc.js", ".babelrc.cjs", ".babelrc.mjs", ".babelrc.cts"])
     if (existsSync(path.join(project, name))) throw new Error("Project Babel configuration is not supported by this prototype: " + name);
+  assertNoTailwindConfigFile(project);
   const resolution = prepareProjectResolution({project, sdk, dependencies, resolveSdk: id => requireSdk.resolve(id)});
   const selected = selectedAdapterInputs(project, dependencies);
   let nativeCombination, records = [];
@@ -82,6 +84,7 @@ async function main() {
   if (typecheck.error || typecheck.status !== 0)
     throw new Error("TypeScript failed\n" + (typecheck.stdout ?? "") + (typecheck.stderr ?? "") + (typecheck.error?.message ?? ""));
   const assets = createAssetPipeline({root: project});
+  const styles = createTailwindStep({project, dependencies});
   const result = await build({
     absWorkingDir: project, entryPoints: [entry], outfile, write: false,
     tsconfigRaw: resolution.tsconfigRaw, conditions: resolution.conditions,
@@ -90,6 +93,7 @@ async function main() {
     mainFields: ["main"], resolveExtensions: resolution.resolveExtensions,
     plugins: [
       assets.plugin,
+      styles.plugin,
       resolution.plugin,
       adapterBuild.plugin,
       platformPlugin(path.join(sdk, "src"), (id) => requireSdk.resolve(id)),
@@ -139,6 +143,7 @@ async function main() {
       specs: adapterBuild.specCount} : null,
     assets: stagedAssets.manifest ? {path: path.relative(project, outfile + ".assets.json").split(path.sep).join("/"),
       files: stagedAssets.manifest.files.length} : null,
+    styles: styles.report(),
   }, null, 2) + "\n");
   console.log("GODOT_FABRIC_BUILT: " + entryArg);
 }
