@@ -102,16 +102,6 @@ rn::LinesMeasurements lines_of(const PreparedParagraph &prepared) {
   }
   return lines;
 }
-// A glyph a row paints: where its pen is on the row, the glyph to draw and the run whose style it takes.
-struct PaintedGlyph {
-  RID font;
-  int size{};
-  int64_t index{};
-  Vector2 offset;
-  float x{}, advance{};
-  size_t run{};
-  bool ellipsis{};
-};
 // The glyphs a row paints, in painting order: its text up to where it was trimmed, then the glyphs of the ellipsis.
 // The ellipsis takes the run of the last glyph painted before it (the row's first run when none is): RN's span covers
 // the truncated text, so its color and its decoration go on under the ellipsis. The positions are the paragraph's.
@@ -334,15 +324,24 @@ rn::LinesMeasurements ParagraphLayout::measureLines(const rn::AttributedStringBo
     return {};
   }
 }
-std::vector<DecorationSegment> PreparedParagraph::decoration_segments() const {
+PaintedRows PreparedParagraph::painted_rows() const {
+  PaintedRows rows;
+  rows.reserve(lines.size());
+  for (const auto &line : lines) {
+    rows.push_back(painted_glyphs(line, runs));
+  }
+  return rows;
+}
+std::vector<DecorationSegment> PreparedParagraph::decoration_segments(const PaintedRows &rows) const {
   std::vector<DecorationSegment> segments;
   for (size_t row = 0; row < lines.size(); ++row) {
     const auto &line = lines[row];
     // One segment per run on a row: from where its first painted glyph starts to where its last one ends.
-    for (const auto &group : painted_groups(painted_glyphs(line, runs), false)) {
+    for (const auto &group : painted_groups(rows[row], false)) {
       const auto &run = runs[group.run];
-      // A group without width (the sentinel, a trimmed space) has nothing to draw a line under.
-      if (group.x1 <= group.x0 || !(run.underline || run.strikethrough)) {
+      // A group without width (the sentinel, a trimmed space) has nothing to draw a line under, and a run without
+      // a font has no metrics to place one by.
+      if (run.font.is_null() || group.x1 <= group.x0 || !(run.underline || run.strikethrough)) {
         continue;
       }
       // Godot's metrics, as RichTextLabel reads them: the underline sits at the font's underline position below
@@ -366,16 +365,18 @@ std::vector<DecorationSegment> PreparedParagraph::decoration_segments() const {
 }
 void PreparedParagraph::draw(const RID &canvas, Vector2 origin) const {
   auto ts = server();
-  for (const auto &line : lines) {
-    for (const auto &glyph : painted_glyphs(line, runs)) {
+  // The glyphs are collected once, and both the glyphs and the lines are drawn from them.
+  const PaintedRows rows = painted_rows();
+  for (size_t row = 0; row < rows.size(); ++row) {
+    for (const auto &glyph : rows[row]) {
       if (glyph.font.is_valid()) {
-        ts->font_draw_glyph(glyph.font, canvas, glyph.size, origin + Vector2(glyph.x, line.y) + glyph.offset,
+        ts->font_draw_glyph(glyph.font, canvas, glyph.size, origin + Vector2(glyph.x, lines[row].y) + glyph.offset,
             glyph.index, runs[glyph.run].color);
       }
     }
   }
   auto *rendering = RenderingServer::get_singleton();
-  for (const auto &segment : decoration_segments()) {
+  for (const auto &segment : decoration_segments(rows)) {
     rendering->canvas_item_add_rect(canvas, Rect2(origin.x + segment.x0, origin.y + segment.y - segment.thickness / 2,
         segment.x1 - segment.x0, segment.thickness), segment.color);
   }
@@ -398,13 +399,15 @@ folly::dynamic PreparedParagraph::snapshot() const {
   }
   for (const auto &line : lines) metrics.push_back(folly::dynamic::object("x", line.x)("baseline", line.y)
       ("height", line.height)("width", line.width)("ascent", line.ascent));
-  for (const auto &segment : decoration_segments()) decorations.push_back(folly::dynamic::object("line", segment.line)
+  // The glyphs are collected once: the decorations and the painted rows are both read from them.
+  const PaintedRows rows = painted_rows();
+  for (const auto &segment : decoration_segments(rows)) decorations.push_back(folly::dynamic::object("line", segment.line)
       ("run", segment.run)("kind", segment.strikethrough ? "line-through" : "underline")("x0", segment.x0)
       ("x1", segment.x1)("y", segment.y)("thickness", segment.thickness)
       ("color", segment.color.to_html(true).utf8().get_data()));
   // What each row paints: the runs of its glyphs in order, and the run the ellipsis took.
-  for (size_t row = 0; row < lines.size(); ++row) {
-    for (const auto &group : painted_groups(painted_glyphs(lines[row], runs), true)) {
+  for (size_t row = 0; row < rows.size(); ++row) {
+    for (const auto &group : painted_groups(rows[row], true)) {
       painted.push_back(folly::dynamic::object("line", row)("run", group.run)("ellipsis", group.ellipsis)
           ("x0", group.x0)("x1", group.x1));
     }

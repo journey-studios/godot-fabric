@@ -38,6 +38,19 @@ struct ParagraphLine {
   float top{};
   int start{}, end{};
 };
+// A glyph a row paints: where its pen is on the row (in the paragraph's coordinates), the glyph to draw and the run
+// whose style it takes. ellipsis marks the glyphs of the ellipsis, which take the run of the glyph before them.
+struct PaintedGlyph {
+  godot::RID font;
+  int size{};
+  int64_t index{};
+  godot::Vector2 offset;
+  float x{}, advance{};
+  size_t run{};
+  bool ellipsis{};
+};
+// The painted glyphs of every visible row, in painting order.
+using PaintedRows = std::vector<std::vector<PaintedGlyph>>;
 struct PreparedParagraph {
   godot::Ref<godot::TextParagraph> paragraph;
   std::vector<TextRun> runs;
@@ -47,9 +60,12 @@ struct PreparedParagraph {
   int total_lines{}, ellipses{};
   folly::dynamic snapshot() const;
   void draw(const godot::RID &canvas, godot::Vector2 origin) const;
+  // The one source of what the rows paint, for the drawing, the decorations and the snapshot. It copies the glyphs
+  // out of the TextServer, so a caller collects it once and passes it on.
+  PaintedRows painted_rows() const;
   // The one place the decorations are decided: draw paints these and snapshot reports these. Computed from the
   // glyphs that are actually painted (the truncated text has none) and never during measure.
-  std::vector<DecorationSegment> decoration_segments() const;
+  std::vector<DecorationSegment> decoration_segments(const PaintedRows &rows) const;
 };
 // Fabric supplies immutable attributed strings, including inheritance and
 // composite children. One shaper supplies both Yoga measurement and drawing.

@@ -50,8 +50,8 @@ const variants = [
     replace: "  const { textDecorationLine, ...inherited } = flat;\n" +
       '  return <GodotText {...props} style={textDecorationLine === "none" ? inherited : flat} />;'},
   {name: "whole-line", argument: "--sabotage=whole-line", file: layout, native: true,
-    find: "    for (const auto &group : painted_groups(painted_glyphs(line, runs), false)) {\n",
-    replace: "    for (auto group : painted_groups(painted_glyphs(line, runs), false)) {\n" +
+    find: "    for (const auto &group : painted_groups(rows[row], false)) {\n",
+    replace: "    for (auto group : painted_groups(rows[row], false)) {\n" +
       "      group.x0 = line.x;\n      group.x1 = line.x + line.width;\n"},
   {name: "skew-sign", argument: "--sabotage=skew-sign", file: layout, native: true,
     find: "constexpr float ITALIC_SKEW = 0.25f;", replace: "constexpr float ITALIC_SKEW = -0.25f;"},
@@ -143,10 +143,10 @@ assert.equal(receipt.hostSha256.restored, receipt.hostSha256.genuine, "The rebui
 receipt.currentRunStatus = (await run()).status;
 await writeFile(path.join(root, "build/text-style-sabotage.json"), JSON.stringify(receipt, null, 2) + "\n");
 for (const [name, entry] of Object.entries(receipt.controls)) {
-  assert.equal(entry.runStatus, 0, `The ${name} control fails exactly its checks: build/text-style-${name}.log`);
+  assert.equal(entry.runStatus, 0, `The ${name} control fails exactly its checks: build/text-style-${name}-test.log`);
 }
 for (const entry of receipt.variants) {
-  assert.equal(entry.runStatus, 0, `The probe and oracle must reject the ${entry.name} sabotage: build/text-style-sabotage-${entry.name}.log`);
+  assert.equal(entry.runStatus, 0, `The probe and oracle must reject the ${entry.name} sabotage: build/text-style-sabotage-${entry.name}-test.log`);
 }
-assert.equal(receipt.currentRunStatus, 0, "The genuine run passes: build/text-style-current.log");
+assert.equal(receipt.currentRunStatus, 0, "The genuine run passes: build/text-style-current-test.log");
 console.log(JSON.stringify(receipt, null, 2));
