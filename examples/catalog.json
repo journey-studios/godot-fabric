@@ -238,6 +238,13 @@
     "scene": "examples/device-services/scene.tscn"
   },
   {
+    "id": "accessibility-info",
+    "title": "Original RN AccessibilityInfo: the screen reader, reduce motion, reduce transparency and increase contrast Godot reports, their events, and what it cannot read",
+    "api": "public",
+    "source": "examples/accessibility-info/App.jsx",
+    "scene": "examples/accessibility-info/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",

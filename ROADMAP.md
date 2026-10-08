@@ -2915,8 +2915,9 @@ After main's Modal slice was merged, the same suites passed on the merged tree (
 594 assertions, the 7 Modal tests, 298 Node and 13 Python contract tests, with both controls and
 the four sabotages rebuilt for the new bundle); the receipt remains that of `42615f4`.
 
-Open: `AccessibilityInfo` (settings and events, the iOS `AccessibilityManager` contract) is the
-second slice; focus and keyboard navigation, announcements, grouping under `accessible`, custom
+Open: `AccessibilityInfo` (settings and events, the iOS `AccessibilityManager` contract) became the
+[second slice, part a](#accessibilityinfo-the-os-settings-and-their-events-2026-10-08); focus and keyboard navigation,
+announcements, grouping under `accessible`, custom
 `accessibilityActions`, `accessibilityValue`, text scale, `Text`, the host's Button and TextInput,
 and the Switch are not mapped yet. `expanded` and `busy` are published to Godot but AccessKit's macOS
 adapter does not serve them, so the bridge cannot cover them. **Mobile has no bridge:** Godot 4.7.2
@@ -3148,6 +3149,61 @@ On the implementation tree (`4338d1c`) the contracts gate (301 Node/13 Python, s
 the type check, the parity suite and the device services, accessibility, text layout, images, app state,
 appearance, frame clock, animated, modal, networking and WebSocket suites pass. Only GF-24's first-slice
 checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
+
+### AccessibilityInfo: the OS settings and their events (2026-10-08)
+
+GF-20 stays **In progress**; this is its second slice, part a, and it closes no checkpoint: the first slice already
+closed `slice`, and the full item, contract, parity and targets remain open. The
+[AccessibilityInfo evidence](docs/evidence/accessibility-info/README.md) makes the public `react-native` export React
+Native's own `AccessibilityInfo` over a C++ TurboModule, `AccessibilityManager`, with iOS's contract (the one
+`AccessibilityInfo.js` takes when `Platform.OS` is `"godot"`), and Godot's `DisplayServer`: **54 headless checks** in
+two applications of one bundle. RN's Android `AccessibilityInfo` module is not installed, so its lookup returns `null`.
+
+One `AccessibilityInfo` per `FabricApplication` owns the module (`native/accessibility_info.{h,cpp}`); it is created when
+JS first imports `AccessibilityInfo.js` and takes the baseline reading then, as `RCTAccessibilityManager`'s `init` does.
+Godot has no change signal for these settings, so `ApplicationRuntime`'s pump reads them again once per frame, before it
+drains the queued work, and each change is delivered in that same pump. Four settings have a reading in Godot 4.7.2: the
+screen reader (VoiceOver on macOS), reduce motion, reduce transparency and increase contrast (RN's "darker system
+colors"), through `DisplayServer`'s `accessibility_*` methods. **Unknown is never off:** `-1` (the headless and mobile
+servers), a method the `DisplayServer` lacks or an answer that is not an integer makes the getter reject
+`E_ACCESSIBILITY_UNKNOWN`. Bold text, grayscale, inverted colors and the cross-fade preference have no backing and reject
+`E_ACCESSIBILITY_UNAVAILABLE`; their events and `announcementFinished` never fire. A change is a known value that differs
+from the last known one: becoming unknown, `-1` after `-1` and a return to the last known value emit nothing, and the first
+known value after only unknown ones is a change. Each event reaches every listener of every root once, in order, and
+`change` is the alias of `screenReaderChanged`. `uiManagerDidSendAccessibilityEvent` still fails out loud for `focus`
+(`focus is not implemented yet (GF-20 slice 2b)`) and counts every other type by type, as iOS ignores them;
+`announceForAccessibility`, `announceForAccessibilityWithOptions` and `setAccessibilityFocus` throw `E_UNSUPPORTED`, and
+`setAccessibilityContentSizeMultipliers` validates its argument and throws `E_UNSUPPORTED`. Everything that names a setting
+is one row of a descriptor table in `native/accessibility_info_core.h`, and a validation meta
+(`validation_accessibility_settings`) replaces the readings of the keys it names. The facade re-exports RN's original
+object through a lazy getter in place of the stub, `environmentStats().reduceMotion` counts the real listeners, and
+`sdk/toolchain/platform-plugin.mjs` resolves RN's `legacySendAccessibilityEvent` to its `.ios.js` file.
+
+The probe waits for the poll counter the host reports, never for time. Application A has the meta and two roots (26 steps:
+lazy creation, every getter with a known value, `-1`, a missing key and an invalid value, each event exactly once per
+change, four settings changing in one frame, the module's callbacks, the announcements and focus, unmount and stop);
+application R has Godot's real backend, where headless reads `-1` for all four and so rejects and never emits. An
+independent oracle replays every step against RN's and iOS's rules, and holds the four `DisplayServer` method names to its
+own list of the engine's. The preceding host (`43a59607`, main `dd05760`) fails exactly the **40 normative checks of 54**,
+and its getters reject with RN's own `NativeAccessibilityManagerIOS is not available`. **Four retained host sabotages**
+(`-1` read as off, a poll that reports every time, the meta keys of two settings swapped, a `DisplayServer` method the engine
+does not have) fail 12, 17, 8 and 2 checks and the oracle rejects each; the missing resolver alias breaks the bundle in the
+platform-seams test (17 tests). The example passes 10 headless checks, 10 with the native renderer and 12 with two captures.
+
+Open: announcements and programmatic focus are slice 2b (they need a spike on whether AccessKit on macOS announces live
+regions); text scale and `fontScale` wait for a content size category that Godot does not have; the mobile servers report
+`-1` today and the iOS and Android bridges are GF-34 and GF-35; no real VoiceOver, Reduce Motion, Reduce Transparency or
+Increase Contrast change is exercised (headless reads `-1`, so a swap of two existing `DisplayServer` methods is not
+distinguishable there); there is no graphical CI run; and the hosted CI run of the new step and the Pages publication are
+pending.
+
+Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
+[`d54e8cd`](https://github.com/journey-studios/godot-fabric/commit/d54e8cdaea64663ed6f9d0f8f93303dec463a162) (after
+`394a007`) and recorded at
+[`c1eed36`](https://github.com/journey-studios/godot-fabric/commit/c1eed3644dbfc9854c128e8acdc55ec78f770d7c). On the
+implementation tree the contracts gate (302 Node/13 Python), the type check, static analysis, the publication scan and the
+accessibility, appearance, device services, typography and NativeWind suites pass. No checkpoint, whole GF, weight or
+denominator closes.
 
 ## M1 — Complete the native UI tree
 
