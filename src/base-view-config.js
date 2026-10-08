@@ -1,5 +1,6 @@
 // Platform-owned data shared by Controls and the original RN static ViewConfig.
 // Lazy original processors keep this module free of renderer/bootstrap imports.
+import { accessibilityAttributes, accessibilityEventTypes } from "./accessibility-view-config.js";
 function processGodotColor(value) {
   return require("react-native/Libraries/StyleSheet/processColor").default(value);
 }
@@ -118,6 +119,7 @@ export const controlViewConfig = {
     pointerEvents: true,
     collapsable: true,
     collapsableChildren: true,
+    ...accessibilityAttributes,
     hitSlop: { process: normalizeGodotRect },
     kind: true,
     svg: true,
@@ -174,6 +176,7 @@ export const controlViewConfig = {
     },
   },
   directEventTypes: {
+    ...accessibilityEventTypes,
     topChange: { registrationName: "onChange" },
     topFocus: { registrationName: "onFocus" },
     topBlur: { registrationName: "onBlur" },
@@ -198,8 +201,9 @@ export const coreEventConfigs = {
 export default {
   validAttributes: Object.fromEntries(Object.entries(controlViewConfig.validAttributes).filter(([name]) =>
     /^(onTouch|onPointer|onGotPointer|onLostPointer|onClick|onResponder|onStartShould|onMoveShould)/.test(name) ||
-    ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren"].includes(name))),
+    ["style", "testID", "nativeID", "pointerEvents", "hitSlop", "onLayout", "collapsable", "collapsableChildren",
+      ...Object.keys(accessibilityAttributes)].includes(name))),
   bubblingEventTypes: Object.fromEntries(Object.entries(controlViewConfig.bubblingEventTypes)
     .filter(([name]) => /^(topTouch|topPointer|topGotPointer|topLostPointer|topClick)/.test(name))),
-  directEventTypes: { topLayout: { registrationName: "onLayout" } },
+  directEventTypes: { topLayout: { registrationName: "onLayout" }, ...accessibilityEventTypes },
 };

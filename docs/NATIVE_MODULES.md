@@ -125,6 +125,19 @@ flood the log. React updates and cleanup continue; partial unmount and stop
 must drain work even when metrics cannot be sampled. Shutdown skips metrics
 sampling and invalidates the native module authority before VM destruction.
 
+## Accessibility
+
+The first GF-20 slice adds no TurboModule. The semantic tree is not a module: it
+is the host component that every `View` mounts as (`GodotAccessibleView`, a `Panel`
+that fills Godot's accessibility element from RN's props and answers the OS's
+press), with the pure, Godot-free semantic core in
+`native/accessibility_core.h` that a mobile bridge can consume. Its contract is
+in the [research note](research/accessibility.md). `AccessibilityInfo` stays the
+environment subset above (fixed policy values, no OS settings and no events); its
+module contract, the settings and events of iOS's `AccessibilityManager`, is the
+second slice. Godot's `AccessibilityServer` is reached by name through the engine's
+singleton registry, since the binding profile does not include it.
+
 ## Validation and remaining work
 
 ```sh

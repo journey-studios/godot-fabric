@@ -6,13 +6,14 @@
     "refreshSeconds": 5,
     "baseline": "RN 0.87.1 · React 19.2.3 · Godot 4.7.2",
     "focusSequence": "5",
-    "focusTitle": "GF-14: revisão local concluída; PR e CI/CodeRabbit em preparação"
+    "focusTitle": "GF-14 PR #58: correções revisadas; integração com Accessibility #57 e nova prova em andamento"
   },
   "updatedAt": "2026-10-08T03:31:42.759Z",
   "source": {
     "commit": "96a2e6ede82db4f1d5b0771a838400fdcfb44a3f",
     "url": "https://github.com/journey-studios/godot-fabric/commit/96a2e6ede82db4f1d5b0771a838400fdcfb44a3f",
-    "scope": "Main integrada com GF-11, GF-18 e GF-23 preservados: 26/156 checkpoints, 0/39 itens. GF-14 passou a repetição independente integrada e revisão thermo-nuclear; publicação e aceite hospedado ainda pendentes."
+    "scope": "Main 9ea7811 integrada com Text, Modal, Device Services e Accessibility preservados: 27/156 checkpoints, 0/39 itens. GF-14 tem correções de interrupção e props neutras; rebuild integrado e CI/CodeRabbit finais pendentes.",
+    "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/58"
   },
   "phases": [
     {
@@ -1951,7 +1952,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "Accessibility",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Map the semantic tree, roles/labels/state/actions, focus, live announcements, hidden/grouped content and AccessibilityInfo settings/events to the OS assistive technology bridge. Prove screen-reader traversal/activation, keyboard navigation, reduced motion and text scaling on each target. A metadata dictionary alone is not a pass; a missing OS bridge is a release blocker to resolve early",
       "dependencies": [
         "GF-04",
@@ -1962,14 +1963,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "Primeira fatia: View, Pressable e TouchableOpacity levam as props de acessibilidade do RN (label e hint como nome e descrição do elemento, papel, estados, região live, aria-hidden e onAccessibilityTap) à árvore de acessibilidade do Godot (AccessKit), e o press do SO chega aos callbacks do RN. Todas as 105 grafias de accessibilityRole e role do RN 0.87.1 são mapeadas (61 grafias, 44 nomes distintos) para um papel do Godot ou rejeitadas com o motivo (44 grafias, 39 nomes distintos), sem cair num papel genérico. A prova tem dois tipos: 80 checks headless que provam só metadado (descritor, propriedades dos Controls e o caminho do host do press) e 22 checks que leem a árvore NSAccessibility real do Godot gráfico no macOS e pressionam elementos com AXPress; o host anterior falha exatamente 10 e 5, e quatro sabotagens são rejeitadas. O bridge só roda localmente (sessão gráfica) e o passo headless ainda não rodou na CI hospedada. Seguem abertos AccessibilityInfo (fatia 2), foco e teclado, anúncios, grupos, ações customizadas, text scale e o mobile: o Godot 4.7.2 não tem bridge de acessibilidade em iOS nem Android, o que bloqueia GF-34 e GF-35.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Acessibilidade: 80 checks headless (só metadado), 22 na árvore NSAccessibility real, controle do host anterior e sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/README.md"
+            },
+            {
+              "label": "Recibo de execução do commit 42615f4: hashes, contagens, controles e sabotagens",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3546,14 +3556,13 @@
       "message": "Fatia desktop sob revisão: ScrollView original RN 0.87.1, comandos e offsets fracionários, pan/momentum nativo, cancelamento e duas roots. Repetição independente local: 22/22; regressão de listas 44/44; quatro capturas macOS; sabotagem com três falhas esperadas rejeitada pelo oráculo. scrollToEnd preserva eixo transversal (política desktop alinhada ao Android). CI/CodeRabbit e aceite ainda pendentes. Contrato completo, nested scroll, refresh, paging/snap, bounce/zoom, teclado, hardware e exports mobile permanecem abertos."
     },
     {
-      "id": "modal-final-109e6fd-desktop-slice",
-      "at": "2026-10-08T01:25:22.138062+00:00",
+      "id": "accessibility-first-slice-20261008",
+      "at": "2026-10-08T02:23:27.221171+00:00",
       "taskIds": [
-        "GF-18",
-        "GF-14"
+        "GF-20"
       ],
-      "message": "PR #51 mergeada em 7e2df46 após CI final 109e6fd com cinco jobs verdes e sete threads CodeRabbit resolvidas. A raiz auditou 193 Modal (11 macOS), 164 transforms, 672 capture, cold start e paridade restrita a 13 casos; a árvore mergeada é idêntica. Primeiro checkpoint GF-18 aceito: 24/156 e 0/39; outros três continuam abertos. GF-14 inicia com um Luna e investigação de comandos/offset reproduzida, sem aceite novo.",
-      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
+      "message": "Primeira fatia do GF-20: as props de acessibilidade do RN em View, Pressable e TouchableOpacity chegam à árvore do AccessKit no Godot (nome, descrição, papel, estados, live, hidden e o press do SO). Prova de metadado: 80 checks headless em duas roots, com um oráculo independente e as 105 grafias de papel varridas (61 mapeadas e 44 rejeitadas com o motivo). Prova real: 22 checks leem a árvore NSAccessibility do Godot gráfico no macOS e pressionam elementos com AXPress; núcleo C++ com 594 asserções. O host anterior falha exatamente 10 e 5 checks e quatro sabotagens (nome, press, tabela de papéis e hidden) falham 6, 17, 3 e 5, todas rejeitadas pelo oráculo. Pendentes: o bridge é só local e o passo headless não rodou na CI hospedada; o Godot 4.7.2 não tem bridge em iOS e Android (bloqueia GF-34 e GF-35); AccessibilityInfo, foco e teclado, anúncios, grupos, ações customizadas e text scale seguem abertos. Só o checkpoint da primeira fatia fecha; nenhum item, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/README.md"
     },
     {
       "id": "text-layout-first-slice-20261007",
@@ -3563,6 +3572,16 @@
       ],
       "message": "Primeira fatia do GF-11 (Text and fonts): onTextLayout e o baseline do Yoga passam a vir das linhas do parágrafo que o host mede e pinta, por um TextLayoutManager de plataforma do Godot com measureLines. 76 checks headless confrontados com as tabelas dos TTFs empacotados por um oráculo independente (tolerância ±1 px; o desvio medido é de no máximo 0,576 px com o arredondamento do FreeType, e a escala crua erra até 1,484 px); o host anterior falha exatamente 5 checks e as três sabotagens retidas falham 4, 3 e 9, todas rejeitadas pelo oráculo; exemplo com 18 checks headless e 32 gráficos e duas capturas. A CI hospedada do passo novo está pendente. Só o checkpoint slice do GF-11 fecha; nenhum item completo, peso ou denominador muda.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/README.md"
+    },
+    {
+      "id": "modal-final-109e6fd-desktop-slice",
+      "at": "2026-10-08T01:25:22.138062+00:00",
+      "taskIds": [
+        "GF-18",
+        "GF-14"
+      ],
+      "message": "PR #51 mergeada em 7e2df46 após CI final 109e6fd com cinco jobs verdes e sete threads CodeRabbit resolvidas. A raiz auditou 193 Modal (11 macOS), 164 transforms, 672 capture, cold start e paridade restrita a 13 casos; a árvore mergeada é idêntica. Primeiro checkpoint GF-18 aceito: 24/156 e 0/39; outros três continuam abertos. GF-14 inicia com um Luna e investigação de comandos/offset reproduzida, sem aceite novo.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/51"
     },
     {
       "id": "modal-hosted-bee7b40-global-timeout",

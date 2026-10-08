@@ -3,7 +3,7 @@ import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useCo
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -280,9 +280,48 @@ const originalTouchableProps: import("../../node_modules/react-native/types_gene
 const publicTouchable = <TouchableOpacity {...touchableProps} ref={instance => { if (instance) instance.measure(() => {}); }}><View /></TouchableOpacity>;
 // @ts-expect-error the style is the Godot View subset
 const touchableShadow = <TouchableOpacity style={{shadowColor: "#000000"}} />;
-// @ts-expect-error accessibility props are not verified on this platform
-const touchableAccessibility = <TouchableOpacity accessibilityLabel="Save" />;
-void originalTouchableProps; void publicTouchable; void touchableShadow; void touchableAccessibility;
+void originalTouchableProps; void publicTouchable; void touchableShadow;
+
+// Accessibility: the props the host maps to the OS's assistive technology, on View and TouchableOpacity.
+const accessibleProps: AccessibilityProps = {accessible: true, accessibilityLabel: "Save", accessibilityHint: "Saves the draft",
+  accessibilityRole: "button", accessibilityState: {disabled: false, busy: false, checked: undefined, expanded: true},
+  accessibilityLiveRegion: "polite", accessibilityElementsHidden: false, importantForAccessibility: "no-hide-descendants",
+  onAccessibilityTap: () => {}, "aria-label": "Save", "aria-live": "off", "aria-hidden": false, "aria-disabled": true};
+const accessibleView = <View {...accessibleProps} role="tab" testID="accessible" />;
+const touchableAccessibilityProps: Omit<AccessibilityProps, "role" | "onAccessibilityTap"> = {...accessibleProps};
+const accessibleTouchable = <TouchableOpacity {...touchableAccessibilityProps} onPress={() => {}} disabled accessibilityRole="switch"
+  accessibilityState={{checked: true}} />;
+// @ts-expect-error RN's TouchableOpacity forwards accessibilityRole but not role or onAccessibilityTap to its View
+const touchableRole = <TouchableOpacity role="button" onAccessibilityTap={() => {}} />;
+const ariaSwitch = <View role="switch" aria-checked aria-label="Dark mode" />;
+// The platform's props are RN's own types, so a screen-reader label from RN code type-checks unchanged.
+const upstreamAccessibility: Pick<import("../../node_modules/react-native/types_generated/index").ViewProps,
+  "accessible" | "accessibilityLabel" | "accessibilityHint" | "accessibilityLiveRegion" | "accessibilityElementsHidden"> = accessibleProps;
+// @ts-expect-error an unknown role is rejected before it reaches the host
+const unknownRole = <View accessibilityRole="banana" />;
+// @ts-expect-error webview has no Godot accessibility role, so only the host's explicit error could say so
+const rejectedRole = <View accessibilityRole="webview" />;
+// @ts-expect-error a table role needs row and column counts, which are not supported
+const rejectedAriaRole = <View role="table" />;
+// @ts-expect-error heading is a role spelling, not an accessibilityRole
+const wrongVocabulary = <View accessibilityRole="heading" />;
+// @ts-expect-error Godot's accessibility has no mixed state
+const mixedState = <View accessibilityRole="checkbox" accessibilityState={{checked: "mixed"}} />;
+// @ts-expect-error custom accessibility actions are not supported yet
+const customActions = <View accessibilityActions={[{name: "activate"}]} />;
+// @ts-expect-error Godot hides an element only together with its descendants
+const hideOnly = <View importantForAccessibility="no" />;
+// @ts-expect-error a label is text
+const numericLabel = <TouchableOpacity accessibilityLabel={5} />;
+// @ts-expect-error the value of the accessibility state is a boolean
+const stateNotBoolean = <View accessibilityState={{disabled: "yes"}} />;
+// @ts-expect-error a live region is none, polite or assertive
+const assertiveOff = <View accessibilityLiveRegion="off" />;
+// @ts-expect-error accessibilityValue is not supported yet
+const valueProp = <View accessibilityValue={{now: 5}} />;
+void accessibleView; void accessibleTouchable; void touchableRole; void ariaSwitch; void upstreamAccessibility; void unknownRole; void rejectedRole;
+void rejectedAriaRole; void wrongVocabulary; void mixedState; void customActions; void hideOnly; void numericLabel;
+void stateNotBoolean; void assertiveOff; void valueProp;
 
 // Text: onTextLayout is RN's original event, with one entry per visible line.
 const layoutHandler = (event: TextLayoutEvent) => {

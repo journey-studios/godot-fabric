@@ -5,6 +5,7 @@
 #include "paragraph_view.h"
 #include "switch_view.h"
 #include "activity_indicator_view.h"
+#include "accessible_view.h"
 #include "appearance_adapter.h"
 #include "native_animated.h"
 #include "modal_window_stack.h"
@@ -21,6 +22,7 @@ void initialize_fabric(godot::ModuleInitializationLevel level) {
     godot::ClassDB::register_class<GodotParagraph>();
     godot::ClassDB::register_class<GodotSwitch>();
     godot::ClassDB::register_class<GodotActivityIndicator>();
+    godot::ClassDB::register_class<GodotAccessibleView>();
     godot::ClassDB::register_class<GodotFabricBinding>();
     godot::ClassDB::register_class<fabric_godot::ModalWindowStack>();
     godot::ClassDB::register_class<FabricApplication>();
