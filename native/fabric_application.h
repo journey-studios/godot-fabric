@@ -5,7 +5,7 @@
 #include <vector>
 
 class FabricSurface;
-namespace fabric_godot { class ApplicationRuntime; class AdapterLoader; class AppLifecycle; class SystemAppearance; class DeviceServices; }
+namespace fabric_godot { class ApplicationRuntime; class AdapterLoader; class AppLifecycle; class SystemAppearance; class DeviceServices; class AccessibilityInfo; }
 
 // Experimental explicit owner. Final resource/editor authoring is still GF-28.
 class FabricApplication : public godot::Node {
@@ -63,6 +63,8 @@ class FabricApplication : public godot::Node {
   std::shared_ptr<fabric_godot::SystemAppearance> appearance;
   // One set of device services (Linking, Clipboard, Vibration) per application, shared by every root.
   std::shared_ptr<fabric_godot::DeviceServices> device_services;
+  // One AccessibilityInfo (the settings and events of the AccessibilityManager module) per application, shared by every root.
+  std::shared_ptr<fabric_godot::AccessibilityInfo> accessibility_info;
   bool bundle_loaded = false;
   bool terminal_stopped = false;
   std::vector<std::string> pre_runtime_errors;

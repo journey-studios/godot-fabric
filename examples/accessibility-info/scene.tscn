@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://examples/accessibility-info/validation.gd" id="1"]
+
+[node name="AccessibilityInfoExample" type="Node"]
+script = ExtResource("1")
+
+[node name="Application" type="FabricApplication" parent="."]
+metadata/scenario = "accessibility-info"
+
+[node name="Surface" type="FabricSurface" parent="."]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 620.0
+offset_bottom = 656.0
+application_path = NodePath("../Application")
+component_name = "AccessibilityInfoExample"
+initial_props = {}
+
+[node name="ScreenReaderButton" type="Button" parent="."]
+offset_left = 644.0
+offset_top = 24.0
+offset_right = 876.0
+offset_bottom = 72.0
+text = "Screen reader"
+
+[node name="MotionButton" type="Button" parent="."]
+offset_left = 644.0
+offset_top = 84.0
+offset_right = 876.0
+offset_bottom = 132.0
+text = "Reduce motion"
+
+[node name="TransparencyButton" type="Button" parent="."]
+offset_left = 644.0
+offset_top = 144.0
+offset_right = 876.0
+offset_bottom = 192.0
+text = "Reduce transparency"
+
+[node name="ContrastButton" type="Button" parent="."]
+offset_left = 644.0
+offset_top = 204.0
+offset_right = 876.0
+offset_bottom = 252.0
+text = "Increase contrast"
+
+[node name="StandIn" type="Label" parent="."]
+offset_left = 644.0
+offset_top = 268.0
+offset_right = 876.0
+offset_bottom = 420.0
+autowrap_mode = 3

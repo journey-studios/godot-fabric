@@ -184,6 +184,8 @@ add_executable(websocket_core_test websocket_core_test.cpp)
 add_executable(websocket_handshake_test websocket_handshake_test.cpp)
 # The pure device-services core (URL rules, launch arguments, backend seam) needs neither Godot nor RN.
 add_executable(device_services_core_test device_services_core_test.cpp)
+# The pure AccessibilityInfo core (readings, change rules, names and error codes) needs neither Godot nor RN.
+add_executable(accessibility_info_core_test accessibility_info_core_test.cpp)
 target_include_directories(timer_registry_test PRIVATE "${RN}")
 
 # Pin the same upstream wslay implementation used by Godot, without building or
@@ -208,6 +210,8 @@ else()
 endif()
 add_library(fabric_godot ${FABRIC_GODOT_LIBRARY_TYPE} fabric_application.cpp application_runtime.cpp fabric_surface.cpp text_layout.cpp paragraph_layout.cpp paragraph_view.cpp switch_view.cpp activity_indicator_view.cpp accessible_view.cpp image_view.cpp image_loader.cpp godot_image_manager.cpp image_loader_module.cpp input_adapter.cpp pointer_adapter.cpp pointer_geometry.cpp physical_embedding.cpp svg_node.cpp scroll_adapter.cpp appearance_adapter.cpp transform_adapter.cpp native_animated.cpp turbo_module_registry.cpp networking_modules.cpp websocket_module.cpp device_services.cpp godot_device_backend.cpp godot_http_transport.cpp godot_websocket_transport.cpp godot_websocket_connection.cpp game_service_registry.cpp godot_dom.cpp adapter_registry.cpp adapter_loader.cpp modal_window_stack.cpp modal_presentation.cpp register.cpp)
 target_include_directories(fabric_godot PRIVATE "${WSLAY}/lib/includes" "${CMAKE_CURRENT_BINARY_DIR}/wslay/includes")
+# AccessibilityInfo: the AccessibilityManager module over the DisplayServer's accessibility settings.
+target_sources(fabric_godot PRIVATE accessibility_info.cpp)
 
 # Explicit test-only extension for synchronous listener reentrancy. Its class is
 # registered only in this library; the shipped Fabric extension has no probe API.
@@ -236,7 +240,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
   add_executable(fabric_ios_link_smoke smoke.cpp)
   target_link_libraries(fabric_ios_link_smoke PRIVATE fabric_godot fabric_core)
   target_link_options(fabric_ios_link_smoke PRIVATE "-Wl,-u,_fabric_library_init")
-  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test affine_transform_test http_core_test image_core_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
+  set_target_properties(fabric_smoke fabric_ios_link_smoke timer_registry_test frame_clock_test scroll_motion_test affine_transform_test http_core_test image_core_test accessibility_core_test websocket_core_test websocket_handshake_test device_services_core_test accessibility_info_core_test pointer_processor_test pointer_processor_original_negative_test pointer_geometry_test pointer_geometry_original_test pointer_projection_test
     PROPERTIES MACOSX_BUNDLE FALSE)
 else()
   set_target_properties(fabric_godot PROPERTIES
