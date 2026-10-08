@@ -61,6 +61,7 @@
     "tests/device-services-fixture.jsx",
     "tests/websocket-fixture.jsx",
     "tests/images-fixture.jsx",
+    "tests/images-network-fixture.jsx",
     "tests/modal-host-fixture.jsx"
   ],
   "ignorePatterns": [

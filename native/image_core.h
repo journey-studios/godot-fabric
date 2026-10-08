@@ -39,7 +39,7 @@ struct Source {
   std::string media_type;
   std::string payload;
   bool base64{};
-  // Why a Network or Unsupported source cannot be loaded.
+  // Why an Unsupported source cannot be loaded.
   std::string reason;
 };
 
@@ -69,7 +69,8 @@ inline bool starts_with_ci(std::string_view text, std::string_view prefix) {
 
 // RCTImageManager hands the loader an NSURL; this host's schemes are the ones the Godot file system serves:
 // res:// (the exported project, which is where RN's bundled assets live, as the iOS app bundle is), user://
-// and absolute file:// paths (the iOS file request handler's), and data: URIs (its data request handler's).
+// and absolute file:// paths (the iOS file request handler's), data: URIs (its data request handler's) and http(s):// ones,
+// which the network downloads (the iOS HTTP request handler's).
 inline Source classify(std::string_view uri) {
   Source source;
   if (uri.empty()) {
@@ -120,12 +121,11 @@ inline Source classify(std::string_view uri) {
     return source;
   }
   if (starts_with_ci(uri, "http://") || starts_with_ci(uri, "https://")) {
+    // Downloaded by the loader's network (image_network.h) before the bytes come here.
     source.kind = SourceKind::Network;
-    source.reason = "Network images are not supported by this host yet: the image cache and the HTTP transport arrive in a later slice (" +
-        std::string(uri) + ")";
     return source;
   }
-  source.reason = "Unsupported image URI \"" + std::string(uri) + "\": this host loads res://, user://, file:// and data: sources";
+  source.reason = "Unsupported image URI \"" + std::string(uri) + "\": this host loads res://, user://, file://, data:, http:// and https:// sources";
   return source;
 }
 

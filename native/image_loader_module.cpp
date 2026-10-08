@@ -5,8 +5,12 @@
 #include <jsi/jsi.h>
 #include <react/bridging/Bridging.h>
 #include <react/bridging/Promise.h>
+#include <cmath>
+#include <cstdio>
 #include <map>
+#include <optional>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace rn = facebook::react;
@@ -19,7 +23,18 @@ struct State {
   std::shared_ptr<ImageLoader> loader;
 };
 
-constexpr const char *no_cache = "this host has no image cache yet: the decoded-image cache and network loading arrive in a later slice";
+// RCTConvert NSString of one value of getSizeWithHeaders' dictionary: a string as it is, a number or a boolean as its text.
+std::optional<std::string> header_text(jsi::Runtime &rt, const jsi::Value &value) {
+  if (value.isString()) return value.getString(rt).utf8(rt);
+  if (value.isNumber()) {
+    const double number = value.getNumber();
+    char text[64];
+    std::snprintf(text, sizeof text, number == std::floor(number) && std::fabs(number) < 1e15 ? "%.0f" : "%g", number);
+    return std::string(text);
+  }
+  if (value.isBool()) return std::string(value.getBool() ? "1" : "0");
+  return std::nullopt;
+}
 
 class NativeImageLoader final : public rn::NativeImageLoaderIOSCxxSpec<NativeImageLoader> {
  public:
@@ -36,7 +51,7 @@ class NativeImageLoader final : public rn::NativeImageLoaderIOSCxxSpec<NativeIma
     live(rt);
     const auto text = uri.utf8(rt);
     rn::AsyncPromise<std::vector<double>> promise(rt, jsInvoker_);
-    state_->loader->measure(text, [promise, text, state = state_](MeasuredImage size) mutable {
+    state_->loader->measure(text, {}, [promise, text, state = state_](MeasuredImage size) mutable {
       if (!state->active) return;
       if (size.ok) promise.resolve({static_cast<double>(size.width), static_cast<double>(size.height)});
       else promise.reject("E_GET_SIZE_FAILURE: Failed to getSize of " + text + ": " + size.error);
@@ -44,13 +59,19 @@ class NativeImageLoader final : public rn::NativeImageLoaderIOSCxxSpec<NativeIma
     return jsi::Value(rt, promise.get(rt));
   }
 
-  // The same, with the {width, height} object RCTImageLoader getSizeWithHeaders answers. Headers only matter to a network
-  // request, which this host does not make yet.
-  jsi::Value getSizeWithHeaders(jsi::Runtime &rt, jsi::String uri, jsi::Object) {
+  // The same, with the {width, height} object RCTImageLoader getSizeWithHeaders answers. The headers go with the request of an
+  // http(s) source, each added in turn.
+  jsi::Value getSizeWithHeaders(jsi::Runtime &rt, jsi::String uri, jsi::Object headers) {
     live(rt);
     const auto text = uri.utf8(rt);
+    std::vector<std::pair<std::string, std::string>> request_headers;
+    const auto names = headers.getPropertyNames(rt);
+    for (size_t index = 0, count = names.size(rt); index < count; ++index) {
+      const auto name = names.getValueAtIndex(rt, index).getString(rt);
+      if (const auto value = header_text(rt, headers.getProperty(rt, name))) request_headers.emplace_back(name.utf8(rt), *value);
+    }
     rn::AsyncPromise<std::map<std::string, double>> promise(rt, jsInvoker_);
-    state_->loader->measure(text, [promise, state = state_](MeasuredImage size) mutable {
+    state_->loader->measure(text, std::move(request_headers), [promise, state = state_](MeasuredImage size) mutable {
       if (!state->active) return;
       if (size.ok) promise.resolve({{"width", static_cast<double>(size.width)}, {"height", static_cast<double>(size.height)}});
       else promise.reject("E_GET_SIZE_FAILURE: " + size.error);
@@ -58,14 +79,23 @@ class NativeImageLoader final : public rn::NativeImageLoaderIOSCxxSpec<NativeIma
     return jsi::Value(rt, promise.get(rt));
   }
 
-  jsi::Value prefetchImage(jsi::Runtime &rt, jsi::String) { return refuse_prefetch(rt); }
-  jsi::Value prefetchImageWithMetadata(jsi::Runtime &rt, jsi::String, jsi::String, double) { return refuse_prefetch(rt); }
+  // RCTImageLoader prefetchImage: loads the picture as an Image of no size would, so that the cache has it, and resolves true;
+  // a failure rejects with E_PREFETCH_FAILURE and the error's text. The metadata only attributes the request.
+  jsi::Value prefetchImage(jsi::Runtime &rt, jsi::String uri) { return prefetch(rt, uri.utf8(rt)); }
+  jsi::Value prefetchImageWithMetadata(jsi::Runtime &rt, jsi::String uri, jsi::String, double) { return prefetch(rt, uri.utf8(rt)); }
 
-  // Nothing is cached, which is true.
-  jsi::Value queryCache(jsi::Runtime &rt, jsi::Array) {
+  // RCTImageLoader getImageCacheStatus: the URLs the byte cache holds a response for, as "memory" (the cache has no disk).
+  jsi::Value queryCache(jsi::Runtime &rt, jsi::Array uris) {
     live(rt);
+    std::map<std::string, std::string> status;
+    for (size_t index = 0, count = uris.size(rt); index < count; ++index) {
+      const auto value = uris.getValueAtIndex(rt, index);
+      if (!value.isString()) continue;
+      const auto uri = value.getString(rt).utf8(rt);
+      if (auto where = state_->loader->cache_status(uri); !where.empty()) status[uri] = std::move(where);
+    }
     rn::AsyncPromise<std::map<std::string, std::string>> promise(rt, jsInvoker_);
-    promise.resolve({});
+    promise.resolve(std::move(status));
     return jsi::Value(rt, promise.get(rt));
   }
 
@@ -74,10 +104,14 @@ class NativeImageLoader final : public rn::NativeImageLoaderIOSCxxSpec<NativeIma
   void live(jsi::Runtime &rt) const {
     if (!state_->active) throw jsi::JSError(rt, "E_MODULE_DISPOSED: ImageLoader");
   }
-  jsi::Value refuse_prefetch(jsi::Runtime &rt) {
+  jsi::Value prefetch(jsi::Runtime &rt, const std::string &uri) {
     live(rt);
     rn::AsyncPromise<bool> promise(rt, jsInvoker_);
-    promise.reject(std::string("E_PREFETCH_FAILURE: ") + no_cache);
+    state_->loader->prefetch(uri, [promise, state = state_](MeasuredImage result) mutable {
+      if (!state->active) return;
+      if (result.ok) promise.resolve(true);
+      else promise.reject("E_PREFETCH_FAILURE: " + result.error);
+    });
     return jsi::Value(rt, promise.get(rt));
   }
 };
@@ -89,6 +123,7 @@ class ImageLoaderFixture final : public rn::TurboModule {
     methodMap_["hold"] = {1, hold};
     methodMap_["limit"] = {1, limit};
     methodMap_["budget"] = {1, budget};
+    methodMap_["responseLimit"] = {1, response_limit};
   }
 
  private:
@@ -105,6 +140,13 @@ class ImageLoaderFixture final : public rn::TurboModule {
     if (!fixture.state_->active) throw jsi::JSError(rt, "E_MODULE_DISPOSED: GodotImageFixture");
     if (count != 1 || !args[0].isNumber() || !(args[0].getNumber() >= 0)) throw jsi::JSError(rt, "E_ARGUMENT: budget requires a number of bytes");
     fixture.state_->loader->budget(static_cast<std::size_t>(args[0].getNumber()));
+    return jsi::Value::undefined();
+  }
+  static jsi::Value response_limit(jsi::Runtime &rt, rn::TurboModule &module, const jsi::Value *args, size_t count) {
+    auto &fixture = static_cast<ImageLoaderFixture &>(module);
+    if (!fixture.state_->active) throw jsi::JSError(rt, "E_MODULE_DISPOSED: GodotImageFixture");
+    if (count != 1 || !args[0].isNumber() || !(args[0].getNumber() >= 0)) throw jsi::JSError(rt, "E_ARGUMENT: responseLimit requires a number of bytes");
+    fixture.state_->loader->response_limit(static_cast<uint64_t>(args[0].getNumber()));
     return jsi::Value::undefined();
   }
   static jsi::Value limit(jsi::Runtime &rt, rn::TurboModule &module, const jsi::Value *args, size_t count) {

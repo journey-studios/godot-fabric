@@ -29,7 +29,9 @@ void sources_are_classified_by_scheme() {
   require(classify("file:///C:/dir/x.png").path == "C:/dir/x.png", "A drive path loses the root slash");
   require(classify("file://host/tmp/x.png").kind == SourceKind::Unsupported, "Another host is not a local path");
   const auto network = classify("https://example.com/a.png");
-  require(network.kind == SourceKind::Network && network.reason.find("later slice") != std::string::npos, "http(s) names the later slice");
+  require(network.kind == SourceKind::Network && network.reason.empty(), "https is a network source");
+  require(classify("HTTP://example.com/a.png").kind == SourceKind::Network, "and so is http, in any case");
+  require(classify("ftp://example.com/a.png").reason.find("http:// and https://") != std::string::npos, "Another scheme is refused, naming the ones that load");
   require(classify("").kind == SourceKind::Unsupported, "An empty URI is refused");
   require(classify("logo.png").kind == SourceKind::Unsupported, "A bare path is refused");
   const auto base64 = classify("data:image/png;base64,QUJD");

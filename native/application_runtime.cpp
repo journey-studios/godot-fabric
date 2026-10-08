@@ -21,6 +21,7 @@
 #include "paragraph_view.h"
 #include "switch_view.h"
 #include "activity_indicator_view.h"
+#include "app_lifecycle.h"
 #include "image_view.h"
 #include "image_loader.h"
 #include "image_loader_module.h"
@@ -592,10 +593,18 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add_appearance(appearance);
     // The deadlines of timed requests run on the monotonic clock plus the validation seam's offset, which is 0 outside validation.
     // The close handshake of a socket has a deadline too, so the sockets run on the same clock, and wss trusts the same authorities.
-    const auto clock = [offset = std::move(clock_offset_ms)] { return now_ms() + (offset ? offset() : 0); };
+    const auto clock = [offset = clock_offset_ms] { return now_ms() + (offset ? offset() : 0); };
     networking = std::make_unique<fabric_godot::Networking>(fabric_godot::make_godot_http_transport(trusted_authorities, clock),
         fabric_godot::make_godot_websocket_transport(trusted_authorities, clock));
     networking->install(*native_modules);
+    // The image loader downloads over a transport of its own, with the same trust and the same clock; the stale times of cached
+    // responses are in wall time, which the validation offset moves as well.
+    images->enable_network(fabric_godot::make_godot_http_transport(trusted_authorities, clock), clock, [offset = std::move(clock_offset_ms)] {
+      return std::chrono::duration<double, std::milli>(std::chrono::system_clock::now().time_since_epoch()).count() + (offset ? offset() : 0);
+    });
+    lifecycle->on_memory_warning([loader = std::weak_ptr<fabric_godot::ImageLoader>(images)] {
+      if (const auto strong = loader.lock()) strong->clear_caches();
+    });
     fabric_godot::install_image_loader_module(*native_modules, images);
     if (scenario == "images-fixture") fabric_godot::install_image_loader_fixture(*native_modules, images);
     if (device_services) device_services->install(*native_modules);

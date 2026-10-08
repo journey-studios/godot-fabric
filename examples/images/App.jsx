@@ -4,7 +4,9 @@ import { AppRegistry, Image, ImageBackground, PixelRatio, Pressable, StyleSheet,
 // RN's original Image.ios.js, ImageBackground and asset registry through the public react-native import. Pictures are read and
 // decoded on worker threads: the six resize modes of one bundled landscape, a logo with @1x, @2x and @3x files (RN's pickScale
 // chooses by the pixel ratio), a PNG and an SVG as data: URIs, an ImageBackground under its children and a picture that does
-// not exist, which fails through onError.
+// not exist, which fails through onError. A row of network pictures comes from a small server the scene starts on loopback (its
+// address is the root's baseUrl): a PNG downloaded over HTTP, the same address and size mounted again on a click, which the host
+// answers from memory without a second request, and an address the server answers 404 for, whose status reaches onError.
 const logo = require("./assets/logo.png");
 const landscape = require("./assets/landscape.png");
 const sprite = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAArUlEQVR42u2XvRGAIAxGrdzA1t4ZHMwlXcBVbLRFj/z6ATkP7tIJ7xE1hGHowziObby4aAYuJpIueu6TKmAiVjAl0gT+SQIFd0mg4WaJEvBUwrX7eVkfQQGk58QsULtHCbBZ4N49WiArEVqgyt/QBbpATkD66qXIzWeLESXgkaDmipUQIcHBVeeBdkELXHUYabLgrYSQnuANoKJoV1QFHqIpDdGWh7iYhLma/XbcImEsh21OnggAAAAASUVORK5CYII=";
@@ -13,23 +15,37 @@ const badge = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
   '<stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#db2777"/></linearGradient></defs>' +
   '<circle cx="32" cy="32" r="30" fill="url(#g)"/><path d="M20 34l8 8 16-18" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>');
 const modes = ["cover", "contain", "stretch", "center", "repeat", "none"];
-const observations = { events: {}, mode: "cover", picture: "landscape", renders: 0 };
+const observations = { events: {}, errors: {}, progress: {}, mode: "cover", picture: "landscape", renders: 0 };
 globalThis.ImagesExample = {
-  state: () => ({ ...observations, events: { ...observations.events }, pixelRatio: PixelRatio.get(), logo: Image.resolveAssetSource(logo) }),
+  state: () => ({ ...observations, events: { ...observations.events }, errors: { ...observations.errors }, progress: { ...observations.progress },
+    pixelRatio: PixelRatio.get(), logo: Image.resolveAssetSource(logo) }),
 };
 
 // What the Image told JS, shown under it and counted for the validation: the same events RN's onLoadStart, onLoad and onError give.
-function useLoading(id) {
+function useLoading(id, { network = false } = {}) {
   const [status, setStatus] = useState("loading");
   const count = (name) => { observations.events[id] = [...(observations.events[id] ?? []), name]; };
   return [status, {
     onLoadStart: () => { count("loadStart"); setStatus("loading"); },
+    // Only a download reports progress as it goes; a file or a data: URI reports it once, and the tiles above do not listen.
+    ...(network ? { onProgress: (event) => {
+      count("progress");
+      const { loaded, total } = event.nativeEvent;
+      observations.progress[id] = { loaded, total };
+      setStatus(total > 0 ? `${loaded} of ${total} bytes` : `${loaded} bytes`);
+    } } : {}),
     onLoad: (event) => {
       count("load");
       const { width, height } = event.nativeEvent.source;
       setStatus(`loaded ${width}x${height} px`);
     },
-    onError: (event) => { count("error"); setStatus(event.nativeEvent.error); },
+    // A failed download carries the HTTP status of its response, which the tile shows.
+    onError: (event) => {
+      count("error");
+      observations.errors[id] = event.nativeEvent;
+      const { error, responseCode } = event.nativeEvent;
+      setStatus(responseCode ? `HTTP ${responseCode}` : error);
+    },
     onLoadEnd: () => count("loadEnd"),
   }];
 }
@@ -54,8 +70,9 @@ function ModeTile({ mode }) {
   );
 }
 
-function ImagesExample() {
+function ImagesExample({ baseUrl }) {
   const [mode, setMode] = useState("cover");
+  const [again, setAgain] = useState(false);
   const [picture, setPicture] = useState("landscape");
   const [logoStatus, logoHandlers] = useLoading("logo");
   const [spriteStatus, spriteHandlers] = useLoading("data-png");
@@ -63,6 +80,10 @@ function ImagesExample() {
   const [backgroundStatus, backgroundHandlers] = useLoading("background");
   const [missingStatus, missingHandlers] = useLoading("missing");
   const [previewStatus, previewHandlers] = useLoading("preview");
+  const [photoStatus, photoHandlers] = useLoading("net-photo", { network: true });
+  const [againStatus, againHandlers] = useLoading("net-again", { network: true });
+  const [netMissingStatus, netMissingHandlers] = useLoading("net-missing", { network: true });
+  const sunrise = { uri: `${baseUrl}/pictures/sunrise.png` };
   observations.renders += 1;
   observations.mode = mode;
   observations.picture = picture;
@@ -93,6 +114,21 @@ function ImagesExample() {
           </Tile>
           <Tile id="missing" title="Missing file" caption="onError, then onLoadEnd" status={missingStatus}>
             <Image testID="images-missing" source={{ uri: "res://examples/images/assets/missing.png", width: 84, height: 84 }} style={styles.missing} {...missingHandlers} />
+          </Tile>
+        </View>
+        <View style={styles.grid}>
+          <Tile id="net-photo" title="Network PNG" caption="over HTTP" status={photoStatus}>
+            <Image testID="images-net-photo" source={sunrise} style={styles.netImage} {...photoHandlers} />
+          </Tile>
+          <Tile id="net-again" title="Remount" caption="served from memory" status={again ? againStatus : "not mounted"}>
+            {again
+              ? <Image testID="images-net-again" source={sunrise} style={styles.netImage} {...againHandlers} />
+              : <Pressable testID="images-net-mount" onPress={() => setAgain(true)} style={({ pressed }) => [styles.button, { opacity: pressed ? 0.72 : 1 }]}>
+                  <Text style={styles.buttonText}>Mount again</Text>
+                </Pressable>}
+          </Tile>
+          <Tile id="net-missing" title="HTTP error" caption="404 reaches onError" status={netMissingStatus}>
+            <Image testID="images-net-missing" source={{ uri: `${baseUrl}/pictures/missing.png` }} style={styles.netMissing} {...netMissingHandlers} />
           </Tile>
         </View>
         <View style={styles.footer}>
@@ -138,6 +174,8 @@ const styles = StyleSheet.create({
   background: { width: 96, height: 60, justifyContent: "flex-end", alignItems: "flex-start", backgroundColor: "#1e293b" },
   overlay: { margin: 4, paddingHorizontal: 6, color: "#ffffff", fontFamily: "NotoSans", fontSize: 12, lineHeight: 16, backgroundColor: "#00000099" },
   missing: { width: 84, height: 84, backgroundColor: "#450a0a", borderWidth: 1, borderColor: "#ef4444" },
+  netImage: { width: 96, height: 64, backgroundColor: "#1e293b" },
+  netMissing: { width: 96, height: 64, backgroundColor: "#450a0a", borderWidth: 1, borderColor: "#ef4444" },
   footer: { flexDirection: "row", alignItems: "center", gap: 14 },
   previewStage: { padding: 6, backgroundColor: "#111c33", borderRadius: 10 },
   preview: { width: 150, height: 90, backgroundColor: "#1e293b" },
