@@ -12,7 +12,7 @@ import OriginalTouchableNativeFeedback from "react-native/Libraries/Components/T
 import OriginalSwitch from "react-native/Libraries/Components/Switch/Switch";
 import OriginalActivityIndicator from "react-native/Libraries/Components/ActivityIndicator/ActivityIndicator";
 import OriginalModal from "react-native/Libraries/Modal/Modal";
-import OriginalSafeAreaView from "react-native/Libraries/Components/SafeAreaView/SafeAreaView";
+import RCTSafeAreaViewNativeComponent from "react-native/Libraries/Components/SafeAreaView/RCTSafeAreaViewNativeComponent";
 import {
   Pressable as GodotPressable,
   Button as GodotButton,
@@ -84,7 +84,14 @@ export function Modal(props) {
 }
 Modal.displayName = OriginalModal.displayName;
 Modal.Context = OriginalModal.Context;
-export const SafeAreaView = OriginalSafeAreaView;
+// RN's SafeAreaView picks its native component by Platform.OS: RCTSafeAreaViewNativeComponent on "ios" and a plain View on
+// any other OS, which would make it one here ("godot"). The host mounts the component iOS selects (RN's own descriptor,
+// native/display_insets.h): its State carries the padding that the window's unsafe bands leave of the view, and Yoga applies it.
+// Its props are ViewProps, so it runs the checks of the View (renderHostView). Like RN's iOS SafeAreaView it does not go
+// through View.js, so the aria-* and id/tabIndex mappings of that file do not apply: the view config drops those names, as it does on iOS.
+export function SafeAreaView(props) {
+  return renderHostView(RCTSafeAreaViewNativeComponent, props);
+}
 export {
   FlatList,
   SectionList,
@@ -176,11 +183,9 @@ function nativeStyle(style, kind) {
   }
   return flat;
 }
-export function View({
-  style,
-  collapsable,
-  ...props
-}) {
+// What the host takes of a View: the declared props, the explicit roles and the style names it implements. RN's View.js and RN's
+// SafeAreaView differ only in the native component, so both run this.
+function renderHostView(Component, { style, collapsable, ...props }) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");
   checkProps("View", props);
@@ -189,7 +194,10 @@ export function View({
   // props reach RN's View, whose view config (src/accessibility-view-config.js)
   // lets through the ones the host maps and rejects the values it cannot honor.
   const { userSelect, ...layout } = flat;
-  return <OriginalView {...withExplicitRoles(props)} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
+  return <Component {...withExplicitRoles(props)} collapsable={collapsable} style={nativeStyle(layout, "View")} />;
+}
+export function View(props) {
+  return renderHostView(OriginalView, props);
 }
 export function Text({ style, ...props }) {
   const flat = nativeStyle(style, "Text");

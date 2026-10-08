@@ -48,6 +48,8 @@ jobs:
         run: .deps/build/affine_transform_test
       - name: Account durations, percentiles and the phases of a pump
         run: .deps/build/performance_metrics_test
+      - name: Compute the unsafe bands, UIKit's per-view insets, pixel rounding and the update threshold of SafeAreaView
+        run: .deps/build/display_insets_core_test
       - run: npm run test:codegen:native -- --node "$(command -v node)"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
@@ -649,6 +651,20 @@ jobs:
             build/layout-animation-comparison.json
             build/layout-animation-current.log
             build/layout-animation-probe-bundle.json
+          if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
+      # The density policy and RN's SafeAreaView on the headless host. The iOS simulator run of the same slice is recorded locally:
+      # this CI does not run Godot on iOS.
+      - run: npm run test:mobile-density
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: native-mobile-density
+          path: |
+            build/mobile-density-report.json
+            build/mobile-density-current-report.json
+            build/mobile-density-comparison.json
+            build/mobile-density-current.log
+            build/mobile-density-probe-bundle.json
           if-no-files-found: ${{ job.status == 'success' && 'error' || 'warn' }}
       - run: npm run test:responders:shared-touches
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

@@ -70,6 +70,7 @@
     "tests/frontier-services-fixture.jsx",
     "tests/accessibility-info-fixture.jsx",
     "tests/layout-animation-fixture.jsx",
+    "tests/mobile-density-fixture.jsx",
     "tests/os-contracts-fixture.jsx",
     "tests/websocket-fixture.jsx",
     "tests/images-fixture.jsx",

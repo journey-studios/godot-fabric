@@ -36,11 +36,13 @@
 #include "layout_animation.h"
 #include "native_animated.h"
 #include "device_services.h"
+#include "display_insets.h"
 #include "accessibility_info.h"
 #include "networking_modules.h"
 #include "godot_http_transport.h"
 #include "godot_websocket_transport.h"
 #include <react/runtime/TimerManager.h>
+#include <react/renderer/components/safeareaview/SafeAreaViewComponentDescriptor.h>
 #include <react/renderer/components/view/ViewComponentDescriptor.h>
 #include <react/renderer/components/view/primitives.h>
 #include <react/renderer/components/text/ParagraphComponentDescriptor.h>
@@ -96,6 +98,8 @@ using fabric_godot::ControlEventEmitter;
 
 static std::string component_kind(const rn::ShadowView &shadow) {
   if (shadow.componentName == std::string("View")) return "view";
+  // RN's SafeAreaView is a View whose State carries the padding: the host's View control mounts it.
+  if (shadow.componentName == std::string(rn::SafeAreaViewComponentName)) return "view";
   if (shadow.componentName == std::string(rn::ModalHostViewComponentName)) return "modal";
   if (shadow.componentName == std::string("ScrollView")) return "scroll";
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
@@ -303,6 +307,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     fabric_godot::PlanarTransform transform{};
   };
   std::map<int, Mounted> views;
+  // RN's SafeAreaViews (display_insets.h): the tags of the ones created, and what the host did with their State.
+  std::set<int> safe_area_tags;
+  std::shared_ptr<fabric_godot::SafeAreaCounters> safe_area_counters{std::make_shared<fabric_godot::SafeAreaCounters>()};
   struct PhysicalHost {
     Window *window{};
     Window *owner_window{};
@@ -414,6 +421,35 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::optional<PhysicalHost> physical_input_host(const fabric_godot::PointerInputSource &source) const {
     auto revision = ui ? ui->getShadowTreeRevisionProvider()->getCurrentRevision(source.surface) : nullptr;
     return physical_input_host(source, std::move(revision));
+  }
+
+  // The node is still the host's to answer for: its application runs, its surface neither stops nor has stopped, and the tag
+  // is not being retired.
+  bool live(rn::SurfaceId surface_id, rn::Tag tag) const {
+    auto root = roots.find(surface_id);
+    return !inactive() && root != roots.end() && !root->second->stopping && !root->second->stopped && !retiring.contains(tag);
+  }
+
+  // `rect`, which is relative to the physical root of `embedding`, in the window of that root: the rectangle measureInWindow
+  // reports. Nothing when the surface stops or the root has no host. Layout/offset sizes exclude transforms; window
+  // rectangles include the affine embedding (all four corners, including rotation).
+  std::optional<rn::dom::DOMRect> window_rect(const fabric_godot::PhysicalEmbedding &embedding, rn::dom::DOMRect rect,
+      bool transforms) const {
+    auto root = roots.find(embedding.target().getSurfaceId());
+    if (root == roots.end() || root->second->stopping || root->second->stopped) return std::nullopt;
+    auto physical = physical_host(embedding);
+    if (!physical) return std::nullopt;
+    const auto transform = physical->boundary_to_viewport;
+    if (!transforms) {
+      rect.x += transform.get_origin().x;
+      rect.y += transform.get_origin().y;
+      return rect;
+    }
+    const Vector2 corners[] = {Vector2(rect.x, rect.y), Vector2(rect.x + rect.width, rect.y),
+        Vector2(rect.x, rect.y + rect.height), Vector2(rect.x + rect.width, rect.y + rect.height)};
+    Rect2 bounds(transform.xform(corners[0]), Vector2());
+    for (int index = 1; index < 4; ++index) bounds.expand_to(transform.xform(corners[index]));
+    return rn::dom::DOMRect{bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y};
   }
 
   std::optional<fabric_godot::PointerInputSource> root_pointer_source(int surface_id) const {
@@ -585,6 +621,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     owner->owner = dispatcher;
     providers.add(rn::concreteComponentDescriptorProvider<fabric_godot::ControlDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::ViewComponentDescriptor>());
+    // RN's own SafeAreaView descriptor: it applies the State's padding to Yoga; update_safe_area_views fills the State.
+    providers.add(rn::concreteComponentDescriptorProvider<rn::SafeAreaViewComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::ScrollViewComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::ParagraphComponentDescriptor>());
     providers.add(rn::concreteComponentDescriptorProvider<rn::TextComponentDescriptor>());
@@ -648,30 +686,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
           [this](const fabric_godot::PhysicalEmbedding &embedding, rn::dom::DOMRect rect, bool transforms) {
-            const auto id = embedding.target().getSurfaceId();
-            auto root = roots.find(id);
-            if (root == roots.end() || root->second->stopping || root->second->stopped)
-              return rn::dom::DOMRect{};
-            auto physical = physical_host(embedding);
-            if (!physical) return rn::dom::DOMRect{};
-            const auto transform = physical->boundary_to_viewport;
-            // Layout/offset sizes exclude transforms. Window rectangles include
-            // the affine embedding (all four corners, including rotation).
-            if (!transforms) {
-              rect.x += transform.get_origin().x;
-              rect.y += transform.get_origin().y;
-              return rect;
-            }
-            const Vector2 corners[] = {Vector2(rect.x, rect.y), Vector2(rect.x + rect.width, rect.y),
-                Vector2(rect.x, rect.y + rect.height), Vector2(rect.x + rect.width, rect.y + rect.height)};
-            Rect2 bounds(transform.xform(corners[0]), Vector2());
-            for (int index = 1; index < 4; ++index) bounds.expand_to(transform.xform(corners[index]));
-            return rn::dom::DOMRect{bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y};
-          }, [this](const rn::ShadowNode &node) {
-            auto root = roots.find(node.getSurfaceId());
-            return !inactive() && root != roots.end() && !root->second->stopping &&
-                !root->second->stopped && !retiring.contains(node.getTag());
-          });
+            return window_rect(embedding, rect, transforms).value_or(rn::dom::DOMRect{});
+          }, [this](const rn::ShadowNode &node) { return live(node.getSurfaceId(), node.getTag()); });
     });
     if (adapters) adapters->install_modules(*native_modules);
     native_modules->install(*runtime);
@@ -877,6 +893,30 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     return folly::dynamic::object("window", metrics(current.size))
         ("screen", metrics(current.screen));
   }
+  // RN's iOS SafeAreaView asks its State for the padding UIKit computes for its view, after every update and whenever the
+  // view's safe area changes. Here that is every pump: each SafeAreaView is resolved to its State and its frame in the window
+  // (the one measureInWindow reports), and display_insets.h decides the padding and whether RN is asked to change the State.
+  void update_safe_area_views() {
+    if (inactive()) return;
+    const auto metrics = host_metrics->get();
+    std::map<int, rn::RootShadowNode::Shared> revisions;
+    for (auto tag = safe_area_tags.begin(); tag != safe_area_tags.end();) {
+      auto mounted = views.find(*tag);
+      if (mounted == views.end()) { tag = safe_area_tags.erase(tag); continue; }
+      const int current = *tag++;
+      const int surface = mounted->second.surface_id;
+      if (!live(surface, current)) continue;
+      auto &revision = revisions.try_emplace(surface).first->second;
+      if (!revision) revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(surface);
+      const auto *node = revision ? find_family(*revision, current) : nullptr;
+      std::optional<fabric_godot::display_insets::Frame> frame;
+      auto embedding = node ? fabric_godot::PhysicalEmbedding::capture(revision, *node) : std::nullopt;
+      if (embedding && embedding->has_layout(true))
+        if (auto rect = window_rect(*embedding, embedding->bounding_rect(true), true))
+          frame = fabric_godot::display_insets::Frame{rect->x, rect->y, rect->width, rect->height};
+      fabric_godot::follow_safe_area(node ? fabric_godot::safe_area_state(*node) : nullptr, frame, metrics, safe_area_counters);
+    }
+  }
   void update_viewport() {
     const auto next = read_window();
     const auto previous = host_metrics->get();
@@ -915,6 +955,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         }
       }
     }
+    // The OS moved a band of the window (a rotation, the home indicator) without changing its size: no Dimensions event, only
+    // the SafeAreaViews follow (update_safe_area_views).
+    else if (next.unsafe != previous.unsafe) host_metrics->set(next);
     for (auto &[id, root] : roots) {
       if (root->stopping) continue;
       auto *host = root->host();
@@ -1154,6 +1197,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             fail(metrics_error);
           }
         }
+      }
+      // After the window was read, before the beat: the State updates this asks for are delivered in this pump.
+      if (!stopping && !stop_requested) {
+        try { update_safe_area_views(); }
+        catch (const std::exception &error) { fail(error.what()); }
       }
       for (auto &[tag, mounted] : views) {
         if (roots.at(mounted.surface_id)->stopping) continue;
@@ -1518,7 +1566,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       apply_frame(mounted);
       return;
     }
-    if (shadow.componentName == std::string("View")) {
+    // The View, and RN's SafeAreaView which is a View; a GodotControl of kind "view" (the Pressable) takes the Control path below.
+    if (shadow.componentName == std::string("View") || shadow.componentName == std::string(rn::SafeAreaViewComponentName)) {
       fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
       apply_frame(mounted);
       return;
@@ -2381,6 +2430,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             control->set_mouse_filter(Control::MOUSE_FILTER_IGNORE);
           } else throw std::runtime_error("Unsupported GodotControl kind: " + kind);
           native_tags.emplace(control, next.tag);
+          if (next.componentName == std::string(rn::SafeAreaViewComponentName)) safe_area_tags.insert(next.tag);
           auto entry = views.emplace(next.tag, Mounted{control, {}, surface_id, false, {}, {}, std::move(external), mount_id}).first;
           entry->second.modal = std::move(modal);
           if (!entry->second.external) {
@@ -2705,6 +2755,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     result["stopRequested"] = stop_requested;
     result["pendingRootRetirements"] = pending_retirements.size();
     result["dimensions"] = device_dimensions();
+    result["displayInsets"] = fabric_godot::safe_area_snapshot(host_metrics->get().unsafe, *safe_area_counters, safe_area_tags.size());
     for (const auto &error : errors) result["errors"].push_back(error);
     return result;
   }
@@ -2752,6 +2803,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
           ("fabricX", mounted.shadow.layoutMetrics.frame.origin.x)
           ("fabricY", mounted.shadow.layoutMetrics.frame.origin.y)
           ("focused", control->has_focus())("visible", control->is_visible())("opacity", control->get_modulate().a);
+      node["component"] = mounted.shadow.componentName;
+      if (mounted.shadow.componentName == std::string(rn::SafeAreaViewComponentName) && mounted.shadow.state) {
+        // The padding the mounted State holds, which RN's descriptor applied to Yoga.
+        const auto state = std::static_pointer_cast<const fabric_godot::SafeAreaState>(mounted.shadow.state);
+        const auto padding = fabric_godot::padding_of(*state);
+        node["safeArea"] = folly::dynamic::object("left", padding.left)("top", padding.top)("right", padding.right)
+            ("bottom", padding.bottom);
+      }
       if (mounted.modal) {
         if (auto *window = mounted.modal->window())
           node["modalWindow"] = folly::dynamic::object
