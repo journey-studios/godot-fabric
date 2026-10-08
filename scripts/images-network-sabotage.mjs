@@ -33,8 +33,8 @@ const variants = [
     replace: "      active_.erase(id);\n      ++abandoned_;"},
   {name: "texture-mutation", argument: "--sabotage=texture-mutation", hostDirectory: "build/images-network-sabotage-texture-mutation-host",
     file: "native/image_view.cpp",
-    find: "    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f / scale, 1.0f / scale));\n    draw_texture_rect(",
-    replace: "    image_->texture->set_size_override(Vector2i(std::max(1, static_cast<int>(std::lround(natural.width))), std::max(1, static_cast<int>(std::lround(natural.height)))));\n    draw_set_transform(Vector2(), 0.0f, Vector2(1.0f / scale, 1.0f / scale));\n    draw_texture_rect("},
+    find: "  layer_.draw(get_canvas_item(), image_->texture->get_rid(), *painted);",
+    replace: "  if (painted->kind == img::PaintKind::Tile) image_->texture->set_size_override(Vector2i(std::max(1, static_cast<int>(std::lround(natural_size().width))), std::max(1, static_cast<int>(std::lround(natural_size().height)))));\n  layer_.draw(get_canvas_item(), image_->texture->get_rid(), *painted);"},
 ];
 const digest = content => createHash("sha256").update(content).digest("hex");
 const sha = async file => digest(await readFile(file));

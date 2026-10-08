@@ -6,6 +6,7 @@
 #include "switch_view.h"
 #include "activity_indicator_view.h"
 #include "image_view.h"
+#include "image_effects.h"
 #include "accessible_view.h"
 #include "appearance_adapter.h"
 #include "native_animated.h"
@@ -32,7 +33,11 @@ void initialize_fabric(godot::ModuleInitializationLevel level) {
   }
 }
 void terminate_fabric(godot::ModuleInitializationLevel level) {
-  if (level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) FabricApplication::release_system_theme_callback();
+  if (level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
+    FabricApplication::release_system_theme_callback();
+    // Every view is gone by now; the shader they shared is the extension's to free.
+    fabric_godot::PictureLayer::release_shader();
+  }
 }
 extern "C" GDExtensionBool GDE_EXPORT fabric_library_init(
     GDExtensionInterfaceGetProcAddress get_proc_address, GDExtensionClassLibraryPtr library,

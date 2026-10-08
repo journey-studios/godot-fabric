@@ -91,6 +91,7 @@
     "test:websocket": "node --test --test-concurrency=1 tests/websocket-native.test.mjs tests/websocket-transport-smoke.test.mjs tests/websocket-transport-lifetime.test.mjs tests/websocket-load.test.mjs",
     "test:images": "node --test tests/images-native.test.mjs",
     "test:images-network": "node --test tests/images-network-native.test.mjs",
+    "test:images-visual": "node --test tests/images-visual-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
   },

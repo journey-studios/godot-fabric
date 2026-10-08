@@ -81,6 +81,19 @@ npm run test:images
 > arquivos que a segunda fatia mudou têm os pins novos no recibo dela. As seções "O que este host fazia",
 > "A implementação", "Padrões e desvios" e "Limites" abaixo falam do estado de `552fb56`.
 
+> Nota posterior (2026-10-08): a terceira fatia do GF-16, a dos
+> [efeitos de imagem](../images-visual/README.md) (implementação
+> [`6c221e8`](https://github.com/journey-studios/godot-fabric/commit/6c221e8500e159ba9322d9b7a6b5adace4f8aff2)), substituiu o que esta
+> página descreve como recusado: `tintColor`, `blurRadius`, `capInsets` e o raio de borda do estilo da Image
+> são desenhados, e `defaultSource`, `loadingIndicatorSource`, `fadeDuration`, `progressiveRenderingEnabled`,
+> `resizeMethod`, `resizeMultiplier` e `overlayColor` são aceitos sem efeito, como no iOS, em vez de falhar
+> onde a Image renderiza. A suíte `test:images` mudou com o contrato: as 13 recusas desses props saíram do
+> fixture (de 22 para 9) e o check que as nomeava saiu, de modo que ela tem agora 72 checks (onde a nota
+> anterior conta 73); o controle e as sabotagens dela foram refeitos nos hosts preservados. O exemplo ganhou
+> quatro cartões (21 Images, 26 checks headless e 39 com o renderizador), e os dois quadros desta página mostram o
+> exemplo antes deles. As seções "O que este host fazia", "A implementação", "Padrões e desvios" e "Limites"
+> falam do estado de `552fb56`.
+
 ## O que o RN faz
 
 O `ImageShadowNode` pede a imagem dentro do `layout`: o `updateStateIfNeeded` escolhe a fonte

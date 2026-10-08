@@ -536,8 +536,8 @@ keeps listening to a request it swapped away from fails 2, and the oracle reject
 15 mutations of the genuine report. Two captures of the example, a C++ test of the pure parts
 (68 assertions) and the research note with RN's file and line references. The second slice
 (below) later replaced the record's refusal of network images, `prefetch` and `queryCache`, so
-the suite now has 73 checks. Tint, blur, capInsets, rounded image clipping, animated formats and every
-target but macOS are open. Hosted run 37724902858 (the push of main 6d02746) repeated the 74 checks
+the suite now has 73 checks (72 since the visual slice, which stopped refusing the props it draws). Animated
+formats and every target but macOS are open. Hosted run 37724902858 (the push of main 6d02746) repeated the 74 checks
 with identical IDs, and the oracle accepts its report ([receipt](images/hosted-ci.json)).
 
 The [network images record](images-network/README.md) makes the same `Image` load `http` and `https`
@@ -561,7 +561,30 @@ the example, three C++ tests (cache 76, network 64 and core 77 assertions), and 
 from RN iOS, among them a rule stricter than iOS's URL-keyed caches (a request that carries `Authorization`,
 `Proxy-Authorization` or `Cookie` neither reads nor writes either cache, and is refused over http, which is what
 App Transport Security does there); image redirects drop the source's headers as iOS does. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
-target but macOS are open. Hosted CI pending; this slice closes no checkpoint.
+target but macOS are open. Hosted run 37750455295 (the push of main fb50a32) repeated the 74 checks with identical IDs
+and the recorded bundle, and the oracle accepts its report ([receipt](images-network/hosted-ci.json)). This slice
+closes no checkpoint.
+
+The [visual images record](images-visual/README.md) makes the same `Image` draw `tintColor`, `blurRadius`,
+`capInsets` and the clip of the style's `borderRadius`, and take the seven props that RN iOS ignores without
+effect. The picture is drawn on a canvas item of its own, a child of the view's and scaled by 1/scale, so the
+view's background and border are never tinted or clipped; one shader shared by every view tints (every pixel takes
+the color and keeps its alpha) and clips to two anti-aliased rounded rectangles (the border box with the radii, and
+the content frame with each radius less the border beside it, limited as `RCTPathCreateWithRoundedRect` does), and
+`capInsets` are a stretched or tiled nine-patch of the same item. `blurRadius` is RN iOS's `RCTBlurredImageWithRadius`:
+a square box in premultiplied alpha, two passes, run on the worker after the decode; a blurred picture has a texture
+of its own, a request that blurs neither reads nor writes the decoded cache, and it takes no tint or caps. The
+headless renderer draws no pixel, so 53 headless checks in actual SceneTree frames certify what the view asked the
+renderer for (every rectangle, radius, margin, tint and shader parameter of 52 declared Images and 13 live changes,
+and the item and material it made and freed) and the exact pixels of the blur by the bitmap the worker made, which
+an independent oracle recomputes for 14 blurred pictures; the oracle also models six steps over the two caches with a
+loopback server and refuses 48 mutations of the genuine report. The preceding host runs all 53 and fails the 40
+normative ones; four retained sabotages (a clip that ignores the border width, a third blur pass, a blurred request
+that uses the decoded cache, cap insets that ignore the scale) fail 2, 3, 8 and 2 checks and the oracle rejects each.
+Two captures of the example, whose pixel checks saw the shader draw, a C++ test of the pure parts (46 assertions) and
+every departure from RN iOS (the blur's rounding, effects on the next draw, `onLoad` after the blur, `capInsets` in
+`stretch` and `repeat` only, a refused list of insets, a transparent black tint). A comparison of the effects with
+iOS, every target but macOS and hosted CI are open; this slice closes no checkpoint.
 
 The [performance record](performance/README.md) is GF-30's first slice. The application snapshot gains a `performance`
 section (exact counters of the native views, Hermes' live heap after a forced collection, and the pump split into

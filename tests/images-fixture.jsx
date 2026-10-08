@@ -61,22 +61,10 @@ const specs = [
   {id: "mode-changing", group: "dynamic", source: {asset: "wide"}, style: box(60), resizeMode: "cover"},
 ];
 
-// Image props the host refuses where the Image renders. Each is rendered inside a boundary that records the error. (The request keys
-// of a source, headers, method, body and cache, and crossOrigin and referrerPolicy, are the network's: tests/images-network-fixture.jsx.)
+// Image props the host refuses where the Image renders: what is a mistake. (What it draws and what it ignores, as iOS does, is taken:
+// tests/images-visual-fixture.jsx. The request keys of a source, headers, method, body and cache, and crossOrigin and referrerPolicy,
+// are the network's: tests/images-network-fixture.jsx.)
 const refusals = [
-  {id: "tintColor", props: {tintColor: "#f00"}},
-  {id: "style.tintColor", props: {style: {tintColor: "#f00"}}},
-  {id: "blurRadius", props: {blurRadius: 2}},
-  {id: "capInsets", props: {capInsets: {top: 1, left: 1, bottom: 1, right: 1}}},
-  {id: "defaultSource", props: {defaultSource: 1}},
-  {id: "loadingIndicatorSource", props: {loadingIndicatorSource: {uri: "x"}}},
-  {id: "fadeDuration", props: {fadeDuration: 100}},
-  {id: "progressiveRenderingEnabled", props: {progressiveRenderingEnabled: true}},
-  {id: "resizeMethod", props: {resizeMethod: "resize"}},
-  {id: "resizeMultiplier", props: {resizeMultiplier: 2}},
-  {id: "overlayColor", props: {overlayColor: "#fff"}},
-  {id: "style.borderRadius", props: {style: {borderRadius: 4}}},
-  {id: "style.borderTopLeftRadius", props: {style: [{width: 5}, {borderTopLeftRadius: 4}]}},
   {id: "resizeMode", props: {resizeMode: "fill"}},
   {id: "style.resizeMode", props: {style: {resizeMode: "fill"}}},
   {id: "style.objectFit", props: {style: {objectFit: "fill-ish"}}},
