@@ -1,6 +1,7 @@
 #include "image_effects_core.h"
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -101,6 +102,20 @@ void a_uniform_picture_stays_uniform_and_a_kernel_of_one_changes_nothing() {
   std::vector<uint8_t> clear(3 * 3 * 4);
   box_blur_rgba8(clear.data(), 3, 3, 5);
   require(clear == std::vector<uint8_t>(3 * 3 * 4), "a transparent picture stays transparent");
+}
+
+void dimensions_that_overflow_leave_the_buffer() {
+  constexpr std::size_t largest = std::numeric_limits<std::size_t>::max();
+  auto pixels = bitmap(2, 2);
+  const auto before = pixels;
+  // 2^63 x 2 is 2^64, which wraps to zero pixels: the sum a careless count would take for an empty bitmap.
+  box_blur_rgba8(pixels.data(), largest / 2 + 1, 2, 3);
+  require(pixels == before, "a pixel count that wraps leaves the buffer as it was");
+  box_blur_rgba8(pixels.data(), largest, 3, 3);
+  require(pixels == before, "a pixel count that overflows leaves the buffer as it was");
+  // A pixel count that fits, whose byte count (four to a pixel) does not.
+  box_blur_rgba8(pixels.data(), largest / 4 + 1, 1, 3);
+  require(pixels == before, "a byte count that overflows leaves the buffer as it was");
 }
 
 void the_running_sums_are_the_window_sums() {
@@ -227,6 +242,7 @@ int main() {
   the_kernel_is_the_box_of_a_gaussian_made_odd();
   premultiplying_rounds_to_the_nearest();
   a_uniform_picture_stays_uniform_and_a_kernel_of_one_changes_nothing();
+  dimensions_that_overflow_leave_the_buffer();
   the_running_sums_are_the_window_sums();
   one_opaque_pixel_spreads_as_two_boxes();
   corners_follow_the_border_drawing();

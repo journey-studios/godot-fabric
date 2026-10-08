@@ -13,27 +13,35 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 const directory = path.join(root, "examples/images/assets");
 const mix = (a, b, t) => a.map((channel, index) => Math.round(channel + (b[index] - channel) * t));
 
-// Supersampled, so that the edges of the logo are smooth at every density.
-function logoAt(size) {
+// Supersampled, so that the edges are smooth at every density: `shade(u, v)` gives the color of a point of the unit square, or null where
+// the picture is transparent. Every drawn picture of the example goes through this one loop.
+function drawn(size, shade) {
   const samples = 4;
   return {width: size, height: size, pixel(x, y) {
     let r = 0, g = 0, b = 0, a = 0;
     for (let sy = 0; sy < samples; sy++) {
       for (let sx = 0; sx < samples; sx++) {
-        const u = (x + (sx + 0.5) / samples) / size, v = (y + (sy + 0.5) / samples) / size;
-        // A rounded square, bounded by 0.06 of the picture on every side.
-        const dx = Math.max(Math.abs(u - 0.5) - (0.5 - 0.06 - 0.2), 0), dy = Math.max(Math.abs(v - 0.5) - (0.5 - 0.06 - 0.2), 0);
-        if (Math.hypot(dx, dy) > 0.2) continue;
-        const ring = Math.hypot(u - 0.5, v - 0.5);
-        let color = mix([14, 165, 233], [99, 102, 241], (u + v) / 2);
-        if (ring > 0.27 && ring < 0.34) color = [248, 250, 252];
-        if (Math.abs(u - 0.5) + Math.abs(v - 0.5) < 0.15) color = [250, 204, 21];
+        const color = shade((x + (sx + 0.5) / samples) / size, (y + (sy + 0.5) / samples) / size);
+        if (color == null) continue;
         r += color[0]; g += color[1]; b += color[2]; a += 255;
       }
     }
     const count = samples * samples;
     return a === 0 ? [0, 0, 0, 0] : [Math.round(r / (a / 255)), Math.round(g / (a / 255)), Math.round(b / (a / 255)), Math.round(a / count)];
   }};
+}
+
+// The logo: a rounded square bounded by 0.06 of the picture on every side, with a gradient, a ring and a diamond.
+function logoAt(size) {
+  return drawn(size, (u, v) => {
+    const dx = Math.max(Math.abs(u - 0.5) - (0.5 - 0.06 - 0.2), 0), dy = Math.max(Math.abs(v - 0.5) - (0.5 - 0.06 - 0.2), 0);
+    if (Math.hypot(dx, dy) > 0.2) return null;
+    const ring = Math.hypot(u - 0.5, v - 0.5);
+    let color = mix([14, 165, 233], [99, 102, 241], (u + v) / 2);
+    if (ring > 0.27 && ring < 0.34) color = [248, 250, 252];
+    if (Math.abs(u - 0.5) + Math.abs(v - 0.5) < 0.15) color = [250, 204, 21];
+    return color;
+  });
 }
 
 // 120 x 60: a sky, a sun and two ridges, with a red mark on the left edge and a green one on the right, so that every crop shows which side it kept.
@@ -61,23 +69,6 @@ const spritePicture = {width: 32, height: 32, pixel(x, y) {
   if (py > 19 && mouth > 7 && mouth < 9.2) return [30, 41, 59, 255];
   return face > 12.5 ? [217, 119, 6, 255] : [250, 204, 21, 255];
 }};
-
-// Supersampled, like the logo: `shade(u, v)` gives the color of a point of the unit square, or null where the picture is transparent.
-function drawn(size, shade) {
-  const samples = 4;
-  return {width: size, height: size, pixel(x, y) {
-    let r = 0, g = 0, b = 0, a = 0;
-    for (let sy = 0; sy < samples; sy++) {
-      for (let sx = 0; sx < samples; sx++) {
-        const color = shade((x + (sx + 0.5) / samples) / size, (y + (sy + 0.5) / samples) / size);
-        if (color == null) continue;
-        r += color[0]; g += color[1]; b += color[2]; a += 255;
-      }
-    }
-    const count = samples * samples;
-    return a === 0 ? [0, 0, 0, 0] : [Math.round(r / (a / 255)), Math.round(g / (a / 255)), Math.round(b / (a / 255)), Math.round(a / count)];
-  }};
-}
 
 // A disc on a transparent ground: a gradient body, a white ring and a yellow dot. Every pixel is opaque or partly so, and a tint takes them all.
 const iconAt = size => drawn(size, (u, v) => {

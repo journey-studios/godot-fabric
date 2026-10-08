@@ -15,6 +15,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <numbers>
 #include <optional>
 #include <vector>
@@ -109,10 +110,14 @@ inline void box_pass(const uint8_t *source, uint8_t *target, std::size_t width, 
 }
 
 // RCTBlurredImageWithRadius on a straight-alpha RGBA8 bitmap, in place: premultiplied, two box passes, straight again. A kernel of one
-// pixel changes nothing.
+// pixel changes nothing, and neither do dimensions whose pixel count, or whose byte count, does not fit a size_t: no such bitmap can
+// exist, and the buffer is not touched.
 inline void box_blur_rgba8(uint8_t *pixels, std::size_t width, std::size_t height, uint32_t kernel) {
   if (width == 0 || height == 0 || kernel <= 1) return;
+  constexpr std::size_t largest = std::numeric_limits<std::size_t>::max();
+  if (width > largest / height) return;
   const std::size_t count = width * height;
+  if (count > largest / 4) return;
   for (std::size_t i = 0; i < count; ++i) {
     for (std::size_t channel = 0; channel < 3; ++channel) pixels[i * 4 + channel] = premultiplied(pixels[i * 4 + channel], pixels[i * 4 + 3]);
   }
