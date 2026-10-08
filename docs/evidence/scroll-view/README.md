@@ -1,10 +1,18 @@
 # ScrollView desktop probe
 
-Current status (2026-10-08): the local evidence below was produced at source `3bf129c` with host `fa9bcca`, before Text #67 (`b82fbdd`) was integrated. It is historical for the combined tree. No combined-tree rebuild, replay or hosted CI has run; hosted CI/review remain pending. GF-14 remains open with all four checkpoints false.
+Current status (2026-10-08): PR #58 is merged at `66c948b`; its audited producer tree is `a3fe519`. Hosted run `37799420834` succeeded, all eight uploaded packages were extracted and verified, and the frozen artifact audit passed 17/17 checks. The principal accepted the first desktop ScrollView slice; this branch records only GF-14 `slice` as done, with `contract`, `parity` and `targets` still open. The principal also accepted all three V05-01 criteria, now recorded in this branch. This update records the checkpoints; publication metadata identifies the deployed tree. The c6e5 receipts preserve pre-sync state and a3 captures are historical. The a3 public dashboard capture is historical and shows 31/156 checkpoints.
 
-## Integrated local evidence: source `3bf129c`
+The [hosted receipt](hosted-ci.json) records package IDs and digests, audit results, source inputs, and limits. The [source index](source-pins-a3fe519.json) links deduplicated repository, Node module, and external source maps. The [V05-01 receipt](v05-01.json) records the accepted criteria. Both receipts are immutable snapshots captured before the dashboard checkpoint update; their sync-pending fields describe that earlier state and are not updated in place.
 
-The current local replay combines original React Native 0.87.1 ScrollView and
+The hosted SDK receipt records host digest `9d8959ec…` and 144 compiled-source pins, but the uploaded artifact did not contain the native library bytes. No binary-byte equivalence, ABI certification, physical mobile behavior, refresh-rate coverage, or complete React Native parity is claimed. The parity subset covers 13 core UI cases on simulators/emulators and does not exercise ScrollView parity or a physical device.
+
+The current visual records are the [public dashboard snapshot](dashboard-public-a3fe519.jpg), [coordination snapshot](agents-a3fe519-review.jpg), and [historical V05-01 publication capture](dashboard-milestone-24bc971.jpg). The V05-01 receipt pins the public dashboard and historical milestone captures; the coordination image is a registry snapshot without a test or acceptance claim. The six ScrollView/Modal images and two Images example captures linked in the historical `3bf129c` section are local captures from that pre-Text host, not graphics uploaded by the a3 hosted run. The [local dashboard criteria preview](dashboard-local-criteria-preview.jpg) shows the branch-only localhost view (Frontier 3/42) before merge; its [provenance record](dashboard-local-criteria-preview.json) identifies the observed projection and limits. It is not a public Pages snapshot, runtime proof, or additional acceptance evidence.
+
+The original c6 evidence commit remains immutable. The public and coordination images, plus the later local-preview image, only have their JPEG filename extensions corrected in this checkout; their image bytes, SHA-256 values, and evidence decisions are unchanged.
+
+## Historical local evidence: source `3bf129c`
+
+That local replay combined original React Native 0.87.1 ScrollView and
 Modal wheel handling with Images #66. It is pinned to source commit
 [`3bf129c`](https://github.com/journey-studios/godot-fabric/commit/3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba),
 the macOS host SHA-256 `fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce`,
@@ -23,7 +31,7 @@ runtime and ABI certification claims remain false.
 | Original RN ScrollView | 33/33 | Fractional 13.25 px offset, paint/Fabric/DOM agreement, diagonal pan, interruptions, pointer retirement and two-surface cleanup |
 | Original RN Modal wheel | 13/13 | Four actual Window wheel events; vertical +72 px and horizontal +48 px; 14 damaged reports rejected |
 | Pointer click | 8 × 91 | All eight configurations replayed with 26 required measured cases and full cleanup |
-| VirtualizedList / OS contracts | 44/44 / 37/37 | Current reports pass; preceding-SDK and sabotage controls rejected by their oracles |
+| VirtualizedList / OS contracts | 44/44 / 37/37 | The reports from that run pass; preceding-SDK and sabotage controls were rejected by their oracles |
 | Performance | 43/43 | Same-bundle prior-host control has 28 expected failures; six current-report mutation controls rejected |
 | Images | 72/72, 74/74, 53/53 | Base, network and visual reports; a same-bundle prior-host visual control has 40 failures |
 | Images example | 39/39 | Headed macOS capture; two pixels-identical images are reused from the Images evidence folder |
@@ -31,7 +39,7 @@ runtime and ABI certification claims remain false.
 | Local gates | 353 Node + 13 Python | Dashboard 43/43, static scan and publication scan pass |
 | Headed captures | 4 ScrollView + 2 Modal + 2 Images | Actual pixels viewed by root; clipping, fractional offset, pan, Modal wheel and cleanup shown |
 
-The six current ScrollView and Modal captures are the [initial view](scroll-view-3bf129c-initial.png),
+The six historical ScrollView and Modal captures are the [initial view](scroll-view-3bf129c-initial.png),
 [13.25 px offset](scroll-view-3bf129c-fractional-13_25.png),
 [horizontal clipped pan](scroll-view-3bf129c-horizontal-pan-clipped.png),
 [cleanup](scroll-view-3bf129c-cleanup.png),
@@ -49,9 +57,7 @@ correction. The earlier `18d3478` receipt has a separate historical runner-path
 and hash discrepancy, documented in its section below; neither old receipt is
 used to bind this run.
 
-The run is local desktop evidence only. Hosted CI and CodeRabbit review for
-this combined source are pending; GF-14 remains open at 30/156 with zero of its
-four checkpoints accepted. There is no physical mobile, refresh-rate, complete
+That local run was desktop evidence only. At that historical point, hosted CI and CodeRabbit review were pending and the dashboard stood at 30/156 with all four GF-14 checkpoints open. There is no physical mobile, refresh-rate, complete
 RN parity, or full GF-14 acceptance claim. Unsupported ScrollView behavior such
 as refresh controls, paging/snap and bounce remains open.
 
@@ -100,9 +106,7 @@ and the six producer groups for [ScrollView](source-pins-18d3478-scroll-view-gro
 | Windowed captures | 4 ScrollView + 2 Modal | Actual pixels inspected by root; clipping, fractional offset, pan, wheel and cleanup shown |
 
 The local desktop run does not complete GF-14. Hosted CI and CodeRabbit review
-for source `18d3478` are pending; the earlier 4aba CI success and approval apply
-to that earlier head only. The dashboard is 30/156 and every GF-14 checkpoint
-remains open. The [board snapshot](agents-18d3478-testing.jpg) records the
+for source `18d3478` were pending at that historical point; the earlier 4aba CI success and approval applied only to that head. Its dashboard snapshot stood at 30/156 with all GF-14 checkpoints open. The [board snapshot](agents-18d3478-testing.jpg) records the
 testing state and open coordination warning; it is not a green-board claim.
 This is macOS Godot evidence, not physical iOS/Android, refresh-rate coverage,
 full React Native parity or complete GF-14 acceptance.
@@ -209,7 +213,7 @@ refresh-rate, full parity or complete GF-14 acceptance is claimed.
 The preceding local source is `2a01ec6`, integrating the capture/route correction
 `465ae76` with main's Images network/cache PR #64. The loaded macOS host is
 `7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9`.
-Final-head hosted CI, CodeRabbit review and checkpoint acceptance are pending.
+At that historical point, final-head hosted CI, CodeRabbit review and checkpoint acceptance were pending.
 
 | Integrated run | Result | Evidence scope |
 | --- | ---: | --- |
@@ -428,8 +432,7 @@ from committed PR head `24bc971`, rendered and deployed by the workflow on main.
 The uploaded artifact, public JSON and committed data match, allowing only the
 publication metadata added by the workflow. This snapshot shows 28/156
 checkpoints and 0/39 complete items. This is a historical publication snapshot.
-After OS #61 integration the branch has 29/156 checkpoints; all GF-14 checkpoints
-remain open until the new head passes hosted CI and CodeRabbit acceptance.
+After OS #61 integration, that branch snapshot had 29/156 checkpoints; all GF-14 checkpoints were open while hosted CI and CodeRabbit review awaited the new head.
 
 ![Published review progress for PR #58](dashboard-public-24bc971.jpg)
 
@@ -437,8 +440,7 @@ The [OS-integrated publication receipt](publication-0a0aeaa.json) records the
 then-current 29/156 dataset from committed head `0a0aeaa`, rendered and deployed by
 main workflow run `37731033472`. The uploaded artifact and public JSON match
 exactly; removing only the generated publication metadata yields the committed
-JSON. All GF-14 checkpoints remain open. Subsequent documentation-only updates
-preserve this dataset and the tested producer sources.
+JSON. All GF-14 checkpoints were open in that snapshot. Subsequent documentation-only updates preserved this dataset and the tested producer sources.
 
 ![Published OS-integrated review progress for PR #58](dashboard-public-0a0aeaa.jpg)
 
@@ -460,9 +462,7 @@ The following final macOS captures show the original RN example with a
 
 ![Edited inventory at the lower bound after resizing](legacy-example-narrow.png)
 
-These local results do not accept hosted CI or any GF-14 checkpoint. The
-previous 29/156 publication above is a historical dataset once newer review
-progress is deployed; every GF-14 checkpoint remains open.
+These local results did not accept hosted CI or a GF-14 checkpoint. The previous 29/156 publication is a historical dataset; all GF-14 checkpoints were open in that snapshot.
 
 
 ## Click regression and AccessibilityInfo integration
@@ -495,9 +495,7 @@ repository paths, with overlap between groups. The old 43d/123-pin proof remains
 historical. SDK packing/verification passes; its adapter and ABI certification
 claims remain false. The [correction and integration receipt](click-regression-and-accessibility-integration.json)
 records actual report/log identities, independent measured scroll checks, the
-failed hosted run and limitations. A new hosted run and CodeRabbit review of
-the published head remain required. GF-14's slice and full acceptance remain
-open; dashboard progress stays 29/156.
+failed hosted run and limitations. At that point a new hosted run and CodeRabbit review were still required; the dashboard snapshot was 29/156 with GF-14 checkpoints open.
 
 The local shared board records this task and its reserved files. Its historical
 `private-interface.js` alert was coordinated after inspecting independent

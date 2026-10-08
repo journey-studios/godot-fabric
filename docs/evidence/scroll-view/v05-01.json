@@ -1,0 +1,125 @@
+{
+  "format": "godot-fabric.frontier-milestone-evidence/v1",
+  "milestone": "V05-01",
+  "title": "Marco 0.5 e aviso aos agentes no dashboard (aditivo)",
+  "status": "principal-reviewed-accepted-evidence-dashboard-sync-pending",
+  "accepted": true,
+  "milestoneSourceCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+  "previousMainCommit": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+  "criteria": {
+    "insercao": {
+      "evidenceStatus": "principal-accepted",
+      "accepted": true,
+      "sourceCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+      "audit": {
+        "path": "build/scroll-view-root/v05-01-acceptance-audit.json",
+        "sha256": "d155d292e9b1aec81a30878e8a46135320bddd3c6b03d62fcc23ef013a6086b4",
+        "protectedReleaseKeysIdentical": [
+          "tasks",
+          "phases",
+          "sequences",
+          "releaseChecklist",
+          "integrationChecklist",
+          "decisions"
+        ],
+        "roadmapParserIdentical": true,
+        "summaryBefore": {
+          "percent": 17.307692307692307,
+          "total": 40,
+          "required": 39,
+          "complete": 0,
+          "active": 28,
+          "blocked": 0,
+          "checkpoints": 27,
+          "checkpointTotal": 156
+        },
+        "summaryAfter": {
+          "percent": 17.307692307692307,
+          "total": 40,
+          "required": 39,
+          "complete": 0,
+          "active": 28,
+          "blocked": 0,
+          "checkpoints": 27,
+          "checkpointTotal": 156
+        },
+        "summaryWithoutMilestone": {
+          "percent": 17.307692307692307,
+          "total": 40,
+          "required": 39,
+          "complete": 0,
+          "active": 28,
+          "blocked": 0,
+          "checkpoints": 27,
+          "checkpointTotal": 156
+        },
+        "dashboardTests": {
+          "command": "node --test tests/migration-dashboard.test.mjs",
+          "passed": 14,
+          "failed": 0,
+          "logPath": "build/scroll-view-root/v05-01-dashboard-tests.log",
+          "logSha256": "02fd49c9bf74b5ae4bd154042bcc64166a890bd5e5e7114b82d349c380fe11fc"
+        }
+      },
+      "scope": "Additive #60 milestone insertion; protected 1.0 release keys and parser stay unchanged."
+    },
+    "agentes": {
+      "evidenceStatus": "principal-accepted",
+      "accepted": true,
+      "sourceCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+      "sources": [
+        {
+          "path": "dashboard/AGENT_PROMPT.md",
+          "blobAtMilestone": "c90bfa9a9e0ffda6bf470e40c28f35e583608ceb",
+          "verifiedUnchangedAtCurrentMerge": true
+        },
+        {
+          "path": "dashboard/README.md",
+          "blobAtMilestone": "b4f1f720303c04829344b6f174571ef01b6fa5d6",
+          "verifiedUnchangedAtCurrentMerge": true
+        }
+      ],
+      "scope": "Agent guidance requires milestone-only progress, preserving unknown JSON keys, and keeping HUD/GF work on the normal flow."
+    },
+    "publicacao": {
+      "evidenceStatus": "principal-accepted",
+      "accepted": true,
+      "milestoneSourceCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+      "currentSnapshot": {
+        "verificationPath": "build/scroll-view-root/publication-a3fe519-verified.json",
+        "verificationSha256": "a96e64c69a21e185f43a88899b59f8d105a48e72ca3b3ab1dabd24940b483b10",
+        "runId": 37799702595,
+        "producerCommit": "a3fe519f9fa2dbfbebc1837bceebadb5e971272f",
+        "rendererCommit": "57e41f2e89a774eb79752cc87cd5e2096d2f3041",
+        "publicJsonPath": "build/scroll-view-root/public-migration-a3fe519.json",
+        "publicJsonSha256": "905e5ae89963099b153cc09feb1f9d13b6d53abd72510fdc0358f2ad6dc11e5d",
+        "gf14Accepted": false,
+        "frontierAccepted": false,
+        "screenshotPath": "dashboard-public-a3fe519.jpg",
+        "screenshotSha256": "1d7fb372a80369df4f3245434ee9659dde5731a6ba24afc1fb2c2de3c381aa99",
+        "snapshotOnly": true,
+        "publicationWasInMainAtTime": false,
+        "observedAt": "2026-10-08T15:20:57.519084+00:00"
+      },
+      "historicalPublication": {
+        "receiptPath": "publication-24bc971.json",
+        "receiptSha256": "f197a27ddc562fb9b1cb33228873b773ffb67515be75388d5044db245da08540",
+        "runId": 37727042426,
+        "dataRef": "24bc971133ba3a88c2f9151de4c247091ddb5d89",
+        "screenshotPath": "dashboard-milestone-24bc971.jpg",
+        "screenshotSha256": "88ae68b67e8bce2c459868a303d916a984fcbff1d6d487b90cefb0b36a88357a"
+      },
+      "scope": "Current a3 Pages publication is a separate snapshot from milestone source c0f3702; marker visibility is evidence, not V05-01 or GF-14 acceptance."
+    }
+  },
+  "decisionBoundary": "The principal accepted the three V05-01 evidence criteria. Their dashboard flags remain unchanged until a separate dashboard checkpoint commit; this receipt does not change GF-14 or other milestone criteria. V05-02 iPhone remains open.",
+  "principalReview": {
+    "reviewedAt": "2026-10-08T16:30:48Z",
+    "acceptedCriteria": [
+      "insercao",
+      "agentes",
+      "publicacao"
+    ],
+    "dashboardUpdatePending": true
+  }
+}

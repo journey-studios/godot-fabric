@@ -1,15 +1,8 @@
 # ScrollView implementation review
 
-Status: GF-14 is in progress. No GF-14 checkpoint has been accepted. This is
-the root's ongoing implementation-quality review, separate from the research
-plan and from the implementer's test report. It applies the user-supplied
-thermo-nuclear review criteria: simpler ownership, original RN behavior,
-explicit boundaries and independent executed evidence.
+Status: PR #58 merged at `66c948b`; hosted producer `a3fe519` passed its frozen 17/17 artifact audit. The principal accepted the first desktop ScrollView slice only: this branch records GF-14 `slice`, while `contract`, `parity` and `targets` remain false. This update records the checkpoints; publication metadata identifies the deployed tree. The c6e5 receipts preserve pre-sync state and a3 captures are historical. The historical a3 publication snapshot shows 31/156 and is not a live count for the current branch. The evidence does not certify uploaded dylib bytes, ABI, physical mobile behavior, refresh-rate coverage, or full RN parity. See the [curated hosted receipt](../evidence/scroll-view/hosted-ci.json) and [source index](../evidence/scroll-view/source-pins-a3fe519.json). The 13-case parity subset covers core UI on simulators/emulators, not ScrollView parity or physical hardware.
 
-The local ScrollView/Images run below used source `3bf129c` and host `fa9bcca`
-before Text #67 (`b82fbdd`) was integrated. That run is historical for the
-combined tree. Text #67 is integrated; a fresh combined native build and runtime replay are
-pending in final-head CI, with no new local combined run claimed. GF-14 remains at 30/156 with all four checkpoints false.
+This is the root's implementation-quality review, separate from the research plan and implementer's test report. It applies the thermo-nuclear criteria: simpler ownership, original RN behavior, explicit boundaries and independent executed evidence.
 
 ## Historical local review before Text #67: source `3bf129c`
 
@@ -25,7 +18,7 @@ extends its existing route rather than introducing another input owner.
 
 Root independently checked the combined Images #66 host `fa9bcca6…`, all 140
 native input pins against Git and working bytes, and the 2,713-file SDK package.
-The [current receipt](../evidence/scroll-view/integration-3bf129c.json) records
+The [historical receipt](../evidence/scroll-view/integration-3bf129c.json) records
 ScrollView 33, Modal wheel 13, pointer click 8 × 91, lists 44, OS 37,
 Performance 43, and Images 72/74/53 checks, plus the headed Images example's
 39 checks and eight inspected captures. Canonical measured-state oracles were
@@ -44,11 +37,7 @@ is explicitly recorded after execution, without recapturing images. The
 earlier `18d3478` wrapper-label discrepancy remains documented rather than
 rewriting its receipt.
 
-No Contracts run started for published `d35808a`, because Text #67 had made
-the PR conflicting. CI and review of the combined merge remain pending. This
-historical local review does not accept GF-14's full contract, physical mobile
-or refresh-rate parity. The dashboard remains 30/156 with all four GF-14
-checkpoints false.
+At that historical point, no Contracts run had started for published `d35808a`, because Text #67 had made the PR conflicting. CI and review were pending then. That local review did not establish GF-14's full contract, physical mobile or refresh-rate parity; the dashboard snapshot stood at 30/156 with all four checkpoints open.
 
 ## Historical Performance integration: source `18d3478`
 
@@ -83,10 +72,7 @@ Their host and bundle links were checked, but a later audit found that the
 graphics receipt stored the canonical runner hash beside the copied runner
 path; that historical runner identity is not verified.
 
-These are local macOS results. CI and CodeRabbit for the integrated `18d3478`
-source remain pending; success and approval from published `4aba7f5` are
-historical only. GF-14 remains open at dashboard 30/156, with all four
-checkpoints false. No mobile hardware, refresh-rate matrix, complete RN parity
+These were local macOS results. CI and CodeRabbit for integrated source `18d3478` were pending at that time; success and approval from published `4aba7f5` applied only to that earlier head. The dashboard snapshot then stood at 30/156 with all four GF-14 checkpoints open. No mobile hardware, refresh-rate matrix, complete RN parity
 or full GF-14 acceptance is established. Earlier host-specific reviews below
 are retained as historical diagnoses, not as evidence against or in place of
 this integrated run.
@@ -327,9 +313,8 @@ recorded bytes and final host/bundle, and the root inspected the rendered clippi
 and empty cleanup frame.
 
 See [the integrated independent receipt](../evidence/scroll-view/root-integrated.json).
-The thermo-nuclear local structural and behavioral review is satisfied for this
-desktop slice. Final publication, CI and CodeRabbit review are still required;
-no GF-14 checkpoint or full-contract acceptance follows from local evidence alone.
+The thermo-nuclear local structural and behavioral review was satisfied for this
+desktop slice. At that historical point final publication, CI and CodeRabbit review were still required; that local evidence alone did not accept a GF-14 checkpoint or the full contract.
 
 ## Interrupted drag and neutral option review
 
@@ -375,8 +360,7 @@ All 112 native producers and 18 bundle producers match committed Git blobs at
 `0273dc38`; six installed RN inputs match the pinned sources. The complete
 contract gate passes 331 Node and 13 Python tests, with static, type, publication
 and dashboard gates passing. The implementation retains canonical ownership
-and the structural simplifications from this review. Final hosted acceptance
-remains pending; no GF-14 checkpoint is accepted by this local review.
+and the structural simplifications from this review. At that stage hosted acceptance was pending, and that local review had not accepted a GF-14 checkpoint.
 
 See [the independent interruption proof](../evidence/scroll-view/root-interruption.json)
 and [committed producers](../evidence/scroll-view/committed-source.json).
@@ -407,9 +391,7 @@ protocol was introduced by integration. The prior 28-check negative pair is
 preserved with its own bundle and identity, without mixing it into this run.
 
 See [the final independent integration receipt](../evidence/scroll-view/root-images-integration.json).
-Local thermo-nuclear review is satisfied for this first desktop slice. Hosted
-CI, CodeRabbit and acceptance remain separate pending steps; the full GF-14
-contract remains open.
+Local thermo-nuclear review was satisfied for this first desktop slice. At that historical point, CI, CodeRabbit and acceptance were pending; the full GF-14 contract remained open.
 
 
 ## OS-specific integration review
@@ -444,9 +426,7 @@ command protocol, compatibility mode or cast. The separate wrappers preserve
 the original RN component contract and the facade's inline-Text boundary. No
 source file crosses the thousand-line threshold. The earlier structural
 simplifications remain intact, satisfying local thermo-nuclear review for this
-desktop slice. CodeRabbit's approval of `3fe88da` is historical; hosted CI,
-review and acceptance for the new published head remain required. GF-14's full
-contract and all four checkpoints remain open.
+desktop slice. CodeRabbit's approval of `3fe88da` applied only to that earlier head. At that stage hosted CI and review for the new head were required, and the full GF-14 contract and all four checkpoints were still open.
 
 See [the current independent receipt](../evidence/scroll-view/root-os-integration.json)
 and [the facade regression receipt](../evidence/scroll-view/facade-regressions-43d0375.json).
@@ -529,8 +509,7 @@ bytes, all visually checked. Contract checks pass 352 Node and 13 Python tests.
 127 build inputs and 181 distinct repository producers match the committed
 tree; group counts overlap. SDK packing/verification is experimental and does
 not certify an adapter ABI. The failed hosted run and historical successes
-remain separate from these local results. Hosted CI, new-head CodeRabbit
-review and GF-14 acceptance are still pending.
+remain separate from these local results. At that historical stage, hosted CI, new-head CodeRabbit review and GF-14 acceptance were pending.
 
 See [the historical integration receipt](../evidence/scroll-view/click-regression-and-accessibility-integration.json)
 and [producer map](../evidence/scroll-view/committed-source-cae0d2e.json).
@@ -601,8 +580,7 @@ without repeating source hashes per group. Both evidence files stay below
 
 This correction satisfies local thermo-nuclear review: cached state and
 duplicate cancellation are removed, canonical RN/route owners remain in place,
-and the new probe remains below 1,000 lines. Final-head hosted CI, CodeRabbit
-review and checkpoint acceptance still require their own evidence. The
+and the new probe remains below 1,000 lines. At that historical stage, final-head hosted CI, CodeRabbit review and checkpoint acceptance still required their own evidence. The
 cancelled `3e29553` run is not accepted. See the
 [current receipt](../evidence/scroll-view/pointer-route-capture-retirement.json)
 and [committed producer inventory](../evidence/scroll-view/committed-source-2a01ec6.json).
