@@ -7,8 +7,15 @@ extends Node
 # mobile servers report that they do not know). The validation presses the buttons, clicks React's own "Ask again" button
 # with real mouse input, and reads each state from the native tree, from the application's AccessibilityInfo counters and
 # from what React observed. It waits for the polls the host counts, never for time.
+#
+# The fifth native button stands in for the screen reader that announcements are spoken to: it cycles the application's
+# validation_accessibility_announcer meta through reader (a recorder that behaves as a screen reader), none (a recorder with no
+# screen reader: the announcement is dropped and counted) and system (no meta: Godot's real AccessibilityServer, which speaks
+# through AccessKit when a screen reader is on). The line under the stand-in counts what the host did with the announcements.
 const DEVICE := 1001
 const META := "validation_accessibility_settings"
+const ANNOUNCER_META := "validation_accessibility_announcer"
+const ANNOUNCER_CYCLE := ["reader", "none", "system"]
 const KEYS := {"ScreenReaderButton": "screen_reader", "MotionButton": "reduce_animation",
   "TransparencyButton": "reduce_transparency", "ContrastButton": "increase_contrast"}
 # system, unknown, off, on
@@ -16,10 +23,12 @@ const CYCLE := [null, -1, 0, 1]
 var checks: Array = []
 var stages: Dictionary = {}
 var standin := {}
+var announcer := "system"
 var capturing := false
 @onready var application: Node = $Application
 @onready var surface: Control = $Surface
 @onready var legend: Label = $StandIn
+@onready var counters: Label = $AnnounceCounters
 
 # The first stand-in values must be set before the application's module reads them, which is when the first root renders:
 # _enter_tree runs before any child's _ready.
@@ -28,6 +37,9 @@ func _enter_tree() -> void:
     # Every key is named, so the run reads the same on a machine whose own settings are on, and on the headless engine.
     standin = {"screen_reader": 0, "reduce_animation": 0, "reduce_transparency": 0, "increase_contrast": -1}
     get_node("Application").set_meta(META, standin.duplicate())
+    # Announcements are spoken to a recorder that behaves as a screen reader, so a headless run can see them published.
+    announcer = "reader"
+    get_node("Application").set_meta(ANNOUNCER_META, {})
 
 func apply_standin() -> void:
   if standin.is_empty():
@@ -39,7 +51,21 @@ func apply_standin() -> void:
   for name: String in KEYS:
     var key: String = KEYS[name]
     lines.append("%s: %s" % [key.replace("_", " "), shown(standin[key]) if standin.has(key) else "system"])
+  lines.append("announcements: %s" % announcer)
   legend.text = "Stand-in for the platform\n" + "\n".join(lines)
+
+# The screen reader announcements are spoken to: one press is the next state of the cycle.
+func cycle_announcer() -> void:
+  announcer = ANNOUNCER_CYCLE[(ANNOUNCER_CYCLE.find(announcer) + 1) % ANNOUNCER_CYCLE.size()]
+  match announcer:
+    "reader":
+      application.set_meta(ANNOUNCER_META, {})
+    "none":
+      application.set_meta(ANNOUNCER_META, {"available": false})
+    _:
+      if application.has_meta(ANNOUNCER_META):
+        application.remove_meta(ANNOUNCER_META)
+  apply_standin()
 
 func shown(value: int) -> String:
   return "unknown" if value == -1 else ("on" if value == 1 else "off")
@@ -82,6 +108,27 @@ func example() -> Dictionary:
 func native_state() -> Dictionary:
   var value: Variant = JSON.parse_string(application.call("snapshot"))
   return value if value is Dictionary else {}
+
+# What the host did with the announcements: the application's own counters, never React's.
+func announced() -> Dictionary:
+  var value: Variant = module().get("announcements", {})
+  return value if value is Dictionary else {}
+
+func dropped_total(section: Dictionary) -> int:
+  var total := 0
+  for count: Variant in section.get("dropped", {}).values():
+    total += int(count)
+  return total
+
+func show_counters() -> void:
+  var section := announced()
+  counters.text = "Announcements, as the host counts them\nrequested %d · published %d · dropped %d" % [
+    int(section.get("requested", 0)), int(section.get("published", 0)), dropped_total(section)]
+
+func _process(_delta: float) -> void:
+  # The host's counters about six times a second: the status is a JSON document, not worth building every frame.
+  if Engine.get_process_frames() % 10 == 0:
+    show_counters()
 
 # The application's AccessibilityInfo counters.
 func module() -> Dictionary:
@@ -153,6 +200,7 @@ func capture(stage: String) -> void:
 func _ready() -> void:
   for name: String in KEYS:
     get_node(name).pressed.connect(cycle.bind(KEYS[name]))
+  get_node("AnnouncerButton").pressed.connect(cycle_announcer)
   apply_standin()
   if not OS.get_cmdline_user_args().has("--validate"):
     return
@@ -215,8 +263,36 @@ func run() -> void:
   verify(values()["reduce-motion"] == "unknown" and values()["screen-reader"] == "on"
     and int(module().get("settings", {}).get("reduceMotion", {}).get("rejectedUnknown", -1)) >= 1,
     "Asking again about a setting the platform no longer reports says unknown, not off")
+  await run_announcements()
   verify(native_state().get("errors", []).is_empty() and example().get("errors", []).is_empty(), "The run raised no host error and no unexpected rejection")
   await finish()
+
+# The Announce button is React's own, pressed with the mouse. With the recorder behaving as a screen reader the announcement is
+# published (a new element with the text as its value and a polite live mode, inside an update, freed outside the next one); when
+# the stand-in says there is no screen reader it is dropped and counted. The screen counts what was sent and the native line
+# what the host did with it; the recorder's calls are the host's, not VoiceOver's.
+func run_announcements() -> void:
+  await click("a11y-announce")
+  await after_polls(4)
+  var first := announced()
+  stages.announced = {"example": example(), "announcements": first, "values": values(), "sent": text("a11y-value-announced")}
+  var calls: Array = first.get("recorded", []).map(func(entry: Dictionary) -> String: return str(entry.op) + ("" if int(entry.handle) == 0 else " " + str(int(entry.handle))) + ("" if str(entry.text) == "" else " " + str(entry.text)))
+  verify(text("a11y-value-announced") == "1" and example().get("announced") == 1 and int(first.get("requested", -1)) == 1
+    and int(first.get("published", -1)) == 1 and dropped_total(first) == 0 and first.get("osTree") == true
+    and calls == ["update.begin", "create 1", "value 1 Announcement 1", "live 1 polite", "update.end", "free 1", "update.begin", "update.end"],
+    "Pressing Announce sends one announcement: the screen counts it, and the host published it in a new element with the text as its value and a polite live mode")
+  # The screen reader goes away: the next announcement is dropped, and the line says so.
+  await press("AnnouncerButton")
+  await click("a11y-announce")
+  await after_polls(4)
+  var second := announced()
+  show_counters()
+  stages.dropped = {"example": example(), "announcements": second, "line": counters.text, "sent": text("a11y-value-announced")}
+  verify(text("a11y-value-announced") == "2" and int(second.get("requested", -1)) == 2 and int(second.get("published", -1)) == 1
+    and dropped_total(second) == 1 and int(second.get("dropped", {}).get("noScreenReader", -1)) == 1
+    and counters.text.ends_with("requested 2 · published 1 · dropped 1") and legend.text.contains("announcements: none"),
+    "With no screen reader the next announcement is counted and dropped, never kept for one that turns on later: sent 2, published 1, dropped 1")
+  await capture("announced")
 
 func finish() -> void:
   application.call("stop")

@@ -17,8 +17,18 @@ import assert from "node:assert/strict";
 //    setting becomes unknown, nor for -1 after -1, nor when it comes back to the value it last had.
 //  - boldTextChanged, grayscaleChanged, invertColorsChanged and announcementFinished never fire.
 //  - The multipliers of setAccessibilityContentSizeMultipliers are numbers above zero (RCTAccessibilityManager.mm
-//    ignores any other); a valid call, the announcements and the programmatic focus are refused with E_UNSUPPORTED.
+//    ignores any other); a valid call and the programmatic focus are refused with E_UNSUPPORTED.
 //  - sendAccessibilityEvent reaches the host's UIManager delegate; iOS acts on focus alone (RCTMountingManager.mm).
+//  - An announcement (announceForAccessibility*, RCTAccessibilityManager.mm:319-358) is put in a new element with the text as its
+//    value and a live mode, because AccessKit's macOS adapter speaks the value of a live node when it is added: priority "high"
+//    is assertive and every other priority, "low" aside, is polite. iOS's queue option and "low" priority have no AccessKit
+//    equivalent and are refused. With no screen reader (headless, or the recorder says so) the call returns and the
+//    announcement is dropped, never kept for a screen reader that turns on later. The element is made inside an accessibility
+//    update, the update is asked for by the frame's pump, and the element is freed outside the next update. An update holds one
+//    announcement, in the order they were asked for, because AccessKit posts the elements of one update in an order of its own
+//    (measured) and iOS, with no queue, lets the last announcement asked for interrupt the rest: the announcements of one frame
+//    wait for the updates after the first, a frame apart. The recorder is the AccessibilityServer: it runs the update itself and
+//    records every call, so the model below is a state machine over frames whose recorded calls are compared one by one.
 // display is the DisplayServer method of Godot 4.7.2 that is the setting's reading (extension_api.json lists each as an int
 // with no arguments); it is this list's, not the host's, that the host's names are held to.
 const settings = [
@@ -46,7 +56,17 @@ const iosEventNames = new Map([["announcementFinished", "announcementFinished"],
   ["screenReaderChanged", "screenReaderChanged"], ["darkerSystemColorsChanged", "darkerSystemColorsChanged"]]);
 const categories = ["extraSmall", "small", "medium", "large", "extraLarge", "extraExtraLarge", "extraExtraExtraLarge", "accessibilityMedium",
   "accessibilityLarge", "accessibilityExtraLarge", "accessibilityExtraExtraLarge", "accessibilityExtraExtraExtraLarge"];
-const focusMessage = "focus is not implemented yet (GF-20 slice 2b)";
+// Why the focus and two options of an announcement are refused (the spec of this slice, not the host's strings).
+const focusMessage = "E_UNSUPPORTED: Godot has a single focus; moving the screen reader's focus would move the keyboard focus and blur the "
+  + "focused control, which iOS does not do";
+const queueError = /E_UNSUPPORTED.*the macOS accessibility API has no announcement queue/;
+const priorityError = /E_UNSUPPORTED.*AccessKit has only polite and assertive/;
+// An announcement that waits for an update that does not come is dropped after this many frames.
+const maxPendingPumps = 120;
+// The engine API the announcements call, by name (extension_api.json of Godot 4.7.2 and the AccessibilityServer's source).
+const announceApi = {server: "AccessibilityServer", methods: ["is_supported", "create_sub_element", "update_set_value", "update_set_live", "free_element"],
+  constants: ["ROLE_STATIC_TEXT", "LIVE_POLITE", "LIVE_ASSERTIVE"], tree: "is_accessibility_enabled",
+  node: ["get_accessibility_element", "queue_accessibility_update"], missing: []};
 const decode = value => {
   if (value != null && typeof value === "object" && !Array.isArray(value) && "$number" in value) {
     return Number(value.$number);
@@ -62,13 +82,146 @@ const decode = value => {
 
 const stepsA = ["early", "lazy-before", "lazy-read", "getters", "unbacked", "subscribe", "quiet", "motion-on", "alias", "transparency-on",
   "contrast-appears", "contrast-on", "together", "unknown", "unknown-back", "unknown-different", "key-removed", "invalid-values", "restored",
-  "direct-getters", "content-size", "announce", "ui-events", "unsubscribe", "unmount", "stop"];
-const stepsR = ["real-read", "real-getters", "real-subscribe", "real-after", "real-stop"];
+  "direct-getters", "content-size", "announce-basic", "announce-priorities", "announce-twice", "announce-batch", "announce-empty",
+  "announce-refused", "focus-refused", "announce-no-reader", "announce-reader-leaves", "announce-expires", "announce-no-element",
+  "ui-events", "unsubscribe", "unmount", "stop"];
+const stepsR = ["real-read", "real-getters", "real-subscribe", "real-announce", "real-after", "real-stop"];
+
+// One application's announcements, as a state machine over frames. recorder is the settings of the validation recorder that
+// stands in for the AccessibilityServer ({available, element, delivers}, each true unless it says false), or null for the
+// real server of a headless engine, where no screen reader is ever there.
+class Announcements {
+  constructor(recorder) {
+    this.recorder = recorder;
+    Object.assign(this, {requested: 0, published: 0, released: 0, updatesRequested: 0, updates: 0, lastText: null, lastPriority: null});
+    this.dropped = {noScreenReader: 0, empty: 0, expired: 0, stopped: 0};
+    this.refused = {queue: 0, priority: 0};
+    this.pending = [];
+    this.held = [];
+    this.log = [];
+    this.next = 1;
+    this.stopped = false;
+  }
+  setting(key) {
+    return this.recorder != null && this.recorder[key] !== false;
+  }
+  // A screen reader is there: only the recorder can say so in a headless run.
+  get available() {
+    return !this.stopped && this.setting("available");
+  }
+  record(op, handle = 0, text = "") {
+    this.log.push({op, handle, text});
+  }
+  // The result is what the module does with the call: nothing (it returns) or the refusal it throws.
+  announce(text, {queue = false, priority = null} = {}) {
+    if (this.stopped) {
+      return "stopped";
+    }
+    if (queue === true) {
+      this.refused.queue += 1;
+      return "queue";
+    }
+    if (priority === "low") {
+      this.refused.priority += 1;
+      return "priority";
+    }
+    const live = priority === "high" ? "assertive" : "polite";
+    this.requested += 1;
+    this.lastText = text;
+    this.lastPriority = live;
+    if (text === "") {
+      this.dropped.empty += 1;
+    } else if (!this.available) {
+      this.dropped.noScreenReader += 1;
+    } else {
+      this.pending.push({text, live, age: 0});
+    }
+    return "returned";
+  }
+  // The update the engine would run: a new element, with its value and live mode, for the first announcement waiting. One that has
+  // no element to be put in is dropped and does not take the update from the next.
+  update() {
+    this.record("update.begin");
+    this.updates += 1;
+    while (this.pending.length > 0) {
+      const {text, live} = this.pending.shift();
+      if (!this.setting("element")) {
+        this.dropped.noScreenReader += 1;
+        continue;
+      }
+      const handle = this.next++;
+      this.record("create", handle);
+      this.record("value", handle, text);
+      this.record("live", handle, live);
+      this.held.push(handle);
+      this.published += 1;
+      break;
+    }
+    this.record("update.end");
+  }
+  // One frame: free what the last update published (outside any update), drop what cannot be heard, ask for the update.
+  frame() {
+    if (this.stopped) {
+      return;
+    }
+    const freed = this.held.splice(0);
+    for (const handle of freed) {
+      this.record("free", handle);
+      this.released += 1;
+    }
+    if (this.pending.length > 0) {
+      if (!this.available) {
+        this.dropped.noScreenReader += this.pending.length;
+        this.pending = [];
+      } else {
+        for (const item of this.pending) {
+          item.age += 1;
+        }
+        const expired = this.pending.filter(item => item.age > maxPendingPumps).length;
+        this.dropped.expired += expired;
+        this.pending = this.pending.filter(item => item.age <= maxPendingPumps);
+      }
+    }
+    if (freed.length > 0 || this.pending.length > 0) {
+      this.updatesRequested += 1;
+      if (this.setting("delivers")) {
+        this.update();
+      }
+    }
+  }
+  // Frames until nothing is waiting and nothing is left to free: a step gives the host more frames than that.
+  settle() {
+    for (let frames = 0; (this.pending.length > 0 || this.held.length > 0) && !this.stopped; frames += 1) {
+      assert.ok(frames < 2 * maxPendingPumps, "the announcements settle");
+      this.frame();
+    }
+  }
+  stop() {
+    if (this.stopped) {
+      return;
+    }
+    this.dropped.stopped += this.pending.length;
+    this.pending = [];
+    for (const handle of this.held.splice(0)) {
+      this.record("free", handle);
+      this.released += 1;
+    }
+    this.stopped = true;
+  }
+  // What the host's snapshot must say.
+  expected() {
+    return {stopped: this.stopped, osTree: this.available, requested: this.requested, published: this.published, released: this.released,
+      updatesRequested: this.updatesRequested, updates: this.updates, pending: this.pending.length, held: this.held.length,
+      dropped: this.dropped, refused: this.refused, lastText: this.lastText, lastPriority: this.lastPriority, maxPendingPumps,
+      api: announceApi, recorded: this.log};
+  }
+}
 
 // One application's accessibility state as RN's rules and the contract define it.
 class Device {
-  constructor({meta, mounted}) {
-    Object.assign(this, {meta, meta0: meta, mounted: new Set(mounted)});
+  constructor({meta, mounted, announcer}) {
+    Object.assign(this, {meta, meta0: meta, mounted: new Set(mounted), announcer0: announcer});
+    this.announcements = new Announcements(announcer);
     this.created = false;
     this.stopped = false;
     this.last = Object.fromEntries(settings.map(entry => [entry.name, -1]));
@@ -77,7 +230,7 @@ class Device {
     this.rejectedUnknown = Object.fromEntries(settings.map(entry => [entry.name, 0]));
     this.events = Object.fromEntries(deviceEvents.map(event => [event, 0]));
     this.unbacked = Object.fromEntries(unbackedSettings.map(entry => [entry.name, 0]));
-    this.refused = {contentSize: 0, contentSizeInvalid: 0, announce: 0, announceWithOptions: 0, focus: 0};
+    this.refused = {contentSize: 0, contentSizeInvalid: 0, announceInvalid: 0, focus: 0};
     this.ui = {ignored: 0, unsupported: 0, byType: {}};
     this.errors = [];
     // The listeners in subscription order: id, the public name it subscribed with and the device event it hears.
@@ -162,12 +315,18 @@ function replay(device, command, outcome) {
     case "meta":
       device.meta = command.value;
       break;
+    case "announcer":
+      // The recorder's settings are read on every call of the announcer, so they take effect at once.
+      device.announcements.recorder = command.value;
+      break;
     case "wait":
       assert.equal(command.reached, true, "the host delivered the frames the probe waited for");
       device.poll(outcome);
+      device.announcements.settle();
       break;
     case "settle":
       device.poll(outcome);
+      device.announcements.settle();
       break;
     case "unmount": {
       // An unmounted root's effect cleanup removes its subscriptions and records itself.
@@ -183,6 +342,7 @@ function replay(device, command, outcome) {
       device.subscriptions = device.subscriptions.filter(subscription => !device.mounted.has(subscription.root));
       device.mounted.clear();
       device.stopped = true;
+      device.announcements.stop();
       break;
     case "call":
       callApi(device, expect, command.label, command.api, args);
@@ -249,9 +409,7 @@ function callApi(device, expect, label, name, args) {
         expect(label, api, {state: "threw", error: /E_MODULE_DISPOSED/});
         break;
       }
-      const counter = {announceForAccessibility: "announce", announceForAccessibilityWithOptions: "announceWithOptions", setAccessibilityFocus: "focus"}[name];
-      device.refused[counter] += 1;
-      expect(label, api, {state: "threw", error: /E_UNSUPPORTED.*GF-20 slice 2b/});
+      announcementCall(device, (state, expected) => expect(label, api, {state, ...expected}), name, args);
       break;
     }
     default:
@@ -310,19 +468,52 @@ function callModule(device, expect, label, method, args) {
       break;
     }
     case "setAccessibilityFocus":
-      device.refused.focus += 1;
-      expect(label, api, {state: "threw", error: /E_UNSUPPORTED.*GF-20 slice 2b/, callbacks: []});
-      break;
     case "announceForAccessibility":
-      device.refused.announce += 1;
-      expect(label, api, {state: "threw", error: /E_UNSUPPORTED.*GF-20 slice 2b/, callbacks: []});
-      break;
     case "announceForAccessibilityWithOptions":
-      device.refused.announceWithOptions += 1;
-      expect(label, api, {state: "threw", error: /E_UNSUPPORTED.*GF-20 slice 2b/, callbacks: []});
+      announcementCall(device, (state, expected) => expect(label, api, {state, ...expected, callbacks: []}), method, args);
       break;
     default:
       throw new Error("accessibility info oracle: unknown module method " + method);
+  }
+}
+
+// A call of the announcement methods and of the focus, public or direct: what the module returns or throws, and what the
+// announcer does. The text is the first argument; the options, when there are any, the second. An option of the wrong type is an
+// argument error (queue is read first), and the refusals come from what the options ask for.
+function announcementCall(device, expect, name, args) {
+  if (name === "setAccessibilityFocus") {
+    device.refused.focus += 1;
+    expect("threw", {error: focusMessage});
+    return;
+  }
+  let options = {};
+  if (name === "announceForAccessibilityWithOptions") {
+    const given = args[1];
+    const absent = value => value === undefined || value === null;
+    if (!absent(given.queue) && typeof given.queue !== "boolean") {
+      device.refused.announceInvalid += 1;
+      expect("threw", {error: /E_ARGUMENT/});
+      return;
+    }
+    if (!absent(given.priority) && typeof given.priority !== "string") {
+      device.refused.announceInvalid += 1;
+      expect("threw", {error: /E_ARGUMENT/});
+      return;
+    }
+    options = {queue: given.queue ?? false, priority: given.priority ?? null};
+  }
+  switch (device.announcements.announce(args[0], options)) {
+    case "queue":
+      expect("threw", {error: queueError});
+      break;
+    case "priority":
+      expect("threw", {error: priorityError});
+      break;
+    case "returned":
+      expect("returned", {});
+      break;
+    default:
+      throw new Error("accessibility info oracle: the announcer is stopped but the module is not");
   }
 }
 
@@ -339,6 +530,7 @@ function verifyStep(report, device, app, name) {
   }
   // The step ends after frames have passed, and the host polls on each of them.
   device.poll(outcome);
+  device.announcements.settle();
   assert.deepEqual(step.calls.map(entry => entry.label), outcome.calls.map(entry => entry.label), name + ": calls");
   step.calls.forEach((entry, index) => {
     const expected = outcome.calls[index];
@@ -400,6 +592,12 @@ function verifyCounters(step, device, previous, app, name) {
   assert.deepEqual(info.events, device.events, where + ": events by name");
   assert.deepEqual(info.unbacked, device.unbacked, where + ": settings with no backing");
   assert.deepEqual(info.refused, device.refused, where + ": refused calls");
+  // The announcements: the counters, what the last one was, whether an OS tree stands behind the application, the engine API
+  // they call and every call the announcer made to the recorder.
+  assert.deepEqual(info.announcements, device.announcements.expected(), where + ": announcements");
+  const {requested, published, pending} = info.announcements;
+  const dropped = Object.values(info.announcements.dropped).reduce((total, count) => total + count, 0);
+  assert.equal(requested, published + pending + dropped, where + ": every announcement taken is published, pending or dropped");
   assert.deepEqual(info.uiEvents, {ignored: device.ui.ignored, ignoredOther: 0, unsupported: device.ui.unsupported, byType: device.ui.byType},
     where + ": UIManager events");
   assert.equal(info.eventsUnobserved, 0, where + ": every event found its module");
@@ -454,14 +652,52 @@ function coverage(report, a) {
   assert.ok(categoriesSeen.has("notACategory") && categoriesSeen.has("large") && categoriesSeen.has("medium"), "the multipliers include invalid and unknown entries");
 }
 
+// The script has to exercise every way an announcement is taken, published, refused or dropped.
+function announcementCoverage(report, a) {
+  const calls = Object.values(report.stages.A).flatMap(step => step.commands).filter(command => ["call", "direct"].includes(command.do));
+  const withOptions = calls.filter(command => (command.api ?? command.method).endsWith("announceForAccessibilityWithOptions"))
+    .map(command => decode(command.args)[1]);
+  const priorities = new Set(withOptions.map(options => options.priority));
+  for (const priority of ["high", "default", "urgent", "low", undefined, null]) {
+    assert.ok(priorities.has(priority), "an announcement with priority " + priority);
+  }
+  assert.ok(withOptions.some(options => options.queue === true) && withOptions.some(options => options.queue === false)
+    && withOptions.some(options => options.queue === null), "queue true, false and null");
+  assert.ok(withOptions.some(options => typeof options.queue === "string") && withOptions.some(options => typeof options.priority === "number")
+    && withOptions.some(options => typeof options.priority === "object" && options.priority !== null), "options of the wrong type");
+  assert.ok(calls.some(command => (command.api ?? command.method).endsWith("announceForAccessibility") && decode(command.args)[0] === ""), "an empty text");
+  assert.ok(calls.some(command => (command.api ?? command.method).endsWith("announceForAccessibility") && /[^\u0000-\u007f]/.test(decode(command.args)[0])), "a text beyond ASCII");
+  const recorders = Object.values(report.stages.A).flatMap(step => step.commands).filter(command => command.do === "announcer").map(command => command.value);
+  assert.ok(recorders.some(value => value.available === false) && recorders.some(value => value.delivers === false)
+    && recorders.some(value => value.element === false), "a recorder with no screen reader, one that never delivers and one with no element");
+  const final = report.stages.A.stop.info.announcements;
+  for (const [reason, count] of Object.entries(final.dropped)) {
+    assert.ok(count >= 1, "an announcement dropped for " + reason);
+  }
+  assert.ok(final.refused.queue >= 1 && final.refused.priority >= 1 && final.published >= 5 && a.announcements.stopped, "every outcome happens");
+  // Announcements of one frame are published one per update, in order, the same text is said twice, and a handle is never reused.
+  const creates = final.recorded.filter(entry => entry.op === "create").map(entry => entry.handle);
+  assert.equal(new Set(creates).size, creates.length, "no element is made twice with the same handle");
+  let inUpdate = 0;
+  for (const entry of final.recorded) {
+    inUpdate = entry.op === "update.begin" ? 0 : inUpdate + (entry.op === "create" ? 1 : 0);
+    assert.ok(inUpdate <= 1, "an update holds at most one announcement");
+  }
+  const values = final.recorded.filter(entry => entry.op === "value").map(entry => entry.text);
+  assert.ok(values.join("|").includes("One|Two|Three"), "three announcements of one frame come out in the order they were made");
+  assert.ok(values.some((text, index) => values.indexOf(text) !== index), "the same text is announced twice");
+}
+
 // Re-derives every step of a current-host report; throws on any difference.
 export function verifyAccessibilityInfoReport(report) {
   assert.ok(report.initialMeta?.A != null && report.initialMeta.R === null, "the report says what each application started with");
-  const a = new Device({meta: report.initialMeta.A, mounted: ["A", "B"]});
+  assert.ok(report.initialAnnouncer?.A != null && report.initialAnnouncer.R === null, "A announces to the recorder and R to the real server");
+  const a = new Device({meta: report.initialMeta.A, mounted: ["A", "B"], announcer: report.initialAnnouncer.A});
   verifyApplication(report, "A", stepsA, a);
   assert.equal(report.stages.A.stop.info.stopped, true);
   coverage(report, a);
-  const r = new Device({meta: null, mounted: ["R"]});
+  announcementCoverage(report, a);
+  const r = new Device({meta: null, mounted: ["R"], announcer: null});
   verifyApplication(report, "R", stepsR, r);
   // The method the host reads for each setting is the DisplayServer method the oracle names for it, the engine has that method,
   // and what the engine answers to it is what the host last read (-1 for all four in headless, where R has no meta).
@@ -477,5 +713,43 @@ export function verifyAccessibilityInfoReport(report) {
   assert.deepEqual(Object.values(r.known), [null, null, null, null]);
   assert.deepEqual(r.events, Object.fromEntries(deviceEvents.map(event => [event, 0])), "R never emitted");
   assert.deepEqual(Object.values(report.stages.R).flatMap(step => step.events.filter(event => !event.cleanup)), [], "R's listeners heard nothing");
+  // The engine has every name the announcements call, answers from the headless server say no screen reader is there, and the
+  // host reports the very names the oracle lists.
+  const facts = report.announceFacts;
+  assert.deepEqual(report.announceApi, {server: announceApi.server, methods: announceApi.methods, constants: announceApi.constants,
+    tree: announceApi.tree, node: announceApi.node}, "the probe asked the engine about the oracle's names");
+  assert.equal(facts.serverRegistered, true, "the AccessibilityServer singleton exists");
+  assert.deepEqual(facts.methods, Object.fromEntries(announceApi.methods.map(name => [name, true])), "every server method exists");
+  assert.deepEqual(facts.constants, Object.fromEntries(announceApi.constants.map(name => [name, true])), "every server constant exists");
+  assert.equal(facts.treeMethod, true, "SceneTree has " + announceApi.tree);
+  assert.deepEqual(facts.nodeMethods, Object.fromEntries(announceApi.node.map(name => [name, true])), "Node has its two accessibility methods");
+  assert.equal(facts.serverSupported, false, "the headless AccessibilityServer is not supported");
+  assert.equal(facts.treeEnabled, false, "the headless tree has no accessibility");
+  assert.deepEqual(r.announcements.expected().recorded, [], "the real server records nothing");
+  assert.equal(r.announcements.available, false, "no screen reader behind the real, headless server");
   return {steps: {A: stepsA.length, R: stepsR.length}, events: a.events, changes: a.changes.length, checks: report.checks.length};
+}
+
+// The graphical lane (accessibility-announcements-bridge): what AccessKit asked AppKit to post for each announcement, re-derived
+// from the rules (priority high is the high level, 90, and every other accepted priority the medium level, 50; each announcement
+// is one post on the window; an empty text, queue: true and priority low post nothing). Throws on any difference. The three
+// announcements of one frame are posted in the order they were made, because each is published in an update of its own.
+export function verifyAnnouncementsBridgeReport(report) {
+  const level = priority => (priority === "high" ? 90 : 50);
+  const post = (text, priority) => [text, level(priority), "GodotWindow"];
+  const steps = report.stages.steps;
+  assert.deepEqual(steps.saved, [post("Saved")], "an announcement is one post with its text and the medium level");
+  assert.deepEqual(steps.again, [post("Saved")], "the same text again is posted again");
+  assert.deepEqual(steps.high, [post("Alert", "high")], "priority high is the high level");
+  assert.deepEqual(steps.plain, [post("Plain", "default")], "priority default is the medium level");
+  assert.deepEqual(steps.odd, [post("Odd", "urgent")], "a priority iOS ignores is the medium level");
+  assert.deepEqual(steps.batch, [post("First"), post("Second"), post("Third", "high")], "three announcements of a frame are three posts, in the order made");
+  assert.deepEqual(report.stages.batchOrder, ["First", "Second", "Third"], "the order AccessKit posted them in");
+  assert.deepEqual(steps.silent, [], "an empty text, queue: true and priority low post nothing");
+  assert.deepEqual(report.stages.afterStop.late, [], "nothing is posted after stop");
+  const posted = [steps.saved, steps.again, steps.high, steps.plain, steps.odd, steps.batch].reduce((total, rows) => total + rows.length, 0);
+  const host = report.stages.beforeStop.announcements;
+  assert.equal(host.published, posted, "the host published what AccessKit posted");
+  assert.equal(host.recorded.length, 0, "the real server was used, not the recorder");
+  return {posts: posted, batchOrder: report.stages.batchOrder};
 }

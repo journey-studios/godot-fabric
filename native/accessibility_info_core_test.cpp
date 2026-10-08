@@ -293,14 +293,18 @@ void refusals_are_counted() {
   settings.note_unavailable(Unbacked::BoldText);
   settings.note_content_size_refused();
   settings.note_content_size_invalid();
-  settings.note_announce_refused();
-  settings.note_announce_options_refused();
+  settings.note_announce_invalid();
   settings.note_focus_refused();
   const auto &counters = settings.counters();
   require(counters.unbacked_rejected[index_of(Unbacked::BoldText)] == 2 && counters.unbacked_rejected[index_of(Unbacked::Grayscale)] == 1,
       "Each unbacked getter is counted on its own");
-  require(counters.content_size_refused == 1 && counters.content_size_invalid == 1 && counters.announce_refused == 1
-      && counters.announce_options_refused == 1 && counters.focus_refused == 1, "Each refused call is counted on its own");
+  require(counters.content_size_refused == 1 && counters.content_size_invalid == 1 && counters.announce_invalid == 1
+      && counters.focus_refused == 1, "Each refused call is counted on its own");
+}
+
+void the_focus_refusal_says_why() {
+  require(std::string(focus_refusal) == "E_UNSUPPORTED: Godot has a single focus; moving the screen reader's focus would move the "
+      "keyboard focus and blur the focused control, which iOS does not do", "The reason for the focus");
 }
 }  // namespace
 
@@ -318,5 +322,6 @@ int main() {
   ui_events_are_ignored_except_focus();
   multipliers_are_finite_and_positive();
   refusals_are_counted();
+  the_focus_refusal_says_why();
   std::cout << "ACCESSIBILITY_INFO_CORE_PASSED\n";
 }

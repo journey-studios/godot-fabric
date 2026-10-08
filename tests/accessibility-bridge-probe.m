@@ -7,6 +7,14 @@
 // behind AXPress. An external AXUIElement client would need the TCC permission; code inside the process
 // needs none.
 //
+// It also sees what AccessKit asks AppKit to post. The announcement of a live region is not part of the tree: AccessKit
+// raises it as NSAccessibilityAnnouncementRequestedNotification, posted on the window by
+// NSAccessibilityPostNotificationWithUserInfo, the call a screen reader's announcements come from. dyld interposition (the
+// __DATA,__interpose section is honoured for every image of the process, the executable's calls included, because this
+// library is inserted) routes that call through here first: it is recorded, then forwarded to AppKit unchanged, so a
+// screen reader that runs hears it as usual. What is recorded is what AccessKit asked for; that VoiceOver spoke it is not
+// something any code in the process can see.
+//
 // It answers requests that the test writes to FABRIC_AX_DIR/request.json and replies in response.json. A
 // timer on the main queue polls for requests: Godot's loop services the main queue, and AccessKit's tree is
 // only read from there. The first query of the tree activates AccessKit's adapter, so a query can come back
@@ -15,13 +23,19 @@
 //   {"id": 1, "op": "dump"}                               -> {"id": 1, "tree": <node>}
 //   {"id": 2, "op": "press", "title": "Save", "role": "AXButton", "occurrence": 0}
 //                                                         -> {"id": 2, "matched": 2, "pressed": true}
+//   {"id": 3, "op": "posted", "since": 0}                 -> {"id": 3, "total": 4, "posted": [<post>, ...]}
 //
-// A node is {role, subrole, roleDescription, title, help, value, enabled, selected, children}.
+// A node is {role, subrole, roleDescription, title, help, value, enabled, selected, children}. A post is
+// {notification, element, announcement, priority}: the notification's name, the class of the element it was posted on and,
+// for the announcement notification, the text and the priority level it carries (10 low, 50 medium, 90 high).
 #import <AppKit/AppKit.h>
 #import <objc/message.h>
 #import <objc/runtime.h>
 
 static NSString *directory;
+// Every notification posted with a user-info dictionary, in order. The main thread posts them and answers requests; the
+// lock keeps the two apart should a post come from elsewhere.
+static NSMutableArray<NSDictionary *> *posted;
 
 static id value(id object, SEL selector) {
   if (![object respondsToSelector:selector]) {
@@ -67,6 +81,30 @@ static NSDictionary *describe(id node, int depth) {
     @"children": children,
   };
 }
+// Records a notification and forwards it to AppKit. The signature is AppKit's declaration, which dyld requires of a
+// replacement.
+static void interposedPost(id element, NSAccessibilityNotificationName notification, NSDictionary *userInfo) {
+  id text = userInfo[NSAccessibilityAnnouncementKey];
+  id priority = userInfo[NSAccessibilityPriorityKey];
+  NSDictionary *entry = @{
+    @"notification": jsonSafe(notification),
+    @"element": NSStringFromClass([element class]) ?: @"",
+    @"announcement": jsonSafe(text),
+    @"priority": jsonSafe(priority),
+  };
+  @synchronized(posted) {
+    [posted addObject:entry];
+  }
+  NSAccessibilityPostNotificationWithUserInfo(element, notification, userInfo);
+}
+// dyld reads the pairs of this section: what to call instead, and the function that is replaced.
+__attribute__((used)) static struct {
+  const void *replacement;
+  const void *replacee;
+} interposition[] __attribute__((section("__DATA,__interpose"))) = {
+  {(const void *)interposedPost, (const void *)NSAccessibilityPostNotificationWithUserInfo},
+};
+
 // The content view the window serves its accessibility tree from.
 static id contentRoot(void) {
   for (NSWindow *window in NSApp.windows) {
@@ -109,6 +147,14 @@ static NSDictionary *answer(NSDictionary *request) {
     }
     return @{@"id": request[@"id"], @"matched": @(matches.count), @"pressed": @(pressed)};
   }
+  if ([operation isEqualToString:@"posted"]) {
+    NSArray *all;
+    @synchronized(posted) {
+      all = [posted copy];
+    }
+    NSUInteger since = MIN((NSUInteger)[request[@"since"] unsignedIntegerValue], all.count);
+    return @{@"id": request[@"id"], @"total": @(all.count), @"posted": [all subarrayWithRange:NSMakeRange(since, all.count - since)]};
+  }
   return @{@"id": request[@"id"], @"error": [@"unknown operation " stringByAppendingString:operation ?: @""]};
 }
 static void poll(void) {
@@ -128,6 +174,7 @@ static void poll(void) {
 }
 
 __attribute__((constructor)) static void start(void) {
+  posted = [NSMutableArray array];
   const char *configured = getenv("FABRIC_AX_DIR");
   if (configured == NULL) {
     return;
