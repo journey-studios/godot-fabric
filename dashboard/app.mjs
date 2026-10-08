@@ -1,16 +1,15 @@
 import { validate, summarize, progress, taskProgress, pendingDependencies, STATUSES } from "./model.mjs";
+import { AGENT_SLOTS, coordinate } from "./agents.mjs";
+import { renderAgents, agentChips } from "./agents-view.mjs";
+import { escape, percent, date, clock, url } from "./format.mjs";
 
 const $ = id => document.getElementById(id);
-const escape = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
-const percent = value => `${new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(value)}%`;
-const date = value => new Date(value).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "short", year: "numeric" });
-const clock = value => new Date(value).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", second: "2-digit" });
-const url = value => /^https?:\/\//.test(value || "") ? escape(value) : "#";
 const evidenceLinks = evidence => evidence.map(item => `<a href="${url(item.url)}" target="_blank" rel="noopener">${escape(item.label)} ↗</a>`).join(" · ");
 const checkpoint = step => `<div class="checkpoint ${step.done ? "done" : ""}"><span class="check-icon" aria-label="${step.done ? "Concluído" : "Pendente"}">${step.done ? "☑" : "□"}</span><span>${escape(step.label)}${step.evidence.length ? `<span class="checkpoint-links">${evidenceLinks(step.evidence)}</span>` : ""}</span></div>`;
 const progressBar = value => `<div class="progress-track" role="progressbar" aria-valuenow="${value.toFixed(1)}" aria-valuemin="0" aria-valuemax="100" aria-label="Progresso"><span style="width:${value}%"></span></div>`;
 const status = task => `<span class="status-pill ${task.status}"><i class="dot ${task.status}"></i>${STATUSES[task.status]}</span>`;
 let data, lastPayload, live = true, timer, loading = false;
+let board = null, boardError = "", coordination = null, boardMissing = false, agentsHtml = "", chipSignature = "";
 
 function renderSummary() {
   const summary = summarize(data);
@@ -27,7 +26,56 @@ function renderSummary() {
 
 function taskRow(task) {
   const value = taskProgress(task), pending = pendingDependencies(task, data.tasks);
-  return `<details id="${escape(task.id)}" class="task-row"><summary><span class="task-code">${escape(task.id)}</span><span class="task-title">${escape(task.title)}</span><span class="priority ${task.priority}">${task.priority}</span>${status(task)}<span class="mini-progress"><span class="mini-track"><i style="width:${value}%"></i></span><b>${percent(value)}</b></span><span class="chevron" aria-hidden="true">›</span></summary><div class="task-detail"><div class="detail-grid"><div><div class="detail-label">RESULTADO E ACEITE COMPLETO</div><p class="acceptance-text" lang="en">${escape(task.acceptance)}</p>${task.note ? `<p class="task-note">${escape(task.note)}</p>` : ""}${task.blocker ? `<p class="error">Bloqueio: ${escape(task.blocker)}</p>` : ""}<div class="detail-label">DEPENDÊNCIAS PARA CONCLUSÃO</div><div class="dependencies">${task.dependencies.length ? task.dependencies.map(id => `<button class="dep-button ${pending.includes(id) ? "pending" : ""}" data-task="${escape(id)}">${escape(id)} ${pending.includes(id) ? "○" : "✓"}</button>`).join("") : '<span class="muted">Sem dependências de conclusão.</span>'}</div>${pending.length ? `<p class="dependency-note">${pending.length} dependências abertas. Fatias limitadas podem avançar antes do fechamento.</p>` : ""}<p class="task-scope">${task.priority} · Peso ${task.weight} · ${task.releaseRequired ? "Obrigatório para 1.0" : "Escopo posterior, fora do percentual 1.0"}</p></div><div><div class="detail-label">CHECKPOINTS · ${percent(value)}</div>${task.checkpoints.map(checkpoint).join("")}</div></div></div></details>`;
+  return `<details id="${escape(task.id)}" class="task-row"><summary><span class="task-code">${escape(task.id)}</span><span class="task-title">${escape(task.title)}${agentChips(task.id, coordination)}</span><span class="priority ${task.priority}">${task.priority}</span>${status(task)}<span class="mini-progress"><span class="mini-track"><i style="width:${value}%"></i></span><b>${percent(value)}</b></span><span class="chevron" aria-hidden="true">›</span></summary><div class="task-detail"><div class="detail-grid"><div><div class="detail-label">RESULTADO E ACEITE COMPLETO</div><p class="acceptance-text" lang="en">${escape(task.acceptance)}</p>${task.note ? `<p class="task-note">${escape(task.note)}</p>` : ""}${task.blocker ? `<p class="error">Bloqueio: ${escape(task.blocker)}</p>` : ""}<div class="detail-label">DEPENDÊNCIAS PARA CONCLUSÃO</div><div class="dependencies">${task.dependencies.length ? task.dependencies.map(id => `<button class="dep-button ${pending.includes(id) ? "pending" : ""}" data-task="${escape(id)}">${escape(id)} ${pending.includes(id) ? "○" : "✓"}</button>`).join("") : '<span class="muted">Sem dependências de conclusão.</span>'}</div>${pending.length ? `<p class="dependency-note">${pending.length} dependências abertas. Fatias limitadas podem avançar antes do fechamento.</p>` : ""}<p class="task-scope">${task.priority} · Peso ${task.weight} · ${task.releaseRequired ? "Obrigatório para 1.0" : "Escopo posterior, fora do percentual 1.0"}</p></div><div><div class="detail-label">CHECKPOINTS · ${percent(value)}</div>${task.checkpoints.map(checkpoint).join("")}</div></div></div></details>`;
+}
+
+function renderAgentBoard() {
+  const html = renderAgents(board, coordination, data?.tasks ?? [], boardError);
+  // Skip identical markup so the 5 s polling does not rebuild the DOM (and drop hover/selection) for nothing.
+  if (html !== agentsHtml) {
+    const open = new Set([...document.querySelectorAll("#agents-board details[open]")].map(item => item.id));
+    $("agents-board").innerHTML = html;
+    open.forEach(id => { if ($(id)) $(id).open = true; });
+    agentsHtml = html;
+  }
+  const alerts = coordination ? coordination.issues.filter(issue => issue.severity === "conflict").length : 0;
+  $("agent-count").textContent = coordination ? `${coordination.lanes.filter(Boolean).length}/${AGENT_SLOTS}` : "—";
+  $("agent-count").classList.toggle("alert", alerts > 0);
+}
+
+function setBoard(next, error = "") {
+  board = next;
+  boardError = error;
+  coordination = next ? coordinate(next.agents) : null;
+  renderAgentBoard();
+  // Roadmap rows show which agent works on each GF; redraw them only when that mapping changes.
+  const signature = JSON.stringify(coordination?.lanes.map(agent => agent && [agent.slot, agent.taskIds]));
+  if (signature !== chipSignature) {
+    chipSignature = signature;
+    if (data) { renderTasks(); }
+  }
+}
+
+async function refreshBoard() {
+  if (boardMissing) { return; }
+  try {
+    const response = await fetch(new URL("./agents.json", import.meta.url), { cache: "no-store", signal: AbortSignal.timeout(8000) });
+    // 404 means a static host (GitHub Pages): there is no local registry to poll.
+    if (response.status === 404) {
+      boardMissing = true;
+      setBoard(null);
+      return;
+    }
+    const payload = await response.json();
+    // Any other failure keeps the last board and says why it may be stale.
+    if (response.ok) {
+      setBoard(payload);
+    } else {
+      setBoard(board, payload.error || `Quadro de agentes indisponível: HTTP ${response.status}`);
+    }
+  } catch (error) {
+    setBoard(board, `Quadro de agentes indisponível: ${error.message}`);
+  }
 }
 
 function renderTasks() {
@@ -68,14 +116,14 @@ function render() {
   const selected = $("phase-filter").value;
   $("phase-filter").innerHTML = '<option value="all">Todas as fases</option>' + data.phases.map(phase => `<option value="${escape(phase.id)}">${escape(phase.id)} · ${escape(phase.shortTitle || phase.title)}</option>`).join("");
   if ([...$("phase-filter").options].some(option => option.value === selected)) $("phase-filter").value = selected;
-  renderSummary(); renderTasks(); renderRest();
+  renderSummary(); renderTasks(); renderRest(); renderAgentBoard();
 }
 
 async function refresh() {
   if (loading) return;
   loading = true; $("refresh").disabled = true;
   try {
-    const response = await fetch(new URL("./migration.json", import.meta.url), { cache: "no-store", signal: AbortSignal.timeout(8000) });
+    const [response] = await Promise.all([fetch(new URL("./migration.json", import.meta.url), { cache: "no-store", signal: AbortSignal.timeout(8000) }), refreshBoard()]);
     const payload = await response.json();
     if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
     validate(payload);

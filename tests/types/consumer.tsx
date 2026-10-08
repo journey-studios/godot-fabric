@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
-import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
+import { AppRegistry, AppState, Appearance, Linking, Clipboard, Vibration, useColorScheme, RootTagContext, Button, Switch, ActivityIndicator, Modal, SafeAreaView, Text, TextInput, View, UIManager, findNodeHandle, TurboModuleRegistry, NativeModules, NativeEventEmitter, type AppStateEvent, type AppStateStatus, type ColorSchemeName, type ModalProps, type TurboModule, type ViewInstance, type TextInputInstance } from "react-native";
 import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type ListRenderItem, type SectionListData } from "react-native";
 import { Animated, Easing, TouchableOpacity, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
-import type { TextInputProps, ButtonProps, SwitchChangeEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
+import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
 
 const inputProps: TextInputProps = { value: "A😀B", selection: { start: 1, end: 3 }, submitBehavior: "submit" };
 const originalInput: UpstreamInput = inputProps;
@@ -308,3 +308,19 @@ const valueProp = <View accessibilityValue={{now: 5}} />;
 void accessibleView; void accessibleTouchable; void touchableRole; void ariaSwitch; void upstreamAccessibility; void unknownRole; void rejectedRole;
 void rejectedAriaRole; void wrongVocabulary; void mixedState; void customActions; void hideOnly; void numericLabel;
 void stateNotBoolean; void assertiveOff; void valueProp;
+
+// Text: onTextLayout is RN's original event, with one entry per visible line.
+const layoutHandler = (event: TextLayoutEvent) => {
+  const [first] = event.nativeEvent.lines;
+  const baseline: number = first.ascender;
+  const letters: string = first.text;
+  const ink: number = first.capHeight + first.xHeight + first.descender + first.x + first.y + first.width + first.height;
+  void baseline; void letters; void ink;
+};
+const measuredText = <Text numberOfLines={2} onTextLayout={layoutHandler} ref={instance => { if (instance) instance.measure(() => {}); }}>Lines</Text>;
+const originalTextProps: import("../../node_modules/react-native/types_generated/index").TextProps = { onTextLayout: layoutHandler };
+// @ts-expect-error the handler receives the layout event, not a press
+const wrongTextLayout = <Text onTextLayout={(event: PointerEvent) => { void event; }}>Lines</Text>;
+// @ts-expect-error span presses are not implemented
+const spanPress = <Text onPress={() => {}}>Lines</Text>;
+void measuredText; void originalTextProps; void wrongTextLayout; void spanPress;

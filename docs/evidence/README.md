@@ -478,6 +478,31 @@ mobile (Godot 4.7.2 has no accessibility bridge on iOS or Android, which blocks 
 CI has not run the headless step yet, and the bridge is local only. Only the `slice` checkpoint of GF-20's first
 slice closes; no whole GF, other checkpoint, weight or denominator closes.
 
+The [text layout record](text-layout/README.md) gives the public `Text` the geometry of its lines:
+RN's `onTextLayout` and the Yoga baseline of a Text in an `alignItems: 'baseline'` row. A Godot
+platform `TextLayoutManager` adds the virtual `measureLines` that RN's `ParagraphShadowNode`
+looks for (the host used RN's portable one, which has none, so the event was never emitted and
+every baseline was zero), and `ParagraphLayout` overrides it over the same shaped paragraph that
+measures and paints, with no second line breaker. 76 headless checks run in one Hermes
+application: exactly one event per paragraph with the prop for its first layout (the emitter
+records its last rows before dispatching), the nine fields of every line, the agreement of
+event, node and paint (line count, concatenated text without the host's sentinel, heights, `x` by
+`textAlign`, baseline `y + ascender`), the emitter's dedupe (a color change, or a width that
+wraps the same lines, asks `measureLines` again and emits nothing), three baseline rows and a
+paragraph the host cannot lay out, whose failures do not unwind through Yoga's C callback. An
+independent oracle reads the TrueType tables of the two bundled fonts in Node: the host is
+within 0.576 px of them (0 for ascender, descender and height) once FreeType's documented rounding
+of the scaled ascent and descent is modelled, while the plain table scale is off by up to 1.484 px
+and does not hold the proposed ±1 px. The preceding host (26 checks run) fails exactly the 5
+normative checks (no event, zero baselines); three retained sabotages (every line reported
+despite `numberOfLines`, an ascender without the centred `lineHeight` offset, the sentinel left in
+a line's text) fail 4, 3 and 9 checks and the oracle rejects each. The example passes 18
+headless and 32 renderer checks (the painted ink agrees with the reported baseline, `capHeight`
+and `xHeight` to a pixel), with two captures, and a static guard compares the platform manager
+with the pinned RN's `cxx` one. The hosted CI run of the new step is **pending**. Open: the original
+`Text.js`, span press and selection, font loading and fallback, bidi/emoji/grapheme clusters,
+decoration and `fontStyle`, font scaling and an iOS/Android reference measurement.
+
 The [device services record](device-services/README.md) runs React Native's original `Linking`,
 `Clipboard` (the legacy module) and `Vibration` from the public import over three C++ TurboModules
 (`LinkingManager` with iOS's contract, `Clipboard` and `Vibration`) that call Godot's `OS.shell_open`,

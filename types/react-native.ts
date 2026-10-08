@@ -142,9 +142,12 @@ export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | 
   "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
   "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture"> &
   AccessibilityProps & { style?: StyleProp<ViewStyle> };
-export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID"> & {
+/** Text: onTextLayout is RN's original event, one entry per visible line (see docs/research/text-layout.md).
+ * Only the outer Text emits it; a nested Text ignores it, as in RN. */
+export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };
+export type TextLayoutEvent = RN.TextLayoutEvent;
 export interface TextInputProps extends Pick<RN.TextInputProps, "onChange" | "onChangeText" | "onSelectionChange" |
   "onFocus" | "onBlur" | "onEndEditing" | "onSubmitEditing" | "onKeyPress" | "onLayout"> {
   value?: string; defaultValue?: string; placeholder?: string; editable?: boolean;

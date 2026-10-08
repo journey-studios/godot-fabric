@@ -1222,7 +1222,7 @@
       "phase": "M1",
       "priority": "P1",
       "title": "Text and fonts",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ",
       "dependencies": [
         "GF-08",
@@ -1231,14 +1231,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "onTextLayout e o baseline do Yoga a partir das linhas do parágrafo que o host mede e pinta. Um TextLayoutManager de plataforma do Godot (native/text_platform/, no lugar do cxx portátil do RN) acrescenta o measureLines virtual e o ParagraphLayout o sobrescreve sobre o mesmo PreparedParagraph, sem segundo algoritmo de quebra. O evento do RN traz, por linha visível, text, x, y, width, height, descender, capHeight, ascender e xHeight (caixa e baseline como no iOS, capHeight e xHeight como no Android, sem a sentinela do host); só o parágrafo externo o emite, o span aninhado o ignora e um valor que não é função é rejeitado. 76 checks headless num aplicativo Hermes: exatamente um evento por parágrafo no primeiro layout, dedupe do emissor (uma mudança de cor, ou uma largura que quebra as mesmas linhas, não reemite), concordância entre medida e pintura, o baseline do Yoga em três linhas e a falha de um parágrafo que o host não consegue medir sem que a exceção atravesse o callback C do Yoga. Um oráculo independente lê as tabelas dos dois TTFs empacotados em Node: o desvio do host é de no máximo 0,576 px (0 em ascender, descender e altura) com o arredondamento documentado do FreeType, enquanto a escala crua das tabelas erra até 1,484 px e não sustenta ±1 px; a tolerância normativa segue ±1 px. O host anterior falha exatamente 5 checks normativos; três sabotagens retidas (todas as linhas ignorando numberOfLines, ascender sem o deslocamento centralizado do lineHeight e a sentinela no texto da linha) falham 4, 3 e 9 checks e o oráculo rejeita cada uma. Exemplo com 18 checks headless e 32 gráficos e duas capturas, em que a tinta pintada concorda com o baseline, o capHeight e o xHeight reportados; uma guarda estática compara o manager de plataforma com o RN pinado. Abertos: o Text.js original, spans pressionáveis e selecionáveis, carregamento e fallback de fontes, bidi, emoji e clusters de grafemas, decoração e fontStyle, elipse head/middle, escala de fonte e adjustsFontSizeToFit, views inline e uma medição de referência no iOS e no Android. A CI hospedada do passo native-text-layout está pendente: nenhuma execução hospedada foi feita. Esta fatia fecha só o checkpoint slice; o aceite total do GF-11 continua em andamento e nenhum peso ou denominador muda.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Text layout: 76 checks headless, host anterior com 5 falhas normativas, três sabotagens retidas rejeitadas pelo oráculo, exemplo com 18/32 checks e capturas (implementação 8e3e435; CI hospedada pendente)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/README.md"
+            },
+            {
+              "label": "Text layout: recibo de execução, hashes dos hosts, tolerância medida e limitações",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -3520,6 +3529,15 @@
       "url": "https://github.com/journey-studios/godot-fabric/blob/ac5f913c1ca060c12e960ff1b6c22c372da2ebe9/docs/evidence/accessibility/README.md"
     },
     {
+      "id": "text-layout-first-slice-20261007",
+      "at": "2026-10-08T02:06:47.722+00:00",
+      "taskIds": [
+        "GF-11"
+      ],
+      "message": "Primeira fatia do GF-11 (Text and fonts): onTextLayout e o baseline do Yoga passam a vir das linhas do parágrafo que o host mede e pinta, por um TextLayoutManager de plataforma do Godot com measureLines. 76 checks headless confrontados com as tabelas dos TTFs empacotados por um oráculo independente (tolerância ±1 px; o desvio medido é de no máximo 0,576 px com o arredondamento do FreeType, e a escala crua erra até 1,484 px); o host anterior falha exatamente 5 checks e as três sabotagens retidas falham 4, 3 e 9, todas rejeitadas pelo oráculo; exemplo com 18 checks headless e 32 gráficos e duas capturas. A CI hospedada do passo novo está pendente. Só o checkpoint slice do GF-11 fecha; nenhum item completo, peso ou denominador muda.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/4a822310decfaddee34204f3d09094c291ac2c9f/docs/evidence/text-layout/README.md"
+    },
+    {
       "id": "modal-hosted-bee7b40-global-timeout",
       "at": "2026-10-08T00:17:03.208711+00:00",
       "taskIds": [
@@ -5445,6 +5463,13 @@
       ],
       "message": "Correções nativas e de fixture publicadas após revisão independente: controles de entrada idêntica, 35 fontes, host 45ba095b, consumer externo e duas capturas. Revisão local aprovada; CI/CodeRabbit finais pendentes, sem novo checkpoint.",
       "url": "https://github.com/journey-studios/godot-fabric/commit/f95a3e2ebad4111819a7fa076a86fc4e3e031f98"
+    },
+    {
+      "id": "agent-board-parallel-20261008",
+      "at": "2026-10-08T00:43:16.000Z",
+      "taskIds": [],
+      "message": "Quadro de agentes paralelos: até cinco agentes, cada um com worktree, branch e áreas reservadas, coordenam pelo registro local (npm run agents). O painel local mostra o que cada um faz, a worktree, os arquivos alterados, os conflitos e os recados. Não muda checkpoints nem o denominador.",
+      "url": "https://github.com/journey-studios/godot-fabric/pull/53"
     },
     {
       "id": "device-services-first-slice-f3571fd",

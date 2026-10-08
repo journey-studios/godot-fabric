@@ -217,6 +217,13 @@
     "scene": "examples/networking/scene.tscn"
   },
   {
+    "id": "text-layout",
+    "title": "Text onTextLayout lines and Yoga baseline alignment, drawn over the paragraphs",
+    "api": "public",
+    "source": "examples/text-layout/App.jsx",
+    "scene": "examples/text-layout/scene.tscn"
+  },
+  {
     "id": "device-services",
     "title": "Original RN Clipboard, Linking and Vibration over the host's device services, with stand-in backends",
     "api": "public",

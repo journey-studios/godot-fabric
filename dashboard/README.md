@@ -9,7 +9,7 @@ release e decisões arquiteturais estão incluídos.
 node scripts/migration-dashboard.mjs
 # http://127.0.0.1:4317
 node scripts/migration-dashboard.mjs check
-node --test tests/migration-dashboard.test.mjs
+node --test tests/migration-dashboard.test.mjs tests/agents-board.test.mjs
 ```
 
 Busca, filtros de fase/status/prioridade e detalhes de cada item funcionam
@@ -111,6 +111,75 @@ estiver ocupada. Não copie o dashboard a cada entrega: mantenha um JSON
 observado e valide antes de publicar sua atualização.
 
 [Prompt para a thread de implementação](AGENT_PROMPT.md).
+
+## Agentes em paralelo (até 5)
+
+O painel local mostra até cinco agentes trabalhando ao mesmo tempo, cada um em
+sua própria worktree: quem é, o que faz, em qual worktree, branch e HEAD está,
+quais áreas reservou e se atrapalha outro agente. Aparece na seção **Agentes**
+e como chips "Agente N" nos itens GF do roadmap.
+
+O registro é um arquivo por agente em `<git-common-dir>/fabric-agents/slot-N.json`
+(N de 1 a 5), no diretório git compartilhado por todas as worktrees do clone.
+Fica fora do git de propósito: é coordenação ao vivo e local, e um campo no
+`migration.json` divergiria por branch e geraria conflitos de merge. Cada agente
+escreve só o próprio arquivo. `FABRIC_AGENTS_DIR` ou `--agents <dir>` (também no
+servidor) apontam para outro diretório. `FABRIC_AGENT_NAME` define o `--agent`
+padrão do `claim`.
+
+Protocolo, rodando na worktree de cada agente:
+
+```sh
+# 1. antes de editar: reserva o slot, o GF e as áreas
+npm run agents -- claim --task GF-22 --title "Rede sobre o cliente HTTP" \
+  --agent "Codex · GPT-5" --area src/networking/ --resource port:4318
+# 2. a cada marco (sem opções é só um sinal de vida)
+npm run agents -- update --state testing --now "rodando os testes" --next "abrir a PR"
+# 3. recados para outro agente (sem --to vai para todos)
+npm run agents -- say "contrato do fetch pronto" --to 2
+# 4. antes de commit e push: sai com 1 se houver conflito com você ou se o
+#    git de algum agente estiver ilegível (arquivos alterados desconhecidos)
+npm run agents -- check
+# 5. ao entregar
+npm run agents -- release
+```
+
+`npm run agents` sem comando (ou `list`) imprime o quadro no terminal.
+
+Regras:
+
+- Um agente por worktree e uma branch por agente, nunca `main`. A worktree
+  (raiz do `git rev-parse --show-toplevel`) identifica o agente; o slot sai do
+  `claim` (primeiro livre, ou `--slot N`). Com os cinco slots ocupados o `claim`
+  é recusado e indica com quem falar.
+- Áreas são exclusivas por prefixo: diretório termina com `/`
+  (`src/networking/`), arquivo não (`src/a.js`). Sem caminho absoluto, `..` ou
+  curingas. Áreas que se sobrepõem entre agentes são conflito, assim como um
+  arquivo alterado dentro da área reservada por outro agente ou o mesmo arquivo
+  alterado por dois agentes fora de áreas. O `claim` e o `update` recusam o que
+  criaria um conflito.
+- O git é a verdade: branch, HEAD, ahead/behind de `origin/main` e arquivos
+  alterados são lidos ao vivo da worktree. Conflitos usam o que foi declarado e
+  o que realmente mudou.
+- Arquivos compartilhados são os hubs que toda entrega altera: `ROADMAP.md`,
+  `README.md`, `package.json`, `docs/API.md`, `examples/entry.jsx`,
+  `native/register.cpp`, `native/fabric_application.cpp`,
+  `src/react-native-platform.jsx`, `types/react-native.ts`,
+  `tests/types/consumer.tsx` e outros. A lista completa (32 caminhos) é
+  `SHARED_PATHS` em `dashboard/agents.mjs`, a fonte única; o painel a mostra na
+  linha da regra. Eles nunca são exclusivos: ficam fora de toda área. Reservá-los
+  é aceito, mas ignorado, com o aviso `shared-area` (tire-os das áreas no
+  próximo `update`); diretórios que os contêm (`native/`, `dashboard/`) são
+  áreas normais, e alterar um compartilhado dentro da área de outro agente não
+  é conflito. Quando 2 ou mais agentes os alteram o painel só avisa: o
+  orquestrador faz o merge sequencial e todos mantêm os dois lados.
+- Recursos `tipo:valor` (`port:4318`, `build:modal-consumer`) são exclusivos.
+  O mesmo GF em dois agentes é só aviso: fatias diferentes de um GF podem andar
+  em paralelo, mas combinem a divisão.
+- Sem `update` há 30 minutos o agente aparece como "sem sinal". As áreas
+  continuam reservadas até o `release`; libere o slot de uma worktree removida.
+- O quadro é local: precisa do servidor (`npm run dashboard`) na máquina das
+  worktrees. No GitHub Pages não há servidor Node e a seção mostra só um aviso.
 
 ## GitHub Pages
 

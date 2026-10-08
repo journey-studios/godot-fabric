@@ -6,8 +6,9 @@ de migração atualizado durante o trabalho.
 Primeiro leia `dashboard/README.md`, `dashboard/migration.json`,
 `ROADMAP.md` e `docs/ARCHITECTURE_V2_DECISIONS.md`. Se o dashboard ainda não
 estiver no seu checkout, integre somente os arquivos novos da branch
-`codex/migration-dashboard`: `dashboard/`, `scripts/migration-dashboard.mjs`
-e `tests/migration-dashboard.test.mjs`. Preserve seu trabalho e adapte os
+`codex/migration-dashboard`: `dashboard/`, `scripts/migration-dashboard.mjs`,
+`scripts/agents.mjs`, `tests/migration-dashboard.test.mjs` e
+`tests/agents-board.test.mjs`. Preserve seu trabalho e adapte os
 scripts npm sem substituir seu `package.json` ou trocar sua branch.
 
 Confirme qual JSON o servidor aberto está lendo: o caminho é impresso ao
@@ -54,6 +55,33 @@ entrega da implementação. Para publicar antes do merge, siga o disparo
 manual abaixo; o deploy automático continua ocorrendo ao chegar ao main. Verifique o workflow `Migration dashboard Pages` antes de afirmar
 que o site público já mostra a atualização. Alterações somente locais não
 atualizam o Pages.
+
+## Trabalho em paralelo
+
+Até cinco agentes trabalham ao mesmo tempo, cada um na própria worktree e branch
+(nunca `main`). Siga este protocolo, na sua worktree:
+
+1. `npm run agents -- claim --task GF-xx --title "..." --area caminho/` antes de
+   editar. Reserve áreas pequenas e exclusivas; se for recusado, fale com o
+   agente indicado em vez de forçar.
+2. `npm run agents -- update --state ... --now "..." --next "..."` a cada marco
+   (um `update` sem opções é só um sinal de vida; sem sinal por 30 min você
+   aparece como "sem sinal").
+3. `npm run agents -- say "..." --to N` para avisar outro agente de algo que
+   afeta o trabalho dele.
+4. `npm run agents -- check` antes de commit e push: conflito exige resolver ou
+   combinar com o outro agente. Arquivos compartilhados (ROADMAP.md, README.md,
+   package.json, docs/API.md, examples/entry.jsx, native/register.cpp,
+   native/fabric_application.cpp, src/react-native-platform.jsx,
+   types/react-native.ts, tests/types/consumer.tsx... a lista completa, com 32
+   caminhos, é `SHARED_PATHS` em `dashboard/agents.mjs`) nunca são exclusivos:
+   não os reserve em `--area` (a reserva é ignorada, com aviso `shared-area`);
+   alterá-los só gera aviso e eles entram por merge sequencial do orquestrador,
+   mantendo os dois lados.
+5. `npm run agents -- release` ao entregar.
+
+Detalhes, regras e o formato do registro estão em "Agentes em paralelo (até 5)"
+no `dashboard/README.md`. O quadro é local e não aparece no GitHub Pages.
 
 ## Publicar progresso sem merge
 

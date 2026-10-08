@@ -2349,6 +2349,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("timerEngine", "react-native/TimerManager")("windowListener", window_listener.has_value())
         ("pendingAnimationFrames", frame_callbacks.size())("animationFramesRun", frame_callbacks_run)
         ("textMeasurements", text_layout->measurements() + paragraph_layout->measurements())
+        ("textLineMeasurements", paragraph_layout->line_measurements())
         ("viewportUpdates", viewport_updates)("errors", folly::dynamic::array());
     const auto counts = pointer_processor().pointerStateCountsForGodot();
     result["pointerProcessor"] = folly::dynamic::object("active", counts[0])

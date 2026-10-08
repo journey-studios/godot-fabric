@@ -17,7 +17,7 @@ test("Pages artifact works under a project subpath and contains only public asse
   const output = await mkdtemp(path.join(tmpdir(), "fabric-pages-"));
   t.after(() => rm(output, { recursive: true, force: true }));
   await buildDashboardPages(output);
-  assert.deepEqual((await readdir(output)).sort(), [".nojekyll", "AGENT_PROMPT.md", "app.mjs", "fonts", "index.html", "migration.json", "model.mjs", "style.css"].sort());
+  assert.deepEqual((await readdir(output)).sort(), [".nojekyll", "AGENT_PROMPT.md", "agents-view.mjs", "agents.css", "agents.mjs", "app.mjs", "fonts", "format.mjs", "index.html", "migration.json", "model.mjs", "style.css"].sort());
   const html = await readFile(path.join(output, "index.html"), "utf8");
   const app = await readFile(path.join(output, "app.mjs"), "utf8");
   const css = await readFile(path.join(output, "style.css"), "utf8");
@@ -125,7 +125,7 @@ test("server observes external JSON updates, rejects corruption and recovers", a
   assert.equal((await fetch(`${base}/api/data`)).status, 200);
   assert.equal((await fetch(`${base}/api/data`, { method: "POST" })).status, 405);
   assert.equal((await fetch(`${base}/package.json`)).status, 404);
-  for (const resource of ["/", "/style.css", "/app.mjs", "/model.mjs", "/fonts/NotoSans.ttf", "/AGENT_PROMPT.md"]) {
+  for (const resource of ["/", "/style.css", "/app.mjs", "/model.mjs", "/agents.mjs", "/agents-view.mjs", "/format.mjs", "/agents.css", "/fonts/NotoSans.ttf", "/AGENT_PROMPT.md"]) {
     assert.equal((await fetch(`${base}${resource}`)).status, 200, resource);
   }
 });
