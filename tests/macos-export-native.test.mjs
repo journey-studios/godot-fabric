@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
-import {assertLocalLoadPaths, auditAppLoadPaths, normalizeFrameworkPackaging, runMacOSExport, verifySignatures} from "../scripts/macos-export.mjs";
+import {assertConsumerCapture, assertLocalLoadPaths, auditAppLoadPaths, normalizeFrameworkPackaging, runMacOSExport, verifySignatures} from "../scripts/macos-export.mjs";
 import {createHarness} from "../scripts/consumer-harness.mjs";
 import {verifyAddonNativeInputs} from "../scripts/pack-addon.mjs";
 
@@ -64,6 +64,33 @@ test("committed consumer oracle preserves the exact 40/43 check names and captur
   assert.deepEqual(checkInventory.headed.filter(name => name.startsWith("Consumer capture saved:")), [
     "Consumer capture saved: initial", "Consumer capture saved: updated", "Consumer capture saved: resized",
   ]);
+});
+
+function pngHeader(width, height) {
+  const bytes = Buffer.alloc(24);
+  Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]).copy(bytes);
+  bytes.write("IHDR", 12, "ascii");
+  bytes.writeUInt32BE(width, 16);
+  bytes.writeUInt32BE(height, 20);
+  return bytes;
+}
+
+function consumerCaptureReport(window = {width: 1080, height: 600, scale: 0.5, fontScale: 1}, geometryWindow = window) {
+  return {beforeStop: {dimensions: {window}}, geometry: {windowMetrics: {window: geometryWindow}}};
+}
+
+test("headed consumer capture requires the fixed physical image and matching logical RN metrics", () => {
+  const expected = consumerCaptureReport();
+  assert.deepEqual(assertConsumerCapture(pngHeader(540, 300), "initial", expected), {width: 540, height: 300});
+  assert.throws(() => assertConsumerCapture(pngHeader(1024, 600), "clamped", expected), /fixed exported window/);
+  assert.throws(() => assertConsumerCapture(pngHeader(540, 300), "wrong-logical-window",
+    consumerCaptureReport({width: 1024, height: 600, scale: 0.5, fontScale: 1})), /logical window or scale/);
+  assert.throws(() => assertConsumerCapture(pngHeader(540, 300), "wrong-scale",
+    consumerCaptureReport({width: 1080, height: 600, scale: 1, fontScale: 1})), /logical window or scale/);
+  assert.throws(() => assertConsumerCapture(pngHeader(540, 300), "missing-window",
+    {beforeStop: {dimensions: {}}, geometry: {windowMetrics: {}}}), /omitted RN window metrics/);
+  assert.throws(() => assertConsumerCapture(pngHeader(540, 300), "geometry-mismatch",
+    consumerCaptureReport(undefined, {width: 1080, height: 600, scale: 0.5, fontScale: 2})), /geometry window metrics differ/);
 });
 
 test("load-path validation permits contained loader paths and rejects traversal", () => {

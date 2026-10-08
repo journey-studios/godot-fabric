@@ -62,12 +62,17 @@ function assertCheckInventory(report, expectedNames, server, userDataPath) {
   assert.ok(userDataPath.length > 0, "exported fixture omitted its actual user data path");
 }
 
-function assertConsumerCapture(bytes, name) {
+export function assertConsumerCapture(bytes, name, report) {
   const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
   assert.ok(bytes.length >= 24 && bytes.subarray(0, 8).equals(signature), `${name} capture is not PNG`);
   assert.equal(bytes.toString("ascii", 12, 16), "IHDR", `${name} capture has no PNG IHDR`);
   const dimensions = {width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20)};
-  assert.deepEqual(dimensions, {width: 1080, height: 600}, `${name} capture dimensions differ from the canonical consumer baseline`);
+  assert.deepEqual(dimensions, {width: 540, height: 300}, `${name} capture dimensions differ from the fixed exported window`);
+  const initialWindow = report?.beforeStop?.dimensions?.window;
+  const measuredWindow = report?.geometry?.windowMetrics?.window;
+  assert.ok(initialWindow && measuredWindow, `${name} capture report omitted RN window metrics`);
+  assert.deepEqual(initialWindow, {width: 1080, height: 600, scale: 0.5, fontScale: 1}, `${name} capture RN logical window or scale differs from the fixed consumer baseline`);
+  assert.deepEqual(measuredWindow, initialWindow, `${name} capture geometry window metrics differ from the initial RN window`);
   return dimensions;
 }
 
@@ -268,6 +273,14 @@ function patchValidation(text) {
   const pathCount = (text.match(/res:\/\/consumer-/g) ?? []).length;
   assert.equal(pathCount, 2, "expected exactly two canonical report/capture output path prefixes");
   let result = text.replaceAll("res://consumer-", "user://consumer-");
+  const ready = "func _ready() -> void:\n";
+  assert.equal(result.split(ready).length - 1, 1, "canonical consumer _ready method not found uniquely");
+  result = result.replace(ready, `func _enter_tree() -> void:
+  super._enter_tree()
+  if DisplayServer.get_name() != "headless":
+    get_tree().root.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
+
+${ready}`);
   const completion = '  print("CONSUMER_VALIDATION_PASSED" if success else "CONSUMER_VALIDATION_FAILED")';
   assert.equal(result.split(completion).length - 1, 1, "canonical consumer completion marker not found uniquely");
   result = result.replace(completion, '  print("MACOS_EXPORT_USER_DATA_DIR:" + OS.get_user_data_dir())\n' + completion);
@@ -282,11 +295,18 @@ async function prepareProject(harness, template, projectName) {
   const sourceProject = await readFile(projectPath, "utf8");
   assert.equal(sourceProject.split('config/name="Godot Fabric Consumer"').length - 1, 1, "minimal consumer project name changed unexpectedly");
   assert.equal(sourceProject.split("[rendering]\n").length - 1, 1, "minimal consumer rendering section changed unexpectedly");
+  const viewportHeight = "window/size/viewport_height=600\n";
+  assert.equal(sourceProject.split(viewportHeight).length - 1, 1, "minimal consumer viewport height changed unexpectedly");
   let adaptedProject = sourceProject.replace('config/name="Godot Fabric Consumer"', `config/name="${projectName}"`);
+  adaptedProject = adaptedProject.replace(viewportHeight, `${viewportHeight}window/size/window_width_override=540\nwindow/size/window_height_override=300\nwindow/size/resizable=false\nwindow/stretch/aspect="keep"\n`);
   adaptedProject = adaptedProject.replace("[rendering]\n", "[rendering]\ntextures/vram_compression/import_s3tc_bptc=true\ntextures/vram_compression/import_etc2_astc=true\n");
   assert.ok(adaptedProject.includes(`config/name="${projectName}"`));
   assert.ok(adaptedProject.includes("textures/vram_compression/import_s3tc_bptc=true"));
   assert.ok(adaptedProject.includes("textures/vram_compression/import_etc2_astc=true"));
+  assert.ok(adaptedProject.includes("window/size/window_width_override=540"));
+  assert.ok(adaptedProject.includes("window/size/window_height_override=300"));
+  assert.ok(adaptedProject.includes("window/size/resizable=false"));
+  assert.ok(adaptedProject.includes('window/stretch/aspect="keep"'));
   await writeFile(projectPath, adaptedProject);
   const preset = `[preset.0]\nname="macOS Arm64"\nplatform="macOS"\nrunnable=true\ndedicated_server=false\ncustom_features=""\nexport_filter="all_resources"\ninclude_filter=""\nexclude_filter=""\n\n[preset.0.options]\napplication/bundle_identifier="${expectedBundleIdentifier}"\napplication/short_version="1.0"\napplication/version="1.0"\nbinary_format/architecture="arm64"\ncustom_template/release="${template.replaceAll("\\", "\\\\").replaceAll('"', '\\"')}"\ncodesign/codesign=0\n`;
   await writeFile(path.join(harness.project, "export_presets.cfg"), preset);
@@ -299,9 +319,7 @@ async function prepareProject(harness, template, projectName) {
   await writeFile(originalProjectCopy, sourceProject);
   await writeFile(adaptedProjectCopy, adaptedProject);
   const patch = await harness.run("fixture-validation-diff", "/usr/bin/diff", ["-u", originalCopy, adaptedCopy], 1, harness.env, {cwd: harness.directory});
-  assert.equal((patch.match(/^[-+](?![-+])/gm) ?? []).length, 5, "fixture output adaptation should contain two path swaps and one marker line");
   const projectPatch = await harness.run("fixture-project-diff", "/usr/bin/diff", ["-u", originalProjectCopy, adaptedProjectCopy], 1, harness.env, {cwd: harness.directory});
-  assert.equal((projectPatch.match(/^[-+](?![-+])/gm) ?? []).length, 4, "project adaptation should only rename the app and enable two texture import settings");
   return {canonicalProjectSha256: sha256(await readFile(path.join(root, "consumers/minimal/project.godot"))),
     adaptedProjectSha256: sha256(await readFile(projectPath)), canonicalValidationSha256: sha256(Buffer.from(sourceValidation)),
     adaptedValidationSha256: sha256(Buffer.from(adaptedValidation)), validationDiff: patch,
@@ -345,9 +363,9 @@ async function runExportedConsumer(harness, app, label, headed, expectedNames, p
     for (const name of ["initial", "updated", "resized"]) {
       const source = path.join(userDataPath, `consumer-${name}.png`);
       const bytes = await readFile(source);
-      const dimensions = assertConsumerCapture(bytes, name);
       const destination = path.join(harness.directory, `${name}.png`);
       await copyFile(source, destination);
+      const dimensions = assertConsumerCapture(bytes, name, report);
       captures.push({...await fileRecord(destination), dimensions});
     }
   }

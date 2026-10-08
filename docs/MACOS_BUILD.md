@@ -30,13 +30,15 @@ Godot's export-plugin error message is not an abort guarantee. The runner theref
 
 The fixture adaptation is confined to the disposable copied project: its report and captures move from read-only `res://` to `user://`, and it prints the actual user-data directory so the runner can collect and verify the report and PNGs. The committed consumer stays unchanged. The runner compares exact check names and order against [`macos-export-checks.json`](../scripts/macos-export-checks.json), including the three headed captures.
 
+For the bounded export fixture, the copied project fixes the physical headed window at 540×300 and keeps the 1080×600 logical canvas at a uniform 0.5 scale; resizing is disabled. Headless validation leaves Godot's default scale mode untouched. The runner requires both the exact PNG dimensions and matching RN window metrics (`1080×600`, scale `0.5`, font scale `1`) so a smaller/clipped render cannot pass by image size alone.
+
 CI retains the verified app as `Verified.app.tar.gz`; extract it with `tar -xzf Verified.app.tar.gz` so bundle permissions and framework symlinks are preserved. Verify the extracted bundle with `codesign --verify --deep --strict --verbose=2 Verified.app`.
 
 Ad-hoc signing is for local validation only. This slice does not establish Developer ID distribution, notarization, an iOS export, mobile-device behavior, or a second-machine replay. The observed environment is the same Mac with fresh per-application user data, rather than a clean OS user profile. The Frontier twelve-turn game replay, clean profile, second Mac/VM and physical-device criteria remain open.
 
 ## Evidence status
 
-The [executed evidence](evidence/macos-export/README.md) records producer `58f527193039222b19794960e7b662cb34c65e74`: a signed, relocated `.app` passed the exact 40/43 checks and three 1080×600 captures matched the editable baseline byte for byte. The native test lane also passed framework-layout idempotency and four real rejection controls. Root independently verified all 219 SDK source pins, builder/PCK bindings and the signature at the final path. Hosted CI and CodeRabbit for the delivery PR are pending.
+The [historical executed evidence](evidence/macos-export/README.md) records producer `58f527193039222b19794960e7b662cb34c65e74`: its signed, relocated `.app` passed the exact 40/43 checks and three 1080×600 captures matched the editable baseline byte for byte. That result predates the fixed physical-window protocol above. The later hosted run at `7c6a4f8` failed when the hosted capture was 1024×600 instead of the asserted 1080×600. The revised exported app has not yet been measured, so this historical proof does not validate the new capture protocol.
 
 Run the same lane with `MACOS_EXPORT_TEMPLATE` set to the derived ZIP:
 
