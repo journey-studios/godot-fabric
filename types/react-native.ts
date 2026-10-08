@@ -152,6 +152,8 @@ export interface AccessibilityProps {
   accessibilityLiveRegion?: "none" | "polite" | "assertive";
   accessibilityElementsHidden?: boolean;
   importantForAccessibility?: "auto" | "yes" | "no-hide-descendants";
+  /** Only the empty list: a custom action fails where the View renders. */
+  accessibilityActions?: readonly never[];
   onAccessibilityTap?: () => void;
   "aria-label"?: string;
   "aria-live"?: "off" | "polite" | "assertive";
@@ -162,14 +164,26 @@ export interface AccessibilityProps {
   "aria-expanded"?: boolean;
   "aria-selected"?: boolean;
 }
-// An interface, so that a project's opt-in declarations (types/nativewind.ts) can merge into it.
-export interface ViewProps extends Pick<RN.ViewProps, "children" | "testID" | "onLayout" | "pointerEvents" | "collapsable" | "collapsableChildren" | "id" | "nativeID" |
+/** What the host gives every View-like element (a View, an Image, an ActivityIndicator, and through the View a Pressable): the
+ * identifiers, the layout event, the hit area, and the pointer, click, touch and responder events its input pipeline
+ * dispatches. One list, so that the components that share it cannot disagree. */
+type HostViewProps = Pick<RN.ViewProps, "testID" | "nativeID" | "onLayout" | "pointerEvents" | "hitSlop" | "collapsable" | "collapsableChildren" |
   "onPointerDown" | "onPointerDownCapture" | "onPointerMove" | "onPointerMoveCapture" |
   "onPointerUp" | "onPointerUpCapture" | "onPointerCancel" | "onPointerCancelCapture" |
   "onPointerOver" | "onPointerOverCapture" | "onPointerOut" | "onPointerOutCapture" |
   "onPointerEnter" | "onPointerEnterCapture" | "onPointerLeave" | "onPointerLeaveCapture" |
-  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture">,
-  AccessibilityProps { style?: StyleProp<ViewStyle> }
+  "onGotPointerCapture" | "onGotPointerCaptureCapture" | "onLostPointerCapture" | "onLostPointerCaptureCapture" |
+  "onClick" | "onClickCapture" | "onTouchStart" | "onTouchStartCapture" | "onTouchMove" | "onTouchMoveCapture" |
+  "onTouchEnd" | "onTouchEndCapture" | "onTouchCancel" | "onTouchCancelCapture" | "onStartShouldSetResponder" |
+  "onStartShouldSetResponderCapture" | "onMoveShouldSetResponder" | "onMoveShouldSetResponderCapture" | "onResponderGrant" |
+  "onResponderReject" | "onResponderStart" | "onResponderEnd" | "onResponderMove" | "onResponderRelease" | "onResponderTerminate" |
+  "onResponderTerminationRequest">;
+// An interface, so that a project's opt-in declarations (types/nativewind.ts) can merge into it. Every prop here is one that
+// src/prop-scope.mjs classifies as supported for the View. The props it refuses, and the ones it ignores (accessibilityValue,
+// focusable, tabIndex, the focus events and the rest), are not declared, and tests/scope-0.5.test.mjs keeps the two in step.
+export interface ViewProps extends HostViewProps, Pick<RN.ViewProps, "children" | "id">, AccessibilityProps {
+  style?: StyleProp<ViewStyle>;
+}
 /** Text renders RN's original Text.js (see docs/research/text-original.md). onTextLayout is RN's original event, one
  * entry per visible line (docs/research/text-layout.md); only the outer Text emits it, a nested Text ignores it, as
  * in RN. The outer paragraph presses with onPress, onPressIn, onPressOut and onLongPress (Pressability, with
@@ -180,11 +194,12 @@ export interface ViewProps extends Pick<RN.ViewProps, "children" | "testID" | "o
  * scale is 1 and nothing highlights outside iOS. selectable, adjustsFontSizeToFit, selectionColor, dataDetectorType,
  * textBreakStrategy, lineBreakStrategyIOS, android_hyphenationFrequency and the head and middle ellipsize modes fail
  * where the Text renders. */
-export interface TextProps extends Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout" |
+export interface TextProps extends Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "id" | "onTextLayout" |
+  "pointerEvents" | "onPointerEnter" | "onPointerLeave" | "onPointerMove" |
   "onPress" | "onPressIn" | "onPressOut" | "onLongPress" | "pressRetentionOffset" | "disabled" | "allowFontScaling" |
   "maxFontSizeMultiplier" | "dynamicTypeRamp" | "suppressHighlighting" | "onResponderGrant" | "onResponderMove" |
   "onResponderRelease" | "onResponderTerminate" | "onResponderTerminationRequest" | "onStartShouldSetResponder" |
-  "onMoveShouldSetResponder"> {
+  "onMoveShouldSetResponder">, Omit<AccessibilityProps, "onAccessibilityTap" | "aria-live"> {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 }
 export type TextLayoutEvent = RN.TextLayoutEvent;
@@ -204,8 +219,8 @@ export type SwitchProps = Pick<RN.SwitchProps, "value" | "disabled" | "onChange"
 export type SwitchChangeEvent = RN.SwitchChangeEvent;
 /** RN's original ActivityIndicator.js (non-Android path) over the generated
  * ActivityIndicatorView component; a numeric size sizes the Godot spinner. */
-export type ActivityIndicatorProps = Pick<RN.ActivityIndicatorProps, "animating" | "color" | "hidesWhenStopped" | "size" |
-  "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
+export type ActivityIndicatorProps = Pick<RN.ActivityIndicatorProps, "animating" | "color" | "hidesWhenStopped" | "size" | "children"> &
+  HostViewProps & Omit<AccessibilityProps, Extract<keyof AccessibilityProps, `aria-${string}`>> & { style?: StyleProp<ViewStyle> };
 /** RN's original Image.ios.js behind a validating wrapper, with RN's own native image pipeline (ImageShadowNode, its
  * ImageRequest and the observers) over a host ImageManager that reads and decodes on worker threads. Sources are
  * require()d assets, res://, user://, file:// and data: URIs, and http(s) addresses. tintColor, blurRadius, capInsets and the
@@ -217,9 +232,10 @@ export type ImageLoadEvent = RN.ImageLoadEvent;
 export type ImageErrorEvent = RN.ImageErrorEvent;
 export type ImageProgressEventIOS = RN.ImageProgressEventIOS;
 export type ImageStyle = Omit<ViewStyle, "overflow"> & Pick<RN.ImageStyle, "resizeMode" | "objectFit" | "overflow" | "tintColor" | "overlayColor">;
-export interface ImageProps extends Pick<RN.ImageProps, "source" | "src" | "srcSet" | "alt" | "width" | "height" | "resizeMode" | "testID" | "nativeID" |
-  "onLayout" | "onLoadStart" | "onLoad" | "onLoadEnd" | "onError" | "onProgress" | "onPartialLoad" | "blurRadius" | "capInsets" | "tintColor" |
-  "defaultSource" | "loadingIndicatorSource" | "fadeDuration" | "progressiveRenderingEnabled" | "resizeMethod" | "resizeMultiplier"> { style?: StyleProp<ImageStyle> }
+export interface ImageProps extends Pick<RN.ImageProps, "source" | "src" | "srcSet" | "alt" | "width" | "height" | "resizeMode" |
+  "onLoadStart" | "onLoad" | "onLoadEnd" | "onError" | "onProgress" | "onPartialLoad" | "blurRadius" | "capInsets" | "tintColor" |
+  "defaultSource" | "loadingIndicatorSource" | "fadeDuration" | "progressiveRenderingEnabled" | "resizeMethod" | "resizeMultiplier" |
+  "crossOrigin" | "referrerPolicy">, HostViewProps, Omit<AccessibilityProps, "aria-live"> { style?: StyleProp<ImageStyle> }
 export type ImageBackgroundProps = ImageProps & { children?: React.ReactNode; style?: StyleProp<ViewStyle>;
   imageStyle?: StyleProp<ImageStyle>; imageRef?: React.Ref<NativeInstance> };
 export interface ImageStatics {
@@ -239,7 +255,8 @@ export declare const ImageBackground: React.ComponentType<ImageBackgroundProps &
 export declare const AssetRegistry: typeof RN.AssetRegistry;
 /** RN's original Modal with the Godot presentation and lifecycle props. */
 export type ModalProps = Pick<RN.ModalProps, "visible" | "transparent" | "onShow" | "onRequestClose" |
-  "testID" | "children" | "backdropColor"> & {
+  "testID" | "children" | "backdropColor" | "modalRef"> & {
+  style?: StyleProp<ViewStyle>;
   animationType?: "none";
   presentationStyle?: "fullScreen" | "overFullScreen";
 };
@@ -266,7 +283,7 @@ export declare const ActivityIndicator: React.ComponentType<ActivityIndicatorPro
  * the Godot View subset; props this platform has not verified are omitted. */
 export type TouchableOpacityProps = Pick<RN.TouchableOpacityProps, "activeOpacity" | "onPress" | "onPressIn" | "onPressOut" |
   "onLongPress" | "delayLongPress" | "delayPressIn" | "delayPressOut" | "disabled" | "hitSlop" | "pressRetentionOffset" |
-  "testID" | "nativeID" | "onLayout" | "children"> & Omit<AccessibilityProps, "role" | "onAccessibilityTap"> & { style?: StyleProp<ViewStyle> };
+  "testID" | "nativeID" | "onLayout" | "children"> & Omit<AccessibilityProps, "role" | "onAccessibilityTap" | "accessibilityActions"> & { style?: StyleProp<ViewStyle> };
 export declare const TouchableOpacity: React.ComponentType<TouchableOpacityProps & React.RefAttributes<NativeInstance>>;
 /** RN's original TouchableNativeFeedback.js: Pressability's press props around the single child RN clones. Off Android RN
  * leaves out the drawable, so `background` and `useForeground` are accepted and never reach the host. The statics are
@@ -277,15 +294,45 @@ export type TouchableNativeFeedbackProps = Pick<RN.TouchableNativeFeedbackProps,
 export declare const TouchableNativeFeedback: React.ComponentType<TouchableNativeFeedbackProps> &
   Pick<typeof RN.TouchableNativeFeedback, "SelectableBackground" | "SelectableBackgroundBorderless" | "Ripple" | "canUseNativeForeground">;
 /** RN's original Pressable.js over the Godot View: Pressability's press props, and a style that may be a function of
- * `pressed`. Props this platform has not verified (hover, focus, the Android ripple and sound) are omitted. */
-export interface PressableProps extends Pick<RN.PressableProps, "onPress" | "onPressIn" | "onPressOut" | "onLongPress" |
-  "delayLongPress" | "disabled" | "hitSlop" | "pressRetentionOffset" | "testID" | "nativeID" | "onLayout" | "children">,
-  AccessibilityProps { style?: StyleProp<ViewStyle> | ((state: RN.PressableStateCallbackType) => StyleProp<ViewStyle>) }
+ * `pressed`. It takes the props of the Godot View, with its own press props; the hover handlers, the Android ripple and
+ * sound, `testOnly_pressed`, `focusable` and `tabIndex` are not declared (the hover handlers and `testOnly_pressed` fail
+ * where the Pressable renders; the Android props, `focusable` and `tabIndex` are accepted and change nothing). */
+export interface PressableProps extends Omit<ViewProps, "children" | "style">, Pick<RN.PressableProps, "onPress" | "onPressIn" |
+  "onPressOut" | "onLongPress" | "onPressMove" | "delayLongPress" | "disabled" | "pressRetentionOffset" | "unstable_pressDelay" |
+  "cancelable" | "blockNativeResponder" | "children"> {
+  style?: StyleProp<ViewStyle> | ((state: RN.PressableStateCallbackType) => StyleProp<ViewStyle>);
+}
 export declare const Pressable: React.ComponentType<PressableProps & React.RefAttributes<NativeInstance>>;
-/** RN's original useWindowDimensions, fed by the Godot window. */
-export declare const useWindowDimensions: typeof RN.useWindowDimensions;
+/** The metrics of the window or the screen, as RN's DisplayMetrics: the host reports its window in points, the scale of its
+ * display and a fontScale that is always 1. */
+export interface ScaledSize { width: number; height: number; scale: number; fontScale: number }
+/** What a `change` of the dimensions carries: both sets, as RN's DimensionsPayload. */
+export interface DimensionsChange { window: ScaledSize; screen: ScaledSize }
+/** RN's original Dimensions state, fed by the host. `set` is RN's native-only entry point and is not declared. */
+export declare const Dimensions: {
+  get(dimension: "window" | "screen"): ScaledSize;
+  addEventListener(type: "change", handler: (change: DimensionsChange) => void): EmitterSubscription;
+};
+/** React hook over the window's metrics: width, height, scale and fontScale (always 1). */
+export declare function useWindowDimensions(): ScaledSize;
+/** The platform object: `OS` is "godot", which is neither "ios" nor "android", so `select` picks the `godot` key, then
+ * `native`, then `default`; the `ios` and `android` keys are never selected. `constants` has the RN version only: Version,
+ * isTV and the rest of RN's Platform are absent. */
+export declare const Platform: {
+  readonly OS: "godot";
+  readonly constants: { readonly reactNativeVersion: { readonly major: number; readonly minor: number; readonly patch: number } };
+  select<T>(specifics: { godot?: T; native?: T; default: T }): T;
+  select<T>(specifics: { godot?: T; native?: T; default?: T }): T | undefined;
+};
+/** The styles `StyleSheet.create` takes: a View, Text or Image style, with the literal types of its values kept, so that a
+ * `resizeMode: "contain"` written in a sheet still fits an Image. */
+export type NamedStyle = ViewStyle | TextStyle | ImageStyle;
 export declare const StyleSheet: {
-  hairlineWidth: number;
-  create<T extends Record<string, TextStyle>>(styles: T): T;
-  flatten(style: StyleProp<TextStyle>): TextStyle;
+  /** RN's iOS-like constant: 1 on this host. */
+  readonly hairlineWidth: number;
+  /** An absolutely positioned box over its parent, as RN 0.87.1's. */
+  readonly absoluteFill: { readonly position: "absolute"; readonly left: 0; readonly right: 0; readonly top: 0; readonly bottom: 0 };
+  create<const T extends Record<string, NamedStyle>>(styles: T): T;
+  compose<A, B>(style1: StyleProp<A>, style2: StyleProp<B>): StyleProp<A | B>;
+  flatten<T>(style?: StyleProp<T>): T;
 };

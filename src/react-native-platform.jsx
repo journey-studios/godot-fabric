@@ -26,6 +26,7 @@ import {
 import { PublicInput } from "./public-input";
 import TextInputState from "./text-input-state";
 import { validateButton, validateInput } from "./control-contracts.mjs";
+import { checkProps } from "./prop-scope.mjs";
 import { pressableAccessibilityProps, withExplicitRoles } from "./accessibility-view-config.js";
 import processColor from "react-native/Libraries/StyleSheet/processColor";
 import OriginalStyleSheet from "react-native/Libraries/StyleSheet/StyleSheet";
@@ -70,7 +71,15 @@ export {
 } from "./os-specific";
 export { useWindowDimensions } from "./window-dimensions";
 export { default as useColorScheme } from "react-native/Libraries/Utilities/useColorScheme";
-export const Modal = OriginalModal;
+// RN's original Modal.js behind the prop policy (src/prop-scope.mjs): the check runs on every render, so a prop that the host
+// cannot take fails on an update as it does on the mount. RN's Modal is a function component that maps ref to modalRef and
+// carries Context; this wrapper keeps both.
+export function Modal(props) {
+  checkProps("Modal", props);
+  return <OriginalModal {...props} />;
+}
+Modal.displayName = OriginalModal.displayName;
+Modal.Context = OriginalModal.Context;
 export const SafeAreaView = OriginalSafeAreaView;
 export {
   FlatList,
@@ -81,6 +90,8 @@ export {
 export { default as Platform } from "./platform";
 export const StyleSheet = {
   hairlineWidth: 1,
+  // RN 0.87.1's StyleSheetExports.js: an absolutely positioned box over its parent.
+  absoluteFill: Object.freeze({ position: "absolute", left: 0, right: 0, top: 0, bottom: 0 }),
   create: (styles) => styles,
   // RN's own compose, which VirtualizedList uses for its cells and headers.
   compose: (style1, style2) => OriginalStyleSheet.compose(style1, style2),
@@ -168,6 +179,7 @@ export function View({
 }) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");
+  checkProps("View", props);
   const flat = StyleSheet.flatten(style);
   // Browser text selection is irrelevant to native Controls. The accessibility
   // props reach RN's View, whose view config (src/accessibility-view-config.js)
@@ -258,6 +270,7 @@ export function ActivityIndicator({ style, ...props }) {
   if (useTextAncestor()) {
     throw new Error("Inline Controls are not implemented in Godot Text");
   }
+  checkProps("ActivityIndicator", props);
   return <OriginalActivityIndicator {...props} style={nativeStyle(style, "ActivityIndicator")} />;
 }
 export const StatusBar = unavailable("StatusBar");

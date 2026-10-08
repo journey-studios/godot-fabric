@@ -4,6 +4,7 @@ import { FlatList, SectionList, VirtualizedList, VirtualizedSectionList, type Li
 import { Animated, Easing, TouchableOpacity, TouchableNativeFeedback, useAnimatedValue, useAnimatedValueXY, type TouchableOpacityProps, type TouchableNativeFeedbackProps } from "react-native";
 import { AssetRegistry, Image, ImageBackground, type ImageProps, type ImageBackgroundProps, type ImageStyle, type ImageLoadEvent, type ImageErrorEvent, type ImageProgressEventIOS, type ImageResizeMode, type ImageSourcePropType } from "react-native";
 import { Pressable, useWindowDimensions, type PressableProps } from "react-native";
+import { Dimensions, Platform, StyleSheet, type EmitterSubscription, type ScaledSize } from "react-native";
 import type { TextInputProps as UpstreamInput, ButtonProps as UpstreamButton } from "../../node_modules/react-native/types_generated/index";
 import type { TextInputProps, ButtonProps, SwitchChangeEvent, TextLayoutEvent, ActivityIndicatorProps, ViewStyle, PointerEvent, NativePointerEvent, AccessibilityProps } from "react-native";
 
@@ -460,3 +461,55 @@ const classImage = <Image source={{ uri: "res://logo.png" }} className="w-8" />;
 // @ts-expect-error className on Pressable
 const classPressable = <Pressable className="p-2" />;
 void pressable; void staticPressable; void WindowSize; void ripplePressable; void hoverPressable; void classView; void classText; void classImage; void classPressable;
+
+// The utilities of the 0.5 scope (docs/compatibility/scope-0.5.json): Platform, Dimensions, useWindowDimensions and StyleSheet.
+// Platform.OS is "godot": the first line is the whole OS test, and the other two systems are not names of it.
+const platformIsGodot: boolean = Platform.OS === "godot";
+const pickedNumber: number = Platform.select({ godot: 1, native: 2, default: 3 });
+const pickedOptional: string | undefined = Platform.select({ native: "native" });
+const reactNativeMinor: number = Platform.constants.reactNativeVersion.minor;
+// @ts-expect-error "ios" is not the OS of this platform
+const platformIsIOS = Platform.OS === "ios";
+// @ts-expect-error the ios key of select is never selected
+const iosKey = Platform.select({ ios: 1, default: 2 });
+// @ts-expect-error Version is not part of the Godot Platform
+const platformVersion = Platform.Version;
+void platformIsGodot; void pickedNumber; void pickedOptional; void reactNativeMinor; void platformIsIOS; void iosKey; void platformVersion;
+// Dimensions: get takes window or screen, and the change handler may destructure what it receives.
+const windowSize: ScaledSize = Dimensions.get("window");
+const screenScale: number = Dimensions.get("screen").scale;
+const dimensionsSubscription: EmitterSubscription = Dimensions.addEventListener("change", ({ window, screen }) => {
+  const width: number = window.width; const fontScale: number = screen.fontScale;
+  void width; void fontScale;
+});
+dimensionsSubscription.remove();
+// @ts-expect-error only window and screen exist
+const displaySize = Dimensions.get("display");
+// @ts-expect-error the change handler receives { window, screen }, not a number
+const wrongHandler = Dimensions.addEventListener("change", (change: number) => { void change; });
+// @ts-expect-error change is the only event
+const resizeEvent = Dimensions.addEventListener("resize", () => {});
+void windowSize; void screenScale; void displaySize; void wrongHandler; void resizeEvent;
+function Metrics() {
+  const metrics: ScaledSize = useWindowDimensions();
+  // @ts-expect-error the host reports no densityDpi
+  const density = metrics.densityDpi;
+  void density;
+  return <View />;
+}
+// StyleSheet.create keeps the literal types of the values, so a sheet entry fits an Image, a Text and a View.
+const sheet = StyleSheet.create({
+  root: { ...StyleSheet.absoluteFill, backgroundColor: "#000000" },
+  picture: { width: 24, height: 24, resizeMode: "contain" },
+  label: { color: "#ffffff", fontSize: 12, textAlign: "center" },
+  box: { flex: 1, position: "absolute", transform: [{ translateX: 4 }] },
+});
+const sheetView = <View style={[sheet.root, sheet.box]}>
+  <Image source={{ uri: "res://logo.png" }} style={sheet.picture} /><Text style={sheet.label}>Label</Text>
+</View>;
+const composedStyle = StyleSheet.compose(sheet.box, sheet.root);
+const flatStyle = StyleSheet.flatten([sheet.box, sheet.root]);
+const thinLine: number = StyleSheet.hairlineWidth;
+// @ts-expect-error a style outside the Godot subset
+const shadowSheet = StyleSheet.create({ shadow: { shadowColor: "#000000" } });
+void Metrics; void sheetView; void composedStyle; void flatStyle; void thinLine; void shadowSheet;
