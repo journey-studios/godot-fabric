@@ -545,10 +545,12 @@ workloads 20 times each, headless: a `View`, `Button`/`TextInput`/`Switch`, a re
 120-row `FlatList`. After every cycle the SceneTree's nodes, Godot's orphan count and the host's native views are
 back to the baseline of the run; counters, phases and the heap source keep their invariants at every reading, and
 the live heap at rest rises at most 2,048 bytes above its first steady value (worst measured: one 312-byte step in
-eight soaks). 41 checks, recomputed by an independent oracle, which also recomputes the nearest-rank percentiles
-from the samples the host reports. The preceding host fails exactly the 27 that read the section; three retained
+eight soaks). 41 checks at the pinned `ad87234` (42 in the current suite, which the review of #59 extended with the
+check that the notification of a root's unmount carries the live and retired roots of the retirement), recomputed by an
+independent oracle, which also recomputes the nearest-rank percentiles from the samples the host reports. The preceding
+host fails exactly the 27 that read the section (28 in the current suite); three retained
 sabotages (a Control never freed, a frozen heap reading, a phase counted twice) fail 4, 3 and 2 and the oracle
-rejects each; four breakages made in the recorded report are rejected too. The samples the percentiles come from
+rejects each; four breakages made in the recorded report are rejected too (five in the current suite). The samples the percentiles come from
 are published only to a validation run (`validation_performance_samples`): the application snapshot weighs 5,997
 bytes by default and 18,398 with them. Durations, the resident memory and Godot's static memory are recorded and
 never judged, and the headless numbers do not represent a display. Per-device budgets (V2-D28), text shaping,

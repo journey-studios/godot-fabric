@@ -19,6 +19,10 @@ Todo link de código abaixo está fixado no commit de implementação
 [`ad87234`](https://github.com/journey-studios/godot-fabric/commit/ad8723449abcab24fa5b38e41f3deac5c5a162fe)
 (árvore `0b4523e7`). Cada fonte executada, listada em `sourcePins` do recibo, tem o mesmo SHA-256
 que o blob desse commit: os documentos que o commit também traz não são entrada de nenhum comando.
+Os números desta página e do recibo são os de `ad87234`: 41 checks, 27 falhas normativas do host anterior e
+quatro quebras no relatório gravado. A suíte atual tem 42, 28 e cinco, porque o check de que a notificação de
+unmount de uma raiz carrega as raízes vivas e aposentadas da aposentadoria entrou na revisão do PR #59; esta
+página e o recibo continuam descrevendo `ad87234`.
 
 | Lane executada | Checks | Observação |
 | --- | ---: | --- |
