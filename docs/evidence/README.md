@@ -629,6 +629,31 @@ graphical CI run, announcements, programmatic focus and text scale are open. Hos
 does not complete GF-20, and it closes no checkpoint, whole GF, weight or denominator (the first slice already
 closed GF-20's `slice` checkpoint).
 
+The [accessibility announcements record](accessibility-announcements/README.md) is GF-20's second slice, part b:
+`announceForAccessibility` and `announceForAccessibilityWithOptions` of RN's original `AccessibilityInfo` speak through
+AccessKit on macOS. Each announcement is a new static text element under the `FabricApplication`'s own element, with the
+text as its `value` and `LIVE_POLITE` (`LIVE_ASSERTIVE` for `priority: 'high'`), made inside the accessibility update and
+freed outside the next one; a `name` alone is silent (measured) and a value equal to the one before does not speak again,
+so every announcement is an element of its own. The announcements of one frame are published one per update, in the order
+asked, because AccessKit posts the elements of one update in an order of its own that is not stable (three runs, three
+orders). With no screen reader the call returns and the announcement is counted and dropped, never kept for one that
+turns on later. `queue: true`, `priority: 'low'` and the screen reader's programmatic focus throw `E_UNSUPPORTED` with
+the reason (the macOS API has no queue, AccessKit has two live modes, Godot has one focus), and `announcementFinished`
+never fires. Two pure cores have their own tests (14 and 15 functions); two applications of one bundle run 69 headless
+checks three times (a recorder that replaces the `AccessibilityServer`, and Godot's real backend, which has no screen
+reader in headless), with an independent oracle that replays the announcer as a state machine and every recorded call.
+The preceding host fails exactly the 15 normative checks (hosts `bd0c6f71` and `62867d91`), and eight retained host
+sabotages (four of them of the announcements: the text in the name, the priorities swapped, no screen-reader gate, one
+element reused) fail 12, 17, 8, 2, 5, 7, 6 and 6 checks, each rejected by the oracle. A local graphical lane (12 checks,
+a macOS window session, no permission, **not part of hosted CI**) interposes the call AccessKit makes to AppKit and
+measures the posts: each announcement once, with its text and priority level (50 polite, 90 assertive), the three of
+one frame as `First`, `Second`, `Third`; the preceding host fails its 8 post checks and three sabotages are rejected. The
+example passes 12 headless checks, 12 with the native renderer and 15 with three captures, and the record keeps the
+spike of the interposition. That VoiceOver spoke is **not proven** (the speech is a manual check); queueing, low
+priority, programmatic focus, the announcement of a View's live region (probably silent on macOS), mobile, Windows and
+Linux are open. The source receipt does not certify the hosted native build, and hosted CI and Pages are **pending**;
+this does not complete GF-20, and it closes no checkpoint, whole GF, weight or denominator.
+
 The [text original record](text-original/README.md) makes the public `Text` render React Native's original
 `Libraries/Text/Text.js` instead of a wrapper that registered `RCTText` and `RCTVirtualText` itself (RN's own
 `NativeText` would collide with it: `Tried to register two views with the same name RCTText`): GF-11's second

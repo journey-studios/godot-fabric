@@ -41,6 +41,7 @@
         "tests/accessibility-info-native.test.mjs",
         "tests/accessibility-announcements-bridge.test.mjs",
         "docs/evidence/accessibility-info/README.md",
+        "docs/evidence/accessibility-announcements/README.md",
         "docs/research/accessibility-info.md",
         "docs/research/accessibility-announcements.md"
       ],

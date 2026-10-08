@@ -254,7 +254,7 @@ RN's rules and not from the host:
   `E_ACCESSIBILITY_UNKNOWN` there. A bridge to UIKit and Android's accessibility manager is
   the work of the mobile slices (GF-34 and GF-35).
 - **No graphical CI.** The hosted run is headless.
-- **Slice 2b** ([accessibility-announcements.md](accessibility-announcements.md)). The spike
+- **Slice 2b** ([accessibility-announcements.md](accessibility-announcements.md), [record](../evidence/accessibility-announcements/README.md)). The spike
   found that AccessKit's macOS adapter speaks a live node's value (measured), so announcements are
   elements made for each call; programmatic focus has no way to move the screen reader's focus
   without moving the keyboard focus, and stays refused with that reason; `announcementFinished`

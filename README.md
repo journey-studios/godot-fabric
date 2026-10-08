@@ -317,8 +317,8 @@ and eight host sabotages are rejected. `npm run test:accessibility-info:bridge` 
 interposes the call AccessKit makes to AppKit and proves it posts each announcement with its text and priority level (12 checks;
 that VoiceOver spoke is not proven; the announcements of one frame are published one per update and posted in the order they were made). Real
 operating-system settings, mobile and a graphical CI run are not certified; hosted CI has not run the step yet.
-[Evidence](docs/evidence/accessibility-info/README.md) (settings), [research](docs/research/accessibility-info.md) and
-[announcements](docs/research/accessibility-announcements.md).
+[Evidence](docs/evidence/accessibility-info/README.md) (settings), [evidence of the announcements](docs/evidence/accessibility-announcements/README.md),
+[research](docs/research/accessibility-info.md) and [announcements](docs/research/accessibility-announcements.md).
 
 The [capture notification example](examples/pointer-capture-notifications/README.md)
 certifies `gotpointercapture`/`lostpointercapture` for JSX props and original

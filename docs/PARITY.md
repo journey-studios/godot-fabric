@@ -82,8 +82,8 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
 - **Accessibility settings:** the original [AccessibilityInfo](evidence/accessibility-info/README.md) (54 checks; GF-20's
   second slice, part a), over a C++ TurboModule and Godot's `DisplayServer`: the screen reader, reduce motion,
   reduce transparency and increase contrast, read once per frame, with the events of their changes; bold text,
-  grayscale, inverted colors and cross-fade reject as unavailable. GF-20's second slice, part b, adds the
-  announcements (`announceForAccessibility`, `announceForAccessibilityWithOptions`): each is a live element that AccessKit
+  grayscale, inverted colors and cross-fade reject as unavailable. GF-20's second slice, part b
+  ([record](evidence/accessibility-announcements/README.md)), adds the announcements (`announceForAccessibility`, `announceForAccessibilityWithOptions`): each is a live element that AccessKit
   speaks (assertive for `priority: 'high'`), dropped and counted with no screen reader; `queue: true`, `priority: 'low'` and the
   screen reader's programmatic focus stay refused with their reasons (the macOS API has no queue, AccessKit has two live
   modes, Godot has one focus) and `announcementFinished` never fires. A headless probe in two applications with an

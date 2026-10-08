@@ -9,7 +9,8 @@ as "not implemented yet (GF-20 slice 2b)": `announceForAccessibility`,
 announcements real, through AccessKit, and closes the focus question with the data that says it
 cannot be honored without a side effect iOS does not have. Nothing here says that VoiceOver
 spoke: the proof reaches the call AccessKit makes to AppKit, and no further (see "What is
-derived and what is measured").
+derived and what is measured"). The [evidence record](../evidence/accessibility-announcements/README.md)
+pins the executions to the implementation commit.
 
 ## What RN does
 
@@ -126,8 +127,8 @@ the announcements hang from, and it publishes when it receives
 An early design put the announcements of one frame in one update, as the Godot limit of 60 updates a second
 suggests. The graphical lane measured what that does: the three announcements of one frame (`First`, `Second`,
 `Third`, with `Third` high) were posted by AccessKit as `Second`, `First`, `Third`, so the order inside one update is
-AccessKit's, not the host's (a spike that wrote the elements in Godot directly had happened to post them in creation
-order). On iOS, with no `queue`, each announcement interrupts the one before, so the user hears the last one asked for;
+AccessKit's, not the host's and not stable (a spike that wrote three elements in one update in Godot directly posted them in
+creation order in one run and as `Third`, `First`, `Second` in another). On iOS, with no `queue`, each announcement interrupts the one before, so the user hears the last one asked for;
 an order that changes with the update would change which announcement is heard. The decision is therefore to publish
 one announcement per update, in the order they were asked for, a frame apart (one frame of latency for each additional
 announcement of the same frame, well within 60 updates a second). With that, the lane measures `First`, `Second`,
@@ -196,7 +197,8 @@ structure of the Godot sources quoted above; iOS's behavior (the RN sources, App
 - The same text said twice in two elements is posted twice.
 - With the three announcements of one frame in one update (the first design), AccessKit posted them as
   `Second`, `First`, `Third` (with `Third` high): the order inside one update is AccessKit's. A spike that wrote
-  the elements in Godot directly had happened to post them in creation order. With one announcement per update
+  three elements in one update in Godot directly posted them in creation order in its first run and as `Third`,
+  `First`, `Second` when it was run again for the evidence record: three runs, three orders. With one announcement per update
   (the decision above) the lane measures `First`, `Second`, `Third`, each with its own priority level.
 - The announcement elements are gone from the OS tree after they are freed.
 - On the sabotage hosts: the priorities swapped post 90 for the default ones and 50 for the high one;

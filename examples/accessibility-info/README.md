@@ -35,7 +35,8 @@ sent (**Announcements sent**), and the native line under the stand-in counts wha
 `requested`, `published` (a new live element AccessKit speaks) and `dropped` (no screen reader to speak it).
 With VoiceOver on and the stand-in on *system*, pressing it makes VoiceOver say the text.
 
-`npm run test:accessibility-info` is the [evidence](../../docs/evidence/accessibility-info/README.md) suite,
+`npm run test:accessibility-info` is the [evidence](../../docs/evidence/accessibility-info/README.md) suite (the announcements have a
+[record](../../docs/evidence/accessibility-announcements/README.md) of their own),
 outside the catalog: a headless probe in two applications, one with the validation metas (the settings and a
 recorder for the announcements) and two roots and one with the real backend, replayed by an independent oracle.
 The preceding host, with the same bundle, fails exactly the checks of the announcements, and eight retained host
