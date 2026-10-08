@@ -4,8 +4,8 @@ import {bundleNativeProbe} from "./native-probe-bundle.mjs";
 // decodes on the worker pool, RN's ImageManager over it, the GodotImage view, the ImageLoader module, the asset pipeline
 // that puts bundled pictures beside the bundle, the SDK files that route RN's Image through the validating wrapper, the
 // runtime wiring and the build that compiles RN's image sources.
-export const imagesNativeProducers = ["native/image_core.h", "native/image_geometry.h", "native/image_core_test.cpp", "native/image_loader.h",
-  "native/image_loader.cpp", "native/godot_image_manager.h", "native/godot_image_manager.cpp", "native/image_view.h", "native/image_view.cpp",
+export const imagesNativeProducers = ["native/image_core.h", "native/image_geometry.h", "native/image_core_test.cpp", "native/image_cache.h", "native/image_network.h",
+  "native/image_network.cpp", "native/image_sources.h", "native/image_sources.cpp", "native/image_loader.h", "native/image_loader.cpp", "native/godot_image_manager.h", "native/godot_image_manager.cpp", "native/image_view.h", "native/image_view.cpp",
   "native/image_loader_module.h", "native/image_loader_module.cpp", "native/application_runtime.cpp", "native/register.cpp", "native/godot-profile.json",
   "native/CMakeLists.txt"];
 

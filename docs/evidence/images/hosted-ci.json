@@ -1,0 +1,1918 @@
+{
+  "schemaVersion": 1,
+  "scenario": "images",
+  "status": "verified-completed-hosted-workflow-and-headless-images-artifact",
+  "run": {
+    "id": 37724902858,
+    "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+    "event": "push",
+    "branch": "main",
+    "workflow": "Contracts",
+    "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858",
+    "mergedPullRequest": "https://github.com/journey-studios/godot-fabric/pull/56",
+    "status": "completed",
+    "conclusion": "success",
+    "attemptCount": 1,
+    "attempts": [
+      {
+        "attempt": 1,
+        "conclusion": "success",
+        "startedAt": "2026-10-08T03:54:02Z",
+        "jobs": [
+          {
+            "name": "reference-ios",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113140736254,
+            "runAttempt": 1,
+            "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+            "startedAt": "2026-10-08T04:43:16Z",
+            "completedAt": "2026-10-08T04:52:25Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736254"
+          },
+          {
+            "name": "native-cold-start",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113140736422,
+            "runAttempt": 1,
+            "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+            "startedAt": "2026-10-08T04:52:03Z",
+            "completedAt": "2026-10-08T05:38:01Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736422"
+          },
+          {
+            "name": "reference-android",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113140736430,
+            "runAttempt": 1,
+            "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+            "startedAt": "2026-10-08T03:54:06Z",
+            "completedAt": "2026-10-08T04:00:30Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736430"
+          },
+          {
+            "name": "contracts",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113140736475,
+            "runAttempt": 1,
+            "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+            "startedAt": "2026-10-08T03:54:05Z",
+            "completedAt": "2026-10-08T03:55:40Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736475"
+          },
+          {
+            "name": "parity-comparison",
+            "status": "completed",
+            "conclusion": "success",
+            "databaseId": 113167281663,
+            "runAttempt": 1,
+            "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+            "startedAt": "2026-10-08T05:38:04Z",
+            "completedAt": "2026-10-08T05:38:24Z",
+            "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113167281663"
+          }
+        ]
+      }
+    ],
+    "reruns": [],
+    "jobs": [
+      {
+        "name": "reference-ios",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113140736254,
+        "runAttempt": 1,
+        "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+        "startedAt": "2026-10-08T04:43:16Z",
+        "completedAt": "2026-10-08T04:52:25Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736254"
+      },
+      {
+        "name": "native-cold-start",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113140736422,
+        "runAttempt": 1,
+        "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+        "startedAt": "2026-10-08T04:52:03Z",
+        "completedAt": "2026-10-08T05:38:01Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736422"
+      },
+      {
+        "name": "reference-android",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113140736430,
+        "runAttempt": 1,
+        "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+        "startedAt": "2026-10-08T03:54:06Z",
+        "completedAt": "2026-10-08T04:00:30Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736430"
+      },
+      {
+        "name": "contracts",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113140736475,
+        "runAttempt": 1,
+        "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+        "startedAt": "2026-10-08T03:54:05Z",
+        "completedAt": "2026-10-08T03:55:40Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113140736475"
+      },
+      {
+        "name": "parity-comparison",
+        "status": "completed",
+        "conclusion": "success",
+        "databaseId": 113167281663,
+        "runAttempt": 1,
+        "headSha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+        "startedAt": "2026-10-08T05:38:04Z",
+        "completedAt": "2026-10-08T05:38:24Z",
+        "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37724902858/job/113167281663"
+      }
+    ],
+    "jobCheckouts": {
+      "contracts": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+      "native-cold-start": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+      "parity-comparison": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+      "reference-android": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+      "reference-ios": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82"
+    },
+    "referenceParity": {
+      "android": 13,
+      "ios": 13,
+      "comparison": "PARITY_COMPARISON_PASSED: 13 subset cases, ios + android"
+    },
+    "contractsJob": {
+      "nodeContractTests": {
+        "tests": 301,
+        "pass": 301,
+        "fail": 0
+      },
+      "pythonContractTests": 13,
+      "pythonContractsOK": true,
+      "checkStaticAndPublicationStepsPresent": true
+    },
+    "nativeJobExecutedInAttempt": 1,
+    "nativeJobMinutes": 45.97
+  },
+  "implementationCommit": "552fb56a098f35beb41a0a333f99f0f35b4b3ec9",
+  "committedStateExercised": {
+    "source": "postReview",
+    "commit": "257b0bdd988a3148b879d62104148266e26b3d74",
+    "headlessChecks": 74,
+    "reviewCommits": [
+      "257b0bdd988a3148b879d62104148266e26b3d74"
+    ],
+    "note": "the report's top level describes the implementation commit; the hosted run exercises the tree after review, which the report records in postReview"
+  },
+  "runHeadIsPostCommitSourcePin": true,
+  "pullRequest": {
+    "number": 56,
+    "url": "https://github.com/journey-studios/godot-fabric/pull/56",
+    "title": "feat(images): Run RN's Image over worker-thread decoding",
+    "headSha": "d54c81153e9b493242c32fb25eb31d30a104f739",
+    "squashMergeCommit": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+    "mergedAt": "2026-10-08T03:53:59Z",
+    "headTreeSha": "16ffd595c1b5e9934990260fc88beb83de57e1da",
+    "mainTreeSha": "16ffd595c1b5e9934990260fc88beb83de57e1da",
+    "headTreeEqualsMainTree": true,
+    "commitCount": 9,
+    "stackedBranchCommitsBeforeImplementation": [],
+    "commitsAfterImplementation": [
+      {
+        "commit": "7da9354",
+        "subject": "docs(images): Pin executed Image evidence and captures"
+      },
+      {
+        "commit": "6d20cca",
+        "subject": "docs(dashboard): Record the Image slice"
+      },
+      {
+        "commit": "6a06012",
+        "subject": "Merge origin/main into feat/images",
+        "merge": [
+          "6d20cca",
+          "7e2df46"
+        ]
+      },
+      {
+        "commit": "c194618",
+        "subject": "Merge origin/main into feat/images",
+        "merge": [
+          "6a06012",
+          "585ca1b"
+        ]
+      },
+      {
+        "commit": "257b0bd",
+        "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+      },
+      {
+        "commit": "37929da",
+        "subject": "Merge origin/main into feat/images",
+        "merge": [
+          "257b0bd",
+          "d3273b3"
+        ]
+      },
+      {
+        "commit": "4ba2d1a",
+        "subject": "docs(images): Record the post-review changes"
+      },
+      {
+        "commit": "d54c811",
+        "subject": "Merge origin/main into feat/images",
+        "merge": [
+          "4ba2d1a",
+          "9ea7811"
+        ]
+      }
+    ],
+    "trackedPathsChangedAfterImplementation": 34
+  },
+  "actualCheckout": {
+    "sha": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+    "parents": [
+      "9ea781148fee3a0e1d2063322e5c45303ffc676f"
+    ],
+    "treeSha": "16ffd595c1b5e9934990260fc88beb83de57e1da",
+    "treeEntries": 1519,
+    "localTreeOfRunHeadEqualsGitHubTree": true,
+    "everyBlobOfTheGitHubTreeEqualsTheLocalBlobOfTheRunHead": true,
+    "method": "full checkout SHA from every job's git-log output (a push of main checks out the pushed commit); the immutable GitHub Git tree is compared with the local tree and every blob of the run head; each tracked path's run-head bytes are compared with the pinned bytes of the implementation commit, and every difference is traced to the commits that introduced it",
+    "trackedPinSetCounts": {
+      "sourcePins": 16,
+      "nativeSourcePins": 95,
+      "verificationSourcePins": 30,
+      "fixtureFilePins": 18
+    },
+    "allCuratedTrackedPathsVerified": 159,
+    "allTrackedInputContentIdenticalToImplementationCommit": false,
+    "trackedPathsEqualToImplementationCommitAtRunHead": 125,
+    "pathsWhoseBytesDifferAtRunHeadFromImplementation": [
+      ".fallowrc.json",
+      ".github/workflows/contracts.yml",
+      "examples/catalog.json",
+      "examples/entry.jsx",
+      "native/CMakeLists.txt",
+      "native/adapter_registry.cpp",
+      "native/application_runtime.cpp",
+      "native/application_runtime.h",
+      "native/fabric_application.cpp",
+      "native/fabric_application.h",
+      "native/fabric_surface.cpp",
+      "native/godot_dom.cpp",
+      "native/godot_dom.h",
+      "native/image_view.cpp",
+      "native/networking_modules.cpp",
+      "native/networking_state.h",
+      "native/paragraph_layout.cpp",
+      "native/paragraph_layout.h",
+      "native/pointer_adapter.cpp",
+      "native/pointer_adapter.h",
+      "native/pointer_event.h",
+      "native/pointer_geometry.cpp",
+      "native/pointer_geometry.h",
+      "native/register.cpp",
+      "package.json",
+      "sdk/toolchain/asset-plugin.mjs",
+      "sdk/toolchain/build.mjs",
+      "src/react-native-platform.jsx",
+      "tests/asset-plugin.test.mjs",
+      "tests/images-native.test.mjs",
+      "tests/images-oracle.mjs",
+      "tests/platform-seams.test.mjs",
+      "tests/types/consumer.tsx",
+      "types/react-native.ts"
+    ],
+    "allDifferencesTracedToCommits": true,
+    "sourcePinsMatchCurrentDirtyTreeClaimed": false
+  },
+  "artifact": {
+    "id": 11528879666,
+    "name": "native-images",
+    "zipSizeBytes": 110333,
+    "zipSha256": "b8c2eef9abaf275b420b3a5d5161eceda893b3ff0a0717d1f339130749c728a4",
+    "zipSha256EqualsUploadLogDigest": true,
+    "zipSha256EqualsArtifactAPIDigest": true,
+    "uploadedAt": "2026-10-08T05:10:12Z",
+    "expiresAt": "2027-01-06T03:54:02Z",
+    "fileCount": 6,
+    "filesMatchTheWorkflowUploadPaths": true,
+    "files": {
+      "images-comparison.json": "ed9d86d379a665c4882c4d833b2f3f29fed48713dc05e373fa3689a840aa5033",
+      "images-current-report.json": "30dff575073b1c44189d9a4e53a0e911213fbfd683366ca68c8ef7339d7b2be5",
+      "images-current.log": "8f613971317e6cb93e7ff9cb9173262197fdeaae3384826b98138e251ab9dae9",
+      "images-probe-bundle.json": "36d5debb489bc1a4c541a0f24bf479a4c011866bd2e9ce87113d16f42b038f3c",
+      "images-probe.js.assets.json": "e1c21e38af280028aa4eaff4baa2f2cf89116fb34a92d628ef213b64277ecd69",
+      "images-report.json": "8153d5ef3ffb7ae63d450382f8cff40b9fcdc738ca27941be43a69d7aea8d39e"
+    }
+  },
+  "verification": {
+    "headlessChecks": 74,
+    "committedHeadlessChecks": 74,
+    "lanes": [
+      {
+        "lane": "current",
+        "reportFile": "images-current-report.json",
+        "logFile": "images-current.log",
+        "checks": 74,
+        "passed": 74,
+        "uniqueCheckIds": true,
+        "committedChecks": 74,
+        "checksEqualCommitted": true,
+        "checkIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+        "checkIdDigestFormula": "sha256 of the check names joined by a newline",
+        "committedCheckIdDigestSha256": "ed2c8cc0ff620fc376c4f40a2f99ea732a6db7994d89cdefdec42e2939285259",
+        "checkIdDigestEqualsCommitted": true,
+        "bundleSha256": "f141ed27660c635cabd78d0f3a48d078c25851529df98afedb5f8ce9b8334c35",
+        "bundleInputCount": 370,
+        "bundleEqualsHashRecordedInCommittedReportAt": [],
+        "pinnedBundleSha256": "46c9bec083a6bb6c0fff9304087254632b19a46a53f1ce9fe430e0f2d8c7edfd",
+        "bundleEqualsPinnedBundle": false,
+        "nativeHostSha256": "756c3f50b4daf914eba7b2cc076a7675132a43e65dce24c17e1db55dff0d8c3f",
+        "node": "v22.23.2",
+        "reportSha256": "30dff575073b1c44189d9a4e53a0e911213fbfd683366ca68c8ef7339d7b2be5",
+        "logSha256": "8f613971317e6cb93e7ff9cb9173262197fdeaae3384826b98138e251ab9dae9",
+        "passedMarker": "IMAGES_PASSED: 74",
+        "passedMarkerInLog": true,
+        "reportAllAssertionsPassed": true,
+        "expectedErrorLines": [
+          "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+          "ERROR: Condition \"err\" is true. Returning: Ref<Image>()",
+          "ERROR: Condition \"image.is_null()\" is true. Returning: ERR_PARSE_ERROR",
+          "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+          "ERROR: Condition \"err\" is true. Returning: Ref<Image>()",
+          "ERROR: Condition \"image.is_null()\" is true. Returning: ERR_PARSE_ERROR",
+          "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+          "ERROR: Condition \"err\" is true. Returning: Ref<Image>()",
+          "ERROR: Condition \"image.is_null()\" is true. Returning: ERR_PARSE_ERROR"
+        ],
+        "errorLines": [
+          "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+          "ERROR: Condition \"err\" is true. Returning: Ref<Image>()",
+          "ERROR: Condition \"image.is_null()\" is true. Returning: ERR_PARSE_ERROR",
+          "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+          "ERROR: Condition \"err\" is true. Returning: Ref<Image>()",
+          "ERROR: Condition \"image.is_null()\" is true. Returning: ERR_PARSE_ERROR",
+          "ERROR: Condition \"!success\" is true. Returning: ERR_FILE_CORRUPT",
+          "ERROR: Condition \"err\" is true. Returning: Ref<Image>()",
+          "ERROR: Condition \"image.is_null()\" is true. Returning: ERR_PARSE_ERROR"
+        ],
+        "unexpectedErrorLines": [],
+        "crashOrScriptErrorMatches": [],
+        "pointerRegistryWarningLines": 0,
+        "pinnedProducersChangedSinceTheCommittedState": [
+          "sdk/toolchain/asset-plugin.mjs",
+          "src/react-native-platform.jsx",
+          "tests/images-native.test.mjs",
+          "tests/images-oracle.mjs"
+        ]
+      }
+    ],
+    "producersRecordedByContent": {},
+    "independentOracle": [
+      {
+        "module": "tests/images-oracle.mjs",
+        "atCommit": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+        "export": "verifyImagesReport",
+        "lane": "current",
+        "acceptsDownloadedReport": true,
+        "modulesLoaded": [
+          "sdk/toolchain/asset-plugin.mjs",
+          "tests/images-oracle.mjs",
+          "tests/images-pattern.mjs",
+          "tests/fixtures/images/.gdignore",
+          "tests/fixtures/images/assets/badge.png",
+          "tests/fixtures/images/assets/badge@2x.png",
+          "tests/fixtures/images/assets/badge@3x.png",
+          "tests/fixtures/images/assets/tile.png",
+          "tests/fixtures/images/assets/wide.png",
+          "tests/fixtures/images/broken/corrupt.png",
+          "tests/fixtures/images/broken/empty.png",
+          "tests/fixtures/images/broken/notimage.png",
+          "tests/fixtures/images/broken/oversize.jpg",
+          "tests/fixtures/images/broken/oversize.png",
+          "tests/fixtures/images/broken/truncated.png",
+          "tests/fixtures/images/formats/format.bmp",
+          "tests/fixtures/images/formats/format.gif",
+          "tests/fixtures/images/formats/format.jpg",
+          "tests/fixtures/images/formats/format.png",
+          "tests/fixtures/images/formats/format.svg",
+          "tests/fixtures/images/formats/format.tga",
+          "tests/fixtures/images/formats/format.webp",
+          "tests/fixtures/images/manifest.json"
+        ],
+        "result": {
+          "cases": 41,
+          "jobs": 78
+        },
+        "reportPathMapping": {
+          "occurrencesOfTheRunnerCheckoutDirectory": 50,
+          "replacedBy": "the directory the committed oracle was extracted into",
+          "downloadedReportSha256": "30dff575073b1c44189d9a4e53a0e911213fbfd683366ca68c8ef7339d7b2be5",
+          "reason": "the oracle compares the report's file:// URIs with the checkout directory it runs from; nothing else in the report was changed"
+        }
+      }
+    ],
+    "rawReportEqualsLaneReportWithoutExcludedKeys": {
+      "current": true
+    },
+    "normativeChecks": {
+      "hosted": 63,
+      "committed": 63,
+      "committedPrecedingHostFailuresAreNormative": true
+    },
+    "probeBundleReceiptEqualsReportProvenanceBundle": true,
+    "comparison": {
+      "originalControlPresent": false,
+      "sabotagesPresent": [],
+      "oracleCases": 41,
+      "oracleJobs": 78,
+      "committedDeclaredCases": 41,
+      "committedJobsRecorded": 78,
+      "intentionalNativeProducerDifferences": [
+        "native/image_core.h",
+        "native/image_geometry.h",
+        "native/image_core_test.cpp",
+        "native/image_loader.h",
+        "native/image_loader.cpp",
+        "native/godot_image_manager.h",
+        "native/godot_image_manager.cpp",
+        "native/image_view.h",
+        "native/image_view.cpp",
+        "native/image_loader_module.h",
+        "native/image_loader_module.cpp",
+        "native/application_runtime.cpp",
+        "native/register.cpp",
+        "native/godot-profile.json",
+        "native/CMakeLists.txt"
+      ],
+      "currentRecordEqualsTheLane": true
+    },
+    "assetManifest": {
+      "file": "images-probe.js.assets.json",
+      "format": "godot-fabric.assets/v1",
+      "bundleSha256": "f141ed27660c635cabd78d0f3a48d078c25851529df98afedb5f8ce9b8334c35",
+      "bundleSha256EqualsBundleReceipt": true,
+      "filesEqualBundleReceiptAssets": true,
+      "files": {
+        "assets/tests/fixtures/images/assets/badge.png": "3e66a63204c1245775d7af2e08dc899097e7a3f12aef45948396dd776a7664f6",
+        "assets/tests/fixtures/images/assets/badge@2x.png": "a6e07b350240cfd8b902dc67f420eb8cc6c32e574398256c0b0289f58445bccb",
+        "assets/tests/fixtures/images/assets/badge@3x.png": "4ee5e4c946f2edf111b85768e38bc0d63de78015dd4d42dbf9c98098c2e59794",
+        "assets/tests/fixtures/images/assets/tile.png": "2301e079bfa06c792c42503b567fe41282bd2b4652206ffd3c4b4ce0849e6af1",
+        "assets/tests/fixtures/images/assets/wide.png": "9950ba2a0eef6917b41aab657355f9f991b0f3835afc409a1fba1b6243cc246a"
+      },
+      "filesEqualCommittedFixturePins": true
+    },
+    "hostedObservations": {
+      "loaderCountersAtStop": {
+        "cancelled": 5,
+        "deferredUploads": 5,
+        "dropped": 3,
+        "failed": 14,
+        "loaded": 43,
+        "measured": 13,
+        "measures": 13,
+        "peakInFlight": 4,
+        "peakUploadsPerPoll": 1,
+        "requested": 71,
+        "tasksAwaited": 74,
+        "tasksStarted": 74,
+        "uploadBytes": 133024,
+        "uploads": 43
+      },
+      "committedLoaderCountersAtTheEnd": {
+        "cancelled": 5,
+        "deferredUploads": 5,
+        "dropped": 3,
+        "failed": 14,
+        "loaded": 43,
+        "measured": 13,
+        "measures": 13,
+        "peakInFlight": 4,
+        "peakUploadsPerPoll": 1,
+        "requested": 71,
+        "tasksAwaited": 74,
+        "tasksStarted": 74,
+        "uploadBytes": 133024,
+        "uploads": 43
+      },
+      "loaderCountersEqualCommitted": true,
+      "jobsRecorded": 78,
+      "jobsOnWorkerThreads": 73,
+      "distinctWorkerThreadIdentities": 3,
+      "jobsOnTheMainThread": 0,
+      "liveTexturesAtStop": 0,
+      "note": "observations of the hosted run; the probe and the oracle assert none of these counts"
+    },
+    "exampleHeadless": {
+      "step": "npm run test:examples",
+      "example": "images",
+      "checks": 17,
+      "committedChecks": 17,
+      "stepPresentInTheNativeJob": true
+    },
+    "controlsAgainstTheHostedLanes": {
+      "preceding-host": {
+        "checksFailingInTheCommittedControl": 3,
+        "presentInHostedLane": 3,
+        "passingInHostedLane": 3
+      },
+      "sabotage-main-thread": {
+        "checksFailingInTheCommittedControl": 12,
+        "presentInHostedLane": 12,
+        "passingInHostedLane": 12
+      },
+      "sabotage-stale-request": {
+        "checksFailingInTheCommittedControl": 2,
+        "presentInHostedLane": 2,
+        "passingInHostedLane": 2
+      }
+    },
+    "declaredNativeHostSha256": "756c3f50b4daf914eba7b2cc076a7675132a43e65dce24c17e1db55dff0d8c3f",
+    "sameDeclaredNativeHostAcrossLanes": true,
+    "nativeHostHashIsRunnerDeclaredNoBinaryIncluded": true,
+    "runnerNode": "v22.23.2",
+    "committedNode": "v22.23.3",
+    "producerPins": {
+      "tests/images-fixture.jsx": "02f5aa947959485348357bb5fe5ea71fae406d0c2dc46935e09c58f185185327",
+      "tests/images-probe.gd": "b538bd493195664f5799905520274ad420795364d6f6242ad1d6e7eb0ab4074f",
+      "tests/images-native.test.mjs": "6fe89c05cf564699acdfc812186132d2f96806afcb86ec7e7bdf92a3d28cd9cc",
+      "tests/images-oracle.mjs": "3c2b75eaf47d007fac965234aaad7796a54f9090cce0b3428277a23d1a2f3214",
+      "tests/images-pattern.mjs": "df313dbcbb90402122b5a44f8c192f716f30cf94827834069675edbe895e1f17",
+      "tests/fixtures/images/manifest.json": "f5aa4f1e69366bb73ce7f2313bdaec172c540709c8299699fc424a64fc7402c7",
+      "scripts/images-bundle.mjs": "c47607f6a57547d70a9dbad664e8cbed55070a846c7adcefab567b28d69f09b2",
+      "scripts/images-fixtures.mjs": "25af9c1be35958206883189774e17a4cb47453fd286d6ac9449366803770aa1e",
+      "scripts/images-fixtures.gd": "34d26171f783c24d1f7e691b9f2925f198bf6e360f2786672df53bf42fa2b079",
+      "scripts/native-probe-bundle.mjs": "92cb02dbedbab70bd0437abaecb5fb0ef6ffb7be40d7558d4a47bcc6cc6e6d19",
+      "src/image.jsx": "ee9433ae1d2dbed8df37a7ef36f5fe58c838c1ca639998a1519525c9c603b81d",
+      "src/image-contract.mjs": "bfeeed482b79f20f3544d2df1cf9b464744438e026921e529e0e3a70ae830ca1",
+      "src/react-native-platform.jsx": "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218",
+      "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+      "sdk/toolchain/platform-plugin.mjs": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+      "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+      "native/image_core.h": "3a66103cdf71a536aa72de214cded183e686141e8a1bba0e568794849bff6935",
+      "native/image_geometry.h": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+      "native/image_core_test.cpp": "f2c5454b7d80dc720a4ac342b7d9deed6dc07fc21a8c15f4ae11948cca425ec0",
+      "native/image_loader.h": "00f59a1552d782a190e968ee1d69f92965b1c147b15e4d337578c45ea3e7bbb0",
+      "native/image_loader.cpp": "7826938a24f7c30d3581d1360c3f9f2b08530ddbc82ec5e211aad2aedbc4ab83",
+      "native/godot_image_manager.h": "ecd7e9ef99451e0a0d1b1fb2c6de6dbc70ef39accf38859b4f77186f524dbb63",
+      "native/godot_image_manager.cpp": "e11aec4600b5932f5de309230648d565808cb53f1c1e6ee74549a7c29a0d9baa",
+      "native/image_view.h": "8185ff0d33f262f261c562229afaae41e1ca439849f8be5b76a0ccf6e0ba285e",
+      "native/image_view.cpp": "c9362d227e4459a4afaee6c5da2e5ada0e1d5aac5b19f19b7da7b4489cbffc62",
+      "native/image_loader_module.h": "1d5031eaf042c74b53e57fa8b7b5d276b672ad152ca3a26ba902496a586a57d7",
+      "native/image_loader_module.cpp": "2450de24dc4559b3eada1c0d3badbd8bddc6762505f8d579b6b7ef1fdea063b4",
+      "native/application_runtime.cpp": "e7e5f8db23a8af053d12ee59da742b1210354b88eb4d272da3051733c4281a42",
+      "native/register.cpp": "a2366bf2040d54d2427a9c961f6ae9272ffc7607b584690e4e12d4bc0a0a118a",
+      "native/godot-profile.json": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+      "native/CMakeLists.txt": "e4f68a5289fd6f9f7e63c9a03cfee681d62b37cb08a01f113c3e35ef23495974"
+    },
+    "producerPinsEqualRunHeadBytes": true,
+    "producerPinsDifferingFromImplementationPins": [
+      "sdk/toolchain/asset-plugin.mjs",
+      "src/react-native-platform.jsx",
+      "tests/images-native.test.mjs",
+      "tests/images-oracle.mjs"
+    ],
+    "producerPinsDifferingFromTheCommittedState": [
+      "sdk/toolchain/asset-plugin.mjs",
+      "src/react-native-platform.jsx",
+      "tests/images-native.test.mjs",
+      "tests/images-oracle.mjs"
+    ],
+    "producerPinsOutsideTheReportsSourcePins": [
+      "native/CMakeLists.txt",
+      "native/application_runtime.cpp",
+      "native/godot-profile.json",
+      "native/godot_image_manager.cpp",
+      "native/godot_image_manager.h",
+      "native/image_core.h",
+      "native/image_core_test.cpp",
+      "native/image_geometry.h",
+      "native/image_loader.cpp",
+      "native/image_loader.h",
+      "native/image_loader_module.cpp",
+      "native/image_loader_module.h",
+      "native/image_view.cpp",
+      "native/image_view.h",
+      "native/register.cpp"
+    ],
+    "producerPinsNotInAnyCommittedPinSet": [],
+    "producerPinsAddedBy": {},
+    "originalReactNativeSources": {
+      "Libraries/Image/Image.ios.js": "a23f5593958646ac0d61168219723f60987018c1696d481afa56bc2dc9330d26",
+      "Libraries/Image/ImageViewNativeComponent.js": "f7b4eeac6d29ae75d731f2bc5897bf71cd68ca8bc77c54085937c740706f2514",
+      "Libraries/Image/ImageSourceUtils.js": "bf6ddbc3551e496406a0abf5afd100f5c7246fcb3da3907fa0759e0370d811cd",
+      "Libraries/Image/ImageUtils.js": "1ffb1644140f811bd45347a2e4a14cc182414b3fd2e0ec6ec14d6951e04fc76f",
+      "Libraries/Image/ImageInjection.js": "b354405cd1669e08500c293e288b866e277161946c1afe4ac18fe283e749f0a8",
+      "Libraries/Image/NativeImageLoaderIOS.js": "eff5c353f6b442e295bb5e5aef1b2d678f69e9d4bc4d3256d54810e5fa97b7bd",
+      "src/private/specs_DEPRECATED/modules/NativeImageLoaderIOS.js": "a041f39db8aed07a6a7f3fbaccc852bf9c211de5134b35ca18b9d192d3f721d0",
+      "Libraries/Image/resolveAssetSource.js": "b5c1b27fb9a5b1e9915c8495f8b3235462bcffe745cfe7afaad5fcaa1f3d5930",
+      "Libraries/Image/AssetSourceResolver.js": "d84e7ad92b4be3c3d4748e3356aea293021957c9e7aa1a0d95193a848961a811",
+      "Libraries/Image/AssetUtils.js": "ebebdaa0d7385d18cf583923a5103e4f79a3fe861b764f48251823f780c1dbc9",
+      "src/private/assets/AssetRegistry.js": "f73e092fa608b2dad8cc26b70f7fb309c4627b0432d970bbd0b85a33648c969b",
+      "src/asset-registry.js": "19371c8bda20c2fe65cff1ae016fdd1002730d065d71df76337543a40bec7905",
+      "Libraries/Image/ImageBackground.js": "0c9f6ae42f290c8271c169590597cea854383fc7eb94866043c78c9fe6f6d964",
+      "Libraries/Animated/components/AnimatedImage.js": "2fa39fffd855a7d87e296a5bc2ab1e8d029254035d97f2d8725ef925b4f53292",
+      "Libraries/NativeComponent/NativeComponentRegistry.js": "814b755cfa308d019de15944f5179d32a70d75b8c26289b65714be589ef46742",
+      "Libraries/Image/Image.js": "ee3a6c518734bfc8dd594050f886131bb280e6f45a2c5bb6bb3f8f0dc5de19a2",
+      "Libraries/Image/Image.android.js": "5b864da4d8495bfc8c2e7f1c4ccd739452efa1cc8105097dc2c38e3f8b38c320",
+      "Libraries/Image/RCTImageLoader.mm": "b82090ce325a980dbdc1439b703f483c92c9aa4b64ca307c256a299fe244265a",
+      "Libraries/Image/RCTImageUtils.mm": "1b22ecc192372c2de0639d2b759f03da4381eed3c055a414fd92b16dfeff85fa",
+      "Libraries/Image/RCTBundleAssetImageLoader.mm": "e259fad2351bf5b67b707554862f426ef4f429bd839320240fdfe7c028d7d186",
+      "Libraries/Network/RCTFileRequestHandler.mm": "2a8cf767e9ebdcc6c01c0d80f2467e8156ce0b10d43c18086f2a483ebebb9a1f",
+      "Libraries/Network/RCTDataRequestHandler.mm": "a9a7d97d330d6e0b0927ddbf2348e017aa825b282f3cd53a155b7e09c2e11156",
+      "Libraries/Network/RCTNetworkTask.mm": "d3f751a626f63f01894cd93b6c11ecad27fcce7c61cf3b9a27b47047b90e4eff",
+      "React/Fabric/Mounting/ComponentViews/Image/RCTImageComponentView.mm": "a3c70cd2cd412239238fd73584362f9626f1579ab0296e4c4327a784012e8203",
+      "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImageManager.mm": "567dec441c1edc6b3f0b5af8f72c9bc509624b3e76d162a263c53ac26b22fcf7",
+      "ReactCommon/react/renderer/imagemanager/platform/ios/react/renderer/imagemanager/RCTImagePrimitivesConversions.h": "d94b105fcc155625194bed540ca5d1d2d500c19fe7b4b9e91afa237162eb70e0",
+      "ReactCommon/react/renderer/imagemanager/ImageResponseObserverCoordinator.cpp": "53c185617b4a27b696cdfe5123b29b20a5c35dd0bf16e8c4c9fd09b9f27ab883",
+      "ReactCommon/react/renderer/imagemanager/ImageRequest.h": "370acd1eb4b87d4deeb3d296333c7f34f525a0f79801cb2bb5fc7d39f0cba7b7",
+      "ReactCommon/react/renderer/components/image/ImageShadowNode.cpp": "2059767f5d2678b0d406798ee004cb68d725ac744b8d5d31da50381f9b6de525",
+      "ReactCommon/react/renderer/components/image/ImageEventEmitter.cpp": "d0ebb067d02a0f2447e530ee31c31fb557f8ef246c0b8509841bfb55c245a685",
+      "ReactCommon/react/renderer/components/image/ImageComponentDescriptor.cpp": "9c80dade3dea86cc3336cde97e5c0db6bd9d2ca9fed18d9c0ab9bfa8ebaffd4a",
+      "ReactCommon/react/renderer/components/image/conversions.h": "faa08fb20e4eed218fb471990d2f158ee51424dec078e440e767032c4987bdd3",
+      "React/FBReactNativeSpec/FBReactNativeSpecJSI.h": "59b30f22c4f165c99d354c539db51fc6b7fd9e4872b9bdc18d513f3173a43b86"
+    },
+    "originalReactNativeInputCount": 33,
+    "originalReactNativeSourcesEqualCommitted": true,
+    "unexpectedScriptRegistryCrashOrRuntimeErrors": [],
+    "existingGlogInitializationWarningsPresent": true,
+    "immutableTrackedSourcePins": {
+      ".fallowrc.json": {
+        "sha256": "93539bf3d534b74b980a35ababf9e9ef662c614a2670ce53ba6290f955d8c857",
+        "gitBlobSha1": "86c3ecd7854aad8c0bf39c96593e920393ab7873",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "f087251426106faaeba8dfadda8787dfe786d9abd414737223ba5fb3b438fb90",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "e871abe",
+            "subject": "feat(dashboard): Coordinate up to five parallel agents (#53)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      ".github/workflows/contracts.yml": {
+        "sha256": "f07c7207dd4eb375c6fde8979da4e3cacdf4dd0fea22473e9bfdb58d0ee1fe71",
+        "gitBlobSha1": "9df471d02d4fb9abe5fe64673b716e861acd7cff",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "165c8494c3202cb82175b69380b5c9b3159d64670200520d6c57baa393678875",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "dependencies.json": {
+        "sha256": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a",
+        "gitBlobSha1": "321855aac90f17a27393f853a3444b040b0b1249",
+        "pinSet": "nativeSourcePins"
+      },
+      "examples/catalog.json": {
+        "sha256": "79c06d19b5289e731c3a9a50f9bb4b47efab21956bb1f2e0f2356495bcad4d76",
+        "gitBlobSha1": "a7fefeb6343c0d04c6177f5a7c608d1c41b7c9f3",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "e370ff6f0ec1c3f849578e16048a866865781ef519b6ba989c0675207dc5b78a",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "examples/entry.jsx": {
+        "sha256": "43ab16d041c7afddfbfaba3a805679906e7650d62f153a7d8478bc3e162c6ab1",
+        "gitBlobSha1": "50a77f393e9f0c947ff974dda2dae1f32d8e925a",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "7606f5cbbce1e29547a7383983fa57912a91d2633af79fb5d8f146230dc46ec1",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "examples/images/App.jsx": {
+        "sha256": "00136a9b7e70d063e21fdc53b9025850f778da1d6204cce0096adb43588a7f3f",
+        "gitBlobSha1": "a2a906e4a4111ed95d5cb74305bf71ae86224528",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/.gdignore": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "gitBlobSha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/landscape.png": {
+        "sha256": "f1d79a65a1528501d2ae745572bb6818e7723c9ed3b7cb6da9f21ea21c2a1450",
+        "gitBlobSha1": "9aafbe238ded30b372a2b1e8b84f13c2d7efb94b",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/logo.png": {
+        "sha256": "ca6976f236a755c44a45081c2baa8be11f54f34466112de4be8643e4d0de8366",
+        "gitBlobSha1": "7a9a0f2cefa31242cabbf22be998ff808df2b080",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/logo@2x.png": {
+        "sha256": "522c7ce864a7ee713b8d9baf82feb88a98674dbd0a4f9c20139404cc072bf6ac",
+        "gitBlobSha1": "4b52ec87489273daff8314414498578f295f54fc",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/logo@3x.png": {
+        "sha256": "0fe52743f1c7c174e2c3b80118200332809a8198dd6be814d9e00e239b875dda",
+        "gitBlobSha1": "6ad916791e0e902dfef24b2aa753e0dfff21b7b5",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/sprite.png": {
+        "sha256": "4522ab860d5a662231c1b61d904ad0d889bf467d782480ddf02b130d1e0ee07f",
+        "gitBlobSha1": "f2d0d55fbd29595cb81bb8c33b4c71b260c0c0bd",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/assets/tile.png": {
+        "sha256": "010a72fc6d1936044476fc1337c114ced2e21e361b7ca23169916c34c1f58b04",
+        "gitBlobSha1": "a7421f3edfb93c69d9d4a6ddc213de9a1d2d036d",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/scene.tscn": {
+        "sha256": "ec93131969d7d497c1d1a7dba236ff6b4ca54835c163a4cf56472ee7f96147be",
+        "gitBlobSha1": "5b693abcdef56f7fb7d4c0d2eca90635abec9828",
+        "pinSet": "verificationSourcePins"
+      },
+      "examples/images/validation.gd": {
+        "sha256": "1e7acf482effefd78e37b877fc5db50e763c71a90e2cbf14e549253a17b0ca75",
+        "gitBlobSha1": "dfda5617a812b7de5be3bc1b045fe77bca1fc953",
+        "pinSet": "verificationSourcePins"
+      },
+      "native/CMakeLists.txt": {
+        "sha256": "e4f68a5289fd6f9f7e63c9a03cfee681d62b37cb08a01f113c3e35ef23495974",
+        "gitBlobSha1": "c990f6005c06b99c8fde02e84805fa98107346f9",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "835920462e6477fde22246c7ee4e5d610212a889b897f6040cb6ff3e70719c94",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/activity_indicator_view.cpp": {
+        "sha256": "9c09594e8435fc0a222b0502a38eb673bde90c909202b702532eae026ca033e5",
+        "gitBlobSha1": "f75c30df1a893444883f70624c25274f4b05ab20",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/activity_indicator_view.h": {
+        "sha256": "d2a164deb96187b3a04797acf2fbad04671e8582b74d1bdeebb4d2b7e56dff00",
+        "gitBlobSha1": "8fe602f1e6cbc4cd90d8262a213744caf94376cd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.cpp": {
+        "sha256": "f7ca2100f2e709eed6e8a4dd66d85f8005b76df3f0e076ed914e919a179530fd",
+        "gitBlobSha1": "75a3efbc3367a4dbd4261cd737f328dd9294a1bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_loader.h": {
+        "sha256": "ab6647511cc7d744ec14e3f808c0ebd54813ce567e5d94612edc32876fa25bfa",
+        "gitBlobSha1": "8f390073dd28493f4c8b75da5bb40c9814eebe99",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/adapter_registry.cpp": {
+        "sha256": "778fd835c0d5a1fcca2e72669071cddb7ce39d5ffdfa9a03c8034a31820e39e7",
+        "gitBlobSha1": "cb4f85cf0d341a648ade0c875cbf088d7fb57f67",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "03babf3bb7d088f9efe5b5a7a0f4aecfdc71ef747acc693ea1ecf3271b93b6d7",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/adapter_registry.h": {
+        "sha256": "6786863c04bc3eeced3340d6e1cc2442004e7df25a95c77de54a10cc2a1b95da",
+        "gitBlobSha1": "eaed7acbcb12e4d7dd4ef10f1687ac6f24d726ab",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform.h": {
+        "sha256": "e23ff2f0472f531943ef2236f40c6cfae0d91f8a770aeeca5693919f36264364",
+        "gitBlobSha1": "add1aedcb90ef3e44432875e248b8e2b1d7d8755",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/affine_transform_test.cpp": {
+        "sha256": "d690694e04ce01c467ca9ce62ace0b44b04cb1cd765f6d6bbe866c55a5b7e388",
+        "gitBlobSha1": "e4023fd8ad7b8bf6baf7a14dc320b295a2ebb167",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/app_lifecycle.h": {
+        "sha256": "63322e6df841fd9e3f134b4331c9bd41d77ff7d875a0b5183f1d1446bd5808ba",
+        "gitBlobSha1": "bbc5295c158d6b856a12aa96c47db3ffb4936e9a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.cpp": {
+        "sha256": "d0da5c6a2bcfc2b80dc34a85b79520211c66efe9823765800091acfe10b1f697",
+        "gitBlobSha1": "543e6233cbe73369bcf28fa15b11667aaff28eae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/appearance_adapter.h": {
+        "sha256": "65fbc134b9ad83880bd5d7498aee3d570b8220c315a2538d4b7976c1b017506e",
+        "gitBlobSha1": "34ec7b348099237af8efe9f81339066b91a4bba4",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/application_runtime.cpp": {
+        "sha256": "e7e5f8db23a8af053d12ee59da742b1210354b88eb4d272da3051733c4281a42",
+        "gitBlobSha1": "fdc0c7cc6cf95b9863bb98bb8f333b9777de529b",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "62239b1fc56ff65eba840d61a8ade430db5a5a944a354338539d88144e8d9101",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/application_runtime.h": {
+        "sha256": "a98aeca24f8bd31cc8c9e54b656dc15b0c15e579e9268fe40ead6270b9066248",
+        "gitBlobSha1": "923873a826bacd9a2a56c451e25abd2997f3b956",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "bc5e10f1ec80a7646f21b8bf273713ac08916c90fa73b3ae2df4c0d0fc238e98",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/blob_store.h": {
+        "sha256": "d6d2d0acea8451ecf2a459e38246ec93f20d364619ee5f9ad7a88d4d038d185a",
+        "gitBlobSha1": "d6dd2fc72a9a90914624aed31b872a3b3561b9c9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/coordinate_transform.h": {
+        "sha256": "ac0772b4641c097b77ac5a0180725724d34a553da62c638898b98dbfc08a30d9",
+        "gitBlobSha1": "a210978f59c8f7a8cda60473f3e13271e5a694e8",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/fabric_application.cpp": {
+        "sha256": "211c0dec8b8851313c013f0f98e15ff3edf963841c35ca7ab50fc68eb0a7494c",
+        "gitBlobSha1": "82a9b9365599e21fa9a8281bd05246b59698a551",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "74eef31b36ffea194a265721e1c1a3921348437c7159806abc59a6274d7f5acd",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/fabric_application.h": {
+        "sha256": "87eb529fadd1da60993dd78e43d461d3ed76786f086fa7fd558cb5e093d5d957",
+        "gitBlobSha1": "94c3248d2bc39d39eac74aab1dff2ae6ac11c109",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "00ac875adeb1fbf2c29bae70eed1ba0546e4be7fe2a65b7bd022005515bad057",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/fabric_surface.cpp": {
+        "sha256": "2523df9d0de60a02fe214c31cdce129672480db4482ba9c125b1ade06bd2686a",
+        "gitBlobSha1": "330f0a4810806cbb3682e08b9fb177a36a8416e6",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "1e4b9e288fca4824df5359d03a305d497817049ee6f7acbfdcbf7bd5fcd84df0",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/fabric_surface.h": {
+        "sha256": "ba7dd2297a9c5c74e3bd9014f190ce8dda5978a77181ff218a36ee59b1ca04e5",
+        "gitBlobSha1": "88f63dabbe3437ed4218eec6ee7909ef66d2d084",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock.h": {
+        "sha256": "6a7c88cbf2522053b17f5a67ac7d410e8de05fcfddfad0db5cc0c3b9cb63636f",
+        "gitBlobSha1": "807a10fd3ea0eb8245590575aab4962cc727a9b0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/frame_clock_test.cpp": {
+        "sha256": "100061c9d1743365908b0963d8237e3808ccb0f14b23c2d6e410cf1956580e06",
+        "gitBlobSha1": "67d4bd6a612db9d952ed1daf74418937d9b22ae6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.cpp": {
+        "sha256": "3e9d0b3162a73e54e72bf6629ef3558b5b9c9ea0200210fff5251a24580e9daf",
+        "gitBlobSha1": "96c419959d4ed90cb740751ecf32481eba9b1c5b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/game_service_registry.h": {
+        "sha256": "9d00de7312bea297957b826a56750109fbaaf9c2bc9606b698a9eb9e222023b6",
+        "gitBlobSha1": "dc58912d2dada48b6e5f847f3338c8c5ee243da0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot-profile.json": {
+        "sha256": "fbaa54aaf8d3d4634b2b2550d2c9daf1038e0e8135ef306f930b3f8a7b8b48a3",
+        "gitBlobSha1": "61c48ae948729cfee0a7f1ebafc5379569400894",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_component.h": {
+        "sha256": "226c0de9828f8e1295e8512c9b88e9cb949e06324c138e8b437b71e5a1e2b00f",
+        "gitBlobSha1": "437b276941b28e246bfb1687db39f9af2ba5292b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_dom.cpp": {
+        "sha256": "3d500ad2ad67b21c06cc52cd618a6ec149cb28e15e40a5c10517ce720421b79f",
+        "gitBlobSha1": "ea4ad8107d8caa563cc65b06000fc0129c14915d",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "675cb90bcb4a46655a6c06a048ceef180c7610d204ea8898407e33dcf04c3d7c",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/godot_dom.h": {
+        "sha256": "c5521853208d10590241244fac03212e3583b1edaa1a51f810e044babd3df283",
+        "gitBlobSha1": "3ac0fd7d19d1a044f796b624fe67cd4d78fe2fa6",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "a28de441954eddfc7115ebcd1fb897429c31adc2cf35e5c84ad11058026532b8",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/godot_http_transport.cpp": {
+        "sha256": "dac76dc9f92b7783532635a9a9dc6d4a5ccad40c3eff4275eb22b564235a3353",
+        "gitBlobSha1": "ba3d62dcf8dbc42ef70cea764ca9b6201050bdad",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_http_transport.h": {
+        "sha256": "385f988428f4bb230b274795154a1aba14b1ba383e3f5b40e7875b09fb50e41e",
+        "gitBlobSha1": "afcdc0fc8078417a6ef18409ba133e8e92948c6a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_image_manager.cpp": {
+        "sha256": "e11aec4600b5932f5de309230648d565808cb53f1c1e6ee74549a7c29a0d9baa",
+        "gitBlobSha1": "c2d2437afde3807bba7c5f58417ae3c688291584",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_image_manager.h": {
+        "sha256": "ecd7e9ef99451e0a0d1b1fb2c6de6dbc70ef39accf38859b4f77186f524dbb63",
+        "gitBlobSha1": "09da8fb9eef9d1726a1fc7e47a8bf27014b69094",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_tls.h": {
+        "sha256": "49f77f128fc58d3e982d7c6d4edd7c0e2a399746e27a98388bfe61dab5b0e266",
+        "gitBlobSha1": "09f11b77859e0679ba37c26d1c41d3297632ca4b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_connection.cpp": {
+        "sha256": "6fede0b8671d212244f768cd138c6e1c21e5820c263cf40cafe6d65629c3b12d",
+        "gitBlobSha1": "9e53bd0e44353d0f3a1465e0ce6520d8350bdeb2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_connection.h": {
+        "sha256": "b73a4fca7e8409aa16d68483e36c0b15d039575d9ab97b5684a8c0cffddf759d",
+        "gitBlobSha1": "ee39128c03ea43ac1dd88c4707e7545822ea8a06",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_transport.cpp": {
+        "sha256": "7f65248099c54810177a0662ba35022aac6678d3486159b9e834eaf1c168d7af",
+        "gitBlobSha1": "ad68d88fb6de34443cab5f0a72cdf8f889b6d46e",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/godot_websocket_transport.h": {
+        "sha256": "cc47b487c3a8786e6839fbf5c12ed7d467b1cfec88848eff723719c1ef68f514",
+        "gitBlobSha1": "ed8967ba9478dbde7b4bc5a88f124f5d0976ccae",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/http_core.h": {
+        "sha256": "ff0bd0ec1ac1d42592bc82351e3b9b49b78e91cb2c8839b1a68ecfdda1818198",
+        "gitBlobSha1": "5f48cf2199f1a43d6782876a40d3f0a50337f205",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/http_core_test.cpp": {
+        "sha256": "20c3760c1b6adcbce779867b97a7bed21c9c09c8f04b9413c05523ff99658228",
+        "gitBlobSha1": "a67804e8893dcc222af8a5aac8ec64e110c6b505",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/http_transport.h": {
+        "sha256": "950c58ce7c355ac03a5c9ae2cb21e142432833cafeefad0d731543197a3a75e5",
+        "gitBlobSha1": "4a5971c7bca7086d5252648c39419ad0cb4f150c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_core.h": {
+        "sha256": "3a66103cdf71a536aa72de214cded183e686141e8a1bba0e568794849bff6935",
+        "gitBlobSha1": "392e3bd8596fa7cf8fc18549c3df1923513ac588",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_core_test.cpp": {
+        "sha256": "f2c5454b7d80dc720a4ac342b7d9deed6dc07fc21a8c15f4ae11948cca425ec0",
+        "gitBlobSha1": "c1a5d875ae487e3f8eac58faf6cd04f571d12cce",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_geometry.h": {
+        "sha256": "9e9e520ae9a07aacbe9de347ed58fea7706ee98c3e944f0a8d06408b41fbd94f",
+        "gitBlobSha1": "abd8c746d57ea16a18a5c8ce067dc9238c4175ef",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader.cpp": {
+        "sha256": "7826938a24f7c30d3581d1360c3f9f2b08530ddbc82ec5e211aad2aedbc4ab83",
+        "gitBlobSha1": "2022a570a8982aa8022adebd4b8b9592e1004c2a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader.h": {
+        "sha256": "00f59a1552d782a190e968ee1d69f92965b1c147b15e4d337578c45ea3e7bbb0",
+        "gitBlobSha1": "6844d7b9bb9bdfd789866c478231c35a2cd5e2db",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader_module.cpp": {
+        "sha256": "2450de24dc4559b3eada1c0d3badbd8bddc6762505f8d579b6b7ef1fdea063b4",
+        "gitBlobSha1": "a0bce1b5218b0fc95ae7c5c73fc08f4cffa5bbd0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_loader_module.h": {
+        "sha256": "1d5031eaf042c74b53e57fa8b7b5d276b672ad152ca3a26ba902496a586a57d7",
+        "gitBlobSha1": "9413fdf9147760375433f4061c70aa44e9166ea3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/image_view.cpp": {
+        "sha256": "c9362d227e4459a4afaee6c5da2e5ada0e1d5aac5b19f19b7da7b4489cbffc62",
+        "gitBlobSha1": "7aae1bb3bfad2a86d22786ce7ce86ab4c767412f",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "0d9e7789dde054d46c04db5cde2858bd98d5e6f4b032f5fa7b59ece555fa8227",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "257b0bd",
+            "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.native/image_view.cpp"
+      },
+      "native/image_view.h": {
+        "sha256": "8185ff0d33f262f261c562229afaae41e1ca439849f8be5b76a0ccf6e0ba285e",
+        "gitBlobSha1": "4f357cb59fb2f79203e82e65c85c2d87d786bd36",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.cpp": {
+        "sha256": "52f0be84c7631583708202be3cdd67b58dd706ebff4c75be6bcc3b35728b5c24",
+        "gitBlobSha1": "37add990da86fee1ce94cc57ac00ccb58f4cbc68",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/input_adapter.h": {
+        "sha256": "6f0595691c7f04041be739bcc358451b16d0c96354cbd81051079d0bc9164284",
+        "gitBlobSha1": "8c65b26618766e82b855a1f1d510b61e30a904b2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.cpp": {
+        "sha256": "9224701708d026cbeec40a5d34e1ec7fdcd87e6c86e5d50d8cd9a7ed9a5419dd",
+        "gitBlobSha1": "5e65cf77bc7198992464b1b5dbd18c23e2745364",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/native_animated.h": {
+        "sha256": "253cc4924eca12f5216f3926bbcc7b4a186e07129a161672cd3ba9b7f61dd118",
+        "gitBlobSha1": "a17ec1f16c053666803e19235f76e93dd9efdc4a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/networking_modules.cpp": {
+        "sha256": "07874740c7a5d979dbeed459de956d9b2e25cd21469b8ebb0ba33267f7c8d809",
+        "gitBlobSha1": "94dd8ab8aab640da9105910e37b7576218d43771",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "788a6169d959e2c161aaa295b8f280e03c11ca64a8906321f4a54e67a50471fa",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/networking_modules.h": {
+        "sha256": "39895576cb4e83dd5f35aacfbc8f98272b8a0825ed6a72a98c39e309d06ee219",
+        "gitBlobSha1": "c42ebe99ec06f19e7aa3ff85b14449379f91e78c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/networking_state.h": {
+        "sha256": "a3bfd49fa52fab4100b5981fab9921650ae5444f93c1b34765f968ce1f67653c",
+        "gitBlobSha1": "c3280a5514bb3492995aaff2d18e7227a76eda96",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "0fb96f61422c6a88e85c76091bf83cdf215708a36e4ff47b5d6125e92107d415",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/paragraph_layout.cpp": {
+        "sha256": "6f0b2a678c43603fd57be96421455a5b9b79536179e95ef29cfd7b904a9544f3",
+        "gitBlobSha1": "79c32f6f45bdfe16531a590ab21e30b7a1a7c107",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "1ea600a40dbaa7165cf47a1f43289981be477adb5c3ff7bc70013ff19747fc71",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/paragraph_layout.h": {
+        "sha256": "2560d18658f9919d7ebd6a44d9b6f80d8658fa923de89a5467937954fbbb4a36",
+        "gitBlobSha1": "cf551d1ef6731d3e39029b92af0bec54f8647c7e",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "6913cdcb4a9928e0c211d59a505b63fd3947bbd372a4f27ab4193fa68ea6eb4f",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/paragraph_view.cpp": {
+        "sha256": "198fd000d45ed08579ee51e3d92b3fdd2e594bd9b5fd8db94b841e2e31d426f4",
+        "gitBlobSha1": "da1f25c13cf900c3e7a936fae5420316b01ee0d2",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/paragraph_view.h": {
+        "sha256": "ef9b08a35f2f10a878b0a909adce1f8f3d18b3223ce14b214a29bf6eb8e55e13",
+        "gitBlobSha1": "fc77f7e87d534e1418302d46e9d6b125f6945481",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_adapter.cpp": {
+        "sha256": "a7f187461484b8d1ebd5d468661a206b6f11b98d71f098d5a49bfb27ac9ea627",
+        "gitBlobSha1": "7dd6b7d2b756ad15ff8688a512feb4fce57d0f43",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "3c44ac9404f6b59cbc12f0ca2fc99801a905b57dcf11d2dc705e2fbf3196c372",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/pointer_adapter.h": {
+        "sha256": "3ad1350f2adf0954fdb30d3733cf9adbd065ba171beb3e5eead472fb0e42529e",
+        "gitBlobSha1": "5bbf57ef6a392e72d0bfbec66c42fe1d8899ea80",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "006cdcf44c74141a96074725ff080cdcd4d71df25b6310c175a347f976f58932",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/pointer_event.h": {
+        "sha256": "18e1da96322a69f43b30f32d811a22c5bf8aefaab86cc36bbbbb0900dd38f568",
+        "gitBlobSha1": "ac46f1dc707eece700dd5fbc02d34fb4c5e0bba0",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "6fec7e417615aac00d314e0aaea9a4b84b7ea676c19e7304e6a7cb845d9afd74",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/pointer_geometry.cpp": {
+        "sha256": "90e4a8159cbe7435e148c44d7b3e8e6b53f27fdabfa6c39ca10003cec6e895a7",
+        "gitBlobSha1": "91aa123c53c73ee62f6bfaf7069470c303380bfe",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "cfb85146958d8b23b85b6f0f7d19e16bc92139f94f7f50fa1f999be7a19a4c22",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/pointer_geometry.h": {
+        "sha256": "0b4246b35b87ac9bce0041b9daa7769a3c2c5f513593f37a957931675b843ed9",
+        "gitBlobSha1": "79bc68bab08030cddd6a82df97deb707de0d86cb",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "c7fe7852a6e53f187630c7659b641cd125a8d210abdfdb81d88114c236c7d650",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/pointer_geometry_history.h": {
+        "sha256": "7a29a37ee0a03cef66fb525bd595f66852b166e9fed92e85f56053bdb57e8c0a",
+        "gitBlobSha1": "c8b50f47557758dc275fd42a39f465b968561cc5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_geometry_test.cpp": {
+        "sha256": "8d60622630647a4b4ef155146888538877702c17dfbd358da80b5beb0eb3446a",
+        "gitBlobSha1": "2e7a49d94116a370fcd4e55e516564d593a455bc",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_processor_test.cpp": {
+        "sha256": "55b1d5dba35e6fa7e9b6f63fa8804e8f1984b1938f763ddcd9f1379c1b7cbd47",
+        "gitBlobSha1": "5bdf854cce8b5e33a026a1ccb9892a2fc4d8fdca",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/pointer_projection_test.cpp": {
+        "sha256": "6f5eace5e1485b6b6218d25eec56c1082dde893258bfee131e6a5bf6bdf7ed41",
+        "gitBlobSha1": "21bb7fe04575cad3914e43ad7187528b6d51c396",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/register.cpp": {
+        "sha256": "a2366bf2040d54d2427a9c961f6ae9272ffc7607b584690e4e12d4bc0a0a118a",
+        "gitBlobSha1": "c4d123ac7ac9194b2097738fed9d71c79b58c67a",
+        "pinSet": "nativeSourcePins",
+        "pinnedSha256": "415cb431d0a632aed16bffcb200ffd1dd151a699e4c2ab098895a6995bf8b93a",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "native/scroll_adapter.cpp": {
+        "sha256": "34d56c69d7fd3609ea371f12a34d666cf61fa807741a8a8b4e69216a0af3fddd",
+        "gitBlobSha1": "bf147a008d79af29178bd9fce09bed9eb0bb749b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/scroll_adapter.h": {
+        "sha256": "008c4e5227b443669e00e2e861982d1cba5d4a9ef9471b82b012d5a07e6bbfc0",
+        "gitBlobSha1": "9bf853c26868c0327ceb4b5bbc6953be114bbdc9",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/smoke.cpp": {
+        "sha256": "0290f34806b86a19a2a4b1dfc39494102e2e60f1eaf99e7b97c2e3e260eadb7a",
+        "gitBlobSha1": "322f491d8cc146c0afced84cb500c6259326c10d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.cpp": {
+        "sha256": "8f3a7dfb2ef4b19238a7082c52d7d7087a8c6bda074a09bcd2b5d1296bc23a06",
+        "gitBlobSha1": "09ad5eea83732012a8828f64b29624e93ee14cd7",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/svg_node.h": {
+        "sha256": "2eb5cc5ba7685367215875108a7824dd93f2402105dc9b7336cfe8890ca1c7dc",
+        "gitBlobSha1": "be741e49dd3c1a16429ea354cd64d9a048ca402d",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.cpp": {
+        "sha256": "a001b56b3aae828f14e11699e0402c52b510897d02734de1aef2aad9d9546c01",
+        "gitBlobSha1": "fa5aa5b5dc27d43be4f9c3f71cfd3706b2b5dfa5",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/switch_view.h": {
+        "sha256": "e61b7b36924a119b770cd4569d6320ebf7956ac239478efc9a8732923210ae37",
+        "gitBlobSha1": "5a9bee39b55c89037601afdddcd6d0fb0a797225",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/system_appearance.h": {
+        "sha256": "3c583f8275e351ef212c2531a36ef2f04577398331e743c4ba85684c79629292",
+        "gitBlobSha1": "f8faf4cf5e0ec942dfeff10bbeb2e1c3040f3656",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.cpp": {
+        "sha256": "3c97d7cab86b19e0f554711ec324940c3f3c68c4cd18e2393737776ca6a01e3c",
+        "gitBlobSha1": "764201917e03250c889e27238eda5e37850c8eb0",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/text_layout.h": {
+        "sha256": "4feea1fba0750f7ddbb9072cc49acf6990adc79652b796653ed01b6077065876",
+        "gitBlobSha1": "6ee21e395ff084ba12fdd48f3644ce05a1eb8ebb",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry.h": {
+        "sha256": "cec2ec9a5a48ce5623f44ef27ac950e1f3ff02b257bfa762a8d34ecc05fdae56",
+        "gitBlobSha1": "0815cc1d60e2fee42a6d4635c411905a362a99e1",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/timer_registry_test.cpp": {
+        "sha256": "933f9ee8e36aaa22e4763dcaad9138a69748cff42718cd3a276d80b27ba1d594",
+        "gitBlobSha1": "9c5716740facecbab807b695fdb95e63c3df29f3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.cpp": {
+        "sha256": "7a6f1b91963dea029eee1eff224ae5b99d99425f087fdefc701daa340b1d69b5",
+        "gitBlobSha1": "2af57be4b8b9c05d370b13668d8c5f317c797f62",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/transform_adapter.h": {
+        "sha256": "a4b3b2e55bf9f0720cd07764906881faaec61b8bc98b7a10c65617e10eac4c03",
+        "gitBlobSha1": "00a19be080a8a6f7c1dd8e80bec6e2dab3db6ee3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.cpp": {
+        "sha256": "4abf603c4ea702dfeabaea43f42e50743cf7a100887e16d153c6a8272c884d5c",
+        "gitBlobSha1": "f8cd7a960417ac96fd9ddcad9aff02920cc46c1c",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/turbo_module_registry.h": {
+        "sha256": "8b3889a2925db25235b4ebdaab6edfa01832c3b137c741ade7037037ae5caa74",
+        "gitBlobSha1": "ba1b7885dc5064776a5d77a5423499c83f68d87b",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_core.h": {
+        "sha256": "37301bb8093b24bb166d1590cc80865ae0f252b299c0fc5c03773ff639cd88a7",
+        "gitBlobSha1": "3eab16dee65b47b7dfaa3e6f164421bbbb03d63f",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_core_test.cpp": {
+        "sha256": "cc9fb61629a9b327c7def2517668b51c949260a149de33f088babe7d6238973c",
+        "gitBlobSha1": "e7a65bf5c517fc25e7227b16456d9f33521ca488",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_handshake.h": {
+        "sha256": "fa6637f0e4c1a79ef5a8f617b882df989e70a1d80a18e397ac540ec0d84e58b1",
+        "gitBlobSha1": "af6684240768000fa7ee640fa9d326234ef3f7d6",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_handshake_test.cpp": {
+        "sha256": "523f4906046c6bbaf64abc954056d7810263cab5ccb002e09b1292cca5cee41e",
+        "gitBlobSha1": "54a814bd50befc67eecced5aeaf1fb0a5de4b8b3",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_module.cpp": {
+        "sha256": "cb803e071d2ca38d4b172967a9f6bce2b3ac40128c41d4230b233af1c31d236b",
+        "gitBlobSha1": "8aa56f23e13a467064052f62f54580baa6df885a",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_module.h": {
+        "sha256": "b366992442410db1350034dd5dff076d724919ff3d8cd156c2487d24a43a5d76",
+        "gitBlobSha1": "0c61b16b0d1670722cfd00e009911eaebd6b6c31",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_transport.h": {
+        "sha256": "8309ece4cb31b530f69c39f053132f8c2d36aa46d240245a04a8b612e281f9b0",
+        "gitBlobSha1": "f36283313f4053ddefcc0c8b98f072d34174a327",
+        "pinSet": "nativeSourcePins"
+      },
+      "native/websocket_transport_test_fixture.cpp": {
+        "sha256": "20699fe2e6c90e7807313516e9aefae809d3ae87c999a41e285030bf571bde1d",
+        "gitBlobSha1": "f63960d4154f27bfd8098ec8fbc8c02db8dbf7bd",
+        "pinSet": "nativeSourcePins"
+      },
+      "package.json": {
+        "sha256": "3c89f81557ceaef7663cd9813a3f09b5b4c6dfa3279f46b801c4764eb7563d00",
+        "gitBlobSha1": "8bb15bb2cff887c7ee2ce66306575e53615ff926",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "1e9f2c89bde1a4ac2e1be54180c4ad9d103ced967a7d1446f52397ec26e0a6de",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "e871abe",
+            "subject": "feat(dashboard): Coordinate up to five parallel agents (#53)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "scripts/adapter-runtime-check.mjs": {
+        "sha256": "35d4b9df39d4b38f45043a26d33630c453055407310a249914b6134bfe9b8bf2",
+        "gitBlobSha1": "009506d185c7806be44e7f48480aa16e9638ff10",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/bundle.mjs": {
+        "sha256": "134178ebf8e2ba529b0343517b559a8dab1da2e60bd22790d6e36486cf9aef48",
+        "gitBlobSha1": "6033d9b37a17794ae6cd8a344b5bb3649b845ba8",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/event-target-bundle.mjs": {
+        "sha256": "c7867ebf7bf92145ce45920ec9c353ba3997f8afe82917b4e75959c9324ed6de",
+        "gitBlobSha1": "98d1b7bcd1d930d60a8d7314030cb99c949bd039",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/images-bundle.mjs": {
+        "sha256": "c47607f6a57547d70a9dbad664e8cbed55070a846c7adcefab567b28d69f09b2",
+        "gitBlobSha1": "91f72fd445b5746159e80ddd26eb20552325fc5b",
+        "pinSet": "sourcePins"
+      },
+      "scripts/images-example-assets.mjs": {
+        "sha256": "4ad118c17b36c747e2f600a576f701bbb471582f59f3329e67beb5450cff3acd",
+        "gitBlobSha1": "11f03377ce02bd13a39369b28b486b938d2d9d4c",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/images-fixtures.gd": {
+        "sha256": "34d26171f783c24d1f7e691b9f2925f198bf6e360f2786672df53bf42fa2b079",
+        "gitBlobSha1": "29e8e2c033e4fbc023b542d6bbacd534c23652e2",
+        "pinSet": "sourcePins"
+      },
+      "scripts/images-fixtures.mjs": {
+        "sha256": "25af9c1be35958206883189774e17a4cb47453fd286d6ac9449366803770aa1e",
+        "gitBlobSha1": "de6cd132fbbb9ddea83b6a6e93679f6d7b9df5c6",
+        "pinSet": "sourcePins"
+      },
+      "scripts/images-sabotage.mjs": {
+        "sha256": "3985f7001c21f730e89173190f713fec57e65f736346435882827e56224193c9",
+        "gitBlobSha1": "24fc033dc85f5b943523ff2ca953657db8ab5683",
+        "pinSet": "verificationSourcePins"
+      },
+      "scripts/native-probe-bundle.mjs": {
+        "sha256": "92cb02dbedbab70bd0437abaecb5fb0ef6ffb7be40d7558d4a47bcc6cc6e6d19",
+        "gitBlobSha1": "0489d48af73610a5c902e591149e197f1efe1eb5",
+        "pinSet": "sourcePins"
+      },
+      "scripts/sabotage-sources.mjs": {
+        "sha256": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+        "gitBlobSha1": "0186a4bdd4f624be5e403834688cacb8ed9355d4",
+        "pinSet": "verificationSourcePins"
+      },
+      "sdk/addon/ios_export.gd": {
+        "sha256": "684d57e6884c2670e06221064c5a2d1e502893b3903fd12cc2e2972fd6e9c7cf",
+        "gitBlobSha1": "bce6a8d7403b51e31cc16dc2e05a495e716bc231",
+        "pinSet": "verificationSourcePins"
+      },
+      "sdk/toolchain/asset-plugin.mjs": {
+        "sha256": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+        "gitBlobSha1": "91665135ee50992cf7591ef2124f344c3f1c794c",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "e64b6f8d63978d86a5c20fd8fdffc7ef5e429b53039e669dbc7eaaaf5420f801",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "257b0bd",
+            "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.sdk/toolchain/asset-plugin.mjs"
+      },
+      "sdk/toolchain/build.mjs": {
+        "sha256": "d07d9c852fbc4a5e710b680c6150f55cf65df7aad276bd947d9f1e2f20c4d5e7",
+        "gitBlobSha1": "22de78fd4d1fef5e1478fe05011a83e1fecac5d6",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "3c7fafa8b4292b46d26a84b9a5a75d1021075d95ba9d09d38c23817fe8c13a27",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "257b0bd",
+            "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.sdk/toolchain/build.mjs"
+      },
+      "sdk/toolchain/platform-plugin.mjs": {
+        "sha256": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+        "gitBlobSha1": "5e03f153fe70674f5bd0568bd4fb8a5e8b631015",
+        "pinSet": "sourcePins"
+      },
+      "src/animated-exports.js": {
+        "sha256": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+        "gitBlobSha1": "0b9f24ea6e9f1ec4c02e056bef7236e94ab09dba",
+        "pinSet": "sourcePins"
+      },
+      "src/image-contract.mjs": {
+        "sha256": "bfeeed482b79f20f3544d2df1cf9b464744438e026921e529e0e3a70ae830ca1",
+        "gitBlobSha1": "7fefe781ae95a8a474ec53513e4aa8394fdfdb15",
+        "pinSet": "sourcePins"
+      },
+      "src/image.jsx": {
+        "sha256": "ee9433ae1d2dbed8df37a7ef36f5fe58c838c1ca639998a1519525c9c603b81d",
+        "gitBlobSha1": "833876c60adcbf957a4e8c5d7a272d05d76c87a1",
+        "pinSet": "sourcePins"
+      },
+      "src/react-native-platform.jsx": {
+        "sha256": "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218",
+        "gitBlobSha1": "9cdd035f481bbb7bbbb5a47dd97c890e9cd75be9",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "b3d0652fa9a7d8c83e5607bc4c54e8b286a8dcbf65d65b700ba63cef8f5fe4ff",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "tests/asset-plugin.test.mjs": {
+        "sha256": "090d51d36677e8382774e253f4bf5b568ec288b1f6c2d3472527518a2890bf99",
+        "gitBlobSha1": "6bacfc4fe353156a787997e7e3b0a21d2d2f2b41",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "09cd07de369ae1cbcce772797790093bf1a07dff067455e6e255260752ac66d9",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "257b0bd",
+            "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.tests/asset-plugin.test.mjs"
+      },
+      "tests/fixtures/images/assets/badge.png": {
+        "sha256": "3e66a63204c1245775d7af2e08dc899097e7a3f12aef45948396dd776a7664f6",
+        "gitBlobSha1": "1de17df10797e0e2bcf39c5e6dca5ae8f85fc3f0",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/assets/badge@2x.png": {
+        "sha256": "a6e07b350240cfd8b902dc67f420eb8cc6c32e574398256c0b0289f58445bccb",
+        "gitBlobSha1": "21351e0d3aca270f7c7bd6f0658a3ea110410707",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/assets/badge@3x.png": {
+        "sha256": "4ee5e4c946f2edf111b85768e38bc0d63de78015dd4d42dbf9c98098c2e59794",
+        "gitBlobSha1": "82d24b27f6bb2443b879100660de461eec1d2418",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/assets/tile.png": {
+        "sha256": "2301e079bfa06c792c42503b567fe41282bd2b4652206ffd3c4b4ce0849e6af1",
+        "gitBlobSha1": "2f64ad56cd6f86f39c7dacfd1eb0e8d6c30479db",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/assets/wide.png": {
+        "sha256": "9950ba2a0eef6917b41aab657355f9f991b0f3835afc409a1fba1b6243cc246a",
+        "gitBlobSha1": "d86568b520eacc2caaa75a017709d2352da6792d",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/broken/corrupt.png": {
+        "sha256": "d0b1a90ca34f7684aa0c4b97e3bbd1b856c8d4ea63fcd37f6ae2298419b5bc30",
+        "gitBlobSha1": "70e5fca54dbc53ef0670ed2a2b641818174602c8",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/broken/empty.png": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "gitBlobSha1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/broken/notimage.png": {
+        "sha256": "0131ca5e7cf03aa0f4534b8c9756af7b51059353b246584715dba4773f559dac",
+        "gitBlobSha1": "320de42d0c4d84e80d3d5b62e2ebd6b64f95862e",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/broken/oversize.jpg": {
+        "sha256": "b6f6e74600bd60283ed35c7ce2afd178732ad92eb6faf172f0c701ef5957e408",
+        "gitBlobSha1": "5e1dbc5fe9c026f0171cb64edf456cadbde24e26",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/broken/oversize.png": {
+        "sha256": "4cc359e84437f359656cc6f336cdf7cb671f52bbcc0f4bcfa367fe03b87ef761",
+        "gitBlobSha1": "8b0d42ed0737c4da34c3a9b5319326932d7542d4",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/broken/truncated.png": {
+        "sha256": "c2e74ba45467222b5546e4f29cf75dbe42c55a6ab412969f24f0ec5ece655a43",
+        "gitBlobSha1": "8c7803d26cc01a9025299992dd5530340833f6ac",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.bmp": {
+        "sha256": "40ac0452ff702984d1d4cd2a8380f8f35e168b177faa0e0a20642be2ffa9700a",
+        "gitBlobSha1": "f0aa2284586eb4bb51c5f01b671c09679a0c3a8c",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.gif": {
+        "sha256": "b1442e85b03bdcaf66dc58c7abb98745dd2687d86350be9a298a1d9382ac849b",
+        "gitBlobSha1": "35d42e808f0a8017b8d52a06be2f8fec0b466a66",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.jpg": {
+        "sha256": "e8c7734160164a5be8931fbe772c75bebef40a3e89041938acb44983f5a5c578",
+        "gitBlobSha1": "2921248cea29d49db4dd1e902f51f841da687c7b",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.png": {
+        "sha256": "aceaf14451f98ebd22d11072e56b93869803fe8f4ee4470aa9d7c8434a2f60f4",
+        "gitBlobSha1": "f40b758be69f6c2e086d986fcaf445146ea05828",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.svg": {
+        "sha256": "df31b43d1878e3f2ac9bcb2d06c9b0cf9e16a085a1a50b48fe8c9aed1c84125b",
+        "gitBlobSha1": "f16521245811306e29862615a3242d48e41cbea2",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.tga": {
+        "sha256": "bcb78ab165ac800b87ae027c70fa55094bf2506838883f6268f08da1dcfcedbd",
+        "gitBlobSha1": "9656bdce9c4ffe7f36a3b7eb1197291a6877fef0",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/formats/format.webp": {
+        "sha256": "7e6928bdc86ac9cec3090a98b5c04fa584223f8f5f95e25b51a84af29430dd1e",
+        "gitBlobSha1": "35a90501fbf291b8abbb46a9ad821f0d8f74a3e3",
+        "pinSet": "fixtureFilePins"
+      },
+      "tests/fixtures/images/manifest.json": {
+        "sha256": "f5aa4f1e69366bb73ce7f2313bdaec172c540709c8299699fc424a64fc7402c7",
+        "gitBlobSha1": "dcd315937eb30d2918679543656f1c0b5ef7ef89",
+        "pinSet": "sourcePins"
+      },
+      "tests/image-contract.test.mjs": {
+        "sha256": "f7902c4db9a31f78700999733376d1e1a9661f3d3e147e3921ec45e9f2180b5f",
+        "gitBlobSha1": "219435c0bf8314c9c1f74df8b03dc5fb27ff4b09",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/images-fixture.jsx": {
+        "sha256": "02f5aa947959485348357bb5fe5ea71fae406d0c2dc46935e09c58f185185327",
+        "gitBlobSha1": "8b7944994716a82d9e7cddd03c61856aa9306209",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-native.test.mjs": {
+        "sha256": "6fe89c05cf564699acdfc812186132d2f96806afcb86ec7e7bdf92a3d28cd9cc",
+        "gitBlobSha1": "12b6249a37467b4de431b7ec8989b7d85fa7a4f8",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "85e73a6f74423107df2b4e4440a1b30a6c9978bf5ba0a82ebc3cb12b713ebf32",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "257b0bd",
+            "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.tests/images-native.test.mjs"
+      },
+      "tests/images-oracle.mjs": {
+        "sha256": "3c2b75eaf47d007fac965234aaad7796a54f9090cce0b3428277a23d1a2f3214",
+        "gitBlobSha1": "c15cdf6667e825e7bed36facc9a84721ed2def53",
+        "pinSet": "sourcePins",
+        "pinnedSha256": "d48d20e00673dc102a948532ca5a61e8877ec0db24e7084d826002a05e7b6d99",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "257b0bd",
+            "subject": "fix(images): Start loads before observing and publish assets after the bundle"
+          }
+        ],
+        "equalsHashRecordedAt": "postReview.pins.tests/images-oracle.mjs"
+      },
+      "tests/images-pattern.mjs": {
+        "sha256": "df313dbcbb90402122b5a44f8c192f716f30cf94827834069675edbe895e1f17",
+        "gitBlobSha1": "53842cc5b88e1fc2acd489b9ae624e7e5f5fd91d",
+        "pinSet": "sourcePins"
+      },
+      "tests/images-probe.gd": {
+        "sha256": "b538bd493195664f5799905520274ad420795364d6f6242ad1d6e7eb0ab4074f",
+        "gitBlobSha1": "b798230a97c7deeb931163ebd7f089032ed6b1c3",
+        "pinSet": "sourcePins"
+      },
+      "tests/native-animated-fixture.jsx": {
+        "sha256": "38508ac108385b4e74402583c02cfca80287c05c1d28e6e16ef622f6c1c05497",
+        "gitBlobSha1": "75f3b1e8ff00e5e90c91650ced5cde92a4dc8458",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/native-animated-probe.gd": {
+        "sha256": "92441f28b2912f2bd783da8bf345f7f4657eb578b3fb59c670fc745ba51f1c13",
+        "gitBlobSha1": "811dbb9bb260c0ec4e1f2e5a262baba3de9a64c7",
+        "pinSet": "verificationSourcePins"
+      },
+      "tests/platform-seams.test.mjs": {
+        "sha256": "44f122eceddfee5ed40201c030e13662b0eeda4d777a60561101a8dc61441a12",
+        "gitBlobSha1": "66b006ff5c56de230f559afac3b31efc3242d181",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "2e5fd5002dc640a70bcd07f9390fac7455636c23e17d1a30989a764d866b7801",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "tests/types/consumer.tsx": {
+        "sha256": "ec6612eced7b8d3e159cf202a31ebab5403595660d6f7e32ca93fb410ac3bd42",
+        "gitBlobSha1": "9d9849140cf34a57573e32e231bbda4bc4a8cfb0",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "4193ee686a9decd17d077a55cfcaa00f16e0c2462d9782e646d76d27c74980af",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      },
+      "types/react-native.ts": {
+        "sha256": "bed0ecbecafa0d5a865b9a0ecdd9aca67a0cd8645eff65eb95547cd08e0e900f",
+        "gitBlobSha1": "4b8dd21a52d4ad41fcded1b3c120b6aafd1d40a9",
+        "pinSet": "verificationSourcePins",
+        "pinnedSha256": "8cc65f9294c585f5a643097ed5500620c0943d7e4776c0432e5cf865f0ec5389",
+        "changedAfterImplementationBy": [
+          {
+            "commit": "9ea7811",
+            "subject": "feat(accessibility): Map RN View accessibility to the OS through Godot's AccessKit (#57)"
+          },
+          {
+            "commit": "d3273b3",
+            "subject": "feat(text): Report RN line geometry through onTextLayout and the Yoga baseline (#54)"
+          },
+          {
+            "commit": "585ca1b",
+            "subject": "feat(device-services): Run RN's Linking, Clipboard and Vibration over typed Godot modules (#55)"
+          },
+          {
+            "commit": "7e2df46",
+            "subject": "feat(modal): Present RN Modal with scoped input lifetimes"
+          }
+        ],
+        "equalsHashRecordedAt": null
+      }
+    }
+  },
+  "limits": [
+    "All five jobs completed successfully in the final attempt; this artifact audit certifies only the headless current images lane (74 checks, the state after the review of PR #56).",
+    "The preceding-host control (3 normative failures among its 11 reachable checks) and the two retained sabotages (12 and 2 failures) remain local evidence; this audit only shows that every check they fail and still exist passes in the hosted run. The hosted job runs the images example headless (test:examples) but not its capture lane with the native renderer (25 checks).",
+    "Bundle hashes and the native host hash are declared by the runner; no bundle or native binary is included in the artifact.",
+    "CI host hash is not required to equal the local built host.",
+    "Mobile and parity jobs are separate: only their PASSED markers are recorded, their outputs are not audited here.",
+    "Deployment/Pages is separate.",
+    "Git-tree verification establishes tracked content at the pushed main checkout; it does not independently inspect a compiled native binary.",
+    "The slice's own committed limits are unchanged and still apply:",
+    "Network images (http and https sources, headers, method, body and cache) fail through onError naming the later slice; they need GF-22 and a request layer for images.",
+    "No decoded-image cache, prefetch or real queryCache: every Image reads and decodes its file again.",
+    "tintColor, blurRadius, capInsets, defaultSource, loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled, resizeMethod, resizeMultiplier and overlayColor fail where the Image renders; a border radius on the Image's own style fails too (the host clips rectangles only).",
+    "Animated GIF and WebP, nativeImageSource, and an Image inside Text (a failure by design, as for every Control) are not delivered.",
+    "Assets were loaded from the project directory (res://build/...) and from user://; the iOS export hook copies the manifest's files, but no exported app, desktop export or Android export ran.",
+    "The captures were taken by the macOS native renderer at content scale 2; the pixel checks sample a few points and there is no independent pixel oracle of the whole frame.",
+    "ImageIO's rounding of a thumbnail's size, UIKit's exact tiling geometry and decode memory on a device were not compared with iOS.",
+    "Hosted macOS CI has not run this slice; the oracle and the probe state values from what the host delivered or from bounds (peak in flight at most 4, peak uploads per poll 1 at a budget of one byte), never from frame pace.",
+    "Only macOS arm64 was executed; Windows, Linux, Android, iOS and Web runtimes are not covered.",
+    "GF-16 is open: only its first-slice checkpoint can close, and no whole GF, other checkpoint, dependency, weight or denominator closes."
+  ],
+  "findings": [
+    "explained, non-blocking: .fallowrc.json: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), e871abe (#53), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: .github/workflows/contracts.yml: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: examples/catalog.json: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: examples/entry.jsx: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/CMakeLists.txt: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/adapter_registry.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/application_runtime.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/application_runtime.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/fabric_application.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 585ca1b (#55); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/fabric_application.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 585ca1b (#55); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/fabric_surface.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/godot_dom.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/godot_dom.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/image_view.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 257b0bd (fix(images): Start loads before observing and publish assets after the bundle); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.native/image_view.cpp",
+    "explained, non-blocking: native/networking_modules.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 585ca1b (#55); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/networking_state.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 585ca1b (#55); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/paragraph_layout.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: d3273b3 (#54); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/paragraph_layout.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: d3273b3 (#54); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/pointer_adapter.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/pointer_adapter.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/pointer_event.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/pointer_geometry.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/pointer_geometry.h: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: native/register.cpp: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: package.json: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), e871abe (#53), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: sdk/toolchain/asset-plugin.mjs: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 257b0bd (fix(images): Start loads before observing and publish assets after the bundle); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.sdk/toolchain/asset-plugin.mjs",
+    "explained, non-blocking: sdk/toolchain/build.mjs: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 257b0bd (fix(images): Start loads before observing and publish assets after the bundle); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.sdk/toolchain/build.mjs",
+    "explained, non-blocking: src/react-native-platform.jsx: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: tests/asset-plugin.test.mjs: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 257b0bd (fix(images): Start loads before observing and publish assets after the bundle); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/asset-plugin.test.mjs",
+    "explained, non-blocking: tests/images-native.test.mjs: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 257b0bd (fix(images): Start loads before observing and publish assets after the bundle); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/images-native.test.mjs",
+    "explained, non-blocking: tests/images-oracle.mjs: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 257b0bd (fix(images): Start loads before observing and publish assets after the bundle); the run head's tree equals the final PR head's tree; the bytes equal the hash recorded in the committed report at postReview.pins.tests/images-oracle.mjs",
+    "explained, non-blocking: tests/platform-seams.test.mjs: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: tests/types/consumer.tsx: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: types/react-native.ts: the run-head bytes differ from the 552fb56 pin; the PR branch gained commits that touch this path after the pinned run: 9ea7811 (#57), d3273b3 (#54), 585ca1b (#55), 7e2df46 (feat(modal): Present RN Modal with scoped input lifetimes); the run head's tree equals the final PR head's tree",
+    "explained, non-blocking: lane current: the bundle differs from the committed state's; 4 of the producers the bundle pins changed with commits main gained after the committed state: sdk/toolchain/asset-plugin.mjs, src/react-native-platform.jsx, tests/images-native.test.mjs, tests/images-oracle.mjs",
+    "explained, non-blocking: the runner's Node is v22.23.2 where the committed state ran v22.23.3; recorded as a fact, no comparison of a result depends on it here"
+  ],
+  "blockingFindings": [],
+  "nativeJobLog": {
+    "jobId": 113140736422,
+    "sha256": "ce0b436f3b8946f9c79a5623e9185be86840207b0d0c9edd91453d2705671cdc",
+    "checkoutVerified": true,
+    "step": "npm run test:images",
+    "stepTap": {
+      "ok": [
+        "RN's own Image over native worker-thread image loading renders bundled, file and data pictures and releases every request"
+      ],
+      "tests": 1,
+      "pass": 1,
+      "fail": 0
+    },
+    "unexpectedScriptRegistryCrashOrCompilerErrors": 0,
+    "compilerWarningMatches": 0,
+    "actionsNodeDeprecationWarningLines": 145,
+    "fullRawLogIncludedInReceipt": false
+  }
+}

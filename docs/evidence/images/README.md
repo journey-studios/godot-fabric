@@ -62,6 +62,25 @@ npm run test:images
 > os mesmos SHA-256 dos commitados. Esta página, as contagens e o restante do recibo descrevem a execução
 > em `552fb56`, e cada pin anterior continua igual a `git show 552fb56:<arquivo>`.
 
+> Nota posterior (2026-10-08): a segunda fatia do GF-16, a das
+> [imagens de rede](../images-network/README.md) (implementação
+> [`6bbd036`](https://github.com/journey-studios/godot-fabric/commit/6bbd03665b0b2136f0eabe58a540cbf4394215ee)), substituiu o que esta página
+> descreve como recusado ou ausente: fontes `http` e `https` carregam (com `headers`, `method`, `body` e
+> `cache` na fonte e `crossOrigin` e `referrerPolicy` na Image) em vez de falhar por `onError` com o nome
+> da fatia futura; `Image.prefetch` e `prefetchWithMetadata` baixam e resolvem verdadeiro em vez de
+> rejeitar; `queryCache` informa as URLs do cache de bytes em vez de `{}`; `getSize` e
+> `getSizeWithHeaders` de uma URL de rede baixam e leem o cabeçalho; as seis chaves de fonte que o
+> wrapper recusava deixaram de ser recusadas; e `repeat` ladrilha no tamanho exato da imagem em pontos,
+> sem redimensionar a textura, em vez de num tamanho inteiro. Por isso a suíte `test:images` mudou
+> com o contrato: o caso `neg-http`, os casos de `getSize` por `http` e as seis recusas de chave saíram do
+> fixture, o `prefetch` de um arquivo carregável resolve verdadeiro e o de um ausente rejeita com
+> `E_PREFETCH_FAILURE`, e a suíte tem agora 73 checks (62 normativos), onde esta página conta 74 (63); o
+> controle no host anterior tem 11 checks e as mesmas 3 falhas normativas, e as sabotagens falham 12 e 2.
+> O que esta página e o [recibo](report.json) afirmam sobre o pipeline local (as lanes, as contagens, os
+> pins) descreve a execução em `552fb56`, e cada pin continua igual a `git show 552fb56:<arquivo>`; os
+> arquivos que a segunda fatia mudou têm os pins novos no recibo dela. As seções "O que este host fazia",
+> "A implementação", "Padrões e desvios" e "Limites" abaixo falam do estado de `552fb56`.
+
 ## O que o RN faz
 
 O `ImageShadowNode` pede a imagem dentro do `layout`: o `updateStateIfNeeded` escolhe a fonte
@@ -262,7 +281,8 @@ pixel branco do canto e deixa o fundo embaixo; as seis telhas têm seis digests 
 imagem que falhou não deixa pixels de imagem. Não há oráculo independente de pixels do quadro
 inteiro, e a comparação com o UIKit segue aberta em Limites.
 
-Estas execuções são locais: a CI hospedada ainda não rodou esta fatia.
+A lane com o renderizador roda só localmente; a CI hospedada rodou a lane headless da suíte (veja
+Limites).
 
 ## Regressões
 
@@ -315,7 +335,26 @@ depois delas; os gates que os leem rodaram de novo na árvore final.
   foram comparados com o iOS.
 - **Plataformas.** Só macOS arm64 foi executado; Windows, Linux, Android, iOS e Web não foram
   exercitados, nem hardware real.
-- **CI.** A CI hospedada desta fatia está pendente.
+- **CI.** A CI hospedada do push da `main` em `6d02746` (o squash do #56, run
+  37724902858) passou nos cinco jobs na primeira tentativa, sem reexecução. O job
+  `native-cold-start` rodou `npm run test:images` (1 de 1 teste ok), e o artefato
+  `native-images` repete os **74 checks headless** com os IDs do relatório commitado
+  (o mesmo digest, `ed2c8cc0…`); o mesmo job rodou o exemplo `images` no
+  `test:examples` (17 checks headless). O oráculo independente aceita o relatório
+  baixado (as URIs `file://` do relatório trazem o diretório de checkout do runner,
+  que o recibo mapeia para o diretório onde o oráculo foi extraído), e os 3, 12 e 2
+  checks que o controle e as sabotagens locais falham existem e passam todos no run.
+  Dos 159 pins de código e configuração, 125 têm em `6d02746` os bytes de `552fb56`
+  e 34 diferem: 6 são os arquivos do `postReview` e têm os SHA-256 que ele registra
+  para `257b0bd`, e 28 mudaram por commits que a `main` ganhou depois de `552fb56`.
+  Por isso o SHA-256 do bundle do run (`f141ed27…`) não é um dos registrados
+  (`46c9bec0…` em `552fb56`, `2ee6d7f4…` na árvore mesclada `37929da`): 4 produtores
+  do bundle mudaram (`asset-plugin.mjs`, `react-native-platform.jsx`,
+  `images-native.test.mjs`, `images-oracle.mjs`). O [Pages](publication.json) (run
+  37724902853) implantou exatamente os dados commitados de `6d02746`; o site público
+  já foi substituído pelo deploy de `c0f3702` (run 37725323261). A CI hospedada não
+  roda o controle no host anterior, as sabotagens nem a captura com o renderizador.
+  [Recibo](hosted-ci.json).
 
 Nenhum GF inteiro, contrato, paridade, alvo, outro checkpoint, peso ou denominador fecha: só o
 checkpoint de fatia do GF-16.

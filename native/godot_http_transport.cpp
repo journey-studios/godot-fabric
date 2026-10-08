@@ -174,7 +174,7 @@ class GodotHttpTransport final : public HttpTransport {
     }
     const int status = static_cast<int>(x.client->get_response_code());
     auto headers = parse_headers(x.client->get_response_headers());
-    if (auto redirect = http::plan_redirect(x.request.method, status, x.url, x.request.headers, headers)) {
+    if (auto redirect = http::plan_redirect(x.request.method, status, x.url, x.request.headers, headers, x.request.drop_headers_on_redirect)) {
       // OkHttp allows 20 follow-ups and fails on the 21st.
       if (x.redirects >= http::max_redirects) {
         fail(x, {"Too many follow-up requests: " + std::to_string(x.redirects + 1)});

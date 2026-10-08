@@ -58,7 +58,7 @@ the command again. Rebuild native C++ changes with `npm run setup`.
 | [device-services](device-services/README.md) | Original RN Clipboard, Linking and Vibration over native device services, with stand-in backends, real clicks and a deep link delivered by the host | Public | [App](device-services/App.jsx) · [scene](device-services/scene.tscn) |
 | [accessibility-info](accessibility-info/README.md) | Original RN AccessibilityInfo over Godot's accessibility settings: the screen reader, reduce motion, reduce transparency and increase contrast with their events, the settings Godot cannot read rejected, and four native buttons that stand in for the system | Public | [App](accessibility-info/App.jsx) · [scene](accessibility-info/scene.tscn) |
 | [layout-animation](layout-animation/README.md) | Original RN LayoutAnimation on RN's C++ LayoutAnimationDriver, advanced by the host's frame clock: a spring between a row and a column, and one tile that enters while another leaves | Public | [App](layout-animation/App.jsx) · [scene](layout-animation/scene.tscn) |
-| [images](images/README.md) | Original RN Image, ImageBackground and asset registry over worker-thread decoding: the six resize modes, `@Nx` assets, `data:` sources, a failure and a preview that two buttons change | Public | [App](images/App.jsx) · [scene](images/scene.tscn) |
+| [images](images/README.md) | Original RN Image, ImageBackground and asset registry over worker-thread decoding: the six resize modes, `@Nx` assets, `data:` sources, a failure, a network PNG from a loopback server, a remount answered by the decoded cache and an HTTP 404, and a preview that two buttons change | Public | [App](images/App.jsx) · [scene](images/scene.tscn) |
 | [parity](parity/README.md) | Thirteen shared RN/Godot reference cases; automated | Public | [fixture](../tests/parity/fixture.jsx) · [scene](parity/scene.tscn) |
 
 **Public** means the UI uses supported `react-native` imports. Diagnostic
@@ -370,10 +370,15 @@ sources (bundled `@Nx` assets, `res://`, `user://`, `file://` and `data:` URIs i
 resize modes, the events and their order, failures, and decodes held in flight while their request is
 swapped away or unmounted, with an independent oracle that recomputes the sources, pixel sizes, events
 and rectangles from RN's formulas and the fixture's own pixels: `npm run test:images`, next to the
-launcher entry (`npm run example -- images` clicks `Next mode` and `Swap the picture`). Its
-[receipt](../docs/evidence/images/README.md) records 74 headless checks, two captures, the
-preceding-host control, which fails the 3 normative checks it can reach, and two retained sabotages,
-which fail 12 and 2.
+launcher entry (`npm run example -- images` clicks `Next mode`, `Swap the picture` and `Mount again`,
+and shows a network PNG from a server the scene starts on loopback). Its
+[receipt](../docs/evidence/images/README.md) records 74 headless checks (73 now, since the network
+slice), two captures, the preceding-host control, which fails the 3 normative checks it can reach, and
+two retained sabotages, which fail 12 and 2. The
+[network images receipt](../docs/evidence/images-network/README.md) records 74 headless checks over a
+loopback Node server (`npm run test:images-network`), the control that fails the 30 normative checks the
+preceding host reaches, three retained sabotages that fail 1, 34 and 2, and the example's 22 headless and
+30 graphical checks with two captures.
 
 | Public TSX form | Public counter | NativeWind |
 | --- | --- | --- |

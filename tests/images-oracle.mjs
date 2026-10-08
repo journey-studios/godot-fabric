@@ -31,7 +31,7 @@ export const jsOnlyChecks = [
   "cleanup/Stop releases every root and queued work",
   "report/The Images report is saved",
 ];
-export const expectedCheckCount = 74;
+export const expectedCheckCount = 73;
 
 // ---- RN's formulas ----
 
@@ -55,7 +55,7 @@ function targetRectSize(source, destination, scale) {
   return [ceilValue(dw, scale), ceilValue(dw / aspect, scale)];
 }
 // RCTDecodeImageWithData + RCTTargetSize (cover, no upscaling): the pixels a picture of `source` pixels is decoded at.
-function decodedPixels(source, destination, scale) {
+export function decodedPixels(source, destination, scale) {
   if (destination[0] === 0 && destination[1] === 0) return source;
   let size = targetRectSize(source, destination, scale);
   if (source[0] < size[0] * scale) size = source;
@@ -66,7 +66,7 @@ function decodedPixels(source, destination, scale) {
 }
 
 // What UIImageView draws for the content modes RCTContentModeFromImageResizeMode picks (repeat is a tiled resizable image).
-function contentModeDraw(mode, [cw, ch], [nw, nh]) {
+export function contentModeDraw(mode, [cw, ch], [nw, nh]) {
   if (!(cw > 0 && ch > 0 && nw > 0 && nh > 0)) return null;
   const frame = {x: 0, y: 0, width: cw, height: ch}, whole = {x: 0, y: 0, width: nw, height: nh};
   if (mode === "stretch") return {dst: frame, src: whole, tiled: false};
@@ -120,7 +120,7 @@ function readSource(uri, inputs) {
   return {kind, bytes: null};
 }
 
-function sniff(bytes, file) {
+export function sniff(bytes, file) {
   if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return "png";
   if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "jpeg";
   if (bytes.length >= 12 && bytes.toString("ascii", 0, 4) === "RIFF" && bytes.toString("ascii", 8, 12) === "WEBP") return "webp";
@@ -162,10 +162,10 @@ function pngInflates(bytes) {
     return false;
   }
 }
-const decodes = (format, bytes) => (format === "png" ? pngDecodes(bytes) && pngInflates(bytes) : true);
+export const decodes = (format, bytes) => (format === "png" ? pngDecodes(bytes) && pngInflates(bytes) : true);
 
-const sizeLimit = 16384, pixelLimit = 64 * 1024 * 1024;
-function headerSize(format, bytes, file) {
+export const sizeLimit = 16384, pixelLimit = 64 * 1024 * 1024;
+export function headerSize(format, bytes, file) {
   if (format === "tga") return {width: bytes.readUInt16LE(12), height: bytes.readUInt16LE(14)};
   return imageDimensions(format === "jpeg" ? "jpg" : format, bytes, file);
 }
@@ -182,7 +182,6 @@ function expectRequest(uri, request, inputs) {
     return out;
   };
   if (read.kind === "empty") return fail("The image source has an empty URI");
-  if (read.kind === "network") return fail(/^Network images are not supported by this host yet: .*later slice \(/);
   if (read.kind === "unsupported") return fail(new RegExp(`^Unsupported image URI "${escape(uri)}": this host loads`));
   if (read.kind === "data" && read.bytes == null) return fail(/^The data: image URI does not hold valid base64 data$/);
   if (read.bytes == null) {
@@ -315,7 +314,8 @@ function verifyCase(spec, report) {
     const picture = view.image, wanted = expected.picture;
     same([picture.format, picture.width, picture.height, picture.sourceWidth, picture.sourceHeight, picture.scale],
       [wanted.format, wanted.width, wanted.height, wanted.sourceWidth, wanted.sourceHeight, wanted.scale], label + ": picture");
-    same([picture.textureWidth, picture.textureHeight], view.mode === "repeat" ? [Math.round(wanted.width / wanted.scale), Math.round(wanted.height / wanted.scale)] : [wanted.width, wanted.height], label + ": texture");
+    // The texture is the picture's pixels in every mode: repeat tiles it under a transform and never resizes it, as other views may share it.
+    same([picture.textureWidth, picture.textureHeight], [wanted.width, wanted.height], label + ": texture");
     const load = log.find(entry => entry.type === "load");
     same(load.keys, ["source", "target", "timeStamp"], label + ": load payload");
     same(load.sourceKeys, ["height", "uri", "width"], label);
@@ -569,9 +569,8 @@ export function verifyImagesReport(report, {original = false} = {}) {
   size("getSizeWithHeaders", [24, 24]);
   assert.match(results["getSize-missing"].message, /^E_GET_SIZE_FAILURE: Failed to getSize of res:\/\/tests\/fixtures\/images\/formats\/does-not-exist\.png: Could not find image/);
   assert.match(results["getSize-failure-callback"].value, /^E_GET_SIZE_FAILURE: /);
-  assert.match(results["getSize-http"].message, /^E_GET_SIZE_FAILURE: Failed to getSize of https:\/\/example\.invalid\/picture\.png: Network images are not supported by this host yet/);
-  assert.match(results["getSizeWithHeaders-http"].message, /^E_GET_SIZE_FAILURE: Network images are not supported/);
-  for (const key of ["prefetch", "prefetchWithMetadata"]) assert.match(results[key].message, /^E_PREFETCH_FAILURE: this host has no image cache yet/);
+  for (const key of ["prefetch", "prefetchWithMetadata"]) same(results[key], {ok: true, value: true}, key);
+  assert.match(results["prefetch-missing"].message, /^E_PREFETCH_FAILURE: Could not find image res:\/\/tests\/fixtures\/images\/formats\/does-not-exist\.png \(no such file\)$/);
   same(results.queryCache, {ok: true, value: {}});
   const resolved = results.resolve.value;
   same([resolved.pixelRatio, resolved.pickScale, resolved.missing, resolved.nullish], [2, 2, null, null]);
@@ -579,8 +578,7 @@ export function verifyImagesReport(report, {original = false} = {}) {
   // The contract: the messages, from the declared props.
   const messages = stages.contract.messages;
   const later = ["tintColor", "style.tintColor", "blurRadius", "capInsets", "defaultSource", "loadingIndicatorSource", "fadeDuration", "progressiveRenderingEnabled",
-    "resizeMethod", "resizeMultiplier", "overlayColor", "style.borderRadius", "style.borderTopLeftRadius", "source.headers", "source.method", "source.body", "source.cache",
-    "crossOrigin", "referrerPolicy"];
+    "resizeMethod", "resizeMultiplier", "overlayColor", "style.borderRadius", "style.borderTopLeftRadius"];
   for (const id of later) assert.match(messages[`A-refusal-${id}`], new RegExp(`^Godot Image does not implement ${escape(id)} yet: `), id);
   assert.equal(messages["A-refusal-resizeMode"], "Godot Image resizeMode must be cover, contain, stretch, center, repeat, none");
   assert.equal(messages["A-refusal-style.resizeMode"], messages["A-refusal-resizeMode"]);
@@ -592,7 +590,7 @@ export function verifyImagesReport(report, {original = false} = {}) {
   assert.match(messages["A-refusal-children"], /^The <Image> component cannot contain children/);
   assert.equal(messages["A-refusal-inline"], "Inline Controls are not implemented in Godot Text");
   same(Object.keys(messages).filter(key => !key.includes("refusal")), []);
-  assert.equal(stages.contract.refusals.length, 28);
+  assert.equal(stages.contract.refusals.length, 22);
   // The descriptor Metro writes: recomputed from the three variant files.
   const descriptor = stages.contract.assets.badge.descriptor;
   const md5 = createHash("md5");
