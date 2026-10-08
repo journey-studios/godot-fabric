@@ -410,10 +410,19 @@ const wrongTextLayout = <Text onTextLayout={(event: PointerEvent) => { void even
 const pressableText = <Text onPress={() => {}} onPressIn={() => {}} onPressOut={() => {}} onLongPress={() => {}} disabled
   pressRetentionOffset={{ top: 10, left: 10, bottom: 10, right: 10 }} allowFontScaling={false} maxFontSizeMultiplier={1.2}
   dynamicTypeRamp="body" suppressHighlighting>Press</Text>;
+// The seven responder props of RN's TextProps, on an outer paragraph: each handler has RN's own signature.
+const responderText = <Text onStartShouldSetResponder={() => true} onMoveShouldSetResponder={() => false}
+  onResponderGrant={event => { void event.nativeEvent.pageX; }} onResponderMove={event => { void event.nativeEvent.locationY; }}
+  onResponderRelease={event => { void event.nativeEvent.timestamp; }} onResponderTerminate={() => {}}
+  onResponderTerminationRequest={() => true}>Responder</Text>;
+// @ts-expect-error a responder handler receives the gesture event, not a layout event
+const wrongResponder = <Text onResponderGrant={(event: TextLayoutEvent) => { void event; }}>Responder</Text>;
+// @ts-expect-error the Capture, Reject, Start and End variants are not props of RN's TextProps
+const captureResponder = <Text onStartShouldSetResponderCapture={() => true}>Responder</Text>;
 // @ts-expect-error selection and font fitting are not implemented
 const selectableText = <Text selectable adjustsFontSizeToFit>Lines</Text>;
 // @ts-expect-error head and middle ellipsizing are not implemented
 const middleEllipsis = <Text numberOfLines={1} ellipsizeMode="middle">Lines</Text>;
 // @ts-expect-error fontSize is a style, not a prop of RN's Text
 const fontSizeProp = <Text fontSize={20}>Lines</Text>;
-void measuredText; void originalTextProps; void wrongTextLayout; void pressableText; void selectableText; void middleEllipsis; void fontSizeProp;
+void measuredText; void originalTextProps; void wrongTextLayout; void pressableText; void responderText; void wrongResponder; void captureResponder; void selectableText; void middleEllipsis; void fontSizeProp;

@@ -205,9 +205,9 @@ Each of these runs with a real mouse and a real touch.
 
 ## Limitations and open
 
-- **Press on a span** needs hit testing by text fragment and its own dispatch in
-  the pointer adapter (GF-14's area): out. A nested `Text` fails if it sets any
-  press or responder prop.
+- **A press handler on a span itself** needs hit testing by text fragment and its own dispatch in
+  the pointer adapter (GF-14's area): out. A nested `Text` that declares any press or responder prop
+  fails; a touch over a span's text is the outer paragraph's press, and works.
 - **Accessibility of Text** (GF-20): `Text.js` gives a pressable paragraph
   `accessibilityRole: 'link'`; `GodotParagraph` applies no accessibility props.
 - **Default size** 18 against RN's 14, a divergence on purpose, open.

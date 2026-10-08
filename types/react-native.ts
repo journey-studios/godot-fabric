@@ -169,14 +169,18 @@ export type ViewProps = Pick<RN.ViewProps, "children" | "testID" | "onLayout" | 
 /** Text renders RN's original Text.js (see docs/research/text-original.md). onTextLayout is RN's original event, one
  * entry per visible line (docs/research/text-layout.md); only the outer Text emits it, a nested Text ignores it, as
  * in RN. The outer paragraph presses with onPress, onPressIn, onPressOut and onLongPress (Pressability, with
- * pressRetentionOffset and disabled); a nested Text fails if it sets any press or responder prop. allowFontScaling,
+ * pressRetentionOffset and disabled) and takes the seven responder props RN's TextProps declares (onResponderGrant,
+ * onResponderMove, onResponderRelease, onResponderTerminate, onResponderTerminationRequest, onStartShouldSetResponder
+ * and onMoveShouldSetResponder); a nested Text fails if it sets any press or responder prop. allowFontScaling,
  * maxFontSizeMultiplier, dynamicTypeRamp and suppressHighlighting are accepted and change nothing: the host's font
  * scale is 1 and nothing highlights outside iOS. selectable, adjustsFontSizeToFit, selectionColor, dataDetectorType,
  * textBreakStrategy, lineBreakStrategyIOS, android_hyphenationFrequency and the head and middle ellipsize modes fail
  * where the Text renders. */
 export type TextProps = Pick<RN.TextProps, "children" | "testID" | "onLayout" | "numberOfLines" | "nativeID" | "onTextLayout" |
   "onPress" | "onPressIn" | "onPressOut" | "onLongPress" | "pressRetentionOffset" | "disabled" | "allowFontScaling" |
-  "maxFontSizeMultiplier" | "dynamicTypeRamp" | "suppressHighlighting"> & {
+  "maxFontSizeMultiplier" | "dynamicTypeRamp" | "suppressHighlighting" | "onResponderGrant" | "onResponderMove" |
+  "onResponderRelease" | "onResponderTerminate" | "onResponderTerminationRequest" | "onStartShouldSetResponder" |
+  "onMoveShouldSetResponder"> & {
   style?: StyleProp<TextStyle>; ellipsizeMode?: "tail" | "clip";
 };
 export type TextLayoutEvent = RN.TextLayoutEvent;

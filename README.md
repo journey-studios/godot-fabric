@@ -43,7 +43,8 @@ paragraph presses through RN's own Pressability (`onPress`, `onPressIn`, `onPres
 paragraph. The [evidence record](docs/evidence/text-original/README.md) and the [research](docs/research/text-original.md) record 119 headless checks (114 in the record pinned at `ba5ff00`, before the review of PR #62 added five nested-span
 responder cases) with a real
 mouse and touch, the controls of the previous SDK and host (68 and 3 failures; 63 and 3 in the record) and six retained
-sabotages, and four captures of the pressable line (hosted CI pending). Press on a nested span, selection,
+sabotages, and four captures of the pressable line (hosted CI pending). Press handlers on a nested span itself (a nested `Text` that declares one fails, while a touch over its text is the outer
+paragraph's press), selection,
 `adjustsFontSizeToFit`, font scaling, Text accessibility, bidi/emoji and font fallback remain open.
 
 The [View geometry example](examples/view/README.md) exercises original public

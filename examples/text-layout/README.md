@@ -164,7 +164,8 @@ export function Measured() {
 `onTextLayout` is emitted by the outer paragraph only; a nested `Text` ignores it,
 as RN's virtual text does, and a value that is not a function throws. The outer
 paragraph presses through RN's original `Text.js`; a nested `Text` that sets any press
-or responder prop fails (press on a span needs hit testing by fragment). Selection
+or responder prop fails (a handler of the span's own needs hit testing by fragment, while a touch over a span's text
+is the outer paragraph's press). Selection
 (`selectable`), `adjustsFontSizeToFit`, font scaling (accepted and inert), Text
 accessibility, decoration and italics, head/middle ellipsis, inline views, bidi/emoji
 and font fallback are not implemented; the default size is 18, not RN's 14. The text of a truncated last line, empty text, a
