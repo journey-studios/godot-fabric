@@ -210,6 +210,13 @@
     "scene": "examples/networking/scene.tscn"
   },
   {
+    "id": "images",
+    "title": "Original RN Image over worker-thread decoding: resize modes, bundled @2x assets, data URIs and failures",
+    "api": "public",
+    "source": "examples/images/App.jsx",
+    "scene": "examples/images/scene.tscn"
+  },
+  {
     "id": "parity",
     "title": "Thirteen original-native reference cases",
     "api": "public",

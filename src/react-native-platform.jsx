@@ -2,6 +2,8 @@
 // native features fail where invoked, instead of becoming inert no-op shims.
 import React from "react";
 import { ScrollView as GodotScrollView } from "./scroll-view";
+import GodotImage from "./image";
+import OriginalImageBackground from "react-native/Libraries/Image/ImageBackground";
 import OriginalView from "react-native/Libraries/Components/View/View";
 import OriginalTouchableHighlight from "react-native/Libraries/Components/Touchable/TouchableHighlight";
 import OriginalTouchableWithoutFeedback from "react-native/Libraries/Components/Touchable/TouchableWithoutFeedback";
@@ -162,7 +164,10 @@ function unavailable(name, reason) {
     throw new Error(`Godot platform does not implement ${name}${reason ? `: ${reason}` : ""}`);
   };
 }
-export const Image = unavailable("Image");
+// RN's original Image.ios.js behind a validating wrapper (image.jsx), and its original ImageBackground and asset registry.
+export const Image = GodotImage;
+export const ImageBackground = OriginalImageBackground;
+export { default as AssetRegistry } from "react-native/asset-registry";
 // RN's original Switch.js takes its non-Android path: the generated
 // SwitchNativeComponent ViewConfig, its onChange event and setValue command.
 export function Switch({ style, ...props }) {
@@ -203,7 +208,6 @@ export function ActivityIndicator({ style, ...props }) {
   return <OriginalActivityIndicator {...props} style={nativeStyle(style, "ActivityIndicator")} />;
 }
 export const StatusBar = unavailable("StatusBar");
-export const ImageBackground = unavailable("ImageBackground");
 export const KeyboardAvoidingView = unavailable("KeyboardAvoidingView");
 export const RefreshControl = unavailable("RefreshControl");
 export function Button(props) {

@@ -16,7 +16,7 @@
     "test:nativewind": "npm run bundle && node --test tests/nativewind-contract.test.mjs",
     "start": "node scripts/check.mjs --interactive",
     "test:typography": "npm run bundle && node --test tests/typography-contract.test.mjs tests/typography-native.test.mjs tests/line-height-native.test.mjs",
-    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs tests/codegen.test.mjs tests/adapter-plugin.test.mjs tests/adapter-manifest.test.mjs tests/native-sdk.test.mjs tests/pack-addon-native.test.mjs tests/rn-pointer-overlay.test.mjs tests/rn-event-target-overlay.test.mjs tests/rn-pointer-interest-overlay.test.mjs tests/rn-renderer-tag-overlay.test.mjs tests/bundle-determinism.test.mjs tests/project-resolution.test.mjs tests/native-typecheck.test.mjs tests/typecheck-consumer.test.mjs tests/package-conditions.test.mjs tests/platform-seams.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
+    "test:contracts": "npm run bundle && npm run type-check && npm run test:parity && npm run test:dashboard && node --test tests/godot-binary.test.mjs tests/nativewind-contract.test.mjs tests/svg-contract.test.mjs tests/typography-contract.test.mjs tests/publication-scan.test.mjs tests/examples.test.mjs tests/control-contracts.test.mjs tests/godot-fabric.test.mjs tests/codegen.test.mjs tests/adapter-plugin.test.mjs tests/adapter-manifest.test.mjs tests/native-sdk.test.mjs tests/pack-addon-native.test.mjs tests/rn-pointer-overlay.test.mjs tests/rn-event-target-overlay.test.mjs tests/rn-pointer-interest-overlay.test.mjs tests/rn-renderer-tag-overlay.test.mjs tests/bundle-determinism.test.mjs tests/project-resolution.test.mjs tests/native-typecheck.test.mjs tests/typecheck-consumer.test.mjs tests/package-conditions.test.mjs tests/platform-seams.test.mjs tests/asset-plugin.test.mjs tests/image-contract.test.mjs && python3 -m unittest discover -s tests -p \"*_test.py\"",
     "check:publication": "node scripts/publication-scan.mjs",
     "test:cold": "npm run bundle && node scripts/cold-start.mjs",
     "parity:inventory": "node scripts/parity-inventory.mjs",
@@ -78,6 +78,7 @@
     "test:frame-clock": "node --test tests/frame-clock-native.test.mjs",
     "test:networking": "node --test tests/networking-native.test.mjs",
     "test:websocket": "node --test --test-concurrency=1 tests/websocket-native.test.mjs tests/websocket-transport-smoke.test.mjs tests/websocket-transport-lifetime.test.mjs tests/websocket-load.test.mjs",
+    "test:images": "node --test tests/images-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
   },

@@ -18,6 +18,10 @@
 #include "paragraph_view.h"
 #include "switch_view.h"
 #include "activity_indicator_view.h"
+#include "image_view.h"
+#include "image_loader.h"
+#include "image_loader_module.h"
+#include "godot_image_manager.h"
 #include "timer_registry.h"
 #include "frame_clock.h"
 #include "turbo_module_registry.h"
@@ -34,6 +38,7 @@
 #include <react/renderer/components/text/RawTextComponentDescriptor.h>
 #include <react/renderer/components/switch/AppleSwitchComponentDescriptor.h>
 #include <react/renderer/components/FBReactNativeSpec/ComponentDescriptors.h>
+#include <react/renderer/components/image/ImageComponentDescriptor.h>
 #include <godot_cpp/classes/input_event_mouse_button.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
 #include <godot_cpp/classes/input_event_screen_touch.hpp>
@@ -82,6 +87,7 @@ static std::string component_kind(const rn::ShadowView &shadow) {
   if (shadow.componentName == std::string("Paragraph")) return "paragraph";
   if (shadow.componentName == std::string(rn::AppleSwitchComponentName)) return "switch";
   if (shadow.componentName == std::string(rn::ActivityIndicatorViewComponentName)) return "activity";
+  if (shadow.componentName == std::string(rn::ImageComponentName)) return "image";
   if (shadow.componentName == std::string(fabric_godot::ControlName))
     return std::static_pointer_cast<const ControlProps>(shadow.props)->kind;
   return shadow.componentName;
@@ -202,6 +208,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   std::unique_ptr<fabric_godot::TurboModuleRegistry> native_modules;
   // RN's networking stack over Godot's HTTP client and WebSocket peer, polled from pump() and ended by stop().
   std::unique_ptr<fabric_godot::Networking> networking;
+  // The reads and decodes of RN's Image requests, on the worker pool; finished from pump() and ended by stop().
+  std::shared_ptr<fabric_godot::ImageLoader> images;
   std::shared_ptr<fabric_godot::GameServiceRegistry> game_services;
   std::shared_ptr<fabric_godot::AdapterRegistry> adapters;
   const std::thread::id host_thread{std::this_thread::get_id()};
@@ -308,6 +316,9 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     paragraph_layout = std::make_shared<fabric_godot::ParagraphLayout>(context, text_layout->font(),
         [this](const std::string &error) { fail(error); });
     context->insert("TextLayoutManager", std::shared_ptr<rn::TextLayoutManager>(paragraph_layout));
+    // RN's Image shadow node takes its requests from the ImageManager registered under this name, inside layout.
+    images = std::make_shared<fabric_godot::ImageLoader>(host_thread);
+    context->insert(rn::ImageManagerKey, std::shared_ptr<rn::ImageManager>(std::make_shared<fabric_godot::GodotImageManager>(context, images)));
     host_metrics = read_window();
     viewport_size = host_metrics.size;
     refresh_rate = host_metrics.refresh_rate;
@@ -366,6 +377,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     // The generated descriptor iOS registers for "RCTActivityIndicatorView";
     // ActivityIndicator.js sizes the frame, so it needs no measurement.
     providers.add(rn::concreteComponentDescriptorProvider<rn::ActivityIndicatorViewComponentDescriptor>());
+    // RN's own Image descriptor, state and events; the mount side is GodotImage.
+    providers.add(rn::concreteComponentDescriptorProvider<rn::ImageComponentDescriptor>());
     // Original Fabric registry requests selected descriptors lazily. Requests
     // only register immutable providers; native objects wait for Create commits.
     providers.setComponentDescriptorProviderRequest([this](rn::ComponentName name) {
@@ -400,6 +413,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     networking = std::make_unique<fabric_godot::Networking>(fabric_godot::make_godot_http_transport(trusted_authorities, clock),
         fabric_godot::make_godot_websocket_transport(trusted_authorities, clock));
     networking->install(*native_modules);
+    fabric_godot::install_image_loader_module(*native_modules, images);
+    if (scenario == "images-fixture") fabric_godot::install_image_loader_fixture(*native_modules, images);
     native_modules->add("NativeDOMCxx", [this](jsi::Runtime &, const std::shared_ptr<rn::CallInvoker> &invoker) {
       return std::make_shared<fabric_godot::GodotDOM>(invoker,
           [this](rn::SurfaceId id, rn::dom::DOMRect rect, bool transforms) {
@@ -935,6 +950,8 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       // Requests advance before the drain, so the events they produce are delivered
       // in this pump; one pump reads at most a megabyte of response bodies.
       if (!stopping && !stop_requested) networking->poll(1024 * 1024);
+      // Finished image loads are told to their views here, so their events are delivered in this pump too.
+      if (!stopping && !stop_requested) images->poll(fabric_godot::ImageLoader::default_upload_budget);
       for (int limit = 0; !stop_requested && !work.empty() && limit < 256; ++limit) {
         auto callback = std::move(work.front());
         work.pop_front();
@@ -1040,6 +1057,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (native_animated) native_animated->stop();
     // In-flight requests end first: nothing may report to JS from here on.
     networking->stop();
+    images->stop();
     for (auto id : timer_registry->handles()) clear_timer->call(*runtime, static_cast<double>(id));
     frame_callbacks.clear();
     std::vector<int> ids;
@@ -1134,6 +1152,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       apply_frame(mounted);
       return;
     }
+    if (auto *picture = Object::cast_to<GodotImage>(control)) {
+      picture->apply(shadow);
+      fabric_godot::apply_appearance(*control, *props, shadow.layoutMetrics);
+      apply_frame(mounted);
+      return;
+    }
     if (auto *indicator = Object::cast_to<GodotActivityIndicator>(control)) {
       indicator->apply(*std::static_pointer_cast<const rn::ActivityIndicatorViewProps>(shadow.props),
           initial ? nullptr : std::static_pointer_cast<const rn::ActivityIndicatorViewProps>(previous.props).get());
@@ -1197,6 +1221,31 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     ++roots.at(found->second.surface_id)->events;
     std::static_pointer_cast<const ControlEventEmitter>(found->second.shadow.eventEmitter)->inputEvent(name, std::move(payload));
   }
+  // The mount a callback from its control is addressed to, with the application that holds it: on the host thread, while the
+  // application, the surface and this mount are all still live. Both are null otherwise.
+  static std::pair<std::shared_ptr<Impl>, Mounted *> live_mount(const std::weak_ptr<Impl> &owner, std::thread::id thread,
+      int surface_id, int tag, uint64_t mount_id) {
+    if (std::this_thread::get_id() != thread) return {};
+    auto guard = owner.lock();
+    if (!guard || guard->inactive() || guard->retiring.contains(tag)) return {};
+    auto root = guard->roots.find(surface_id);
+    auto mounted = guard->views.find(tag);
+    if (root == guard->roots.end() || root->second->stopping || root->second->stopped || mounted == guard->views.end() ||
+        mounted->second.surface_id != surface_id || mounted->second.mount_id != mount_id || mounted->second.external) return {};
+    return {std::move(guard), &mounted->second};
+  }
+  // How one mounted Image reaches JS: through the emitter committed with its shadow view.
+  fabric_godot::ImageEmitter image_emitter(int surface_id, int tag, uint64_t mount_id) {
+    std::weak_ptr<Impl> owner = shared_from_this();
+    const auto thread = host_thread;
+    return [owner, thread, surface_id, tag, mount_id](const std::function<void(const rn::ImageEventEmitter &)> &call) {
+      auto [guard, mounted] = live_mount(owner, thread, surface_id, tag, mount_id);
+      if (!mounted || !mounted->shadow.eventEmitter) return;
+      ExecutionScope execution(*guard);
+      ++guard->roots.at(surface_id)->events;
+      call(*std::static_pointer_cast<const rn::ImageEventEmitter>(mounted->shadow.eventEmitter));
+    };
+  }
   Callable core_control_signal(int surface_id, int tag, uint64_t mount_id, CoreControlSignal signal) {
     std::weak_ptr<Impl> owner = shared_from_this();
     const auto thread = host_thread;
@@ -1205,30 +1254,24 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     return Callable(memnew(GodotCoreControlCallback(takes_argument ? 1 : 0,
         signal == CoreControlSignal::Key ? Variant::OBJECT : signal == CoreControlSignal::Toggle ? Variant::BOOL : Variant::STRING,
         [owner, thread, surface_id, tag, mount_id, signal](const Variant **args) {
-          if (std::this_thread::get_id() != thread) return;
-          auto guard = owner.lock();
-          if (!guard || guard->inactive() || guard->retiring.contains(tag)) return;
-          auto root = guard->roots.find(surface_id);
-          auto mounted = guard->views.find(tag);
-          if (root == guard->roots.end() || root->second->stopping || root->second->stopped ||
-              mounted == guard->views.end() || mounted->second.surface_id != surface_id ||
-              mounted->second.mount_id != mount_id || mounted->second.external) return;
+          auto [guard, mounted] = live_mount(owner, thread, surface_id, tag, mount_id);
+          if (!mounted) return;
           ExecutionScope execution(*guard);
           if (signal == CoreControlSignal::Activate) {
-            if (component_kind(mounted->second.shadow) != "button" || !mounted->second.shadow.eventEmitter) return;
-            ++root->second->events;
-            std::static_pointer_cast<const ControlEventEmitter>(mounted->second.shadow.eventEmitter)->activate();
+            if (component_kind(mounted->shadow) != "button" || !mounted->shadow.eventEmitter) return;
+            ++guard->roots.at(surface_id)->events;
+            std::static_pointer_cast<const ControlEventEmitter>(mounted->shadow.eventEmitter)->activate();
           } else if (signal == CoreControlSignal::Toggle) {
-            const auto &shadow = mounted->second.shadow;
+            const auto &shadow = mounted->shadow;
             if (shadow.componentName != std::string(rn::AppleSwitchComponentName) || !shadow.eventEmitter) return;
             const bool on = static_cast<bool>(*args[0]);
             // RCTSwitchComponentView onChange: no event when the native value
             // already equals the committed value prop. UIManagerBinding mixes
             // the target tag and timeStamp into the payload, as on iOS.
             if (std::static_pointer_cast<const rn::SwitchProps>(shadow.props)->value == on) return;
-            ++root->second->events;
+            ++guard->roots.at(surface_id)->events;
             std::static_pointer_cast<const rn::SwitchEventEmitter>(shadow.eventEmitter)->onChange({.value = on});
-          } else if (auto *input = mounted->second.input.get()) {
+          } else if (auto *input = mounted->input.get()) {
             if (signal == CoreControlSignal::Change) input->changed(static_cast<String>(*args[0]));
             else if (signal == CoreControlSignal::FocusEntered) input->focus(true);
             else if (signal == CoreControlSignal::FocusExited) input->focus(false);
@@ -1681,6 +1724,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
             control = toggle;
           } else if (next.componentName == std::string(rn::ActivityIndicatorViewComponentName)) {
             control = memnew(GodotActivityIndicator);
+          } else if (next.componentName == std::string(rn::ImageComponentName)) {
+            auto *picture = memnew(GodotImage);
+            picture->bind(image_emitter(surface_id, next.tag, mount_id));
+            control = picture;
           } else if (kind == "scroll") control = memnew(ScrollContainer);
           else if (kind == "paragraph") control = memnew(GodotParagraph);
           else if (kind == "text") control = memnew(Label);
@@ -1932,6 +1979,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
         ("stored", pointer_routes.size())("suppressed", suppressed_pointers);
     result["nativeModules"] = native_modules->snapshot();
     result["networking"] = networking->snapshot();
+    result["images"] = images->snapshot();
     result["nativeAnimated"] = native_animated ? native_animated->snapshot() : folly::dynamic::object("enabled", false);
     result["gameServices"] = game_services->snapshot();
     result["adapters"] = adapters ? adapters->snapshot() : folly::dynamic::object("selected", false);
@@ -1996,10 +2044,11 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       if (mounted.external) { node["adapter"] = mounted.external->snapshot(); node["mountId"] = static_cast<int64_t>(mounted.mount_id); }
       if (mounted.scroll) node["scroll"] = mounted.scroll->snapshot();
       if (kind == "view" || kind == "text" || kind == "paragraph" || kind == "button" || kind == "input" ||
-          kind == "switch" || kind == "activity")
+          kind == "switch" || kind == "activity" || kind == "image")
         node["appearance"] = fabric_godot::appearance_snapshot(*control);
       if (auto *toggle = Object::cast_to<GodotSwitch>(control)) node["switch"] = toggle->snapshot();
       if (auto *indicator = Object::cast_to<GodotActivityIndicator>(control)) node["activity"] = indicator->snapshot();
+      if (auto *picture = Object::cast_to<GodotImage>(control)) node["image"] = picture->snapshot();
       if (auto *paragraph = Object::cast_to<GodotParagraph>(control)) {
         auto measured = paragraph->snapshot();
         for (const auto &item : measured.items()) node[item.first] = item.second;

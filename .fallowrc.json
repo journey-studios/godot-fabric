@@ -55,7 +55,8 @@
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
     "tests/networking-fixture.jsx",
-    "tests/websocket-fixture.jsx"
+    "tests/websocket-fixture.jsx",
+    "tests/images-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -174,6 +175,7 @@
         "VirtualizedSectionList",
         "RefreshControl",
         "ImageBackground",
+        "AssetRegistry",
         "KeyboardAvoidingView",
         "VirtualizedList",
         "TextInput",
@@ -280,7 +282,19 @@
             "useAnimatedValue",
             "useAnimatedValueXY",
             "TouchableOpacity",
-            "TouchableOpacityProps"
+            "TouchableOpacityProps",
+            "Image",
+            "ImageBackground",
+            "AssetRegistry",
+            "ImageProps",
+            "ImageBackgroundProps",
+            "ImageStyle",
+            "ImageStatics",
+            "ImageResizeMode",
+            "ImageSourcePropType",
+            "ImageLoadEvent",
+            "ImageErrorEvent",
+            "ImageProgressEventIOS"
           ]
         },
         {
