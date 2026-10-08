@@ -171,9 +171,12 @@ globalThis.VirtualizedListProbe = {
   // The list's own ScrollView ref, as RN's FlatList exposes it.
   scrollRef(name) {
     const list = refs[name]?.current;
-    const scroll = list?.getNativeScrollRef?.() ?? list?.getScrollRef?.();
+    // VirtualizedList.getScrollRef is the original RN ScrollView responder;
+    // getNativeScrollRef returns the inner native host and is a different API.
+    const scroll = list?.getScrollRef?.() ?? list?.getNativeScrollRef?.();
+    const responder = list?.getScrollResponder?.();
     return {node: list?.getScrollableNode?.() ?? null, ref: scroll?.getScrollableNode?.() ?? null,
-      responder: list?.getScrollResponder?.() === scroll, inner: scroll?.getInnerViewNode?.() ?? null,
+      responder: responder?.getScrollableNode?.() === scroll?.getScrollableNode?.(), inner: scroll?.getInnerViewNode?.() ?? null,
       methods: ["scrollTo", "scrollToEnd", "getScrollResponder", "getScrollableNode", "getNativeScrollRef", "getInnerViewRef"]
         .filter(method => typeof scroll?.[method] === "function")};
   },

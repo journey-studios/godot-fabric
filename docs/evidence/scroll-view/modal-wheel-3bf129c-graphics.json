@@ -1,0 +1,56 @@
+{
+  "scenario": "scroll-view-modal-wheel-routing",
+  "status": "passed",
+  "hostSha256": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+  "buildReceiptSha256": "ebfe79c8001be303db3a7d14b70762a0aed91a65a2bdda149431c932e8328ab8",
+  "canonicalBundleReceiptSha256": "381a901eb97866a5f61aba9245db07b8cd70bba890c418c7d8d5afab85b10665",
+  "canonicalBundleJsSha256": "31e15a0efc45fab2e60d37683c92d8cff350d349f633647c2f589e39fdfdff7d",
+  "canonicalProbeSha256": "63ebdbf7dc75195010c0bf18dd0c9cbc74fe0a2b68e8850d70e518a9b2eb7a25",
+  "graphicsProbeSha256": "8fb0942161f17f0490c96b178f304fc1e24d266d42e3d27a79c23e38343da14b",
+  "graphicsProbeDiff": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-modal-graphics-probe.diff",
+  "graphicsProbeDiffSha256": "66652d0832e6f88a24075e9b780628255139a355882916a14a02efb85705f5e9",
+  "captureRunnerSha256": "cbcd295bc7aa3ace97a03e8e1f44c44373686fd15172ae173af6144e3e4ca1e5",
+  "captureInsertionPoints": [
+    {
+      "line": 244,
+      "after": "after_down snapshot",
+      "before": "modal/down offset assertion"
+    },
+    {
+      "line": 267,
+      "after": "after_left snapshot",
+      "before": "modal/left offset assertion"
+    }
+  ],
+  "captureReportSha256": "26e489102044289724c42e8740ac8e3e4d7d990e08f2b8d3114173d9790132b1",
+  "logSha256": "47f2f9b1fcfe8692ae43dc4c41e31812e3394d50f02be5ec6888be0f33e1581b",
+  "captures": [
+    {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/modal-wheel-3bf129c-down.png",
+      "sha256": "399841c33aaa3a56fe6ba35bca191131ac5c3a7e33cde327da72b89b2c5a6124",
+      "bytes": 3155
+    },
+    {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/modal-wheel-3bf129c-horizontal.png",
+      "sha256": "a11585f10420c3ed849a251085361dee32d2f59faa56edea5e9a982476bb9903",
+      "bytes": 1868
+    }
+  ],
+  "before": {
+    "host": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "receipt": "ebfe79c8001be303db3a7d14b70762a0aed91a65a2bdda149431c932e8328ab8",
+    "bundle": "381a901eb97866a5f61aba9245db07b8cd70bba890c418c7d8d5afab85b10665",
+    "builtBundle": "31e15a0efc45fab2e60d37683c92d8cff350d349f633647c2f589e39fdfdff7d"
+  },
+  "after": {
+    "host": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "receipt": "ebfe79c8001be303db3a7d14b70762a0aed91a65a2bdda149431c932e8328ab8",
+    "bundle": "381a901eb97866a5f61aba9245db07b8cd70bba890c418c7d8d5afab85b10665",
+    "builtBundle": "31e15a0efc45fab2e60d37683c92d8cff350d349f633647c2f589e39fdfdff7d"
+  },
+  "checks": 13,
+  "passedChecks": 13,
+  "limitations": [
+    "Headed macOS Godot Window viewport captures; no mobile hardware or refresh-rate certification."
+  ]
+}

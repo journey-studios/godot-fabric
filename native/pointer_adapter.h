@@ -38,8 +38,8 @@ class PointerAdapter {
   void responder(int tag, bool active, bool block);
   void cancel();
   void removed(int tag);
-  // A native gesture (a ScrollView drag) took over the contacts begun in tag.
-  void takeover(int tag);
+  // A native ScrollView gesture takes over this pointer and cancels its touch stream.
+  void takeover(int tag, int pointer_id);
   void leave_mouse(int pointer_id, const godot::Vector2 *position = nullptr);
   std::vector<int> pointer_ids() const;
   std::vector<rn::Touch> touches() const;

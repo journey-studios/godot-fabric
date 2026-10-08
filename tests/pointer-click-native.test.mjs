@@ -41,7 +41,7 @@ const cases = {
   "mouse/chord-left-last": click("L1", "L1"), "mouse/chord-right-last": none(), "mouse/cancel": none(),
   "touch/same": click("L1", "L1", "touch"), "touch/drag": click("G", "L2", "touch"), "touch/secondary": click("L1", "L1", "touch"),
   "touch/cancel": none("touch"), "touch/pressable": {...click("P", "P", "touch"), presses: 1}, "touch/scroll-tap": click("I0", "I0", "touch"),
-  "touch/scroll-takeover": {...none("touch"), takeover: 55}, "mouse/scroll-takeover": {...none(), takeover: 0},
+  "touch/scroll-takeover": {...none("touch"), startsAt: 0, takeover: 55}, "mouse/scroll-takeover": {...none(), startsAt: 55, takeover: 0},
   "mouse/after-scroll": click("L1", "L1"), "mouse/cross-root": none(), "B/mouse/same": {...click("L1", "L1"), panel: "B"},
   "mouse/removed": none(),
 };
@@ -63,14 +63,10 @@ function callbacks(target, I, D) {
     ...(I && D ? [["RootB", 3, "Root"], ["DocB", 3, "Doc"]] : D ? [["DocB", 3, "Doc"]] : [])];
 }
 const node = (host, testID) => host.nodes.find(entry => entry.testID === testID);
-function tagMap(stage, name) {
-  const fixture = stage.react.panels[name].tags;
-  return {...fixture, W: node(stage.after, "").tag, CT: node(stage.after, name + "-scroll-content").tag};
-}
 const typed = (react, type) => react.raw.filter(row => row.channel === "typed" && row.type === type);
 
 function verifyCase(id, stage, I, D) {
-  const spec = cases[id], name = spec.panel ?? "A", react = stage.react, tags = tagMap(stage, name);
+  const spec = cases[id], name = spec.panel ?? "A", react = stage.react, tags = react.panels[name].tags;
   const clicks = react.raw.filter(row => row.type === "topClick");
   if (spec.target == null) assert.deepEqual(clicks, [], id);
   else {
@@ -97,16 +93,32 @@ function verifyCase(id, stage, I, D) {
     assert.ok(react.presses.every(sequence => sequence > clicks[0].sequence), "Press follows the ignored pointer click");
   }
   if (spec.takeover != null) {
-    const [cancel, ...extra] = typed(react, "topPointerCancel");
-    assert.ok(cancel != null && extra.length === 0, id);
-    const after = type => typed(react, type).filter(row => row.sequence > cancel.sequence);
-    assert.equal(typed(react, "topPointerDown").length, 1, id); assert.deepEqual(typed(react, "topPointerUp"), [], id);
-    assert.deepEqual(after("topPointerMove").filter(row => row.pointerId === cancel.pointerId), [], id);
-    assert.ok(after("topTouchMove").length > 0 && after("topTouchEnd").length === 1, id);
-    assert.deepEqual([cancel.pointerType, cancel.buttons], [spec.pointer, 0], id);
-    assert.ok(react.scrollBegins.length === 1 && react.scrollBegins[0] < cancel.sequence, id);
+    const pointerCancels = typed(react, "topPointerCancel"), touchCancels = typed(react, "topTouchCancel");
+    const pointerStars = react.raw.filter(row => row.channel === "star" && row.type === "topPointerCancel");
+    const touchStars = react.raw.filter(row => row.channel === "star" && row.type === "topTouchCancel");
+    assert.equal(pointerCancels.length, 1, id); assert.equal(pointerStars.length, 1, id);
+    assert.equal(touchCancels.length, 1, id); assert.equal(touchStars.length, 1, id);
+    const pointerCancel = pointerCancels[0], touchCancel = touchCancels[0];
+    assert.equal(pointerStars[0].payloadId, pointerCancel.payloadId, id);
+    assert.equal(touchStars[0].payloadId, touchCancel.payloadId, id);
+    const afterPointer = type => typed(react, type).filter(row => row.sequence > pointerCancel.sequence);
+    const afterTouch = type => typed(react, type).filter(row => row.sequence > touchCancel.sequence);
+    const downs = typed(react, "topPointerDown");
+    assert.equal(downs.length, 1, id);
+    assert.equal(pointerCancel.pointerId, downs[0].pointerId, id);
+    assert.deepEqual(typed(react, "topPointerUp"), [], id);
+    assert.deepEqual(afterPointer("topPointerMove").filter(row => row.pointerId === pointerCancel.pointerId), [], id);
+    assert.deepEqual(afterPointer("topPointerUp"), [], id); assert.deepEqual(afterPointer("topClick"), [], id);
+    assert.deepEqual(afterTouch("topTouchMove"), [], id); assert.deepEqual(afterTouch("topTouchEnd"), [], id);
+    assert.deepEqual([pointerCancel.pointerType, pointerCancel.buttons], [spec.pointer, 0], id);
+    assert.equal(react.scrollBegins.length, 1, id);
+    assert.ok(react.scrollBegins[0] > pointerCancel.sequence && react.scrollBegins[0] > touchCancel.sequence &&
+      react.scrollBegins[0] > pointerStars[0].sequence && react.scrollBegins[0] > touchStars[0].sequence, id);
     const before = node(stage.before, name + "-scroll").scroll, scrolled = node(stage.after, name + "-scroll").scroll;
-    assert.deepEqual([scrolled.y, scrolled.begins, scrolled.ends, scrolled.dragging], [spec.takeover, before.begins + 1, before.ends + 1, false], id);
+    assert.equal(before.y, spec.startsAt, id);
+    assert.deepEqual([scrolled.y, scrolled.begins, scrolled.ends, scrolled.momentumBegins, scrolled.momentumEnds,
+      scrolled.motion, scrolled.dragging], [spec.takeover, before.begins + 1, before.ends + 1, before.momentumBegins,
+      before.momentumEnds, 0, false], id);
     assert.equal(stage.after.pointer.pointerTakeovers, stage.before.pointer.pointerTakeovers + 1, id);
   } else assert.equal(typed(react, "topPointerCancel").length, id.endsWith("/cancel") ? 1 : 0, id);
   assert.deepEqual([stage.after.pointer.activeTouches, stage.after.pointer.takenPointers, stage.application.pointerProcessor.active,
@@ -132,8 +144,8 @@ function verify({report, result, log, interestMode, flagMode}) {
     assert.deepEqual([...report.expectedOriginalFailures].sort(), [
       ...clicked.flatMap(id => [`${id}/The release synthesizes exactly the expected click from its own sample`,
         `${id}/Click callbacks follow RN's propagation for this lane`]),
-      "touch/scroll-takeover/A native scroll drag takes the contact over: one cancel, then only touches",
-      "mouse/scroll-takeover/A native scroll drag takes the contact over: one cancel, then only touches",
+      "touch/scroll-takeover/A native scroll drag takes the contact over: one pointer and touch cancel, then native scrolling",
+      "mouse/scroll-takeover/A native scroll drag takes the contact over: one pointer and touch cancel, then native scrolling",
       "native/Each root's adapter counts exactly its synthesized clicks and takeovers"].sort());
     assert.match(log, new RegExp(`POINTER_CLICK_ORIGINAL_NEGATIVE: ${report.expectedOriginalFailures.length}`));
     return;

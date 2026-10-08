@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+  "origin": "third-party",
+  "hashBasis": "recorded",
+  "pathCount": 1,
+  "pins": {
+    ".deps/hermes/destroot/include/jsi/instrumentation.h": "1395779ad53ec372518b977d077e65a876215bc31a94cf049ed55d0a3d2426f4"
+  }
+}

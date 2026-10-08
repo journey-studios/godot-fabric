@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "status": "independently-verified-local-os-integrated",
+  "scope": "GF-14 desktop slice after main OS-specific #61, preserving Images #56 and Frontier #60; new hosted CI and CodeRabbit acceptance remain open",
+  "executedAt": "2026-10-08T05:02:11.246Z",
+  "sourceCommit": "43d0375ed4e39c248162f03efd4919c00a9bb999",
+  "current": {
+    "negative": false,
+    "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+    "buildReceiptSha256": "10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45",
+    "bundleSha256": "f2af26ef113aebf2178bbb7f0c307920ffbdf67ff8272feff2ebd76d8f842910",
+    "probeSha256": "3c42b5ef82ac59a1d9cdea759f5110e40c69edf21e84c2f627ee6ef9fcb47915",
+    "bundleReceiptSha256": "f3a9e58ec1e232d40aae27a5427a440deee7ff5bcd0839ce884a6e615f197624",
+    "compiledNativePins": {
+      "native/application_runtime.cpp": "84f1bd89aba4bcb6b3bb7ce8e4a9b44997c0989a4ae16233507989a555b6d746",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/scroll_adapter.cpp": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
+      "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
+    },
+    "bundleProducerPins": {
+      "native/application_runtime.cpp": "84f1bd89aba4bcb6b3bb7ce8e4a9b44997c0989a4ae16233507989a555b6d746",
+      "native/pointer_adapter.cpp": "ec39d890540e7b33d3189364c91713e2b4753888051a0a8c110983c3539611eb",
+      "native/pointer_adapter.h": "592268c36e90204061c70468ec3c9d3c60375ef34c1b0f879eab5c2454853a5f",
+      "native/scroll_adapter.cpp": "0a4b11bbaabe1a047ba25425644a6681ac76cbff3beddda4f3660b8536edb39a",
+      "native/scroll_adapter.h": "f656f8a3653d6c694f9bcfc451451e672dde6c21759e44629fdcd50028f6f1b6",
+      "native/scroll_motion.h": "a5be75f1dd1093a99fb8c697264629e22b531dd3f25256106ac31534b603b81a",
+      "native/scroll_offset.h": "919a4cbf04e32893b0ea0694c12d3366951795bf664d7b113c23d20213a58904",
+      "native/scroll_throttle.h": "f04be5176241d71a1c46b52c64e1e29e133bdfe9f25e7d258623fa68c734a7a4"
+    },
+    "frameworkPinCount": 16,
+    "frameworksIdenticalToPreIntegration": true,
+    "execution": {
+      "code": 0,
+      "signal": null,
+      "timeout": false
+    },
+    "checks": 28,
+    "failures": [],
+    "reportSha256": "89e55174125ebd1fb53b22e8545cdab546d509a0c09119b8e252bf9cc68705aa",
+    "logSha256": "3f4b817fff9fa094fdd21987250a78968bbd6acc1fa342dcf7d01c501edf6961",
+    "fullCleanup": true,
+    "executedAt": "2026-10-08T04:59:04.770Z",
+    "rawArtifacts": "build/scroll-view-root/interruption-840d7f3e5b95-1791435538229"
+  },
+  "interruption": {
+    "wheel": {
+      "claimedOffset": 130,
+      "endOffset": 130,
+      "replacementOffset": 178,
+      "endBeforeReplacement": true,
+      "endsAdded": 1,
+      "retiredBeforeMoveAndUp": true,
+      "fabricY": 178,
+      "paintY": -178,
+      "newMomentum": false
+    },
+    "contentOffset": {
+      "claimedOffset": 130,
+      "endOffset": 130,
+      "replacementOffset": 260,
+      "endBeforeReplacement": true,
+      "endsAdded": 1,
+      "retiredBeforeMoveAndUp": true,
+      "fabricY": 260,
+      "paintY": -260,
+      "newMomentum": false
+    }
+  },
+  "diagonal": {
+    "vertical": {
+      "release": {
+        "x": 80,
+        "y": 150
+      },
+      "transverseVelocity": 0,
+      "target": 270.691284179688,
+      "settled": {
+        "x": 80,
+        "y": 270.691288774314
+      },
+      "events": [
+        "begin",
+        "end",
+        "momentumBegin",
+        "momentumEnd"
+      ]
+    },
+    "horizontal": {
+      "release": {
+        "x": 150,
+        "y": 70
+      },
+      "transverseVelocity": 0,
+      "target": 269.055908203125,
+      "settled": {
+        "x": 269.055895750874,
+        "y": 70
+      },
+      "events": [
+        "begin",
+        "end",
+        "momentumBegin",
+        "momentumEnd"
+      ]
+    }
+  },
+  "orientation": {
+    "canceledAtChange": true,
+    "events": [
+      "begin",
+      "end"
+    ],
+    "duplicateEnd": false
+  },
+  "neutralOptions": {
+    "mounted": true,
+    "logical": {
+      "x": 12,
+      "y": 24
+    },
+    "fabric": {
+      "x": 12,
+      "y": 24
+    },
+    "paint": {
+      "x": -12,
+      "y": -24
+    },
+    "errors": []
+  },
+  "lists": {
+    "checks": 44,
+    "positiveOracle": "passed",
+    "reportSha256": "6837c18661fb2128d9892ef2a7c7089af9ff3d0f8a54c0d36be31c04f56ac559",
+    "shelf": {
+      "logicalX": 180,
+      "fabricX": 180,
+      "paintX": -180,
+      "beginDrag": 1,
+      "endDrag": 1,
+      "momentumBegin": 0,
+      "momentumEnd": 0
+    },
+    "sabotage": {
+      "checks": 44,
+      "failures": [
+        "mount/feed/The first window renders initialNumToRender items, RN's overscan, the header and the footer",
+        "mount/feed/The first viewable items are those at least half visible",
+        "feed/wheel/onViewableItemsChanged reports the items at least half visible, with exact changes"
+      ],
+      "reportSha256": "a4cde09e451a5de056d67544073ce456840276d1292437a4611cd24e4d114faa",
+      "forcedGreenOracle": "rejected"
+    }
+  },
+  "graphics": {
+    "checks": 4,
+    "capturesVerified": 4,
+    "receiptSha256": "e96232e48d6da5fbb9e39fbd26a4de56b476f2e1f4f6761e6bc2eafdbcad783f",
+    "hostAndBundleMatch": true,
+    "independentPixels": {
+      "capture": "docs/evidence/scroll-view/captures/horizontal-pan-clipped.png",
+      "captureSha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26",
+      "inside": {
+        "point": [
+          554,
+          109
+        ],
+        "rgb": [
+          29,
+          78,
+          216
+        ]
+      },
+      "outside": {
+        "point": [
+          680,
+          109
+        ],
+        "rgb": [
+          245,
+          248,
+          250
+        ]
+      },
+      "method": "Root independently decoded final OS-integrated PNG pixels; the capture bytes also match the pre-OS capture."
+    }
+  },
+  "regressionOracles": {
+    "accessibility": {
+      "checks": 80,
+      "reportSha256": "4d5df77e3692c72975c64fc5be1f6fb89f096f1df8a62b054fa50eb4cd819c94",
+      "oracle": "independently-passed",
+      "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2"
+    },
+    "images": {
+      "checks": 74,
+      "reportSha256": "d47b01ee710fcb73bb87d6f5ce8dce351d2e4d44e26c4678742d897427da7b94",
+      "oracle": "independently-passed",
+      "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2"
+    },
+    "osContracts": {
+      "checks": 37,
+      "reportSha256": "d67de70e64595bab8a3bc9f60d39527683922ac044dd0d6b5f0326dcec2611f8",
+      "oracle": "independently-passed",
+      "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+      "retainedControls": {
+        "previousSdk": 1,
+        "sabotages": 3,
+        "sdkSourcesRestored": true,
+        "controls": [
+          {
+            "lane": "previous-sdk",
+            "checks": 37,
+            "failures": 30,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "a3622f8c540d34d86a7a90607b0d836fb3f2cf5861abbae8cfd04860057b7134"
+          },
+          {
+            "lane": "sabotage-platform-android",
+            "checks": 37,
+            "failures": 14,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "fd6f3e4093cb267c05df07e32425a67b2c0e5528f68b19d403f04ebc1a97adc3"
+          },
+          {
+            "lane": "sabotage-silent-shim",
+            "checks": 37,
+            "failures": 8,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "ce9dfd5a1f208c2998db111c73d36fb1011f0c236e6f16581b8049478ecb2d8c"
+          },
+          {
+            "lane": "sabotage-self-import",
+            "checks": 37,
+            "failures": 5,
+            "forcedGreenIndependentOracle": "rejected",
+            "reportSha256": "6cb96ba5e42789a7284ba33e376ac2bb27c9e96fcb3fdf568296bb45d2551573"
+          }
+        ],
+        "scope": "The previous SDK is an absence control, not a sabotage. Root confirms all four reports and rejects forced-green flags using the independent OS oracle."
+      }
+    }
+  },
+  "producerGroups": {
+    "native": {
+      "count": 123,
+      "pinsSha256": "b639cf5f0aba1988a248f89ef2014c7f906e28aea3d9309a3071a0de314dda30",
+      "allMatchCommittedBlobs": true
+    },
+    "bundle": {
+      "count": 18,
+      "pinsSha256": "877f5777c2099bd9e07f55f3bc97002f15f3fd82b6a0bd0097f30efb65b993fe",
+      "allMatchCommittedBlobs": true
+    },
+    "reactNative": {
+      "count": 6,
+      "pinsSha256": "8092ccd6a41cf150f98a885cc00620731be9ec5f523e80e5beb1b63e1b5ad11c",
+      "allMatchPinnedInstalledSources": true
+    }
+  },
+  "historicalInterruptionControl": {
+    "receipt": "root-interruption.json",
+    "receiptSha256": "b989fcab5af4585d5835896c55b75ca137954a14703f30169f40f59a55ebf36e",
+    "scope": "Earlier bbb683 vs 4f28 28-check pair; exactly two interruption failures. Its bundle is preserved separately and is not relabeled as this OS-integrated bundle."
+  },
+  "limitations": [
+    "Desktop macOS Godot 4.7.2 only; no hardware input or mobile export certification",
+    "Headless Accessibility verifies metadata and host actions, not an OS tree",
+    "Full GF-14 contract and RN differential parity remain open",
+    "Source identities do not certify the external SDK adapter ABI"
+  ],
+  "supplementalRepositoryBundleInputs": {
+    "count": 40,
+    "allMatchCommittedBlobs": true,
+    "pins": {
+      "dependencies.json": "6dac0c43c88cf68052d6a4ba6927f5e95590c7a17b71731e23cdba0e2d32892a",
+      "package-lock.json": "1230bb2c426a69b480197b02ed238621eabd549a8684594267eeb4ebeb047ed5",
+      "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+      "sdk/toolchain/asset-plugin.mjs": "c995c9cd58c61501579c6f904e405724d7d744bb14121dc5e562b559cef05b2f",
+      "sdk/toolchain/platform-plugin.mjs": "d3214cda75c13251cf093cc03ecb11284897127655f9b906b705f88b6cb4fcaa",
+      "sdk/toolchain/platform-resolution.mjs": "e61a0e1fd62da4ab3c387e41903f4528d98924bc13391a3d1b885b53404ba18f",
+      "src/accessibility-view-config.js": "440348f775f67fef2ca042f97a30c993b1da629d85a78758f9a50c43c3f2d854",
+      "src/animated-exports.js": "4b8eb788d0ae79245f9f73e0c6ade55cfe97007a03e54adc8d27f1a0f02c4b0d",
+      "src/app-registry.js": "370c319308002e4ab052cb9609348b6f096262ed926a5b60bc8d2faa6da7988b",
+      "src/app-state.js": "4a630422e09310dd3bdb9cad8428dc816af1edb0097c08ed6513528e60d2efa8",
+      "src/base-view-config.js": "8ca29c87bf2ccccbccf961e279d45ce9f3c963fbfc33e95018637beb4f7664d7",
+      "src/components.jsx": "606af88192e7f166da2ad3bb59579b1d117950069473e41069417822203c767a",
+      "src/control-contracts.mjs": "777e4a764a65265b478631c5d5c53c8dd5750a770eaf8427c99c509e6dd7244b",
+      "src/device-services.js": "c8c77c2877d947b4b5a901b9eee4d403ff364d30e63c7c164ccf2494cea2caa6",
+      "src/image-contract.mjs": "bfeeed482b79f20f3544d2df1cf9b464744438e026921e529e0e3a70ae830ca1",
+      "src/image.jsx": "ee9433ae1d2dbed8df37a7ef36f5fe58c838c1ca639998a1519525c9c603b81d",
+      "src/initialize.js": "9f375e74c5e76853ed32a0b3a4d1238c132ff79e9a2caff3a9c84012a0785e80",
+      "src/list-props.mjs": "1f18f3ab95a2ec2313c2b0a1d4e72caed64916d461fecdd1557d7be762a56255",
+      "src/lists.js": "380a2e3590431db354441740e5e9d8c5b9f476d093dfbc3e9e39bd99e9cc418f",
+      "src/native-module-runtime.js": "2af346160e265ee65892d05fb051d20b8cc06de2a79b655d4f38ac78ad6907f3",
+      "src/native-modules.js": "21f658161bea9c98e95c9f5e0e0ef455cbca9a44c03de560eb5f421ae291d393",
+      "src/os-specific.js": "866c898c84bc7810614a8ae1257e1fcd87dbde7e145c31697cfd929491540aa5",
+      "src/platform-color-value-types.js": "5e7c2be2e7ec31f3adf2873a2674e7d764571a93f8ba6422b2dcd33ba56fd368",
+      "src/platform-environment.js": "9313aa82bf6b99f68d8fe8c727c0c8f7488bdc089a46520a6c89c8b2503ccfc2",
+      "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+      "src/pointer-listener-query.js": "3ebd2b0c2b1d0ac5567d9bf9c7d4fcbf92e9fa1c77cb9c439b63c62aebc6ff0b",
+      "src/private-interface.js": "6fa21336dce92068ceab2e9127bec6ae7a4d2e7596da33aed3c17eee4d8bce63",
+      "src/public-input.jsx": "051dc0be7bdf80eb5464cfd189171f4c7adf65eeb62b349318adac0c07ebebb5",
+      "src/react-native-platform.jsx": "bbe66833de2841ded30988e24724741e63aa7b2ca108a24572c2215a24eb2259",
+      "src/render-application.jsx": "d3e12dc4f6bd28b9fb9fca4fca9614b3e2d7cbf6e126a985aee84db25a3f097c",
+      "src/renderer-proxy.js": "862c448204ea1ea25c7857c0210e8490962e685df93ed8cf077ab16b82b0e760",
+      "src/runtime.js": "3da190a8f7e39baa1b97ea31774ac8db87b914c4167e759c2b85141b8fa1864c",
+      "src/scroll-view-contract.mjs": "a0644efdb267baf478add4192dda509c3c12c8f8825b2bae6ccfea0c5547ad25",
+      "src/scroll-view-native-config.js": "f114c705f1b881fef594477df5d8617251586bd874b3fc03cc90d7f627bcfef9",
+      "src/scroll-view.jsx": "63c0483060edfaa84e4bbf35bf07ea3100fc16769d2ab8056b24efb9c9634ca9",
+      "src/text-input-state.js": "7fc27f7ea5f103750a11a8c0a935238f32c4d29875e2f655917a162c1c513a52",
+      "src/text.jsx": "2edcafb828946a908abef4afffd9adccdf03a6d874da62e33afb54a6b2168f3a",
+      "src/ui-manager.js": "74e917cabdd6c61d2255dcd17f744d55a2b85c4dcd69ccdeff812f2b6e53704d",
+      "src/window-dimensions.js": "8846a80c7dcab98fb7b8401b8260415da0e0e64fbf4f93506ae10170ac171e6a",
+      "tests/scroll-view-fixture.jsx": "166c1a2badbdf64a14336808351b80af60ee9dd1fda20ecad4f02c1a4b2df0ce"
+    },
+    "scope": "Repository files named by bundle metafile, plus common bundler, resolver, asset tool, dependency lock and dependency manifest. Recorded bundle.sources remain the separate 18-entry map."
+  },
+  "facadeRegressionsReceipt": {
+    "path": "docs/evidence/scroll-view/facade-regressions-43d0375.json",
+    "sha256": "ebaa804791adc86230899521a6cc4ab2e813e25ed345fc8d28ceaef4fffaa88e",
+    "scope": "Four original-facade bundle lanes, Device launch and NativeModules/Metrics regression reports on the unchanged frozen host; root verification boundaries are recorded in this durable receipt."
+  }
+}
