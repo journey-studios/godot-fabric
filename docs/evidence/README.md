@@ -561,6 +561,27 @@ the example, three C++ tests (cache 66, network 60 and core 70 assertions), and 
 from RN iOS. A disk cache, revalidation, `Vary`, cookies, compression, HTTP/2, remote servers and every
 target but macOS are open. Hosted CI pending; this slice closes no checkpoint.
 
+The [OS-specific contracts record](os-contracts/README.md) makes the public `react-native` export React
+Native's own `ToastAndroid` (its fallback), `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
+`ProgressBarAndroid`, `DrawerLayoutAndroid` (its fallback), `InputAccessoryView`, `PushNotificationIOS`
+and `TouchableNativeFeedback`, each on the branch RN itself takes off its own platform (`Platform.OS` is
+`"godot"`): a warning, a resolved `false`, `'denied'` or `{}` (on Godot that means unavailable, not a
+refusal), a thrown RN error, an `UnimplementedView` or Pressability without an Android drawable. GF-24's
+first slice has no native code, and the host registers none of the modules these look up: the registry
+answers `null` and `getEnforcing` throws, for all six. Two applications of one bundle run 37 headless
+checks (30 normative) against the real registry, with a real mouse and touch press, and an independent
+oracle that reads every text, key and count from the pinned RN sources (46 operations, 16 attributed
+warnings, 44 permissions) and sees each warning as a `HERMES:` log line. The control is the previous SDK,
+the `src/` of main `6d02746`, bundled by the same helper: it fails exactly the 30 normative checks; three
+retained in-memory sabotages (Platform.OS `"android"`, a silent Toast with a granting PermissionsAndroid, the
+generic self-importing ToastAndroid path) fail 14, 8 and 5, and the oracle rejects all four. The research
+differs from Node `vm` in seven points, among them PushNotificationIOS's two listener methods, which work in JS,
+and the press order, which is in, out, press. Extending `bundleNativeProbe` with `platformRoot` and `plugins`
+left the eleven other callers' bundle receipts byte-identical. The generic deep path of a third-party package
+stays `undefined` until `platform-plugin` has an alias, `StatusBar` stays a placeholder, and the Android and iOS
+implementations, OS-specific props and OS-version comparison are open. Hosted CI is pending; this does not
+complete GF-24: only its first-slice checkpoint closes, and no whole GF, other checkpoint, weight or denominator does.
+
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes
 **250829098.0.17**, NativeWind **4.2.7** and css-interop **0.2.7**.

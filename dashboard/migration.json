@@ -2242,7 +2242,7 @@
       "phase": "M2",
       "priority": "P1",
       "title": "OS-specific public contracts",
-      "status": "planned",
+      "status": "in_progress",
       "acceptance": "Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract",
       "dependencies": [
         "GF-09",
@@ -2257,14 +2257,23 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "",
+      "note": "ToastAndroid (pelo ToastAndroidFallback), PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid (pelo DrawerLayoutAndroidFallback), InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN, lidos pelo import público react-native, cada um no ramo que o próprio RN toma numa plataforma que não é iOS nem Android (Platform.OS \"godot\"): o ToastAndroid avisa e tem constantes 0; o PermissionsAndroid avisa e resolve false, 'denied' ou {} (no Godot isso significa indisponível, não recusa); DynamicColorIOS, ActionSheetIOS (depois dos invariantes de argumento) e 15 estáticos do PushNotificationIOS lançam os erros do RN; ProgressBarAndroid e DrawerLayoutAndroid renderizam uma View comum em volta dos filhos e os 8 métodos do drawer lançam; o InputAccessoryView avisa a cada render e devolve null; o TouchableNativeFeedback é Pressability sem o drawable do Android (onPressIn, onPressOut e onPress num clique real de mouse e de toque). A fatia não tem código nativo: src/os-specific.js tem getters preguiçosos que devolvem os módulos originais, e a fachada embrulha o TouchableNativeFeedback com a guarda de Control inline e os quatro estáticos do RN. O host não registra nenhum dos seis módulos que eles procuram (get devolve null e getEnforcing lança): a ausência é o contrato. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê textos, chaves e contagens dos fontes do RN pinado (46 operações, 16 avisos atribuídos, 44 permissões) e confere que cada aviso é uma linha HERMES: do log. Como a fatia não tem código nativo, o controle é o SDK anterior (o src/ da main 6d02746) pelo mesmo bundleNativeProbe, que falha exatamente os 30 checks normativos; três sabotagens em memória (Platform.OS android, Toast mudo com PermissionsAndroid que concede, caminho genérico do Toast que importa a si mesmo) falham 14, 8 e 5, todas rejeitadas pelo oráculo. A pesquisa em Node vm difere em sete pontos, entre eles o addEventListener do PushNotificationIOS, que funciona em JS, e a ordem do clique (in, out, press). O bundleNativeProbe ganhou platformRoot e plugins opcionais, e os recibos dos onze outros chamadores ficaram idênticos byte a byte. Abertos: StatusBar (continua placeholder e o host não tem StatusBarManager), as props específicas de SO, as implementações de Android e iOS (GF-34 e GF-35), a comparação por versão do SO e o alias no platform-plugin para pacotes de terceiros, cujo import do caminho genérico do ToastAndroid ou do DrawerLayoutAndroid segue undefined; Alert, Share, Settings e BackHandler ficam no GF-23 (V2-D30). CI hospedada pendente. Só o checkpoint slice fecha; nenhum item, peso ou denominador muda.",
       "blocker": "",
       "checkpoints": [
         {
           "id": "slice",
           "label": "Primeira fatia funcional validada no host",
-          "done": false,
-          "evidence": []
+          "done": true,
+          "evidence": [
+            {
+              "label": "Contratos específicos de iOS e Android: 37 checks headless em duas aplicações (30 normativos), SDK anterior com exatamente 30 falhas normativas e três sabotagens retidas (14, 8 e 5) rejeitadas pelo oráculo (implementação 4338d1c; CI hospedada pendente)",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
+            },
+            {
+              "label": "Contratos específicos de iOS e Android: recibo de execução, hashes, controles e os onze recibos do bundleNativeProbe",
+              "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/execution.json"
+            }
+          ]
         },
         {
           "id": "contract",
@@ -4115,6 +4124,15 @@
       ],
       "message": "CI hospedada das Images: o push da main em 6d02746 (squash de #56, run 37724902858) passou nos cinco jobs na primeira tentativa. O job nativo rodou npm run test:images (1 de 1 ok) e o artefato repete os 74 checks headless com IDs idênticos aos do relatório commitado; o oráculo independente aceita o relatório baixado. Os seis arquivos da revisão têm os SHA-256 que o postReview registra e os outros 28 pins que diferem de 552fb56 vieram de commits da main, por isso o bundle do run (f141ed27…) não é um dos registrados. Pages 37724902853 implantou exatamente os dados de 6d02746.",
       "url": "https://github.com/journey-studios/godot-fabric/blob/d16aa27e83bf4c736c54029580a2a21460d8ed86/docs/evidence/images/hosted-ci.json"
+    },
+    {
+      "id": "os-contracts-first-slice-1b2dfd5",
+      "at": "2026-10-08T04:32:15.000+00:00",
+      "taskIds": [
+        "GF-24"
+      ],
+      "message": "Primeira fatia do GF-24 com evidência local: ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS e TouchableNativeFeedback originais do RN reproduzem a indisponibilidade que o próprio RN tem fora do iOS e do Android, sem módulo nativo no host e sem código nativo na fatia. 37 checks headless em duas aplicações contra o registro real, com um oráculo independente que lê os fontes do RN pinado; o SDK anterior falha exatamente os 30 normativos e três sabotagens em memória falham 14, 8 e 5, todas rejeitadas pelo oráculo; os recibos dos onze outros chamadores do bundleNativeProbe ficam idênticos. No Godot, 'denied' e false do PermissionsAndroid significam indisponível. Só o checkpoint slice do GF-24 fecha; CI hospedada pendente. Abertos: StatusBar, props específicas de SO, implementações Android e iOS (GF-34 e GF-35) e o alias do platform-plugin para pacotes de terceiros; Alert, Share, Settings e BackHandler ficam no GF-23.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/1b2dfd53aa114b88f5ba3bff133ee6e09651243e/docs/evidence/os-contracts/README.md"
     },
     {
       "id": "accessibility-first-slice-20261008",

@@ -1,0 +1,291 @@
+{
+  "format": "godot-fabric.os-contracts-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "4338d1c5a2803a8c1b8feda633fc8be63565ac3d",
+  "executedTreeSha": "709d78720bcede6149594bd1909506e55475ed06",
+  "sourceState": "working tree clean and equal to the implementation commit's tree, with no untracked file, when every command below ran; the evidence files were added afterwards and are not inputs",
+  "baseCommit": "c0f3702d69d4da4bc518ea32586320f8e01aed2c",
+  "previousSdkCommit": "6d02746bfe95ba48041ba1accbb6096ae4e8bb82",
+  "environment": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "reactNative": "0.87.1",
+    "react": "19.2.3",
+    "hermes": "250829098.0.17",
+    "node": "v22.23.3",
+    "modes": [
+      "headless"
+    ]
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The os-contracts step and the native-os-contracts artifact of .github/workflows/contracts.yml have not run on hosted CI yet. Everything below is local macOS arm64 evidence."
+  },
+  "nativeCode": {
+    "changed": false,
+    "note": "This slice adds no native code. The host is the one built from main's native sources; the previous-host control of other slices does not discriminate, so the control is the previous SDK.",
+    "hostSha256": "45087a009ad3f0d31d8cdbcd8dba377dc02176fc8a411046789d68eb1fd7b14d"
+  },
+  "productProbe": {
+    "command": "npm run test:os-contracts",
+    "suite": "1/1 subtests passed",
+    "applications": {
+      "A": "every API, every outcome: reads, calls, mounted cases, host modules, a real mouse and a real touch press, and the APIs after stop",
+      "B": "a second application: the one-time notices print again, once, in its own runtime"
+    },
+    "checks": 37,
+    "normativeChecks": 30,
+    "checksThatHoldOnAnySdk": 7,
+    "allCurrentAssertionsPassed": true,
+    "oracle": {
+      "operations": 46,
+      "warnings": 16,
+      "permissions": 44,
+      "notices": 3,
+      "hostModules": 6,
+      "pushStatics": 17,
+      "drawerMethods": 8,
+      "readsFromPinnedReactNativeSources": true,
+      "readsSdkSource": false,
+      "checkedWithEveryProbeCheckMarkedPassed": true
+    },
+    "hermesLines": {
+      "distinctTexts": 8,
+      "lines": 25,
+      "note": "every warning the fixture recorded is one HERMES: line in the log, the same number of times"
+    },
+    "nativeViewsPerRoot": 12,
+    "hostSha256": "45087a009ad3f0d31d8cdbcd8dba377dc02176fc8a411046789d68eb1fd7b14d",
+    "bundleSha256": "2f82a8ca9bc29eb50a8c06c3fc8d5b369fb09c1dea3cb529dc0cd07fc0ea3ebb",
+    "bundleInputs": 388,
+    "rawReportSha256": "927a452754bfa273a82f0a943ffd48ca10e59c5d46405cf6d60c5124e1921cf3",
+    "reportSha256": "9de18e273a549712dc69292240c88ecd1b390b24b8fd8350da9905f2590d53e9",
+    "elapsedMs": 4294
+  },
+  "controls": {
+    "previousSdk": {
+      "command": "node tests/os-contracts-native.test.mjs --allow-previous-sdk",
+      "sdk": "src/ of main 6d02746 (the Image and Accessibility slices), extracted from git into build/os-contracts-previous-sdk/ and bundled by bundleNativeProbe",
+      "facadeSha256": "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218",
+      "checks": 37,
+      "passed": 7,
+      "failed": 30,
+      "failedEqualsNormative": true,
+      "marker": "OS_CONTRACTS_PREVIOUS_SDK: 30",
+      "bundleSha256": "513de6369ea3d13f611b3c456b88a9d79738f78db55d94eb3889311bcdbe6f8a",
+      "hostSha256": "45087a009ad3f0d31d8cdbcd8dba377dc02176fc8a411046789d68eb1fd7b14d",
+      "oracleRejection": "A: only StatusBar and an inline TouchableNativeFeedback fail at render",
+      "exportsUndefined": [
+        "ToastAndroid",
+        "PermissionsAndroid",
+        "DynamicColorIOS",
+        "ActionSheetIOS",
+        "ProgressBarAndroid",
+        "DrawerLayoutAndroid",
+        "InputAccessoryView",
+        "PushNotificationIOS",
+        "TouchableNativeFeedback"
+      ]
+    },
+    "sabotages": [
+      {
+        "name": "platform-android",
+        "command": "node tests/os-contracts-native.test.mjs --sabotage=platform-android",
+        "override": "in-memory esbuild plugin before the platform plugin; no source file edited",
+        "checks": 37,
+        "failed": 14,
+        "marker": "OS_CONTRACTS_SABOTAGE_REJECTED: 14",
+        "bundleSha256": "211dbcd62fc972473188c77b9b4533b7105773bca3b6966059e757659d78e2ac",
+        "oracleRejection": "A: only StatusBar and an inline TouchableNativeFeedback fail at render"
+      },
+      {
+        "name": "silent-shim",
+        "command": "node tests/os-contracts-native.test.mjs --sabotage=silent-shim",
+        "override": "in-memory esbuild plugin before the platform plugin; no source file edited",
+        "checks": 37,
+        "failed": 8,
+        "marker": "OS_CONTRACTS_SABOTAGE_REJECTED: 8",
+        "bundleSha256": "dcdc7364d602fc49a0847f0588d248ac2c8a4b3ac5e3ecb094249270b4865125",
+        "oracleRejection": "ToastAndroid is RN's module"
+      },
+      {
+        "name": "self-import",
+        "command": "node tests/os-contracts-native.test.mjs --sabotage=self-import",
+        "override": "in-memory esbuild plugin before the platform plugin; no source file edited",
+        "checks": 37,
+        "failed": 5,
+        "marker": "OS_CONTRACTS_SABOTAGE_REJECTED: 5",
+        "bundleSha256": "22aac58cfa771a6a7b35bc092f57feca62cfb66f7c2a6d46862516d1accce7ab",
+        "oracleRejection": "ToastAndroid is exported"
+      }
+    ],
+    "script": "node scripts/os-contracts-sabotage.mjs",
+    "sourceHashesUnchanged": true,
+    "sdkSourceSha256": {
+      "src/os-specific.js": "866c898c84bc7810614a8ae1257e1fcd87dbde7e145c31697cfd929491540aa5",
+      "src/platform.js": "9ca8f22e4af66426dc2b39b23b674e446e7a899431b9c9cc00d98bdb75346bff",
+      "src/react-native-platform.jsx": "057831cf113ea86b3a231822f1f9c2c6f65a682038d3041463c412b922847ade"
+    }
+  },
+  "bundleNativeProbe": {
+    "change": "optional parameters platformRoot (default src/) and plugins (default [], before the platform plugin); defaults and receipts unchanged",
+    "proof": "the eleven other callers bundled with main's c0f3702 helper and with the extended one: every receipt identical byte for byte (cmp), ignoring the pin of the helper itself",
+    "receiptsSha256": "5c1d7d14d59f6553092f75eaa89e207993976f4eb9e3ea626205fdae2cebec5a",
+    "callers": {
+      "bundleAccessibilityProbe": {
+        "name": "accessibility",
+        "bundleSha256": "fac62659388b60224e62ea05f7e5d1a7566eba8e7c82d74a11f85b7ad72c46d7",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleAppStateProbe": {
+        "name": "app-state",
+        "bundleSha256": "59c803b65e8286a6bd3355acb7a83f7d61eea633ac0ad7ecaf998f86614a4331",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleAppearanceProbe": {
+        "name": "appearance",
+        "bundleSha256": "7c21f9be322ad8668632b4ef5ecb48eda9c448c6941a33deef7764b698a31481",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleDeviceServicesProbe": {
+        "name": "device-services",
+        "bundleSha256": "c74c959eaad86ebcd98dfa473571510aa834c1866711ff297a2c8078e68124d4",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleFrameClockProbe": {
+        "name": "frame-clock",
+        "bundleSha256": "f82af0e4ed4822aed5a3efaf8cf926f17b8f583e622b29f7a868ed7625895288",
+        "bundleInputs": 388,
+        "assets": false
+      },
+      "bundleImagesProbe": {
+        "name": "images",
+        "bundleSha256": "9a98afaf28b40d13c2bf82151c1f7f0552a18b002c6d8da0ac317fd6ec379429",
+        "bundleInputs": 390,
+        "assets": true
+      },
+      "bundleModalHostProbe": {
+        "name": "modal-host",
+        "bundleSha256": "23fd33223ed6fbb223462e7d16c32eafa7dcdc195ad3519cd120df4daf3241a6",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleNativeAnimatedProbe": {
+        "name": "native-animated",
+        "bundleSha256": "daac92e5973f8a2342ebf9a1fff1baa8f50f7b8f68a91a9d620f85819214fc6a",
+        "bundleInputs": 388,
+        "assets": false
+      },
+      "bundleNetworkingProbe": {
+        "name": "networking",
+        "bundleSha256": "c41c7e4e1eecc87bfe5536776f6c3e1685f8ccba9ef68c8815b4ce192d39a246",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleTextLayoutProbe": {
+        "name": "text-layout",
+        "bundleSha256": "50d57547b2d8350e8ae30eceecab4ce89f2b159262ca914bc989b4607950cde5",
+        "bundleInputs": 387,
+        "assets": false
+      },
+      "bundleWebSocketProbe": {
+        "name": "websocket",
+        "bundleSha256": "1d2c8c0adee13004ef234a10b8471346a924bfedcb20ad6289fa24885c89cdd5",
+        "bundleInputs": 387,
+        "assets": false
+      }
+    },
+    "suites": [
+      {
+        "suite": "npm run test:device-services",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:accessibility",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:text-layout",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:images",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:app-state",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:appearance",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:frame-clock",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:animated",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:modal",
+        "exitCode": 0,
+        "tests": 7,
+        "passed": 7,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:networking",
+        "exitCode": 0,
+        "tests": 1,
+        "passed": 1,
+        "failed": 0
+      },
+      {
+        "suite": "npm run test:websocket",
+        "exitCode": 0,
+        "tests": 4,
+        "passed": 4,
+        "failed": 0
+      }
+    ]
+  },
+  "limits": [
+    "A third-party import of RN's generic ToastAndroid or DrawerLayoutAndroid path stays undefined until sdk/toolchain/platform-plugin.mjs has an alias; only imports of the react-native root are covered",
+    "PermissionsAndroid's false, 'denied' and {} mean unavailable on Godot and cannot tell a refusal from an absence",
+    "StatusBar stays an exported placeholder and the host has no StatusBarManager",
+    "A promise returned by PermissionsAndroid stays pending after a stop",
+    "ProgressBarAndroid and DrawerLayoutAndroid draw nothing of their own",
+    "No Android or iOS behavior, no implementation of the mobile ports (GF-34, GF-35), no OS-specific props and no OS-version comparison is certified",
+    "headless macOS arm64 only; the checkpoint closed by this slice is GF-24's slice checkpoint alone"
+  ]
+}
