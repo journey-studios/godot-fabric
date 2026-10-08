@@ -12,7 +12,7 @@
   "source": {
     "commit": "bee7b40061319e25d002fc86808dc9c1140c5424",
     "url": "https://github.com/journey-studios/godot-fabric/commit/bee7b40061319e25d002fc86808dc9c1140c5424",
-    "scope": "Modal desktop: correção 3b8ddbc validada em bee7b40 na CI com 193 assertivas Modal (11 macOS display), 164 transforms e 672 capture. Root audita pins 35/95 e 10 RN; CodeRabbit aprova, seis threads resolvidas. Workflow 37701896839 cancelado pelo limite global45min, cold-start reporta passed e paridade skipped. Ajuste apenas do budget total para60min; novo head precisa cinco jobs verdes antes do merge. GF-18 parcial; mantém23/156 checkpoints e0/39 itens completos.",
+    "scope": "Modal desktop: a correção 3b8ddbc foi validada na CI do bee7b40: 193 verificações Modal (11 com display macOS), 164 transforms e 672 capture. A auditoria conferiu 35 pins do Modal, 95 do SDK e 10 pins RN. CodeRabbit aprovou e seis threads foram resolvidas. O workflow 37701896839 foi cancelado ao atingir o limite global de 45 minutos; o cold start reportou sucesso no artefato e a paridade ficou skipped. O orçamento global subiu para 60 minutos; o novo head precisa dos cinco jobs verdes antes do merge. GF-18 segue parcial, com 23/156 checkpoints e 0/39 itens completos.",
     "implementationPr": "https://github.com/journey-studios/godot-fabric/pull/51"
   },
   "phases": [
@@ -1842,7 +1842,7 @@
       ],
       "releaseRequired": true,
       "weight": 1,
-      "note": "PR #51: revisão thermo-nuclear corrigiu geometria, captura cross-root, stack ownership, lifetime, teardown e indexação lógica. Regressão singular a978 reproduzida e corrigida em 3b8ddbc, sem afrouxar oracle. CI bee7b40: Modal193 (owners11/macOS), transforms164 e capture672 passam;35 Modal/95 SDK/10 RN pins auditados. CodeRabbit aprovado e seis threads resolvidas. Workflow37701896839 cancelado pelo limite total45min após COLD_START_PASSED; paridade skipped. Budget global60min, novo head CI pendente. Consumer SDK local68/68 e gates283Node13Python anteriores preservados. Orientação/insets,hardware/mobile/export e paridade integral abertos; quatro checkpoints false,23/156 e0/39 preservados.",
+      "note": "PR #51: a revisão thermo-nuclear corrigiu geometria, captura cross-root, ownership da stack, lifetime, teardown e indexação lógica. A regressão singular de a978 foi reproduzida e corrigida em 3b8ddbc, sem afrouxar o oracle. Na CI do bee7b40 passaram 193 verificações Modal (11 com display macOS), 164 transforms e 672 capture; foram auditados 35 pins Modal, 95 do SDK e 10 RN. CodeRabbit aprovou e seis threads foram resolvidas. O workflow 37701896839 atingiu o limite global de 45 minutos após COLD_START_PASSED; a paridade ficou skipped. O limite global agora é 60 minutos e uma nova CI completa ainda é necessária. O consumer local do SDK passou 68/68; os gates anteriores de 283 testes Node e 13 Python permanecem registrados. Orientação/insets, hardware/mobile/export e paridade integral continuam abertos; quatro checkpoints seguem false, com 23/156 e 0/39 preservados.",
       "blocker": "",
       "checkpoints": [
         {
@@ -3500,7 +3500,7 @@
         "GF-18",
         "GF-13"
       ],
-      "message": "Root audita193 Modal (11 com display macOS),164 transforms,672 capture,35/95 producer pins e10 RN pins no bee7b40. CodeRabbit aprova e resolve seis threads. CI cancelada pelo limite global45min confirmado por annotation; cold-start passed no artefato, paridade skipped. Novo budget total60min conserva probes/oráculos; merge e aceite dependem de novo head completamente verde. Nenhum checkpoint ou denominador alterado.",
+      "message": "A raiz auditou no bee7b40 193 verificações Modal (11 com display macOS), 164 transforms, 672 capture, 35/95 pins de produtores e 10 pins RN. CodeRabbit aprovou; as seis threads foram resolvidas. A CI foi cancelada ao atingir o limite global de 45 minutos, confirmado pela annotation; o cold start passou no artefato e a paridade ficou skipped. O novo orçamento total de 60 minutos mantém probes e oráculos; merge e aceite aguardam uma nova CI totalmente verde. Nenhum checkpoint ou denominador foi alterado.",
       "url": "https://github.com/journey-studios/godot-fabric/actions/runs/37701896839"
     },
     {
