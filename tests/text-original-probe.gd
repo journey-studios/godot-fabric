@@ -22,6 +22,7 @@ const REJECTIONS := [
   ["span-long-press", "does not implement onLongPress"],
   ["span-responder", "does not implement onResponderGrant"],
   ["span-start", "does not implement onStartShouldSetResponder"],
+  ["span-move", "does not implement onMoveShouldSetResponder"],
   ["selectable", "does not implement selectable"],
   ["fit", "does not implement adjustsFontSizeToFit"],
   ["head", "supports tail or clip ellipsizeMode"],
@@ -521,7 +522,7 @@ func attempt_case() -> void:
     var fallback := not view("A", "guard-fallback").is_empty()
     var ok: bool = rejected.size() == before + 1 and message.contains(expected) and fallback
     # The preceding SDK rejects some of these with the very same words; those are not what it must fail.
-    if kind in ["span-responder", "span-start", "selection-color", "detector", "break-strategy", "line-break-ios", "hyphenation", "text-prop", "font-size-prop"]:
+    if kind in ["span-responder", "span-start", "span-move", "selection-color", "detector", "break-strategy", "line-break-ios", "hyphenation", "text-prop", "font-size-prop"]:
       normative_check(ok, "negative/" + kind + "/The wrapper rejects it before any native layout: " + expected)
     else:
       check(ok, "negative/" + kind + "/The wrapper rejects it before any native layout: " + expected)

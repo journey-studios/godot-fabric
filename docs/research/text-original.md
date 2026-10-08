@@ -1,9 +1,9 @@
 # Text original: RN's `Text.js` over the paragraph, with press
 
 Status: second slice of GF-11, executed locally on macOS arm64 against pinned RN
-0.87.1 and official Godot 4.7.2, headless. The probe ran **113 checks**, every
+0.87.1 and official Godot 4.7.2, headless. The probe ran **114 checks**, every
 press gesture with a real mouse and a real touch; the SDK and the host of main
-before this slice ran the same fixture and failed exactly its **62 normative
+before this slice ran the same fixture and failed exactly its **63 normative
 checks**; the same bundle on that host alone (the guard missing) failed exactly
 **3**; six retained sabotages each fail the probe and the independent oracle
 rejects every one of them. The example ran 22 checks headless and 36 with the
@@ -127,7 +127,7 @@ Both were checked first, in Hermes inside Godot, with a throwaway fixture:
 | Default size | 14 | **18 kept**, documented, open |
 | `onPress`, `onLongPress`, `onPressIn`, `onPressOut` (outer) | `Pressability`, 130 ms minimum press, 500 ms long press | accepted, behave as upstream |
 | `pressRetentionOffset`, `disabled` | the region and the grant | accepted, behave as upstream |
-| press props on a nested `Text` | `PressableVirtualText`, needs a hit test per fragment | rejected with an error: `Godot Text does not implement <prop> on a nested Text: only the outer paragraph is pressable` (`onPress*`, `onLongPress`, `onResponder*`, `onStartShouldSetResponder`) |
+| press props on a nested `Text` | `PressableVirtualText`, needs a hit test per fragment | rejected with an error: `Godot Text does not implement <prop> on a nested Text: only the outer paragraph is pressable` (`onPress*`, `onLongPress`, `onResponder*`, `onStartShouldSetResponder`, `onMoveShouldSetResponder`) |
 | `allowFontScaling`, `maxFontSizeMultiplier`, `dynamicTypeRamp`, `suppressHighlighting` | scale and highlight on iOS | accepted and inert: the host's font scale is 1 and nothing highlights outside iOS |
 | `selectable`, `adjustsFontSizeToFit` | selection, fit to the box | rejected when on: `Godot Text does not implement <prop>`; the host refuses `adjustsFontSizeToFit` too |
 | `ellipsizeMode` head, middle, invalid | ellipsis at the head or in the middle | rejected: `Godot Text supports tail or clip ellipsizeMode`; the host refuses head and middle too |
@@ -184,14 +184,14 @@ Each of these runs with a real mouse and a real touch.
 - [`scripts/text-original-sabotage.mjs`](../../scripts/text-original-sabotage.mjs) retains the controls
   and restores every source byte for byte:
   - **previous SDK and host** (main before the slice, installed in `addons/`): fails exactly the
-    62 normative checks (the original `Text.js` is not in its bundle either, and
+    63 normative checks (the original `Text.js` is not in its bundle either, and
     the fixture's import of `TextNativeComponent` throws the registry's collision
     message, so the bypass cases fail at render);
   - **previous host with this SDK**: fails exactly the 3 bypass checks and is silent on all three;
     the oracle rejects only `bypass`;
   - sabotages: `register` (the wrapper registers `RCTText` again: the application does
-    not even start; 101 checks fail), `style` (no text styles in the base config: 5),
-    `ancestor` (a private context: 12), `span-press` (a nested press allowed: 6),
+    not even start; 102 checks fail), `style` (no text styles in the base config: 5),
+    `ancestor` (a private context: 13), `span-press` (a nested press allowed: 7),
     `guard` (no native guard, which rebuilds the host: 3 — and the dylib it
     produces is byte-identical to the previous host's), `default` (RN's 14 instead
     of 18: 2). The oracle rejects each by sections the table of the comparison

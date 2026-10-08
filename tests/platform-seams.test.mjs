@@ -8,7 +8,7 @@ import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {build} from "esbuild";
 import {parseSync, transformFromAstSync} from "@babel/core";
-import platformBaseViewConfig, {controlViewConfig} from "../src/base-view-config.js";
+import platformBaseViewConfig, {controlViewConfig, textStyleAttributes} from "../src/base-view-config.js";
 import {platformPlugin} from "../sdk/toolchain/platform-plugin.mjs";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -38,9 +38,10 @@ function execute(result, globals = {}) {
 // The base config also declares the text styles RN's Text needs; the Controls' own style map does not.
 function assertGeneratedStyle(config) {
   assert.deepEqual(Object.keys(config.validAttributes.style).sort(), Object.keys(platformBaseViewConfig.validAttributes.style).sort());
-  const textOnly = ["fontFamily", "fontWeight", "lineHeight", "letterSpacing", "textAlign"];
-  assert.ok(textOnly.every(name => name in platformBaseViewConfig.validAttributes.style && !(name in controlViewConfig.validAttributes.style)),
-    "the text styles are in the base config only");
+  // The names of the platform's text styles that the Controls' map lacks: color and fontSize are in both.
+  const textOnly = textStyleAttributes.filter(name => !(name in controlViewConfig.validAttributes.style));
+  assert.ok(textOnly.length > 0 && textOnly.every(name => name in platformBaseViewConfig.validAttributes.style),
+    "the text styles are in the base config");
   assert.deepEqual(Object.keys(platformBaseViewConfig.validAttributes.style).filter(name => !textOnly.includes(name)).sort(),
     Object.keys(controlViewConfig.validAttributes.style).sort());
 }

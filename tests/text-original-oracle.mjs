@@ -38,6 +38,7 @@ const rejections = {
   "span-long-press": "Godot Text does not implement onLongPress on a nested Text",
   "span-responder": "Godot Text does not implement onResponderGrant on a nested Text",
   "span-start": "Godot Text does not implement onStartShouldSetResponder on a nested Text",
+  "span-move": "Godot Text does not implement onMoveShouldSetResponder on a nested Text",
   selectable: "Godot Text does not implement selectable",
   fit: "Godot Text does not implement adjustsFontSizeToFit",
   head: "Godot Text supports tail or clip ellipsizeMode",

@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import {spawnSync} from "node:child_process";
 import {createHash} from "node:crypto";
 import {readFileSync} from "node:fs";
-import {mkdir, readFile, rm, writeFile} from "node:fs/promises";
+import {readFile, rm, writeFile} from "node:fs/promises";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
-import {bundleTextOriginalProbe, bundleTextOriginalProbeOn, textOriginalBundled, textOriginalNativeProducers,
-  textOriginalSdkProducers} from "../scripts/text-original-bundle.mjs";
+import {bundleTextOriginalPrevious, bundleTextOriginalProbe, precedingCommit, previousSdkFacade, textOriginalBundled,
+  textOriginalNativeProducers, textOriginalSdkProducers} from "../scripts/text-original-bundle.mjs";
 import {ensureGodotBinary} from "../scripts/godot-binary.mjs";
 import {oracleRejections, sections, verifyTextOriginalReport} from "./text-original-oracle.mjs";
 
@@ -23,7 +23,6 @@ const root = fileURLToPath(new URL("..", import.meta.url));
 //     span-press  a nested Text may be pressable
 //     guard       ParagraphLayout::prepare does not refuse head, middle and adjustsFontSizeToFit
 //     default     the paragraph's default size is RN's 14 instead of this platform's 18
-const PRECEDING_COMMIT = "6d02746bfe95ba48041ba1accbb6096ae4e8bb82";
 const PRECEDING_FACADE_SHA256 = "2ffd51304b181de3946a09c29a58450398b11c134b9c48f46afce7fc45f71218";
 const SABOTAGES = ["register", "style", "ancestor", "span-press", "guard", "default"];
 const previous = process.argv.includes("--previous");
@@ -60,21 +59,6 @@ async function optionalFile(file) {
   }
 }
 
-// The public SDK of main before the slice, taken from its commit.
-async function precedingSdkRoot() {
-  const target = path.join(root, "build/text-original-previous-sdk");
-  await rm(target, {recursive: true, force: true});
-  const listed = spawnSync("git", ["ls-tree", "-r", "--name-only", PRECEDING_COMMIT, "src"], {cwd: root, encoding: "utf8"});
-  assert.equal(listed.status, 0, "The previous SDK control needs commit " + PRECEDING_COMMIT + " locally");
-  for (const file of listed.stdout.trim().split("\n")) {
-    const shown = spawnSync("git", ["show", `${PRECEDING_COMMIT}:${file}`], {cwd: root, maxBuffer: 64 * 1024 * 1024});
-    assert.equal(shown.status, 0);
-    await mkdir(path.dirname(path.join(target, file)), {recursive: true});
-    await writeFile(path.join(target, file), shown.stdout);
-  }
-  return path.join(target, "src");
-}
-
 async function runProbe(binary, bundle) {
   await rm(path.join(root, "build/text-original-report.json"), {force: true});
   const result = spawnSync(binary, ["--path", root, "--headless", "--script", "res://tests/text-original-probe.gd", "--", "--lane", probeLane],
@@ -96,13 +80,15 @@ const rejectedSections = report => Object.entries(oracleRejections(report)).filt
 test("the public Text runs RN's original Text.js and presses on the paragraph over real Godot input", async () => {
   const binary = await ensureGodotBinary();
   const facadeBefore = digest(await readFile(path.join(root, "src/react-native-platform.jsx")));
-  const bundle = previous ? await bundleTextOriginalProbeOn(await precedingSdkRoot(), "text-original-previous") : await bundleTextOriginalProbe();
+  const bundle = previous ? await bundleTextOriginalPrevious() : await bundleTextOriginalProbe();
   const inputs = bundle.bundle.inputs;
   const original = Object.fromEntries(textOriginalBundled.map(file => [file, inputs.includes("node_modules/react-native/" + file)]));
   if (previous) {
     // The wrapper of main before the slice never loads RN's Text: that assertion is what the control fails.
     assert.equal(original["Libraries/Text/Text.js"], false, "The previous SDK does not run RN's Text.js");
-    assert.equal(bundle.facadeSha256, PRECEDING_FACADE_SHA256, "The control runs the pinned previous SDK");
+    // The bundle holds the facade extracted from the commit (pinned in its receipt), not the one in src/.
+    assert.equal(bundle.sources[previousSdkFacade], PRECEDING_FACADE_SHA256, "The control runs the pinned previous SDK");
+    assert.ok(inputs.includes(previousSdkFacade) && !inputs.includes("src/react-native-platform.jsx"));
   } else {
     for (const [file, present] of Object.entries(original)) {
       assert.ok(present, "The public bundle runs the original module: " + file);
@@ -199,7 +185,7 @@ test("the public Text runs RN's original Text.js and presses on the paragraph ov
   if (priorReport != null) {
     assert.ok(priorReport.previousNegativeObserved);
     assert.deepEqual(priorReport.checks.map(row => row.name), report.checks.map(row => row.name), "The control runs the same checks");
-    assert.equal(priorReport.provenance.bundle.facadeSha256, PRECEDING_FACADE_SHA256);
+    assert.equal(priorReport.provenance.bundle.sources[previousSdkFacade], PRECEDING_FACADE_SHA256);
     controls.previous = {checks: priorReport.checks.length, failures: priorReport.checks.filter(row => !row.passed).map(row => row.name),
       oracleRejections: oracleRejections(priorReport), nativeHostSha256: priorReport.provenance.nativeHostSha256};
   }
@@ -223,7 +209,7 @@ test("the public Text runs RN's original Text.js and presses on the paragraph ov
     }
   }
   await writeFile(path.join(root, "build/text-original-comparison.json"), JSON.stringify({scenario: report.scenario,
-    originalModules: original, precedingCommit: PRECEDING_COMMIT, previousHostSha256: previousHostSha,
+    originalModules: original, precedingCommit, previousHostSha256: previousHostSha,
     current: {checks: report.checks.length, nativeHostSha256: hostSha, bundleSha256: bundle.bundle.sha256}, controls, sabotages,
     staleReportsSkipped: stale}, null, 2) + "\n");
 });

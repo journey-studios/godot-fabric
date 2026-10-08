@@ -487,7 +487,7 @@ tooling and exports remain pending.
   and the `onResponder*` handlers work on the outer paragraph.
 - Fail where the Text renders, with these errors:
   - on a nested `Text`, any of `onPress`, `onPressIn`, `onPressOut`, `onLongPress`,
-    `onStartShouldSetResponder` and `onResponder*`:
+    `onStartShouldSetResponder`, `onMoveShouldSetResponder` and `onResponder*`:
     `Godot Text does not implement <name> on a nested Text: only the outer paragraph is pressable`;
   - `selectable` or `adjustsFontSizeToFit` when on: `Godot Text does not implement <name>`;
   - `ellipsizeMode` head, middle or any other value:

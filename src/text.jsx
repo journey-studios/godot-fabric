@@ -11,15 +11,9 @@ import TextAncestorContext from "react-native/Libraries/Text/TextAncestorContext
 export function useTextAncestor() {
   return useContext(TextAncestorContext);
 }
-export const textStyleAttributes = [
-  "fontSize",
-  "fontFamily",
-  "fontWeight",
-  "lineHeight",
-  "letterSpacing",
-  "textAlign",
-  "color",
-];
+// The text styles, one list for the platform: the base view config declares them for RN's Text and the facade's
+// style checks read them from here.
+export { textStyleAttributes } from "./base-view-config.js";
 // The size of an outer paragraph that sets none. RN's is 14; this platform kept its own 18 (see
 // docs/research/text-original.md), and the spans inherit whichever size their paragraph has.
 const DEFAULT_FONT_SIZE = 18;
@@ -34,6 +28,8 @@ const unsupportedProps = [
   "lineBreakStrategyIOS",
   "android_hyphenationFrequency",
 ];
+// The props of this platform's earlier wrapper that RN's Text does not have, and what to do instead.
+const wrapperOnlyProps = { text: "pass the text as children", fontSize: "set it in style" };
 // A nested Text is a span of its paragraph. A press on a span needs hit testing by fragment and its own dispatch,
 // which the host does not have: only the outer paragraph is pressable.
 const spanPressProps = [
@@ -42,6 +38,7 @@ const spanPressProps = [
   "onPressOut",
   "onLongPress",
   "onStartShouldSetResponder",
+  "onMoveShouldSetResponder",
   "onResponderGrant",
   "onResponderMove",
   "onResponderRelease",
@@ -52,10 +49,9 @@ const spanPressProps = [
 export function ParagraphText({ style, numberOfLines, ellipsizeMode, onTextLayout, ...props }) {
   const nested = useTextAncestor();
   // The wrapper of this platform used to accept these two; RN's Text has neither.
-  for (const name of ["text", "fontSize"]) {
+  for (const [name, hint] of Object.entries(wrapperOnlyProps)) {
     if (props[name] !== undefined) {
-      throw new Error(`Godot Text does not implement ${name}: it is not a prop of RN's Text${
-        name === "text" ? ", pass the text as children" : ", set it in style"}`);
+      throw new Error(`Godot Text does not implement ${name}: it is not a prop of RN's Text, ${hint}`);
     }
   }
   for (const name of unsupportedFlags) {

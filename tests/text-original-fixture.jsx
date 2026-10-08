@@ -139,6 +139,7 @@ const attempts = {
   "span-long-press": () => <Text>a <Text onLongPress={() => {}}>span</Text></Text>,
   "span-responder": () => <Text>a <Text onResponderGrant={() => {}}>span</Text></Text>,
   "span-start": () => <Text>a <Text onStartShouldSetResponder={() => true}>span</Text></Text>,
+  "span-move": () => <Text>a <Text onMoveShouldSetResponder={() => true}>span</Text></Text>,
   selectable: () => <Text selectable>guarded</Text>,
   fit: () => <Text adjustsFontSizeToFit>guarded</Text>,
   head: () => <Text ellipsizeMode="head" numberOfLines={1}>guarded</Text>,

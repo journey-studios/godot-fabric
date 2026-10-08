@@ -42,7 +42,7 @@ const variants = [
       'const own = (name, extra) => register(name, () => ({ ...controlViewConfig, uiViewClassName: name, ...extra }));\n' +
       'own("RCTText", {});\nown("RCTVirtualText", {});'},
   {name: "style", argument: "--sabotage=style", file: "src/base-view-config.js",
-    find: "    style: {...controlViewConfig.validAttributes.style, ...textStyle},\n", replace: ""},
+    find: "    style: platformStyle,\n", replace: ""},
   {name: "ancestor", argument: "--sabotage=ancestor", file: "src/text.jsx",
     find: 'import TextAncestorContext from "react-native/Libraries/Text/TextAncestorContext";',
     replace: "const TextAncestorContext = React.createContext(false);"},
