@@ -458,8 +458,10 @@ retained sabotages (decoding on the main thread, a view that keeps listening to 
 request, a reload that consults the decoded cache, a download whose transport request stays open, a
 repeating Image that resizes the shared texture) fail 12, 2, 1, 32 and 2. A disk cache,
 revalidation, cookies, compression, `tintColor`, `blurRadius`, `capInsets`, rounded image clipping
-and animated formats are open; each unsupported prop fails where the Image renders. Hosted CI is
-pending. [Evidence](docs/evidence/images/README.md);
+and animated formats are open; each unsupported prop fails where the Image renders. Hosted CI passed
+the first slice's 74 checks on main (run 37724902858,
+[receipt](docs/evidence/images/hosted-ci.json)) and is pending for the network slice.
+[Evidence](docs/evidence/images/README.md);
 [network evidence](docs/evidence/images-network/README.md).
 
 This does not promise compatibility with every React Native library.

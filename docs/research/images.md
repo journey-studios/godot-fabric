@@ -9,8 +9,12 @@ mutations of the genuine report. The [network slice's evidence](../evidence/imag
 owns the 72 headless checks over a loopback Node server (HTTP and HTTPS), the control on the
 preceding host (37 checks run, the 30 that need the network fail), three retained sabotages that the
 probe and the oracle both reject, 27 mutations of the genuine report that the oracle refuses and the
-22 headless and 30 graphical checks of the example and its two captures. Hosted CI has not run the
-network slice. GF-16 stays open; the network slice closes no checkpoint.
+22 headless and 30 graphical checks of the example and its two captures. Hosted run 37724902858 (the
+push of main 6d02746, the squash of #56) passed all five jobs in its first attempt; its native job
+ran `npm run test:images` (1 of 1 TAP test passing) and its artifact repeated the first slice's 74
+checks, and the independent oracle accepts its report
+([receipt](../evidence/images/hosted-ci.json)); hosted CI has not run the network slice. GF-16 stays
+open; the network slice closes no checkpoint.
 
 All paths below are under `node_modules/react-native/` unless they start with `native/`, `src/`,
 `sdk/` or `tests/`.

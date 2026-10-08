@@ -281,7 +281,8 @@ pixel branco do canto e deixa o fundo embaixo; as seis telhas têm seis digests 
 imagem que falhou não deixa pixels de imagem. Não há oráculo independente de pixels do quadro
 inteiro, e a comparação com o UIKit segue aberta em Limites.
 
-Estas execuções são locais: a CI hospedada ainda não rodou esta fatia.
+A lane com o renderizador roda só localmente; a CI hospedada rodou a lane headless da suíte (veja
+Limites).
 
 ## Regressões
 
@@ -334,7 +335,26 @@ depois delas; os gates que os leem rodaram de novo na árvore final.
   foram comparados com o iOS.
 - **Plataformas.** Só macOS arm64 foi executado; Windows, Linux, Android, iOS e Web não foram
   exercitados, nem hardware real.
-- **CI.** A CI hospedada desta fatia está pendente.
+- **CI.** A CI hospedada do push da `main` em `6d02746` (o squash do #56, run
+  37724902858) passou nos cinco jobs na primeira tentativa, sem reexecução. O job
+  `native-cold-start` rodou `npm run test:images` (1 de 1 teste ok), e o artefato
+  `native-images` repete os **74 checks headless** com os IDs do relatório commitado
+  (o mesmo digest, `ed2c8cc0…`); o mesmo job rodou o exemplo `images` no
+  `test:examples` (17 checks headless). O oráculo independente aceita o relatório
+  baixado (as URIs `file://` do relatório trazem o diretório de checkout do runner,
+  que o recibo mapeia para o diretório onde o oráculo foi extraído), e os 3, 12 e 2
+  checks que o controle e as sabotagens locais falham existem e passam todos no run.
+  Dos 159 pins de código e configuração, 125 têm em `6d02746` os bytes de `552fb56`
+  e 34 diferem: 6 são os arquivos do `postReview` e têm os SHA-256 que ele registra
+  para `257b0bd`, e 28 mudaram por commits que a `main` ganhou depois de `552fb56`.
+  Por isso o SHA-256 do bundle do run (`f141ed27…`) não é um dos registrados
+  (`46c9bec0…` em `552fb56`, `2ee6d7f4…` na árvore mesclada `37929da`): 4 produtores
+  do bundle mudaram (`asset-plugin.mjs`, `react-native-platform.jsx`,
+  `images-native.test.mjs`, `images-oracle.mjs`). O [Pages](publication.json) (run
+  37724902853) implantou exatamente os dados commitados de `6d02746`; o site público
+  já foi substituído pelo deploy de `c0f3702` (run 37725323261). A CI hospedada não
+  roda o controle no host anterior, as sabotagens nem a captura com o renderizador.
+  [Recibo](hosted-ci.json).
 
 Nenhum GF inteiro, contrato, paridade, alvo, outro checkpoint, peso ou denominador fecha: só o
 checkpoint de fatia do GF-16.

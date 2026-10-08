@@ -537,7 +537,8 @@ keeps listening to a request it swapped away from fails 2, and the oracle reject
 (68 assertions) and the research note with RN's file and line references. The second slice
 (below) later replaced the record's refusal of network images, `prefetch` and `queryCache`, so
 the suite now has 73 checks. Tint, blur, capInsets, rounded image clipping, animated formats and every
-target but macOS are open. Hosted CI pending.
+target but macOS are open. Hosted run 37724902858 (the push of main 6d02746) repeated the 74 checks
+with identical IDs, and the oracle accepts its report ([receipt](images/hosted-ci.json)).
 
 The [network images record](images-network/README.md) makes the same `Image` load `http` and `https`
 sources, with `headers`, `method`, `body` and `cache`, over the image loader's own `HttpTransport`: at

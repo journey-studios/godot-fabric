@@ -3098,8 +3098,15 @@ networking, WebSocket and transform guard suites, which only live in `build/`, w
 their preserved preceding hosts; hosted CI has no controls and is not affected. The Animated check
 that listed `Image` among the components that fail where they render no longer does, since
 `Animated.Image` renders now. All 159 executed code and configuration inputs match implementation
-`552fb56` via git show/SHA-256 (executed from the committed tree, execution base `ebcb292`). After the review of #56, `GodotImage` tells JS `onLoadStart` before it swaps observers (`addObserver` answers inside the call when a request holds a response), the oracle judges the order of every event list (18 mutations of the genuine report, and no lane drives the synchronous path), the asset pipeline starts each build empty and the builder places the asset files before the bundle and finishes the manifest and the retirement after it ([`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)); the lanes ran again with the same counts (74, 3, 12 and 2) and the `postReview` section of `report.json` pins the six changed files. Hosted
-CI for this slice is pending. Only GF-16's first-slice checkpoint closes; no whole GF, other
+`552fb56` via git show/SHA-256 (executed from the committed tree, execution base `ebcb292`). After the review of #56, `GodotImage` tells JS `onLoadStart` before it swaps observers (`addObserver` answers inside the call when a request holds a response), the oracle judges the order of every event list (18 mutations of the genuine report, and no lane drives the synchronous path), the asset pipeline starts each build empty and the builder places the asset files before the bundle and finishes the manifest and the retirement after it ([`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)); the lanes ran again with the same counts (74, 3, 12 and 2) and the `postReview` section of `report.json` pins the six changed files. Hosted Contracts run 37724902858 (the push of main
+[`6d02746`](https://github.com/journey-studios/godot-fabric/commit/6d02746bfe95ba48041ba1accbb6096ae4e8bb82),
+the squash of #56) passed all five jobs in its first attempt; its [audited
+artifact](docs/evidence/images/hosted-ci.json) repeats the 74 headless checks with identical IDs, the
+independent oracle accepts the downloaded report, and the 6 files of the review commit
+[`257b0bd`](https://github.com/journey-studios/godot-fabric/commit/257b0bdd988a3148b879d62104148266e26b3d74)
+have the SHA-256 that `postReview` pins; the other 28 tracked paths that differ from the `552fb56` pins came
+with commits main gained, and the bundle SHA-256 differs from the recorded ones for that reason. [Pages
+37724902853](docs/evidence/images/publication.json) deployed this record from main `6d02746`. Only GF-16's first-slice checkpoint closes; no whole GF, other
 checkpoint, weight or denominator closes.
 
 **Network images and the image caches (2026-10-08).** The second slice of GF-16 replaces what the paragraphs above
