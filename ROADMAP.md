@@ -2969,7 +2969,8 @@ implementation host; after merging main (Modal, #51) the rebuilt host repeated t
 
 The original `Text.js` in place of the repository's wrapper, pressable and
 selectable spans, font loading and fallback, bidi, emoji and grapheme clusters,
-`textDecoration` and `fontStyle`, head and middle ellipsis, font scaling,
+`textDecoration` and `fontStyle` (done by the
+[third slice](#text-style-italic-and-text-decoration-on-the-paragraph-2026-10-08)), head and middle ellipsis, font scaling,
 `adjustsFontSizeToFit`, inline views and a reference measurement on an iOS simulator
 and an Android emulator remain open. The platforms differ on the text of a truncated
 last line, empty text, when `lineHeight` centres the baseline, lines beyond a fixed
@@ -3376,7 +3377,8 @@ Thirty-three props fail where the `Text` renders, word for word: any press or re
 (the four press props and every prop that starts with `onResponder`, `onStartShouldSetResponder` or
 `onMoveShouldSetResponder`, the `Capture`, `Reject`, `Start`, `End` and `Termination` variants included), `selectable`, `adjustsFontSizeToFit`, `ellipsizeMode` head, middle or invalid (`tail or clip`),
 `selectionColor`, `dataDetectorType`, `textBreakStrategy`, `lineBreakStrategyIOS`, `android_hyphenationFrequency`, the
-wrapper-only `text=` and `fontSize=`, `fontStyle` and `textDecoration*`, a bad `numberOfLines`, a non-function
+wrapper-only `text=` and `fontSize=`, `fontStyle` and `textDecoration*` (the third slice accepts the supported values of
+those), a bad `numberOfLines`, a non-function
 `onTextLayout` and inline Controls. A native guard in `ParagraphLayout::prepare` repeats the refusal of head, middle and
 `adjustsFontSizeToFit` for a `NativeText` imported around the facade, which used to be drawn as a plain character trim or
 ignored: `measure` and the paint report it and the Yoga callback survives. The default size of an outer paragraph stays
@@ -3395,7 +3397,8 @@ held, after the click and with the column narrowed, taken by a capture driver th
 
 Open: press on a span (hit testing by text fragment and a dispatch in the pointer adapter), accessibility of `Text`
 (`Text.js` gives a pressable paragraph `accessibilityRole: 'link'`, which the host does not apply, with GF-20),
-`fontStyle` and decoration (the next slice), head and middle ellipsizing, selection and `adjustsFontSizeToFit`, font
+`fontStyle` and decoration (done by the
+[third slice](#text-style-italic-and-text-decoration-on-the-paragraph-2026-10-08)), head and middle ellipsizing, selection and `adjustsFontSizeToFit`, font
 scaling, the default size of 14, font loading and fallback, bidi, emoji and grapheme clusters, and a reference
 measurement on an iOS simulator and an Android emulator. The hosted CI run of the new `native-text-original` step and the
 Pages publication are **pending**.
@@ -3410,6 +3413,72 @@ the text layout (76), touchables (93 and 7), typography laboratory (50 headless,
 type check, the contracts gate (301 Node/13 Python, static analysis, publication scan) and the platform seams (16) pass
 on that tree. Only the first-slice checkpoint was closed, earlier, by the first slice; no whole GF, other checkpoint,
 weight or denominator closes.
+
+### Text style: italic and text decoration on the paragraph (2026-10-08)
+
+GF-11 stays **In progress**: this is its third slice, and its first-slice checkpoint was closed by the first one. The
+[text style evidence](docs/evidence/text-style/README.md) makes the paragraph paint `fontStyle: 'italic'` and
+`textDecorationLine` (underline, line-through and both) with `textDecorationColor` and `textDecorationStyle: 'solid'`,
+which the original `Text.js` already hands to the host and the facade used to reject: **61 headless checks** in one
+Hermes application. No checkpoint of any other item changes.
+
+The base view config declares the four names (`textDecorationColor` through the same processor as `color`, since a bare
+`true` would hand the C++ an unparsed string), and the facade validates their values from one table. In the host
+(`native/paragraph_layout.{h,cpp}`) the italic is a **synthetic slant**: the bundled fonts have no italic face and no
+`ital` or `slnt` axis, so the run's `FontVariation` gets a transform of 0.25, the value of Android's fake italic (the
+iOS of RN does not slant a custom family without an italic face, so the platforms have no common reference). It never
+takes the shortcut to the fallback font and has `:italic` in the font cache key; the outline leans, so the advance, the
+width and the breaks do not change. The lines have no Godot primitive, so the host draws them from Godot's own metrics,
+the convention of `RichTextLabel`: the underline at the font's underline position below the baseline, the
+strike-through in the middle of the run's ascent and descent, both `max(1, thickness)` thick. There is one segment per
+run and per visual row, over the glyphs that are actually painted (truncated text has none, and a group without width
+has none), and one `painted_glyphs` is the source of what a row paints for the drawing, the decorations and the snapshot,
+so the snapshot is exactly what was drawn. The lines are computed in `draw` and `snapshot`, never in `prepare`, which
+runs in measure: painting does not change a measure. A child replaces its parent's line and color field by field (`none`
+cancels an underline, `line-through` replaces it), the line takes the text color when `textDecorationColor` is unset,
+and the opacity of a span multiplies the text and the line alike.
+
+The same pass fixes a bug that the new lines exposed: the glyphs of the ellipsis carry no position, so the old drawing
+looked their run up as run 0 and painted the ellipsis of a truncated paragraph in the color of the **first** run. They
+now take the run of the last glyph painted before them, for the color and for the line. The facade rejects, where the
+`Text` renders and word for word, `fontStyle` other than `normal` and `italic` (`oblique` included), `textDecorationLine`
+other than the four strings of RN's types (the native parser's aliases `strikethrough` and `underline-strikethrough`,
+the reversed order and `overline` included) and `textDecorationStyle` other than `solid`; a guard in
+`ParagraphLayout::prepare` repeats the refusal of `oblique` and of a non-solid line style, with the same words, for a
+`NativeText` imported around the facade, and a `View` or a `TextInput` keeps rejecting the styles.
+
+An independent oracle reads `head`, `hhea`, `post` and `OS/2` of the bundled TTFs in Node and recomputes the center and
+thickness of every underline and strike-through (the host is within 0.005 px), that segments touch, that a run
+covering its row runs from the row's x to its x plus its width, that decoration never changes a measure, the inheritance,
+the opacity, the ellipsis and clipped text, 18 rejected styles word for word and the bypass refusals; the skew is read on
+the outline of "I" (the top moves right by 0.25 of its height, 3 px at 16 px, and the bottom and the advance stay). The SDK
+and host of main `0f2cc7e` fail exactly 47 of the 61 checks; the same bundle on that host alone fails the 27 that need the
+new native code; eight retained sabotages (an underline above the baseline, the line color ignored, a child's `none`
+dropped, a line over the whole row, the skew inverted, the facade letting `dotted` through, the ellipsis on the first
+run again, no native guard) fail 1, 5, 1, 3, 2, 4, 2 and 5, and the oracle rejects each in its own section. The geometry
+is Godot's, not either platform's: Android's formulas (`ReactUnderlineSpan.kt:32`, `ReactStrikethroughSpan.kt:37`) put the
+underline 0.2 px (NotoSans) to 1.1 px (JetBrainsMono) higher and the strike-through 1.3 and 1.2 px lower; iOS leaves
+the lines to TextKit and was not measured. The typography laboratory gained a line of italic, underline, line-through
+and colored decoration and a span that cancels it: 55 headless and 72 renderer checks, four of them reading pixels,
+with three captures.
+
+Open: real italic faces (`oblique` stays rejected), the `double`, `dotted`, `dashed` and `wavy` lines, `overline`
+(not a value of RN's types), bidirectional text (a run that a reordering splits would get one line per piece), line
+geometry that matches either platform and a reference measurement on iOS and Android, press on a span, accessibility of
+`Text`, head and middle ellipsizing, selection, `adjustsFontSizeToFit`, font scaling, font loading and fallback, emoji
+and grapheme clusters. The hosted CI run of the new `native-text-style` step and the Pages publication are **pending**.
+
+Executed on macOS arm64 with official Godot 4.7.2 at implementation
+[`7819302`](https://github.com/journey-studios/godot-fabric/commit/7819302a7513363e15437bff70bf982ab2a2ce9f) (the
+feature at `bc1df3b` and the review round that put the style values in one table and named the guard's values with
+RN's own `toString`) and recorded at
+[`1b9a64b`](https://github.com/journey-studios/godot-fabric/commit/1b9a64b665ce247d910e5ff75fb7116f71e1f390): the text
+original (119), text layout (76), touchables (93 and 7), typography laboratory (55 headless, 72 renderer), the 35
+examples, the type check, the contracts gate (302 Node/13 Python, static analysis, publication scan) and the platform
+seams (17) pass on that tree. After merging main (`bf1e9e9`, GF-30) the host was reconfigured and rebuilt, the controls
+were refreshed and the suite repeated its 61 checks (47 and 27 on the previous SDK and host, the eight sabotages
+rejected), and the text original and the 35 examples passed again. Only the first-slice checkpoint was closed, earlier,
+by the first slice; no whole GF, other checkpoint, weight or denominator closes.
 
 ### LayoutAnimation on RN's own LayoutAnimationDriver (2026-10-08)
 

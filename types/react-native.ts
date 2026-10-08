@@ -105,7 +105,10 @@ export type ViewStyle = Pick<RN.ViewStyle,
   "backgroundColor" | "borderColor" | "borderLeftColor" | "borderTopColor" | "borderRightColor" | "borderBottomColor" |
   "borderWidth" | "borderTopWidth" | "borderRightWidth" | "borderBottomWidth" |
   "borderLeftWidth" | "borderRadius" | "borderTopLeftRadius" | "borderTopRightRadius" | "borderBottomLeftRadius" | "borderBottomRightRadius">;
-export type TextStyle = ViewStyle & Pick<RN.TextStyle, "fontSize" | "color" | "fontFamily" | "fontWeight" | "lineHeight" | "letterSpacing" | "textAlign">;
+/** fontStyle italic is synthetic (the bundled fonts have no italic face) and the text decoration is solid: a
+ * textDecorationStyle other than "solid" fails where the Text renders (docs/research/text-style.md). */
+export type TextStyle = ViewStyle & Pick<RN.TextStyle, "fontSize" | "color" | "fontFamily" | "fontWeight" | "lineHeight" | "letterSpacing" | "textAlign" |
+  "fontStyle" | "textDecorationLine" | "textDecorationColor"> & { textDecorationStyle?: "solid" };
 export type InputStyle = ViewStyle & Pick<RN.TextStyle, "fontSize"> & { color?: string };
 export type StyleProp<T> = RN.StyleProp<T>;
 export type PointerEvent = RN.PointerEvent;

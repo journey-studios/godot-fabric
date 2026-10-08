@@ -1,0 +1,16 @@
+extends SceneTree
+
+# Not project code. Crops the new line of the typography laboratory (the upright and italic Hamburgefonts, the line of
+# italic, underline, line-through and colored decoration, and the span that cancels its parent's underline) out of the
+# initial frame that `npm run example -- typography --capture` saves, and enlarges it by 4 with nearest-neighbour
+# sampling, so that every pixel stays a pixel.
+#
+#   cp docs/evidence/text-style/crop-line.gd.txt build/crop-line.gd
+#   godot --path . --headless --script res://build/crop-line.gd
+func _init() -> void:
+  var image := Image.load_from_file("res://build/typography-initial.png")
+  var region := Rect2i(12, 398, 312, 114)
+  var crop := image.get_region(region)
+  crop.resize(region.size.x * 4, region.size.y * 4, Image.INTERPOLATE_NEAREST)
+  print("crop saved: ", crop.save_png("res://build/typography-style-zoom.png"), " ", crop.get_size())
+  quit()
