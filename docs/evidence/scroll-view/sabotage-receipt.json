@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-negative-control",
+  "scenario": "native-virtualized-list",
+  "command": "node --test scripts/scroll-view-list-sabotage.mjs",
+  "runtime": {
+    "reactNative": "0.87.1",
+    "displayServer": "headless"
+  },
+  "hostSha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+  "bundle": {
+    "sha256": "90a3a562f456ae28cd150ff08196513f83e8448f98f98b8ee07fc7468b01e471",
+    "sabotage": "remove onLayout forwarding to the original RN ScrollView",
+    "copiedSourceSha256": "cd8e58c59144e9d6a68663282fe90ad6fae0a937db5f653b8b32e299a3aa2f7b"
+  },
+  "checks": {
+    "total": 44,
+    "failed": [
+      "mount/feed/The first window renders initialNumToRender items, RN's overscan, the header and the footer",
+      "mount/feed/The first viewable items are those at least half visible",
+      "feed/wheel/onViewableItemsChanged reports the items at least half visible, with exact changes"
+    ]
+  },
+  "cleanup": {
+    "stopped": true,
+    "rootCount": 0,
+    "pendingWork": 0
+  },
+  "oracle": {
+    "rejectsEvenIfProbeChecksAreMarkedPassed": true,
+    "reason": "mount: feed window"
+  },
+  "artifacts": {
+    "reportSha256": "a4cde09e451a5de056d67544073ce456840276d1292437a4611cd24e4d114faa",
+    "logSha256": "cb81aba2d3b0d09ec21814807c4236773c9d7ac2f3a8462216e136a5633dc638",
+    "bundleReceiptSha256": "7b33ceee37018faf74575e52dfa36fd5e1593d6f034a9045b84fac52c78a7bb5",
+    "launcherSha256": "b360a13814e8386fc6a1a549d82d2e1e86af184014c4fe3cdf66f6a05e687034"
+  },
+  "note": "The retained sabotage is generated only in an isolated build/ copy. The preserved positive 44-check report remains separate."
+}

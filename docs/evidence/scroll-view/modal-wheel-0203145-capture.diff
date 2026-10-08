@@ -1,0 +1,54 @@
+--- tests/scroll-view-modal-probe.gd	2026-10-08 07:03:45
++++ build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/scroll-view-modal-graphics-probe.gd	2026-10-08 07:28:33
+@@ -118,6 +118,16 @@
+   owner.push_input(up, true)
+   await settle(24)
+ 
++func capture_window(window: Window, path: String) -> Dictionary:
++  if window == null or not is_instance_valid(window): return {"saved": false, "reason": "missing Modal Window"}
++  await RenderingServer.frame_post_draw
++  var texture: ViewportTexture = window.get_texture()
++  if texture == null: return {"saved": false, "reason": "missing viewport texture"}
++  var image: Image = texture.get_image()
++  if image == null or image.is_empty(): return {"saved": false, "reason": "empty viewport image"}
++  var error := image.save_png(path)
++  return {"saved": error == OK, "path": path, "error": error, "width": image.get_width(), "height": image.get_height()}
++
+ func run_probe() -> void:
+   root.size = Vector2i(640, 480)
+   root.position = Vector2i(37, 29)
+@@ -231,6 +241,7 @@
+     await settle()
+   var after_down := snapshot(surface_a)
+   var after_down_v: Dictionary = node_in(after_down, "probe-modal-vertical").get("scroll", {})
++  var modal_down_capture := await capture_window(window_a, "res://build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/modal-wheel-0203145-down.png")
+   check(is_equal_approx(float(after_down_v.get("y", -1)), float(initial_a_v.get("y", 0)) + 72.0),
+     "modal/down wheel applies 48 times its factor through Window.window_input", {"before": initial_a_v,
+       "after": after_down_v, "signalEvents": signal_events.duplicate()})
+@@ -253,6 +264,7 @@
+     await settle()
+   var after_left := snapshot(surface_a)
+   var after_left_h: Dictionary = node_in(after_left, "probe-modal-horizontal").get("scroll", {})
++  var modal_left_capture := await capture_window(window_a, "res://build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/modal-wheel-0203145-horizontal.png")
+   check(is_equal_approx(float(after_left_h.get("x", -1)), float(initial_a_h.get("x", 0)) + 48.0),
+     "modal/left wheel reverses horizontal direction", {"before": initial_a_h, "after": after_left_h})
+ 
+@@ -307,14 +319,15 @@
+       "surfaceAAfterStop": surface_a_after_stop, "surfaceBAfterStop": surface_b_after_stop,
+       "modalWindowsReleased": modal_windows_released},
+     "allAssertionsPassed": failures.is_empty(), "scope": {"originalRNModal": true, "originalRNScrollView": true,
+-      "actualWindowInputSignal": true, "mobile": false}}
+-  var output := FileAccess.open("res://build/scroll-view-modal-report.json", FileAccess.WRITE)
++      "actualWindowInputSignal": true, "mobile": false},
++    "graphicsCaptures": {"modalWheelDown": modal_down_capture, "modalWheelHorizontal": modal_left_capture}}
++  var output := FileAccess.open("res://build/scroll-view-root/modal-wheel-green/host-7fc20194/graphics/scroll-view-modal-graphics-report.json", FileAccess.WRITE)
+   if output == null:
+     push_error("FABRIC_CHECK_FAILED: report is writable")
+     quit(1)
+     return
+   output.store_string(JSON.stringify(report, "  ") + "\n")
+-  print("SCROLL_VIEW_MODAL_REPORT=" + ("PASS" if failures.is_empty() else "FAIL") + " checks=" + str(checks.size()))
++  print("SCROLL_VIEW_MODAL_GRAPHICS_REPORT=" + ("PASS" if failures.is_empty() else "FAIL") + " checks=" + str(checks.size()))
+   quit(0 if failures.is_empty() else 1)
+ 
+ func _initialize() -> void:

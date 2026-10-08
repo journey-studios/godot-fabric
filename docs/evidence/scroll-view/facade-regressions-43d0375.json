@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-local-regression",
+  "testedCommit": "43d0375ed4e39c248162f03efd4919c00a9bb999",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "sha256": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2",
+    "unchangedFromPreRun": "840d7f3e5b9526e4843b009f17db3422d56cd5195277a90f049eb7fe3cdb23e2"
+  },
+  "nativeBuildReceipt": {
+    "path": ".deps/build/native-sdk-build.json",
+    "sha256": "10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45",
+    "unchangedFromPreRun": "10d8910b7d4a70a0f76b252e030e37036545feb504420c2bd72b22813dc22c45",
+    "compiledSourcePins": 123
+  },
+  "regressions": [
+    {
+      "name": "accessibility",
+      "status": "passed",
+      "checks": 80,
+      "oracle": "accepted",
+      "bundleSha256": "dd31a3a3e53642659a00b16487cc6d774daeb5468d00ed6f2d6369d29eca19d8",
+      "sourcePins": 18,
+      "reactNativePins": 15,
+      "report": {
+        "path": "build/accessibility-current-report.json",
+        "sha256": "4d5df77e3692c72975c64fc5be1f6fb89f096f1df8a62b054fa50eb4cd819c94"
+      },
+      "log": {
+        "path": "build/accessibility-current.log",
+        "sha256": "3603cb222585d105f9b0f9198d097e1c739242e63b090ae78976ae4c427548db"
+      },
+      "bundleReceipt": {
+        "path": "build/accessibility-probe-bundle.json",
+        "sha256": "3041d87d7a4a9f4ddcbc613d606ab4fc077bb2282022e0bc78e1bd74d2e8b63a"
+      },
+      "independentOracle": "accepted-by-root",
+      "producers": {
+        "repository": {
+          "count": 18,
+          "allMatchCommittedBlobs": true,
+          "pinsSha256": "3eed2209d1cd0e32a55164fe480c4acd1fc34e6a4b11ede9c7e4ef4ee9fc0001"
+        },
+        "reactNative": {
+          "count": 15,
+          "allMatchPinnedInstalledSources": true,
+          "pinsSha256": "794ba01c7e77510c314c477506e9af6041b816570888f73541aefce3517284e9"
+        }
+      }
+    },
+    {
+      "name": "images",
+      "status": "passed",
+      "checks": 74,
+      "oracle": "accepted",
+      "oracleSummary": {
+        "cases": 41,
+        "jobs": 78
+      },
+      "bundleSha256": "56ad2f8c00b0e79b49b82525e822640700bdc4d6b49b9f370347923e547c9a38",
+      "sourcePins": 31,
+      "reactNativePins": 33,
+      "report": {
+        "path": "build/images-current-report.json",
+        "sha256": "d47b01ee710fcb73bb87d6f5ce8dce351d2e4d44e26c4678742d897427da7b94"
+      },
+      "log": {
+        "path": "build/images-current.log",
+        "sha256": "6de6ac5b75b2e68b1ed801987dafaa40155b541a0ccd0e5e45d4dced36b4c0f4"
+      },
+      "bundleReceipt": {
+        "path": "build/images-probe-bundle.json",
+        "sha256": "0bfe7351391eda54b955aeee1002689bc85f493863feba00278c74681213bb9a"
+      },
+      "independentOracle": "accepted-by-root",
+      "producers": {
+        "repository": {
+          "count": 31,
+          "allMatchCommittedBlobs": true,
+          "pinsSha256": "baad5fb1a6aa9402dfb831fcd9ad5f7567ca43f56d36344c9961934432c5fdbc"
+        },
+        "reactNative": {
+          "count": 33,
+          "allMatchPinnedInstalledSources": true,
+          "pinsSha256": "5bc5108fd1fadfadb8687a4859212f77cd4c95c7ca3337a0ab4d4cf43b5b65ae"
+        }
+      }
+    },
+    {
+      "name": "text-layout",
+      "status": "passed",
+      "checks": 76,
+      "oracle": "accepted",
+      "oracleSummary": {
+        "original": false,
+        "tolerance": 1,
+        "maxima": {
+          "ascender": 0,
+          "descender": 0,
+          "height": 0,
+          "capHeight": 0.5760000000000005,
+          "xHeight": 0.49599999999999955,
+          "rawAscender": 0.8960000000000008,
+          "rawDescender": 0.7259999999999991,
+          "rawHeight": 1.4840000000000018,
+          "baselineOffset": 0.5
+        },
+        "offsets": [
+          {
+            "row": "baseline-small",
+            "expected": 15,
+            "measured": 15
+          },
+          {
+            "row": "self-small",
+            "expected": 13,
+            "measured": 13
+          },
+          {
+            "row": "mixed-sans",
+            "expected": 9.5,
+            "measured": 9
+          }
+        ]
+      },
+      "bundleSha256": "aa9a2235f2193ce07d19a6c1d1eeffbdf8f98ab974d707f2cf769706c66f13a9",
+      "sourcePins": 16,
+      "reactNativePins": 13,
+      "report": {
+        "path": "build/text-layout-current-report.json",
+        "sha256": "9d5c1d37524a2dd4cf23ead3521032df194535fef2a0392810746f86e87ec4f1"
+      },
+      "log": {
+        "path": "build/text-layout-current.log",
+        "sha256": "8d552a8dd17eae2cb903aa5ce47dcfbc8628fa459596b1bb4ed7db71c6c77310"
+      },
+      "bundleReceipt": {
+        "path": "build/text-layout-probe-bundle.json",
+        "sha256": "7cc75a3bed0fcbadfbc7e51fc2500c39c9b8a94f9fcda03008e150c807369c31"
+      },
+      "independentOracle": "accepted-by-root",
+      "producers": {
+        "repository": {
+          "count": 16,
+          "allMatchCommittedBlobs": true,
+          "pinsSha256": "474c621948eb928daa853ce6e87ed60838ee05a76e147c3aa661f71971cd49c8"
+        },
+        "reactNative": {
+          "count": 13,
+          "allMatchPinnedInstalledSources": true,
+          "pinsSha256": "9ad41a6cef8288415ecbfabc4c0e184a8093876e5055e8864eda4c41dc277730"
+        }
+      }
+    },
+    {
+      "name": "device-services",
+      "status": "passed",
+      "checks": 65,
+      "oracle": "accepted",
+      "oracleSummary": {
+        "steps": {
+          "A": 39,
+          "R": 4
+        },
+        "linksAccepted": 6,
+        "vibrations": 22,
+        "checks": 65
+      },
+      "bundleSha256": "e1ce4fe41a87009e52a0bef69b6763282632202736449e3128098e853bcb5d65",
+      "sourcePins": 21,
+      "reactNativePins": 22,
+      "report": {
+        "path": "build/device-services-probe-current-report.json",
+        "sha256": "5d5c479b706dd08c4c76ed7e7d68831bbf12fbac2daf0d1ce8c6cfb5bb87d5bf"
+      },
+      "log": {
+        "path": "build/device-services-probe-current.log",
+        "sha256": "526f8591964d106e922bad5bc4ebc11d282e689e5dcc00f2125e43d3999f2c08"
+      },
+      "bundleReceipt": {
+        "path": "build/device-services-probe-bundle.json",
+        "sha256": "c9b7124b8c194d5cd88440e6af20092d714d5176e99f9454e104c4155920a95d"
+      },
+      "independentOracle": "accepted-by-root",
+      "producers": {
+        "repository": {
+          "count": 21,
+          "allMatchCommittedBlobs": true,
+          "pinsSha256": "82999ec20e047efe2b59d8893cead3215ca50cb663af295fb4e6e0ed62c164b3"
+        },
+        "reactNative": {
+          "count": 22,
+          "allMatchPinnedInstalledSources": true,
+          "pinsSha256": "d60a0dc388341764725f9852e619ccdb3ada63e3767345fc2482c60aedfbf091"
+        }
+      }
+    },
+    {
+      "name": "device-services-launch",
+      "status": "passed",
+      "checks": 2,
+      "oracle": "accepted",
+      "oracleSummary": {
+        "checks": 2
+      },
+      "report": {
+        "path": "build/device-services-launch-current-report.json",
+        "sha256": "32f94cedb8062dbf88d39c832484baae90734360eecb0afe3adeafe06d80ade4"
+      },
+      "log": {
+        "path": "build/device-services-launch-current.log",
+        "sha256": "b00d1ee17e17f98d18ac37accc9a3b4ab92db4b22f3cfb1422b7c85e93b02758"
+      },
+      "independentOracle": "accepted-by-root"
+    },
+    {
+      "name": "native-modules",
+      "status": "passed",
+      "checks": 76,
+      "assertionReview": "native test assertions passed",
+      "report": {
+        "path": "build/native-modules-report.json",
+        "sha256": "ff40cba7f53970ce5053820ed64fb35f7155f3b14ce4bffece3ed2bd391e9f0e"
+      },
+      "log": {
+        "path": "build/native-modules.log",
+        "sha256": "e93b58bde88355b5187e39ad5aac895afaf556bb31eaae5162ff45364d6e96d3"
+      },
+      "independentOracle": "report-count-and-check-results-verified; assertions in native test lane"
+    },
+    {
+      "name": "metrics-errors",
+      "status": "passed",
+      "checks": 58,
+      "assertionReview": "native test assertions passed",
+      "report": {
+        "path": "build/metrics-errors-report.json",
+        "sha256": "6fe19a979c46996195447f2c1be14a3091b41099bedde716745a745aa7e4c27e"
+      },
+      "log": {
+        "path": "build/metrics-errors.log",
+        "sha256": "45f655f8515832a534aba12b16a060dec1cee69f9ca96d57b1f544e40becadfa"
+      },
+      "independentOracle": "report-count-and-check-results-verified; assertions in native test lane"
+    }
+  ],
+  "bundleStep": {
+    "command": "npm run test:modules -> npm run bundle",
+    "appBundle": {
+      "path": "build/app.js",
+      "sha256": "4c67ccd96fa5933d6e32ddf75548f8cf5619feeb571340507fd4d938f5b929b7"
+    },
+    "inputs": {
+      "path": "build/bundle-inputs.json",
+      "sha256": "d6eff48286078c3276d99b3e81ef1d2c33052110f04b0d496c53a25868a49040"
+    }
+  },
+  "limits": [
+    "Headless Godot macOS regressions only; no new mobile or physical-device claims."
+  ],
+  "rootVerification": {
+    "verifiedAt": "2026-10-08T05:07:23.573Z",
+    "originalReceiptSha256": "fab9d5c671eb63d6885adc27b2a2db511d60c84a9513b48e083dbd09e133789e",
+    "scope": "Root rederives Accessibility, Images, Text and Device/launch oracles, checks all seven report counts/results and recorded artifact hashes, and compares every recorded bundle producer with Git/pinned RN sources. NativeModules and Metrics/Errors use their native test assertions; no replacement behavioral oracle is claimed."
+  }
+}

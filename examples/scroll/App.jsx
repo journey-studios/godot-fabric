@@ -45,6 +45,7 @@ export function ScrollApp() {
   const [query, filter] = useState("");
   const [enabled, enable] = useState(true);
   const [locked, lock] = useState(false);
+  const [noncancelable, setNoncancelable] = useState(false);
   const [nativeProbe, showNativeProbe] = useState(false);
   const [unsupportedProbe, showUnsupportedProbe] = useState(false);
   const [initialOffset, setInitialOffset] = useState(undefined);
@@ -65,11 +66,14 @@ export function ScrollApp() {
   actions.nativeProbe = (value) => showNativeProbe(value);
   actions.unsupportedProp = (value) => showUnsupportedProbe(value);
   actions.propOffset = (y) => setInitialOffset({ x: 0, y });
-  actions.offset = (y) => vertical.current?.scrollTo({ y });
-  actions.end = () => vertical.current?.scrollToEnd();
-  actions.horizontal = (x) => horizontal.current?.scrollTo({ x });
+  actions.offset = (y) => vertical.current?.scrollTo({ y, animated: false });
+  actions.animateOffset = (y) => vertical.current?.scrollTo({ y });
+  actions.end = () => vertical.current?.scrollToEnd({ animated: false });
+  actions.animateEnd = () => vertical.current?.scrollToEnd();
+  actions.horizontal = (x) => horizontal.current?.scrollTo({ x, animated: false });
   actions.enable = (value) => enable(value);
   actions.lock = (value) => lock(value);
+  actions.noncancelable = (value) => setNoncancelable(value);
   actions.remove = () => show(false);
   actions.restore = () => show(true);
   actions.shrink = () => setItems((value) => value.slice(0, 2));
@@ -79,13 +83,6 @@ export function ScrollApp() {
     row.current?.measureInWindow((x, y, width, height) => {
       observations.measured = { x, y, width, height };
     });
-  actions.unsupported = () => {
-    try {
-      vertical.current.scrollTo({ y: 50, animated: true });
-    } catch (error) {
-      observations.unsupported = error.message;
-    }
-  };
   useEffect(
     () => () => {
       observations.cleanups++;
@@ -145,7 +142,6 @@ export function ScrollApp() {
           onScroll={(event) => record("Scroll", event)}
           onScrollBeginDrag={(event) => record("Begin", event)}
           onScrollEndDrag={(event) => record("End", event)}
-          onResponderReject={() => record("Reject")}
           onContentSizeChange={(width, height) => {
             observations.content = [width, height];
           }}
@@ -155,7 +151,8 @@ export function ScrollApp() {
               key={item.id}
               testID={`item-${item.id}`}
               ref={item.id === 0 ? row : undefined}
-              cancelable={!locked}
+              cancelable={!noncancelable}
+              blockNativeResponder={locked}
               delayLongPress={400}
               onPressIn={() => record(`In:${item.id}`)}
               onPressOut={() => record(`Out:${item.id}`)}
@@ -204,7 +201,7 @@ export function ScrollApp() {
         testID="categories"
         ref={horizontal}
         horizontal
-        style={{ height: 48 }}
+        style={{ height: 48, flexGrow: 0, flexShrink: 0 }}
       >
         {[
           "Alimentos",

@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 1,
+  "status": "local-reviewed; hosted-ci-and-checkpoint-pending",
+  "sourceCommit": "2a01ec6f6b7816c54776b7dd9977afa448eb7502",
+  "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+  "nativeInputCount": 134,
+  "buildReceipt": {
+    "path": ".deps/build/native-sdk-build.json",
+    "sha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b"
+  },
+  "scroll": {
+    "path": "build/scroll-view-gf14-report.json",
+    "sha256": "873c2339b09f59544e2ffc6cd195475adc688f1abb1cc39a6c4e28504c718594",
+    "checks": 33,
+    "scrollBehavior": {
+      "neutral": {
+        "x": 12,
+        "y": 24,
+        "fabricX": 12,
+        "fabricY": 24,
+        "paintX": -12,
+        "paintY": -24
+      },
+      "interruptions": {
+        "wheel": {
+          "endY": 130,
+          "replacementY": 178,
+          "lifecycle": [
+            "begin",
+            "end"
+          ],
+          "endBeforeReplacement": true,
+          "candidateRetiredThroughUp": true
+        },
+        "contentOffset": {
+          "endY": 130,
+          "replacementY": 260,
+          "lifecycle": [
+            "begin",
+            "end"
+          ],
+          "endBeforeReplacement": true,
+          "candidateRetiredThroughUp": true
+        }
+      },
+      "verticalDiagonal": {
+        "release": {
+          "x": 80,
+          "y": 150
+        },
+        "velocityX": 0,
+        "settled": {
+          "x": 80,
+          "y": 268.947201273028
+        },
+        "events": [
+          "begin",
+          "end",
+          "momentumBegin",
+          "momentumEnd"
+        ]
+      },
+      "horizontalDiagonal": {
+        "release": {
+          "x": 150,
+          "y": 70
+        },
+        "velocityY": 0,
+        "settled": {
+          "x": 272.458106421297,
+          "y": 70
+        },
+        "events": [
+          "begin",
+          "end",
+          "momentumBegin",
+          "momentumEnd"
+        ]
+      },
+      "orientation": [
+        "begin",
+        "end"
+      ]
+    },
+    "pointerBehavior": {
+      "checks": 5,
+      "siblingCaptureRetained": true,
+      "captureReleasedOnce": true,
+      "hiddenTouchRetiredBeforeMove": true,
+      "hiddenMouseSuppressedThroughUp": true,
+      "freshMouseDisplacement": 36
+    },
+    "cleanupVerified": true
+  },
+  "lanes": {
+    "lists": {
+      "path": "build/virtualized-list-current-report.json",
+      "sha256": "1b40199fa1d30308ced896c93609f714bc28ff1ece951ebb3b6a6e6a5995523e",
+      "checks": 44,
+      "independentMeasuredOraclePassed": true
+    },
+    "os": {
+      "path": "build/os-contracts-current-report.json",
+      "sha256": "d7ebcb4476adefac3e8feeab7ad453e0af6c60b7877031f9dece21bd9f36365c",
+      "checks": 37,
+      "independentMeasuredOraclePassed": true,
+      "measured": {
+        "operations": 46,
+        "warnings": 16,
+        "permissions": 44,
+        "notices": 3,
+        "hostModules": 6,
+        "pushStatics": 17,
+        "drawerMethods": 8
+      }
+    },
+    "images": {
+      "path": "build/images-current-report.json",
+      "sha256": "47bfddaead8c6523ed07b86e654696f45b23bbeba96c772f030a45d3e737a07c",
+      "checks": 73,
+      "independentMeasuredOraclePassed": true,
+      "measured": {
+        "cases": 40,
+        "jobs": 78
+      }
+    },
+    "imagesNetwork": {
+      "path": "build/images-network-current-report.json",
+      "sha256": "96d8d72167fced9c82b40eec51be2047570f4d91cb520d42eb9b5983588037f7",
+      "checks": 74,
+      "independentMeasuredOraclePassed": true,
+      "measured": {
+        "cases": 24,
+        "model": {
+          "decoded": 1,
+          "bytes": 1,
+          "urls": 61,
+          "operations": 115
+        },
+        "jobs": 146
+      }
+    },
+    "click": {
+      "path": "build/pointer-click-comparison.json",
+      "sha256": "e6f2ffc25e8e535555e6794c4c0b778d41e7c673ac0014c9af84c03b50892988",
+      "lanes": 8,
+      "checksPerLane": 91,
+      "reports": [
+        {
+          "path": "build/pointer-click-current-disabled-report.json",
+          "sha256": "f687c78d78d7e1fa34cbcc8a7e63c21c5b4f0a2a2c17078244d6bf3393c27877",
+          "lane": "current-disabled"
+        },
+        {
+          "path": "build/pointer-click-current-enabled-report.json",
+          "sha256": "e968b17ea91516c79422c486fd02a143b0ef10a63bd170914b6c7819733e09c4",
+          "lane": "current-enabled"
+        },
+        {
+          "path": "build/pointer-click-current-imperative-only-report.json",
+          "sha256": "0edc9b689e8c4c3a62e3c15d7ac22e9452e0b9f556147ce52cb8480986e24232",
+          "lane": "current-imperative-only"
+        },
+        {
+          "path": "build/pointer-click-current-internal-only-report.json",
+          "sha256": "1acb76ccd374dd23ff25495e94128494ab4cd0b7c7f23a5cb924639637e120fe",
+          "lane": "current-internal-only"
+        },
+        {
+          "path": "build/pointer-click-original-disabled-report.json",
+          "sha256": "9c5028e74231e4607c30978dc4dd557005f694120d8038a74a9b1ea2cbd60e73",
+          "lane": "original-disabled"
+        },
+        {
+          "path": "build/pointer-click-original-enabled-report.json",
+          "sha256": "a794c7c7b739cc5219b12f3286ce2d929470013f6cac44cc9811688860f28c9d",
+          "lane": "original-enabled"
+        },
+        {
+          "path": "build/pointer-click-original-imperative-only-report.json",
+          "sha256": "d893887bac7d26e762b1fac51990e5cef6b5f611c1e73e2b07bae5fdfb2b772d",
+          "lane": "original-imperative-only"
+        },
+        {
+          "path": "build/pointer-click-original-internal-only-report.json",
+          "sha256": "c7829c1c5f298fadaaad5d6dcae8b09d8c12934e7f0a96c51f7021047cfc0c61",
+          "lane": "original-internal-only"
+        }
+      ],
+      "measuredCasesPerLane": 26
+    }
+  },
+  "graphics": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/graphics-receipt.json",
+    "sha256": "2d49ed9bf09a476c04ed49a782abec063a39b2ef27cdd929a380ed6934ee8071",
+    "checks": 4,
+    "allFourCapturesViewedByRoot": true,
+    "executedProbeDiffOnlyCaptureDir": true
+  },
+  "logs": {
+    "scroll": {
+      "sha256": "c0628f036038917f128eff8ced228078f162c032c0781b502f14042c39cd0a1c",
+      "bytes": 121123,
+      "knownUiManagerWarningsAllowed": 2
+    }
+  },
+  "limitations": [
+    "Local macOS proof, not final-head hosted CI or mobile parity.",
+    "External SDK adapter ABI remains experimental."
+  ],
+  "verifiedAt": "2026-10-08T09:13:04.810493+00:00",
+  "fixCommit": "465ae7690f64773f8d97f7ed802301603f360f75",
+  "integratedMain": "fb50a325fe0e4961f434b21382d2c4a5885ee14e",
+  "independentReview": {
+    "method": "Exact named inventories, measured state/lifecycle oracles, Git blob source pins and runtime cleanup; all four graphics viewed by root.",
+    "clickMeasuredCases": 26,
+    "clickLanes": 8,
+    "clickMalformedCopiesRejected": 17,
+    "routeMalformedCopiesRejected": 9,
+    "routeOracle": {
+      "path": "build/scroll-view-root/root-pointer-route-oracle.mjs",
+      "sha256": "fd9bae1ba84a89dbdbd1dcc394b6428a2ba696a35ae7463a62532c074de3f362"
+    },
+    "clickOracleAudit": {
+      "path": "build/scroll-view-root/root-pointer-click-oracle-audit.json",
+      "sha256": "d1681846d1165a9dc4a006792a3bc8a224085e63bec1fd1523cc7b069eb640bd"
+    },
+    "sdkCorrection": "Rejected draft link to a previous package log; root verified native-sdk-scrollview-fb50 directly."
+  },
+  "historicalRed": {
+    "schemaVersion": 1,
+    "rootIndependentReview": true,
+    "expectedBehaviorFailures": [
+      "same-surface sibling pointer capture prevents native pan takeover",
+      "sibling capture releases exactly once on Up",
+      "hidden mounted child retires its route before later Move or Up",
+      "hidden mouse contact stays suppressed until a fresh Down, then scrolls normally"
+    ],
+    "exactInventory": 33,
+    "sameMountedTagVisibleTransition": true,
+    "oldHost": "b4dfdbda2f81ad20cd9a9e5690f8ee5b854a8cf8125aaee5feabfeb6a81cc1d3",
+    "oldHostCompiledPinMismatchExpected": [
+      "native/application_runtime.cpp"
+    ],
+    "cleanStop": true,
+    "report": {
+      "path": "build/scroll-view-root/scroll-b4df-red-final-v3/scroll-view-gf14-report.json",
+      "sha256": "4da9de9fe9375402e63d4eaffb551c02e0c00d027f79158ec0d474482c4ccb41"
+    },
+    "runtimeAcceptance": false
+  },
+  "historicalPreImagesGreen": {
+    "sourceCommit": "465ae7690f64773f8d97f7ed802301603f360f75",
+    "hostSha256": "b2a8b1bfb2baa3dd9c28b1234e289a525e4ef47144cc3e4b807d265ac1af03ec",
+    "scrollChecks": 33,
+    "independentReceipt": {
+      "path": "build/scroll-view-root/root-pointer-route-green-b2a8.json",
+      "sha256": "f803babf355094d8c61f59b06def54a17e98742e802419527ccf2c4045aba464"
+    },
+    "scope": "Executed before integrating Images #64; not a current 2a01 run.",
+    "supplemental": {
+      "AccessibilityInfo": 54,
+      "Animated": 75,
+      "examplesScenarios": 35,
+      "examplesChecks": 2467,
+      "ScrollMotion": 44,
+      "AccessibilityCore": 594,
+      "scope": "Historical b2a8 lanes preserved; not repeated on Images-integrated host. Final hosted suite is required."
+    }
+  },
+  "controls": {
+    "lists": {
+      "originalControlPresent": false,
+      "precedingSdkControlPresent": true,
+      "sabotagePresent": true,
+      "precedingSdkFailuresCount": 11,
+      "sabotageFailuresCount": 3,
+      "comparison": {
+        "path": "build/virtualized-list-comparison.json",
+        "sha256": "211936a034630df6afecfd5b7b648fdaf2f49675c5335271d5b06b17cf8c6400"
+      }
+    },
+    "os": {
+      "previousSdkControlPresent": true,
+      "sabotagePresent": [
+        "platform-android",
+        "silent-shim",
+        "self-import"
+      ],
+      "previousSdkFailuresCount": 30,
+      "variants": {
+        "platform-android": {
+          "failures": 14,
+          "measuredOracleRejected": true
+        },
+        "silent-shim": {
+          "failures": 8,
+          "measuredOracleRejected": true
+        },
+        "self-import": {
+          "failures": 5,
+          "measuredOracleRejected": true
+        }
+      },
+      "comparison": {
+        "path": "build/os-contracts-comparison.json",
+        "sha256": "4660ddf06906569896ebb1bf51cfa0b7ab9e96f19c58f6a742aabc9d87f62ebe"
+      }
+    },
+    "images": {
+      "originalControlPresent": false,
+      "sabotagePresent": [
+        "main-thread",
+        "stale-request"
+      ],
+      "variants": {
+        "main-thread": {
+          "failures": 12,
+          "measuredOracleRejected": true
+        },
+        "stale-request": {
+          "failures": 2,
+          "measuredOracleRejected": true
+        }
+      },
+      "comparison": {
+        "path": "build/images-comparison.json",
+        "sha256": "9e8d83ff9ace73412d861a77beb51f1af177f0c8dd7a091e55da1500bbc71184"
+      }
+    },
+    "imagesNetwork": {
+      "originalControlPresent": true,
+      "sabotagePresent": [
+        "decoded-reload",
+        "cancel-open",
+        "texture-mutation"
+      ],
+      "originalFailuresCount": 30,
+      "variants": {
+        "decoded-reload": {
+          "failures": 1,
+          "measuredOracleRejected": true
+        },
+        "cancel-open": {
+          "failures": 34,
+          "measuredOracleRejected": true
+        },
+        "texture-mutation": {
+          "failures": 2,
+          "measuredOracleRejected": true
+        }
+      },
+      "comparison": {
+        "path": "build/images-network-comparison.json",
+        "sha256": "af6537d0ced80c7884bd451bab58f68275ad4997c13e3ca46e450216c6b01a9b"
+      }
+    },
+    "ImagesRestoration": {
+      "sourcesByteIdentical": true,
+      "hostByteIdentical": true,
+      "receipts": [
+        {
+          "path": "build/images-sabotage.json",
+          "sha256": "0d9710c634aab73855d324dad23d4cd6a6351b964cb59af07587b1c9dff539e2"
+        },
+        {
+          "path": "build/images-network-sabotage.json",
+          "sha256": "b3e83a13477c943e6cf8b3a8dc7a80930b2624d2862998957d9b9a652e80ce7d"
+        }
+      ]
+    }
+  },
+  "localGates": {
+    "nodeTests": 352,
+    "pythonTests": 13,
+    "contracts": {
+      "path": "build/scroll-view-root/contracts-2a01-images-network.log",
+      "sha256": "e02ed3fde1ae10d124918dcd8185004518de00e54dfb00d8624194d43288f5eb"
+    },
+    "static": {
+      "path": "build/scroll-view-root/static-2a01-images-network.log",
+      "sha256": "ec86bf7bceeb43a58d6736b8471e16754f6a13a7fe0a165e1a60c50b2074bfef"
+    },
+    "publication": {
+      "path": "build/scroll-view-root/publication-2a01-images-network.log",
+      "sha256": "6b269579064c7454074e4077dcf1be6b869ff93f81a4391f412c531fc4ea226b"
+    }
+  },
+  "hosted": {
+    "previousHead": "3e295535e872c36869adaafc1c9fdcc8237c77f6",
+    "previousRun": 37746334680,
+    "previousConclusion": "cancelled; superseded by fixes and integration",
+    "currentHeadCiAccepted": false,
+    "newHeadCodeRabbitAccepted": false,
+    "checkpointAccepted": false
+  },
+  "sdkVerification": {
+    "path": "build/scroll-view-root/sdk-2a01-root-verify.log",
+    "sha256": "40abe8d46a5f89f8baad6e5ac96023078d6b5deba3ade1274a072d5a1af41e32"
+  },
+  "runtime": {
+    "platform": "macOS arm64",
+    "godot": "4.7.2-stable (official)",
+    "reactNative": "0.87.1",
+    "mode": "headless; separate windowed graphical lane",
+    "commands": [
+      "npm run test:scroll-view",
+      "npm run test:lists",
+      "npm run test:os-contracts",
+      "npm run test:pointers:click",
+      "npm run test:images",
+      "npm run test:images-network"
+    ]
+  }
+}

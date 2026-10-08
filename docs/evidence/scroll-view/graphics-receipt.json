@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "status": "verified",
+  "scenario": "gf14-scroll-view-graphical-capture",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "before": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+    "after": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+    "unchanged": true
+  },
+  "buildReceipt": {
+    "path": ".deps/build/native-sdk-build.json",
+    "sha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b",
+    "afterSha256": "07bdaebf6cf0131460c28267245971777c6bf59d477da141f0d9f2fc6bf1989b",
+    "unchanged": true
+  },
+  "bundle": {
+    "path": "build/scroll-view-gf14-probe.js",
+    "before": "9be2f9b5815707d1fc9c40f389d5454901db6aafe00a27e51694a0929233df90",
+    "after": "9be2f9b5815707d1fc9c40f389d5454901db6aafe00a27e51694a0929233df90",
+    "unchanged": true
+  },
+  "bundleReceipt": {
+    "path": "build/scroll-view-gf14-probe-bundle.json",
+    "sha256": "b61f42adc7434185e7749cdbec70810feacb69200b89126571001e1453ec516d",
+    "afterSha256": "b61f42adc7434185e7749cdbec70810feacb69200b89126571001e1453ec516d",
+    "unchanged": true
+  },
+  "probe": {
+    "originalPath": "tests/scroll-view-graphics-probe.gd",
+    "originalSha256": "1ec039f2c3c3a3149c18c08201a89b3fe0a5f2e64f66548284fc016257ca3001",
+    "executedCopyPath": "build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics-probe.gd",
+    "executedCopySha256": "4bd64b9fba10022eb7e3966613aebd1b907db4fcae2f5f1a72b2c3aa018f0752",
+    "onlyDifference": "CAPTURE_DIR points to this ignored output folder"
+  },
+  "report": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics-report.json",
+    "sha256": "cc9f5408da3ab063bb48049c655dc1b4dd353d202fb1e074d89fb4e001c47db3"
+  },
+  "checks": [
+    {
+      "name": "initial frame contains both mounted roots at expected viewport size",
+      "passed": true
+    },
+    {
+      "name": "fractional paint and RN measurement remain aligned at 13.25 px",
+      "passed": true
+    },
+    {
+      "name": "horizontal pan paints inside the viewport and clips blue content outside it",
+      "passed": true
+    },
+    {
+      "name": "both roots and all pointer/runtime ownership are empty after stop",
+      "passed": true
+    }
+  ],
+  "captures": [
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/initial.png",
+      "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136",
+      "bytes": 13524,
+      "trackedPath": "docs/evidence/scroll-view/captures/initial.png"
+    },
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/fractional-13_25.png",
+      "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1",
+      "bytes": 12671,
+      "trackedPath": "docs/evidence/scroll-view/captures/fractional-13_25.png"
+    },
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/horizontal-pan-clipped.png",
+      "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26",
+      "bytes": 12669,
+      "trackedPath": "docs/evidence/scroll-view/captures/horizontal-pan-clipped.png"
+    },
+    {
+      "path": "build/scroll-view-root/rebuild-fb50-2a01/captures/cleanup.png",
+      "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8",
+      "bytes": 2205,
+      "trackedPath": "docs/evidence/scroll-view/captures/cleanup.png"
+    }
+  ],
+  "log": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics.log",
+    "sha256": "b84dda04aeed4be76f3bbbe1db285688c75f497d55fd3a0d65f099668c505df8"
+  },
+  "limitations": [
+    "Godot macOS windowed run only; no physical mobile or hardware touch claim."
+  ],
+  "sourceCommit": "2a01ec6f6b7816c54776b7dd9977afa448eb7502",
+  "rawExecutionReceipt": {
+    "path": "build/scroll-view-root/rebuild-fb50-2a01/graphics-receipt.json",
+    "sha256": "2d49ed9bf09a476c04ed49a782abec063a39b2ef27cdd929a380ed6934ee8071"
+  },
+  "measurements": {
+    "fractional": {
+      "logicalY": 13.25,
+      "fabricY": 13.25,
+      "paintedY": -13.25,
+      "measuredRowY": 10.75
+    },
+    "horizontal": {
+      "logicalX": 540,
+      "fabricX": 540,
+      "paintedX": -540,
+      "viewport": "[P: (444.0, 24.0), S: (220.0, 170.0)]",
+      "insidePixel": "(0.1137, 0.3059, 0.8471, 1.0)",
+      "outsidePixel": "(0.9608, 0.9725, 0.9804, 1.0)"
+    }
+  },
+  "allFourCapturesViewedByRoot": true,
+  "executedCopyDiffVerified": "Exactly CAPTURE_DIR; original and actual executed copy hashed separately.",
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "displayServer": "macOS",
+  "renderer": "gl_compatibility",
+  "mode": "windowed",
+  "reproduce": "Godot --path <checkout> --windowed --script res://build/scroll-view-root/rebuild-fb50-2a01/scroll-view-graphics-probe.gd"
+}

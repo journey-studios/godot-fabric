@@ -1,0 +1,484 @@
+{
+  "schemaVersion": 1,
+  "status": "local-reviewed; final-head hosted CI, CodeRabbit and GF-14 checkpoint pending",
+  "sourceCommit": "0203145048604cebd475ab4eedf3d0b959b4b0ab",
+  "fixCommit": "412eba25369995c7bb80677f04c42dc5a6386bf5",
+  "integratedMain": "0f2cc7e7b87af4826c76bf7490637c282cab77cd",
+  "reviewThread": "https://github.com/journey-studios/godot-fabric/pull/58#discussion_r4217309272",
+  "red": {
+    "sourceCommit": "8dd61297cbf491dba5c167b068703165f696278f",
+    "receipt": {
+      "path": "build/scroll-view-root/root-modal-wheel-red-v6.json",
+      "sha256": "46d3e05eeefe5c22cf1cd0a2debd9216826bd7a2074e3e49296f5c02553325a7"
+    },
+    "report": {
+      "path": "build/scroll-view-root/modal-wheel-8dd-red/attempt-v6/report.json",
+      "sha256": "c106c6b638645b8c0da33d97c5af46c62734909a6e9a225a5a84b875da482fff"
+    },
+    "log": {
+      "path": "build/scroll-view-root/modal-wheel-8dd-red/attempt-v6/godot.log",
+      "sha256": "aeafbc7f2c688bd623523f81654d05a7496266cc179a6e5d6aba2287e6e19e20"
+    },
+    "hostSha256": "7870787106d0a4725167458203825c528ed227035220704d299b124b91ce9bd9",
+    "checks": 13,
+    "passed": 9,
+    "failed": 4,
+    "expectedFailures": [
+      "Modal down wheel",
+      "Modal up wheel",
+      "Modal right wheel",
+      "Modal left wheel"
+    ],
+    "observed": "All four events reach the actual current Modal Window.window_input; logical/Fabric/paint offsets remain zero rather than72/48. Root wheel60/24, independent other-owner zero, click, pan, public reset and cleanup pass.",
+    "historicalHeaderLimitation": "Header modalWindowId was read after teardown and is zero. Authority is the live before/after node snapshots and Window signal observer, verified independently. Permanent regression saves both live IDs before stop."
+  },
+  "green": {
+    "schemaVersion": 1,
+    "scope": "Root-reviewed committed-source local macOS proof; no hosted or mobile acceptance",
+    "sourceCommit": "0203145048604cebd475ab4eedf3d0b959b4b0ab",
+    "hostSha256": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+    "nativeInputs": 134,
+    "buildReceipt": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/native-sdk-build.json",
+      "sha256": "c1f3c7caef69cd6b7f47083edc479e230685ecdd2569d4af8529fe421d963615"
+    },
+    "sdk": {
+      "manifest": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/native-sdk/manifest.json",
+        "sha256": "8c805fe01091628a1fd3666b01aa1cf9060448644c819b29a4d23400e739d883"
+      },
+      "files": 2713,
+      "allBytesAndLinksVerified": true,
+      "abiCertified": false
+    },
+    "scroll": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/scroll-view/scroll-view-gf14-report.json",
+      "sha256": "5a0ee98758ad1f49e1193fe5624b4f87dceb7b94e1416b8240992ebd579ede25",
+      "checks": 33,
+      "measured": {
+        "neutral": {
+          "x": 12,
+          "y": 24,
+          "fabricX": 12,
+          "fabricY": 24,
+          "paintX": -12,
+          "paintY": -24
+        },
+        "interruptions": {
+          "wheel": {
+            "endY": 130,
+            "replacementY": 178,
+            "lifecycle": [
+              "begin",
+              "end"
+            ],
+            "endBeforeReplacement": true,
+            "candidateRetiredThroughUp": true
+          },
+          "contentOffset": {
+            "endY": 130,
+            "replacementY": 260,
+            "lifecycle": [
+              "begin",
+              "end"
+            ],
+            "endBeforeReplacement": true,
+            "candidateRetiredThroughUp": true
+          }
+        },
+        "verticalDiagonal": {
+          "release": {
+            "x": 80,
+            "y": 150
+          },
+          "velocityX": 0,
+          "settled": {
+            "x": 80,
+            "y": 269.038363510577
+          },
+          "events": [
+            "begin",
+            "end",
+            "momentumBegin",
+            "momentumEnd"
+          ]
+        },
+        "horizontalDiagonal": {
+          "release": {
+            "x": 150,
+            "y": 70
+          },
+          "velocityY": 0,
+          "settled": {
+            "x": 268.955150297694,
+            "y": 70
+          },
+          "events": [
+            "begin",
+            "end",
+            "momentumBegin",
+            "momentumEnd"
+          ]
+        },
+        "orientation": [
+          "begin",
+          "end"
+        ]
+      },
+      "pointer": {
+        "checks": 5,
+        "siblingCaptureRetained": true,
+        "captureReleasedOnce": true,
+        "hiddenTouchRetiredBeforeMove": true,
+        "hiddenMouseSuppressedThroughUp": true,
+        "freshMouseDisplacement": 36
+      }
+    },
+    "modal": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/scroll-view/scroll-view-modal-report.json",
+      "sha256": "a3fcd24c15904835aefce21e2c3bd5d9e51b5077164da3267eddf7ccc52220a3",
+      "checks": 13,
+      "displayServer": "macOS",
+      "oracle": {
+        "path": "tests/scroll-view-modal-oracle.mjs",
+        "sha256": "c9c640677f3f99c8c565f0bc74e66a3207246ed9160ff5b1eaa58f142f6795a6"
+      },
+      "negativeControls": [
+        {
+          "name": "logical offset changed",
+          "rejected": true,
+          "diagnostic": "afterModalDown logical active offset: expected 72, received 0"
+        },
+        {
+          "name": "Fabric offset changed",
+          "rejected": true,
+          "diagnostic": "afterModalRight Fabric active offset: expected 72, received 0"
+        },
+        {
+          "name": "painted offset changed",
+          "rejected": true,
+          "diagnostic": "afterModalUp painted active offset: expected -48, received 0"
+        },
+        {
+          "name": "cross axis changed",
+          "rejected": true,
+          "diagnostic": "afterModalLeft logical cross-axis: expected 0, received 1"
+        },
+        {
+          "name": "content limit falsified",
+          "rejected": true,
+          "diagnostic": "afterModalDown measured content bound: expected 510, received 500"
+        },
+        {
+          "name": "wrong source Window",
+          "rejected": true,
+          "diagnostic": "wheel signal came from Modal A Window 0\n+ actual - expected\n\n+ 30450648681\n- 33839646400\n"
+        },
+        {
+          "name": "wrong fractional factor",
+          "rejected": true,
+          "diagnostic": "Modal window wheel factor 1: expected 0.5, received 2"
+        },
+        {
+          "name": "wrong observed coordinates",
+          "rejected": true,
+          "diagnostic": "Modal window wheel x 2: expected 325, received 1"
+        },
+        {
+          "name": "missing wheel observation",
+          "rejected": true,
+          "diagnostic": "all four wheel events reached current Modal Window.window_input\n\n3 !== 4\n"
+        },
+        {
+          "name": "root affected by Modal wheel",
+          "rejected": true,
+          "diagnostic": "root vertical remains unchanged: expected 60, received 72"
+        },
+        {
+          "name": "second owner affected",
+          "rejected": true,
+          "diagnostic": "owner B remains unchanged: expected 0, received 72"
+        },
+        {
+          "name": "timer left in second runtime",
+          "rejected": true,
+          "diagnostic": "owner B runtime.pendingTimers\n\n1 !== 0\n"
+        },
+        {
+          "name": "hover left in second surface",
+          "rejected": true,
+          "diagnostic": "surface B.pointer.hoverPointers\n\n1 !== 0\n"
+        },
+        {
+          "name": "truthy check flag",
+          "rejected": true,
+          "diagnostic": "[{\"detail\":{\"host\":\"(640, 480)\",\"modalA\":\"(640, 480)\",\"modalB\":\"(360, 280)\",\"ownerB\":\"(360, 280)\",\"surfaceA\":\"(250.0, 180.0)\"},\"name\":\"setup/two original RN Modals have independent owner Windows\",\"passed\":\"true\"}]"
+        }
+      ]
+    },
+    "hostedAcceptance": false,
+    "mobileEvidence": false
+  },
+  "consumers": {
+    "scope": "Root local current host consumer evidence; no hosted acceptance",
+    "sourceCommit": "0203145048604cebd475ab4eedf3d0b959b4b0ab",
+    "hostSha256": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+    "click": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-comparison.json",
+      "sha256": "a4db886cbd4d4cc4a98a64de5c6a69842e415f815e810c38e6cadd706719d28f",
+      "lanes": [
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-original-disabled-report.json",
+          "sha256": "1dfa70f9eb66314ef1612247ab64a1ad9d83a6dbf328c466c4e2ceb5ddbcfa3e",
+          "lane": "original-disabled",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-original-imperative-only-report.json",
+          "sha256": "0f77e4711d7f41f8f7d7b2abcfae889e1226f488bb647812023f74e9cd9db2e8",
+          "lane": "original-imperative-only",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-original-internal-only-report.json",
+          "sha256": "5260a7f9499b05a29f0dbe7114d52559a2a186a0b2836fb907e253c79e9eab72",
+          "lane": "original-internal-only",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-original-enabled-report.json",
+          "sha256": "1efb10b8d4252cb96c0fa42a12302546da2da957afdd12ecdbb3551efa8fa760",
+          "lane": "original-enabled",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-current-disabled-report.json",
+          "sha256": "6476f16cf35b78290a9d9a5d5056eab1d5eafcbb25e13fbea83aba17e7572b4d",
+          "lane": "current-disabled",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-current-imperative-only-report.json",
+          "sha256": "59736015b0ff7420e9b2152189462d1d9ddcbeee1ac3e989a4f8dcb6e7174bd1",
+          "lane": "current-imperative-only",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-current-internal-only-report.json",
+          "sha256": "74cacb0e49bd1849464fcd39e29ea472836d8b9d37ee21874ccde1988c070108",
+          "lane": "current-internal-only",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-current-enabled-report.json",
+          "sha256": "3a75d35579a161cb2a28bba515e6f19e985cec4cf10da9fa2e248550ab76b73a",
+          "lane": "current-enabled",
+          "checks": 91,
+          "requiredMeasuredCases": 26,
+          "terminalOwnershipClean": true
+        }
+      ],
+      "missingRequiredCaseRejected": true,
+      "stoppedRootBPointerLeakRejected": true
+    },
+    "lists": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/list-current-controls/virtualized-list-current-report.json",
+      "sha256": "3b11877e5102e86dbc2ee080c200945bd73817c5dba81d07c3293109573b57af",
+      "checks": 44,
+      "controls": [
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/list-current-controls/virtualized-list-preceding-sdk-report.json",
+          "sha256": "14d81abf6af0e0eaeac6e38e5df0e4f12e9249047437dbb72eae5613db4b8d19",
+          "variant": "preceding-sdk",
+          "checks": 16,
+          "failed": 11,
+          "oracleRejected": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/list-current-controls/virtualized-list-sabotage-report.json",
+          "sha256": "739635fc9d45d44d8422c838eb04d7ad17c2b5e5aee065a4dca188e1ad3c3856",
+          "variant": "sabotage",
+          "checks": 44,
+          "failed": 3,
+          "oracleRejected": true
+        }
+      ]
+    },
+    "hostedAcceptance": false,
+    "os": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/os-current-controls/os-contracts-current-report.json",
+      "sha256": "f26b39182db54d08e03b98c3e280dd2104791be6fcee2dfff267035d7e1298d2",
+      "checks": 37,
+      "measured": {
+        "operations": 46,
+        "warnings": 16,
+        "permissions": 44,
+        "notices": 3,
+        "hostModules": 6,
+        "pushStatics": 17,
+        "drawerMethods": 8
+      },
+      "controls": [
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/os-current-controls/os-contracts-previous-sdk-report.json",
+          "sha256": "d765d0dbc43d932dbe30de258aa360ab60197d19d7882f74702abc7e34f0f567",
+          "variant": "previous-sdk",
+          "checks": 37,
+          "failed": 30,
+          "oracleRejected": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/os-current-controls/os-contracts-sabotage-platform-android-report.json",
+          "sha256": "8cf9956205d5be76fdfd7364228c5464f71db57542ebcc8d512408200f2a39aa",
+          "variant": "sabotage-platform-android",
+          "checks": 37,
+          "failed": 14,
+          "oracleRejected": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/os-current-controls/os-contracts-sabotage-silent-shim-report.json",
+          "sha256": "b2bd408c2abf967923204937c1065439319ed780ad87743b1c681d6d47bbe840",
+          "variant": "sabotage-silent-shim",
+          "checks": 37,
+          "failed": 8,
+          "oracleRejected": true
+        },
+        {
+          "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/os-current-controls/os-contracts-sabotage-self-import-report.json",
+          "sha256": "2cc2c3ee5ae271ecfc4739eca1ece6585a6fabe1172a8ccf1c7614ec68027e91",
+          "variant": "sabotage-self-import",
+          "checks": 37,
+          "failed": 5,
+          "oracleRejected": true
+        }
+      ]
+    }
+  },
+  "fullModalRegression": {
+    "nodeTests": 7,
+    "mountedChecks": 193,
+    "reports": [
+      {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-host-current-report.json",
+        "sha256": "e58e645f8a167e6076acba9fc6722d2884646d132bc2f2b1341796c39c011713",
+        "checks": 68
+      },
+      {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-owner-windows-report.json",
+        "sha256": "603d93ebd26c039acb60314f55fde3f2a2087be5b3aaa3a5fc5eb820d8ebbd69",
+        "checks": 11
+      },
+      {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-capture-lifetime-report.json",
+        "sha256": "5ad2f22293446d71b3f4145af401cc9adbeb5dc26eabb692a769023d96d175bc",
+        "checks": 65
+      },
+      {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-stack-membership-report.json",
+        "sha256": "829288c1bda921c0a529a0f8b018af572b4aeb0b44166774f8ef91e34f368d90",
+        "checks": 31
+      },
+      {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-sibling-order-report.json",
+        "sha256": "9e49cdc832660594945f58611bbfee31da4b36fa795d6f8fe8bdf20fb2b9a1ba",
+        "checks": 9
+      },
+      {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-surface-lifetime-report.json",
+        "sha256": "cf70dcb0f62ed7a29d8a314afef45b223e12f5feae05df28e4f960a1960d6688",
+        "checks": 9
+      }
+    ],
+    "negativeMissingOwnerTargetRetained": {
+      "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-owner-windows-target-missing-report.json",
+      "sha256": "ea5334910535bb5b4303fca69e2747da1b62fb4c31c73a8d0f20996f444463f3"
+    }
+  },
+  "gates": {
+    "contracts": {
+      "nodeTests": 352,
+      "parts": {
+        "parity": 7,
+        "dashboard": 43,
+        "mainContracts": 302
+      },
+      "pythonTests": 13,
+      "log": {
+        "path": "build/scroll-view-root/modal-wheel-contracts-0203145.log",
+        "sha256": "b9f25f1d35e5921a13af50ff2abcad01ed7bd5a6830c5a802b5ab52cdf21c6bc"
+      }
+    },
+    "static": {
+      "passed": true,
+      "log": {
+        "path": "build/scroll-view-root/modal-wheel-static-0203145.log",
+        "sha256": "812af86af21082761ed23b557dcd9f86a1452f6914a47fdce595900a3c9f4d51"
+      }
+    },
+    "publication": {
+      "passed": true,
+      "files": 1481,
+      "log": {
+        "path": "build/scroll-view-root/modal-wheel-publication-0203145.log",
+        "sha256": "228206f1c88a7cc95ac14f258bf372cc055f5e48cfd38498bb1e1985711d0032"
+      }
+    },
+    "publicationAfterDocs": {
+      "passed": true,
+      "files": 1489,
+      "log": {
+        "path": "build/scroll-view-root/modal-wheel-publication-after-docs.log",
+        "sha256": "3b1073e0edeb751356a8fbd9cd190663127c7a9072cc4f1e4447c683b8669c5a"
+      }
+    }
+  },
+  "producerInventory": {
+    "path": "docs/evidence/scroll-view/committed-source-0203145.json",
+    "sha256": "32d92959e9650e4d09c14428037971b9be18d7bf60bf23d024173c6a1e74d321"
+  },
+  "graphics": {
+    "path": "docs/evidence/scroll-view/modal-wheel-0203145-graphics.json",
+    "sha256": "5edcfaa9c4d03eaaf00792f4556367ab90cb8bfcfeca2e2c3e8fba0750d5d2d7"
+  },
+  "executionCorrections": [
+    {
+      "attempt": "click first run",
+      "accepted": false,
+      "reason": "Root test:contracts concurrently ran the main bundle producer; integrity guard correctly aborted after2passing lanes. Raw attempt preserved, full8-lane rerun ran serially with stable77900d5b bundle and7fc host."
+    },
+    {
+      "attempt": "list first run",
+      "accepted": false,
+      "reason": "44behavior checks passed but optional retained preceding/sabotage reports were bound to787host. Stale sidecars preserved, controls regenerated on7fc before final current lane."
+    }
+  ],
+  "limitations": [
+    "Headless and headed macOS4.7.2 local proof only; new published head CI/review remains required.",
+    "Modal screenshots are Window viewport captures from an explicitly identified instrumented copy, not the untouched canonical probe.",
+    "Historical Images73/network74, Animated, examples and four ScrollView captures are not relabeled as current7fc runs.",
+    "External adapter ABI remains experimental; no mobile parity, hardware touch or full GF-14 contract acceptance."
+  ],
+  "agentBoard": {
+    "capture": {
+      "path": "docs/evidence/scroll-view/agents-0203145-testing.jpg",
+      "sha256": "d5203b3e7b5efad739075a7740b50fc19a6d16eab533fa17f3afca27e7d52d0e"
+    },
+    "state": "review",
+    "rootViewed": true,
+    "coordination": "private-interface historical overlap with LayoutAnimation was coordinated by independent hunks; no new edits there. Other paths remain reserved until merge."
+  }
+}
