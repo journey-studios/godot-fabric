@@ -212,6 +212,11 @@ function verifySoak(workload, soak, baseline) {
     assert.ok(retired.state === "unmounted" && retired.nativeTags === 0 && retired.creates === retired.deletes && retired.creates === mounted.creates,
       `${label}: a retired surface deleted every view it created`);
     assert.ok(cycle.mountFrames > 0 && cycle.unmountFrames > 0, `${label}: the surface settled and was retired`);
+    // The notification of the unmount is the snapshot taken as the root ended, with the root counts brought up to the retirement.
+    assert.ok(mounted.liveRoots >= 1 && mounted.liveRoots === mounted.rootCount && mounted.retiredRoots === cycle.before.performance.counters.retiredRoots,
+      `${label}: a mounted surface reports the live and retired roots of the application`);
+    assert.ok(retired.liveRoots >= 0 && retired.liveRoots === retired.rootCount && retired.retiredRoots === cycle.after.performance.counters.retiredRoots,
+      `${label}: the unmount notification's live roots agree with its root count and its retired roots with the application's`);
     const created = cycle.after.performance.counters.creates - cycle.before.performance.counters.creates;
     const deleted = cycle.after.performance.counters.deletes - cycle.before.performance.counters.deletes;
     assert.equal(created, mounted.creates, `${label}: the host counted the views the surface created`);

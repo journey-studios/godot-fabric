@@ -466,6 +466,24 @@ memory are recorded with their provenance and never judged; target-device budget
 graphic frame time and the mobile targets are open. The probe has no visual output, so there is no example scene or screenshot. Hosted CI is pending.
 [Evidence](docs/evidence/performance/README.md); [research](docs/research/performance.md).
 
+React Native's iOS- and Android-specific APIs keep their upstream unavailability on Godot, where
+`Platform.OS` is neither: `ToastAndroid`, `PermissionsAndroid`, `DynamicColorIOS`, `ActionSheetIOS`,
+`ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`, `PushNotificationIOS` and
+`TouchableNativeFeedback` are RN's original modules, exported from the public import, and each
+runs the branch RN itself takes off its own platform. ToastAndroid warns (its constants are 0),
+PermissionsAndroid warns and resolves `false`, `'denied'` or `{}` (on Godot that means unavailable,
+not a refusal), DynamicColorIOS, ActionSheetIOS and PushNotificationIOS throw RN's own errors,
+ProgressBarAndroid and DrawerLayoutAndroid render a plain View around their children,
+InputAccessoryView warns and renders nothing, and TouchableNativeFeedback is Pressability without an
+Android drawable. The host registers none of their native modules, and `StatusBar` is still an
+exported placeholder. The headless probe runs them in two applications against the real host
+registry, with an independent oracle that reads every text, key and count from the pinned sources;
+this slice has no native code, so the previous SDK is its control and fails exactly its normative
+checks, and three retained sabotages are rejected. A package that imports a generic deep path
+(`react-native/Libraries/Components/ToastAndroid/ToastAndroid`) still gets `undefined`; the
+Android and iOS implementations, the OS-specific props and OS-version comparisons are open. Hosted
+CI is pending. [Evidence](docs/evidence/os-contracts/README.md); [research](docs/research/os-contracts.md).
+
 This does not promise compatibility with every React Native library.
 [API and limitations](docs/API.md) define the supported contracts.
 The [parity baseline](docs/compatibility/BASELINE.md) inventories the remaining

@@ -2047,7 +2047,7 @@ examples; codegen, the native SDK pack/verify, adapters (registry 207/11, loader
 All 30 executed code/configuration inputs match implementation 0e18060 via git
 show/SHA-256 (execution base 15e1dda/dirty retained). The wrong-root release of
 concurrent presses is fixed in the host by the shared touches slice;
-concurrent presses with the touchables themselves, TouchableNativeFeedback, focus and keyboard activation, accessibility, click
+concurrent presses with the touchables themselves, focus and keyboard activation, accessibility, click
 synthesis, typed declarations and hardware remain open. Hosted Contracts run
 37394073082 (the push of main 946e624) passed all five jobs in the first
 attempt; its [audited artifact](docs/evidence/touchables/hosted-ci.json) repeats
@@ -3145,6 +3145,52 @@ board and GF-20) the performance suite passes again with its controls rebuilt on
 rest is 11.5 to 16.8 KB higher in every workload (1,802,128, 1,816,104, 1,832,944 and 1,949,872 bytes) because the
 bundle carries main's SDK additions, nodes and orphans do not change, the 2,048-byte limit holds (the same 312-byte
 worst step), and the accessibility, text-layout and device-services suites pass. Only GF-30's first-slice
+
+### iOS- and Android-specific APIs: the upstream unavailability, reproduced (2026-10-08)
+
+GF-24 becomes **In progress**; only its first-slice checkpoint becomes done, and the full item,
+contract, parity and targets remain open. The [OS-specific contracts evidence](docs/evidence/os-contracts/README.md)
+makes the public `react-native` export React Native's own `ToastAndroid`, `PermissionsAndroid`,
+`DynamicColorIOS`, `ActionSheetIOS`, `ProgressBarAndroid`, `DrawerLayoutAndroid`, `InputAccessoryView`,
+`PushNotificationIOS` and `TouchableNativeFeedback`, each on the branch RN itself takes on a platform that is
+neither iOS nor Android (`Platform.OS` is `"godot"`): **37 headless checks** in two applications of one bundle,
+against the real host registry. No checkpoint of any other item changes.
+
+The slice has no native code. `src/os-specific.js` is a CommonJS module with lazy getters (the pattern of the
+device services) that returns the original modules, the `ToastAndroid` and `DrawerLayoutAndroid` ones through
+the `...Fallback` files RN's own `.ios.js` exports, and prints RN's one-time notices; the facade re-exports them
+and wraps `TouchableNativeFeedback` with the inline-Control guard of the other touchables and RN's four statics.
+The host registers none of the modules they look up (`ToastAndroid`, `PermissionsAndroid`, `ActionSheetManager`,
+`DialogManagerAndroid`, `PushNotificationManager`, `StatusBarManager`): the registry answers `null` and
+`getEnforcing` throws, so the absence is the contract. `ToastAndroid` warns and its constants are 0;
+`PermissionsAndroid` warns and resolves `false`, `'denied'` or `{}`, which on Godot means unavailable and not a
+refusal; `DynamicColorIOS`, `ActionSheetIOS` (after RN's argument invariants) and fifteen `PushNotificationIOS`
+statics throw RN's errors; `ProgressBarAndroid` and `DrawerLayoutAndroid` render a plain View around their
+children, and the drawer's eight methods throw; `InputAccessoryView` warns on each render and renders `null`;
+`TouchableNativeFeedback` is Pressability without the Android drawable, and a real mouse and touch press gives
+`onPressIn`, `onPressOut` and `onPress`.
+
+An independent oracle reads every text, key and count from the pinned RN sources (46 operations, 16 attributed
+warnings, 44 permissions) instead of copying them, and each warning is one `HERMES:` log line. As the slice has no
+native code, the control is the previous SDK, the `src/` of main `6d02746` bundled by the same helper: it fails
+exactly the 30 normative checks of 37, and three retained in-memory sabotages (`Platform.OS` `"android"`, a silent
+Toast with a granting `PermissionsAndroid`, the self-importing generic Toast path) fail 14, 8 and 5; the oracle
+rejects all four. The research differs from Node `vm` in seven points: `addEventListener` and
+`removeEventListener` of `PushNotificationIOS` work in JavaScript, the press order is in, out, press, the flattened
+`UnimplementedView` has no native node, `InputAccessoryView` warns once per render (two at mount), a promise stays
+pending after a stop, `testID` is the touchable's, and the Android branch answers `Unsupported native command`.
+`bundleNativeProbe` gained optional `platformRoot` and `plugins`; the eleven other callers' receipts are
+byte-identical and their suites pass.
+
+Open: `StatusBar` (still an exported placeholder, with no `StatusBarManager`), the OS-specific props of other
+components, the Android and iOS implementations of these APIs (GF-34 and GF-35), the OS-version comparison, and an
+alias in `sdk/toolchain/platform-plugin.mjs` for third-party packages, whose import of RN's generic
+`ToastAndroid` or `DrawerLayoutAndroid` path still resolves `undefined`. Alert, Share, Settings and BackHandler stay
+with GF-23 (V2-D30). Hosted CI for the new step is pending.
+
+On the implementation tree (`4338d1c`) the contracts gate (301 Node/13 Python, static analysis, publication scan),
+the type check, the parity suite and the device services, accessibility, text layout, images, app state,
+appearance, frame clock, animated, modal, networking and WebSocket suites pass. Only GF-24's first-slice
 checkpoint closes; no whole GF, other checkpoint, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
@@ -3178,7 +3224,7 @@ observe the real system and retain the original event/callback contracts.
 | GF-21 · P1 · System environment and app lifecycle | In progress | Deliver real Appearance/useColorScheme, AppState, device configuration and subscription behavior. Cover system theme changes/manual override, foreground/background/focus, memory pressure and event cleanup. Test window minimization, scene pauses and mobile resume with pending timers/network/animations; remove fixed success values | GF-05, GF-07, GF-09, GF-25 |
 | GF-22 · P1 · Networking and web-standard runtime APIs | In progress | Deliver the required fetch/XHR/WebSocket, headers/body/form data/blob and abort behavior, backed by real native networking. Certify streaming/progress/cancellation, TLS/redirect/cookie policies, offline/reconnect and errors with a deterministic local test server. Freeze exactly which pinned RN globals/methods are in scope and verify module disposal | GF-05, GF-21, GF-25 |
 | GF-23 · P1 · Shared device services | In progress | Implement applicable Alert, BackHandler, Linking, Share, Vibration, Settings and legacy Clipboard behavior through typed OS modules. Include promise/callback/error/event contracts, deep links and interaction with scene/navigation roots. Verify success, denial, unavailable hardware, lifecycle and cancelled operations on exported consumers | GF-07, GF-21, GF-25 |
-| GF-24 · P1 · OS-specific public contracts | Planned | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |
+| GF-24 · P1 · OS-specific public contracts | In progress | Map every pinned iOS/Android-specific component/API/prop, including InputAccessoryView, StatusBar, PermissionsAndroid, ToastAndroid, ActionSheetIOS, DynamicColorIOS and legacy notification/drawer/progress/touchable contracts. Implement on applicable OSs and reproduce upstream unavailability elsewhere. Compare API/OS-version restrictions explicitly; deprecation does not silently remove the pinned contract | GF-09, GF-12, GF-13, GF-17, GF-18, GF-23, GF-25, GF-34, GF-35 |
 
 ## M3 — Make the platform extensible and usable outside the demos
 

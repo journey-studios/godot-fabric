@@ -1307,6 +1307,14 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
       modal_stack.unref();
     }
     retired["rootCount"] = roots.size();
+    // The snapshot above was read with this root alive. Its per-surface fields stay, and the performance
+    // section's root counts follow the retirement, so that they agree with rootCount.
+    if (auto *section = retired.get_ptr("performance")) {
+      if (auto *counters = section->get_ptr("counters")) {
+        (*counters)["liveRoots"] = static_cast<int64_t>(roots.size());
+        (*counters)["retiredRoots"] = static_cast<int64_t>(performance.retired().roots);
+      }
+    }
     retired["modalRuntimeMembers"] = modal_stack.is_valid() ? modal_stack->runtime_count() : 0;
     if (host) host->native_unmounted(runtime_id, id, gd(folly::toJson(retired)));
   }

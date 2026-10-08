@@ -203,7 +203,11 @@ test("The host counts its views, phases and Hermes heap exactly, and a soak of m
   };
   const grew = await mutated(report, "heap-grew", stages => heapAt(stages, 3000));
   const atLimit = await mutated(report, "heap-at-limit", stages => heapAt(stages, 2048));
-  for (const [name, change] of Object.entries({frozen, twice, leaked, grew})) {
+  // A notification of an unmount that still counts the root as alive, as the snapshot read before the retirement does.
+  const stale = await mutated(report, "stale-notification", stages => {
+    stages.workloads.idle.cycles[4].retiredSurface.liveRoots = 1;
+  });
+  for (const [name, change] of Object.entries({frozen, twice, leaked, grew, stale})) {
     const judged = replayChecks(binary, change.file);
     assert.equal(judged.status, 1, judged.log);
     assert.equal(judged.checks.length, replayed.checks.length, `${name}: the replay loses no check`);
@@ -223,6 +227,9 @@ test("The host counts its views, phases and Hermes heap exactly, and a soak of m
   assert.deepEqual(negatives.grew.failedChecks, [
     "chart/The live heap after each steady cycle stays within 2048 bytes of the first steady cycle's"],
   "A live heap that rose 3000 bytes in a steady cycle fails the limit");
+  assert.deepEqual(negatives.stale.failedChecks, [
+    "unmount/The notification of a root's unmount agrees with the application on its live and retired roots"],
+  "A notification that still counts the retired root as alive fails the unmount check");
   // The limit is inclusive: 2048 bytes above the first steady cycle passes the probe's check and the oracle's.
   const allowed = replayChecks(binary, atLimit.file);
   assert.equal(allowed.status, 0, allowed.log);

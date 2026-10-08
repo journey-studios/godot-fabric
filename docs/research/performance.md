@@ -3,8 +3,9 @@
 Status: executed isolated macOS validation (arm64, headless) against pinned RN 0.87.1, Hermes
 250829098.0.17 and official Godot 4.7.2. This is the first slice of GF-30. It measures and does
 not budget: it adds a `performance` section to the application snapshot, a harness that mounts and
-unmounts four workloads in a soak, and 41 headless checks (14 that hold on every host and 27 that
-need the new section). Nothing in it judges a duration, the resident memory or Godot's static
+unmounts four workloads in a soak, and 42 headless checks (14 that hold on every host and 28 that
+need the new section; the [evidence record](../evidence/performance/README.md) pins the run of the
+implementation commit, which had 41, before the review added the unmount notification's check). Nothing in it judges a duration, the resident memory or Godot's static
 memory, and nothing in it decides what a device may spend (see [Open](#open)). **The growth of the
 live Hermes heap in the steady state is bounded by a normative check of 2,048 bytes**
 ([below](#the-live-heap-in-the-steady-state-and-the-limit)).
@@ -13,7 +14,7 @@ The [evidence record](../evidence/performance/README.md) pins the run, the hosts
 slice; its hosted CI run is pending. The suite is `npm run test:performance`. It runs the probe in Godot, replays the recorded report
 through the probe's own checks, and passes the report through an independent oracle
 (`tests/performance-oracle.mjs`) that recomputes the invariants and the percentiles from the raw
-samples. The preceding host fails exactly the 27 checks that read the section, three retained
+samples. The preceding host fails exactly the 28 checks that read the section, three retained
 sabotages each fail at least one check and are rejected by the oracle, and the accounting has a C++
 unit test (`.deps/build/performance_metrics_test`) over synthetic times.
 
@@ -137,6 +138,10 @@ Normative, exact, and independent of how fast the machine is:
   bytes above its value after the first steady cycle of a workload (the first three cycles are warm-up);
 - without the `validation_performance_samples` meta the section reports aggregates and no samples, and
   with it the samples too;
+- the notification of a root's unmount, which the surface keeps as its last report, is the snapshot read as the
+  root ended with the performance section's `liveRoots` and `retiredRoots` brought up to the retirement: it agrees
+  with its own `rootCount` and with the application's reading taken afterwards (the first version read the section
+  with the root still alive and updated only `rootCount`);
 - a busy JS turn is accounted to the JS phase (at least as long as the turn was busy by the host's own
   clock, at most the pumps that ran it);
 - the report names the Godot and Hermes versions, the architecture, the operating system and the driver;

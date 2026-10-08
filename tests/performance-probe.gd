@@ -146,7 +146,9 @@ func surface_row(node: Control) -> Dictionary:
   var state := surface_state(node)
   return {"state": str(state.get("state", "")), "commits": number(state.get("commits")), "creates": number(state.get("creates")),
     "deletes": number(state.get("deletes")), "updates": number(state.get("updates")), "mountReports": number(state.get("mountReports")),
-    "nativeTags": number(state.get("nativeTags")), "retiringTags": number(state.get("retiringTags"))}
+    "nativeTags": number(state.get("nativeTags")), "retiringTags": number(state.get("retiringTags")),
+    "rootCount": number(state.get("rootCount")), "liveRoots": number(dig(state, ["performance", "counters", "liveRoots"])),
+    "retiredRoots": number(dig(state, ["performance", "counters", "retiredRoots"]))}
 
 # Frames until the surface has mounted and nothing more happens for it. Returns the frames waited,
 # or -1 if it never settled.
@@ -450,6 +452,24 @@ func check_invariants() -> void:
   section_check(tree, "invariants/At every reading the views created minus the views deleted are the native views alive")
   section_check(monotonic, "invariants/The counters, the sample counts and the totals never go down from one reading to the next")
 
+# What a surface reports of its own end is the snapshot the host took as the root was retired, with the application's root
+# count and the performance section's live and retired roots brought up to the retirement: they have to agree with each
+# other and with the application's own reading taken afterwards. While the root is mounted they agree on the one root alive.
+func check_unmount_notification() -> void:
+  var agree := true
+  var seen := 0
+  for workload: String in WORKLOADS:
+    var cycles: Array = stages.workloads[workload].cycles
+    for cycle: Dictionary in cycles:
+      var mounted: Dictionary = cycle.mountedSurface
+      var retired: Dictionary = cycle.retiredSurface
+      seen += 1
+      agree = agree and number(mounted.liveRoots) >= 1.0 and mounted.liveRoots == mounted.rootCount \
+        and mounted.retiredRoots == counter(cycle.before, "retiredRoots") \
+        and number(retired.liveRoots) >= 0.0 and retired.liveRoots == retired.rootCount \
+        and retired.retiredRoots == counter(cycle.after, "retiredRoots")
+  section_check(agree and seen == WORKLOADS.size() * CYCLES, "unmount/The notification of a root's unmount agrees with the application on its live and retired roots")
+
 func check_soak(workload: String) -> void:
   var soak: Dictionary = stages.workloads[workload]
   var cycles: Array = soak.cycles
@@ -538,6 +558,7 @@ func evaluate() -> void:
   check_heap_source()
   check_burn()
   check_invariants()
+  check_unmount_notification()
   for workload: String in WORKLOADS:
     check_soak(workload)
 

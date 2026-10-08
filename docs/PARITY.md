@@ -58,17 +58,19 @@ per-target acceptance; pending V2 decisions retain their status.
 
 ## Subsequent checkpoint — 2026-10-06
 
-The public facade now exports **44 names awaiting differential certification and 5
-explicit placeholders** (Image, ImageBackground, KeyboardAvoidingView,
-RefreshControl and StatusBar) and omits 48 of the 97 root values, as
-`npm run parity:status` counts them; Linking, Clipboard and Vibration (the first slice of
-GF-23) and Modal and SafeAreaView (the Modal slice) are the five names added to the 39 and
-subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
+The public facade now exports **56 names awaiting differential certification and 3
+explicit placeholders** (KeyboardAvoidingView, RefreshControl and StatusBar) and omits 38
+of the 97 root values, as `npm run parity:status` counts them; Linking, Clipboard and Vibration
+(the first slice of GF-23), Modal and SafeAreaView (the Modal slice), AssetRegistry with Image and
+ImageBackground (the Image slice, which also took those two out of the placeholders), and
+ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid,
+DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback (the first
+slice of GF-24) are the seventeen names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
 keeps those counts and a per-area table of the evidence below. The tables further
 down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
-remain the 2026-10-01 snapshot, except the three GF-23 entries now updated (4 usable
-components, 12 environment names, 14 unavailable names and 67 missing), and must not be
-read as current counts.
+remain the 2026-10-01 snapshot, except the three GF-23 entries and the nine GF-24 entries
+now updated (5 usable components, 20 environment names, 14 unavailable names and 58
+missing), and must not be read as current counts.
 
 Since the 2026-10-03 checkpoint these slices ran on macOS arm64 over original RN
 source, each with retained negative controls and a hosted CI run that repeated its
@@ -120,6 +122,15 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   most 2,048 bytes in the steady state (a measured 0 to 312). Durations, the resident
   memory and Godot's static memory are recorded and never judged. Target-device budgets, text shaping,
   10,000 rows, graphic frame time and the mobile targets stay open.
+- **OS-specific contracts:** the original [ToastAndroid (its fallback), PermissionsAndroid, DynamicColorIOS,
+  ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid (its fallback), InputAccessoryView, PushNotificationIOS
+  and TouchableNativeFeedback](evidence/os-contracts/README.md), each on the branch RN takes off its own
+  platform, with no host module (GF-24's first slice: reproduce the upstream unavailability; a headless probe in two
+  applications with an independent oracle that reads every text, key and count from the pinned sources, the
+  previous SDK as the control because the slice has no native code, and three retained sabotages; its hosted CI run
+  is pending). `'denied'` and `false` from PermissionsAndroid mean unavailable on Godot. StatusBar stays a placeholder.
+  The Android and iOS implementations, the OS-specific props and the OS-version comparison stay open, and so does the
+  toolchain alias for the generic deep paths, which still resolve to `undefined`.
 
 None of these is an original-native differential: the 13-case core-ui-v2
 comparison with iOS and Android remains the only one. They complete no GF item
@@ -184,10 +195,10 @@ explain the scope.
 
 | Current public facade classification | Count | Meaning |
 | --- | ---: | --- |
-| Usable component subset | 4 | View, Text, Pressable, ScrollView; none certifies its complete upstream contract |
-| Environment/utility subset | 12 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration |
+| Usable component subset | 5 | View, Text, Pressable, ScrollView, TouchableNativeFeedback; none certifies its complete upstream contract |
+| Environment/utility subset | 20 | StyleSheet, Platform, Dimensions, PixelRatio, Appearance, AppState, AccessibilityInfo, I18nManager, useWindowDimensions, Linking, Clipboard, Vibration, ToastAndroid, PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid, InputAccessoryView, PushNotificationIOS |
 | Exported but unavailable | 14 | TextInput, Image/ImageBackground, Switch, touchables, ActivityIndicator, StatusBar, FlatList, VirtualizedList, KeyboardAvoidingView, PanResponder, useColorScheme throw when used |
-| Missing public export | 67 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
+| Missing public export | 58 | Includes Button, SectionList, Modal, Animated, AppRegistry, Keyboard, Networking and module/codegen entrypoints |
 
 The inventory assigns **84 exports to 1.0** and **13 experimental/unstable
 exports to post-1.0 review**. These are scope assignments, not promises already
