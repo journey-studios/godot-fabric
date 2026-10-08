@@ -269,6 +269,10 @@ func finish(initial: Dictionary) -> void:
     "cycles": CYCLES, "newGamesPerCycle": NEW_GAMES_PER_CYCLE, "bindings": BINDINGS, "baseline": baseline, "series": series,
     "checks": checks, "beforeStop": initial, "afterStop": state()}
   var output := FileAccess.open(REPORT, FileAccess.WRITE)
+  if output == null:
+    push_error("CONSUMER_CHECK_FAILED: cannot write " + REPORT)
+    get_tree().quit(1)
+    return
   output.store_string(JSON.stringify(report, "  ") + "\n")
   output.close()
   var failures := checks.filter(func(entry: Dictionary) -> bool: return not entry.passed)

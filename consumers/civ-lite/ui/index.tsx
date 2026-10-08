@@ -159,11 +159,20 @@ function Hud() {
   useEffect(() => {
     seen.screen = screen;
   }, [screen]);
+  // The screen follows the answer: a call that was rejected (null) or refused (ok 0) leaves the HUD where it was.
   const openMenu = () => {
-    void dispatch(FRONTIER_OPEN_MENU, []).then(() => setScreen("menu"));
+    void dispatch(FRONTIER_OPEN_MENU, []).then(result => {
+      if (result !== null && result.ok === 1) {
+        setScreen("menu");
+      }
+    });
   };
   const newGame = () => {
-    void dispatch(FRONTIER_NEW_GAME, []).then(() => setScreen("game"));
+    void dispatch(FRONTIER_NEW_GAME, []).then(result => {
+      if (result !== null && result.ok === 1) {
+        setScreen("game");
+      }
+    });
   };
   return screen === "menu" ? <MenuScreen onNewGame={newGame} /> : <GameScreen onMenu={openMenu} onNewGame={newGame} />;
 }

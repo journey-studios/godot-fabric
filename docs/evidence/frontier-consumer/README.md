@@ -1,5 +1,15 @@
 # Frontier: o consumidor provisionado pelo addon e dez ciclos sem vazamento
 
+> **Registro fixado.** As contagens e os fontes abaixo são os da execução sobre o commit de implementação `b0509db` (rodada no
+> merge `029416f`): 145 checks nativos e quatro sabotagens, com 29, 19, 21 e 3 falhas. Uma rodada de revisão do CodeRabbit
+> mudou depois dois arquivos do template, sem mudar nenhuma contagem: no `ui/index.tsx`, a tela da HUD só muda quando a chamada
+> (`frontier.open_menu` ou `frontier.new_game`) é aceita (`ok: 1`), e não mais também quando é rejeitada ou recusada; e no
+> `validation.gd`, a escrita do relatório é guardada contra uma falha de abertura do arquivo (`CONSUMER_CHECK_FAILED: cannot write`
+> e saída 1). A suíte atual foi rodada de novo com essas mudanças e passa: **145 checks nativos** (18 de build e posse sem as
+> capturas), os mesmos 21 nós, 0 órfãos, 14 bindings, 1 assinatura, 2 conexões e 1 da HUD em todos os ciclos, o epoch de 4 a 31, e
+> as **4 de 4 sabotagens** rejeitadas com as mesmas falhas (29, 19, 21 e 3). O recibo, os SHA-256 e os links continuam descrevendo
+> `b0509db`; o `execution.json` não foi refeito.
+
 Esta fatia fecha o critério `consumidor` do V05-03 do marco 0.5, ligada ao GF-07, sobre o jogo do GF-28 e os serviços do
 [registro anterior](../frontier-services/README.md). O **Frontier** deixa de ser um jogo que só roda no projeto raiz do
 laboratório e vira um **projeto consumidor** de verdade: o template
