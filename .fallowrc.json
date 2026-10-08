@@ -3,6 +3,7 @@
   "entry": [
     "dashboard/app.mjs",
     "dashboard/style.css",
+    "dashboard/agents.css",
     "examples/entry.jsx",
     "src/initialize.js",
     "src/private-interface.js",
@@ -54,6 +55,7 @@
     "tests/appearance-fixture.jsx",
     "tests/native-animated-fixture.jsx",
     "tests/frame-clock-fixture.jsx",
+    "tests/text-layout-fixture.jsx",
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
     "tests/websocket-fixture.jsx",
@@ -257,6 +259,7 @@
             "SafeAreaView",
             "Switch",
             "SwitchChangeEvent",
+            "TextLayoutEvent",
             "ActivityIndicator",
             "StyleSheet",
             "AppRegistry",
@@ -402,6 +405,7 @@
     }
   ],
   "ignoreUnresolvedImports": [
-    "@godot-fabric/runtime"
+    "@godot-fabric/runtime",
+    "./agents.json"
   ]
 }

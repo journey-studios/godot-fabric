@@ -51,7 +51,7 @@ from planned RN compatibility.
 | --- | --- | --- |
 | React | State/effects, Context, memo, keyed identity, callback refs/cleanup, external store, transitions, async Suspense, error boundaries, concurrent root | Production renderer; no certified dev StrictMode, Fast Refresh or DevTools integration |
 | View / Yoga | Original public RCTView/View descriptor, Yoga layout, Fabric stacking order, rectangular overflow clipping, solid physical-edge border colors, public geometry and planar 2D affine styles, a singular one collapsing its View as RN does | RTL, 3D transforms, rounded descendant masks, fractional geometry and full StyleSheet utilities remain open |
-| Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip | Two bundled families plus initial Theme default; no selection, span press, onTextLayout, inline Controls, italic/decoration/shadow, head/middle ellipsis |
+| Text | Nested/composite Text, inherited attributes, variable family/weight, size/spacing, lineHeight, wrapping, left/center/right alignment, numberOfLines, tail/clip, `onTextLayout` on the outer paragraph (one entry per visible line) and the Yoga baseline for `alignItems`/`alignSelf: 'baseline'`, both from the lines the host measures and paints ([record](evidence/text-layout/README.md), [research](research/text-layout.md)) | Two bundled families plus initial Theme default; no selection, span press, inline Controls, italic/decoration/shadow, head/middle ellipsis, font scaling; `onTextLayout` is not emitted on a nested span, as in RN |
 | Button | Public title/onPress/disabled/static color/testID/ref; native Button, measured title and keyboard activation | Godot color sets the background; casing is preserved; callback has no mobile gesture payload; accessibility/TV props are rejected |
 | Switch | RN's original Switch.js over RN's shared iOS/macOS Switch descriptor: value, onValueChange/onChange, disabled, trackColor/thumbColor/ios_backgroundColor, setValue restore of an unchanged value, testID/ref; mouse click and touch tap | 63×28 default frame (RN's iOS 26 size); custom-drawn, without animation, thumb dragging, keyboard activation or accessibility; Android-only props are unused |
 | ActivityIndicator | RN's original ActivityIndicator.js over the generated ActivityIndicatorView descriptor: animating, hidesWhenStopped, color, small/large/numeric size, testID/ref; the spinner advances with real frame time only while animating | Custom-drawn eight-spoke spinner filling the frame (UIKit keeps its own size); RN's iOS gray without a color; no accessibility or reduced-motion handling |
@@ -455,9 +455,28 @@ tooling and exports remain pending.
   accept text attributes; layout/background styles and inline Controls fail.
 - Latin accents are exercised. Bidi, emoji/fallback and colored truncation
   need dedicated tests before claiming parity.
+- `onTextLayout` receives RN's event, `{lines}`, where each line has `text`, `x`,
+  `y`, `width`, `height`, `ascender`, `descender`, `capHeight` and `xHeight`: the
+  line box with the baseline inside it as on iOS (an explicit `lineHeight`
+  centres the baseline), `capHeight` and `xHeight` as the ink height of "T" and
+  "x" as on Android, and `text` without the host's internal sentinel. It is
+  emitted after the layout, once per change of the lines (a change of color, or
+  a width that wraps the same lines, emits nothing), with one line per visible
+  line under `numberOfLines`. The same lines give Yoga the baseline of a Text in
+  a baseline-aligned row. Measured against the bundled fonts' tables the
+  host is within one pixel
+  ([tolerance](research/text-layout.md#tolerance-measured)).
+- `onTextLayout` must be a function (or `undefined`/`null`): any other value
+  throws `Godot Text onTextLayout must be a function`. A nested `Text` ignores it, as RN's
+  virtual text does. `onPress`, `onPressIn`, `onPressOut`, `onLongPress`,
+  `selectable` and `adjustsFontSizeToFit` still throw
+  `Godot Text does not implement <name>`.
+- The text of a truncated last line, empty text, a `lineHeight` smaller than the
+  font and lines beyond a fixed node height differ between RN's platforms and
+  are not part of the contract ([divergences](research/text-layout.md#documented-divergences-not-normative)).
 - The initial Theme font is captured from the application's first surface.
-  Per-root Theme fonts, dynamic Theme/font loading, system font scaling and
-  React Native baseline semantics are pending.
+  Per-root Theme fonts, dynamic Theme/font loading and system font scaling
+  are pending.
 
 ## Platform and performance
 

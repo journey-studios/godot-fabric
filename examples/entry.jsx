@@ -28,7 +28,7 @@ const typography =
   globalThis.godotScenario === "typography"
     ? require("./typography/App")
     : null;
-if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms", "animated", "switch", "activity-indicator", "touchables", "virtualized-list", "appearance", "pan-responder", "networking", "images", "device-services"].includes(globalThis.godotScenario)) {
+if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics", "services", "service-boundaries", "modules", "view", "coordinates", "transforms", "animated", "switch", "activity-indicator", "touchables", "virtualized-list", "appearance", "pan-responder", "networking", "images", "device-services", "text-layout"].includes(globalThis.godotScenario)) {
   if (globalThis.godotScenario === "shared") require("./shared/App");
   else if (globalThis.godotScenario === "refs") require("./refs/App");
   else if (globalThis.godotScenario === "tree") require("./tree/App");
@@ -47,6 +47,7 @@ if (["shared", "refs", "tree", "focus", "pointers", "pointer-geometry", "metrics
   else if (globalThis.godotScenario === "pan-responder") require("./pan-responder/App");
   else if (globalThis.godotScenario === "networking") require("./networking/App");
   else if (globalThis.godotScenario === "images") require("./images/App");
+  else if (globalThis.godotScenario === "text-layout") require("./text-layout/App");
   else if (globalThis.godotScenario === "device-services") require("./device-services/App");
   else if (globalThis.godotScenario === "services") require("./services/App");
   else if (globalThis.godotScenario === "service-boundaries") require("../tests/services-boundary-fixture");
