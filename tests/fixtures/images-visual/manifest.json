@@ -1,0 +1,60 @@
+{
+  "format": "godot-fabric.image-visual-fixtures/v1",
+  "generator": "scripts/images-visual-fixtures.mjs",
+  "files": {
+    "frame@2x.png": {
+      "sha256": "5a30cc4252b42b59cb666d190b640077c10e03643931980f336449cb5ef93769",
+      "bytes": 176,
+      "width": 36,
+      "height": 36,
+      "scale": 2,
+      "fingerprint": "436a5d97284e8095"
+    },
+    "glyph.png": {
+      "sha256": "7c13002e0463de7f38bff5d56f567299c6c1a26883edd5a5d54ed8d0fe036380",
+      "bytes": 190,
+      "width": 12,
+      "height": 9,
+      "scale": 1,
+      "fingerprint": "42fe6f3da43829d7",
+      "blurred": {
+        "5": "2c8b67e3f880e6be"
+      }
+    },
+    "glyph@2x.png": {
+      "sha256": "8022e7933ed1173b37bd2c3dca4906ac33b5c3d0ed6678edda909d3070043b84",
+      "bytes": 447,
+      "width": 24,
+      "height": 18,
+      "scale": 2,
+      "fingerprint": "884a0ccc5108ffbd",
+      "blurred": {
+        "3": "3e2bad9e65b4ca65",
+        "5": "073c61e466b7c825",
+        "7": "15e6a9cc09aff905",
+        "11": "8c6636d064fb8c81"
+      }
+    },
+    "glyph@3x.png": {
+      "sha256": "8789326078c36f3a10f4f10117513aa854d9ed0322aee663f225010006d9e11e",
+      "bytes": 884,
+      "width": 36,
+      "height": 27,
+      "scale": 3,
+      "fingerprint": "4050f85763e1fd89",
+      "blurred": {
+        "11": "4dfc0f0e8ce14267",
+        "85": "91ebf1ff04bac655"
+      }
+    }
+  },
+  "shared": {
+    "formats/format.png": {
+      "fingerprint": "c4a310cd86695025",
+      "blurred": {
+        "3": "04f022de7e575a29",
+        "5": "5aa4c9232d91959d"
+      }
+    }
+  }
+}

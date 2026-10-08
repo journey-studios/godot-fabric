@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {validateImageProps} from "../src/image-contract.mjs";
 
-// The contract of the Godot Image: which of RN's ImageProps it refuses, before RN's Image.ios.js renders anything.
-const style = {width: true, height: true, opacity: true, backgroundColor: true, borderWidth: true, position: true};
+// The contract of the Godot Image: which of RN's ImageProps are mistakes, before RN's Image.ios.js renders anything.
+const style = {width: true, height: true, opacity: true, backgroundColor: true, borderWidth: true, position: true, borderRadius: true, borderTopLeftRadius: true,
+  borderTopRightRadius: true, borderBottomLeftRadius: true, borderBottomRightRadius: true};
 const registered = id => id === 1;
 const check = (props, flat = props.style) => validateImageProps(props, flat, style, registered);
 
@@ -19,17 +20,29 @@ test("the props the host implements pass, including sources it cannot load: a ur
   check({style: {width: 4, height: 4, resizeMode: "none", objectFit: "scale-down", opacity: 0.5, borderWidth: 1, tintColor: undefined}});
 });
 
-test("each prop the host has no native half for yet fails with its name, and says why", () => {
-  const later = {tintColor: "#f00", blurRadius: 2, capInsets: {top: 1}, defaultSource: 1, loadingIndicatorSource: {uri: "x"}, fadeDuration: 1,
-    progressiveRenderingEnabled: true, resizeMethod: "resize", resizeMultiplier: 2, overlayColor: "#fff"};
-  for (const [name, value] of Object.entries(later)) {
-    assert.throws(() => check({[name]: value}), new RegExp(`^Error: Godot Image does not implement ${name} yet: `), name);
+test("the props that draw and the props iOS ignores are taken: none is refused", () => {
+  check({tintColor: "#f00", blurRadius: 2, capInsets: {top: 1, left: 1, bottom: 1, right: 1}});
+  check({capInsets: 4});
+  check({capInsets: {top: 1}});
+  check({blurRadius: 0});
+  for (const [name, value] of Object.entries({defaultSource: 1, loadingIndicatorSource: {uri: "x"}, fadeDuration: 1, progressiveRenderingEnabled: true,
+    resizeMethod: "resize", resizeMultiplier: 2, overlayColor: "#fff"})) {
+    check({[name]: value});
   }
   for (const name of ["tintColor", "overlayColor"]) {
-    assert.throws(() => check({style: {[name]: "#f00"}}), new RegExp(`style\\.${name} yet: `), name);
+    check({style: {[name]: "#f00"}});
   }
   for (const name of ["borderRadius", "borderTopLeftRadius", "borderTopRightRadius", "borderBottomLeftRadius", "borderBottomRightRadius"]) {
-    assert.throws(() => check({style: {[name]: 4}}), new RegExp(`style\\.${name} yet: the host clips rectangles only`), name);
+    check({style: {[name]: 4}});
+  }
+});
+
+test("a blur radius and cap insets that are not numbers are mistakes", () => {
+  for (const value of ["2", Number.NaN, Number.POSITIVE_INFINITY, {}]) {
+    assert.throws(() => check({blurRadius: value}), /^Error: Godot Image blurRadius must be a finite number$/, String(value));
+  }
+  for (const value of ["1", [1, 2, 3, 4], [1, 2, 3], {top: "1"}, {middle: 1}, Number.NaN]) {
+    assert.throws(() => check({capInsets: value}), /^Error: Godot Image capInsets must be a number or an object of top, left, bottom and right numbers$/, JSON.stringify(value));
   }
 });
 

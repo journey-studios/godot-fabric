@@ -10,10 +10,16 @@ const DEVICE := 1001
 const SCALE := 2.0
 const MODES := ["cover", "contain", "stretch", "center", "repeat", "none"]
 const IMAGE_IDS := ["images-mode-cover", "images-mode-contain", "images-mode-stretch", "images-mode-center", "images-mode-repeat", "images-mode-none",
-  "images-logo", "images-data-png", "images-data-svg", "images-background", "images-missing", "images-net-photo", "images-net-missing", "images-preview"]
+  "images-logo", "images-data-png", "images-data-svg", "images-background", "images-missing", "images-net-photo", "images-net-missing", "images-preview",
+  "images-tint-plain", "images-tint", "images-blur", "images-caps", "images-caps-plain", "images-avatar", "images-avatar-border"]
 const BACKGROUND := Color8(30, 41, 59)
 const RED := Color8(239, 68, 68)
 const WHITE := Color8(255, 255, 255)
+# The ground of the tiles' stages, the tint of the icon, the border of the card and the border of the second avatar.
+const STAGE := Color8(17, 28, 51)
+const TINT := Color8(249, 115, 22)
+const PINK := Color8(244, 114, 182)
+const SKY := Color8(56, 189, 248)
 # A 120x60 point landscape in an 84x84 frame, as UIKit's content modes draw it: [dst, src] in points of the content frame and the picture.
 const TILE_RECTS := {
   "cover": [[0.0, 0.0, 84.0, 84.0], [30.0, 0.0, 60.0, 60.0]], "contain": [[0.0, 21.0, 84.0, 42.0], [0.0, 0.0, 120.0, 60.0]],
@@ -206,6 +212,53 @@ func _ready() -> void:
   surface.set_meta("validation_input_device", DEVICE)
   await run()
 
+# What is done to the pictures, read from what each native view asked the renderer for: its shader parameters and its drawing commands.
+func effects_of(id: String) -> Dictionary:
+  var value: Variant = view(id).get("drawn", null)
+  var found: Variant = value.get("effects", null) if value is Dictionary else null
+  return found if found is Dictionary else {}
+
+func layer_of(id: String) -> Dictionary:
+  var found: Variant = effects_of(id).get("layer", null)
+  return found if found is Dictionary else {}
+
+func command_of(id: String) -> Dictionary:
+  var all: Variant = layer_of(id).get("commands", [])
+  return all[0] if all is Array and all.size() == 1 and all[0] is Dictionary else {}
+
+func clip_radii(id: String, which: String) -> Dictionary:
+  var clip: Variant = effects_of(id).get("clip", null)
+  var shape: Variant = clip.get(which, null) if clip is Dictionary else null
+  var radii: Variant = shape.get("radii", null) if shape is Dictionary else null
+  return radii if radii is Dictionary else {}
+
+func clip_rect(id: String, which: String) -> Array:
+  var clip: Variant = effects_of(id).get("clip", null)
+  var shape: Variant = clip.get(which, null) if clip is Dictionary else null
+  return rect(shape.get("rect", null)) if shape is Dictionary else []
+
+func verify_effects() -> void:
+  var tint: Variant = view("images-tint").get("props", {}).get("tint", null)
+  verify(tint is Array and close(tint, [TINT.r, TINT.g, TINT.b, 1.0]) and bool(layer_of("images-tint").get("shaded", false)) and bool(layer_of("images-tint").get("material", false))
+    and not bool(layer_of("images-tint-plain").get("shaded", true)) and not bool(layer_of("images-tint-plain").get("material", true)),
+    "tintColor reaches the picture's own item as the shader's tint, and the icon beside it, with none, uses no shader")
+  var blurred := picture("images-blur")
+  var blurs: Array = loader().jobs.filter(func(job: Dictionary) -> bool: return job.blur.applies)
+  verify(int(blurred.get("blur", {}).get("kernel", 0)) == 7 and bool(blurred.get("blur", {}).get("applies", false)) and int(blurred.get("blur", {}).get("passes", 0)) == 2
+    and blurs.size() == 1 and blurs[0].thread.worker == true and String(blurs[0].thread.id) != String(loader().hostThread) and effects_of("images-blur").get("tint", 1) == null,
+    "blurRadius 8 at scale 1 is a box of 7 pixels, blurred twice on a worker thread, and the picture it made is its own and plain")
+  var margins: Dictionary = command_of("images-caps").get("margins", {})
+  verify(effects_of("images-caps").get("kind") == "ninePatch" and command_of("images-caps").get("op") == "ninePatch"
+    and [float(margins.get("left", 0)), float(margins.get("top", 0)), float(margins.get("right", 0)), float(margins.get("bottom", 0))] == [20.0, 20.0, 20.0, 20.0]
+    and close(rect(command_of("images-caps").get("dst", null)), [0.0, 0.0, 192.0, 76.0]) and effects_of("images-caps-plain").get("kind") == "region",
+    "capInsets of 10 points are 20-pixel margins of a nine-patch over the 96x38 point frame, and the same card without them is one stretched rectangle")
+  var round := clip_radii("images-avatar", "outer")
+  var inner := clip_radii("images-avatar-border", "inner")
+  verify(close(round.get("horizontal", []), [22.0, 22.0, 22.0, 22.0]) and close(clip_rect("images-avatar", "inner"), [0.0, 0.0, 44.0, 44.0])
+    and close(clip_radii("images-avatar-border", "outer").get("horizontal", []), [14.0, 14.0, 14.0, 14.0]) and close(inner.get("horizontal", []), [11.0, 11.0, 11.0, 11.0])
+    and close(clip_rect("images-avatar-border", "inner"), [3.0, 3.0, 38.0, 38.0]),
+    "The avatars clip to the border box with their radius, and the one with a border also to the content frame with the radius less its 3 point border")
+
 # The network row: a PNG downloaded from the scene's server, and an address it answers 404 for.
 func verify_network(state: Dictionary, jobs: Array) -> void:
   var photo := view("images-net-photo")
@@ -229,9 +282,47 @@ func verify_network(state: Dictionary, jobs: Array) -> void:
     and String(node_of("net-missing-status").get("nativeText", "")) == "HTTP 404",
     "A 404 fails through onError with Failed to load <URL>, the status and the response headers, leaves no texture, and the tile shows the status")
 
+# Whether the edge of a rounded picture is anti-aliased: walking the diagonal of each corner from the ground inwards, a pixel is
+# neither the ground nor the picture beside it (a tenth to nine tenths of the way to the pixel two steps on). A hard edge has none.
+func partial_pixels(image: Image, id: String) -> int:
+  var area := region(control(id))
+  var found := 0
+  for corner in range(4):
+    var colors: Array = []
+    for step in range(0, 24):
+      var x := area.position.x + (step if corner % 2 == 0 else area.size.x - 1 - step)
+      var y := area.position.y + (step if corner < 2 else area.size.y - 1 - step)
+      colors.append(image.get_pixel(x, y))
+    for index in range(0, 22):
+      var whole := absf(colors[index + 2].r - STAGE.r) + absf(colors[index + 2].g - STAGE.g) + absf(colors[index + 2].b - STAGE.b)
+      var here := absf(colors[index].r - STAGE.r) + absf(colors[index].g - STAGE.g) + absf(colors[index].b - STAGE.b)
+      if whole > 0.4 and here > 0.1 * whole and here < 0.9 * whole:
+        found += 1
+  return found
+
+# What the renderer drew of the four effects: the pixels of the saved frame, at points of each Control.
+func verify_pixels(image: Image) -> void:
+  var yellow := Color8(250, 204, 21)
+  verify(near(pixel(image, "images-tint", Vector2(16, 16)), TINT) and near(pixel(image, "images-tint", Vector2(16, 8)), TINT) and near(pixel(image, "images-tint", Vector2(16, 3)), TINT)
+    and near(pixel(image, "images-tint", Vector2(1, 1)), STAGE) and near(pixel(image, "images-tint-plain", Vector2(16, 16)), yellow) and not near(pixel(image, "images-tint-plain", Vector2(16, 3)), TINT),
+    "The renderer paints every pixel of the tinted icon in the tint (its dot, its ring and its body alike) and its transparent corner not at all, while the icon beside it keeps its colors")
+  var sharp_edge := pixel(image, "images-mode-cover", Vector2(61.5, 33.6))
+  var soft_edge := pixel(image, "images-blur", Vector2(61.5, 33.6))
+  verify(not near(sharp_edge, soft_edge) and near(pixel(image, "images-mode-cover", Vector2(10, 10)), pixel(image, "images-blur", Vector2(10, 10))),
+    "The renderer shows the blurred landscape soft where the sharp one has an edge (the sun's), and the same where it is smooth")
+  verify(near(pixel(image, "images-caps", Vector2(1, 19)), PINK) and not near(pixel(image, "images-caps", Vector2(5, 19)), PINK) and near(pixel(image, "images-caps", Vector2(48, 1)), PINK)
+    and near(pixel(image, "images-caps", Vector2(0.5, 0.5)), STAGE) and near(pixel(image, "images-caps-plain", Vector2(5, 19)), PINK),
+    "The renderer keeps the card's 2 point border and round corners at the size of the picture when capInsets stretch it, and shows the border four times as wide when they do not")
+  verify(near(pixel(image, "images-avatar", Vector2(1, 1)), STAGE) and near(pixel(image, "images-avatar", Vector2(22, 22)), Color8(248, 250, 252)) and partial_pixels(image, "images-avatar") >= 2,
+    "The renderer clips the avatar to a circle, with an anti-aliased edge: its corners show the ground and its centre the picture")
+  verify(near(pixel(image, "images-avatar-border", Vector2(0.5, 0.5)), STAGE) and near(pixel(image, "images-avatar-border", Vector2(1.5, 22)), SKY)
+    and near(pixel(image, "images-avatar-border", Vector2(5.2, 5.2)), SKY) and not near(pixel(image, "images-avatar-border", Vector2(4.5, 22)), SKY)
+    and near(pixel(image, "images-avatar-border", Vector2(22, 22)), Color8(248, 250, 252)),
+    "The renderer draws the border of the second avatar whole, round corner included, and the picture inside it, clipped by the radius less the border")
+
 func run() -> void:
   var mounted := await wait_for(func() -> bool: return IMAGE_IDS.all(func(id: String) -> bool: return control(id) != null) and control("images-next-mode") != null)
-  verify(mounted, "The public example mounts its fourteen Images and its two buttons, and the third button waits for the click that mounts a fifteenth")
+  verify(mounted, "The public example mounts its twenty-one Images and its two buttons, and the third button waits for the click that mounts a twenty-second")
   var ready := await wait_for(settled)
   await frames(6)
   verify(ready and nodes().filter(func(entry: Dictionary) -> bool: return entry.get("kind") == "image").size() == IMAGE_IDS.size(),
@@ -275,10 +366,11 @@ func run() -> void:
   # A download that fails before its body is a picture (the 404) has nothing to decode and never reaches a worker.
   var workers := jobs.all(func(job: Dictionary) -> bool: return String(job.format) == "" or (job.thread.worker == true and String(job.thread.id) != String(state_of_loader.hostThread)))
   verify(jobs.size() == IMAGE_IDS.size() and workers and jobs.filter(func(job: Dictionary) -> bool: return String(job.format) != "").size() == IMAGE_IDS.size() - 2
-    and int(state_of_loader.counters.failed) == 2 and int(state_of_loader.counters.loaded) == 12,
-    "All fourteen pictures were asked for, the twelve that exist were read and decoded on worker threads, twelve loaded and two failed")
+    and int(state_of_loader.counters.failed) == 2 and int(state_of_loader.counters.loaded) == IMAGE_IDS.size() - 2,
+    "All twenty-one pictures were asked for, the nineteen that exist were read and decoded on worker threads, nineteen loaded and two failed")
   stages.mounted = {"example": state, "loader": state_of_loader, "nodes": nodes()}
   verify_network(state, jobs)
+  verify_effects()
   var image := await capture("all-modes")
   if image != null:
     var tile_samples := {}
@@ -300,6 +392,7 @@ func run() -> void:
     verify(distinct.size() == MODES.size(), "The six tiles are drawn differently: six distinct renderer digests")
     verify(samples["all-modes"]["images-missing"] != samples["all-modes"]["images-logo"], "The failed picture left no pixels of a picture")
     stages.pixels = tile_samples
+    verify_pixels(image)
 
   # Real clicks cycle the preview through the six modes, with no new load.
   var requested := int(loader().counters.requested)

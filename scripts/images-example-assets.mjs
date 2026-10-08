@@ -4,8 +4,10 @@ import {fileURLToPath} from "node:url";
 import {encodePng} from "../tests/images-pattern.mjs";
 
 // Draws the pictures of examples/images: a logo at three densities (logo.png, logo@2x.png and logo@3x.png, the same drawing
-// at 32, 64 and 96 pixels), a landscape that shows how each resize mode crops, pads or repeats a picture, and the small
-// sprite the example embeds as a data URI. The files are committed; run this only to draw them again:
+// at 32, 64 and 96 pixels), a landscape that shows how each resize mode crops, pads or repeats a picture, the small
+// sprite the example embeds as a data URI, and the three pictures of what is done to a picture: an icon on a transparent
+// ground (tinted), an avatar (clipped to rounded corners) and a panel (stretched by cap insets), each at two densities. The files
+// are committed; run this only to draw them again:
 //   node scripts/images-example-assets.mjs
 const root = fileURLToPath(new URL("..", import.meta.url));
 const directory = path.join(root, "examples/images/assets");
@@ -60,9 +62,53 @@ const spritePicture = {width: 32, height: 32, pixel(x, y) {
   return face > 12.5 ? [217, 119, 6, 255] : [250, 204, 21, 255];
 }};
 
+// Supersampled, like the logo: `shade(u, v)` gives the color of a point of the unit square, or null where the picture is transparent.
+function drawn(size, shade) {
+  const samples = 4;
+  return {width: size, height: size, pixel(x, y) {
+    let r = 0, g = 0, b = 0, a = 0;
+    for (let sy = 0; sy < samples; sy++) {
+      for (let sx = 0; sx < samples; sx++) {
+        const color = shade((x + (sx + 0.5) / samples) / size, (y + (sy + 0.5) / samples) / size);
+        if (color == null) continue;
+        r += color[0]; g += color[1]; b += color[2]; a += 255;
+      }
+    }
+    const count = samples * samples;
+    return a === 0 ? [0, 0, 0, 0] : [Math.round(r / (a / 255)), Math.round(g / (a / 255)), Math.round(b / (a / 255)), Math.round(a / count)];
+  }};
+}
+
+// A disc on a transparent ground: a gradient body, a white ring and a yellow dot. Every pixel is opaque or partly so, and a tint takes them all.
+const iconAt = size => drawn(size, (u, v) => {
+  const ring = Math.hypot(u - 0.5, v - 0.5);
+  if (ring > 0.46) return null;
+  if (ring < 0.1) return [250, 204, 21];
+  if (ring > 0.22 && ring < 0.3) return [248, 250, 252];
+  return mix([14, 165, 233], [99, 102, 241], (u + v) / 2);
+});
+
+// A portrait on a gradient that covers the whole square: its corners are what a rounded clip takes away.
+const avatarAt = size => drawn(size, (u, v) => {
+  if (Math.hypot((u - 0.5) / 0.17, (v - 0.4) / 0.17) < 1 || Math.hypot((u - 0.5) / 0.36, (v - 1) / 0.32) < 1) return [248, 250, 252];
+  return mix([244, 114, 182], [99, 102, 241], (u + v) / 2);
+});
+
+// A card whose border is two points wide and whose corners are eight points round, on a transparent ground (24 points at any density):
+// a nine-patch with cap insets of ten points keeps both, whatever size it is stretched to.
+const panelAt = size => drawn(size, (u, v) => {
+  const x = u * 24, y = v * 24;
+  const dx = Math.max(Math.abs(x - 12) - 4, 0), dy = Math.max(Math.abs(y - 12) - 4, 0);
+  const outside = Math.hypot(dx, dy);
+  if (outside > 8) return null;
+  if (outside > 6) return [244, 114, 182];
+  return mix([30, 41, 59], [51, 65, 85], v);
+});
+
 await mkdir(directory, {recursive: true});
 for (const [name, picture] of [["logo.png", logoAt(32)], ["logo@2x.png", logoAt(64)], ["logo@3x.png", logoAt(96)], ["landscape.png", landscape], ["tile.png", tile],
-  ["sprite.png", spritePicture]]) {
+  ["sprite.png", spritePicture], ["icon.png", iconAt(32)], ["icon@2x.png", iconAt(64)], ["avatar.png", avatarAt(56)], ["avatar@2x.png", avatarAt(112)],
+  ["panel.png", panelAt(24)], ["panel@2x.png", panelAt(48)]]) {
   const bytes = encodePng(picture);
   await writeFile(path.join(directory, name), bytes);
   console.log(`${name} ${picture.width}x${picture.height} ${bytes.length} bytes`);

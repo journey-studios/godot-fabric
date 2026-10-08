@@ -1,35 +1,35 @@
 // What the Godot Image takes of RN's ImageProps. RN's own Image.ios.js renders the host component; this contract
-// decides, before it does, which of its props this host has no native implementation for yet. Those fail where the
-// Image renders, with the next slice named, instead of being dropped. A source's uri is runtime data, so an unreadable
+// decides, before it does, which of its props are mistakes. A source's uri is runtime data, so an unreadable
 // one is no mistake here: it fails as a load, through onError. The request a source makes (headers, method, body and cache,
 // which crossOrigin and referrerPolicy turn into headers) belongs to the network, and reaches it as RN's ImageSource gives it.
+//
+// Every other prop of RN's ImageProps is taken, as the reference platform takes it. tintColor, blurRadius and capInsets are drawn
+// (image_effects.h), and so are the radii of the style. loadingIndicatorSource, fadeDuration, progressiveRenderingEnabled,
+// resizeMethod, resizeMultiplier and overlayColor are Android's: the view config of the iOS component (ImageViewNativeComponent.js,
+// the branch that is not Android's) does not list them, so ReactNativeAttributePayload drops them before the native side sees
+// them, and defaultSource, which that config does list, is parsed by ImageProps and read by no iOS component. They are accepted
+// here and have no effect, as they have none on iOS.
 const resizeModes = ["cover", "contain", "stretch", "center", "repeat", "none"];
 const objectFits = ["contain", "cover", "fill", "scale-down", "none"];
-// Props whose native half is a later slice of the Images work (tint needs a shader on the image's own canvas item,
-// the others a filter, a nine-patch, a second image, a transition or a decode option).
-const laterProps = {
-  tintColor: "tinting needs a shader on its own canvas item",
-  blurRadius: "blurring is a later image effect",
-  capInsets: "nine-patch stretching is a later image mode",
-  defaultSource: "placeholder images are a later image state",
-  loadingIndicatorSource: "placeholder images are a later image state",
-  fadeDuration: "the fade-in transition is a later image state",
-  progressiveRenderingEnabled: "progressive decoding is a later image mode",
-  resizeMethod: "the decode method is chosen by the host",
-  resizeMultiplier: "the decode size is chosen by the host",
-  overlayColor: "rounded-corner overlays follow rounded image clipping",
-};
-const laterStyles = {
-  tintColor: laterProps.tintColor,
-  overlayColor: laterProps.overlayColor,
-};
+// Style names that ImageStyle declares and the host's View does not: the tint is read by Image.ios.js and passed on as a prop,
+// and the overlay is Android's, which iOS leaves out of its style attributes.
+const imageStyles = ["tintColor", "overlayColor"];
+const insetNames = ["top", "left", "bottom", "right"];
 const handlers = ["onLoadStart", "onLoad", "onLoadEnd", "onError", "onProgress", "onPartialLoad", "onLayout"];
 
 function present(value) {
   return value !== undefined && value !== null;
 }
-function later(name, reason) {
-  return new Error(`Godot Image does not implement ${name} yet: ${reason}`);
+// capInsets is a number or an object of top, left, bottom and right. RN's C++ also reads a list as left, top, right and bottom
+// (graphicsConversions.h), but it tries the object form first, and a list passes for one with the keys 0 to 3: it logs "Unsupported
+// EdgeInsets map key" for each and keeps no inset. A list is refused here instead of being dropped.
+function validateCapInsets(value) {
+  if (!present(value)) return;
+  const finite = Number.isFinite;
+  const valid = typeof value === "number"
+    ? finite(value)
+    : typeof value === "object" && !Array.isArray(value) && Object.entries(value).every(([name, inset]) => insetNames.includes(name) && finite(inset));
+  if (!valid) throw new Error("Godot Image capInsets must be a number or an object of top, left, bottom and right numbers");
 }
 
 function validateImageSource(source, registered) {
@@ -49,14 +49,11 @@ function validateImageSource(source, registered) {
   }
 }
 
-// `validStyle` holds the style names the Godot View implements; the Image adds its own two.
+// `validStyle` holds the style names the Godot View implements; the Image adds its own two (imageStyles).
 function validateImageStyle(flat, validStyle) {
   for (const [name, value] of Object.entries(flat ?? {})) {
     if (!present(value)) continue;
-    if (Object.hasOwn(laterStyles, name)) throw later(`style.${name}`, laterStyles[name]);
-    if (/^border(?:Top|Bottom)?(?:Left|Right)?Radius$/.test(name)) {
-      throw later(`style.${name}`, "the host clips rectangles only, and rounded image clipping is a later slice");
-    }
+    if (imageStyles.includes(name)) continue;
     if (name === "resizeMode" && !resizeModes.includes(value)) throw new Error(`Godot Image resizeMode must be ${resizeModes.join(", ")}`);
     if (name === "objectFit" && !objectFits.includes(value)) throw new Error(`Godot Image objectFit must be ${objectFits.join(", ")}`);
     if (name === "resizeMode" || name === "objectFit") continue;
@@ -65,9 +62,8 @@ function validateImageStyle(flat, validStyle) {
 }
 
 export function validateImageProps(props, flatStyle, validStyle, registered) {
-  for (const [name, reason] of Object.entries(laterProps)) {
-    if (present(props[name])) throw later(name, reason);
-  }
+  if (present(props.blurRadius) && !Number.isFinite(props.blurRadius)) throw new Error("Godot Image blurRadius must be a finite number");
+  validateCapInsets(props.capInsets);
   if (present(props.resizeMode) && !resizeModes.includes(props.resizeMode)) {
     throw new Error(`Godot Image resizeMode must be ${resizeModes.join(", ")}`);
   }
