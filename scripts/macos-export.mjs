@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
+import {constants as fsConstants} from "node:fs";
 import {copyFile, cp, lstat, mkdir, readFile, readlink, readdir, realpath, rename, rm, stat, symlink, writeFile} from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -17,6 +18,7 @@ const rnResourceBundles = [
   "ReactNativeDependencies_folly.bundle",
   "ReactNativeDependencies_glog.bundle",
 ];
+const consumerOutputNames = ["consumer-report.json", "consumer-initial.png", "consumer-updated.png", "consumer-resized.png"];
 const fatalOutput = /SCRIPT ERROR|Parse Error|(?:^|\n)ERROR:|Program crashed|Stack overflow|ObjectDB instances leaked|Resources still in use|FABRIC_ERROR|CONSUMER_CHECK_FAILED/;
 const sha256 = bytes => createHash("sha256").update(bytes).digest("hex");
 
@@ -273,6 +275,9 @@ function patchValidation(text) {
   const pathCount = (text.match(/res:\/\/consumer-/g) ?? []).length;
   assert.equal(pathCount, 2, "expected exactly two canonical report/capture output path prefixes");
   let result = text.replaceAll("res://consumer-", "user://consumer-");
+  const checkFailure = '    push_error("CONSUMER_CHECK_FAILED: " + message)';
+  assert.equal(result.split(checkFailure).length - 1, 1, "canonical consumer failure diagnostic not found uniquely");
+  result = result.replace(checkFailure, `${checkFailure}\n    print("MACOS_EXPORT_FAILED_SNAPSHOT:" + JSON.stringify({"check": message, "hud": state(hud), "inventory": state(inventory)}))`);
   const ready = "func _ready() -> void:\n";
   assert.equal(result.split(ready).length - 1, 1, "canonical consumer _ready method not found uniquely");
   result = result.replace(ready, `func _enter_tree() -> void:
@@ -336,8 +341,35 @@ async function clearConsumerOutputs(userDataPath, expectedUserDataPath) {
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
-  for (const name of ["consumer-report.json", "consumer-initial.png", "consumer-updated.png", "consumer-resized.png"])
+  for (const name of consumerOutputNames)
     await rm(path.join(userDataPath, name), {force: true});
+}
+
+export async function retainFailedConsumerOutputs(userDataPath, evidenceDirectory) {
+  let directory;
+  try { directory = await lstat(userDataPath); }
+  catch (error) { if (error.code === "ENOENT") return []; throw error; }
+  assert.ok(directory.isDirectory() && !directory.isSymbolicLink(), "fixture user-data path is not a real directory");
+
+  const files = [];
+  for (const name of consumerOutputNames) {
+    const source = path.join(userDataPath, name);
+    let metadata;
+    try { metadata = await lstat(source); }
+    catch (error) { if (error.code === "ENOENT") continue; throw error; }
+    assert.ok(metadata.isFile() && !metadata.isSymbolicLink(), `failed consumer output is not a regular file: ${name}`);
+    const targetName = `runtime-failed-${name}`;
+    const target = path.join(evidenceDirectory, targetName);
+    assert.equal(await existsIncludingDangling(target), false, `refusing to overwrite failed consumer evidence: ${targetName}`);
+    files.push({source, target, targetName});
+  }
+
+  const retained = [];
+  for (const file of files) {
+    await copyFile(file.source, file.target, fsConstants.COPYFILE_EXCL);
+    retained.push({sourcePath: file.source, targetName: file.targetName, ...await fileRecord(file.target)});
+  }
+  return retained;
 }
 
 async function runExportedConsumer(harness, app, label, headed, expectedNames, projectName, priorUserDataPath = null) {
@@ -554,7 +586,7 @@ export async function runMacOSExport({template, output}) {
   const receipt = {format: "godot-fabric.macos-arm64-export/v1", status: "running", startedAt: new Date().toISOString(),
     output, template, limitations: ["local ad-hoc signing only", "not a distribution/notarization claim", "no mobile or second-machine claim"], stages: [],
     removedDyldEnvironmentKeys: harness.removedDyldEnvironmentKeys};
-  let stagingOwned = false, relocatedOwned = false, published = false, projectName = null, userDataPath = null;
+  let stagingOwned = false, relocatedOwned = false, published = false, projectName = null;
   try {
     await writeJson(receiptPath, receipt);
     receipt.templateMember = await verifyTemplateMember(harness, template);
@@ -655,8 +687,7 @@ export async function runMacOSExport({template, output}) {
     relocatedOwned = true;
     receipt.relocation = {completedBeforeRuntime: true, path: relocated};
     const headless = await runExportedConsumer(harness, relocated, "headless", false, checks.headless, projectName);
-    userDataPath = headless.userDataPath;
-    const headed = await runExportedConsumer(harness, relocated, "headed", true, checks.headed, projectName, userDataPath);
+    const headed = await runExportedConsumer(harness, relocated, "headed", true, checks.headed, projectName, headless.userDataPath);
     receipt.runtimes = [{displayServer: "headless", checkCount: headless.checks, logSha256: headless.logSha256},
       {displayServer: "macOS", checkCount: headed.checks, logSha256: headed.logSha256}];
     receipt.captures = headed.captures;
@@ -675,8 +706,18 @@ export async function runMacOSExport({template, output}) {
     await writeJson(receiptPath, receipt);
     return {output, directory: harness.directory, receipt};
   } catch (error) {
+    if (projectName) {
+      const ownedDataPath = path.join(os.homedir(), "Library", "Application Support", "Godot", "app_userdata", projectName);
+      try {
+        const failedConsumerOutputs = await retainFailedConsumerOutputs(ownedDataPath, harness.directory);
+        if (failedConsumerOutputs.length) receipt.failedConsumerOutputs = failedConsumerOutputs;
+      } catch (retentionError) {
+        receipt.failedConsumerOutputRetentionError = retentionError.message;
+      }
+    }
     if (published) {
-      const diagnostic = {status: "app-published-report-update-failed", output, receiptPath, error: error.message};
+      const diagnostic = {status: "app-published-report-update-failed", output, receiptPath, error: error.message,
+        failedConsumerOutputs: receipt.failedConsumerOutputs, failedConsumerOutputRetentionError: receipt.failedConsumerOutputRetentionError};
       try { await writeJson(path.join(harness.directory, "post-publish-diagnostic.json"), diagnostic); } catch {}
       throw new Error(`The app was published, but its final receipt update failed: ${error.message}`);
     }
@@ -708,7 +749,7 @@ export async function runMacOSExport({template, output}) {
       try { await rm(filename, {recursive: true, force: true}); }
       catch (error) { cleanupErrors.push({path: filename, error: error.message}); }
     }
-    if (projectName) {
+    if (projectName && !Object.hasOwn(receipt, "failedConsumerOutputRetentionError")) {
       const ownedDataPath = path.join(os.homedir(), "Library", "Application Support", "Godot", "app_userdata", projectName);
       try { await clearConsumerOutputs(ownedDataPath, ownedDataPath); }
       catch (error) { cleanupErrors.push({path: ownedDataPath, error: error.message}); }

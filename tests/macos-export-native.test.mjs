@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
-import {assertConsumerCapture, assertLocalLoadPaths, auditAppLoadPaths, normalizeFrameworkPackaging, runMacOSExport, verifySignatures} from "../scripts/macos-export.mjs";
+import {assertConsumerCapture, assertLocalLoadPaths, auditAppLoadPaths, normalizeFrameworkPackaging, retainFailedConsumerOutputs, runMacOSExport, verifySignatures} from "../scripts/macos-export.mjs";
 import {createHarness} from "../scripts/consumer-harness.mjs";
 import {verifyAddonNativeInputs} from "../scripts/pack-addon.mjs";
 
@@ -123,6 +123,98 @@ async function controlHarness(name) {
   await mkdir(harness.project, {recursive: true});
   return harness;
 }
+
+test("failed consumer outputs are retained byte-for-byte and missing outputs are allowed", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-failed-consumer-outputs-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const userData = path.join(directory, "owned-user-data");
+  const evidence = path.join(directory, "evidence");
+  await mkdir(userData);
+  await mkdir(evidence);
+  const contents = new Map([
+    ["consumer-report.json", Buffer.from('{"checks":[]}\n')],
+    ["consumer-initial.png", Buffer.from([0, 1, 2, 3])],
+    ["consumer-updated.png", Buffer.from([4, 5, 6])],
+    ["consumer-resized.png", Buffer.from([7, 8])],
+  ]);
+  for (const [name, bytes] of contents) await writeFile(path.join(userData, name), bytes);
+
+  const retained = await retainFailedConsumerOutputs(userData, evidence);
+  assert.equal(retained.length, contents.size);
+  assert.deepEqual((await readdir(evidence)).sort(), [
+    "runtime-failed-consumer-initial.png", "runtime-failed-consumer-report.json",
+    "runtime-failed-consumer-resized.png", "runtime-failed-consumer-updated.png",
+  ]);
+  for (const [name, bytes] of contents) {
+    const targetName = `runtime-failed-${name}`;
+    const saved = await readFile(path.join(evidence, targetName));
+    assert.deepEqual(saved, bytes);
+    assert.equal(retained.find(item => item.targetName === targetName)?.sha256, digest(bytes));
+    assert.deepEqual(await readFile(path.join(userData, name)), bytes, "retention must leave source output untouched");
+  }
+
+  const empty = path.join(directory, "empty-user-data");
+  await mkdir(empty);
+  assert.deepEqual(await retainFailedConsumerOutputs(empty, evidence), []);
+  const missing = path.join(directory, "missing-user-data");
+  assert.deepEqual(await retainFailedConsumerOutputs(missing, evidence), []);
+});
+
+test("failed consumer output retention rejects symlinks before copying anything", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-failed-consumer-symlink-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const userData = path.join(directory, "owned-user-data");
+  const evidence = path.join(directory, "evidence");
+  await mkdir(userData);
+  await mkdir(evidence);
+  const outside = path.join(directory, "outside.json");
+  await writeFile(outside, "outside bytes");
+  await writeFile(path.join(userData, "consumer-report.json"), "raw report");
+  await writeFile(path.join(userData, "consumer-initial.png"), "raw initial");
+  await writeFile(path.join(userData, "consumer-updated.png"), "raw updated");
+  await symlink(outside, path.join(userData, "consumer-resized.png"));
+
+  await assert.rejects(retainFailedConsumerOutputs(userData, evidence), /not a regular file/);
+  assert.deepEqual(await readdir(evidence), [], "the last invalid input must be detected before any copy");
+  assert.equal(await readFile(outside, "utf8"), "outside bytes");
+  await rm(path.join(userData, "consumer-resized.png"));
+  await mkdir(path.join(userData, "consumer-resized.png"));
+  await assert.rejects(retainFailedConsumerOutputs(userData, evidence), /not a regular file/);
+  assert.deepEqual(await readdir(evidence), []);
+});
+
+test("failed consumer output retention rejects a symlinked user-data directory", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-failed-consumer-userdata-link-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const actual = path.join(directory, "actual-user-data");
+  const linked = path.join(directory, "linked-user-data");
+  const evidence = path.join(directory, "evidence");
+  await mkdir(actual);
+  await mkdir(evidence);
+  await writeFile(path.join(actual, "consumer-report.json"), "raw report");
+  await symlink(actual, linked);
+
+  await assert.rejects(retainFailedConsumerOutputs(linked, evidence), /user-data path is not a real directory/);
+  assert.deepEqual(await readdir(evidence), []);
+  assert.equal(await readFile(path.join(actual, "consumer-report.json"), "utf8"), "raw report");
+});
+
+test("failed consumer output retention refuses existing evidence destinations", async t => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), "godot-fabric-failed-consumer-destination-"));
+  t.after(() => rm(directory, {recursive: true, force: true}));
+  const userData = path.join(directory, "owned-user-data");
+  const evidence = path.join(directory, "evidence");
+  await mkdir(userData);
+  await mkdir(evidence);
+  await writeFile(path.join(userData, "consumer-report.json"), "raw report");
+  await writeFile(path.join(userData, "consumer-initial.png"), "raw image");
+  await writeFile(path.join(evidence, "runtime-failed-consumer-initial.png"), "preexisting");
+
+  await assert.rejects(retainFailedConsumerOutputs(userData, evidence), /refusing to overwrite/);
+  assert.deepEqual(await readdir(evidence), ["runtime-failed-consumer-initial.png"]);
+  assert.equal(await readFile(path.join(userData, "consumer-report.json"), "utf8"), "raw report");
+  assert.equal(await readFile(path.join(userData, "consumer-initial.png"), "utf8"), "raw image");
+});
 
 test("native macOS arm64 export and copied-app rejection controls", {
   skip: nativeTemplate ? false : "MACOS_EXPORT_TEMPLATE is unset; native export requires the reviewed Godot arm64 Release template",
