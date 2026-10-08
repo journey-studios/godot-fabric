@@ -1,0 +1,1088 @@
+{
+  "format": "godot-fabric.frontier-services-execution/v1",
+  "executedAt": "2026-10-08",
+  "implementationCommit": "75c4c0f2b5e68119a3af3da4d1f7f9a2190d5ffa",
+  "executedTreeSha": "ecadc7f6fcca950017208d97824c99abe190d4a7",
+  "baseMainCommit": "e1c7a392b65cefafcdd2ca11557c6b845cf26edb",
+  "sourceState": "working tree clean and equal to the implementation commit's tree, with no untracked file outside the ignored build/, addons/, .deps/ and node_modules/, when every command below ran (git status --porcelain empty before the first and after the last); the evidence files were added afterwards and are not inputs",
+  "environment": {
+    "platform": "macOS 26.6.2 arm64",
+    "godot": "4.7.2-stable (official, ed1daf0bf)",
+    "node": "v22.23.3",
+    "npm": "10.9.9",
+    "reactNative": "0.87.1",
+    "modes": [
+      "headless"
+    ],
+    "note": "The bundle runs in the actual Hermes of a FabricApplication with the real services TurboModule, headless; no renderer capture exists or is claimed."
+  },
+  "hostedCi": {
+    "status": "pending",
+    "note": "The test:frontier-services step and the native-frontier-services artifact of .github/workflows/contracts.yml have not run on hosted CI yet, and nothing has been published to Pages. Everything below is local macOS arm64 evidence."
+  },
+  "sourceReceipt": {
+    "sourceReceiptDoesNotCertifyNativeBuild": true,
+    "note": "The SHA-256 of the sources below equal the blobs of the implementation commit. They certify the GDScript, the JavaScript fixture, the test and the oracle that ran, not a native binary: the host the root project loads is the one built on this machine from main's native sources, and no check of this slice changes or compares it."
+  },
+  "nativeCode": {
+    "changed": false,
+    "note": "This slice adds no C++ and touches neither native/, src/ nor sdk/. The root project loads the extension at startup, as it does for every suite.",
+    "hostSha256": "1fd43a177c097ba96523f3437e9d7e25f77b960345f4b101537cbfa418e29559"
+  },
+  "previousHost": {
+    "applicable": false,
+    "reason": "The slice has no native code: there is no previous binary to compare, and the previous SDK does not apply either, because the slice exports nothing from src/ or sdk/."
+  },
+  "commands": [
+    {
+      "command": "node scripts/frontier-services-sabotage.mjs",
+      "exit": 0,
+      "elapsedMs": 119130,
+      "printed": [
+        "controlStatus: 0",
+        "7 variants, every runStatus 0"
+      ]
+    },
+    {
+      "command": "npm run test:frontier-services",
+      "exit": 0,
+      "elapsedMs": 21693,
+      "printed": [
+        "# tests 8",
+        "# pass 8",
+        "# fail 0"
+      ],
+      "note": "tests/frontier-services-native.test.mjs (the probe in 2 processes and the oracle), then tests/frontier-services-parity.test.mjs"
+    },
+    {
+      "command": "npm run test:civ-lite-game",
+      "exit": 0,
+      "elapsedMs": 3288,
+      "printed": [
+        "# tests 1",
+        "# pass 1",
+        "# fail 0"
+      ]
+    },
+    {
+      "command": "npm run type-check",
+      "exit": 0,
+      "elapsedMs": 754,
+      "printed": [],
+      "note": "tsc-rs prints nothing but its command line; exit 0 means no diagnostic"
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "elapsedMs": 340,
+      "printed": [
+        "✓ No issues found (0.12s)"
+      ]
+    },
+    {
+      "command": "npm run check:publication",
+      "exit": 0,
+      "elapsedMs": 832,
+      "printed": [
+        "\"passed\": true,",
+        "\"files\": 1676,"
+      ],
+      "note": "counted on the implementation commit, before the evidence files were added"
+    }
+  ],
+  "productProbe": {
+    "command": "Godot --path . --headless --script res://tests/frontier-services-probe.gd",
+    "executions": 2,
+    "checksPerExecution": 965,
+    "marker": "FRONTIER_SERVICES_PASSED: 965",
+    "allCurrentAssertionsPassed": true,
+    "observedSha256": "d3fc8e38d0bc3362c4bd193e8b5c49d7cce8070e1fd7d0c19f7a1fb9a4ee282e",
+    "executionsObserveTheSame": true,
+    "bundleSha256": "6eaa4a6d85c8ae1a7055ba69a7c9d162c9be08654c7addca4510fb08a69eece6",
+    "displayServer": "headless",
+    "scene": "a GameServices node (consumers/civ-lite/services/game_services.gd) with a child Application stand-in that builds the FabricApplication and emits runtime_available, and a FabricSurface; the bundle is tests/frontier-services-fixture.jsx"
+  },
+  "registered": [
+    {
+      "kind": "state",
+      "name": "frontier.snapshot",
+      "value": {
+        "object": {
+          "actions": {
+            "array": {
+              "object": {
+                "args": {
+                  "array": "integer"
+                },
+                "enabled": "integer",
+                "id": "string",
+                "label": "string",
+                "reason": "string",
+                "reason_text": "string"
+              }
+            }
+          },
+          "city": {
+            "object": {
+              "buildings": {
+                "array": "string"
+              },
+              "food_needed": "integer",
+              "food_rate": "integer",
+              "garrison": {
+                "array": {
+                  "object": {
+                    "id": "integer",
+                    "kind": "string"
+                  }
+                }
+              },
+              "items": {
+                "array": {
+                  "object": {
+                    "cost": "integer",
+                    "enabled": "integer",
+                    "id": "string",
+                    "kind": "string",
+                    "label": "string",
+                    "reason": "string",
+                    "reason_text": "string",
+                    "tech": "string"
+                  }
+                }
+              },
+              "max_size": "integer",
+              "name": "string",
+              "present": "integer",
+              "production_rate": "integer",
+              "queue": {
+                "array": {
+                  "object": {
+                    "cost": "integer",
+                    "item": "string",
+                    "label": "string",
+                    "slot": "integer",
+                    "stock": "integer"
+                  }
+                }
+              },
+              "queue_max": "integer",
+              "science_rate": "integer",
+              "size": "integer",
+              "x": "integer",
+              "y": "integer"
+            }
+          },
+          "context": "string",
+          "dialog": {
+            "object": {
+              "choices": {
+                "array": {
+                  "object": {
+                    "detail": "string",
+                    "id": "string",
+                    "label": "string"
+                  }
+                }
+              },
+              "id": "string",
+              "open": "integer",
+              "text": "string",
+              "title": "string"
+            }
+          },
+          "epoch": "integer",
+          "phase": "string",
+          "research": {
+            "object": {
+              "current": "string",
+              "known": "integer",
+              "needed": "integer",
+              "rate": "integer",
+              "techs": {
+                "array": {
+                  "object": {
+                    "cost": "integer",
+                    "enabled": "integer",
+                    "id": "string",
+                    "label": "string",
+                    "reason": "string",
+                    "reason_text": "string",
+                    "state": "string"
+                  }
+                }
+              }
+            }
+          },
+          "resources": {
+            "object": {
+              "food": {
+                "object": {
+                  "rate": "integer",
+                  "stock": "integer"
+                }
+              },
+              "production": {
+                "object": {
+                  "rate": "integer",
+                  "stock": "integer"
+                }
+              },
+              "science": {
+                "object": {
+                  "rate": "integer",
+                  "stock": "integer"
+                }
+              }
+            }
+          },
+          "selection": {
+            "object": {
+              "unit": "integer",
+              "x": "integer",
+              "y": "integer"
+            }
+          },
+          "tile": {
+            "object": {
+              "city": "integer",
+              "food": "integer",
+              "move_cost": "integer",
+              "present": "integer",
+              "production": "integer",
+              "science": "integer",
+              "terrain": "integer",
+              "terrain_name": "string",
+              "units": {
+                "array": {
+                  "object": {
+                    "fortified": "integer",
+                    "id": "integer",
+                    "kind": "string",
+                    "max_moves": "integer",
+                    "moves": "integer",
+                    "name": "string",
+                    "owner": "integer"
+                  }
+                }
+              },
+              "x": "integer",
+              "y": "integer"
+            }
+          },
+          "turn": "integer",
+          "version": "integer"
+        }
+      }
+    },
+    {
+      "args": [
+        {
+          "object": {
+            "phases": {
+              "array": {
+                "object": {
+                  "events": "integer",
+                  "name": "string",
+                  "tasks": "integer"
+                }
+              }
+            },
+            "turn": "integer"
+          }
+        }
+      ],
+      "kind": "signal",
+      "name": "frontier.turn_ended"
+    },
+    {
+      "args": [
+        "integer",
+        "integer"
+      ],
+      "kind": "method",
+      "name": "frontier.select_tile",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "integer"
+      ],
+      "kind": "method",
+      "name": "frontier.select_unit",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [],
+      "kind": "method",
+      "name": "frontier.clear_selection",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "integer",
+        "integer",
+        "integer"
+      ],
+      "kind": "method",
+      "name": "frontier.move_unit",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "integer"
+      ],
+      "kind": "method",
+      "name": "frontier.found_city",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "integer"
+      ],
+      "kind": "method",
+      "name": "frontier.fortify",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "string",
+        "integer"
+      ],
+      "kind": "method",
+      "name": "frontier.set_production",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "string"
+      ],
+      "kind": "method",
+      "name": "frontier.set_research",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [
+        "string"
+      ],
+      "kind": "method",
+      "name": "frontier.resolve_event",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [],
+      "kind": "method",
+      "name": "frontier.end_turn",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    },
+    {
+      "args": [],
+      "kind": "method",
+      "name": "frontier.new_game",
+      "result": {
+        "object": {
+          "code": "string",
+          "ok": "integer",
+          "text": "string"
+        }
+      }
+    }
+  ],
+  "bindings": 13,
+  "registry": {
+    "bindings": 13,
+    "stoppedAtReport": false,
+    "errors": [],
+    "callbacksRun": 80
+  },
+  "callbacksPerMethod": {
+    "clear_selection": 4,
+    "end_turn": 13,
+    "fortify": 3,
+    "found_city": 4,
+    "move_unit": 9,
+    "new_game": 3,
+    "resolve_event": 3,
+    "select_tile": 9,
+    "select_unit": 7,
+    "set_production": 15,
+    "set_research": 7
+  },
+  "roteiro": {
+    "steps": 73,
+    "accepted": 43,
+    "refused": 30,
+    "snapshotsPublished": 43,
+    "turnEnded": 12,
+    "turns": 12,
+    "finalHash": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+    "goldenHash": "275b7c6182605a784d8be3565d4df38a5bb130aaa6c0ea7640abe4c521427d29",
+    "traceHash": "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8",
+    "expectedTraceHash": "fba99004fa12e253b9a6fe7f8bbee0cbd6e468a67308d25d0c40236f48c68cb8",
+    "initialHash": "c36aad5b117e662a962645923734e5a046f5808fff202cbc5a24e2c9ee871c2e",
+    "phases": [
+      "ai_plan",
+      "ai_move",
+      "production",
+      "growth",
+      "research",
+      "refresh"
+    ],
+    "maxTasksInAPhase": 5,
+    "maxEventsInAPhase": 2,
+    "firstTurnEnded": {
+      "step": 16,
+      "value": {
+        "phases": [
+          {
+            "events": 1,
+            "name": "ai_plan",
+            "tasks": 1
+          },
+          {
+            "events": 1,
+            "name": "ai_move",
+            "tasks": 1
+          },
+          {
+            "events": 0,
+            "name": "production",
+            "tasks": 0
+          },
+          {
+            "events": 0,
+            "name": "growth",
+            "tasks": 0
+          },
+          {
+            "events": 0,
+            "name": "research",
+            "tasks": 0
+          },
+          {
+            "events": 1,
+            "name": "refresh",
+            "tasks": 3
+          }
+        ],
+        "turn": 2
+      }
+    }
+  },
+  "actionsSentBack": {
+    "total": 146,
+    "enabled": 125,
+    "disabled": 21,
+    "acceptedExactlyWhenEnabled": true,
+    "disabledRefusedWithTheirReason": true,
+    "byAction": {
+      "clear_selection": 39,
+      "end_turn": 73,
+      "fortify": 23,
+      "found_city": 7,
+      "select_unit": 4
+    },
+    "note": "each action of the snapshot JavaScript holds, sent back as frontier.<id>(args) on a copy of the reference session (never the live one)"
+  },
+  "refusals": {
+    "roteiro": {
+      "nothing_selected": 1,
+      "out_of_bounds": 1,
+      "no_moves_left": 1,
+      "not_adjacent": 1,
+      "cannot_fortify": 1,
+      "not_a_settler": 1,
+      "impassable_terrain": 1,
+      "not_your_unit": 1,
+      "unknown_unit": 2,
+      "already_fortified": 1,
+      "no_city": 1,
+      "tech_required": 4,
+      "unknown_item": 1,
+      "bad_slot": 1,
+      "research_out_of_order": 1,
+      "already_researching": 1,
+      "unknown_tech": 1,
+      "not_enough_moves": 1,
+      "event_pending": 3,
+      "unknown_choice": 1,
+      "no_event": 1,
+      "tech_known": 1,
+      "already_queued": 1,
+      "already_built": 1
+    },
+    "codes": 24,
+    "totalRefusedSteps": 30
+  },
+  "epochs": {
+    "initial": {
+      "epoch": 1,
+      "hash": "c36aad5b117e662a962645923734e5a046f5808fff202cbc5a24e2c9ee871c2e"
+    },
+    "newGames": [
+      {
+        "number": 1,
+        "epoch": 2,
+        "hash": "c36aad5b117e662a962645923734e5a046f5808fff202cbc5a24e2c9ee871c2e",
+        "turn": 1,
+        "context": "none",
+        "snapshotsEmitted": 1,
+        "turnEndedEmitted": 0
+      },
+      {
+        "number": 2,
+        "epoch": 3,
+        "hash": "c36aad5b117e662a962645923734e5a046f5808fff202cbc5a24e2c9ee871c2e",
+        "turn": 1,
+        "context": "none",
+        "snapshotsEmitted": 1,
+        "turnEndedEmitted": 0
+      },
+      {
+        "number": 3,
+        "epoch": 4,
+        "hash": "c36aad5b117e662a962645923734e5a046f5808fff202cbc5a24e2c9ee871c2e",
+        "turn": 1,
+        "context": "none",
+        "snapshotsEmitted": 1,
+        "turnEndedEmitted": 0
+      }
+    ],
+    "afterTheLastNewGame": {
+      "call": "frontier.select_tile",
+      "epoch": 4
+    },
+    "hashesEqual": true,
+    "epochInState": false
+  },
+  "violations": [
+    {
+      "label": "wrong type",
+      "call": "frontier.select_tile(\"6\", 8)",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "wrong type, a fraction",
+      "call": "frontier.move_unit(1, 7.5, 8)",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "wrong type, a number for a string",
+      "call": "frontier.set_research(7)",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "wrong type, a string for an integer",
+      "call": "frontier.set_production(\"warrior\", \"0\")",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "arity, too few",
+      "call": "frontier.select_tile(6)",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "arity, too many",
+      "call": "frontier.select_unit(1, 2)",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "arity, an argument for a method with none",
+      "call": "frontier.end_turn(1)",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "arity, none for a method with one",
+      "call": "frontier.found_city()",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "extra field, an object with an extra field for an integer",
+      "call": "frontier.select_unit({\"extra\":2,\"unit_id\":1})",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "extra field, an object for a string",
+      "call": "frontier.resolve_event({\"choice_id\":\"welcome\"})",
+      "state": "rejected",
+      "code": "E_SERVICE_SCHEMA",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    },
+    {
+      "label": "a service that was never registered",
+      "call": "frontier.nope()",
+      "state": "rejected",
+      "code": "E_SERVICE_MISSING",
+      "callbacksDelta": 0,
+      "snapshotsEmitted": 0,
+      "turnEndedEmitted": 0,
+      "hashUnchanged": true
+    }
+  ],
+  "persistence": {
+    "unmountedAfterAcceptedEndTurns": 3,
+    "stepPlayedWithNoSurface": 35,
+    "before": {
+      "bindings": 13,
+      "epoch": 1,
+      "generation": "1",
+      "hash": "778cfc3c58f0a25a45371eddcbfdc5090e2ae1fb87bd8c350e067a1450911efc",
+      "registered": 13,
+      "sameGame": true,
+      "sameNode": true,
+      "snapshots": 18,
+      "turn": 4
+    },
+    "unmounted": {
+      "bindings": 13,
+      "epoch": 1,
+      "generation": "1",
+      "hash": "778cfc3c58f0a25a45371eddcbfdc5090e2ae1fb87bd8c350e067a1450911efc",
+      "registered": 13,
+      "sameGame": true,
+      "sameNode": true,
+      "snapshots": 18,
+      "turn": 4
+    },
+    "remounted": {
+      "bindings": 13,
+      "epoch": 1,
+      "generation": "1",
+      "hash": "56cc388316bfd4e73ef5996dc9e5b0a5d4f5246b4f2f942c131e2de363826f21",
+      "registered": 13,
+      "sameGame": true,
+      "sameNode": true,
+      "snapshots": 19,
+      "turn": 4
+    },
+    "firstPanelGeneration": "1",
+    "panel": {
+      "cleanups": 1,
+      "connected": true,
+      "error": null,
+      "mounts": 2,
+      "readyCount": 2
+    }
+  },
+  "dtoLimits": {
+    "depthLimit": 32,
+    "largest": {
+      "depth": 4,
+      "nodes": 173,
+      "step": 43
+    },
+    "maxDepth": 4,
+    "maxNodes": 173,
+    "nodeLimit": 10000
+  },
+  "parity": {
+    "registrations": 13,
+    "mutationsPerSide": 13,
+    "mutationRejections": 26,
+    "nameAndKindCases": 3,
+    "extractorRefusals": 9,
+    "bareNumberCase": 1,
+    "validatorCases": 8,
+    "actionContractCases": 5,
+    "note": "tests/frontier-services-parity.test.mjs, 8 subtests in test:frontier-services (the first is the native test)"
+  },
+  "sabotages": [
+    {
+      "name": "schema-drift",
+      "file": "consumers/civ-lite/services/schema.gd",
+      "find": "\"args\": ACTION_ARGS, \"enabled\": INT, \"reason\": STR, \"reason_text\": STR}}\n",
+      "replace": "\"args\": ACTION_ARGS, \"enabled\": INT, \"reason\": STR}}\n",
+      "sourceSha256": "1c22e489aeee75b9434d80f5a6c3d9b261c9ce9f89f0829657d458111be28902",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=schema-drift",
+      "runStatus": 0,
+      "failedChecks": 2,
+      "failedCheckNames": [
+        "registration: the bundle's first connections, made as it evaluated, were ready: no E_SERVICE_MISSING, no other error",
+        "registration: the first connection received the initial snapshot of epoch 1"
+      ],
+      "oracle": "registration: the bundle's own connections, made as it evaluated, were not ready ([{\"code\":\"E_SERVICE_SCHEMA\",\"connection\":\"snapshot\",\"message\":\"E_SERVICE_SCHEMA: DTO does not match the exact declared schema\"}])",
+      "parity": [
+        "frontier.snapshot.actions[].reason_text: declared in TypeScript, missing from Godot's schema"
+      ],
+      "registrationErrors": [
+        {
+          "code": "E_SERVICE_SCHEMA",
+          "connection": "snapshot",
+          "message": "E_SERVICE_SCHEMA: DTO does not match the exact declared schema"
+        }
+      ]
+    },
+    {
+      "name": "late-register",
+      "file": "consumers/civ-lite/services/game_services.gd",
+      "find": "func _enter_tree() -> void:\n  $Application.runtime_available.connect(_bind_services)\n",
+      "replace": "var _late_runtime: Node\n\n\nfunc _enter_tree() -> void:\n  $Application.runtime_available.connect(func(runtime: Node) -> void: _late_runtime = runtime)\n\n\nfunc _ready() -> void:\n  _bind_services(_late_runtime)\n",
+      "sourceSha256": "e6fe71189ed00145581dca925fa0673c209e3c23c9e515ee134e0a202076f1b6",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=late-register",
+      "runStatus": 0,
+      "failedChecks": 2,
+      "failedCheckNames": [
+        "registration: the bundle's first connections, made as it evaluated, were ready: no E_SERVICE_MISSING, no other error",
+        "registration: the first connection received the initial snapshot of epoch 1"
+      ],
+      "oracle": "registration: the bundle's own connections, made as it evaluated, were not ready ([{\"code\":\"E_SERVICE_MISSING\",\"connection\":\"snapshot\",\"message\":\"E_SERVICE_MISSING: No binding existed when connection was requested\"},{\"code\":\"E_SERVICE_MISSING\",\"connection\":\"turn_ended\",\"message\":\"E_SERVICE_MISSING: No binding existed when connection was requested\"}])",
+      "parity": [],
+      "registrationErrors": [
+        {
+          "code": "E_SERVICE_MISSING",
+          "connection": "snapshot",
+          "message": "E_SERVICE_MISSING: No binding existed when connection was requested"
+        },
+        {
+          "code": "E_SERVICE_MISSING",
+          "connection": "turn_ended",
+          "message": "E_SERVICE_MISSING: No binding existed when connection was requested"
+        }
+      ]
+    },
+    {
+      "name": "silent-intent",
+      "file": "consumers/civ-lite/services/game_services.gd",
+      "find": "  return _intent(\"found_city\", game.found_city(unit_id))\n",
+      "replace": "  _count(\"found_city\")\n  return _plain(game.found_city(unit_id))\n",
+      "sourceSha256": "45f50868993a47f3e8ce824fb76cb6ac697fbcd3b77f7ed820acce4f63682d74",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=silent-intent",
+      "runStatus": 0,
+      "failedChecks": 9,
+      "failedCheckNames": [
+        "step 18 found_city[1] publishes the snapshot once if accepted and never if refused",
+        "step 18 found_city[1] the snapshot JavaScript holds is the node's, field for field",
+        "step 18 found_city[1] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 19 found_city[1] the snapshot JavaScript holds is the node's, field for field",
+        "step 19 found_city[1] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 20 set_production[\"library\",0] the snapshot JavaScript holds is the node's, field for field",
+        "step 20 set_production[\"library\",0] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 21 set_production[\"bogus\",0] the snapshot JavaScript holds is the node's, field for field",
+        "step 21 set_production[\"bogus\",0] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled"
+      ],
+      "oracle": "step 18 found_city(1): an accepted intent publishes exactly one snapshot",
+      "parity": [],
+      "registrationErrors": []
+    },
+    {
+      "name": "frozen-epoch",
+      "file": "consumers/civ-lite/services/game_services.gd",
+      "find": "  epoch += 1\n  game = Game.new(Rules.SEED, epoch)\n",
+      "replace": "  game = Game.new(Rules.SEED, epoch)\n",
+      "sourceSha256": "989a379929d555f26a95e36dec55ffe995104bedbbe249c188dd06567fa12750",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=frozen-epoch",
+      "runStatus": 0,
+      "failedChecks": 4,
+      "failedCheckNames": [
+        "epoch: new_game 1 raises the epoch to 2",
+        "epoch: new_game 2 raises the epoch to 2",
+        "epoch: new_game 3 raises the epoch to 2",
+        "epoch: the game after the last new_game answers an intent in its own epoch"
+      ],
+      "oracle": "new_game 1: the epoch rises strictly",
+      "parity": [],
+      "registrationErrors": []
+    },
+    {
+      "name": "emit-on-refusal",
+      "file": "consumers/civ-lite/services/game_services.gd",
+      "find": "  if result.ok == 1:\n    snapshot_changed.emit(game.snapshot())\n  return _plain(result)\n",
+      "replace": "  snapshot_changed.emit(game.snapshot())\n  return _plain(result)\n",
+      "sourceSha256": "0959bfc8e157ab5be9fe449db2115aa3360892e3f64ee3c6aa6232ad6a81b24e",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=emit-on-refusal",
+      "runStatus": 0,
+      "failedChecks": 29,
+      "failedCheckNames": [
+        "step 00 clear_selection[] publishes the snapshot once if accepted and never if refused",
+        "step 01 select_tile[30,5] publishes the snapshot once if accepted and never if refused",
+        "step 05 found_city[1] publishes the snapshot once if accepted and never if refused",
+        "step 06 move_unit[1,9,8] publishes the snapshot once if accepted and never if refused",
+        "step 07 fortify[1] publishes the snapshot once if accepted and never if refused",
+        "step 08 found_city[2] publishes the snapshot once if accepted and never if refused",
+        "step 10 move_unit[2,5,8] publishes the snapshot once if accepted and never if refused",
+        "step 11 select_unit[3] publishes the snapshot once if accepted and never if refused",
+        "step 12 select_unit[99] publishes the snapshot once if accepted and never if refused",
+        "step 14 fortify[2] publishes the snapshot once if accepted and never if refused",
+        "step 15 set_production[\"warrior\",0] publishes the snapshot once if accepted and never if refused",
+        "step 19 found_city[1] publishes the snapshot once if accepted and never if refused",
+        "step 20 set_production[\"library\",0] publishes the snapshot once if accepted and never if refused",
+        "step 21 set_production[\"bogus\",0] publishes the snapshot once if accepted and never if refused",
+        "step 24 set_production[\"warrior\",3] publishes the snapshot once if accepted and never if refused",
+        "step 25 set_research[\"writing\"] publishes the snapshot once if accepted and never if refused",
+        "step 27 set_research[\"alphabet\"] publishes the snapshot once if accepted and never if refused",
+        "step 28 set_research[\"pottery\"] publishes the snapshot once if accepted and never if refused",
+        "step 39 move_unit[4,8,9] publishes the snapshot once if accepted and never if refused",
+        "step 45 select_tile[7,8] publishes the snapshot once if accepted and never if refused",
+        "step 46 clear_selection[] publishes the snapshot once if accepted and never if refused",
+        "step 48 resolve_event[\"bogus\"] publishes the snapshot once if accepted and never if refused",
+        "step 50 resolve_event[\"welcome\"] publishes the snapshot once if accepted and never if refused",
+        "step 51 set_research[\"alphabet\"] publishes the snapshot once if accepted and never if refused",
+        "step 54 set_production[\"granary\",2] publishes the snapshot once if accepted and never if refused",
+        "step 55 set_production[\"workshop\",2] publishes the snapshot once if accepted and never if refused",
+        "step 59 set_production[\"workshop\",1] publishes the snapshot once if accepted and never if refused",
+        "step 61 set_production[\"granary\",0] publishes the snapshot once if accepted and never if refused",
+        "step 64 set_production[\"library\",0] publishes the snapshot once if accepted and never if refused"
+      ],
+      "oracle": "step 0 clear_selection(): a refused intent publishes nothing",
+      "parity": [],
+      "registrationErrors": []
+    },
+    {
+      "name": "action-args-drift",
+      "file": "consumers/civ-lite/game/snapshot.gd",
+      "find": "    actions.append(action(\"found_city\", \"Found city\", [unit_id], Intents.check_found_city(state, unit_id)))\n",
+      "replace": "    actions.append(action(\"found_city\", \"Found city\", [], Intents.check_found_city(state, unit_id)))\n",
+      "sourceSha256": "5b34165ad4cb1fe528b06c9035fe3bfa0d59d89e96a546411b10af0c6bd31ba1",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=action-args-drift",
+      "runStatus": 0,
+      "failedChecks": 7,
+      "failedCheckNames": [
+        "step 03 select_unit[1] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 04 move_unit[1,7,8] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 05 found_city[1] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 06 move_unit[1,9,8] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 07 fortify[1] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 08 found_city[2] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled",
+        "step 17 select_tile[7,8] every action of the snapshot, sent back as frontier.<id>(args) on a copy of the reference game, is accepted exactly when enabled"
+      ],
+      "oracle": "step 3 select_unit(1): the action found_city carries as many arguments as its method (1)",
+      "parity": [],
+      "registrationErrors": []
+    },
+    {
+      "name": "turn-ended-order",
+      "file": "consumers/civ-lite/services/game_services.gd",
+      "find": "    turn_ended.emit({\"turn\": result.turn, \"phases\": result.phases})\n    snapshot_changed.emit(game.snapshot())\n",
+      "replace": "    snapshot_changed.emit(game.snapshot())\n    turn_ended.emit({\"turn\": result.turn, \"phases\": result.phases})\n",
+      "sourceSha256": "c8b5c7d14af242f24959bf510e88d21629f4fdb3d41e67494f7bf5c53c30d683",
+      "command": "node tests/frontier-services-native.test.mjs --sabotage=turn-ended-order",
+      "runStatus": 0,
+      "failedChecks": 12,
+      "failedCheckNames": [
+        "step 16 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 31 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 34 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 44 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 58 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 60 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 63 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 65 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 68 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 69 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 70 end_turn[] turn_ended comes before the snapshot of the turn that begins",
+        "step 72 end_turn[] turn_ended comes before the snapshot of the turn that begins"
+      ],
+      "oracle": "step 16 end_turn(): turn_ended comes before the snapshot of the turn that begins",
+      "parity": [],
+      "registrationErrors": []
+    }
+  ],
+  "regressions": [
+    {
+      "command": "npm run type-check",
+      "exit": 0
+    },
+    {
+      "command": "npm run check:static",
+      "exit": 0,
+      "marker": "No issues found"
+    },
+    {
+      "command": "npm run check:publication",
+      "exit": 0,
+      "marker": {
+        "files": 1676,
+        "failures": 0
+      }
+    }
+  ],
+  "executedSourceSha256": {
+    "consumers/civ-lite/game/canon.gd": "8c2a185ff22534b76b0173116cc13a10d1c3c77fa523d73ab64e69f7e90bba82",
+    "consumers/civ-lite/game/context.gd": "0810f8234e94f5bcecdc6268592cfe3c4d37d9c810049781616417d7036cdd17",
+    "consumers/civ-lite/game/economy.gd": "b8998292c44577c79356fc996c762734fc5b9cb2ac39a6a140eff2631e3497c7",
+    "consumers/civ-lite/game/game.gd": "39c866648510f47090b5b9b0268c756cb230510bc92cc938c59c67869c004c44",
+    "consumers/civ-lite/game/intents.gd": "517e6a32c099af714c2e83bb9e3963c4f1cfcbbe2149b4e4d7f28db80c38bb2b",
+    "consumers/civ-lite/game/prng.gd": "9471d1032e57143a253927c28ab8681040c88deab9606a59ff25a39931f803ed",
+    "consumers/civ-lite/game/replay.gd": "6942cc7be375fd717021234d96c7adb9663068121d862a6b600c7654f144fcdf",
+    "consumers/civ-lite/game/rules.gd": "bd96e80ed0e3ce9b985158fece61fe93b6a32af50ad68f0f94fa07783eb42040",
+    "consumers/civ-lite/game/snapshot.gd": "8238e8d7ae74c77f1072cd82e732617cd2729d0744bc9b7494ea1fe275728603",
+    "consumers/civ-lite/game/turn.gd": "0a5fc0523e0e94d4d42190a770b95a55ca851adfce62abe608150ecb0c99ba05",
+    "consumers/civ-lite/game/world.gd": "d2be82b34262bfe3f6c6b257037163ce0e5e2937639fd6a1ba1c2bdf21b0a3d6",
+    "consumers/civ-lite/services/game_services.gd": "125ae50d632978fac81abfc0f08a5a7ce005117902ba6fac68ced2bafca27c5a",
+    "consumers/civ-lite/services/schema.gd": "ad92aa570b23872ecb9711d1d7eefc0ecabe68f95aea1ccee759758d115b757e",
+    "consumers/civ-lite/ui/frontier-types.ts": "145dd9b52c6ff3396781538bb26e67b0b2ea8658a2725dd40b926179ff607ef8",
+    "package.json": "5f5e5c6a702fe62cbb232bb754a3ebf17fad27cd28ebfa53e15124662d7050bb",
+    "scripts/frontier-services-bundle.mjs": "079073d4cacfbb7ae07240f77ffa35a332a6e4b81a9f51a768d5eba75621dd87",
+    "scripts/frontier-services-sabotage.mjs": "a7a0daf6aae399af3423bab0ac929911e0746aaa2cbc9ec85c258ae59d1ef729",
+    "scripts/godot-binary.mjs": "7fecdb41c66ea2def0c5842ef2fd5048339d34ae52ecf0c5fc90b34c75037aa6",
+    "scripts/native-probe-bundle.mjs": "38e25c4ec5db7c67184a840505f1aae65f4afdf5a089d9dfd832369eab48bc49",
+    "scripts/sabotage-sources.mjs": "ffeaeb6e85e665a5b18447714ad354e29123a1b7e2cfb1bfe2ad9df9497dedb3",
+    "sdk/addon/godot_fabric.gd": "60b489212e635bfbf2ab999426a849c9c45d813ae9b0a8a8d60a590c75df2f49",
+    "sdk/toolchain/platform-plugin.mjs": "bf30c58281f66d5cd5b11f610d86a683fe2d1c0362c87bae618d1c16f9d94d57",
+    "src/godot-fabric.js": "dd6bc4004ba89e2417bdf3a937ee01dc72eed8078615fffc6bd128dccf7baf79",
+    "src/react-native-platform.jsx": "c077b25f5f724c36028eb91e25e11d9f4584d73ed1d4b0a8da8cb27f7b477313",
+    "tests/civ-lite-game-native.test.mjs": "d5d71810a3154803f3fe36e7fc59f8bd04c23878dab96a46e85b37add6613ec5",
+    "tests/civ-lite-game-oracle.mjs": "533a290f1ccb0261e8487ff73595f47a3d9917132a5d733af73723aacdf368ce",
+    "tests/civ-lite-game-probe.gd": "007d911e17550b0849826347330bb86787d338c7929f92bcc54e1720b2126680",
+    "tests/frontier-services-fixture.jsx": "38d6ebb70334cca9cad4b057fdb8ab4371daa73ef607a88afb758d7368a441dc",
+    "tests/frontier-services-native.test.mjs": "358bebb638a1362617709c4f45e91d93c915a4a7d919c209e331cf477954ef56",
+    "tests/frontier-services-oracle.mjs": "3221fb9ce4be89c7502799a3feeb3db0a4e7224150f226ebc2dcc28cc3dda117",
+    "tests/frontier-services-parity.test.mjs": "5fd8a01b1a18db3d0a385ca0ba1d1e30d6fc315abfdfd01c239fd26378808b86",
+    "tests/frontier-services-probe.gd": "9a61111f182ba1e0e60a415fb744d3cbe5009943611edd7702b0df290870f92b",
+    "tests/types/frontier-services.tsx": "648143734e8e1f5dfc1850cc964eda6d729a40e68605f6a4e7242751b2ca200d",
+    "tsconfig.godot.json": "0f96f92c5a364d4848dc3702f6d1afe0e97ae73b4fbd2a043eb964f0ab07caf6"
+  },
+  "committedBlobs": {
+    "consumers/civ-lite/game/canon.gd": "e98ed6db581d0fac90ba09c03f79b7f52f959475",
+    "consumers/civ-lite/game/context.gd": "2652ecfef3bfbab3bb74ed321a7771288d21f46d",
+    "consumers/civ-lite/game/economy.gd": "eb2f16ed3502c85c70eac63af412bca2aa5356b5",
+    "consumers/civ-lite/game/game.gd": "ebe797989178a19c3e4e31867a2d933aee4c7e18",
+    "consumers/civ-lite/game/intents.gd": "71c06a3309b0106b91cbbcb3541dcb3359290e36",
+    "consumers/civ-lite/game/prng.gd": "9d188b41d61c7826e468f60c423a00d3d0a106d5",
+    "consumers/civ-lite/game/replay.gd": "13331aa690ad94750c35f575c2dd2ef7c2e46c06",
+    "consumers/civ-lite/game/rules.gd": "bd50021bccc1c94ac6f2199a3acbb7825b2bff19",
+    "consumers/civ-lite/game/snapshot.gd": "4a963d843bec031064930ae6c916b3e8aaa297d7",
+    "consumers/civ-lite/game/turn.gd": "2e03b88fa944a7f63d036386125681b093958f72",
+    "consumers/civ-lite/game/world.gd": "7089136040394f08e7bbbdda55aa118c99dd0ab4",
+    "consumers/civ-lite/services/game_services.gd": "b48f8056c2dcfc7699a76e7aa8207737f4c9d6a6",
+    "consumers/civ-lite/services/schema.gd": "bb8d6e77f0fadd511c9f845538f3cb2a0658736c",
+    "consumers/civ-lite/ui/frontier-types.ts": "588a57ebe77002a46cb02a2ae1cb7da15a3915ca",
+    "package.json": "569ad81398e0acc590f07fbcef540b9a3f0818d4",
+    "scripts/frontier-services-bundle.mjs": "5a3812a6195e876398e800f76968552fd34ecc82",
+    "scripts/frontier-services-sabotage.mjs": "6e195f0f98bfafa17da25dc7073b92e6c297e14e",
+    "scripts/godot-binary.mjs": "602d0992e7edd31d3ed3b050bf764d6a3602c581",
+    "scripts/native-probe-bundle.mjs": "5ca13d88791a06db6adfb6f661d42c3291f858da",
+    "scripts/sabotage-sources.mjs": "0186a4bdd4f624be5e403834688cacb8ed9355d4",
+    "sdk/addon/godot_fabric.gd": "64cce633c0842e63c70d81a108cddcea735fcf99",
+    "sdk/toolchain/platform-plugin.mjs": "c529790df1e6d5390ea6028d7d423662b162c6cf",
+    "src/godot-fabric.js": "247eac60fc03e7212e9893ed02af01c29901eafe",
+    "src/react-native-platform.jsx": "dea9c81505d65e0e6649fe411fb7a9da4d5e5ec2",
+    "tests/civ-lite-game-native.test.mjs": "5dc538879534de782365619fc8ab81c065eabe3c",
+    "tests/civ-lite-game-oracle.mjs": "52d81dfcbca7b2484a8c07fc95bab81c0f2b395b",
+    "tests/civ-lite-game-probe.gd": "74fda327081eba106d8a828e9cc3c88253600884",
+    "tests/frontier-services-fixture.jsx": "bf86a17a0ed17fffff821d65218e12c3579d875c",
+    "tests/frontier-services-native.test.mjs": "be8f38f5ef890f8dac2c8a3504500cc1c7fc8285",
+    "tests/frontier-services-oracle.mjs": "73890b1a0595da6405e4a01d3f068f5f829827a0",
+    "tests/frontier-services-parity.test.mjs": "2906924f2e946032ed7143b92e35d972296be7c3",
+    "tests/frontier-services-probe.gd": "2620dbbdea6b5f3c6311c5539472eff861525d56",
+    "tests/types/frontier-services.tsx": "e5026dfd7933d8399cce25c500b8062b0b510e20",
+    "tsconfig.godot.json": "4ae4134f2393ae0a4387f030abf36d0ea24f37c8"
+  },
+  "sourcesEqualCommittedBlobs": true,
+  "limits": [
+    "Headless only: there is no HUD (the playable one is V05-05 and V05-08), so there is no capture, and nothing here renders a panel.",
+    "The probe builds its scene in code with an application stand-in that does what sdk/addon/application_node.gd does, instead of the provisioned node; provisioning by the addon, the editor flow and ten cycles are criterion `consumidor` and are open.",
+    "game_services.gd reaches the facade by preload('res://sdk/addon/godot_fabric.gd'), the laboratory path; a provisioned project must use the global GodotFabric instead.",
+    "A job that survives closing the screen and bursts against the 64 tasks and 128 events a phase are criterion `autoridade` and are open; end_turn is one synchronous GDScript call here.",
+    "The TypeScript types are written by hand and the parity test compares names and shapes only; there is no generator.",
+    "Hosted CI for test:frontier-services and the Pages publication are pending."
+  ]
+}

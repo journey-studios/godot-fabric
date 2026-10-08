@@ -98,8 +98,9 @@
     "test:images-visual": "node --test tests/images-visual-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
     "test:civ-lite-game": "node --test tests/civ-lite-game-native.test.mjs",
-    "type-check:tsc": "tsc -p tsconfig.godot.json",
-    "test:export:macos": "node --test tests/macos-export.test.mjs tests/macos-export-native.test.mjs"
+    "test:frontier-services": "node --test --test-concurrency=1 tests/frontier-services-native.test.mjs tests/frontier-services-parity.test.mjs",
+    "test:export:macos": "node --test tests/macos-export.test.mjs tests/macos-export-native.test.mjs",
+    "type-check:tsc": "tsc -p tsconfig.godot.json"
   },
   "dependencies": {
     "nativewind": "4.2.7",

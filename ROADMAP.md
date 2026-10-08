@@ -561,6 +561,19 @@ snapshot the HUD will project is written down field by field but is not yet a se
 the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
 checkpoint, weight or denominator moves.
 
+**Progress.** V05-03, criterion `servicos`: the persistent `GameServices` node
+(`consumers/civ-lite/services/`) registers the Frontier snapshot as a state, `turn_ended` as
+a signal and eleven methods before any bundle or mount, from one GDScript schema source, with
+an epoch that starts at 1, rises on every `new_game` and stays out of the state and the hash.
+Hand-written TypeScript types are compared with the schemas Godot registered in both
+directions, and a bundle standing in for the HUD plays the whole 12-turn replay through the
+services to the same golden hash, with every snapshot it holds equal to the node's. The
+snapshot's `Action.args` became the intent's positional arguments, so an action is a call.
+Seven retained sabotages are rejected. The [record](https://github.com/journey-studios/godot-fabric/blob/f199dd0968db4450497488a35f288c7ac8356401/docs/evidence/frontier-services/README.md)
+is local macOS arm64 evidence, headless and without a HUD; the hosted CI run and the Pages
+publication are pending. The `consumidor` and `autoridade` criteria of V05-03 stay open, and
+no 1.0 checkpoint, weight or denominator moves.
+
 **Progress, V05-07 (`plugin` and `assinatura`, local).** Producer
 `58f527193039222b19794960e7b662cb34c65e74` exports and publishes a signed macOS arm64
 Release minimal consumer after relocation, exact 40/43 assertions and three 1080×600 captures
