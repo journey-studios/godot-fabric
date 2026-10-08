@@ -2422,7 +2422,8 @@ original `TouchableOpacity` without its bundling seam (the `animated` lane goes 
 control at 19), and the tree example's children-only React commit now keeps an
 imperatively set native ID, as RN's JS thread holds the clone `setNativeProps`
 committed; the slice's executed tree and touchables evidence files stay as historical
-records. Open: `LayoutAnimation` and layout transitions, native `Animated.event` on
+records. Open: layout transitions (`LayoutAnimation` became [its own
+slice](#layoutanimation-on-rns-own-layoutanimationdriver-2026-10-08)), native `Animated.event` on
 the SDK ScrollView, asserted animation of layout props (exploratory runs of `width`
 and `marginLeft` followed frame by frame), `PlatformColor` interpolation, reduced
 motion, behavior under JS load and across background/resume, frame budgets (GF-30),
@@ -3682,6 +3683,76 @@ expand and scan the `godotFabric.tailwind.content` globs itself, so a brace bran
 link that leaves it fails the build naming the link, and Tailwind receives the files' text instead of the globs; the JS
 lane is at 15 tests and the bundle and compiled styles are unchanged by the fix, as the
 [evidence](docs/evidence/library-consumer/README.md) records in a later note.
+
+### LayoutAnimation on RN's own LayoutAnimationDriver (2026-10-08)
+
+GF-19 stays **In progress**; this is its second slice and it closes no checkpoint: the first slice already closed
+`slice`, and the full item, contract, parity and targets remain open. The
+[LayoutAnimation evidence](docs/evidence/layout-animation/README.md) makes the public `react-native` export React Native's
+own `LayoutAnimation` (and the legacy `UIManager.configureNextLayoutAnimation`) run on RN's own C++
+`LayoutAnimationDriver`: **128 headless checks** (87 normative) on one root. Until now the host bound
+`configureNextLayoutAnimation` but never installed an animation delegate, so the call did nothing: only the JS timer that
+`LayoutAnimation.js` arms against the native end (`duration + 17` ms) ended a `configureNext`, and the commit was mounted
+at once.
+
+One `LayoutAnimation` per `FabricApplication` (`native/layout_animation.{h,cpp}`) builds the driver from RN's
+`react/renderer/animations` (three sources, now compiled into the core, with no subclass and no copy), with the
+application's `RuntimeExecutor` wrapped to count what the driver queues, a `LayoutAnimationStatusDelegate` for the
+in-flight flag and the `started` and `completed` counters, and a clock; it hands the driver the component descriptor
+registry and installs it on the `UIManager` in `Scheduler.cpp`'s order. Every surface's mounting coordinator gets not the
+driver but a `RecordingDriver`, a `MountingOverrideDelegate` that forwards to the driver and records the transaction it
+returns, so a transaction is attributed to the driver exactly (the coordinators hold it weakly, and `stop()` releases it
+with the driver, before the Hermes runtime). The host's frame clock is the display link: an animation in flight is a frame
+consumer by the status delegate's flag, as iOS switches its run loop observer, the tick runs `UIManager::animationTick()` at
+the tick's timestamp, and idle neither the frame clock nor the driver ticks. A tick that another consumer of the frame clock
+causes (a `requestAnimationFrame` loop) with no animation in flight leaves the driver untouched and uncounted: the module
+returns from `tick` before `animationTick()`. When the last surface stops while RN still holds an animation (the unmount
+itself was animated), the next surface's registration hands the interest back, because RN removes the old animation at
+the next surface's first pull and signals no start for the one that pull creates. The clock RN reads is the pump's frame time in
+whole milliseconds, handed over at every pump (a commit that animates or interrupts pulls between ticks) and never going
+back; there is no offset seam. `status().layoutAnimation` reports `active`, `started`, `completed`, `callbacksQueued`,
+`ticks`, `clockReads`, `frameMs`, `lastReadMs` and a ring of the last 64 transactions served (the time RN read, the frame
+time, the callbacks queued and the mutations by type). The facade re-exports RN's original `LayoutAnimation`, and
+`UIManager` gains the two legacy methods of RN's `BridgelessUIManager`: `setLayoutAnimationEnabledExperimental` is a no-op
+and `configureNextLayoutAnimation` delegates to Fabric.
+
+Updates animate layout (x, y, width and height), creates fade or scale in and deletes fade or scale out, with the linear,
+easeInEaseOut and spring curves; the driver calls `onAnimationDidEnd` (RN's JS timer stays the fallback, and RN calls the
+callback once) and `onAnimationDidFail` for a config it cannot parse, and a second `configureNext` in the middle of an
+animation continues from the view on screen.
+
+The probe waits for the driver's completion or a callback with a limit, never for a number of frames or a span of time. An
+independent oracle, written from the RN sources, recomputes every frame of every animation from the time RN read for each
+transaction the driver served (the factor of the curve, the layout, opacity and scale of every node, the mutation counts
+and the state of RN's JS timer), to within 1.8e-5 in position and 4.2e-8 in opacity over 359 transactions. The preceding
+host (main `c858263`) fails exactly the **87 normative checks of 128**: every `configureNext` ends by RN's JS timer, once.
+**Six retained host sabotages** (the driver reading seconds, no surface registered, the animation not a frame-clock
+consumer, the success callback dropped, the driver ticked by any tick of the frame clock, the interest not handed back to
+the next root) fail 80, 90, 91, 7, 1 and 4 checks and the oracle rejects each. The suite ran three
+times in a row and once under CPU load, and the example passes 12 headless checks, 12 with the native renderer and 23 with
+five captures. The cost of a tick, measured once with temporary instrumentation (121 to 135 us for one view, 3.7 to 3.8 ms
+for 400), is recorded and is not a gate.
+
+Open: reduced motion (`Platform.isDisableAnimations` is undefined under Godot's platform, so `configureNext` never skips);
+several roots at once (the armed animation is global, as in RN); the interpolation of Text and Image state (layout only, as
+in RN); `keyboard`, easeIn and easeOut without a certificate; background and resume; behavior under JS load; the mobile
+exports; hit-testing of a deleted view that stays mounted until its animation ends; the per-tick budget (GF-30); native
+`Animated.event` on the SDK ScrollView and the rest of what the Animated slice lists; and the hosted CI run of the new step
+and the Pages publication are pending.
+
+The record pinned at `092dd14` ran 121 checks (83 normative; sabotages 75, 87, 86 and 6; 359 transactions): the review of
+PR #65 then made `LayoutAnimation::tick` return when no animation is in flight, so that a `requestAnimationFrame` loop
+that ticks the frame clock neither counts nor ticks the driver, and added a stage with two checks, one of them normative,
+and a fifth retained sabotage that fails it alone (123 checks, 84 normative; sabotages 75, 87, 86, 6 and 1). A second round
+of that review found the interest in ticks lost when the last root stops holding an animation RN has not yet dropped, and
+added the `restart` stage (five checks, three of them normative: a root whose removal is animated stops, and the next
+root's animated first commit has to run to its end with no other commit) and a sixth retained sabotage.
+
+Executed on macOS 26.6.2 arm64 with official Godot 4.7.2 at implementation
+[`ee8f5bd`](https://github.com/journey-studios/godot-fabric/commit/ee8f5bd55e60556bd3fb4408eed11734399ae378) (after `2648ab0`) and recorded at
+[`092dd14`](https://github.com/journey-studios/godot-fabric/commit/092dd14bd70df31bf751c13a3797a9109ca95bb9). On the implementation tree the contracts
+gate (302 Node/13 Python), the type check, static analysis, the publication scan, the animated, frame clock and touchables
+suites, the platform-seams test and the 36 examples pass. No checkpoint, whole GF, weight or denominator closes.
 
 ## M1 — Complete the native UI tree
 

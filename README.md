@@ -363,9 +363,22 @@ by frame by an independent oracle. The preceding host fails exactly its 59
 normative checks, and hosts that hand the backend seconds or leave the JS thread's
 runtime reference update off fail exactly 32 and 2. A uniform `transform: [{ scale }]`
 failed with `E_TRANSFORM_3D` then and renders since the uniform scale proof below;
-`LayoutAnimation` is open. Hosted CI repeated the 75 checks on its second
+`LayoutAnimation` has its own [example](examples/layout-animation/README.md) below. Hosted CI repeated the 75 checks on its second
 attempt ([receipt](docs/evidence/native-animated/hosted-ci.json)).
 [Evidence](docs/evidence/native-animated/README.md).
+
+The [LayoutAnimation example](examples/layout-animation/README.md) runs React Native's original
+`LayoutAnimation` (`configureNext`, `create`, `Presets`, and the legacy
+`UIManager.configureNextLayoutAnimation`) from the public import over RN's own C++
+`LayoutAnimationDriver`, which the host installs on the `UIManager` and advances with its frame
+clock: the next commit's updates animate layout, its creates fade or scale in and its deletes fade
+or scale out, with the linear, easeInEaseOut and spring curves, and the driver calls
+`onAnimationDidEnd` (RN's JS timer stays the fallback) and `onAnimationDidFail`. The headless
+suite (128 checks) recomputes every frame from the clocks RN read with RN's formulas; the preceding host fails
+exactly its 87 driver checks and six retained host sabotages are rejected (80, 90, 91, 7, 1 and 4 checks). One root at a time;
+reduced motion, Text and Image state interpolation, background and resume, JS load and a
+performance budget are open. Hosted CI is pending. [Evidence](docs/evidence/layout-animation/README.md)
+and [research](docs/research/layout-animation.md).
 
 The [uniform scale proof](examples/transforms/README.md#uniform-scale) mounts RN's
 uniform `transform: [{ scale }]` in five Hermes applications: a scale, a scale with
@@ -862,6 +875,7 @@ npm run test:pointers:documents         # original Document/root interest across
 npm run test:transforms:guards           # rejected styles, invalid embedding input, cleanup, uniform scale and singular transforms
 npm run test:frame-clock                 # display-paced frame callbacks and native animation, with controls and sabotages
 npm run test:performance                 # native views, Hermes heap and phase timings in a mount/unmount soak, with controls and sabotages
+npm run test:layout-animation            # RN's LayoutAnimation on RN's C++ driver; the old-host control and sabotages: node scripts/layout-animation-sabotage.mjs
 npm run test:text-layout                 # onTextLayout and the Yoga baseline from the shaped paragraph; the old-host control and sabotages: node scripts/text-layout-sabotage.mjs
 npm run test:text-original               # RN's original Text.js and press on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-original-sabotage.mjs
 npm run test:text-style                  # fontStyle italic and textDecorationLine on the paragraph; the previous SDK and host controls and sabotages: node scripts/text-style-sabotage.mjs

@@ -35,12 +35,13 @@ value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
 `npm run parity:status` generates `build/parity-status.json`. On 2026-10-08 the
-current facade has **56 exported names awaiting differential certification, 3
-explicit placeholders and 38 missing public names** of the 97 root values, against
+current facade has **57 exported names awaiting differential certification, 3
+explicit placeholders and 37 missing public names** of the 97 root values, against
 44, 5 and 48 on 2026-10-07 (the Image slice exported AssetRegistry and took Image and
-ImageBackground out of the placeholders, and nine OS-specific names were added: ToastAndroid,
+ImageBackground out of the placeholders, nine OS-specific names were added: ToastAndroid,
 PermissionsAndroid, DynamicColorIOS, ActionSheetIOS, ProgressBarAndroid, DrawerLayoutAndroid,
-InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback), 39, 5 and 53 on 2026-10-06
+InputAccessoryView, PushNotificationIOS and TouchableNativeFeedback, and the LayoutAnimation
+slice exported LayoutAnimation), 39, 5 and 53 on 2026-10-06
 (Linking, Clipboard and Vibration were added, and so were Modal and SafeAreaView) and 17, 11 and 69
 after adding Button/public TextInput (2026-10-02). The three
 placeholders are KeyboardAvoidingView, RefreshControl and
@@ -80,6 +81,7 @@ slice's own suite, not a coverage percentage.
 | Touchables | `TouchableWithoutFeedback`, `TouchableHighlight` (`TouchableOpacity` is in the next area) | [Touchables](../evidence/touchables/README.md) | 93 and an animated lane; the preceding SDK fails exactly 19, an imitation over Pressable 42 | run 37394073082 ([receipt](../evidence/touchables/hosted-ci.json)) |
 | Lists | `FlatList`, `SectionList`, `VirtualizedList`, `VirtualizedSectionList` | [Virtualized lists](../evidence/virtualized-list/README.md) | 44; the preceding host fails exactly 3, the preceding SDK 11, a ScrollView without `onLayout` 3 | run 37401008543 ([receipt](../evidence/virtualized-list/hosted-ci.json)) |
 | Animation | `Animated`, `Easing`, `useAnimatedValue`, `useAnimatedValueXY`, `TouchableOpacity` | [Animated](../evidence/native-animated/README.md) | 75, recomputed by an independent oracle; the preceding host fails exactly 59 | run 37439650201, second attempt ([receipt](../evidence/native-animated/hosted-ci.json)) |
+| Layout animation | `LayoutAnimation` (`environment_or_utility_subset`: RN's original object over RN's `LayoutAnimationDriver`, one root at a time) and the legacy `UIManager.configureNextLayoutAnimation` and `setLayoutAnimationEnabledExperimental` | [LayoutAnimation](../evidence/layout-animation/README.md) ([research](../research/layout-animation.md), [example](../../examples/layout-animation/README.md)) | 128 (121 in the record pinned at `092dd14`), recomputed frame by frame by an independent oracle; the preceding host fails exactly 87, six retained host sabotages fail 80, 90, 91, 7, 1 and 4 | pending |
 | Transforms | View `transform`: uniform `scale` | [Uniform scale](../evidence/uniform-scale/README.md) | 29, or 35 with the capture; the preceding host fails exactly 22 | run 37455258901 ([receipt](../evidence/uniform-scale/hosted-ci.json)) |
 | Transforms | View `transform`: singular matrices and `scale: 0` | [Singular transforms](../evidence/singular-transforms/README.md) | 49, or 58 with the capture; the preceding host fails exactly 37, a sabotage of the pointer projection 2 | run 37499277022 ([receipt](../evidence/singular-transforms/hosted-ci.json)) |
 | Frame pacing | `requestAnimationFrame` and RN's Native Animated frames | [Frame clock](../evidence/frame-clock/README.md) | 37 over eight loop paces; the preceding host fails exactly 29, three retained sabotages each fail at least one | run 37538167415 ([receipt](../evidence/frame-clock/hosted-ci.json)) |
@@ -98,7 +100,8 @@ they do not move the counts above, and the root's `Networking` export is still m
 Device services row is: it exported `Linking`, `Clipboard` and `Vibration`, which moved the
 counts from 39 and 53 to 42 and 50 before the Modal slice added `Modal` and `SafeAreaView`
 (44 and 48), the Image slice moved them to 47 and 47, and the OS-specific contracts row exported
-nine names, which moved them to 56 and 38. That row reproduces RN's own unavailability on a platform that is neither iOS nor Android:
+nine names, which moved them to 56 and 38, and the Layout animation row exported `LayoutAnimation`,
+which moved them to 57 and 37. The OS-specific contracts row reproduces RN's own unavailability on a platform that is neither iOS nor Android:
 `'denied'` and `false` from `PermissionsAndroid` mean unavailable on Godot, and no
 Android or iOS behavior is certified. Their hosted CI runs are pending.
 
