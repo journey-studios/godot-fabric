@@ -4,12 +4,8 @@
 #include <functional>
 #include <optional>
 
-namespace facebook::react {
-class ShadowNode;
-class UIManager;
-}
-
 namespace fabric_godot {
+class PhysicalEmbedding;
 // The callback returns a connected mounted Control's viewport transform. An
 // absent Control is normal for a logical ref flattened by Fabric.
 using MountedPointerTransform =
@@ -22,8 +18,7 @@ using MountedPointerTransform =
 // Unsupported or
 // non-invertible geometry throws an E_POINTER_GEOMETRY_* diagnostic.
 std::optional<godot::Vector2> pointer_local_point(
-    const facebook::react::UIManager &ui,
-    const facebook::react::ShadowNode &target,
+    const PhysicalEmbedding &embedding,
     godot::Vector2 viewport_point,
     const godot::Transform2D &root_embedding,
     const MountedPointerTransform &mounted, bool *hidden = nullptr);

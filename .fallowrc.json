@@ -56,7 +56,8 @@
     "tests/frame-clock-fixture.jsx",
     "tests/networking-fixture.jsx",
     "tests/device-services-fixture.jsx",
-    "tests/websocket-fixture.jsx"
+    "tests/websocket-fixture.jsx",
+    "tests/modal-host-fixture.jsx"
   ],
   "ignorePatterns": [
     "build/**",
@@ -171,6 +172,8 @@
         "TouchableHighlight",
         "TouchableOpacity",
         "TouchableWithoutFeedback",
+        "Modal",
+        "SafeAreaView",
         "ActivityIndicator",
         "StatusBar",
         "FlatList",
@@ -247,6 +250,9 @@
             "Text",
             "TextInput",
             "Button",
+            "Modal",
+            "ModalProps",
+            "SafeAreaView",
             "Switch",
             "SwitchChangeEvent",
             "ActivityIndicator",

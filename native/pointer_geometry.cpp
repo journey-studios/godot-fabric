@@ -1,9 +1,9 @@
 #include "pointer_geometry.h"
 #include "affine_transform.h"
 #include "coordinate_transform.h"
+#include "physical_embedding.h"
 #include <react/renderer/components/root/RootShadowNode.h>
 #include <react/renderer/core/LayoutableShadowNode.h>
-#include <react/renderer/uimanager/UIManager.h>
 #include <cmath>
 #include <limits>
 #include <stdexcept>
@@ -82,32 +82,21 @@ godot::Transform2D local_transform(const rn::LayoutableShadowNode &node) {
 }
 
 std::optional<godot::Vector2> pointer_local_point(
-    const rn::UIManager &ui, const rn::ShadowNode &target,
+    const PhysicalEmbedding &embedding,
     godot::Vector2 viewport_point, const godot::Transform2D &root_embedding,
     const MountedPointerTransform &mounted, bool *hidden) {
   if (hidden) *hidden = false;
   if (!viewport_point.is_finite())
     throw std::runtime_error("E_POINTER_GEOMETRY_NONFINITE: native pointer sample must be finite");
 
-  // Retain one current revision, then perform all host callbacks after the
-  // registry visit releases its lock. Family ancestry survives clone changes.
-  rn::RootShadowNode::Shared root;
-  ui.getShadowTreeRegistry().visit(target.getSurfaceId(), [&](const rn::ShadowTree &tree) {
-    root = tree.getCurrentRevision().rootShadowNode;
-  });
-  if (!root) return std::nullopt;
-
-  std::vector<const rn::ShadowNode *> path;
-  if (rn::ShadowNode::sameFamily(*root, target)) {
-    path.push_back(root.get());
-  } else {
-    const auto ancestors = target.getFamily().getAncestors(*root);
-    if (ancestors.empty()) return std::nullopt;
-    path.reserve(ancestors.size() + 1);
-    for (const auto &[parent, index] : ancestors) path.push_back(&parent.get());
-    const auto &[parent, index] = ancestors.back();
-    path.push_back(parent.get().getChildren().at(index).get());
-  }
+  // The shared resolver retained this Fabric revision for boundary selection
+  // and geometry. Only this geometric path stops at RootNodeKind; RN still
+  // owns event and responder ancestry.
+  const auto &full_path = embedding.path();
+  std::vector<const rn::ShadowNode *> path(
+      full_path.begin() + static_cast<std::ptrdiff_t>(embedding.boundary_index()),
+      full_path.end());
+  if (path.empty()) return std::nullopt;
 
   std::vector<const rn::LayoutableShadowNode *> layouts;
   layouts.reserve(path.size());

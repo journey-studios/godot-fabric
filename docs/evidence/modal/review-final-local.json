@@ -1,0 +1,264 @@
+{
+  "format": "godot-fabric.modal-final-review/v1",
+  "checkedAt": "2026-10-07T21:12:36.256393+00:00",
+  "reviewer": "root",
+  "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+  "identicalScenarioInputs": {
+    "reviewer": "root",
+    "identicalInputsTo": "build/modal-final-root",
+    "inputs": {
+      "fixture.jsx": "55f7010c141789bcd8fe64bbc3dbe93f0e73c80994ca63ca6d936da9afe35114",
+      "tests/modal-host-probe.gd": "696bbf570ce5d7d7dfc27000db982fce2e96a169850f27326df939ecbed10c7b",
+      "tests/graphical-probe.gd": "186a26c07da6e5936ebb8e8821cea0dd95795986db4ee569847c4350306dc227",
+      "build/modal-host-probe.js": "dbdd8194b4ee8181cf894f60ac78abec87e89e85a024f25078e8130adf81a1b8"
+    },
+    "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+    "sdkReceiptSha256": "311021af0971b656629145f2d9a3eeee5193854e3ca768a5d027c1acb78c71f8"
+  },
+  "executions": {
+    "headless": {
+      "checks": 68,
+      "passed": 68,
+      "displayServer": "headless",
+      "scope": {
+        "crossRootCapture": true,
+        "engineInjectedInput": true,
+        "explicitPointerCapture": true,
+        "foreignRuntimeOwnership": true,
+        "logicalModalBubbling": true,
+        "mobile": false,
+        "originalModal": true,
+        "originalSafeAreaView": true,
+        "pixelCapture": false,
+        "publicButtonAdapter": true,
+        "publicTextInputAdapter": true
+      }
+    },
+    "graphical": {
+      "checks": 73,
+      "passed": 73,
+      "displayServer": "macOS",
+      "scope": {
+        "crossRootCapture": true,
+        "engineInjectedInput": true,
+        "explicitPointerCapture": true,
+        "foreignRuntimeOwnership": true,
+        "logicalModalBubbling": true,
+        "mobile": false,
+        "originalModal": true,
+        "originalSafeAreaView": true,
+        "pixelCapture": true,
+        "publicButtonAdapter": true,
+        "publicTextInputAdapter": true
+      }
+    }
+  },
+  "independentObservations": [
+    {
+      "execution": "headless",
+      "id": "required-probe-checks",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "engine-diagnostics",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "mount/react/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "controls/modalPointer/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "controls/typed/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "controls/clicked/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "controls/blocked/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "reentrantShow/react/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "reentrantShow/nestedInteraction/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "crossRootCapture/report/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "capture/original-Pressability-and-explicit-capture",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "logical-ancestry/bubbling",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "foreign-top/no-cancel-on-lower-stop",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "foreign-top/identity-focus-text",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "foreign-top/one-Up-Press-Lost",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "cross-root/exact-RN-trace",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "cross-root/target-viewport-offset",
+      "passed": true
+    },
+    {
+      "execution": "headless",
+      "id": "cleanup/zero-roots-and-errors",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "required-probe-checks",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "engine-diagnostics",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "mount/react/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "controls/modalPointer/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "controls/typed/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "controls/clicked/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "controls/blocked/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "reentrantShow/react/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "reentrantShow/nestedInteraction/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "crossRootCapture/report/same-observed-contract-as-reviewed-c9",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "capture/original-Pressability-and-explicit-capture",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "logical-ancestry/bubbling",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "foreign-top/no-cancel-on-lower-stop",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "foreign-top/identity-focus-text",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "foreign-top/one-Up-Press-Lost",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "cross-root/exact-RN-trace",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "cross-root/target-viewport-offset",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "cleanup/zero-roots-and-errors",
+      "passed": true
+    },
+    {
+      "execution": "graphical",
+      "id": "screen/canonical-Godot-transform",
+      "passed": true
+    }
+  ],
+  "executionHashes": {
+    "build/modal-review-final-root/headless-report.json": "e3f74cdd3cc7f2178144853621082fe472544a493dc5011a29fa6152c47dcad6",
+    "build/modal-review-final-root/headless.log": "bc2fa4618d64336d8ed564d361e4b77c6be966e890b8d2bb66e7c2ccdfcb6bbe",
+    "build/modal-review-final-root/graphical-report.json": "c104d1f18c36251872cd68e8e65a7a2e03a347900b4c5ba5efe02c139223ea17",
+    "build/modal-review-final-root/graphical.log": "f8b633e130fb0929cb155d99bbba0fbb41674bbc9077648127452cc35aeba439",
+    "capture-review-final-initial.png": "e5b69974b0a3e8b93da74f176ca50544cdc0de358fb91aee0c735080b00e0719",
+    "capture-review-final-resized.png": "78fdebae3d6d45fa85c25d3d338dd8705539c5ff0bf6be15f72beabd25f15d5c"
+  },
+  "visuallyInspected": [
+    "capture-review-final-initial.png",
+    "capture-review-final-resized.png"
+  ],
+  "lifetimeDiscriminators": "discriminators-local.json",
+  "historicalReviewFixes": "review-regressions-local.json",
+  "limits": {
+    "hardwareInput": false,
+    "mobile": false,
+    "export": false,
+    "hostedCI": false,
+    "fullGF18Acceptance": false
+  }
+}

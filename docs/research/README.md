@@ -56,6 +56,10 @@ balanced cleanup. [Evidence](../evidence/README.md) states what actually ran.
 
 ## Host contract investigations
 
+- [Modal ownership and physical embedding](modal.md): original RN descriptor,
+  isolated Godot GUI findings and the sibling-Window decision. Product RN
+  integration, background focus semantics and mobile presentation remain open.
+
 - [Pointer transport and capture lifetime](pointer-capture-boundary.md): pinned
   EventTarget flags, pending/active capture, removal and commit-order constraints.
   This is source investigation, distinct from executed focus/runtime proof.

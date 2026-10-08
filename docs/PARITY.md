@@ -58,11 +58,12 @@ per-target acceptance; pending V2 decisions retain their status.
 
 ## Subsequent checkpoint — 2026-10-06
 
-The public facade now exports **42 names awaiting differential certification and 5
+The public facade now exports **44 names awaiting differential certification and 5
 explicit placeholders** (Image, ImageBackground, KeyboardAvoidingView,
-RefreshControl and StatusBar) and omits 50 of the 97 root values, as
-`npm run parity:status` counts them; Linking, Clipboard and Vibration, the first slice of
-GF-23, are the three names added to the 39 and subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
+RefreshControl and StatusBar) and omits 48 of the 97 root values, as
+`npm run parity:status` counts them; Linking, Clipboard and Vibration (the first slice of
+GF-23) and Modal and SafeAreaView (the Modal slice) are the five names added to the 39 and
+subtracted from the 53 of 2026-10-06. The [live status board](compatibility/BASELINE.md)
 keeps those counts and a per-area table of the evidence below. The tables further
 down and the machine-readable [97-name audit](compatibility/react-native-0.87.1.json)
 remain the 2026-10-01 snapshot, except the three GF-23 entries now updated (4 usable
@@ -103,7 +104,7 @@ headless checks (the [evidence index](evidence/README.md) lists every record and
   13 `core-ui-v2` Android/iOS cases are not WebSocket differential or Godot mobile runtime proof;
   later PR-head changes require new green CI).
   They are globals, not names of the `react-native` root: they do not move the facade's counts,
-  and RN's `Networking` export stays among the missing 50.
+  and RN's `Networking` export stays among the missing 48.
 - **Device services:** the original [Linking, Clipboard and Vibration](evidence/device-services/README.md)
   over three native TurboModules and Godot's `OS.shell_open`, clipboard and `Input.vibrate_handheld`
   (GF-23's first slice; a headless probe in two applications with an independent oracle, the

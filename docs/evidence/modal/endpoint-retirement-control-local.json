@@ -1,0 +1,415 @@
+{
+  "format": "godot-fabric.modal-endpoint-retirement-control/v1",
+  "reviewer": "root",
+  "command": "npm run test:pointers:capture",
+  "hostSha256": "c2293d7f775c942efeb05c49e5a12cb4a4ad563e99eac6405d5f6ef6e52a074a",
+  "lanes": [
+    {
+      "lane": "original-disabled",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "e22c9fc835356a301d1fc9147db7aa672f945dbc023e74050d25e8fc0a4fb75a",
+      "logSha256": "066f1a6e0b2a20ca3e89432d8513f9d5d029c37762c0105e97fe426d556fe3ae"
+    },
+    {
+      "lane": "original-imperative-only",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "ea7a6f0d535ba1268ca761d84854c59d05fea920fdd6ff04b93e9e81bcbd5dd8",
+      "logSha256": "97d116a34c2b756efc85d0f8e291cc014abc2a5a446217fe40777c977b979abe"
+    },
+    {
+      "lane": "original-internal-only",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "18e5266c152df7c46d00234e435be3e14df990660e80a991016f370651c6cacf",
+      "logSha256": "19e6dfb5f7c172957d2ddd358230015173b7d5a0e0c2ef3ce54df74bde85cca5"
+    },
+    {
+      "lane": "original-enabled",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "2bc6ab93c7f42b702ce7689d0733e320542b757f088851506106618ac551818a",
+      "logSha256": "aed33eeb919372b0aa346b7b4c48734fc9249cef2a4895365b930081c5c9c3f8"
+    },
+    {
+      "lane": "current-disabled",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "09f9a9e6c0e10427a42c01626d3dfa6314813dda463e1aa624d43f1e3b1dd63a",
+      "logSha256": "21313c2b06047ee33eabb954b4a02fb8b9b58cdba594666977798649b3f2f1f0"
+    },
+    {
+      "lane": "current-imperative-only",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "485c39239cead2eee32ba874877ba82fa99c26e0fe1d6a2f51779deaa03f7d10",
+      "logSha256": "e7ab8acee714ad1d87c2f3bdb25c29f6345daa75edecc5713ad17002abb851f1"
+    },
+    {
+      "lane": "current-internal-only",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "fd911227f5f8355129c07d3dc7ebe2a6072310da9747b1e4af710fee7311b295",
+      "logSha256": "714129774fab1c09b3284a3b7367e294d3f39b0b027b146c4bc45bb2e4ac096f"
+    },
+    {
+      "lane": "current-enabled",
+      "checks": 84,
+      "passed": 84,
+      "removalChecks": [
+        {
+          "name": "mouse/remove-target/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-target/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/RN's processor emits exactly the expected pointer, boundary, capture and click sequence",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Each event carries its own sample, retargeted to its target with a local offset",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Listeners receive each event in RN's propagation order for this lane",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/Capture is pending at once, active from the next sample and released by Up, Cancel or removal",
+          "passed": true
+        },
+        {
+          "name": "mouse/remove-captured-origin/The case ends without a retained pointer, capture, route or touch",
+          "passed": true
+        }
+      ],
+      "reportSha256": "956e2d45f76cedfd06ab833a0a045ca71ea313a81789c345f4bf814cbb16a304",
+      "logSha256": "870f11d527d4ce94884e23551e2f4114fe7344b7b065f21900ee8b8d96dce4bd"
+    }
+  ],
+  "canonicalIndependentOracleExecuted": true,
+  "sameLiveWindowSuppressionPreserved": true,
+  "destroyedWindowRoutesRetired": "retired-window-routes-local.json",
+  "expandedLifecycle": "discriminators-local.json",
+  "runnerSha256": "9ca079484de3fc772191eec856e403aa6c047ae9dcf8b01f121e8d24caddfc76",
+  "probeSha256": "bf85183e81990d7acc9253c9c0e7fc6a11c1cadfcfe2290be4afcf5f842f57e4",
+  "comparisonSha256": "4aeac276cfde4932ca6ca1a262dd211317a7dc665c2e53b9b2611a166569fbec",
+  "harnessLogSha256": "aa67080b273f2a3796696b78c5c5618d2f6db3e8b10cd3831994a2767ae8b17e",
+  "priorPotentialRunnerOverlap": "The prior successful run was repeated serially after the Luna runner was stopped. This receipt certifies the later isolated run.",
+  "limits": {
+    "mobile": false,
+    "export": false,
+    "hardwareInput": false,
+    "hostedCI": false
+  }
+}

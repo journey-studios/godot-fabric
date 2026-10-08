@@ -124,6 +124,17 @@ export type SwitchChangeEvent = RN.SwitchChangeEvent;
  * ActivityIndicatorView component; a numeric size sizes the Godot spinner. */
 export type ActivityIndicatorProps = Pick<RN.ActivityIndicatorProps, "animating" | "color" | "hidesWhenStopped" | "size" |
   "testID" | "nativeID" | "onLayout"> & { style?: StyleProp<ViewStyle> };
+/** RN's original Modal with the Godot presentation and lifecycle props. */
+export type ModalProps = Pick<RN.ModalProps, "visible" | "transparent" | "onShow" | "onRequestClose" |
+  "testID" | "children" | "backdropColor"> & {
+  animationType?: "none";
+  presentationStyle?: "fullScreen" | "overFullScreen";
+};
+/** RN's original Modal with the subset currently hosted by Godot. */
+export declare const Modal: React.ComponentType<ModalProps>;
+/** RN's original SafeAreaView maps to the View path on Godot; device safe-area
+ * insets are not supplied by this desktop host. */
+export declare const SafeAreaView: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const View: React.ComponentType<ViewProps & React.RefAttributes<NativeInstance>>;
 export declare const Text: React.ComponentType<TextProps & React.RefAttributes<NativeInstance>>;
 export declare const TextInput: React.ComponentType<TextInputProps & React.RefAttributes<TextInputInstance>> & {

@@ -35,9 +35,10 @@ value/combination and RN's entire transitive dependency API are outside this
 inventory. Its presence is not a compatibility score.
 
 `npm run parity:status` generates `build/parity-status.json`. On 2026-10-07 the
-current facade has **42 exported names awaiting differential certification, 5
-explicit placeholders and 50 missing public names** of the 97 root values, against
-39, 5 and 53 on 2026-10-06 (Linking, Clipboard and Vibration were added) and 17, 11 and 69
+current facade has **44 exported names awaiting differential certification, 5
+explicit placeholders and 48 missing public names** of the 97 root values, against
+39, 5 and 53 on 2026-10-06 (Linking, Clipboard and Vibration were added, and so were Modal
+and SafeAreaView) and 17, 11 and 69
 after adding Button/public TextInput (2026-10-02). The five
 placeholders are Image, ImageBackground, KeyboardAvoidingView, RefreshControl and
 StatusBar. This describes source presence: the board counts the export forms the
@@ -84,7 +85,8 @@ slice's own suite, not a coverage percentage.
 The two Runtime globals rows are not facade areas: RN installs those names as globals, so
 they do not move the counts above, and the root's `Networking` export is still missing. The
 Device services row is: it exported `Linking`, `Clipboard` and `Vibration`, which moved the
-counts from 39 and 53 to 42 and 50. Their hosted CI runs are pending.
+counts from 39 and 53 to 42 and 50 before the Modal slice added `Modal` and `SafeAreaView`
+(44 and 48 now). Their hosted CI runs are pending.
 
 ## Original native oracle
 
