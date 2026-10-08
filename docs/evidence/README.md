@@ -475,7 +475,8 @@ headless checks and 5 bridge checks, and four retained sabotages fail 6, 17, 3 a
 oracle rejects. Two captures of the example. No screen reader's speech, no other platform, and no
 mobile (Godot 4.7.2 has no accessibility bridge on iOS or Android, which blocks GF-34 and GF-35);
 `expanded` and `busy` are not covered by the bridge and `AccessibilityInfo` is the next slice. Hosted
-CI has not run the headless step yet. This does not complete GF-20 or add a checkpoint.
+CI has not run the headless step yet, and the bridge is local only. Only the `slice` checkpoint of GF-20's first
+slice closes; no whole GF, other checkpoint, weight or denominator closes.
 
 The source was compiled and executed independently on **macOS arm64** using
 official Godot **4.7.2**, React **19.2.3**, React Native **0.87.1**, Hermes

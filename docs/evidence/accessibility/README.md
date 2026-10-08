@@ -257,4 +257,5 @@ All links are pinned to the implementation commit.
   the `native-cold-start` job, which has not run for this slice yet. There is no hosted receipt,
   and none is claimed.
 
-This slice does not complete GF-20 and closes no checkpoint, weight or denominator.
+Only the `slice` checkpoint of GF-20's first slice closes. No whole GF, other checkpoint, weight or
+denominator closes; the bridge is local only and hosted CI is pending.

@@ -197,6 +197,6 @@
     "Godot 4.7.2 has no accessibility bridge on iOS or Android: a blocker for GF-34 and GF-35.",
     "AccessibilityInfo (settings and events), text scale, focus and keyboard navigation, announcements, custom actions, grouping under accessible, Text, the host's Button and TextInput and the Switch are outside this slice.",
     "No screen reader's speech was heard; only the tree a screen reader reads.",
-    "Hosted CI has not run the headless step yet. This slice does not complete GF-20 or close a checkpoint."
+    "Hosted CI has not run the headless step yet, and the bridge is local only. Only the slice checkpoint of GF-20's first slice closes; no whole GF, other checkpoint, weight or denominator closes."
   ]
 }
