@@ -73,6 +73,22 @@ head `422c2ee` ([receipt](evidence/websocket/hosted-ci.json)); later PR-head cha
 new green run. See the [WebSocket evidence](evidence/websocket/README.md) for local and hosted
 proof and target limits.
 
+The device services register three more C++ TurboModules, `LinkingManager` (RN's generated
+`NativeLinkingManagerCxxSpec`, the iOS contract `Linking.js` takes when `Platform.OS` is `"godot"`),
+`Clipboard` and `Vibration`, created when JS first reads their public API, from one `DeviceServices`
+owned by each `FabricApplication` (`native/device_services.{h,cpp}`) and shared by its roots. Each
+promise settlement and the `url` event leave through RN's scheduler on a stoppable call invoker, so a
+stop drops what was queued; retained methods then throw `E_MODULE_DISPOSED` synchronously, and
+`FabricApplication.deliver_url` returns `false`. The platform calls (`OS.shell_open`, the
+`DisplayServer` clipboard, `Input.vibrate_handheld`) are a backend struct that the validation meta
+`validation_device_services` can replace per function. `LinkingManager`: `getInitialURL` resolves the
+launch `--uri=` or `null`, `canOpenURL` the scheme rule, `openURL` `true` or `Unable to open URL:
+<url>`, `openSettings` always rejects; `addListener` and `removeListeners` are no-ops. `Clipboard`:
+`getString` and `setString` fail with `E_CLIPBOARD_UNAVAILABLE` where the DisplayServer has no
+clipboard. `Vibration`: `vibrate(ms)` for a finite, non-negative duration (`E_ARGUMENT` otherwise),
+`cancel()` to the backend and `vibrateByPattern` refused with `E_UNSUPPORTED`. See the [research
+note](research/device-services.md).
+
 ## Original logical tree and IDs
 
 The later [tree checkpoint](evidence/tree/README.md) adds View `id`/`nativeID`,
