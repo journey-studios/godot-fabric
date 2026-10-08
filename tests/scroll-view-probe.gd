@@ -24,6 +24,19 @@ func native_scroll(target_surface: Control = null, test_id: String = "scroll") -
     if row.get("testID") == test_id: return row.get("scroll", {})
   return {}
 
+func native_node(test_id: String, target_surface: Control = null) -> Dictionary:
+  var target := surface if target_surface == null else target_surface
+  for row: Dictionary in snapshot(target).get("nodes", []):
+    if row.get("testID") == test_id: return row
+  return {}
+
+func pointer_stats(target_surface: Control = null) -> Dictionary:
+  var target := surface if target_surface == null else target_surface
+  return snapshot(target).get("pointer", {})
+
+func count_event_type(events: Array, event_type: String) -> int:
+  return events.filter(func(row: Dictionary) -> bool: return row.get("type") == event_type).size()
+
 func mounted_rect(target_surface: Control, test_id: String) -> Rect2:
   var found := target_surface.find_child(test_id, true, false)
   return found.get_global_rect().abs() if found is Control else Rect2(-1000, -1000, 0, 0)
@@ -51,6 +64,21 @@ func move(at: Vector2) -> void:
   event.device = 1
   event.index = 0
   event.position = at
+  Input.parse_input_event(event)
+
+func mouse_button(at: Vector2, pressed: bool) -> void:
+  var event := InputEventMouseButton.new()
+  event.device = 1
+  event.position = at
+  event.button_index = MOUSE_BUTTON_LEFT
+  event.pressed = pressed
+  Input.parse_input_event(event)
+
+func mouse_move(at: Vector2, left_pressed: bool) -> void:
+  var event := InputEventMouseMotion.new()
+  event.device = 1
+  event.position = at
+  event.button_mask = MOUSE_BUTTON_MASK_LEFT if left_pressed else 0
   Input.parse_input_event(event)
 
 func wheel_down(at: Vector2) -> void:
@@ -367,6 +395,174 @@ func run() -> void:
   check(int(captured_state.get("captured", 0)) == 1 and int(native_scroll().get("begins", 0)) == capture_begins_before,
     "captured child pointer prevents native pan takeover", {"react": captured_state, "scroll": native_scroll()})
   capture("capture-blocks-pan")
+
+  app.call("evaluate", "ScrollViewFixture.reset()")
+  command("scrollTo", [{"x": 0, "y": 0, "animated": false}])
+  await settle(4)
+  var sibling_scroll_before := native_scroll()
+  var sibling_pointer_before := pointer_stats()
+  app.call("evaluate", "ScrollViewFixture.setCaptureSibling(true)")
+  touch(Vector2(100, 42), true)
+  await settle(3)
+  var sibling_down := react()
+  move(Vector2(100, 6))
+  await settle(3)
+  var sibling_move := react()
+  var sibling_scroll_after_move := native_scroll()
+  var sibling_pointer_after_move := pointer_stats()
+  check(int(sibling_down.get("siblingCaptureRequests", 0)) == 1 and sibling_down.get("siblingHasCapture") == true
+      and int(sibling_move.get("siblingGotCapture", 0)) == 1 and sibling_move.get("siblingHasCapture") == true
+      and float(sibling_scroll_after_move.get("y", -1)) == 0.0
+      and int(sibling_scroll_after_move.get("begins", -1)) == int(sibling_scroll_before.get("begins", -2))
+      and int(sibling_pointer_after_move.get("pointerTakeovers", -1)) == int(sibling_pointer_before.get("pointerTakeovers", -2)),
+    "same-surface sibling pointer capture prevents native pan takeover", {"down": sibling_down,
+      "before": {"scroll": sibling_scroll_before, "pointer": sibling_pointer_before},
+      "afterMove": sibling_move, "scroll": sibling_scroll_after_move, "pointer": sibling_pointer_after_move})
+  touch(Vector2(100, 6), false)
+  await settle(4)
+  var sibling_up := react()
+  var sibling_pointer_after_up := pointer_stats()
+  var sibling_routes_after_up: Dictionary = snapshot(app).get("pointerRouting", {})
+  var lost_at_move := int(sibling_move.get("siblingLostCapture", 0))
+  check(sibling_up.get("siblingHasCapture") == false
+      and int(sibling_up.get("siblingLostCapture", 0)) == lost_at_move + 1
+      and int(sibling_pointer_after_up.get("activePointers", -1)) == 0
+      and int(sibling_routes_after_up.get("active", -1)) == 0,
+    "sibling capture releases exactly once on Up", {"afterUp": sibling_up,
+      "pointer": sibling_pointer_after_up, "routes": sibling_routes_after_up})
+  app.call("evaluate", "ScrollViewFixture.setCaptureSibling(false)")
+  touch(Vector2(100, 42), true)
+  await settle(2)
+  var fresh_contact := react()
+  touch(Vector2(100, 42), false)
+  await settle(2)
+  check(fresh_contact.get("siblingHasCapture") == false
+      and int(fresh_contact.get("siblingCaptureRequests", 0)) == 1,
+    "fresh contact starts without the previous sibling capture", fresh_contact)
+
+  app.call("evaluate", "ScrollViewFixture.reset()")
+  command("scrollTo", [{"x": 0, "y": 0, "animated": false}])
+  app.call("evaluate", "ScrollViewFixture.setFirstRowCollapsed(false)")
+  await settle(4)
+  var row_before_hide := native_node("row-0")
+  var route_scroll_before_hide := native_scroll()
+  var pointer_before_hide := pointer_stats()
+  touch(Vector2(100, 42), true)
+  await settle(2)
+  var pressed_before_hide := native_scroll()
+  var route_before_hide: Dictionary = snapshot(app).get("pointerRouting", {})
+  app.call("evaluate", "ScrollViewFixture.setFirstRowCollapsed(true)")
+  await settle(4)
+  var row_hidden := native_node("row-0")
+  var scroll_after_hide := native_scroll()
+  var pointer_after_hide := pointer_stats()
+  var route_after_hide: Dictionary = snapshot(app).get("pointerRouting", {})
+  var events_after_hide: Array = react().get("events", [])
+  var valid_hide: bool = (row_before_hide.get("visible") == true
+      and int(row_before_hide.get("tag", -1)) == int(row_hidden.get("tag", -2))
+      and row_hidden.get("visible") == false and int(pressed_before_hide.get("candidate", false)) == 1
+      and int(route_before_hide.get("active", 0)) == 1 and int(route_before_hide.get("stored", 0)) == 1
+      and int(pointer_after_hide.get("activePointers", -1)) == 0
+      and int(pointer_after_hide.get("pointerCancels", -2)) == int(pointer_before_hide.get("pointerCancels", -3)) + 1
+      and int(pointer_after_hide.get("cancels", -2)) == int(pointer_before_hide.get("cancels", -3)) + 1
+      and int(route_after_hide.get("active", -1)) == 0 and int(route_after_hide.get("contacts", -1)) == 0
+      and int(route_after_hide.get("stored", -1)) == 0
+      and int(scroll_after_hide.get("candidate", true)) == 0 and int(scroll_after_hide.get("motion", -1)) == 0
+      and float(scroll_after_hide.get("y", -1)) == float(route_scroll_before_hide.get("y", -2))
+      and int(scroll_after_hide.get("begins", -1)) == int(route_scroll_before_hide.get("begins", -2)))
+  move(Vector2(100, 6))
+  await settle(3)
+  touch(Vector2(100, 6), false)
+  await settle(3)
+  var scroll_after_hidden_move := native_scroll()
+  var pointer_after_hidden_move := pointer_stats()
+  var route_after_hidden_move: Dictionary = snapshot(app).get("pointerRouting", {})
+  var events_after_hidden_move: Array = react().get("events", [])
+  check(valid_hide and float(scroll_after_hidden_move.get("y", -1)) == float(scroll_after_hide.get("y", -2))
+      and int(scroll_after_hidden_move.get("begins", -1)) == int(scroll_after_hide.get("begins", -2))
+      and int(scroll_after_hidden_move.get("ends", -1)) == int(scroll_after_hide.get("ends", -2))
+      and int(pointer_after_hidden_move.get("pointerCancels", -1)) == int(pointer_after_hide.get("pointerCancels", -2))
+      and int(pointer_after_hidden_move.get("cancels", -1)) == int(pointer_after_hide.get("cancels", -2))
+      and int(route_after_hidden_move.get("active", -1)) == 0
+      and count_event_type(events_after_hidden_move, "begin") == count_event_type(events_after_hide, "begin")
+      and count_event_type(events_after_hidden_move, "end") == count_event_type(events_after_hide, "end"),
+    "hidden mounted child retires its route before later Move or Up", {"beforeHide": {"row": row_before_hide,
+      "scroll": pressed_before_hide, "pointer": pointer_before_hide, "routes": route_before_hide},
+      "afterHide": {"row": row_hidden, "scroll": scroll_after_hide, "pointer": pointer_after_hide,
+        "routes": route_after_hide, "events": events_after_hide},
+      "afterMoveAndUp": {"scroll": scroll_after_hidden_move, "pointer": pointer_after_hidden_move,
+        "routes": route_after_hidden_move, "events": events_after_hidden_move}})
+  app.call("evaluate", "ScrollViewFixture.setFirstRowCollapsed(false)")
+  await settle(4)
+
+  app.call("evaluate", "ScrollViewFixture.reset()")
+  command("scrollTo", [{"x": 0, "y": 0, "animated": false}])
+  await settle(4)
+  var mouse_row_before := native_node("row-0")
+  var mouse_scroll_before := native_scroll()
+  var mouse_pointer_before := pointer_stats()
+  mouse_button(Vector2(100, 42), true)
+  await settle(2)
+  var mouse_down_scroll := native_scroll()
+  var mouse_route_down: Dictionary = snapshot(app).get("pointerRouting", {})
+  app.call("evaluate", "ScrollViewFixture.setFirstRowCollapsed(true)")
+  await settle(4)
+  var mouse_row_hidden := native_node("row-0")
+  var mouse_scroll_hidden := native_scroll()
+  var mouse_pointer_hidden := pointer_stats()
+  var mouse_route_hidden: Dictionary = snapshot(app).get("pointerRouting", {})
+  mouse_move(Vector2(100, 6), true)
+  await settle(2)
+  mouse_button(Vector2(100, 6), false)
+  await settle(3)
+  var mouse_scroll_after_up := native_scroll()
+  var mouse_pointer_after_up := pointer_stats()
+  var mouse_route_after_up: Dictionary = snapshot(app).get("pointerRouting", {})
+  var mouse_events_after_up: Array = react().get("events", [])
+  var mouse_hidden_ok: bool = (mouse_row_before.get("visible") == true
+      and int(mouse_row_before.get("tag", -1)) == int(mouse_row_hidden.get("tag", -2))
+      and mouse_row_hidden.get("visible") == false and int(mouse_down_scroll.get("candidate", false)) == 1
+      and int(mouse_route_down.get("active", 0)) == 1 and int(mouse_pointer_hidden.get("activePointers", -1)) == 0
+      and int(mouse_pointer_hidden.get("pointerCancels", -2)) == int(mouse_pointer_before.get("pointerCancels", -3)) + 1
+      and int(mouse_pointer_hidden.get("cancels", -2)) == int(mouse_pointer_before.get("cancels", -3)) + 1
+      and int(mouse_route_hidden.get("suppressed", -1)) == 1
+      and int(mouse_scroll_hidden.get("candidate", true)) == 0 and int(mouse_scroll_hidden.get("motion", -1)) == 0
+      and float(mouse_scroll_hidden.get("y", -1)) == float(mouse_scroll_before.get("y", -2))
+      and int(mouse_scroll_after_up.get("begins", -1)) == int(mouse_scroll_hidden.get("begins", -2))
+      and int(mouse_scroll_after_up.get("ends", -1)) == int(mouse_scroll_hidden.get("ends", -2))
+      and float(mouse_scroll_after_up.get("y", -1)) == float(mouse_scroll_hidden.get("y", -2))
+      and int(mouse_pointer_after_up.get("pointerCancels", -1)) == int(mouse_pointer_hidden.get("pointerCancels", -2))
+      and int(mouse_route_after_up.get("suppressed", -1)) == 1
+      and count_event_type(mouse_events_after_up, "begin") == 0
+      and count_event_type(mouse_events_after_up, "end") == 0)
+  app.call("evaluate", "ScrollViewFixture.setFirstRowCollapsed(false)")
+  await settle(4)
+  mouse_button(Vector2(100, 42), true)
+  await settle(2)
+  var mouse_fresh_route_down: Dictionary = snapshot(app).get("pointerRouting", {})
+  mouse_move(Vector2(100, 6), true)
+  await settle(3)
+  var mouse_fresh_scroll_move := native_scroll()
+  var mouse_fresh_route_move: Dictionary = snapshot(app).get("pointerRouting", {})
+  mouse_button(Vector2(100, 6), false)
+  await wait_for_scroll_idle()
+  await settle(3)
+  var mouse_fresh_scroll_up := native_scroll()
+  check(mouse_hidden_ok and int(mouse_fresh_route_down.get("suppressed", -1)) == 0
+      and int(mouse_fresh_route_move.get("suppressed", -1)) == 0
+      and float(mouse_fresh_scroll_move.get("y", 0)) > 0.0
+      and int(mouse_fresh_scroll_move.get("begins", -1)) == int(mouse_scroll_before.get("begins", -2)) + 1
+      and int(mouse_fresh_scroll_up.get("ends", -1)) == int(mouse_scroll_before.get("ends", -2)) + 1,
+    "hidden mouse contact stays suppressed until a fresh Down, then scrolls normally", {"beforeHide": {
+      "row": mouse_row_before, "scroll": mouse_down_scroll, "pointer": mouse_pointer_before,
+      "routes": mouse_route_down}, "afterHide": {"row": mouse_row_hidden, "scroll": mouse_scroll_hidden,
+      "pointer": mouse_pointer_hidden, "routes": mouse_route_hidden}, "afterHeldMoveAndUp": {
+      "scroll": mouse_scroll_after_up, "pointer": mouse_pointer_after_up, "routes": mouse_route_after_up,
+      "events": mouse_events_after_up}, "freshDown": mouse_fresh_route_down,
+      "freshMove": {"scroll": mouse_fresh_scroll_move, "routes": mouse_fresh_route_move},
+      "freshUp": mouse_fresh_scroll_up})
+  app.call("evaluate", "ScrollViewFixture.setFirstRowCollapsed(false)")
+  await settle(3)
 
   app.call("evaluate", "ScrollViewFixture.reset()")
   command("scrollTo", [{"x": 0, "y": 0, "animated": false}])

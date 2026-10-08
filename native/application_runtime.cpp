@@ -200,7 +200,6 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     int id{}, surface{}, buttons{};
     bool primary{}, active{}, mouse{}, suppressed{};
     int scroll_tag{};
-    std::vector<int> down_path;
   };
   std::map<PointerKey, RoutedPointer> pointer_routes;
   std::set<int> pending_pointer_removals;
@@ -1636,7 +1635,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
   }
   void cancel_subtree(Control *control) {
     for (const auto &[tag, mounted] : views)
-      if (mounted.control == control || control->is_ancestor_of(mounted.control)) roots.at(mounted.surface_id)->pointer->removed(tag);
+      if (mounted.control == control || control->is_ancestor_of(mounted.control)) {
+        roots.at(mounted.surface_id)->pointer->removed(tag);
+      }
+    // PointerAdapter owns physical IDs while pointer_routes owns scroll
+    // candidates; retire the latter as soon as a subtree drops the former.
+    synchronize_pointer_routes();
   }
   void apply_pointer_filters() {
     for (const auto &[tag, mounted] : views) {
@@ -1765,11 +1769,12 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     return rn::UIManagerBinding::getBinding(*runtime)->getPointerEventsProcessor();
   }
   void cancel_scroll_route(RoutedPointer &route) {
-    auto scroll = views.find(route.scroll_tag);
-    if (route.scroll_tag && scroll != views.end() && scroll->second.scroll)
-      scroll->second.scroll->cancel_pointer(route.id);
+    const int scroll_tag = route.scroll_tag;
+    const int route_id = route.id;
     route.scroll_tag = 0;
-    route.down_path.clear();
+    auto scroll = views.find(scroll_tag);
+    if (scroll_tag && scroll != views.end() && scroll->second.scroll)
+      scroll->second.scroll->cancel_pointer(route_id);
   }
   void retire_pointers(int id) {
     auto &processor = pointer_processor();
@@ -1975,12 +1980,10 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     }
     return result;
   }
-  int scroll_ancestor(int target, const fabric_godot::PointerInputSource &source,
-      std::vector<int> &down_path) const {
-    down_path.clear();
+  int scroll_ancestor(int target, const fabric_godot::PointerInputSource &source) const {
     if (!target) return 0;
-    down_path = physical_hit_path(target, source);
-    for (int tag : down_path) {
+    const auto path = physical_hit_path(target, source);
+    for (int tag : path) {
       auto mounted = views.find(tag);
       if (mounted != views.end() && mounted->second.surface_id == source.surface && mounted->second.scroll)
         return tag;
@@ -1992,14 +1995,16 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     if (mounted == views.end() || !mounted->second.scroll) return Vector2(NAN, NAN);
     return fabric_godot::local_coordinate(mounted->second.control->get_global_transform_with_canvas(), viewport_point);
   }
-  bool captured_on_path(int pointer_id, const fabric_godot::PointerInputSource &source,
-      const std::vector<int> &path) const {
+  bool captured_in_surface(int pointer_id, const fabric_godot::PointerInputSource &source) const {
     auto revision = ui->getShadowTreeRevisionProvider()->getCurrentRevision(source.surface);
     if (!revision) return false;
     auto &processor = pointer_processor();
-    for (int tag : path) {
-      const auto *node = find_family(*revision, tag);
-      if (node && processor.hasPointerCapture(pointer_id, node)) return true;
+    std::vector<const rn::ShadowNode *> pending{revision.get()};
+    while (!pending.empty()) {
+      const auto *node = pending.back();
+      pending.pop_back();
+      if (processor.hasPointerCapture(pointer_id, node)) return true;
+      for (const auto &child : node->getChildren()) pending.push_back(child.get());
     }
     return false;
   }
@@ -2106,7 +2111,7 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const bool touch_release = screen_touch && (!screen_touch->is_pressed() || screen_touch->is_canceled());
     const bool release = left_release || touch_release;
     if (left_press || touch_press) {
-      route.scroll_tag = scroll_ancestor(physical_hit_test(input_source, position), input_source, route.down_path);
+      route.scroll_tag = scroll_ancestor(physical_hit_test(input_source, position), input_source);
       if (route.scroll_tag) {
         const auto local = scroll_local_point(route.scroll_tag, position);
         auto scroll = views.find(route.scroll_tag);
@@ -2119,33 +2124,50 @@ struct fabric_godot::ApplicationRuntime::Impl final : rn::UIManagerDelegate,
     const bool accepted = target->second->pointer->input(event, route.id, route.primary, input_source);
     const bool invalid = target->second->pointer->invalid_coordinates();
     blocked = target->second->pointer->blocks_native() || invalid;
-    if (route.scroll_tag) {
-      const auto local = scroll_local_point(route.scroll_tag, position);
-      auto scroll = views.find(route.scroll_tag);
+    // EventDispatcher runs native event listeners before queuing JS delivery.
+    // Reacquire by key and id after that hook before using this route again.
+    auto current_route = pointer_routes.find(*key);
+    const bool route_survived_dispatch = current_route != pointer_routes.end() && current_route->second.id == pointer_id;
+    if (route_survived_dispatch && current_route->second.scroll_tag) {
+      auto &live_route = current_route->second;
+      const auto local = scroll_local_point(live_route.scroll_tag, position);
+      auto scroll = views.find(live_route.scroll_tag);
       if (scroll == views.end() || !scroll->second.scroll || !local.is_finite()) {
-        cancel_scroll_route(route);
+        cancel_scroll_route(live_route);
       } else {
         auto &adapter = *scroll->second.scroll;
         const double now = now_ms() / 1000.0;
         const fabric_godot::ScrollPoint point{static_cast<double>(local.x), static_cast<double>(local.y)};
-        if (adapter.dragging(route.id)) {
+        if (adapter.dragging(live_route.id)) {
           if (release) {
-            adapter.finish_pan(route.id, point, now,
+            const int route_id = live_route.id;
+            live_route.scroll_tag = 0;
+            adapter.finish_pan(route_id, point, now,
                 (screen_touch && screen_touch->is_canceled()) || (mouse_button && mouse_button->is_canceled()));
-            route.scroll_tag = 0;
-            route.down_path.clear();
-          } else adapter.update_pan(route.id, point, now);
+          } else adapter.update_pan(live_route.id, point, now);
         } else if (release) {
-          adapter.cancel_pointer(route.id);
-          cancel_scroll_route(route);
-        } else if (!invalid && adapter.pan_ready(route.id, point, blocked,
-            captured_on_path(route.id, input_source, route.down_path))) {
-          target->second->pointer->takeover(route.scroll_tag, route.id);
-          adapter.begin_pan(route.id, point, now);
+          cancel_scroll_route(live_route);
+        } else if (!invalid && adapter.pan_ready(live_route.id, point, blocked,
+            captured_in_surface(live_route.id, input_source))) {
+          const int scroll_tag = live_route.scroll_tag;
+          const int route_id = live_route.id;
+          target->second->pointer->takeover(scroll_tag, route_id);
+          auto after_takeover = pointer_routes.find(*key);
+          auto mounted_scroll = views.find(scroll_tag);
+          if (after_takeover != pointer_routes.end() && after_takeover->second.id == route_id &&
+              after_takeover->second.scroll_tag == scroll_tag && mounted_scroll != views.end() &&
+              mounted_scroll->second.scroll)
+            mounted_scroll->second.scroll->begin_pan(route_id, point, now);
         }
       }
     }
-    if (terminal) { pointer_routes.erase(*key); pending_pointer_removals.insert(pointer_id); }
+    if (terminal) {
+      auto terminal_route = pointer_routes.find(*key);
+      if (terminal_route != pointer_routes.end() && terminal_route->second.id == pointer_id) {
+        pointer_routes.erase(terminal_route);
+        pending_pointer_removals.insert(pointer_id);
+      }
+    }
     synchronize_pointer_routes();
     return accepted;
   }
