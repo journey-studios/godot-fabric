@@ -1,65 +1,67 @@
 import {listOnlyProps} from "./list-props.mjs";
 
-// These props change native scrolling behavior that the Godot adapter does
-// not implement. Fail at the public boundary instead of letting RN's original
-// component pass them to a host that silently ignores them.
-const unsupportedProps = new Set([
-  "alwaysBounceHorizontal",
-  "alwaysBounceVertical",
-  "automaticallyAdjustContentInsets",
-  "automaticallyAdjustKeyboardInsets",
-  "automaticallyAdjustsScrollIndicatorInsets",
-  "bounces",
-  "bouncesZoom",
-  "canCancelContentTouches",
-  "centerContent",
-  "contentInset",
-  "contentInsetAdjustmentBehavior",
-  "decelerationRate",
-  "disableIntervalMomentum",
-  "disableScrollViewPanResponder",
-  "directionalLockEnabled",
-  "endFillColor",
-  "experimental_endDraggingSensitivityMultiplier",
-  "fadingEdgeLength",
-  "indicatorStyle",
-  "keyboardDismissMode",
-  "keyboardShouldPersistTaps",
-  "maintainVisibleContentPosition",
-  "maximumZoomScale",
-  "minimumZoomScale",
-  "nestedScrollEnabled",
-  "onScrollToTop",
-  "onKeyboardDidShow",
-  "onKeyboardDidHide",
-  "onKeyboardWillShow",
-  "onKeyboardWillHide",
-  "overScrollMode",
-  "pagingEnabled",
-  "pinchGestureEnabled",
-  "persistentScrollbar",
-  "refreshControl",
-  "scrollToOverflowEnabled",
-  "scrollsToTop",
-  "scrollIndicatorInsets",
-  "scrollPerfTag",
-  "scrollsChildToFocus",
-  "removeClippedSubviews",
-  "snapToAlignment",
-  "snapToInterval",
-  "snapToOffsets",
-  "snapToStart",
-  "snapToEnd",
-  "stickyHeaderIndices",
-  "zoomScale",
+// Values describe the only request that is neutral for the host. `rejectAny`
+// keeps behavior-bearing props fail-closed; `emptyArray` covers opt-in lists
+// with no configured entries. Keep this as the canonical public prop policy.
+const rejectAny = Symbol("reject-any-non-null");
+const emptyArray = Symbol("empty-array-is-neutral");
+const unsupportedProps = new Map([
+  ["alwaysBounceHorizontal", false],
+  ["alwaysBounceVertical", false],
+  ["automaticallyAdjustContentInsets", false],
+  ["automaticallyAdjustKeyboardInsets", false],
+  ["automaticallyAdjustsScrollIndicatorInsets", false],
+  ["bounces", false],
+  ["bouncesZoom", false],
+  ["canCancelContentTouches", true],
+  ["centerContent", false],
+  ["contentInset", rejectAny],
+  ["contentInsetAdjustmentBehavior", rejectAny],
+  ["decelerationRate", rejectAny],
+  ["disableIntervalMomentum", false],
+  ["disableScrollViewPanResponder", false],
+  ["directionalLockEnabled", rejectAny],
+  ["endFillColor", rejectAny],
+  ["experimental_endDraggingSensitivityMultiplier", rejectAny],
+  ["fadingEdgeLength", rejectAny],
+  ["indicatorStyle", rejectAny],
+  ["keyboardDismissMode", "none"],
+  ["keyboardShouldPersistTaps", rejectAny],
+  ["maintainVisibleContentPosition", rejectAny],
+  ["maximumZoomScale", rejectAny],
+  ["minimumZoomScale", rejectAny],
+  ["nestedScrollEnabled", false],
+  ["onScrollToTop", rejectAny],
+  ["onKeyboardDidShow", rejectAny],
+  ["onKeyboardDidHide", rejectAny],
+  ["onKeyboardWillShow", rejectAny],
+  ["onKeyboardWillHide", rejectAny],
+  ["overScrollMode", "never"],
+  ["pagingEnabled", false],
+  ["pinchGestureEnabled", false],
+  ["persistentScrollbar", true],
+  ["refreshControl", rejectAny],
+  ["scrollToOverflowEnabled", false],
+  ["scrollsToTop", false],
+  ["scrollIndicatorInsets", rejectAny],
+  ["scrollPerfTag", rejectAny],
+  ["scrollsChildToFocus", rejectAny],
+  ["removeClippedSubviews", false],
+  ["snapToAlignment", rejectAny],
+  ["snapToInterval", rejectAny],
+  ["snapToOffsets", emptyArray],
+  ["snapToStart", rejectAny],
+  ["snapToEnd", rejectAny],
+  ["stickyHeaderIndices", emptyArray],
+  ["zoomScale", rejectAny],
 ]);
 
-function isRequested(name, value) {
+function isRequested(neutral, value) {
   if (value == null) return false;
-  if (name === "removeClippedSubviews") return value !== false;
-  if (name === "stickyHeaderIndices" || name === "snapToOffsets")
+  if (neutral === rejectAny) return true;
+  if (neutral === emptyArray)
     return !Array.isArray(value) || value.length > 0;
-  return true;
+  return !Object.is(value, neutral);
 }
 
 export function prepareScrollViewProps(props) {
@@ -67,7 +69,7 @@ export function prepareScrollViewProps(props) {
     throw new Error("Godot ScrollView refreshControl is not implemented");
 
   for (const [name, value] of Object.entries(props)) {
-    if (unsupportedProps.has(name) && isRequested(name, value))
+    if (unsupportedProps.has(name) && isRequested(unsupportedProps.get(name), value))
       throw new Error(`Godot ScrollView ${name} is not implemented`);
   }
   if (props.contentOffset != null) {

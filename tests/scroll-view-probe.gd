@@ -53,6 +53,15 @@ func move(at: Vector2) -> void:
   event.position = at
   Input.parse_input_event(event)
 
+func wheel_down(at: Vector2) -> void:
+  var event := InputEventMouseButton.new()
+  event.device = 1
+  event.position = at
+  event.button_index = MOUSE_BUTTON_WHEEL_DOWN
+  event.pressed = true
+  event.factor = 1
+  Input.parse_input_event(event)
+
 func drag(from: Vector2, to: Vector2, target_surface: Control = null, test_id: String = "scroll") -> void:
   touch(from, true)
   await settle(2)
@@ -153,6 +162,20 @@ func run() -> void:
     "Godot preserves horizontal through RCTScrollView create/diff only", scroll_config)
   capture("mounted")
 
+  command("scrollTo", [{"x": 12, "y": 24, "animated": false}])
+  await settle(3)
+  var neutral_mount := native_scroll()
+  var neutral_mount_react := react()
+  check(is_equal_approx(float(neutral_mount.get("x", -1)), 12.0)
+      and is_equal_approx(float(neutral_mount.get("y", -1)), 24.0)
+      and is_equal_approx(float(neutral_mount.get("fabricX", -1)), 12.0)
+      and is_equal_approx(float(neutral_mount.get("fabricY", -1)), 24.0)
+      and neutral_mount_react.get("errors", []).is_empty(),
+    "mounted original ScrollView accepts neutral RN options and still scrolls", {
+      "scroll": neutral_mount, "errors": neutral_mount_react.get("errors", [])})
+  command("scrollTo", [{"x": 0, "y": 0, "animated": false}])
+  await settle(3)
+
   command("scrollTo", [{"x": 0, "y": 13.25, "animated": false}])
   await settle(3)
   var fractional := native_scroll()
@@ -204,6 +227,107 @@ func run() -> void:
   check(int(pan_state.get("cancelled", 0)) == 1 and int(pan_state.get("touchCancelled", 0)) == 1,
     "native takeover cancels the child pointer and touch stream once", pan_state)
   capture("native-pan")
+
+  command("scrollTo", [{"x": 0, "y": 100, "animated": false}])
+  app.call("evaluate", "ScrollViewFixture.reset()")
+  await settle(3)
+  var wheel_before := native_scroll()
+  var wheel_origin := mounted_rect(surface, "scroll").get_center()
+  touch(wheel_origin, true)
+  await settle(2)
+  move(wheel_origin + Vector2(0, -30))
+  await settle(4)
+  var wheel_claimed := native_scroll()
+  wheel_down(wheel_origin)
+  await settle(4)
+  var wheel_after := native_scroll()
+  var wheel_events_after: Array = react().get("events", [])
+  var wheel_end_index := wheel_events_after.find_custom(func(row: Dictionary) -> bool: return row.get("type") == "end")
+  var wheel_offset_index := wheel_events_after.find_custom(func(row: Dictionary) -> bool:
+    return row.get("type") == "scroll" and is_equal_approx(float(row.get("y", -1)), float(wheel_after.get("y", -2))))
+  move(wheel_origin + Vector2(0, -60))
+  await settle(3)
+  touch(wheel_origin + Vector2(0, -60), false)
+  await settle(4)
+  var wheel_after_up := native_scroll()
+  var wheel_final_events: Array = react().get("events", [])
+  var wheel_end_events := wheel_final_events.filter(func(row: Dictionary) -> bool: return row.get("type") == "end")
+  var wheel_end: Dictionary = wheel_end_events[0] if not wheel_end_events.is_empty() else {}
+  var wheel_lifecycle := wheel_final_events.filter(func(row: Dictionary) -> bool:
+    return ["begin", "end", "momentumBegin", "momentumEnd"].has(row.get("type")))
+  var wheel_lifecycle_types: Array = wheel_lifecycle.map(func(row: Dictionary) -> String: return String(row.get("type", "")))
+  check(wheel_claimed.get("dragging") == true and int(wheel_claimed.get("motion", -1)) == 1
+      and wheel_after.get("candidate") == false and wheel_after.get("dragging") == false
+      and int(wheel_after.get("motion", -1)) == 0
+      and is_equal_approx(float(wheel_after.get("y", -1)), float(wheel_claimed.get("y", -2)) + 48.0)
+      and is_equal_approx(float(wheel_after.get("fabricY", -1)), float(wheel_after.get("y", -2)))
+      and is_equal_approx(float(wheel_after.get("contentY", 1)), -float(wheel_after.get("y", -2)))
+      and int(wheel_after.get("ends", 0)) == int(wheel_before.get("ends", -1)) + 1
+      and wheel_end_events.size() == 1 and is_zero_approx(float(wheel_end.get("velocity", 1)))
+      and is_equal_approx(float(wheel_end.get("y", -1)), float(wheel_claimed.get("y", -2)))
+      and wheel_end_index >= 0 and wheel_offset_index > wheel_end_index
+      and wheel_lifecycle_types == ["begin", "end"]
+      and is_equal_approx(float(wheel_after_up.get("y", -1)), float(wheel_after.get("y", -2)))
+      and is_equal_approx(float(wheel_after_up.get("fabricY", -1)), float(wheel_after.get("fabricY", -2)))
+      and is_equal_approx(float(wheel_after_up.get("contentY", 1)), float(wheel_after.get("contentY", -2)))
+      and int(wheel_after_up.get("ends", 0)) == int(wheel_after.get("ends", -1)),
+    "wheel replacement retires a claimed pan once before later pointer movement and Up", {
+      "before": wheel_before, "claimed": wheel_claimed, "afterWheel": wheel_after,
+      "eventsAfterWheel": wheel_events_after, "eventIndices": {"end": wheel_end_index, "wheelOffset": wheel_offset_index},
+      "afterUp": wheel_after_up,
+      "end": wheel_end, "lifecycle": wheel_lifecycle_types})
+
+  command("scrollTo", [{"x": 0, "y": 100, "animated": false}])
+  app.call("evaluate", "ScrollViewFixture.reset()")
+  await settle(3)
+  var prop_before := native_scroll()
+  var prop_origin := mounted_rect(surface, "scroll").get_center()
+  touch(prop_origin, true)
+  await settle(2)
+  move(prop_origin + Vector2(0, -30))
+  await settle(4)
+  var prop_claimed := native_scroll()
+  app.call("evaluate", "ScrollViewFixture.setContentOffset({x:0,y:260})")
+  await settle(8)
+  var prop_after := native_scroll()
+  var prop_events_after: Array = react().get("events", [])
+  var prop_end_index := prop_events_after.find_custom(func(row: Dictionary) -> bool: return row.get("type") == "end")
+  var prop_offset_index := prop_events_after.find_custom(func(row: Dictionary) -> bool:
+    return row.get("type") == "scroll" and is_equal_approx(float(row.get("y", -1)), 260.0))
+  move(prop_origin + Vector2(0, -60))
+  await settle(3)
+  var prop_after_move := native_scroll()
+  touch(prop_origin + Vector2(0, -60), false)
+  await settle(4)
+  var prop_after_up := native_scroll()
+  var prop_final_events: Array = react().get("events", [])
+  var prop_end_events := prop_final_events.filter(func(row: Dictionary) -> bool: return row.get("type") == "end")
+  var prop_end: Dictionary = prop_end_events[0] if not prop_end_events.is_empty() else {}
+  var prop_lifecycle := prop_final_events.filter(func(row: Dictionary) -> bool:
+    return ["begin", "end", "momentumBegin", "momentumEnd"].has(row.get("type")))
+  var prop_lifecycle_types: Array = prop_lifecycle.map(func(row: Dictionary) -> String: return String(row.get("type", "")))
+  check(prop_claimed.get("dragging") == true and int(prop_claimed.get("motion", -1)) == 1
+      and prop_after.get("candidate") == false and prop_after.get("dragging") == false
+      and int(prop_after.get("motion", -1)) == 0 and is_equal_approx(float(prop_after.get("y", -1)), 260.0)
+      and is_equal_approx(float(prop_after.get("fabricY", -1)), 260.0)
+      and is_equal_approx(float(prop_after.get("contentY", 1)), -260.0)
+      and int(prop_after.get("ends", 0)) == int(prop_before.get("ends", -1)) + 1
+      and prop_end_events.size() == 1 and is_zero_approx(float(prop_end.get("velocity", 1)))
+      and is_equal_approx(float(prop_end.get("y", -1)), float(prop_claimed.get("y", -2)))
+      and prop_end_index >= 0 and prop_offset_index > prop_end_index
+      and prop_lifecycle_types == ["begin", "end"]
+      and is_equal_approx(float(prop_after_move.get("y", -1)), 260.0)
+      and is_equal_approx(float(prop_after_move.get("fabricY", -1)), 260.0)
+      and is_equal_approx(float(prop_after_move.get("contentY", 1)), -260.0)
+      and is_equal_approx(float(prop_after_up.get("y", -1)), 260.0)
+      and is_equal_approx(float(prop_after_up.get("fabricY", -1)), 260.0)
+      and is_equal_approx(float(prop_after_up.get("contentY", 1)), -260.0)
+      and int(prop_after_up.get("ends", 0)) == int(prop_after.get("ends", -1)),
+    "contentOffset replacement retires a claimed pan once before later pointer movement and Up", {
+      "before": prop_before, "claimed": prop_claimed, "afterOffset": prop_after,
+      "eventsAfterOffset": prop_events_after, "eventIndices": {"end": prop_end_index, "offset": prop_offset_index},
+      "afterMove": prop_after_move,
+      "afterUp": prop_after_up, "end": prop_end, "lifecycle": prop_lifecycle_types})
 
   app.call("evaluate", "ScrollViewFixture.reset()")
   await fling()

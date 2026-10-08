@@ -10,6 +10,7 @@ const state = {events: [], errors: [], taps: 0, cancelled: 0, touchCancelled: 0,
 let scrollRef;
 let setRowsVisible;
 let setTinyViewport;
+let setControlledOffset;
 let firstRowRef;
 const secondaryState = {events: [], end: null};
 globalThis.ScrollViewFixture = {
@@ -35,6 +36,7 @@ globalThis.ScrollViewFixture = {
   reset: () => { state.events = []; state.taps = 0; state.cancelled = 0; state.touchCancelled = 0; state.captured = 0; },
   replaceContent: () => setRowsVisible?.(value => !value),
   setTinyViewport: value => setTinyViewport?.(value),
+  setContentOffset: value => setControlledOffset?.(value),
   setBlockNative: value => { state.blockNative = value; },
   measureFirstRow: () => firstRowRef?.measureInWindow((x, y, width, height) => { state.measure = {x, y, width, height}; }),
 };
@@ -44,6 +46,7 @@ function ScrollViewFixture() {
   const firstRow = useRef(null);
   const [rowsVisible, setRowsVisibleState] = useState(true);
   const [tiny, setTiny] = useState(false);
+  const [contentOffset, setContentOffset] = useState({x: 0, y: 0});
   const blocker = useRef(PanResponder.create({
     onStartShouldSetPanResponderCapture: () => state.blockNative,
     onMoveShouldSetPanResponderCapture: (_event, gesture) => state.blockNative && Math.abs(gesture.dy) > 4,
@@ -53,9 +56,17 @@ function ScrollViewFixture() {
   useEffect(() => { firstRowRef = firstRow.current; }, [rowsVisible]);
   useEffect(() => { setRowsVisible = setRowsVisibleState; }, []);
   useEffect(() => { setTinyViewport = setTiny; }, []);
+  useEffect(() => { setControlledOffset = setContentOffset; }, []);
   return <View testID="fixture-root" style={{width: 420, height: 320}} {...blocker.panHandlers}>
-    <ScrollView ref={ref} testID="scroll" style={{position: "absolute", left: 24, top: 24,
+    <ScrollView ref={ref} testID="scroll" contentOffset={contentOffset} style={{position: "absolute", left: 24, top: 24,
       width: tiny ? 8 : 220, height: tiny ? 8 : 170}}
+      bounces={false} pagingEnabled={false} nestedScrollEnabled={false} scrollsToTop={false}
+      persistentScrollbar={true}
+      alwaysBounceHorizontal={false} alwaysBounceVertical={false} pinchGestureEnabled={false}
+      disableScrollViewPanResponder={false} automaticallyAdjustContentInsets={false}
+      automaticallyAdjustKeyboardInsets={false} automaticallyAdjustsScrollIndicatorInsets={false}
+      keyboardDismissMode="none" centerContent={false} disableIntervalMomentum={false}
+      canCancelContentTouches={true} overScrollMode="never" scrollToOverflowEnabled={false}
       contentContainerStyle={{minWidth: rowsVisible ? 760 : 0, minHeight: rowsVisible ? 760 : 0}} scrollEventThrottle={0}
       onScroll={event => state.events.push({type: "scroll", x: event.nativeEvent.contentOffset.x, y: event.nativeEvent.contentOffset.y})}
       onScrollBeginDrag={event => state.events.push({type: "begin", y: event.nativeEvent.contentOffset.y})}

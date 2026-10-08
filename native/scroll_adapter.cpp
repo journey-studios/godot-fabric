@@ -54,6 +54,7 @@ void ScrollAdapter::apply(const rn::ShadowView &shadow) {
     motion_.set_offset(clamp_scroll_offset(motion_.offset(), maximum()));
     cancel();
   }
+  if (offset_changed && candidate_ && candidate_->claimed) interrupt_motion();
   if (disabling) cancel();
   if (offset_changed) requested_offset_ = ScrollPoint{props_->contentOffset.x, props_->contentOffset.y};
   update_indicators();
@@ -79,6 +80,8 @@ double ScrollAdapter::now_seconds() const {
   return std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
 }
 void ScrollAdapter::interrupt_motion() {
+  if (candidate_ && candidate_->claimed)
+    finish_pan(candidate_->pointer_id, candidate_->origin, now_seconds(), true);
   if (motion_.mode() == ScrollMotion::Mode::Momentum) {
     if (emitter_) {
       emitter_->onMomentumScrollEnd(metrics());
@@ -173,7 +176,6 @@ bool ScrollAdapter::command(const std::string &name, const folly::dynamic &args)
         !std::isfinite(args[0].asDouble()) || !std::isfinite(args[1].asDouble()))
       throw std::runtime_error("scrollTo requires finite x/y coordinates and an animated boolean");
     const ScrollPoint target = clamp_scroll_offset({args[0].asDouble(), args[1].asDouble()}, maximum());
-    if (candidate_ && candidate_->claimed) finish_pan(candidate_->pointer_id, candidate_->origin, now_seconds(), true);
     interrupt_motion();
     if (args[2].getBool()) {
       motion_.replace(target, true, now_seconds());
@@ -184,7 +186,6 @@ bool ScrollAdapter::command(const std::string &name, const folly::dynamic &args)
   if (name == "scrollToEnd") {
     if (!args.isArray() || args.size() != 1 || !args[0].isBool())
       throw std::runtime_error("scrollToEnd requires an animated boolean");
-    if (candidate_ && candidate_->claimed) finish_pan(candidate_->pointer_id, candidate_->origin, now_seconds(), true);
     interrupt_motion();
     const auto current = motion_.offset();
     const auto limit = maximum();
