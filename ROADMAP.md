@@ -547,6 +547,18 @@ not change the 1.0. Claim areas as usual with `npm run agents`, and name the V05
 item in the title. Record 0.5 progress only in `milestones`; when rewriting
 `migration.json`, keep unknown top-level keys.
 
+**Progress.** V05-03, criterion `replay`: the Frontier rules and scenario run in plain
+GDScript with Godot as the authority (`consumers/civ-lite/game/`), and a 12-turn replay of
+73 intents reaches the same golden hash in 3 of 3 processes (9 executions, with a trace hash
+that fixes the state after every step), using only integers, a PCG32 of the game's own, a
+canonical serialization and SHA-256. The seven contexts are covered, an independent oracle in
+Node recomputes the rules, the map and the generator, and four retained sabotages are
+rejected. The [record](https://github.com/journey-studios/godot-fabric/blob/c2e4501c41fb533af45f449068a639d1f02d1a72/docs/evidence/frontier-game/README.md)
+is local macOS arm64 evidence; the hosted CI run and the Pages publication are pending. The
+snapshot the HUD will project is written down field by field but is not yet a service, so
+the `servicos`, `consumidor` and `autoridade` criteria of V05-03 stay open, and no 1.0
+checkpoint, weight or denominator moves.
+
 ## Next implementation order
 
 Follow the [Architecture 2.0 migration order](#architecture-20-migration-order)
@@ -2165,6 +2177,34 @@ afterwards). [Pages
 deployed this record from main d62bc27. No whole GF, checkpoint, weight or
 denominator closes.
 
+### Original ScrollView desktop slice under review (2026-10-08)
+
+The public facade now uses the original RN 0.87.1 ScrollView and its command,
+ref and Context behavior, with one native scroll owner for fractional offset,
+paint, Fabric state, pan and momentum. The desktop host preserves the transverse
+offset on `scrollToEnd`, following the pinned Android axis policy. A component
+specific registered config retains `horizontal` in Fabric create/diff payloads.
+
+Local evidence includes 28 mounted checks repeated independently against current
+and preceding hosts with identical inputs, the unchanged 44-check list oracle,
+44 native motion checks, four windowed macOS captures and a retained onLayout
+sabotage rejected by the oracle. Roots, tags, captures, contacts and pending work
+retire on stop. See [the review](docs/research/scroll-view-implementation-review.md)
+and [the receipts and captures](docs/evidence/scroll-view/README.md). Hosted CI and
+CodeRabbit acceptance remain open; no GF-14 checkpoint is accepted yet. Full
+props/events, nested scroll, refresh, paging/snap, bounce/zoom, keyboard behavior,
+hardware input, broad RN differential parity and mobile exports remain open.
+
+Diagonal gestures preserve their transverse offset through release and momentum;
+orientation replacement cancels the claimed gesture once through the native
+owner. The earlier 25-check comparison retains exactly three diagonal/orientation
+failures on its preceding host. The final 28-check comparison instead reproduces
+exactly two interruption failures on host `4f28ed0f`: wheel and changed
+`contentOffset` must retire the drag before replacing its offset, and later Move
+and Up cannot resume it. The 22-check pre-integration comparison remains
+separately labeled historical evidence. Host-equivalent neutral RN options pass
+through one explicit policy; active options without a Godot implementation fail.
+
 ### Virtualized lists on the SDK ScrollView (2026-10-05)
 
 GF-15 moves to **In progress** with only its first-slice checkpoint done. The
@@ -2858,22 +2898,25 @@ contract, parity and targets remain open.
 
 ### Modal desktop review (2026-10-07)
 
-GF-18 remains **In progress** with all four checkpoints open. The
-[thermo-nuclear review](docs/research/modal-implementation-review.md) requires
-typed Window stack ownership, one immutable physical embedding for geometry and
-input, canonical endpoint retirement and last-Surface membership cleanup.
-Independent paired controls reproduce and correct the geometry, capture and
-validation-device regressions. No full roadmap item or denominator changes.
+GF-18 remains **In progress**. Its first desktop slice is accepted after the
+[thermo-nuclear review](docs/research/modal-implementation-review.md), final-head
+[CI](https://github.com/journey-studios/godot-fabric/actions/runs/37708637823)
+and merge of [PR #51](https://github.com/journey-studios/godot-fabric/pull/51)
+as `7e2df46`. Root verified the merge tree equals reviewed `109e6fd`.
 
-On corrected head `bee7b40`, the [hosted receipt](docs/evidence/modal/hosted-bee7b40-timeout.json)
-verifies 193 Modal assertions (11 on the macOS display), the fail-fast negative
-with both applications cleaned up, 164 transform and 672 capture assertions,
-35 Modal/95 SDK producer pins and 10 original RN pins. CodeRabbit approved that
-head and all six threads are resolved. The workflow nevertheless exhausted its
-45-minute global budget at cold-start completion; parity was skipped. The total
-budget is raised to 60 minutes without changing probes or their failure criteria,
-and a fresh complete CI run remains required before merge. Orientation/insets,
-hardware, mobile/export and complete pinned RN parity remain acceptance work.
+The [final receipt](docs/evidence/modal/hosted-109e6fd-final.json) records five
+successful required jobs, CodeRabbit approval and seven resolved review threads.
+It verifies 193 Modal assertions (11 on macOS display), 164 transforms,
+672 capture assertions, the precise missing-target negative and clean teardown,
+35 Modal/95 SDK producer pins and 10 original RN pins. Cold start passes two
+fresh imports and warm imports; parity covers only 13 core-ui-v2 cases against
+Android/iOS. The earlier 45-minute timeout remains historical evidence; the
+60-minute global budget preserves all individual probe deadlines and oracles.
+
+Only the first-slice checkpoint closes, moving the dashboard to 24/156;
+0/39 full items remain complete, with unchanged weights and denominator.
+Orientation/insets, hardware, mobile/export, full contract and complete pinned
+RN parity keep the other three GF-18 checkpoints open.
 
 ### Accessibility tree and OS bridge on macOS (2026-10-07)
 
@@ -3630,7 +3673,7 @@ work through public RN imports with applicable upstream behavior.
 | GF-11 · P1 · Text and fonts | In progress | Complete Text props/events/refs, pressable/selectable spans, inline content, truncation/alignment/decoration, baseline/font scaling and font loading/fallback. Validate bidi, emoji, grapheme clusters, mixed fonts, empty/trailing lines, nested updates and measurement/painting agreement. Define tolerances explicitly where font engines differ | GF-08, GF-09, GF-10 |
 | GF-12 · P1 · TextInput and keyboard | In progress | Connect the public wrapper to native controlled/uncontrolled editing. Complete multiline, IME composition, selection/graphemes, secure input, keyboard types/actions, autofill where applicable, submit/end-edit sequencing, undo and commands. Deliver Keyboard/KeyboardAvoidingView and prove real desktop IME and mobile keyboard/insets, including JS transformations and delayed acknowledgements | GF-03, GF-08, GF-09, GF-11, GF-25 |
 | GF-13 · P1 · Input, Pressability and touchables | In progress | Complete pointer/touch/responder and PanResponder contracts, multi-pointer identity/capture/cancel, hitSlop/retention, hover, keyboard/focus traversal and applicable touchable behaviors. Preserve event coordinates/priorities under transforms/scroll. Hardware and injected fixtures cover nested negotiation, interrupted gestures, disabling/removal mid-press and no duplicate activation | GF-06, GF-08, GF-09, GF-10 |
-| GF-14 · P1 · Scroll and refresh | Planned | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
+| GF-14 · P1 · Scroll and refresh | In progress | Complete applicable ScrollView props/events/commands: animated scroll, drag/momentum sequence, clipping, nested scrolling, paging/snap, platform bounce/zoom where applicable, indicators, refresh, keyboard interactions and resizing. Compare offsets/content/insets and event timing; verify ownership during child gestures and interruption | GF-08, GF-09, GF-12, GF-13, GF-19 |
 | GF-15 · P1 · Virtualized lists | In progress | Run upstream VirtualizedList/FlatList/SectionList/VirtualizedSectionList over the completed host. Certify windowing, item identity/state, measurement/getItemLayout, viewability, onEndReached, scrollToIndex failure/recovery, separators/sticky sections and dynamic data. A 10,000-row fixture mounts a bounded window and has measured frame/memory results | GF-10, GF-14 |
 | GF-16 · P1 · Images and asset pipeline | In progress | Deliver Image/ImageBackground/AssetRegistry with bundled/URI/data assets, density selection, size/resize/tint/animation, loading/error/progress, caching and public image methods. Native async decode must not block frames; cancellation/unmount and missing/corrupt assets pass exported-app tests. Network image behavior uses GF-22 | GF-03, GF-09, GF-10, GF-22, GF-25 |
 | GF-17 · P1 · Shared widgets | In progress | Deliver Button with RN title/onPress semantics, Switch and ActivityIndicator plus their stable props/events/accessibility and platform color behavior. Reuse shared upstream JS wrappers where possible. Verify controlled updates, disabled/focus/loading transitions and consumer imports rather than legacy demo aliases | GF-03, GF-10, GF-13, GF-20 |

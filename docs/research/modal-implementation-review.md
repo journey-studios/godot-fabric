@@ -1,11 +1,12 @@
 # Modal implementation quality review
 
-The desktop slice is locally approved on code commit `3b8ddbcc251a2a136c0708b484d68dad2a0ce60c`
-after the thermo-nuclear review and corrections. CodeRabbit approved `bee7b40`
-and all six review threads are resolved. Its hosted Modal, transform and capture
-stages passed, but the native job exhausted its global 45-minute budget before
-parity. A fresh complete CI run with a 60-minute global budget remains required
-before merge; this is not full GF-18 acceptance.
+The first desktop slice is accepted on final reviewed head `109e6fd30c8510af4d2a206949fbfa7d3ff85832`.
+[PR #51](https://github.com/journey-studios/godot-fabric/pull/51) merged as
+`7e2df468405d9b02c6e6462ee0030922f2b9d43d`; root verified identical Git trees.
+[Final CI](https://github.com/journey-studios/godot-fabric/actions/runs/37708637823)
+passed all five required jobs. CodeRabbit approved the final head and all seven
+threads are resolved. Only GF-18's first-slice checkpoint closes; its full
+contract, parity and target checkpoints remain open.
 
 The previous a97876b integration failed hosted `test:transforms:guards` with
 `det == 0`; its Modal step was skipped. Root reproduced the failure and confirmed
@@ -187,13 +188,17 @@ preparation corrections. Earlier 45ba095b and 37053a39 proofs remain historical.
 
 ## Acceptance boundary
 
-Local structural and behavioral review of this desktop slice is approved.
-CodeRabbit approved `bee7b40`, including the independently inspected hosted
-headed witness. The final implementation head still needs complete hosted CI
-before merge. GF-18 remains in progress with all four checkpoints false here.
-Orientation/insets, mobile/export, complete pinned RN parity and hardware input
-remain explicit acceptance work. Local approval does not increase the dashboard
-completeness or certify all previous Luna implementations.
+The final desktop implementation passes the structural and behavioral review,
+including independently reproduced regressions, corrected ownership boundaries
+and clean terminal states. The [final hosted receipt](../evidence/modal/hosted-109e6fd-final.json)
+records the five-job CI and CodeRabbit approval of `109e6fd`, seven resolved
+threads, producer pins, artifact/report/log hashes and exact merge-tree equality.
+
+The first functional host slice is accepted. GF-18 remains in progress with its
+other three checkpoints open: orientation/insets, mobile/export, complete pinned
+RN parity and hardware input still require evidence. The dashboard moves from
+23 to 24 of 156 checkpoints; no whole GF closes and no weight or denominator
+changes. This review does not certify every prior Luna implementation.
 
 ## Hosted runner control
 
@@ -227,3 +232,40 @@ individual probe deadlines, assertions, strict error checks and required headed
 execution remain unchanged. The new head must pass all five jobs before merge.
 The [dashboard capture](../evidence/modal/dashboard-hosted-timeout.jpg) preserves
 the partial hosted result and unchanged 23/156 checkpoints.
+
+
+## Final hosted acceptance (2026-10-08)
+
+Run 37708637823 passed contracts, native-cold-start, reference-android,
+reference-ios and parity-comparison on the exact final head `109e6fd`.
+Root independently audited 193 Modal assertions (11 with macOS Windows),
+164 transforms and all eight 84-check capture lanes (672 total). The precise
+missing-target negative fails its one intended assertion and releases both
+applications' roots, memberships and listeners. The 35 Modal producers,
+95 recorded SDK build inputs and 10 original RN source pins match the reviewed
+head; the merge has the same Git tree.
+
+Both fresh cold imports pass 36 React and 50 typography checks each, plus their
+warm imports. Parity matches only 13 `core-ui-v2` cases against Android and iOS;
+this is not full Modal mobile or RN API parity. The artifact binds the SDK
+manifest and registry/loader logs, but does not include SDK payload binaries;
+no independent payload rehash or ABI certification is claimed. Historical
+failed and timed-out runs above remain part of the regression record.
+
+The [dashboard capture](../evidence/modal/dashboard-109e6fd-final.jpg) records
+24/156 checkpoints in the local branch data. Public Pages publication is verified
+separately; a local capture alone does not prove cloud publication.
+
+
+Public Pages publication is now verified independently in the
+[publication receipt](../evidence/modal/publication-e5e3858.json). Run
+[37713213836](https://github.com/journey-studios/godot-fabric/actions/runs/37713213836)
+built with the main renderer and the exact published data commit `e5e3858`.
+Both the uploaded Pages artifact and the public JSON match the committed data
+when only generated `publication` metadata is removed. The
+[public dashboard capture](../evidence/modal/dashboard-public-e5e3858.jpg)
+shows the branch publication identity, 24/156 checkpoints and 0/39 whole items.
+The initial public read still served the preceding 23/156 data; the later
+matching read confirms propagation. An earlier dispatch with an incorrect
+reference failed before deploy and remains recorded. This publication accepts
+no additional checkpoint or full item.

@@ -31,6 +31,7 @@
     "examples:list": "node scripts/examples.mjs --list",
     "test:examples": "node scripts/examples-check.mjs",
     "test:runtime": "npm run bundle && node --test tests/runtime-native.test.mjs",
+    "test:scroll-view": "node --test --test-concurrency=1 tests/scroll-view-contract.test.mjs tests/scroll-view-native.test.mjs tests/scroll-view-modal-native.test.mjs",
     "test:application": "npm run bundle && node --test tests/shared-application-native.test.mjs",
     "test:modal": "node --test --test-concurrency=1 tests/modal-host-native.test.mjs tests/modal-discriminators-native.test.mjs tests/modal-stack-membership-native.test.mjs",
     "test:modules": "npm run bundle && node --test tests/native-modules-native.test.mjs tests/metrics-errors-native.test.mjs",
@@ -96,6 +97,7 @@
     "test:images-network": "node --test tests/images-network-native.test.mjs",
     "test:images-visual": "node --test tests/images-visual-native.test.mjs",
     "test:websocket:streams": "node --test tests/websocket-stream-spike.test.mjs",
+    "test:civ-lite-game": "node --test tests/civ-lite-game-native.test.mjs",
     "type-check:tsc": "tsc -p tsconfig.godot.json"
   },
   "dependencies": {

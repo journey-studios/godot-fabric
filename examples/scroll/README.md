@@ -38,3 +38,11 @@ These are Godot Viewport readbacks from the [current validation record](../../do
 ![Native scrolling fixture](../../docs/evidence/public-controls/scroll-initial.png)
 
 ![Native content after logical drag](../../docs/evidence/public-controls/scroll-drag.png)
+
+
+The example uses the original RN ScrollView. Validation observes actual rows
+and scroll metrics, including default animated commands and explicit instant
+commands. `cancelable` controls JS responder transfer; the example's separate
+`blockNativeResponder` control tests native pan blocking. The category strip
+sets `flexGrow:0` and `flexShrink:0` to keep its 48 px viewport.
+See the [migration correction and final captures](../../docs/evidence/scroll-view/README.md#legacy-example-ci-correction).

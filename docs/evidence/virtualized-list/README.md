@@ -1,5 +1,15 @@
 # Listas virtualizadas no ScrollView do SDK
 
+A integração mais recente do ScrollView é `2a01ec6`, com a main de Images
+#64. Nesse host, `78707871`, a regressão de listas passa os 44 checks e o
+oráculo independente confere os estados medidos. Os controles foram refeitos:
+o SDK anterior falha os 11 checks previstos entre 16 executados; a sabotagem
+falha exatamente três checks e é rejeitada pelo oráculo. Controles de um host
+anterior são preservados à parte e não entram como prova desta execução.
+Os [recibos atuais](../scroll-view/pointer-route-capture-retirement.json) e o
+[mapa de produtores](../scroll-view/committed-source-2a01ec6.json) registram a
+identidade. CI, revisão final e aceite do ScrollView permanecem pendentes.
+
 Esta fatia troca os placeholders `FlatList` e `VirtualizedList` do SDK pelos
 módulos originais do RN 0.87.1 — `FlatList`, `SectionList`, `VirtualizedList` e
 `VirtualizedSectionList` —, lidos pelo import público `react-native` e
@@ -127,8 +137,15 @@ offsets; os Controls dão a posição de cada célula no conteúdo.
   envia o offset atual.
 - **Ref e duas roots.** O ref do `FlatList` tem os métodos do `ScrollView` do RN
   sobre a instância nativa; input numa root nunca move as listas da outra;
-  `scrollToEnd()` sem argumentos pede a animação padrão do RN e falha
-  visivelmente; o stop desmonta as duas roots sem erros.
+  no host desta evidência histórica, `scrollToEnd()` sem argumentos pedia a
+  animação padrão do RN e falhava visivelmente; o stop desmontava as duas roots
+  sem erros.
+
+A limitação de animação acima pertence ao host histórico desta fatia. A
+[prova posterior de ScrollView](../scroll-view/README.md) inclui o comando
+animado original; o fixture e o oráculo atuais de listas também verificam seu
+avanço entre frames e sua chegada ao fim. Os demais critérios completos do
+GF-15 continuam abertos.
 
 O [oráculo](../../../tests/virtualized-list-oracle.mjs) refaz tudo a partir dos
 algoritmos do RN e do layout declarado no fixture: a janela e os visíveis exatos

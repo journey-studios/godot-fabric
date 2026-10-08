@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 1,
+  "status": "local-integrated-validation-complete; hosted-ci-and-review-pending",
+  "scope": "GF-14 desktop implementation slice combined with Images #66. This is local evidence; it is not GF-14 acceptance.",
+  "source": {
+    "commit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+    "url": "https://github.com/journey-studios/godot-fabric/commit/3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+    "workingTreeWasCleanAtRunStart": true,
+    "dashboardCheckpoints": "30/156",
+    "gf14CheckpointsAccepted": 0
+  },
+  "nativeBuild": {
+    "hostPath": "addons/fabric_godot.dylib",
+    "hostSha256": "fa9bcca66147e867658614dcfb71aafe9ebe0106bf758b897d385acbe69abfce",
+    "buildReceipt": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/native-sdk-build.json",
+      "sha256": "ebfe79c8001be303db3a7d14b70762a0aed91a65a2bdda149431c932e8328ab8"
+    },
+    "inputsReceipt": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/native-sdk-inputs.json",
+      "sha256": "c23567219b7c4c54132bf516b4de55ed1f6e78af7f32e223975db081a288e0b8",
+      "recordedSourcePins": 140,
+      "allPinsMatchWorkingTreeAndGit": true
+    },
+    "sdk": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/native-sdk",
+      "manifestSha256": "efc31fb4bb96a687a251d40241d41ac317591c6d20b8376510492295302384ac",
+      "recordedFiles": 2713,
+      "allBytesAndLinksVerified": true,
+      "externalCertificationClaims": {
+        "adapterLinked": false,
+        "adapterLoaded": false,
+        "runtimeExecuted": false,
+        "runtimeIdentityVerified": false,
+        "abiCertified": false
+      }
+    },
+    "buildAndPackLogs": {
+      "configureLog": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/configure.log",
+        "sha256": "ee0fa31a71a74b821c7e2c2bda461c8ce36c16293c1370250c4ca0177a9b7a55"
+      },
+      "buildLog": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/build.log",
+        "sha256": "17bc9bd989854cce8c201ef933b3407d126bcc8b5ca9d8ecb8ca531129a059b5"
+      },
+      "sdkPackLog": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/sdk-pack.log",
+        "sha256": "bd3a49f79d45fc79ddcdc470727e6a28e3bfa0835984e8040b37dd905d1b98b0"
+      },
+      "sdkVerifyLog": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/sdk-verify.log",
+        "sha256": "8507c10fe30e2bae7cde883cd54d0391dc536ec28239c226ddd439a6bfc1f912"
+      }
+    },
+    "independentReview": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/root-sdk-verified.json",
+      "sha256": "fed51fc8c9bf1a06f7c5ca662d19d59aa40bce6b1909d51f5d773dcf264a4c33"
+    }
+  },
+  "sourceInventory": {
+    "index": {
+      "path": "docs/evidence/scroll-view/source-pins-3bf129c.json",
+      "sha256": "6d82fa985a0d2c809cb9aff10c665f5e15e7b59fae2e8bfb790e83103dce630c"
+    },
+    "counts": {
+      "recordedRepository": 222,
+      "recordedReactNative": 124,
+      "recordedVirtualizedLists": 13,
+      "recordedThirdParty": 1,
+      "computedRepository": 77,
+      "computedReactNative": 260,
+      "computedVirtualizedLists": 2,
+      "computedThirdParty": 190,
+      "recordedUniquePaths": 360,
+      "computedUniquePaths": 529
+    },
+    "basis": "Recorded = native-sdk-inputs.sourceSha256 plus bundle receipt source dictionaries. Computed-after-execution = exact bytes of remaining metafile/import/asset inputs. The 77 computed repository inputs include 76 Git-backed paths and one generated workspace file (build/nativewind-compiled.js), which is explicitly not a Git provenance claim.",
+    "producerGroupCount": 10,
+    "producerGroupIndex": "docs/evidence/scroll-view/source-pins-3bf129c.json",
+    "recordedAndComputedMapRefs": "See sourceMaps in producer group index; each pin occurs once in an origin/basis map.",
+    "gitBackedRepositoryInputs": 298,
+    "workspaceGeneratedRepositoryInputs": [
+      {
+        "path": "build/nativewind-compiled.js",
+        "sha256": "97a2d791d60c83227d82182a918a2cc67b51d0431a1da758cb7e397b5e81c4b7",
+        "basis": "workspace-generated post-run input; no Git blob/commit claim"
+      }
+    ],
+    "assetsNote": {
+      "mappingPath": "docs/evidence/scroll-view/metafiles-3bf129c/imagesExample.json",
+      "mappingSha256": "aa9961bc2d02568bebac15aeea7466dfd75e87a9de6fb937d1f2453851e9137d",
+      "assetManifestPath": "build/scroll-view-root/images-integration-3bf129c/lanes/images/example-capture/app.js.assets.json",
+      "assetManifestSha256": "f04a005759abcbf48c3f699ccc81db4dda619e1132d71367aabc78c5315bca5b",
+      "mappingCount": 10,
+      "publishedPrefix": "assets/examples/images/assets/",
+      "sourcePrefix": "examples/images/assets/",
+      "sourcePinsUseSourcePaths": true,
+      "mappingMethod": "publishedPath entries map to sourcePath keys in the computed-after-execution repository map; hashes and byte lengths are checked from the raw asset manifest and source files."
+    }
+  },
+  "localValidation": {
+    "scrollView": {
+      "checks": 33,
+      "report": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/scroll-view/scroll-view-gf14-report.json",
+        "sha256": "0bbf2a87a8f470c0b943afca4d3827cd53ed994537b660a1041f6fe6f0cd766f"
+      },
+      "log": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/scroll-view/scroll-view-gf14.log",
+        "sha256": "23ef2da8c8b1a44290bc984c648983fa38d8b66da13ca5580c08d3b8dddb712f"
+      },
+      "measured": {
+        "fractionalOffset": 13.25,
+        "paintedY": -13.25,
+        "diagonalPanAndMomentum": "active-axis offset and transverse-zero velocity verified",
+        "orientationChange": "claimed gesture ends once",
+        "wheelInterruption": {
+          "endAtY": 130,
+          "replacementY": 178,
+          "endBeforeReplacement": true
+        },
+        "contentOffsetInterruption": {
+          "endAtY": 130,
+          "replacementY": 260,
+          "endBeforeReplacement": true
+        }
+      }
+    },
+    "modalWheel": {
+      "checks": 13,
+      "displayServer": "macOS",
+      "report": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/scroll-view/scroll-view-modal-report.json",
+        "sha256": "d8f2942bf17e537fd016119a99d7cae7337f135e3f89bea6df4eb075967f0349"
+      },
+      "log": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/scroll-view/scroll-view-modal.log",
+        "sha256": "d17f4ac033fc2fab5761bf8c356ba4d505e87303b64614052ec0444b6733edfa"
+      },
+      "oracle": "14 damaged report copies independently rejected, including logical/Fabric/paint, wrong Window/factor/coordinates, missing observation and second-surface cleanup",
+      "rootReview": {
+        "path": "build/scroll-view-root/root-reviewed-modal-wheel-3bf129c.json",
+        "sha256": "5fc10f48e21f23a8c738eaec227df369113edaa42e2a8f3609f9cec469a0b923"
+      }
+    },
+    "pointerClick": {
+      "lanes": 8,
+      "checksPerLane": 91,
+      "totalChecks": 728,
+      "requiredCasesPerLane": 26,
+      "reportsAndTerminalCleanupIndependentlyReviewed": true,
+      "archive": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/pointer-click/archive-manifest.json",
+        "sha256": "81dbcc0377a7496aa5534378c6d900d47402b7c41d8690ca850b42636c7af92f"
+      },
+      "independentReview": {
+        "path": "build/scroll-view-root/root-reviewed-consumers-3bf129c.json",
+        "sha256": "5279a4b648554a2215e03b431da85e005cc343d7c484b4aef9b05dd35198f50c"
+      }
+    },
+    "virtualizedList": {
+      "currentChecks": 44,
+      "currentFailures": 0,
+      "precedingSdkControl": {
+        "checks": 16,
+        "expectedFailures": 11,
+        "oracleRejected": true
+      },
+      "sabotageControl": {
+        "checks": 44,
+        "expectedFailures": 3,
+        "oracleRejected": true
+      },
+      "archive": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/virtualized-list/archive-manifest.json",
+        "sha256": "cd10da6ca281a96a16c9299b04a5fed37866a0c95c3e4d1e51484b5130dfc984"
+      },
+      "independentReview": {
+        "path": "build/scroll-view-root/root-reviewed-consumers-3bf129c.json",
+        "sha256": "5279a4b648554a2215e03b431da85e005cc343d7c484b4aef9b05dd35198f50c"
+      }
+    },
+    "osContracts": {
+      "currentChecks": 37,
+      "currentFailures": 0,
+      "controls": [
+        {
+          "name": "previous-sdk",
+          "checks": 37,
+          "expectedFailures": 30
+        },
+        {
+          "name": "platform-android",
+          "checks": 37,
+          "expectedFailures": 14
+        },
+        {
+          "name": "silent-shim",
+          "checks": 37,
+          "expectedFailures": 8
+        },
+        {
+          "name": "self-import",
+          "checks": 37,
+          "expectedFailures": 5
+        }
+      ],
+      "allControlOraclesRejected": true,
+      "archive": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/os-contracts/archive-manifest.json",
+        "sha256": "fa66f23a985cbb5e898821bff7d2186346b52d74ffccf47a215dd88f9b8736b8"
+      },
+      "independentReview": {
+        "path": "build/scroll-view-root/root-reviewed-consumers-3bf129c.json",
+        "sha256": "5279a4b648554a2215e03b431da85e005cc343d7c484b4aef9b05dd35198f50c"
+      }
+    },
+    "performance": {
+      "currentChecks": 43,
+      "currentFailures": 0,
+      "sameBundlePreviousHostControl": {
+        "hostSha256": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+        "bundleSha256": "61b72c9b43c68c68c4671f838931b7cc6d90500476edf9677f81d4f42ed7fcf1",
+        "expectedFailures": 28
+      },
+      "currentReportMutationControls": 6,
+      "historicalNativeSabotageBuilds": "Only preserved 18d evidence; not rerun for this integration. Stale-bundle precondition attempts are preserved and excluded.",
+      "archive": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/performance/archive-manifest.json",
+        "sha256": "2a2537895f76cea975691524e09000e17f3f505949923694c863c1b7a281757e"
+      },
+      "independentReview": {
+        "path": "build/scroll-view-root/root-reviewed-performance-3bf129c.json",
+        "sha256": "c792ac233b96ca5eb688ee63a719ea73ddb30cad93aca34eabebaab860e23f2a"
+      }
+    },
+    "images": {
+      "base": {
+        "checks": 72,
+        "failures": 0
+      },
+      "network": {
+        "checks": 74,
+        "failures": 0
+      },
+      "visual": {
+        "checks": 53,
+        "failures": 0
+      },
+      "visualPreviousHostControl": {
+        "hostSha256": "fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9",
+        "expectedFailures": 40
+      },
+      "imagesExample": {
+        "checks": 39,
+        "displayServer": "macOS",
+        "captureReceipt": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/lanes/images/example-capture/capture-receipt.json",
+          "sha256": "46523e43f5b369097eaea75e2d620b97555fd19c48ec2ce009e01a8e872e5d9a"
+        }
+      },
+      "historicalImageNativeSabotages": "Inherited main/Images PR controls are historical; no new sabotage builds were run. Some lane logs include deliberate corrupt-PNG ERROR diagnostics, checked against expected inventory.",
+      "archive": {
+        "path": "build/scroll-view-root/images-integration-3bf129c/lanes/images/archive-manifest.json",
+        "sha256": "9f00d737ba2d428ebe929982550330cdb347d64b07323d57e22d95b83b4f19ac"
+      },
+      "independentReview": {
+        "path": "build/scroll-view-root/root-reviewed-images-3bf129c.json",
+        "sha256": "0f39ef15abef52f0c32e227ec1343adc80db7c44335b67293dee7a36524b7d83"
+      }
+    },
+    "nativeCore": {
+      "scrollMotion": "44 checks passed",
+      "performanceMetrics": "passed",
+      "imageEffects": "passed",
+      "logs": {
+        "scroll-motion-core": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/scroll-motion-core.log",
+          "sha256": "956375529ae770d8689fcc5525e2cfa82a1b22f6736092ac961aa08fe5a3fe3b"
+        },
+        "performance-metrics-core": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/performance-metrics-core.log",
+          "sha256": "2a55af2a7406c54cd0e3e2f615d41fa01601e339c02f316e33d2fb49effaaa24"
+        },
+        "image-effects-core": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/image-effects-core.log",
+          "sha256": "9fae1712f3aaa12198d90d3af7430a581fd6a462f2ec56e1f82af7d1d8b245cd"
+        }
+      }
+    },
+    "repositoryGates": {
+      "contracts": {
+        "status": "passed",
+        "nodeTests": 353,
+        "pythonTests": 13,
+        "log": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/contracts.log",
+          "sha256": "b5f5ff7ce4f4e23e33758576b20abf6c2c3a44cfd3fb4d1d9dae915e34b8897f"
+        }
+      },
+      "dashboardTests": {
+        "status": "passed",
+        "checks": 43,
+        "log": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/dashboard-tests.log",
+          "sha256": "bd8f79385c668b119d149968fcd07cfc0a987a3af4e62ac11791cf5edd33226a"
+        }
+      },
+      "dashboardCheck": {
+        "status": "passed",
+        "tasks": 40,
+        "checkpoints": "30/156",
+        "acceptedGF14Checkpoints": 0,
+        "log": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/dashboard-check.log",
+          "sha256": "ee897690be48f795b6b873e279e169e7bd53ff9236db6fca5a6261961f85d9c8"
+        }
+      },
+      "static": {
+        "status": "passed",
+        "log": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/static.log",
+          "sha256": "0568b6a7df6201fcccba2484ab4823ce50fb4d7bc9e2a935758b3e128ea011ba"
+        }
+      },
+      "publication": {
+        "status": "passed",
+        "log": {
+          "path": "build/scroll-view-root/images-integration-3bf129c/publication.log",
+          "sha256": "78b035957456673f4e52d8191cf93c564da9f5d7b07ac32e016481c737f52307"
+        }
+      }
+    }
+  },
+  "graphics": {
+    "scrollModalCaptureCount": 6,
+    "rootViewedAllEightCurrentImages": true,
+    "scrollReceipt": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-graphics-receipt.json",
+      "sha256": "fdc2f6dba2a4d515b72a9c6d0940780d5b8e06ca17555fda4fb0205297713102"
+    },
+    "modalReceipt": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/graphics-capture-receipt.json",
+      "sha256": "ca8c5d4f0b926ffacfdf8ea4a1aafcaf59a4f8603f85e17810062a29aa6b57db"
+    },
+    "modalCaptureDiff": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/graphics/scroll-view-modal-graphics-probe.diff",
+      "sha256": "66652d0832e6f88a24075e9b780628255139a355882916a14a02efb85705f5e9"
+    },
+    "imagesExampleReceipt": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/lanes/images/example-capture/capture-receipt.json",
+      "sha256": "46523e43f5b369097eaea75e2d620b97555fd19c48ec2ce009e01a8e872e5d9a"
+    },
+    "captures": [
+      {
+        "path": "docs/evidence/scroll-view/scroll-view-3bf129c-initial.png",
+        "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136",
+        "bytes": 13524,
+        "caption": "Initial view with both mounted roots"
+      },
+      {
+        "path": "docs/evidence/scroll-view/scroll-view-3bf129c-fractional-13_25.png",
+        "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1",
+        "bytes": 12671,
+        "caption": "13.25 px fractional offset; Fabric, paint and DOM aligned"
+      },
+      {
+        "path": "docs/evidence/scroll-view/scroll-view-3bf129c-horizontal-pan-clipped.png",
+        "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26",
+        "bytes": 12669,
+        "caption": "Horizontal pan at x=540 with painted clipping"
+      },
+      {
+        "path": "docs/evidence/scroll-view/scroll-view-3bf129c-cleanup.png",
+        "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8",
+        "bytes": 2205,
+        "caption": "Empty surfaces after cleanup"
+      },
+      {
+        "path": "docs/evidence/scroll-view/modal-wheel-3bf129c-down.png",
+        "sha256": "399841c33aaa3a56fe6ba35bca191131ac5c3a7e33cde327da72b89b2c5a6124",
+        "bytes": 3155,
+        "caption": "Modal vertical wheel result (+72 px)"
+      },
+      {
+        "path": "docs/evidence/scroll-view/modal-wheel-3bf129c-horizontal.png",
+        "sha256": "a11585f10420c3ed849a251085361dee32d2f59faa56edea5e9a982476bb9903",
+        "bytes": 1868,
+        "caption": "Modal horizontal wheel result (+48 px)"
+      },
+      {
+        "path": "docs/evidence/images-visual/images-visual-all-modes.png",
+        "sha256": "a1b31feef1f2b8d602c9b36ea4900a1525c6ffdc24417019c809dd6227aa2383",
+        "bytes": 352438,
+        "caption": "Images example: all modes",
+        "sameBytesAsCurrent3bfExampleCapture": true
+      },
+      {
+        "path": "docs/evidence/images-visual/images-visual-interaction.png",
+        "sha256": "7f92a89ab965ce81279cb56bb1a1c290a3c40d3390b36425710994f9fdf70171",
+        "bytes": 342324,
+        "caption": "Images example: interaction",
+        "sameBytesAsCurrent3bfExampleCapture": true
+      }
+    ],
+    "runnerProvenanceCorrection": {
+      "canonicalRunnerSha256": "b92a862e2d7bc5953998108b7826a07f18ff9f84a5ab107896c544a589313fe6",
+      "executedRunnerSha256": "e9fc8c9efc9cb3593065549e68e7421117b709e9d3d3a60fbe2598f5ebaa2a50",
+      "preservedExecutedCopySha256": "e9fc8c9efc9cb3593065549e68e7421117b709e9d3d3a60fbe2598f5ebaa2a50",
+      "correctionRecordedAfterExecution": true,
+      "capturesRerunForCorrection": false
+    },
+    "historical18dRunnerProvenanceLimitation": "graphics-18d3478.json points to a runner copy but records the canonical-source hash; preserved copied runner bytes hash e6a1b75bc1642b2958a08fda98063c5bcca45df2a74a696ea682ae231cf800e3. This ambiguity is historical; no old receipt was rewritten."
+  },
+  "historicalAndExcluded": {
+    "preImagesPreservation": {
+      "path": "build/scroll-view-root/images-integration-3bf129c/pre-images-preservation.json",
+      "sha256": "dc5c36ef1ac03352772dde5be9310326a5e64d8283b0015e4759f73fc4533eeb"
+    },
+    "performanceStaleSidecarAttempts": "Preserved under lanes/performance/stale-bundle-precondition and stale-sabotage-precondition; not counted as product results.",
+    "modalInitialNoDiffAttempt": "Preserved under graphics/modal-first-attempt-no-diff; not counted as a valid capture-diff proof.",
+    "priorSourceEvidence": "0203145/18d3478/2a01ec6 remain unchanged and historical."
+  },
+  "dashboard": {
+    "gf14Status": "in_progress",
+    "acceptedCheckpoints": 0,
+    "completedProjectCheckpoints": "30/156",
+    "activityAdded": "3bf129c local Images-integrated producer validation; hosted review pending"
+  },
+  "hosted": {
+    "status": "pending",
+    "acceptance": false,
+    "codeRabbit": "pending for this integrated source snapshot"
+  },
+  "limits": [
+    "Godot 4.7.2 macOS runtime only; no physical mobile or refresh-rate test.",
+    "No full React Native parity or acceptance of the complete GF-14 props contract; refresh, paging/snap, bounce and other documented unsupported behavior remain open.",
+    "The SDK package receipt verifies package bytes and recorded provenance, not an external adapter ABI or hosted binary equivalence."
+  ]
+}

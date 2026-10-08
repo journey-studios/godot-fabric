@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "0203145048604cebd475ab4eedf3d0b959b4b0ab",
+  "loadedHost": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+  "nativeInputCount": 134,
+  "buildReceipt": {
+    "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/native-sdk-build.json",
+    "sha256": "c1f3c7caef69cd6b7f47083edc479e230685ecdd2569d4af8529fe421d963615"
+  },
+  "canonicalPins": {
+    "path": "docs/evidence/scroll-view/source-pins-0203145.json",
+    "sha256": "2c452a03b51de8e9ed3f698013163540d6c8af42ac23476eebbb6c3999b5fab9"
+  },
+  "distinctSources": {
+    "repository": 215,
+    "reactNative": 354,
+    "virtualizedList": 15
+  },
+  "groups": {
+    "scroll": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/scroll-view/scroll-view-gf14-probe-bundle.json",
+        "sha256": "fb48eb0c49aeab287ec6aa11f974800001c7441315cf46d8ba151e04bb7d9307"
+      },
+      "recordedRepositorySourceCount": 18,
+      "recordedOriginalRNSourceCount": 6,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/scroll-view-gf14-probe.js",
+          "sha256": "ffd9cb507b4d211bcbe367be39f85a29bcd8339f958790a11df62d61d18df65a",
+          "inputCount": 397
+        }
+      ],
+      "graphInputCount": 397
+    },
+    "modalWheel": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/scroll-view/scroll-view-modal-probe-bundle.json",
+        "sha256": "16035e1c396a53a77df16dbea0858fdb5e892947c5ab975403474bf0af8859af"
+      },
+      "recordedRepositorySourceCount": 17,
+      "recordedOriginalRNSourceCount": 10,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/scroll-view-modal-probe.js",
+          "sha256": "ab2424d63900e6a9972855b796114cc925c02fa34992b37359d5398dacda2400",
+          "inputCount": 397
+        }
+      ],
+      "graphInputCount": 397
+    },
+    "click": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/pointer-click-full8/pointer-click-bundles.json",
+        "sha256": "2d9682ab07325f29b9aa6d3f8a9c86fcbb3074233e6ed98aaa1b6442478df46a"
+      },
+      "recordedRepositorySourceCount": 23,
+      "recordedOriginalRNSourceCount": 23,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "disabled",
+          "path": "build/pointer-click-disabled.js",
+          "sha256": "8cd71f094e45793c0c24ee90bc33ad73a255f4f96306b90bc4f1575554506a86",
+          "inputCount": 399
+        },
+        {
+          "lane": "imperative-only",
+          "path": "build/pointer-click-imperative-only.js",
+          "sha256": "2d6c7d0760ba36a33d37b7c234664c64faf00bfa0f42b5a39c4a1bca0c3fb73c",
+          "inputCount": 399
+        },
+        {
+          "lane": "internal-only",
+          "path": "build/pointer-click-internal-only.js",
+          "sha256": "69d403586a92b0d6c678372f1668be175d2231052f230ecdc643c89b9ce6936b",
+          "inputCount": 399
+        },
+        {
+          "lane": "enabled",
+          "path": "build/pointer-click-enabled.js",
+          "sha256": "26e009af8cbdb18b36e986693000b909ef44ba3c8b55c0a31f519639670120e9",
+          "inputCount": 399
+        }
+      ],
+      "graphInputCount": 399
+    },
+    "lists": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/list-current-controls/virtualized-list-current-bundle.json",
+        "sha256": "39fab5b377ee19c3429299957c0c8f82f2379daa2274a62dedaf69c63be1b763"
+      },
+      "recordedRepositorySourceCount": 21,
+      "recordedOriginalRNSourceCount": 17,
+      "recordedOriginalVirtualizedListSourceCount": 13,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/virtualized-list-current.js",
+          "sha256": "d5daeefec52bbe0e848f8f797abfe088aeb45497248afb09a3720cf5dd36ab3a",
+          "inputCount": 397
+        }
+      ],
+      "graphInputCount": 397
+    },
+    "os": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/os-current-controls/os-contracts-probe-bundle.json",
+        "sha256": "cba52fb4367679b4dfdb02da3a7bb67b580070764bc5fed3339fd7e2a2f6476d"
+      },
+      "recordedRepositorySourceCount": 11,
+      "recordedOriginalRNSourceCount": 34,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/os-contracts-probe.js",
+          "sha256": "b01952f5acab35d7fe36cc799d45305b61e7d33a1a343ba883115de5b0e54e22",
+          "inputCount": 398
+        }
+      ],
+      "graphInputCount": 398
+    },
+    "modal-discriminators-probe-bundle": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-discriminators-probe-bundle.json",
+        "sha256": "63e8d613bf79268fa533a65b672f082575d952efbee88d036f952130f46e1907"
+      },
+      "recordedRepositorySourceCount": 35,
+      "recordedOriginalRNSourceCount": 10,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/modal-discriminators-probe.js",
+          "sha256": "7483c70fafe3f065f59913a63ce8fb5fed7039c8b9f84980fc865c821c5774e2",
+          "inputCount": 397
+        }
+      ],
+      "graphInputCount": 397
+    },
+    "modal-host-probe-bundle": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-host-probe-bundle.json",
+        "sha256": "9469b38b055cc0ee4d2af5ed8a326bb305cf8e69d80d35dca1b7077988cb0c6c"
+      },
+      "recordedRepositorySourceCount": 35,
+      "recordedOriginalRNSourceCount": 10,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/modal-host-probe.js",
+          "sha256": "7483c70fafe3f065f59913a63ce8fb5fed7039c8b9f84980fc865c821c5774e2",
+          "inputCount": 397
+        }
+      ],
+      "graphInputCount": 397
+    },
+    "modal-stack-membership-probe-bundle": {
+      "receipt": {
+        "path": "build/scroll-view-root/modal-wheel-green/host-7fc20194/modal-regressions/modal-stack-membership-probe-bundle.json",
+        "sha256": "017ffb3211e8074288edade5ee27301f8c4a8329ec1ae970f22d745f5d3321a9"
+      },
+      "recordedRepositorySourceCount": 35,
+      "recordedOriginalRNSourceCount": 10,
+      "recordedOriginalVirtualizedListSourceCount": 0,
+      "bundles": [
+        {
+          "lane": "default",
+          "path": "build/modal-stack-membership-probe.js",
+          "sha256": "7483c70fafe3f065f59913a63ce8fb5fed7039c8b9f84980fc865c821c5774e2",
+          "inputCount": 397
+        }
+      ],
+      "graphInputCount": 397
+    }
+  },
+  "claims": {
+    "abiCertified": false,
+    "adapterLinked": false,
+    "adapterLoaded": false,
+    "hostedAccepted": false,
+    "mobileAccepted": false
+  }
+}

@@ -115,9 +115,15 @@ function configure(name, surfaceId) {
     tags: tags(name), query: documentQueryControl.snapshot()};
 }
 function tags(name) {
-  const refs = panels.get(name).refs;
-  return Object.fromEntries(Object.entries({C: "container", G: "group", L1: "left", L2: "right", S: "side", P: "press",
-    SV: "scroll", I0: "item0", I1: "item1", I2: "item2", I3: "item3", X: "other"}).map(([key, ref]) => [key, tagOf(refs[ref])]));
+  const panel = panels.get(name), refs = panel.refs;
+  const appRegistryView = refs.container?.parentElement;
+  if (appRegistryView == null || appRegistryView !== refs.other?.parentElement || appRegistryView === panel.element) {
+    throw Error("Fixture siblings must share the mounted AppRegistry View below the surface document element");
+  }
+  const tags = Object.fromEntries(Object.entries({C: "container", G: "group", L1: "left", L2: "right", S: "side", P: "press",
+    SV: "scroll", I0: "item0", I1: "item1", I2: "item2", I3: "item3", X: "other"})
+    .map(([key, ref]) => [key, tagOf(refs[ref])]));
+  return {...tags, W: tagOf(appRegistryView)};
 }
 function arm(name, caseId) {
   active = {name, caseId, events: [], raw: [], presses: [], scrollBegins: [], payloads: new Map()};

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c",
+  "description": "Canonical maps store each path/hash once. Recorded pins came from the immutable native build source map and the declared source maps in bundle receipts. Supplemental imported path hashes were computed from installed bytes after execution; a metafile path does not certify an input hash.",
+  "origins": {
+    "repository": {
+      "map": "source-pins-18d3478-repository.json",
+      "recorded": 189,
+      "total": 211,
+      "computedAfterExecution": 22
+    },
+    "originalReactNative": {
+      "map": "source-pins-18d3478-react-native.json",
+      "recorded": 80,
+      "total": 353,
+      "computedAfterExecution": 273
+    },
+    "originalVirtualizedList": {
+      "map": "source-pins-18d3478-virtualized-lists.json",
+      "recorded": 13,
+      "total": 15,
+      "computedAfterExecution": 2
+    },
+    "thirdParty": {
+      "map": "source-pins-18d3478-third-party.json",
+      "recorded": 1,
+      "total": 159,
+      "computedAfterExecution": 158
+    }
+  },
+  "totalPathHashEntriesAcrossOrigins": 738,
+  "semantics": {
+    "recorded": "Hash explicitly present in native build inputs.sourceSha256 or a bundle receipt sources/originalReactNativeSources/originalVirtualizedListSources map.",
+    "metafileInputs": "Exact imported path sets are in each producer bundle receipt, referenced by path and SHA-256 from its group file.",
+    "computedAfterExecution": "No producer-recorded hash for this path; its bytes were hashed after execution. Includes supplemental metafile inputs. It is not claimed that esbuild recorded these input hashes."
+  }
+}

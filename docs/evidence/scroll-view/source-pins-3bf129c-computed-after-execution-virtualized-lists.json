@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "3bf129cc8d3720d527f6ca98ea6ce2481acaf2ba",
+  "origin": "virtualized-lists",
+  "hashBasis": "computed-after-execution",
+  "pathCount": 2,
+  "pins": {
+    "Lists/VirtualizedListProps.js": "c1c6139fb1f36654b95a47441fccb6d17eea3544dfbcd136a675ba2b7608af55",
+    "Utilities/infoLog.js": "6e2e0ac288b4e22d35015abc872af11d4a82e08f7711bf5cf35b72dc89f9f1ce"
+  }
+}

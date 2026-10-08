@@ -302,11 +302,14 @@ TextInput.State = {
   focusTextInput: TextInputState.focusTextInput,
   blurTextInput: TextInputState.blurTextInput,
 };
-export function ScrollView(props) {
+export const ScrollView = Object.assign(React.forwardRef(function ScrollView(props, ref) {
   if (useTextAncestor())
     throw new Error("Inline Controls are not implemented in Godot Text");
-  return <GodotScrollView {...props} />;
-}
+  return <GodotScrollView ref={ref} {...props} />;
+}), {
+  // Preserve the original RN context used by VirtualizedList in development.
+  Context: GodotScrollView.Context,
+});
 // Upstream PanResponder: gesture state from the original responder events and
 // their touch history, including multi-touch centroids.
 export { default as PanResponder } from "react-native/Libraries/Interaction/PanResponder";

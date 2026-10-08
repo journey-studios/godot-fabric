@@ -1,0 +1,739 @@
+{
+  "schemaVersion": 1,
+  "status": "root-reviewed-local-integrated-evidence; final-head-hosted-ci-and-review-pending",
+  "sourceCommit": "18d3478ea9a69fc117fe51b97ea45f4c7b8cde2c",
+  "pullRequest": "https://github.com/journey-studios/godot-fabric/pull/58",
+  "host": {
+    "path": "addons/fabric_godot.dylib",
+    "sha256": "fa4605bb65a310e177cbf702dddac7a219ddfe46889880edcedbb7ad5f980ba9",
+    "buildReceipt": {
+      "path": "build/scroll-view-root/performance-integration-18d3478/native-sdk-build.json",
+      "sha256": "d9e833f98f5ffa26b28a1d8c0d539bdb8d73515d03ec00c188559bce258a6b4c"
+    },
+    "inputsReceipt": {
+      "path": "build/scroll-view-root/performance-integration-18d3478/native-sdk-inputs.json",
+      "sha256": "305c118d3f4e452d16af45473b760d6a064f9058268153b585bcfaa15264bdb9"
+    },
+    "hostUnchangedAfterLanes": true
+  },
+  "nativeSourceInventory": {
+    "path": "source-pins-18d3478.json",
+    "sha256": "4635ec7165f2c29551778c6231a8e9b7759918744e761e8b4eb32ebcf1cfc5a8",
+    "count": 136,
+    "trackedPaths": 136,
+    "allTrackedPinsMatchGitAndWorkingBytes": true,
+    "dependencyOnlyPaths": [],
+    "canonicalMaps": {
+      "repository": {
+        "path": "source-pins-18d3478-repository.json",
+        "sha256": "04e83796d577f8fff109637faae0a06b0d71b3fc0f1c661af5e54bc4d973577a",
+        "count": 211
+      },
+      "originalReactNative": {
+        "path": "source-pins-18d3478-react-native.json",
+        "sha256": "89620fff0a7610d98ee45792915e5f838228c3103369358be93c9cc5d63960ed",
+        "count": 353
+      },
+      "originalVirtualizedList": {
+        "path": "source-pins-18d3478-virtualized-lists.json",
+        "sha256": "10ca08bab0fbb1a71c0dfce8041327c325f3400d8218d55b63a048b7bab2ed66",
+        "count": 15
+      },
+      "thirdParty": {
+        "path": "source-pins-18d3478-third-party.json",
+        "sha256": "fcf299414086c72b74b4932d99ec80ff51869f12fcdd6de0deaecd9a636960f7",
+        "count": 159
+      }
+    },
+    "uniquePathCountsByOrigin": {
+      "repository": 211,
+      "originalReactNative": 353,
+      "originalVirtualizedList": 15,
+      "thirdParty": 159
+    },
+    "uniqueMapEntryCount": 738,
+    "allRepositoryMapEntriesMatchSourceCommit": true,
+    "allInstalledUpstreamAndDependencyEntriesMatchRecordedBytes": true,
+    "bundleInputMemberships": {
+      "scrollView": [
+        {
+          "name": "scrollView",
+          "inputCount": 397
+        }
+      ],
+      "modalScrollView": [
+        {
+          "name": "modalScrollView",
+          "inputCount": 397
+        }
+      ],
+      "pointerClick": [
+        {
+          "name": "pointerClick:disabled",
+          "inputCount": 399
+        },
+        {
+          "name": "pointerClick:imperative-only",
+          "inputCount": 399
+        },
+        {
+          "name": "pointerClick:internal-only",
+          "inputCount": 399
+        },
+        {
+          "name": "pointerClick:enabled",
+          "inputCount": 399
+        }
+      ],
+      "virtualizedList": [
+        {
+          "name": "virtualizedList",
+          "inputCount": 397
+        }
+      ],
+      "osContracts": [
+        {
+          "name": "osContracts",
+          "inputCount": 398
+        }
+      ],
+      "performance": [
+        {
+          "name": "performance",
+          "inputCount": 532
+        }
+      ]
+    },
+    "metafileSupplementalImports": {
+      "scrollView": {
+        "repository": 30,
+        "originalReactNative": 315,
+        "originalVirtualizedList": 15,
+        "thirdParty": 0
+      },
+      "modalScrollView": {
+        "repository": 30,
+        "originalReactNative": 311,
+        "originalVirtualizedList": 15,
+        "thirdParty": 0
+      },
+      "pointerClick": {
+        "repository": 28,
+        "originalReactNative": 307,
+        "originalVirtualizedList": 15,
+        "thirdParty": 0
+      },
+      "virtualizedList": {
+        "repository": 28,
+        "originalReactNative": 310,
+        "originalVirtualizedList": 2,
+        "thirdParty": 0
+      },
+      "osContracts": {
+        "repository": 31,
+        "originalReactNative": 301,
+        "originalVirtualizedList": 15,
+        "thirdParty": 0
+      },
+      "performance": {
+        "repository": 34,
+        "originalReactNative": 320,
+        "originalVirtualizedList": 15,
+        "thirdParty": 0
+      }
+    },
+    "fullPrecompressionSnapshot": {
+      "path": "build/scroll-view-root/documentation-curation-18d3478/source-pins-18d3478-full-precompression.json",
+      "sha256": "ccc05e6c3e09b82975624fbeb79f8805585402efff2d86cb4544e368d71f637e"
+    },
+    "hashBasis": {
+      "path": "source-pins-18d3478-hash-basis.json",
+      "sha256": "5172e0428994fae8fd62a250b3e52ebcfa7650746de39b890435eeaca4234e6a",
+      "recordedSourcePaths": 580,
+      "computedBundleOnlyPaths": 158
+    },
+    "groupInventories": {
+      "scrollView": {
+        "path": "source-pins-18d3478-scroll-view-group.json",
+        "sha256": "65c51efe476e566d8fb638e2dc32784e982fd15de115052490531f5e865e5ad0",
+        "lineCount": 433
+      },
+      "modalScrollView": {
+        "path": "source-pins-18d3478-modal-wheel-group.json",
+        "sha256": "9202d97e32a31577d5520d5236b7672bf74806c3589718af193f45c2b3b168c8",
+        "lineCount": 432
+      },
+      "pointerClick": {
+        "path": "source-pins-18d3478-pointer-click-group.json",
+        "sha256": "74b53e3b3e9acee0d927f6e3b9c1525a63833aeb67311ad1960b6d4bfa7b7dd5",
+        "lineCount": 469
+      },
+      "virtualizedList": {
+        "path": "source-pins-18d3478-virtualized-list-group.json",
+        "sha256": "7a31b2768663fc100d214d0a8997cc8efe063662cbb4d9a81590a57c6029dbf2",
+        "lineCount": 441
+      },
+      "osContracts": {
+        "path": "source-pins-18d3478-os-contracts-group.json",
+        "sha256": "1f780d8e41448455f42f291098ec7bf232b147737799afe90d0ccb922f85446e",
+        "lineCount": 441
+      },
+      "performance": {
+        "path": "source-pins-18d3478-performance-group.json",
+        "sha256": "1b4bf5dbd07de2c0eea32754072a12fb95843030d67d91c80a89e40ae203d9d1",
+        "lineCount": 441
+      }
+    },
+    "nativeInputsReceipt": {
+      "path": "build/scroll-view-root/performance-integration-18d3478/native-sdk-inputs.json",
+      "sha256": "305c118d3f4e452d16af45473b760d6a064f9058268153b585bcfaa15264bdb9",
+      "verification": "sourceSha256 map has 136 paths and matches the native subset of the repository canonical map; all tracked pins also match Git 18d3478."
+    },
+    "rootIndependentReview": {
+      "path": "build/scroll-view-root/root-reviewed-curation-18d3478.json",
+      "sha256": "3b74bb760d71a165a3c8d5c87d3bf18ca37eef4852859deaf8238cdcb2904b69",
+      "totalCanonicalEntries": 738,
+      "producerRecordedHashes": 283,
+      "computedAfterExecutionHashes": 455
+    }
+  },
+  "sdk": {
+    "packagePath": "build/scroll-view-root/performance-integration-18d3478/native-sdk",
+    "fileRecordCount": 2713,
+    "manifestSha256": "84faf7391ca58ed0ceaee1a615f06bdcd7ae713b9d1c9ce92a640d1b2c511244",
+    "rootVerifiedReceipt": {
+      "path": "build/scroll-view-root/performance-integration-18d3478/root-sdk-verified.json",
+      "sha256": "96e35b86384a85c3a497f4c4a298966b8586cb7f3b34dbb62b5b535daea7382e"
+    },
+    "claims": {
+      "adapterLinked": false,
+      "adapterLoaded": false,
+      "runtimeExecuted": false,
+      "runtimeIdentityVerified": false,
+      "abiCertified": false
+    },
+    "limitation": "Recorded SDK metadata, package bytes and links were locally verified; this does not certify an external adapter ABI or claim a separate hosted binary is byte-identical."
+  },
+  "producers": {
+    "groups": {
+      "scrollView": {
+        "bundleSha256": "ffd9cb507b4d211bcbe367be39f85a29bcd8339f958790a11df62d61d18df65a",
+        "bundleReceipt": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-gf14-probe-bundle.json",
+          "sha256": "0fdd2b7dafb7645d9fdb3b715da6832ed33b1cc1f0acfaffa5bf000591733246"
+        },
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-gf14-report.json",
+          "sha256": "cf267248d151f2fdf395fdb3b8e8479ea351d5221a50a2ac80c5b9a0aae60331",
+          "checks": 33
+        },
+        "declaredRepositoryPinCount": 18,
+        "originalReactNativePinCount": 6,
+        "originalVirtualizedListPinCount": 0
+      },
+      "modalScrollView": {
+        "bundleSha256": "ab2424d63900e6a9972855b796114cc925c02fa34992b37359d5398dacda2400",
+        "bundleReceipt": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-modal-probe-bundle.json",
+          "sha256": "137f6773dcbf8cb1e67e8fd110c1c6fbf5b067b13fde8e965943e385f40064c4"
+        },
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-modal-report.json",
+          "sha256": "158b84d910e154c8f4462320ffdac481d0ec322a3d8860c3d3b6f722d175e7b2",
+          "checks": 13
+        },
+        "declaredRepositoryPinCount": 17,
+        "originalReactNativePinCount": 10,
+        "originalVirtualizedListPinCount": 0
+      },
+      "pointerClick": {
+        "bundleSha256": null,
+        "bundleReceipt": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/pointer-click/pointer-click-bundles.json",
+          "sha256": "a4690e268df4ae878106de34a5f9eaa5bffa8649a90e8ed4de5b43bb84fc0bf0"
+        },
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/pointer-click/pointer-click-report.json",
+          "sha256": "1a5b6a61ee2b1291290ed09f8445dca25aa14decdffb4771a93b1e1b46fb6ff0",
+          "checks": 91
+        },
+        "declaredRepositoryPinCount": 23,
+        "originalReactNativePinCount": 23,
+        "originalVirtualizedListPinCount": 0
+      },
+      "virtualizedList": {
+        "bundleSha256": "d5daeefec52bbe0e848f8f797abfe088aeb45497248afb09a3720cf5dd36ab3a",
+        "bundleReceipt": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-current-bundle.json",
+          "sha256": "e002dfe3f2e3908ecfc6f03ecf617f532e65740bcf637cf4474bf9384e3584a6"
+        },
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-current-report.json",
+          "sha256": "7c500b24c030847f305d41d6ac5147c7bceed919b048b22f3b1719f97b5ebba0",
+          "checks": 44
+        },
+        "declaredRepositoryPinCount": 21,
+        "originalReactNativePinCount": 17,
+        "originalVirtualizedListPinCount": 13
+      },
+      "osContracts": {
+        "bundleSha256": "b01952f5acab35d7fe36cc799d45305b61e7d33a1a343ba883115de5b0e54e22",
+        "bundleReceipt": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-probe-bundle.json",
+          "sha256": "cba52fb4367679b4dfdb02da3a7bb67b580070764bc5fed3339fd7e2a2f6476d"
+        },
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-current-report.json",
+          "sha256": "5ff380341807d5c4daa13b789344f35c7fadf127bef5c3d0e982cf16dfcde2b1",
+          "checks": 37
+        },
+        "declaredRepositoryPinCount": 11,
+        "originalReactNativePinCount": 34,
+        "originalVirtualizedListPinCount": 0
+      },
+      "performance": {
+        "bundleSha256": "8cf0948821e08a88e4e57d5e11a13a10f211e7b144ff005f3516a6d2463df96a",
+        "bundleReceipt": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/performance-final/performance-probe-bundle.json",
+          "sha256": "e513c2818ad01a71448e7ea45ffbb6142292fe9b4674d5bfdf9ee5724e0e03f6"
+        },
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/performance-final/performance-current-report.json",
+          "sha256": "a8bb101f0b65d6229bc65d708020f8bf35f0df788b94ab399cbd2f78b9e18c65",
+          "checks": 43
+        },
+        "declaredRepositoryPinCount": 16,
+        "originalReactNativePinCount": 5,
+        "originalVirtualizedListPinCount": 0
+      }
+    },
+    "metafileSupplemental": {
+      "distinctRepositoryPathCount": 94,
+      "countsByGroup": {
+        "scrollView": {
+          "metafileInputPathCount": 397,
+          "repositoryPathCount": 35,
+          "declaredPinCount": 18,
+          "supplementalRepositoryInputCount": 30,
+          "originalReactNativeInputCount": 321,
+          "originalVirtualizedListInputCount": 15
+        },
+        "modalScrollView": {
+          "metafileInputPathCount": 397,
+          "repositoryPathCount": 35,
+          "declaredPinCount": 17,
+          "supplementalRepositoryInputCount": 30,
+          "originalReactNativeInputCount": 321,
+          "originalVirtualizedListInputCount": 15
+        },
+        "pointerClick": {
+          "metafileInputPathCount": 1596,
+          "repositoryPathCount": 37,
+          "declaredPinCount": 23,
+          "supplementalRepositoryInputCount": 28,
+          "originalReactNativeInputCount": 321,
+          "originalVirtualizedListInputCount": 15
+        },
+        "virtualizedList": {
+          "metafileInputPathCount": 397,
+          "repositoryPathCount": 35,
+          "declaredPinCount": 21,
+          "supplementalRepositoryInputCount": 28,
+          "originalReactNativeInputCount": 321,
+          "originalVirtualizedListInputCount": 15
+        },
+        "osContracts": {
+          "metafileInputPathCount": 398,
+          "repositoryPathCount": 35,
+          "declaredPinCount": 11,
+          "supplementalRepositoryInputCount": 31,
+          "originalReactNativeInputCount": 322,
+          "originalVirtualizedListInputCount": 15
+        },
+        "performance": {
+          "metafileInputPathCount": 532,
+          "repositoryPathCount": 38,
+          "declaredPinCount": 16,
+          "supplementalRepositoryInputCount": 34,
+          "originalReactNativeInputCount": 321,
+          "originalVirtualizedListInputCount": 15
+        }
+      },
+      "limitation": "Supplemental metafile inputs are recorded separately and are not added to the native pin count or producer declared pin counts."
+    }
+  },
+  "suites": {
+    "scrollView": {
+      "checks": 33,
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-gf14-report.json",
+        "sha256": "cf267248d151f2fdf395fdb3b8e8479ea351d5221a50a2ac80c5b9a0aae60331",
+        "checks": 33
+      },
+      "bundleSha256": "ffd9cb507b4d211bcbe367be39f85a29bcd8339f958790a11df62d61d18df65a",
+      "log": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-gf14.log",
+        "sha256": "f0a490cb4fb4b8e1a57a069a1708702028825172834e6c652c77525a97e97915"
+      }
+    },
+    "modalWheel": {
+      "checks": 13,
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-modal-report.json",
+        "sha256": "158b84d910e154c8f4462320ffdac481d0ec322a3d8860c3d3b6f722d175e7b2",
+        "checks": 13
+      },
+      "bundleSha256": "ab2424d63900e6a9972855b796114cc925c02fa34992b37359d5398dacda2400",
+      "log": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/scroll-view/scroll-view-modal.log",
+        "sha256": "2347adf0f0d42c64c127d3ec9d65b4b7723b608856470fbf9e865ed3ae5b92e4"
+      },
+      "headed": true
+    },
+    "pointerClick": {
+      "laneCount": 8,
+      "checksPerLane": 91,
+      "allAssertionsPassed": true,
+      "lanes": {
+        "pointer-click-current-disabled-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "97b7da28cc53fc0f9b254a430f0b884f7703949ebd59b22435fea60098e63ae6"
+        },
+        "pointer-click-current-enabled-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "9142dd216c77eece705e74a0513271122e19ec3ac7730dc906108424b84e2cce"
+        },
+        "pointer-click-current-imperative-only-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "7733a5fb77e4bd9f4a5a5fcc0ac6dff98cda3e1667772e93afc19f047b7190a2"
+        },
+        "pointer-click-current-internal-only-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "a6b5332c8dcdfb1664648d372a64f28a528f2b7c79f8a9e105a96a353beeae93"
+        },
+        "pointer-click-original-disabled-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "885388a3dd930a9564a9d18c8f7a9350423780d39e93327a56139e3d79338da4"
+        },
+        "pointer-click-original-enabled-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "4bda9423415b5cae6ffacbf37fd217bfab265e9a5560256d8d6b0256de864fd3"
+        },
+        "pointer-click-original-imperative-only-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "38cf673b59e317338cdf562fdde61c32013f69af4bd889e335b4a32acc750600"
+        },
+        "pointer-click-original-internal-only-report.json": {
+          "checks": 91,
+          "allAssertionsPassed": true,
+          "failures": 0,
+          "reportSha256": "47f7cc58ad61be544b69f3b739dc74dd280079ab4700c972161dbc4248b64162"
+        }
+      },
+      "independentCleanupReviewed": true
+    },
+    "virtualizedList": {
+      "currentChecks": 44,
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-current-report.json",
+        "sha256": "7c500b24c030847f305d41d6ac5147c7bceed919b048b22f3b1719f97b5ebba0"
+      },
+      "expectedPriorSdkFailures": 11,
+      "priorSdkControl": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-preceding-sdk-report.json",
+        "sha256": "98a4c596120ed3c1c022d7f350dae1c7ebad0db1de53fb521960c496efc7c2ca"
+      },
+      "sabotageFailureNames": [
+        "mount/feed/The first window renders initialNumToRender items, RN's overscan, the header and the footer",
+        "mount/feed/The first viewable items are those at least half visible",
+        "feed/wheel/onViewableItemsChanged reports the items at least half visible, with exact changes"
+      ],
+      "sabotage": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/lists/virtualized-list-sabotage-report.json",
+        "sha256": "654a80a13420ede5b0e8d838b06eaa1199b6a074cc51fcc34502e514bd7436e8"
+      }
+    },
+    "osContracts": {
+      "currentChecks": 37,
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-current-report.json",
+        "sha256": "5ff380341807d5c4daa13b789344f35c7fadf127bef5c3d0e982cf16dfcde2b1"
+      },
+      "expectedPriorSdkFailures": 30,
+      "priorSdkControl": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-previous-sdk-report.json",
+        "sha256": "cd5c848684345074b504ad786e8d1731135cbf5e16a6e41a7df60a0de33dc686"
+      },
+      "sabotageControls": [
+        {
+          "mode": "platform-android",
+          "report": {
+            "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-sabotage-platform-android-report.json",
+            "sha256": "e0077db73a3534ccc8d894d7d2750be909ad97b620384bbb4c6ea6dde455808e"
+          },
+          "failedChecks": [
+            "mount/Only StatusBar and a TouchableNativeFeedback inside Text fail at render, each with its own error",
+            "mount/ProgressBarAndroid commits what a plain nested View commits: its child inside the wrapper, with no extra native view",
+            "mount/Each root commits exactly the expected native views",
+            "reads/Eight exports are defined and each is RN's original module, never a copy",
+            "permissions/check warns once and resolves false",
+            "permissions/request warns once and resolves 'denied', with and without a rationale",
+            "permissions/requestMultiple warns once and resolves an empty object",
+            "permissions/The deprecated checkPermission and requestPermission warn of the deprecation, then of the platform, and resolve false",
+            "native-feedback/The four statics are RN's own: SelectableBackground, SelectableBackgroundBorderless and Ripple describe a drawable, canUseNativeForeground is false",
+            "native-feedback/No native background or foreground prop reaches the host view, with a ripple, with useForeground and by default; Pressability's handlers do",
+            "press/The press reaches the host with no native background and no native command: the host reports no error",
+            "application-b/A second application prints each one-time notice again, once, in its own runtime, and its calls behave the same",
+            "stop/After stop the synchronous parts of the APIs behave as before: they need no host module, so nothing throws E_MODULE_DISPOSED",
+            "stop/Stop releases both roots and balances every native view without a diagnostic"
+          ]
+        },
+        {
+          "mode": "silent-shim",
+          "report": {
+            "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-sabotage-silent-shim-report.json",
+            "sha256": "73f046759c507b5244decf77e4922eaa7dee7e34e44f01565fcc40bad9e82a92"
+          },
+          "failedChecks": [
+            "reads/Eight exports are defined and each is RN's original module, never a copy",
+            "toast/show, showWithGravity and showWithGravityAndOffset return undefined and warn once with RN's text",
+            "permissions/check warns once and resolves false",
+            "permissions/request warns once and resolves 'denied', with and without a rationale",
+            "permissions/requestMultiple warns once and resolves an empty object",
+            "permissions/The deprecated checkPermission and requestPermission warn of the deprecation, then of the platform, and resolve false",
+            "application-b/A second application prints each one-time notice again, once, in its own runtime, and its calls behave the same",
+            "stop/After stop the synchronous parts of the APIs behave as before: they need no host module, so nothing throws E_MODULE_DISPOSED"
+          ]
+        },
+        {
+          "mode": "self-import",
+          "report": {
+            "path": "build/scroll-view-root/performance-integration-18d3478/os-contracts/os-contracts-sabotage-self-import-report.json",
+            "sha256": "0f2b76db7c853ed216971ca4080d5f3fcb9b78fc9441e927377ced1327eca4c6"
+          },
+          "failedChecks": [
+            "reads/Eight exports are defined and each is RN's original module, never a copy",
+            "toast/ToastAndroid has RN's five constants, all 0, and its three methods",
+            "toast/show, showWithGravity and showWithGravityAndOffset return undefined and warn once with RN's text",
+            "application-b/A second application prints each one-time notice again, once, in its own runtime, and its calls behave the same",
+            "stop/After stop the synchronous parts of the APIs behave as before: they need no host module, so nothing throws E_MODULE_DISPOSED"
+          ]
+        }
+      ]
+    },
+    "performance": {
+      "currentChecks": 43,
+      "report": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/performance-final/performance-current-report.json",
+        "sha256": "a8bb101f0b65d6229bc65d708020f8bf35f0df788b94ab399cbd2f78b9e18c65"
+      },
+      "rootIndependentReview": {
+        "path": "build/scroll-view-root/root-reviewed-performance-18d3478.json",
+        "sha256": "a6d85de5c5658606e47fafbddcff20fd291c63d384c77daf4c1aa754466f264a",
+        "verified": true
+      },
+      "precedingHost": {
+        "hostSha256": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+        "report": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/performance-original-host-control/performance-original-host-annotated-report.json",
+          "sha256": "ce6db4357bca82058869fe5b4c520f92f34cd3b0e9fc9afa194115a3dcdea41a",
+          "hostSha256": "7fc20194cb95c99f889cf508a4e92afcb7788160357220f6d5d70a9d46f5cfe3",
+          "bundleSha256": "8cf0948821e08a88e4e57d5e11a13a10f211e7b144ff005f3516a6d2463df96a",
+          "failedCount": 28
+        },
+        "failedChecks": 28,
+        "expectedFailures": 28,
+        "originalNegativeObserved": true
+      },
+      "nativeSabotages": [
+        {
+          "name": "leak",
+          "report": {
+            "path": "build/scroll-view-root/performance-integration-18d3478/performance-controls/results/performance-sabotage-leak-report.json",
+            "sha256": "0a167fb95a46dc3decf4a7dc91fab7797ae4cba20c4193d3dac8514cf7ad559a"
+          },
+          "expectedFailedChecks": 4,
+          "hostSha256": "03eab6ecaa497bebb2491737fc9f620f8a4fab342aa1a411f3f5f2b309c3332c",
+          "rejection": "idle cycle 0: Godot counts no orphan beyond the baseline's\n\n4 !== 2\n"
+        },
+        {
+          "name": "heap",
+          "report": {
+            "path": "build/scroll-view-root/performance-integration-18d3478/performance-controls/results/performance-sabotage-heap-report.json",
+            "sha256": "476a42c44a81ce44d80ef79f54709440119d052fb3cc6316c58e522646b45576"
+          },
+          "expectedFailedChecks": 3,
+          "hostSha256": "45ffd52462bb36648acedec8f234d8a791e8ae4046ef90db2edff15a0f7a58f5",
+          "rejection": "baseline: the heap counts live bytes and collections"
+        },
+        {
+          "name": "phase",
+          "report": {
+            "path": "build/scroll-view-root/performance-integration-18d3478/performance-controls/results/performance-sabotage-phase-report.json",
+            "sha256": "8a6f6eaf5fe4e0ecfb9f96af5348782e95c831434a0307e6f8cce9ec5d12137d"
+          },
+          "expectedFailedChecks": 2,
+          "hostSha256": "89ae16589e709a170bdb3b304d7a8d98b2a444d1634c698eb13419ddc618d482",
+          "rejection": "baseline: phase js has at most one sample per pump (90 > 45)"
+        }
+      ]
+    },
+    "core": {
+      "scrollMotion44": {
+        "log": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/scroll-motion-core.log",
+          "sha256": "956375529ae770d8689fcc5525e2cfa82a1b22f6736092ac961aa08fe5a3fe3b"
+        }
+      },
+      "performanceMetrics": {
+        "log": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/performance-metrics-core.log",
+          "sha256": "2a55af2a7406c54cd0e3e2f615d41fa01601e339c02f316e33d2fb49effaaa24"
+        }
+      }
+    },
+    "gates": {
+      "nodeChecks": 352,
+      "pythonChecks": 13,
+      "contractsLog": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/contracts.log",
+        "sha256": "17f1c16109099e3d385c7b67f9d506616bb429a422911aac5f465c28a141c497"
+      },
+      "staticLog": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/static.log",
+        "sha256": "5493383e886d4a9f180c51ceb4174a7decae33f5d71fe57cc99f58990811194e"
+      },
+      "publicationLog": {
+        "path": "build/scroll-view-root/performance-integration-18d3478/publication.log",
+        "sha256": "15ae90e402f01c7745bb1b6d01ed3fb863b5bc622f554e0542db8c543a5086f3"
+      },
+      "staticPassed": true,
+      "publicationPassed": true
+    }
+  },
+  "captures": {
+    "status": "root-inspected",
+    "rootViewedImages": true,
+    "scrollView": {
+      "receipt": {
+        "path": "docs/evidence/scroll-view/graphics-18d3478.json",
+        "sha256": "f0a2283d6573059ef2142e35f9c26371841bca791044babf04362b34d3980267"
+      },
+      "checks": 4
+    },
+    "modalWheel": {
+      "receipt": {
+        "path": "docs/evidence/scroll-view/modal-wheel-18d3478-graphics.json",
+        "sha256": "3e8915075ba5c7dfb8d5f2c2ca9919769fc5177891d40fce682da30834712d8a"
+      },
+      "checks": 13,
+      "passedChecks": 13,
+      "exactProbeDiff": {
+        "path": "docs/evidence/scroll-view/modal-wheel-18d3478-capture.diff",
+        "sha256": "3000bc5e16b611ce268c6e05e557dc55a0d34a8329e81ad5ed666b3982d8018a"
+      }
+    },
+    "images": [
+      {
+        "documentationCopy": {
+          "path": "docs/evidence/scroll-view/scroll-view-18d3478-initial.png",
+          "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136"
+        },
+        "executedCapture": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/graphics/captures/initial.png",
+          "sha256": "63241774a80da9f1998223e2f0a474f9bd6205dacc3813877fa050c203c2e136"
+        },
+        "byteIdentical": true
+      },
+      {
+        "documentationCopy": {
+          "path": "docs/evidence/scroll-view/scroll-view-18d3478-fractional-13_25.png",
+          "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1"
+        },
+        "executedCapture": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/graphics/captures/fractional-13_25.png",
+          "sha256": "60b52a8d89d6920c5092c6742df2a849601994e4e710586c7e9c1617ddcfcad1"
+        },
+        "byteIdentical": true
+      },
+      {
+        "documentationCopy": {
+          "path": "docs/evidence/scroll-view/scroll-view-18d3478-horizontal-pan-clipped.png",
+          "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26"
+        },
+        "executedCapture": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/graphics/captures/horizontal-pan-clipped.png",
+          "sha256": "bc72256fde9bfd6990cba636e49a3e2d3e6afb91c059fd7dd45cb0073e086f26"
+        },
+        "byteIdentical": true
+      },
+      {
+        "documentationCopy": {
+          "path": "docs/evidence/scroll-view/scroll-view-18d3478-cleanup.png",
+          "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8"
+        },
+        "executedCapture": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/graphics/captures/cleanup.png",
+          "sha256": "641f9cd30f7661d8f5d7879d8bedfacb9352e520ae8bae183cd1a772e99b3ce8"
+        },
+        "byteIdentical": true
+      },
+      {
+        "documentationCopy": {
+          "path": "docs/evidence/scroll-view/modal-wheel-18d3478-down.png",
+          "sha256": "399841c33aaa3a56fe6ba35bca191131ac5c3a7e33cde327da72b89b2c5a6124"
+        },
+        "executedCapture": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/graphics/modal-wheel-0203145-down.png",
+          "sha256": "399841c33aaa3a56fe6ba35bca191131ac5c3a7e33cde327da72b89b2c5a6124"
+        },
+        "byteIdentical": true
+      },
+      {
+        "documentationCopy": {
+          "path": "docs/evidence/scroll-view/modal-wheel-18d3478-horizontal.png",
+          "sha256": "a11585f10420c3ed849a251085361dee32d2f59faa56edea5e9a982476bb9903"
+        },
+        "executedCapture": {
+          "path": "build/scroll-view-root/performance-integration-18d3478/graphics/modal-wheel-0203145-horizontal.png",
+          "sha256": "a11585f10420c3ed849a251085361dee32d2f59faa56edea5e9a982476bb9903"
+        },
+        "byteIdentical": true
+      }
+    ],
+    "boardScreenshot": {
+      "path": "docs/evidence/scroll-view/agents-18d3478-testing.jpg",
+      "sha256": "b0f7256bf53399ea7a09f0f6d0919e3160281e4f2045dccf9a6089673c27933e"
+    }
+  },
+  "historical": {
+    "published4abaCi": "SUCCESS (5 jobs), CodeRabbit approved; applies to 4aba only and is not acceptance of source 18d3478",
+    "previous020And7fcEvidence": "preserved in earlier receipt sections and archives; superseded for this integrated run"
+  },
+  "dashboard": {
+    "task": "GF-14",
+    "status": "in_progress",
+    "taskCount": 40,
+    "checkpointsAccepted": false,
+    "acceptedCheckpoints": "30/156"
+  },
+  "limitations": [
+    "This receipt records local macOS Godot validation only; it does not claim physical iOS/Android or refresh-rate parity.",
+    "Hosted CI and CodeRabbit review for the integrated 18d source are still pending.",
+    "GF-14 remains open; none of its acceptance checkpoints is marked complete."
+  ]
+}
