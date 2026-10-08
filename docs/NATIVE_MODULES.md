@@ -118,6 +118,24 @@ for a screen reader that turns on later. The engine's `AccessibilityServer` is c
 `validation_accessibility_announcer` meta. `announcementFinished` never fires. See the [research
 note](research/accessibility-info.md) and the [announcements note](research/accessibility-announcements.md).
 
+LayoutAnimation adds **no TurboModule**: `LayoutAnimation.configureNext` reaches RN's compiled `nativeFabricUIManager.configureNextLayoutAnimation`,
+which only acts on a `UIManagerAnimationDelegate`. One `LayoutAnimation` (`native/layout_animation.{h,cpp}`) per application installs RN's
+own `LayoutAnimationDriver` (`react/renderer/animations`, compiled into the core) as that delegate, gives it the component descriptor registry,
+hands every `ShadowTree` the host starts a mounting override that forwards to the driver and records each transaction it serves
+(`register_surface`, from `start_root`), and counts what the driver queues on the application's `RuntimeExecutor` (the success callback of each completed animation and the failure callback of a config RN
+cannot parse; both reach JS through the scheduler's work queue). The driver reads the host's frame time in whole milliseconds, handed over once per
+pump (`clock`), and the frame clock treats an animation in flight (the driver's `LayoutAnimationStatusDelegate` edges, as iOS switches its run loop
+observer) as a frame consumer, so `tick` runs `UIManager::animationTick()` on the same ticks and timestamps as `requestAnimationFrame` and Native
+Animated, and only with an animation in flight (a tick that another consumer causes does nothing and is not counted); the transactions it pulls reach `uiManagerDidFinishTransaction`, so a tick's mount is the pump's Mount phase in `status().performance` (the tick
+runs between the JS brackets, never inside one).
+When the last surface stops while RN still holds an animation (an unmount that was itself animated), the next surface's registration hands the interest back.
+`stop()` detaches the driver and destroys it, with the JS callbacks it holds, before the Hermes runtime; a retained `configureNext` then does nothing.
+`status().layoutAnimation`, which follows the `performance` section, is the contract: `enabled`, `active`, `stopped`, `started`, `completed`, `callbacksQueued`, `ticks`, `clockReads`,
+`frameMs` (the frame time last handed to the driver), `lastReadMs` (what RN last read, in whole milliseconds), `pullsTotal`, `pullsDropped` and
+`pulls`, a ring of the last 64 transactions the driver served (`sequence`, `godotFrame`, `readMs` as RN read it, `frameMs`, `callbacks`, `active`, and the
+mutations by type); a host without the module has no such key. See the [research
+note](research/layout-animation.md) and the [evidence](evidence/layout-animation/README.md).
+
 The OS-specific APIs (`ToastAndroid`, `PermissionsAndroid`, `ActionSheetIOS`, `PushNotificationIOS`,
 `StatusBar` and the rest of the [OS-specific contracts](research/os-contracts.md)) add **no native
 module**, and their absence is the contract. RN looks the modules up by name (`ToastAndroid` with

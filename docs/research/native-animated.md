@@ -5,7 +5,8 @@ Godot 4.7.2. The [evidence](../evidence/native-animated/README.md) owns the 75
 headless checks, the preceding-host control (the same bundle fails exactly its 59
 normative checks), two retained sabotages (a backend fed seconds fails 32 checks,
 a JS thread that does not update the shadow node references it holds fails 2) and
-the independent oracle that recomputes every sample. LayoutAnimation, native
+the independent oracle that recomputes every sample. [LayoutAnimation](layout-animation.md)
+runs on RN's own C++ driver on the same ticks; native
 `Animated.event` on the SDK ScrollView, reduced motion, `PlatformColor`
 interpolation, performance budgets and Godot mobile exports are not certified.
 Hosted run 37439650201 repeated the 75 checks on its second attempt, after the
@@ -236,7 +237,7 @@ RN does.
 
 ## Remaining scope
 
-`LayoutAnimation` and layout transitions; native `Animated.event` on the SDK
+Native `Animated.event` on the SDK
 ScrollView and the `Animated.ScrollView`, `FlatList` and `SectionList` wrappers;
 `Animated.Text` and `Animated.Image`; asserted animation of layout props with the
 native driver (only the exploratory runs above cover it); `PlatformColor`
