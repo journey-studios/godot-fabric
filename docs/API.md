@@ -698,7 +698,8 @@ returns `null` and `getEnforcing` throws RN's error. `ToastAndroid` and `DrawerL
 own `ToastAndroidFallback` and `DrawerLayoutAndroidFallback`, because the generic files import
 themselves. `ProgressBarAndroid`, `DrawerLayoutAndroid` and `PushNotificationIOS` print RN's one-time
 notice (`warnOnce`, once per application) on their first read. The [research note](research/os-contracts.md)
-has every row with its RN source and line.
+has every row with its RN source and line, and the [evidence record](evidence/os-contracts/README.md)
+the execution of each one in two Hermes applications.
 
 | API | Supported (what it does on Godot) | Rejected, and how |
 | --- | --- | --- |

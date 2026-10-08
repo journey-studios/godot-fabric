@@ -10,7 +10,7 @@ probe runs them in two actual `FabricApplication`s (two Hermes runtimes, the rea
 TurboModule registry) with an independent oracle that reads every text, key and count from
 the pinned sources. The previous SDK fails exactly the checks that need the slice, and three
 retained sabotages are rejected by the probe and by the oracle. The [evidence record](../evidence/os-contracts/README.md)
-pins the execution once the implementation is committed. Nothing here certifies Android or iOS
+pins the execution at implementation commit `4338d1c`. Nothing here certifies Android or iOS
 behavior, the implementations those platforms ship (GF-34 and GF-35), or real devices; see
 "Remaining scope".
 
