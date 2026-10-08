@@ -140,7 +140,7 @@ test("load-path validation checks real targets behind app aliases and symlinks",
   await assert.rejects(() => assertLocalLoadPaths(["@loader_path/dangling.dylib"], host, app), /ENOENT|no such file/i);
   await assert.rejects(() => assertLocalLoadPaths(["/workspace/developer/libcustom.dylib"], host, app), /unexpected absolute path/);
   await assert.rejects(() => assertLocalLoadPaths(["/usr/lib/../../outside.dylib"], host, app), /unsafe system load path/);
-  await assert.rejects(() => assertLocalLoadPaths(["/System/Library/../../Users/owned/lib.dylib"], host, app), /unsafe system load path/);
+  await assert.rejects(() => assertLocalLoadPaths(["/System/Library/../../outside.dylib"], host, app), /unsafe system load path/);
 });
 
 test("load-path audit awaits realpath containment for Mach-O aliases", async t => {
