@@ -8,7 +8,7 @@
     "focusSequence": "5",
     "focusTitle": "Layout animation: LayoutAnimation original do RN sobre o LayoutAnimationDriver C++ nos ticks do relógio de quadros (GF-19, fatia 2), com evidência em 092dd14; CI hospedada e Pages pendentes."
   },
-  "updatedAt": "2026-10-08T19:56:44.981Z",
+  "updatedAt": "2026-10-08T22:50:00.000Z",
   "source": {
     "commit": "1b9f12037ed76ba3873ed05366fa81ed4c52b835",
     "url": "https://github.com/journey-studios/godot-fabric/commit/1b9f12037ed76ba3873ed05366fa81ed4c52b835",
@@ -3674,6 +3674,14 @@
                 {
                   "label": "As seis sabotagens retidas, cada uma rejeitada",
                   "url": "https://github.com/journey-studios/godot-fabric/blob/1b9f12037ed76ba3873ed05366fa81ed4c52b835/scripts/scope-sabotage.mjs"
+                },
+                {
+                  "label": "CI hospedada do escopo 0.5: push da main em b0e40aa (run 37842839329, o squash do #74), 5 jobs na primeira tentativa; 13 + 3 testes de JS e os 181 checks nativos com IDs idênticos aos commitados, aceitos pelo oráculo; o controle causal e as sabotagens seguem locais",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/77ce06ed7fcf73c6de5da836af6cd74b9e2798f0/docs/evidence/frontier-scope/hosted-ci.json"
+                },
+                {
+                  "label": "Pages do escopo 0.5 (run 37842839320): os dados da main em b0e40aa implantados, com o V05-04 fechado e os links pinados servidos pelo GitHub",
+                  "url": "https://github.com/journey-studios/godot-fabric/blob/77ce06ed7fcf73c6de5da836af6cd74b9e2798f0/docs/evidence/frontier-scope/publication.json"
                 }
               ]
             }
@@ -4316,6 +4324,13 @@
     }
   ],
   "activity": [
+    {
+      "id": "frontier-scope-main-hosted-ci-and-pages-20261008",
+      "at": "2026-10-08T22:50:00.000Z",
+      "taskIds": [],
+      "message": "CI hospedada do escopo do 0.5 (V05-04): o push da main em b0e40aa (squash de #74, run 37842839329) passou nos cinco jobs na primeira tentativa. O job contracts passou os 13 testes da lane de JS, o native-cold-start produziu o relatório de 181 checks de test:scope-0.5 (digest igual ao commitado, aceito pelo oráculo em b0e40aa) e o artefato native-scope-0.5 confere com o digest da API. O Pages (run 37842839320) publicou o migration.json de b0e40aa byte a byte, com os três critérios do V05-04 fechados e os 27 links pinados servidos. Controle causal, sabotagens e a reprodução da queda do ScrollView seguem locais.",
+      "url": "https://github.com/journey-studios/godot-fabric/blob/77ce06ed7fcf73c6de5da836af6cd74b9e2798f0/docs/evidence/frontier-scope/hosted-ci.json"
+    },
     {
       "id": "library-consumer-main-hosted-ci-and-pages-20261008",
       "at": "2026-10-08T19:56:44.981Z",
